@@ -2,7 +2,6 @@
 <!-- build configuration -->
 <project name="orth" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
   <!-- configuration parameters -->
-  <property name="lib.name"     value="orth"/>
   <property name="src.dir"     value="src/main/java"/>
   <property name="asrc.dir"     value="src/main/as"/>
   <property name="rsrc.dir"     value="src/main/resources"/>
@@ -103,7 +102,7 @@
     <copy file="etc/aslib-config.xml.in" tofile="${deploy.dir}/aslib-config.xml">
       <filterset>
         <filter token="flex_sdk_dir" value="${flexsdk.dir}"/>
-        <filter token="lib_name" value="${lib.name}"/>
+        <filter token="lib_name" value="${ant.project.name}"/>
       </filterset>
     </copy>
     <java jar="${flexsdk.dir}/lib/compc.jar" fork="true" failonerror="true">
@@ -113,7 +112,7 @@
       <arg value="-compiler.source-path=${asrc.dir}"/>
       <arg value="-include-sources=src/main/as/"/>
       <arg value="-output"/>
-      <arg value="${deploy.dir}/${lib.name}lib.swc"/>
+      <arg value="${deploy.dir}/${ant.project.name}lib.swc"/>
     </java>
     <delete file="${deploy.dir}/aslib-config.xml"/>
   </target>
@@ -156,18 +155,18 @@
   </target>
 
   <!-- a target for rebuilding everything -->
-  <target name="distall" depends="-prepare,compile,dist,aslib,javadoc,asdoc"/>
+  <target name="distall" depends="dist,javadoc,asdoc"/>
 
   <!-- builds our distribution files (war and jar) -->
   <target name="dist" depends="-prepare,compile,procstream,aslib">
     <!-- build our various jar files -->
-    <jar destfile="${deploy.dir}/${lib.name}.jar" basedir="${classes.dir}"/>
+    <jar destfile="${deploy.dir}/${ant.project.name}.jar" basedir="${classes.dir}"/>
     <copy todir="${gwtjar.dir}">
       <fileset dir="${rsrc.dir}" includes="com/**"/>
       <fileset dir="${src.dir}" includes="com/threerings/orth/scene/data/*.java"/>
       <fileset dir="${src.dir}" includes="com/threerings/orth/data/*.java"/>
     </copy>
-    <jar destfile="${deploy.dir}/${lib.name}-gwt.jar" basedir="${gwtjar.dir}"/>
+    <jar destfile="${deploy.dir}/${ant.project.name}-gwt.jar" basedir="${gwtjar.dir}"/>
     <delete dir="${gwtjar.dir}"/>
   </target>
 
@@ -262,10 +261,17 @@
       <remoteRepository url="${maven.deploy.repo}"/>
       <pom refid="pom"/>
     </artifact:deploy>
+
     <artifact:pom id="as-pom" file="as-pom.xml"/>
     <artifact:deploy file="${deploy.dir}/${ant.project.name}lib.swc" uniqueVersion="false">
       <remoteRepository url="${maven.deploy.repo}"/>
       <pom refid="as-pom"/>
+    </artifact:deploy>
+
+    <artifact:pom id="gwt-pom" file="gwt-pom.xml"/>
+    <artifact:deploy file="${deploy.dir}/${ant.project.name}-gwt.jar" uniqueVersion="false">
+      <remoteRepository url="${maven.deploy.repo}"/>
+      <pom refid="gwt-pom"/>
     </artifact:deploy>
   </target>
 </project>
