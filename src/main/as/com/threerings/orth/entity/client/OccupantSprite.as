@@ -9,6 +9,7 @@ import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.WalkAnimation;
 import com.threerings.orth.scene.client.RoomView;
 import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.orth.scene.data.OrthScene;
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.Comparators;
 import com.threerings.util.ValueEvent;
@@ -321,7 +322,7 @@ public class OccupantSprite extends EntitySprite
      * Effects the movement of this occupant to a new location in the scene. This just animates the
      * movement, and should be called as a result of the server informing us that we've moved.
      */
-    public function moveTo (destLoc :OrthLocation, scene :MsoyScene) :void
+    public function moveTo (destLoc :OrthLocation, scene :OrthScene) :void
     {
         // if there's already a move, kill it
         if (_walk != null) {
@@ -347,7 +348,7 @@ public class OccupantSprite extends EntitySprite
         }
     }
 
-//    public function whirlOut (scene :MsoyScene) :void
+//    public function whirlOut (scene :OrthScene) :void
 //    {
 //        _walk = new WhirlwindAnimation(this, scene, loc);
 //        _walk.start();

@@ -23,7 +23,7 @@ public /*abstract*/ class FurniUpdate extends SceneUpdate
     override public function apply (model :SceneModel) :void
     {
         super.apply(model);
-        doUpdate((model as MsoySceneModel));
+        doUpdate((model as OrthSceneModel));
     }
 
     // documentation inherited
@@ -40,7 +40,7 @@ public /*abstract*/ class FurniUpdate extends SceneUpdate
         data = FurniData(ins.readObject());
     }
 
-    protected /*abstract*/ function doUpdate (model :MsoySceneModel) :void
+    protected /*abstract*/ function doUpdate (model :OrthSceneModel) :void
     {
         throw new Error("abstract");
     }

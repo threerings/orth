@@ -2,12 +2,8 @@
 // $Id: RoomView.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.scene.client {
-import com.threerings.msoy.room.client.*;
-import com.threerings.orth.client.ContextMenuProvider;
-import com.threerings.orth.client.PlaceBox;
-import com.threerings.orth.client.Prefs;
-import com.threerings.orth.client.SnapshotUtil;
-import com.threerings.orth.client.Zoomable;
+import com.threerings.orth.client.OrthPlaceView;
+import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
@@ -47,32 +43,17 @@ import com.threerings.ui.MenuUtil;
 import com.threerings.whirled.spot.data.Location;
 import com.threerings.whirled.spot.data.Portal;
 
-import com.threerings.orth.scene.data.DecorInfo;
 import com.threerings.orth.scene.data.FurniData;
 import com.threerings.orth.scene.data.OrthLocation;
 
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.MsoyContext;
-import com.threerings.orth.client.MsoyPlaceView;
 import com.threerings.orth.client.PlaceBox;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.Snapshottable;
 import com.threerings.orth.client.SnapshotUtil;
 import com.threerings.orth.client.UberClient;
 import com.threerings.orth.client.Zoomable;
-
-import com.threerings.msoy.data.all.MediaDesc;
-
-import com.threerings.msoy.item.data.all.Decor;
-import com.threerings.msoy.item.data.all.ItemIdent;
-import com.threerings.msoy.world.client.WorldContext;
-import com.threerings.msoy.world.client.WorldControlBar;
-
-import com.threerings.msoy.room.client.layout.RoomLayout;
-import com.threerings.msoy.room.client.layout.RoomLayoutFactory;
-import com.threerings.msoy.room.data.MsoyScene;
-import com.threerings.msoy.room.data.RoomObject;
 
 /**
  * The base room view. Should not contain any RoomObject or other network-specific crap.
@@ -1192,7 +1173,7 @@ public class RoomView extends Sprite
 }
 }
 
-import com.threerings.orth.entity.client.RoomElementSprite;
+import com.threerings.orth.scene.client.RoomElementSprite;
 
 class BackdropOverlay extends RoomElementSprite
 {

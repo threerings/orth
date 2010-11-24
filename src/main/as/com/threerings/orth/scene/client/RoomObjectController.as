@@ -23,6 +23,8 @@ import com.threerings.orth.scene.data.EntityControl;
 import com.threerings.orth.scene.data.EntityMemories;
 import com.threerings.orth.scene.data.FurniData;
 import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.orth.scene.data.OrthScene;
+import com.threerings.orth.scene.data.OrthSceneModel;
 import com.threerings.presents.dobj.AttributeChangeAdapter;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.util.ArrayUtil;
@@ -304,7 +306,7 @@ public class RoomObjectController extends RoomController
             return;
 
         case FurniData.ACTION_PORTAL:
-            (_wdctx.getSceneDirector() as MsoySceneDirector).traversePortal(furni.id);
+            (_wdctx.getSceneDirector() as OrthSceneDirector).traversePortal(furni.id);
             return;
 
         case FurniData.ACTION_HELP_PAGE:
@@ -523,7 +525,7 @@ public class RoomObjectController extends RoomController
             if (_roomObj.playlist.containsKey(new ItemIdent(itemType, itemId))) {
                 return;
             }
-            if ((_scene.getPlaylistControl() != MsoySceneModel.ACCESS_EVERYONE) &&
+            if ((_scene.getPlaylistControl() != OrthSceneModel.ACCESS_EVERYONE) &&
                     !canManageRoom()) {
                 _wdctx.displayFeedback(OrthCodes.WORLD_MSGS, "e.no_playlist_perm");
                 return;
@@ -547,8 +549,8 @@ public class RoomObjectController extends RoomController
             // a function we'll invoke when we're ready to use the item
             var useNewItem :Function = function () :void {
                 if (item.getType() == Item.DECOR) {
-                    var newScene :MsoyScene = _scene.clone() as MsoyScene;
-                    var newSceneModel :MsoySceneModel = MsoySceneModel(newScene.getSceneModel());
+                    var newScene :OrthScene = _scene.clone() as OrthScene;
+                    var newSceneModel :OrthSceneModel = OrthSceneModel(newScene.getSceneModel());
                     newSceneModel.decor = item as Decor;
                     applyUpdate(new SceneUpdateAction(_wdctx, _scene, newScene));
 
@@ -617,9 +619,9 @@ public class RoomObjectController extends RoomController
             }
 
         } else if (itemType == Item.DECOR) {
-            var newScene :MsoyScene = _scene.clone() as MsoyScene;
-            var newSceneModel :MsoySceneModel = (newScene.getSceneModel() as MsoySceneModel);
-            newSceneModel.decor = MsoySceneModel.defaultMsoySceneModelDecor();
+            var newScene :OrthScene = _scene.clone() as OrthScene;
+            var newSceneModel :OrthSceneModel = (newScene.getSceneModel() as OrthSceneModel);
+            newSceneModel.decor = OrthSceneModel.defaultOrthSceneModelDecor();
             applyUpdate(new SceneUpdateAction(_wdctx, _scene, newScene));
 
         } else {
@@ -645,7 +647,7 @@ public class RoomObjectController extends RoomController
         reportLocationOwner();
 
         // get a copy of the scene
-        _scene = (_wdctx.getSceneDirector().getScene() as MsoyScene);
+        _scene = (_wdctx.getSceneDirector().getScene() as OrthScene);
 
         _wdctx.getChatDirector().registerCommandHandler(
             Msgs.CHAT, "action", new AvatarChatHandler(false));
@@ -1018,7 +1020,7 @@ public class RoomObjectController extends RoomController
     protected var _roomObj :RoomObject;
 
     /** The current scene we're viewing. */
-    protected var _scene :MsoyScene;
+    protected var _scene :OrthScene;
 
     /** Controller for in-room furni editing. */
     protected var _editor :RoomEditorController;
