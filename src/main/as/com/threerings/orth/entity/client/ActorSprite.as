@@ -5,6 +5,7 @@ package com.threerings.orth.entity.client {
 import com.threerings.orth.scene.client.RoomController;
 import com.threerings.orth.scene.client.RoomView;
 import com.threerings.orth.scene.data.ActorInfo;
+import com.threerings.orth.scene.data.OrthLocation;
 import com.threerings.util.DelayUtil;
 import com.threerings.util.Log;
 import com.threerings.util.Util;
@@ -102,7 +103,7 @@ public class ActorSprite extends OccupantSprite
     {
         var ctrl :RoomController = getController(true);
         if (ctrl != null) {
-            ctrl.requestMove(_ident, new MsoyLocation(x, y, z, orient));
+            ctrl.requestMove(_ident, new OrthLocation(x, y, z, orient));
         }
     }
 

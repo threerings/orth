@@ -3,6 +3,7 @@
 
 package com.threerings.orth.entity.client {
 import com.threerings.orth.scene.data.FurniData;
+import com.threerings.orth.scene.data.OrthLocation;
 import com.threerings.util.Log;
 
 import flash.events.Event;
@@ -87,7 +88,7 @@ public class DecorSprite extends FurniSprite
         furniData.media = decor.getRawFurniMedia();
 
         // sprite location: center and up-front, but shifted by specified offset
-        furniData.loc = new MsoyLocation(0.5, 0, 0);
+        furniData.loc = new OrthLocation(0.5, 0, 0);
 
         return furniData;
     }

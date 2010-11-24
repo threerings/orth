@@ -10,6 +10,7 @@ import com.threerings.flex.CommandMenu;
 import com.threerings.flex.PopUpUtil;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.PlaceBox;
+import com.threerings.orth.client.UberClient;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;

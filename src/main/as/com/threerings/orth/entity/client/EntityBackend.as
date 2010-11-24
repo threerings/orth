@@ -3,6 +3,7 @@
 
 package com.threerings.orth.entity.client {
 import com.threerings.orth.client.ControlBackend;
+import com.threerings.orth.scene.data.OrthLocation;
 
 import flash.display.DisplayObject;
 
@@ -75,7 +76,7 @@ public class EntityBackend extends ControlBackend
     {
         super.populateControlInitProperties(o);
 
-        var loc :MsoyLocation = _sprite.getLocation();
+        var loc :OrthLocation = _sprite.getLocation();
         o["location"] = [ loc.x, loc.y, loc.z ];
         o["datapack"] = _sprite.viz.getAndClearDataPack();
         o["env"] = _sprite.getEnvironment();

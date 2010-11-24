@@ -7,6 +7,8 @@ import com.threerings.display.FilterUtil;
 import com.threerings.media.MediaContainer;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.WalkAnimation;
+import com.threerings.orth.scene.client.RoomView;
+import com.threerings.orth.scene.data.OrthLocation;
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.Comparators;
 import com.threerings.util.ValueEvent;
@@ -176,7 +178,7 @@ public class OccupantSprite extends EntitySprite
     /**
      * Called to set up the occupant's initial location upon entering a room.
      */
-    public function setEntering (loc :MsoyLocation) :void
+    public function setEntering (loc :OrthLocation) :void
     {
         setLocation(loc);
         setOrientation(loc.orient);
@@ -319,7 +321,7 @@ public class OccupantSprite extends EntitySprite
      * Effects the movement of this occupant to a new location in the scene. This just animates the
      * movement, and should be called as a result of the server informing us that we've moved.
      */
-    public function moveTo (destLoc :MsoyLocation, scene :MsoyScene) :void
+    public function moveTo (destLoc :OrthLocation, scene :MsoyScene) :void
     {
         // if there's already a move, kill it
         if (_walk != null) {
@@ -337,7 +339,7 @@ public class OccupantSprite extends EntitySprite
         appearanceChanged();
     }
 
-    public function dispatchEntityMoved (destLoc :MsoyLocation) :void
+    public function dispatchEntityMoved (destLoc :OrthLocation) :void
     {
         if (getItemIdent() != null && _sprite.parent is RoomView) {
             (_sprite.parent as RoomView).dispatchEntityMoved(getItemIdent(),

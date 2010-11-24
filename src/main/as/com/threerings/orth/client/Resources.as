@@ -2,10 +2,6 @@ package com.threerings.orth.client
 {
 public class Resources
 {
-    public function Resources ()
-    {
-    }
-
     [Embed(source="../../../../../../../rsrc/media/idle.swf")]
     public static const IDLE_ICON:Class;
 

@@ -4,6 +4,8 @@
 package com.threerings.orth.entity.client {
 import com.threerings.orth.scene.client.RoomController;
 import com.threerings.orth.scene.client.RoomElement;
+import com.threerings.orth.scene.client.RoomView;
+import com.threerings.orth.scene.data.OrthLocation;
 
 import flash.display.BitmapData;
 import flash.display.BlendMode;
@@ -115,7 +117,7 @@ public class EntitySprite
     }
 
     // from RoomElement
-    public function getLocation () :MsoyLocation
+    public function getLocation () :OrthLocation
     {
         return _loc;
     }
@@ -800,11 +802,11 @@ public class EntitySprite
             return [ hotspot.x, hotspot.y ];
 
         case "location_logical":
-            var loc :MsoyLocation = getLocation();
+            var loc :OrthLocation = getLocation();
             return [ loc.x, loc.y, loc.z ];
 
         case "location_pixel":
-            var ploc :MsoyLocation = getLocation();
+            var ploc :OrthLocation = getLocation();
             var bounds :Array = getRoomBounds();
             bounds[0] *= ploc.x;
             bounds[1] *= ploc.y;
@@ -960,7 +962,7 @@ public class EntitySprite
     protected var _ctx :WorldContext;
 
     /** The current logical coordinate of this media. */
-    protected const _loc :MsoyLocation = new MsoyLocation();
+    protected const _loc :OrthLocation = new OrthLocation();
 
     /** Identifies the item we are visualizing. All furniture will have an ident, but only our
      * avatar sprite will know its ident (and only we can update our avatar's memory, etc.).  */
