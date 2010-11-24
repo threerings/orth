@@ -2,13 +2,28 @@
 // $Id: RoomController.as 17898 2009-08-24 03:38:13Z ray $
 
 package com.threerings.orth.scene.client {
+import com.threerings.crowd.client.PlaceView;
+import com.threerings.crowd.data.PlaceConfig;
+import com.threerings.crowd.data.PlaceObject;
+import com.threerings.crowd.util.CrowdContext;
+import com.threerings.flex.CommandMenu;
+import com.threerings.flex.PopUpUtil;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.PlaceBox;
 import com.threerings.orth.entity.client.ActorSprite;
+import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
-import com.threerings.orth.entity.client.EntitySprite;
+import com.threerings.orth.scene.data.ActorInfo;
 import com.threerings.orth.scene.data.EntityIdent;
+import com.threerings.orth.scene.data.EntityMemories;
+import com.threerings.orth.scene.data.FurniData;
+import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.util.Log;
+import com.threerings.util.Map;
+import com.threerings.util.Maps;
+import com.threerings.util.ObjectMarshaller;
+import com.threerings.whirled.client.SceneController;
 
 import flash.display.DisplayObject;
 import flash.events.Event;
@@ -17,39 +32,19 @@ import flash.events.MouseEvent;
 import flash.events.TimerEvent;
 import flash.geom.Point;
 import flash.ui.Keyboard;
-import flash.utils.getTimer; // function
 import flash.utils.ByteArray;
 import flash.utils.Dictionary;
 import flash.utils.Timer;
-
-import mx.events.MenuEvent;
+import flash.utils.getTimer;
 
 import mx.core.Application;
 import mx.core.IToolTip;
 import mx.core.UIComponent;
+import mx.events.MenuEvent;
 import mx.managers.ISystemManager;
 import mx.managers.ToolTipManager;
 
-import com.threerings.util.Log;
-import com.threerings.util.Map;
-import com.threerings.util.Maps;
-import com.threerings.util.ObjectMarshaller;
-
-import com.threerings.flex.CommandMenu;
-import com.threerings.flex.PopUpUtil;
-
-import com.threerings.crowd.client.PlaceView;
-import com.threerings.crowd.data.PlaceConfig;
-import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.util.CrowdContext;
-
-import com.threerings.whirled.client.SceneController;
-
-import com.threerings.orth.scene.data.ActorInfo;
-import com.threerings.orth.scene.data.EntityMemories;
-import com.threerings.orth.scene.data.FurniData;
-import com.threerings.orth.scene.data.OrthLocation;
-
+// function
 /**
  * Manages the various interactions that take place in a room scene.
  */
@@ -1040,20 +1035,20 @@ public class RoomController extends SceneController
 }
 }
 
-import com.threerings.orth.entity.client.RoomElementSprite;
+import com.threerings.orth.client.Resources;
+import com.threerings.orth.scene.client.RoomElementSprite;
 import com.threerings.orth.scene.data.EntityIdent;
 import com.threerings.orth.scene.data.OrthSceneCodes;
-
-import flash.display.DisplayObject;
-
 import com.threerings.util.Log;
 import com.threerings.util.Throttle;
+
+import flash.display.DisplayObject;
 
 class WalkTarget extends RoomElementSprite
 {
     public function WalkTarget (fly :Boolean = false)
     {
-        var targ :DisplayObject = (fly ? new FLYTARGET() : new WALKTARGET()) as DisplayObject;
+        var targ :DisplayObject = (fly ? new Resources.FLYTARGET() : new Resources.WALKTARGET()) as DisplayObject;
         targ.x = -targ.width/2;
         targ.y = -targ.height/2;
         addChild(targ);
@@ -1071,11 +1066,6 @@ class WalkTarget extends RoomElementSprite
         super.setScreenLocation(x, y, Math.max(0.25, scale));
     }
 
-    [Embed(source="../../../../../../../../rsrc/media/walkable.swf")]
-    protected static const WALKTARGET :Class;
-
-    [Embed(source="../../../../../../../../rsrc/media/flyable.swf")]
-    protected static const FLYTARGET :Class;
 }
 
 /**

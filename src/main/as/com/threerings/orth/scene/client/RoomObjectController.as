@@ -2,50 +2,41 @@
 // $Id: RoomObjectController.as 19189 2010-05-26 19:37:09Z zell $
 
 package com.threerings.orth.scene.client {
+import com.threerings.crowd.chat.client.MuteObserver;
+import com.threerings.crowd.client.PlaceView;
+import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.crowd.data.PlaceConfig;
+import com.threerings.crowd.data.PlaceObject;
+import com.threerings.crowd.util.CrowdContext;
+import com.threerings.flex.CommandMenu;
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.Resources;
 import com.threerings.orth.client.UberClient;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
-import com.threerings.orth.notify.data.Notification;
+import com.threerings.orth.scene.data.ActorInfo;
 import com.threerings.orth.scene.data.ControllableEntity;
 import com.threerings.orth.scene.data.EntityControl;
 import com.threerings.orth.scene.data.EntityMemories;
+import com.threerings.orth.scene.data.FurniData;
+import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.presents.dobj.AttributeChangeAdapter;
+import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.util.ArrayUtil;
+import com.threerings.util.Name;
+import com.threerings.util.ObjectMarshaller;
+import com.threerings.util.Predicates;
+import com.threerings.util.ValueEvent;
+import com.threerings.whirled.data.SceneUpdate;
 
 import flash.events.Event;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.ui.Keyboard;
 import flash.utils.ByteArray;
-
-import com.threerings.util.ArrayUtil;
-import com.threerings.util.MessageBundle;
-import com.threerings.util.Name;
-import com.threerings.util.ObjectMarshaller;
-import com.threerings.util.Predicates;
-import com.threerings.util.ValueEvent;
-
-import com.threerings.presents.dobj.AttributeChangeAdapter;
-import com.threerings.presents.dobj.AttributeChangedEvent;
-
-import com.threerings.crowd.client.PlaceView;
-import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.crowd.data.PlaceConfig;
-import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.util.CrowdContext;
-
-import com.threerings.crowd.chat.client.MuteObserver;
-
-import com.threerings.flex.CommandMenu;
-
-import com.threerings.whirled.data.SceneUpdate;
-
-
-import com.threerings.orth.scene.data.ActorInfo;
-import com.threerings.orth.scene.data.FurniData;
-import com.threerings.orth.scene.data.OrthLocation;
 
 /**
  * Manages the various interactions that take place in a room scene.
@@ -152,7 +143,7 @@ public class RoomObjectController extends RoomController
             if (avatar.isBleepable()) {
                 var key :String = avatar.isBleeped() ? "b.unbleep_avatar" : "b.bleep_avatar";
                 //var key :String = avatar.isBleeped() ? "b.unbleep_item" : "b.bleep_item";
-                bleepItem = { label: Msgs.GENERAL.get(key), icon: BLEEP_ICON,
+                bleepItem = { label: Msgs.GENERAL.get(key), icon: Resources.BLEEP_ICON,
                     callback: avatar.toggleBleeped, arg: _wdctx };
             }
 
@@ -174,7 +165,7 @@ public class RoomObjectController extends RoomController
                 menuItems.push(bleepItem);
             }
             if (flagItems.length > 0) {
-                menuItems.push({ label: Msgs.GENERAL.get("l.item_menu", kind), icon: AVATAR_ICON,
+                menuItems.push({ label: Msgs.GENERAL.get("l.item_menu", kind), icon: Resources.AVATAR_ICON,
                     children: flagItems });
             }
         }
@@ -398,7 +389,7 @@ public class RoomObjectController extends RoomController
         _wdctx.getWorldController().addPetMenuItems(PetName(occInfo.username), menuItems);
         if (pet.isBleepable()) {
             var key :String = pet.isBleeped() ? "b.unbleep_pet" : "b.bleep_pet";
-            menuItems.push({ label: Msgs.GENERAL.get(key), icon: BLEEP_ICON,
+            menuItems.push({ label: Msgs.GENERAL.get(key), icon: Resources.BLEEP_ICON,
                              callback: pet.toggleBleeped, arg: _wdctx });
         }
 
@@ -1042,10 +1033,5 @@ public class RoomObjectController extends RoomController
     protected var _roomAttrListener :AttributeChangeAdapter =
         new AttributeChangeAdapter(roomAttrChanged);
 
-    [Embed(source="../../../../../../../../../msoy.refactor/rsrc/media/skins/menu/avatar.png")]
-    protected static const AVATAR_ICON :Class;
-
-    [Embed(source="../../../../../../../../../msoy.refactor/rsrc/media/skins/menu/bleep.png")]
-    protected static const BLEEP_ICON :Class;
 }
 }

@@ -2,19 +2,16 @@
 // $Id: LoadingSpinner.as 18495 2009-10-26 17:47:38Z jamie $
 
 package com.threerings.orth.ui {
+import com.threerings.orth.client.Resources;
 
 import flash.display.Loader;
 import flash.display.LoaderInfo;
 import flash.display.MovieClip;
 import flash.display.Sprite;
-
 import flash.events.Event;
-
 import flash.filters.GlowFilter;
-
 import flash.text.TextField;
 import flash.text.TextFormat;
-
 import flash.utils.ByteArray;
 
 // NOTE: minimize any dependancies on non-builtin packages, because this class is
@@ -41,7 +38,7 @@ public class LoadingSpinner extends Sprite
         // avoiding using MultiLoader to minimize dependancies
         var l :Loader = new Loader();
         l.contentLoaderInfo.addEventListener(Event.COMPLETE, handleComplete);
-        l.loadBytes(new SPINNER() as ByteArray);
+        l.loadBytes(new Resources.SPINNER() as ByteArray);
 
         _label = new TextField();
         _label.width = WIDTH;
@@ -113,7 +110,5 @@ public class LoadingSpinner extends Sprite
     protected var _spinner :MovieClip;
     protected var _label :TextField;
 
-    [Embed(source="../../../../../../../../msoy.refactor/rsrc/media/loading.swf", mimeType="application/octet-stream")]
-    protected static const SPINNER :Class;
 }
 }

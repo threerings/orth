@@ -2,13 +2,12 @@
 // $Id: MemberSprite.as 19627 2010-11-24 16:02:41Z zell $
 
 package com.threerings.orth.entity.client {
+import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.orth.client.Resources;
+import com.threerings.util.CommandEvent;
 
 import flash.display.DisplayObject;
 import flash.geom.Rectangle;
-
-import com.threerings.util.CommandEvent;
-
-import com.threerings.crowd.data.OccupantInfo;
 
 /**
  * Displays a sprite for a member in a scene.
@@ -151,7 +150,7 @@ public class MemberSprite extends ActorSprite
         // check whether our idle status has changed
         if (isVisiblyIdle(newInfo as MemberInfo) == (_idleIcon == null)) {
             if (_idleIcon == null) {
-                _idleIcon = (new IDLE_ICON() as DisplayObject);
+                _idleIcon = (new Resources.IDLE_ICON() as DisplayObject);
                 addDecoration(_idleIcon, {
                     weight: OccupantSprite.DEC_WEIGHT_IDLE,
                     bounds: new Rectangle(0, 0, 50, 45)

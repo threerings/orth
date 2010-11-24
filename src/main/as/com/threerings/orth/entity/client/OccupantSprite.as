@@ -2,35 +2,24 @@
 // $Id: OccupantSprite.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.entity.client {
+import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.display.FilterUtil;
 import com.threerings.media.MediaContainer;
+import com.threerings.orth.client.Prefs;
+import com.threerings.orth.client.WalkAnimation;
+import com.threerings.util.ArrayUtil;
+import com.threerings.util.Comparators;
 import com.threerings.util.ValueEvent;
 
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.Loader;
 import flash.display.Sprite;
-
 import flash.events.MouseEvent;
 import flash.events.ProgressEvent;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-
-import com.threerings.util.ArrayUtil;
-import com.threerings.util.Comparators;
-
-import com.threerings.display.FilterUtil;
-
-import com.threerings.crowd.data.OccupantInfo;
-
-import com.threerings.msoy.ui.MsoyNameLabel;
-
-import com.threerings.msoy.chat.client.ComicOverlay;
-import com.threerings.orth.client.Prefs;
-import com.threerings.msoy.world.client.WorldContext;
-
-import com.threerings.msoy.room.data.MsoyLocation;
-import com.threerings.msoy.room.data.MsoyScene;
 
 /**
  * Displays a visualization of an occupant in a scene (could be a member, a pet, a MOB, all sorts
@@ -735,7 +724,5 @@ public class OccupantSprite extends EntitySprite
 
     protected static const DECORATION_PAD :int = 5;
 
-    [Embed(source="../../../../../../../rsrc/media/idle.swf")]
-    protected static const IDLE_ICON :Class;
 }
 }
