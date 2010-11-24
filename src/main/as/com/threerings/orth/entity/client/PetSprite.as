@@ -2,6 +2,7 @@
 // $Id: PetSprite.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.entity.client {
+
 import com.threerings.orth.scene.client.RoomController;
 import com.threerings.util.CommandEvent;
 

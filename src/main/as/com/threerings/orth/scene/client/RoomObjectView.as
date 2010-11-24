@@ -2,13 +2,14 @@
 // $Id: RoomObjectView.as 18642 2009-11-10 22:55:00Z jamie $
 
 package com.threerings.orth.scene.client {
-import com.threerings.msoy.room.client.*;
+
 import com.threerings.orth.client.PlaceLoadingDisplay;
 import com.threerings.orth.client.Prefs;
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
-import com.threerings.orth.entity.client.MobSprite;
 import com.threerings.orth.entity.client.EntitySprite;
+import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.scene.data.EntityIdent;
 import com.threerings.orth.scene.data.EntityMemories;
@@ -59,41 +60,6 @@ import com.threerings.whirled.spot.data.SceneLocation;
 import com.threerings.orth.scene.data.MemoryChangedListener;
 import com.threerings.orth.scene.data.OrthLocation;
 
-import com.threerings.msoy.avrg.client.AVRGameBackend;
-
-import com.threerings.msoy.item.data.all.Audio;
-import com.threerings.msoy.item.data.all.Item;
-import com.threerings.msoy.item.data.all.Item_UsedAs;
-import com.threerings.msoy.item.data.all.ItemIdent;
-
-import com.threerings.msoy.client.MsoyClient;
-import com.threerings.msoy.client.PlaceLoadingDisplay;
-import com.threerings.msoy.client.Msgs;
-import com.threerings.msoy.client.MsoyController;
-import com.threerings.msoy.client.Prefs;
-import com.threerings.msoy.client.UberClient;
-
-import com.threerings.msoy.data.MsoyCodes;
-
-import com.threerings.msoy.chat.client.ChatInfoProvider;
-import com.threerings.msoy.chat.client.ComicOverlay;
-import com.threerings.msoy.chat.data.MsoyChatChannel;
-
-import com.threerings.msoy.world.client.WorldClient;
-import com.threerings.msoy.world.client.WorldContext;
-
-import com.threerings.msoy.room.data.ControllableEntity;
-import com.threerings.msoy.room.data.EntityControl;
-import com.threerings.msoy.room.data.EntityMemories;
-import com.threerings.msoy.room.data.FurniUpdate_Remove;
-import com.threerings.msoy.room.data.MemberInfo;
-import com.threerings.msoy.room.data.MobInfo;
-import com.threerings.msoy.room.data.MsoyScene;
-import com.threerings.msoy.room.data.MsoySceneModel;
-import com.threerings.msoy.room.data.RoomCodes;
-import com.threerings.msoy.room.data.RoomObject;
-import com.threerings.msoy.room.data.SceneAttrsUpdate;
-import com.threerings.msoy.room.data.SceneOwnershipUpdate;
 
 /**
  * Extends the base roomview with the ability to view a RoomObject, view chat, and edit.
@@ -510,7 +476,7 @@ public class RoomObjectView extends RoomView
         var localOccupant :MemberInfo;
         localOccupant = _roomObj.occupantInfo.get(_ctx.getClient().getClientOid()) as MemberInfo;
         if (localOccupant != null && localOccupant.isStatic()) {
-            _ctx.displayInfo(MsoyCodes.GENERAL_MSGS, "m.static_avatar");
+            _ctx.displayInfo(OrthCodes.GENERAL_MSGS, "m.static_avatar");
         }
     }
 

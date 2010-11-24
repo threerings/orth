@@ -2,9 +2,12 @@
 // $Id: RoomObjectController.as 19189 2010-05-26 19:37:09Z zell $
 
 package com.threerings.orth.scene.client {
-import com.threerings.msoy.room.client.*;
+import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.UberClient;
+import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.MemberSprite;
+import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.scene.data.EntityMemories;
 
@@ -13,8 +16,6 @@ import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
 import flash.ui.Keyboard;
 import flash.utils.ByteArray;
-
-import mx.controls.Button;
 
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.MessageBundle;
@@ -38,65 +39,10 @@ import com.threerings.flex.CommandMenu;
 
 import com.threerings.whirled.data.SceneUpdate;
 
-import com.threerings.msoy.client.BootablePlaceController;
-import com.threerings.msoy.client.MemberService;
-import com.threerings.msoy.client.Msgs;
-import com.threerings.msoy.client.MsoyClient;
-import com.threerings.msoy.client.MsoyController;
-import com.threerings.msoy.client.TopPanel;
-import com.threerings.msoy.client.UberClient;
-import com.threerings.msoy.data.MemberObject;
-import com.threerings.msoy.data.MsoyCodes;
-import com.threerings.msoy.data.all.MediaDesc;
-import com.threerings.msoy.data.all.MediaDescSize;
-import com.threerings.msoy.data.all.MediaDescSize;
-import com.threerings.msoy.data.all.MemberName;
-import com.threerings.msoy.ui.BubblePopup;
-
-import com.threerings.msoy.item.client.ItemService;
-import com.threerings.msoy.item.data.all.Avatar;
-import com.threerings.msoy.item.data.all.Decor;
-import com.threerings.msoy.item.data.all.Furniture;
-import com.threerings.msoy.item.data.all.Item;
-import com.threerings.msoy.item.data.all.Item_UsedAs;
-import com.threerings.msoy.item.data.all.ItemIdent;
-import com.threerings.msoy.item.data.all.Launcher;
-import com.threerings.msoy.item.data.all.Pet;
-
-import com.threerings.msoy.notify.data.Notification;
-
-import com.threerings.msoy.world.client.WorldControlBar;
-import com.threerings.msoy.world.client.WorldController;
-
-import com.threerings.msoy.room.client.editor.DoorTargetEditController;
-import com.threerings.msoy.room.client.editor.ItemUsedDialog;
-import com.threerings.msoy.room.client.editor.RoomEditorController;
-import com.threerings.msoy.room.client.updates.FurniUpdateAction;
-import com.threerings.msoy.room.client.updates.SceneUpdateAction;
-import com.threerings.msoy.room.client.updates.UpdateAction;
-import com.threerings.msoy.room.client.updates.UpdateStack;
 
 import com.threerings.orth.scene.data.ActorInfo;
-import com.threerings.msoy.room.data.ControllableEntity;
-import com.threerings.msoy.room.data.EntityControl;
-import com.threerings.msoy.room.data.EntityMemories;
 import com.threerings.orth.scene.data.FurniData;
-import com.threerings.msoy.room.data.FurniUpdate_Add;
-import com.threerings.msoy.room.data.FurniUpdate_Remove;
-import com.threerings.msoy.room.data.MemberInfo;
 import com.threerings.orth.scene.data.OrthLocation;
-import com.threerings.msoy.room.data.MsoyScene;
-import com.threerings.msoy.room.data.MsoySceneModel;
-import com.threerings.msoy.room.data.PetInfo;
-import com.threerings.msoy.room.data.PetName;
-import com.threerings.msoy.room.data.PuppetName;
-import com.threerings.msoy.room.data.RoomObject;
-import com.threerings.msoy.room.data.SceneAttrsUpdate;
-import com.threerings.msoy.room.data.SceneOwnershipUpdate;
-
-import com.threerings.msoy.ui.MediaWrapper;
-
-import com.threerings.msoy.chat.client.ChatOverlay;
 
 /**
  * Manages the various interactions that take place in a room scene.
@@ -162,7 +108,7 @@ public class RoomObjectController extends RoomController
     public function containsPlayer (name :MemberName) :Boolean
     {
         var info :OccupantInfo = _roomObj.getOccupantInfo(name);
-        return (info != null) && !(info.username is PuppetName); 
+        return (info != null) && !(info.username is PuppetName);
     }
 
     /**
@@ -300,7 +246,7 @@ public class RoomObjectController extends RoomController
         var handleResult :Function = function (result :Object) :void {
             DoorTargetEditController.start(furniData, _wdctx);
         };
-        _roomObj.roomService.editRoom(_wdctx.resultListener(handleResult, MsoyCodes.EDITING_MSGS));
+        _roomObj.roomService.editRoom(_wdctx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
     }
 
     /**
@@ -330,7 +276,7 @@ public class RoomObjectController extends RoomController
         var handleResult :Function = function (result :Object) :void {
             beginRoomEditing();
         };
-        _roomObj.roomService.editRoom(_wdctx.resultListener(handleResult, MsoyCodes.EDITING_MSGS));
+        _roomObj.roomService.editRoom(_wdctx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
     }
 
     /**
@@ -346,7 +292,7 @@ public class RoomObjectController extends RoomController
      */
     public function handlePublishRoom () :void
     {
-        _roomObj.roomService.publishRoom(_wdctx.listener(MsoyCodes.EDITING_MSGS));
+        _roomObj.roomService.publishRoom(_wdctx.listener(OrthCodes.EDITING_MSGS));
 
         // TODO: remove this bubbley hint someday?
         BubblePopup.showHelpBubble(_wdctx, _wdctx.getControlBar().shareBtn,
@@ -535,7 +481,7 @@ public class RoomObjectController extends RoomController
     override public function deleteItem (ident :ItemIdent) :void
     {
         var svc :ItemService = _wdctx.getClient().requireService(ItemService) as ItemService;
-        svc.deleteItem(ident, _wdctx.confirmListener(MsoyCodes.EDITING_MSGS));
+        svc.deleteItem(ident, _wdctx.confirmListener(OrthCodes.EDITING_MSGS));
     }
 
     override public function rateRoom (rating :Number, onSuccess :Function) :void
@@ -593,13 +539,13 @@ public class RoomObjectController extends RoomController
             }
             if ((_scene.getPlaylistControl() != MsoySceneModel.ACCESS_EVERYONE) &&
                     !canManageRoom()) {
-                _wdctx.displayFeedback(MsoyCodes.WORLD_MSGS, "e.no_playlist_perm");
+                _wdctx.displayFeedback(OrthCodes.WORLD_MSGS, "e.no_playlist_perm");
                 return;
             }
 
         } else {
             if (!canManageRoom()) {
-                _wdctx.displayFeedback(MsoyCodes.EDITING_MSGS, "e.no_permission");
+                _wdctx.displayFeedback(OrthCodes.EDITING_MSGS, "e.no_permission");
                 return;
             }
         }
@@ -624,7 +570,7 @@ public class RoomObjectController extends RoomController
                     // audio is different
                     var rsp :String = "m.music_added" + (canManageRoom(0, false) ? "" : "_temp");
                     _roomObj.roomService.modifyPlaylist(item.itemId, true,
-                        _wdctx.confirmListener(rsp, MsoyCodes.WORLD_MSGS));
+                        _wdctx.confirmListener(rsp, OrthCodes.WORLD_MSGS));
 
                 } else {
                     // create a generic furniture descriptor
@@ -653,7 +599,7 @@ public class RoomObjectController extends RoomController
                 var msg :String = Item.getTypeKey(itemType);
                 (new ItemUsedDialog(_wdctx, Msgs.ITEM.get(msg), function () :void {
                     isvc.reclaimItem(ident,
-                        _wdctx.confirmListener(useNewItem, MsoyCodes.EDITING_MSGS,
+                        _wdctx.confirmListener(useNewItem, OrthCodes.EDITING_MSGS,
                             "e.failed_to_remove", null, "Failed to reclaim item", "item", ident));
                 })).open(true);
             } else {
@@ -661,7 +607,7 @@ public class RoomObjectController extends RoomController
             }
         };
 
-        isvc.peepItem(ident, _wdctx.resultListener(gotItem, MsoyCodes.EDITING_MSGS));
+        isvc.peepItem(ident, _wdctx.resultListener(gotItem, OrthCodes.EDITING_MSGS));
     }
 
     /**
@@ -687,7 +633,7 @@ public class RoomObjectController extends RoomController
             // only send a request if it's even here
             if (_roomObj.playlist.containsKey(new ItemIdent(itemType, itemId))) {
                 _roomObj.roomService.modifyPlaylist(itemId, false,
-                    _wdctx.confirmListener("m.music_removed", MsoyCodes.WORLD_MSGS));
+                    _wdctx.confirmListener("m.music_removed", OrthCodes.WORLD_MSGS));
             }
 
         } else if (itemType == Item.DECOR) {
@@ -826,7 +772,7 @@ public class RoomObjectController extends RoomController
      */
     protected function updateRoom (update :SceneUpdate) :void
     {
-        _roomObj.roomService.updateRoom(update, _wdctx.listener(MsoyCodes.EDITING_MSGS));
+        _roomObj.roomService.updateRoom(update, _wdctx.listener(OrthCodes.EDITING_MSGS));
     }
 
     override protected function checkMouse2 (

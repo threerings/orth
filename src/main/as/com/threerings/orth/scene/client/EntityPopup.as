@@ -12,7 +12,7 @@ import flash.display.Shape;
 
 import mx.containers.Canvas;
 
-import com.threerings.msoy.client.Msgs;
+import com.threerings.orth.client.Msgs;
 import com.threerings.msoy.ui.FloatingPanel;
 
 import com.threerings.msoy.world.client.WorldContext;

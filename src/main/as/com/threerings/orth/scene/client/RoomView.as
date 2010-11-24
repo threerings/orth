@@ -52,7 +52,7 @@ import com.threerings.orth.scene.data.FurniData;
 import com.threerings.orth.scene.data.OrthLocation;
 
 import com.threerings.msoy.client.ContextMenuProvider;
-import com.threerings.msoy.client.Msgs;
+import com.threerings.orth.client.Msgs;
 import com.threerings.msoy.client.MsoyContext;
 import com.threerings.msoy.client.MsoyPlaceView;
 import com.threerings.msoy.client.PlaceBox;

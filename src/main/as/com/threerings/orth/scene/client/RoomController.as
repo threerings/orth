@@ -2,6 +2,7 @@
 // $Id: RoomController.as 17898 2009-08-24 03:38:13Z ray $
 
 package com.threerings.orth.scene.client {
+import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.PlaceBox;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.FurniSprite;
@@ -54,7 +55,7 @@ import com.threerings.orth.scene.data.OrthLocation;
  */
 public class RoomController extends SceneController
 {
-    
+
     /** Logging facilities. */
     protected static const log :Log = Log.getLog(RoomController);
 
