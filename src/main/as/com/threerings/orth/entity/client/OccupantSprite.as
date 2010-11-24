@@ -50,12 +50,6 @@ public class OccupantSprite extends EntitySprite
     /** The minimum move speed, in pixels per second. */
     public static const MIN_MOVE_SPEED :Number = 50;
 
-    /** The sort order of a player's game icon amongst their decorations. */
-    public static const DEC_WEIGHT_GAME :int = 100;
-
-    /** The sort order of a player's avrg-specific display amongst their decorations. */
-    public static const DEC_WEIGHT_AVRG_SPECIAL :int = 150;
-
     /** The sort order of a player's party icon amongst their decorations. */
     public static const DEC_WEIGHT_PARTY :int = 200;
 

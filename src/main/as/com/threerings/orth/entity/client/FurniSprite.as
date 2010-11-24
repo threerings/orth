@@ -63,10 +63,6 @@ public class FurniSprite extends EntitySprite
         case FurniData.ACTION_PORTAL:
             return "m.portal";
 
-        case FurniData.ACTION_LOBBY_GAME:
-        case FurniData.ACTION_WORLD_GAME:
-            return "m.game";
-
         default:
             return "m.furni";
         }
@@ -86,9 +82,7 @@ public class FurniSprite extends EntitySprite
     /** Can this sprite's action be modified? */
     public function isActionModifiable () :Boolean
     {
-        // game furnis can't be turned into something else - but everything else can
-        return ! (_furni.actionType == FurniData.ACTION_LOBBY_GAME ||
-                  _furni.actionType == FurniData.ACTION_WORLD_GAME);
+        return true;
     }
 
     public function update (furni :FurniData) :void
@@ -114,10 +108,6 @@ public class FurniSprite extends EntitySprite
         case FurniData.ACTION_URL:
             // if there's no description, use the URL
             return String(actionData[actionData.length - 1]);
-
-        case FurniData.ACTION_LOBBY_GAME:
-        case FurniData.ACTION_WORLD_GAME:
-            return Msgs.GENERAL.get("i.play_game", String(actionData[1]));
 
         case FurniData.ACTION_PORTAL:
             return Msgs.GENERAL.get("i.trav_portal", String(actionData[actionData.length-1]));
@@ -223,10 +213,6 @@ public class FurniSprite extends EntitySprite
         switch (_furni.actionType) {
         case FurniData.ACTION_PORTAL:
             return PORTAL_HOVER;
-
-        case FurniData.ACTION_LOBBY_GAME:
-        case FurniData.ACTION_WORLD_GAME:
-            return GAME_HOVER;
 
         default:
             return OTHER_HOVER;

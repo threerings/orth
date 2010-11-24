@@ -35,12 +35,6 @@ public class Msgs
         return _editing;
     }
 
-    /** The game message bundle. */
-    public static function get GAME () :MessageBundle
-    {
-        return _game;
-    }
-
     /** The item message bundle. */
     public static function get ITEM () :MessageBundle
     {
@@ -102,7 +96,6 @@ public class Msgs
         _world = msgMgr.getBundle(OrthCodes.WORLD_MSGS);
         _chat = msgMgr.getBundle(OrthCodes.CHAT_MSGS);
         _editing = msgMgr.getBundle(OrthCodes.EDITING_MSGS);
-        _game = msgMgr.getBundle(OrthCodes.GAME_MSGS);
         _item = msgMgr.getBundle(OrthCodes.ITEM_MSGS);
         _notify = msgMgr.getBundle(OrthCodes.NOTIFY_MSGS);
         _prefs = msgMgr.getBundle(OrthCodes.PREFS_MSGS);
@@ -117,7 +110,6 @@ public class Msgs
     protected static var _world :MessageBundle;
     protected static var _chat :MessageBundle;
     protected static var _editing :MessageBundle;
-    protected static var _game :MessageBundle;
     protected static var _item :MessageBundle;
     protected static var _notify :MessageBundle;
     protected static var _prefs :MessageBundle;

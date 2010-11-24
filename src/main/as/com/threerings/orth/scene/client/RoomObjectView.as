@@ -2,9 +2,10 @@
 // $Id: RoomObjectView.as 18642 2009-11-10 22:55:00Z jamie $
 
 package com.threerings.orth.scene.client {
-
+import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.PlaceLoadingDisplay;
 import com.threerings.orth.client.Prefs;
+import com.threerings.orth.client.UberClient;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
@@ -413,18 +414,6 @@ public class RoomObjectView extends RoomView
             for each (var entity :EntitySprite in _entities.values()) {
                 entity.processChatMessage(ident, name, msg.message);
             }
-
-            // TODO: ugh
-            // What should happen is that we should do many operations straight on the backend
-            // (not on the sprite)
-            // then, all the backends can be iterated.
-            // Then, when an avrg is running, it just adds its own entity backend to the list
-            // and it's iterated and called just like everything else
-            // and we won't forget to add methods to avrg.
-            var avrg :AVRGameBackend = _ctx.getGameDirector().getAVRGameBackend();
-            if (avrg != null) {
-                avrg.processChatMessage(ident, msg.message);
-            }
         }
     }
 
@@ -565,51 +554,6 @@ public class RoomObjectView extends RoomView
         return null;
     }
 
-    /** Return an array of the MOB sprites associated with the identified game. */
-    public function getMobs (gameId :int) :Array
-    {
-        var result :Array = new Array();
-        for each (var occInfo :OccupantInfo in _roomObj.occupantInfo.toArray()) {
-            if (occInfo is MobInfo && MobInfo(occInfo).getGameId() == gameId) {
-                var sprite :MobSprite = (_occupants.get(occInfo.getBodyOid()) as MobSprite);
-                if (sprite) {
-                    result.push(sprite);
-                }
-            }
-        }
-        return result;
-    }
-
-    /** Return a uniquely identified MOB associated with the given game, or null. */
-    public function getMob (gameId :int, mobId :String) :MobSprite
-    {
-        for each (var occInfo :OccupantInfo in _roomObj.occupantInfo.toArray()) {
-            if (occInfo is MobInfo && MobInfo(occInfo).getGameId() == gameId &&
-                MobInfo(occInfo).getIdent() == mobId) {
-                var sprite :MobSprite = (_occupants.get(occInfo.getBodyOid()) as MobSprite);
-                if (sprite) {
-                    return sprite;
-                }
-            }
-        }
-        return null;
-    }
-
-    /** Signals that an AVRG has started (gameId != 0) or ended (gameId == 0). */
-    public function avrGameAvailable (gameId :int) :void
-    {
-        for each (var occInfo :OccupantInfo in _roomObj.occupantInfo.toArray()) {
-            if (occInfo is MobInfo) {
-                if (gameId == 0) {
-                    removeBody(occInfo.getBodyOid());
-
-                } else if (MobInfo(occInfo).getGameId() == gameId) {
-                    addBody(occInfo);
-                }
-            }
-        }
-    }
-
     override protected function backgroundFinishedLoading () :void
     {
         super.backgroundFinishedLoading();
@@ -659,14 +603,10 @@ public class RoomObjectView extends RoomView
             _roomObj.playlist.get(new ItemIdent(Item.AUDIO, _roomObj.currentSongId)) as Audio;
         const dispatchStopped :Boolean = (_musicPlayCount >= 0);
         const dispatchStarted :Boolean = (audio != null);
-        var avrg :AVRGameBackend = _ctx.getGameDirector().getAVRGameBackend();
         var entity :EntitySprite;
         if (dispatchStopped) {
             for each (entity in _entities.values()) {
                 entity.processMusicStartStop(false);
-            }
-            if (avrg != null) {
-                avrg.processMusicStartStop(false);
             }
         }
 
@@ -677,9 +617,6 @@ public class RoomObjectView extends RoomView
         if (dispatchStarted) {
             for each (entity in _entities.values()) {
                 entity.processMusicStartStop(true);
-            }
-            if (avrg != null) {
-                avrg.processMusicStartStop(true);
             }
         }
     }
@@ -803,15 +740,6 @@ public class RoomObjectView extends RoomView
         }
     }
 
-    override protected function removeSprite (sprite :EntitySprite) :void
-    {
-        super.removeSprite(sprite);
-
-        if (sprite is MobSprite) {
-            MobSprite(sprite).removed();
-        }
-    }
-
     /**
      * Called after we've told the music player about our music and the state changes.
      */
@@ -830,10 +758,6 @@ public class RoomObjectView extends RoomView
         var metadata :Object = new ImmutableProxyObject(event.value);
         for each (var entity :EntitySprite in _entities.values()) {
             entity.processMusicId3(metadata);
-        }
-        var avrg :AVRGameBackend = _ctx.getGameDirector().getAVRGameBackend();
-        if (avrg != null) {
-            avrg.processMusicId3(metadata);
         }
     }
 

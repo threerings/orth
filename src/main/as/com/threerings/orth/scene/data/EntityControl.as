@@ -9,9 +9,9 @@ import com.threerings.io.SimpleStreamableObject;
 import com.threerings.presents.dobj.DSet_Entry;
 
 /**
- * Used to coordinate the "control" of some executable client content - currently either a room
- * entity (item) or an AVRG. This mechanism elevates one specific client-side instance to play the
- * role usually reserved for server-side logic.
+ * Used to coordinate the "control" of some executable client content - currently a room entity.
+ * This mechanism elevates one specific client-side instance to play the role usually reserved
+ * for server-side logic.
  */
 public class EntityControl extends SimpleStreamableObject
     implements DSet_Entry

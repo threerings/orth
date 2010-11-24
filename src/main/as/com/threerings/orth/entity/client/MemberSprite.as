@@ -10,14 +10,6 @@ import com.threerings.util.CommandEvent;
 
 import com.threerings.crowd.data.OccupantInfo;
 
-import com.threerings.msoy.data.all.MediaDescSize;
-import com.threerings.msoy.game.data.GameSummary;
-
-import com.threerings.msoy.world.client.WorldContext;
-
-import com.threerings.msoy.room.client.OccupantSprite;
-import com.threerings.msoy.room.data.MemberInfo;
-
 /**
  * Displays a sprite for a member in a scene.
  */
@@ -74,16 +66,6 @@ public class MemberSprite extends ActorSprite
     override public function setOccupantInfo (newInfo :OccupantInfo, extraInfo :Object) :void
     {
         super.setOccupantInfo(newInfo, extraInfo);
-
-        // take care of setting up or changing our TableIcon
-        var newSummary :GameSummary = (newInfo as MemberInfo).getGameSummary();
-        if (_tableIcon != null && !_tableIcon.getGameSummary().equals(newSummary)) {
-            _tableIcon.shutdown();
-            _tableIcon = null;
-        }
-        if (_tableIcon == null && newSummary != null) {
-            _tableIcon = new TableIcon(this, newSummary);
-        }
 
         // take care of setting up or changing our PartyIcon
         var newId :int = (newInfo as MemberInfo).getPartyId();
@@ -242,9 +224,6 @@ public class MemberSprite extends ActorSprite
     /** The preferred y value, in pixels, when a user selects a location. */
     protected var _preferredY :int
 
-    /** A decoration used when we're in a table in a lobby. */
-    protected var _tableIcon :TableIcon;
-
     /** A decoration added when we've idled out. */
     protected var _idleIcon :DisplayObject;
 
@@ -253,104 +232,12 @@ public class MemberSprite extends ActorSprite
 }
 }
 
-import flash.geom.Rectangle;
-import flash.text.TextFieldAutoSize;
-import flash.text.TextField;
-
-import com.threerings.util.Command;
-import com.threerings.util.CommandEvent;
+import com.threerings.orth.entity.client.EntitySprite;
+import com.threerings.orth.entity.client.MemberSprite;
+import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.util.Log;
 
-import com.threerings.text.TextFieldUtil;
-
-import com.threerings.orth.client.Msgs;
-import com.threerings.orth.data.MediaDesc;
-import com.threerings.msoy.data.all.MediaDescSize;
-import com.threerings.msoy.data.all.MemberName;
-import com.threerings.msoy.ui.GlowSprite;
-import com.threerings.msoy.ui.ScalingMsoyMediaContainer;
-
-import com.threerings.msoy.game.data.GameSummary;
-import com.threerings.msoy.group.data.all.Group;
-import com.threerings.msoy.world.client.WorldController;
-
-import com.threerings.msoy.party.data.PartySummary;
-
-import com.threerings.msoy.room.client.MemberSprite;
-import com.threerings.msoy.room.client.EntitySprite;
-import com.threerings.msoy.room.client.OccupantSprite;
-
-/**
- * A decoration used when this actor is at a table in a lobby.
- */
-class TableIcon extends GlowSprite
-{
-    public function TableIcon (host :MemberSprite, gameSummary :GameSummary)
-    {
-        _host = host;
-        _gameSummary = gameSummary;
-        var iconSize :int = gameSummary.avrGame ? MediaDescSize.HALF_THUMBNAIL_SIZE
-                                                : MediaDescSize.THUMBNAIL_SIZE;
-        _gameThumb = ScalingMsoyMediaContainer.createView(gameSummary.thumbMedia, iconSize);
-        _gameThumb.x = _gameThumb.maxW / -2; // position with 0 at center
-        addChild(_gameThumb);
-
-        var width :int = _gameThumb.maxW;
-        var height :int = _gameThumb.maxH
-
-        if (!gameSummary.avrGame) {
-            var label :TextField = TextFieldUtil.createField(
-                Msgs.GAME.get("m.join_game", gameSummary.name),
-                {
-                    autoSize: TextFieldAutoSize.CENTER,
-                    textColor: 0xFFFFFF,
-                    outlineColor: 0x000000
-                },
-                { size: 10, bold: true });
-            label.x = label.width / -2; // position with 0 at center
-            label.y = height; // no gap between icon!
-            addChild(label);
-
-            width = Math.max(width, label.width);
-            height += label.height;
-        }
-
-        var cmd :Object;
-        var arg :Object;
-        if (gameSummary.avrGame) {
-            cmd = WorldController.JOIN_AVR_GAME;
-            arg = gameSummary.gameId;
-
-        } else {
-            var memberId :int = (host.getActorInfo().username as MemberName).getId();
-            cmd = WorldController.JOIN_PLAYER_GAME;
-            arg = [ gameSummary.gameId, memberId ];
-        }
-        init(EntitySprite.GAME_HOVER, cmd, arg);
-
-        // specify our bounds explicitly, as our width is centered at 0.
-        _host.addDecoration(this, {
-              toolTip: gameSummary.name,
-              weight: OccupantSprite.DEC_WEIGHT_GAME,
-              bounds: new Rectangle(width/-2, 0, width, height)
-         });
-    }
-
-    public function getGameSummary () :GameSummary
-    {
-        return _gameSummary;
-    }
-
-    public function shutdown () :void
-    {
-        _gameThumb.shutdown();
-        _host.removeDecoration(this);
-    }
-
-    protected var _host :MemberSprite;
-    protected var _gameSummary :GameSummary;
-    protected var _gameThumb :ScalingMsoyMediaContainer;
-}
+import flash.geom.Rectangle;
 
 class PartyIcon extends GlowSprite
 {

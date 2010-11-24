@@ -9,6 +9,7 @@ import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
+import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.scene.data.ControllableEntity;
 import com.threerings.orth.scene.data.EntityControl;
 import com.threerings.orth.scene.data.EntityMemories;
@@ -311,14 +312,6 @@ public class RoomObjectController extends RoomController
             _wdctx.getMsoyController().handleViewUrl(furni.splitActionData()[0] as String);
             return;
 
-        case FurniData.ACTION_WORLD_GAME:
-            postAction(WorldController.JOIN_AVR_GAME, int(furni.splitActionData()[0]));
-            return;
-
-        case FurniData.ACTION_LOBBY_GAME:
-            postAction(WorldController.PLAY_GAME, int(furni.splitActionData()[0]));
-            return;
-
         case FurniData.ACTION_PORTAL:
             (_wdctx.getSceneDirector() as MsoySceneDirector).traversePortal(furni.id);
             return;
@@ -587,12 +580,6 @@ public class RoomObjectController extends RoomController
                     }
                     // create it at the front of the scene, centered on the floor
                     _roomView.setInitialFurniLocation(furni);
-                    if (item is Launcher) {
-                        var launcher :Launcher = (item as Launcher);
-                        furni.actionType = launcher.isAVRG ?
-                            FurniData.ACTION_WORLD_GAME : FurniData.ACTION_LOBBY_GAME;
-                        furni.actionData = String(launcher.gameId) + ":" + launcher.name;
-                    }
                     applyUpdate(new FurniUpdateAction(_wdctx, null, furni));
                 }
             };
@@ -668,15 +655,6 @@ public class RoomObjectController extends RoomController
 
         // get a copy of the scene
         _scene = (_wdctx.getSceneDirector().getScene() as MsoyScene);
-
-        // if we're not playing a game, invite the user to play this group's game
-        if (!_wdctx.getGameDirector().isGaming()) {
-            var model :MsoySceneModel = _scene.getSceneModel() as MsoySceneModel;
-            if (model.gameId != 0) {
-                _wdctx.getNotificationDirector().addGenericNotification(
-                    MessageBundle.tcompose("m.group_game", model.gameId), Notification.INVITE);
-            }
-        }
 
         _wdctx.getChatDirector().registerCommandHandler(
             Msgs.CHAT, "action", new AvatarChatHandler(false));
