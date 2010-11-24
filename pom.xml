@@ -33,6 +33,13 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>com.samskivert</groupId>
+      <artifactId>jmustache</artifactId>
+      <version>1.0</version>
+      <scope>compile</scope>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>com.threerings</groupId>
       <artifactId>narya</artifactId>
       <version>1.2</version>

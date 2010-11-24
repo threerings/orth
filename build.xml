@@ -181,7 +181,7 @@
       <include name="**/*Record.java"/>
     </javac>
     <!-- now update the source files -->
-    <grecord classpathref="classpath">
+    <grecord classpathref="built.classpath">
       <fileset dir="${src.dir}" includes="**/*Record.java"/>
     </grecord>
   </target>
@@ -195,7 +195,7 @@
       <include name="**/*Object.java"/>
     </javac>
     <!-- now generate the associated files -->
-    <gendobj classpathref="classpath">
+    <gendobj classpathref="built.classpath">
       <fileset dir="${src.dir}" includes="**/*Object.java"/>
     </gendobj>
   </target>
@@ -210,7 +210,7 @@
       <exclude name="**/InvocationService.java"/>
     </javac>
     <!-- now generate the associated files -->
-    <genservice header="lib/SOURCE_HEADER" asroot="src/main/as" classpathref="classpath">
+    <genservice header="lib/SOURCE_HEADER" asroot="src/main/as" classpathref="built.classpath">
       <fileset dir="${src.dir}" includes="**/*Service.java">
         <exclude name="**/InvocationService.java"/>
         <exclude name="**/peer/**"/>
@@ -220,7 +220,7 @@
       <providerless service="SimulatorService"/>
       <providerless service="TimeBaseService"/>
     </genservice>
-    <genservice header="lib/SOURCE_HEADER" classpathref="classpath">
+    <genservice header="lib/SOURCE_HEADER" classpathref="built.classpath">
       <fileset dir="${src.dir}" includes="**/peer/**/*Service.java"/>
       <fileset dir="${src.dir}" includes="**/admin/**/*Service.java"/>
     </genservice>
@@ -236,7 +236,7 @@
       <exclude name="**/InvocationReceiver.java"/>
     </javac>
     <!-- now generate the associated files -->
-    <genreceiver header="lib/SOURCE_HEADER" classpathref="classpath">
+    <genreceiver header="lib/SOURCE_HEADER" classpathref="built.classpath">
       <fileset dir="${src.dir}" includes="**/*Receiver.java"
         excludes="**/InvocationReceiver.java"/>
     </genreceiver>
