@@ -100,13 +100,13 @@ public class EntitySprite
     // from RoomElement
     public function getLayoutType () :int
     {
-        return RoomCodes.LAYOUT_NORMAL;
+        return OrthSceneCodes.LAYOUT_NORMAL;
     }
 
     // from RoomElement
     public function getRoomLayer () :int
     {
-        return RoomCodes.FURNITURE_LAYER;
+        return OrthSceneCodes.FURNITURE_LAYER;
     }
 
     // from RoomElement

@@ -33,7 +33,7 @@ public class DecorSprite extends FurniSprite
 
     override public function getRoomLayer () :int
     {
-        return RoomCodes.DECOR_LAYER;
+        return OrthSceneCodes.DECOR_LAYER;
     }
 
     public function updateFromDecor (decor :Decor) :void

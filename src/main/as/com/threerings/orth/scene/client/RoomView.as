@@ -8,6 +8,7 @@ import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.EntitySprite;
+import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.scene.client.layout.RoomLayout;
 import com.threerings.orth.scene.client.layout.RoomLayoutFactory;
 import com.threerings.orth.scene.data.DecorCodes;
@@ -494,7 +495,7 @@ public class RoomView extends Sprite
     /**
      * Sets the background sprite. If the data value is null, simply removes the old one.
      */
-    public function setBackground (decor :Decor) :void
+    public function setBackground (decor :DecorGeometry) :void
     {
         if (_bg != null) {
             removeSprite(_bg);
@@ -825,7 +826,7 @@ public class RoomView extends Sprite
             return; // return if there's nothing to scroll
         }
 
-        var centerX :int = _centerSprite.x + _centerSprite.getLayoutHotSpot().x;
+        var centerX :int = _centerSprite.viz.x + _centerSprite.getLayoutHotSpot().x;
         var newX :Number = centerX - (_actualWidth / scaleX)/2;
         newX = Math.min(_scene.getWidth() - rect.width, Math.max(0, newX));
 
@@ -1010,7 +1011,7 @@ public class RoomView extends Sprite
     protected function addSprite (sprite :EntitySprite) :void
     {
         var index :int = (sprite is DecorSprite) ? 0 : 1;
-        addChildAt(sprite, index);
+        addChildAt(sprite.viz, index);
         addToEntityMap(sprite);
     }
 //  This belongs with the above... somehow: but layout timing booches it
@@ -1024,19 +1025,19 @@ public class RoomView extends Sprite
      */
     protected function removeSprite (sprite :EntitySprite) :void
     {
-        if (sprite.parent != this) {
+        if (sprite.viz.parent != this) {
             // TODO: I believe this happens when you leave a room and your greeter enters;
             // TODO: the sprite with bodyOid=0 ends up in _pendingRemovals and _occupants
             // TODO: both. I don't have time to track down precisely why this happens, but
             // TODO: let's stop throwing exceptions halfway through this code.
             log.warning("Trying to remove a sprite that's not our child", "sprite", sprite,
-                        "parent", sprite.parent);
+                        "parent", sprite.viz.parent);
             return;
         }
 
         _ctrl.setSpriteHovered(sprite, false);
         removeFromEntityMap(sprite);
-        removeChild(sprite);
+        removeChild(sprite.viz);
         _ctx.getMediaDirector().returnSprite(sprite);
 
         // clear any popup associated with it

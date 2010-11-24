@@ -16,14 +16,14 @@ public interface RoomElement extends Snapshottable
     /**
      * Return the type of layout to do for this element.
      *
-     * @return probably RoomCodes.LAYOUT_NORMAL.
+     * @return probably OrthSceneCodes.LAYOUT_NORMAL.
      */
     function getLayoutType () :int
 
     /**
      * Return the layer upon which this element should be layed out.
      *
-     * @return probably RoomCodes.FURNITURE_LAYER.
+     * @return probably OrthSceneCodes.FURNITURE_LAYER.
      */
     function getRoomLayer () :int;
 

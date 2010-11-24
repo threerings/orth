@@ -119,7 +119,7 @@ public class OrthSceneDirector extends SceneDirector
         }
 
         // otherwise try to deal with the player getting bumped back from a locked scene
-        if (reason == RoomCodes.E_ENTRANCE_DENIED) {
+        if (reason == OrthSceneCodes.E_ENTRANCE_DENIED) {
             bounceBack(_sceneId, pendingPreviousScene, reason);
         }
     }
@@ -257,7 +257,7 @@ public class OrthSceneDirector extends SceneDirector
 
     protected function memberMessageReceived (event :MessageEvent) :void
     {
-        if (event.getName() == RoomCodes.FOLLOWEE_MOVED) {
+        if (event.getName() == OrthSceneCodes.FOLLOWEE_MOVED) {
             var sceneId :int = int(event.getArgs()[0]);
             log.info("Following " + _worldctx.getMemberObject().following + " to " + sceneId + ".");
             moveTo(sceneId);

@@ -51,13 +51,13 @@ public class RoomElementSprite extends Sprite
     // from RoomElement
     public function getLayoutType () :int
     {
-        return RoomCodes.LAYOUT_NORMAL;
+        return OrthSceneCodes.LAYOUT_NORMAL;
     }
 
     // from RoomElement
     public function getRoomLayer () :int
     {
-        return RoomCodes.FOREGROUND_LAYER;
+        return OrthSceneCodes.FOREGROUND_LAYER;
     }
 
     // from RoomElement
