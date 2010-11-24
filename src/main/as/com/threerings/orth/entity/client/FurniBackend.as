@@ -3,7 +3,7 @@
 
 package com.threerings.orth.entity.client {
 
-import com.threerings.msoy.client.DeploymentConfig;
+import com.threerings.orth.client.DeploymentConfig;
 
 public class FurniBackend extends EntityBackend
 {

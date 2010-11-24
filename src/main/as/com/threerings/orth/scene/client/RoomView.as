@@ -51,16 +51,16 @@ import com.threerings.orth.scene.data.DecorInfo;
 import com.threerings.orth.scene.data.FurniData;
 import com.threerings.orth.scene.data.OrthLocation;
 
-import com.threerings.msoy.client.ContextMenuProvider;
+import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.Msgs;
-import com.threerings.msoy.client.MsoyContext;
-import com.threerings.msoy.client.MsoyPlaceView;
-import com.threerings.msoy.client.PlaceBox;
-import com.threerings.msoy.client.Prefs;
+import com.threerings.orth.client.MsoyContext;
+import com.threerings.orth.client.MsoyPlaceView;
+import com.threerings.orth.client.PlaceBox;
+import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.Snapshottable;
-import com.threerings.msoy.client.SnapshotUtil;
-import com.threerings.msoy.client.UberClient;
-import com.threerings.msoy.client.Zoomable;
+import com.threerings.orth.client.SnapshotUtil;
+import com.threerings.orth.client.UberClient;
+import com.threerings.orth.client.Zoomable;
 
 import com.threerings.msoy.data.all.MediaDesc;
 

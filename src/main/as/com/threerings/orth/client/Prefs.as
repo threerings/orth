@@ -16,7 +16,7 @@ import com.threerings.util.StringUtil;
  * Dispatched when a piece of media is bleeped or unbleeped.
  * This is dispatched on the 'events' object.
  *
- * @eventType com.threerings.msoy.client.Prefs.BLEEPED_MEDIA;
+ * @eventType com.threerings.orth.client.Prefs.BLEEPED_MEDIA;
  * name: mediaId (may be the GLOBAL_BLEEP constant)
  * value: bleeped (Boolean)
  */
@@ -26,7 +26,7 @@ import com.threerings.util.StringUtil;
  * Dispatched when a tutorial id is ignored.
  * This is dispatched on the 'events' object.
  *
- * @eventType com.threerings.msoy.client.Prefs.IGNORED_TUTORIAL_IDS;
+ * @eventType com.threerings.orth.client.Prefs.IGNORED_TUTORIAL_IDS;
  * name: tutorialItemId
  * value: ignored (Boolean)
  */
@@ -36,7 +36,7 @@ import com.threerings.util.StringUtil;
  * Dispatched when a preference is changed.
  * This is dispatched on the 'events' object.
  *
- * @eventType com.threerings.msoy.client.Prefs.PREF_SET;
+ * @eventType com.threerings.orth.client.Prefs.PREF_SET;
  */
 [Event(name="ConfigValSet", type="com.threerings.util.NamedValueEvent")]
 

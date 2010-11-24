@@ -9,6 +9,8 @@ import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
+import com.threerings.orth.scene.data.ControllableEntity;
+import com.threerings.orth.scene.data.EntityControl;
 import com.threerings.orth.scene.data.EntityMemories;
 
 import flash.events.Event;
@@ -895,12 +897,6 @@ public class RoomObjectController extends RoomController
                     if (winfo.bodyOid == ourOid) {
                         // dispatch got-control to the avatar, it should supress repeats
                         dispatchEntityGotControl(ident);
-                        return true;
-
-                    } else if (winfo.username is PuppetName) {
-                        // Anyone can control the puppet, yet no instance is "in control".
-                        // TODO: shit, shit, shit, shit. We might have to manage control or
-                        // it could freak out avatars. I'm betting that most won't be affected...
                         return true;
 
                     } else {

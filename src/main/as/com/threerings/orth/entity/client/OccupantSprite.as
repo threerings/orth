@@ -26,7 +26,7 @@ import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.msoy.ui.MsoyNameLabel;
 
 import com.threerings.msoy.chat.client.ComicOverlay;
-import com.threerings.msoy.client.Prefs;
+import com.threerings.orth.client.Prefs;
 import com.threerings.msoy.world.client.WorldContext;
 
 import com.threerings.msoy.room.data.MsoyLocation;

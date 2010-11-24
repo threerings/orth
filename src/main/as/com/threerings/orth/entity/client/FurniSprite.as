@@ -16,7 +16,7 @@ import flash.geom.Point;
 
 import com.threerings.util.CommandEvent;
 
-import com.threerings.msoy.client.LoadingWatcher;
+import com.threerings.orth.client.LoadingWatcher;
 import com.threerings.orth.client.Msgs;
 
 import com.threerings.msoy.world.client.WorldContext;
