@@ -14,11 +14,13 @@ import com.samskivert.util.ObserverList;
 import com.threerings.crowd.peer.server.CrowdPeerManager;
 
 import com.threerings.presents.peer.data.ClientInfo;
+import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerNode;
 import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.peer.data.OrthClientInfo;
+import com.threerings.orth.peer.data.OrthNodeObject;
 
 /**
  *
@@ -43,6 +45,11 @@ public abstract class OrthPeerManager extends CrowdPeerManager
         super(cycle);
     }
 
+    @Override // from CrowdPeerManager
+    protected NodeObject createNodeObject ()
+    {
+        return (_onobj = new OrthNodeObject());
+    }
 
     @Override // from CrowdPeerManager
     protected void initClientInfo (PresentsSession client, ClientInfo info)
@@ -82,7 +89,7 @@ public abstract class OrthPeerManager extends CrowdPeerManager
         super.connectedToPeer(peer);
 
         // notify our peer observers
-        final MsoyNodeObject nodeobj = (MsoyNodeObject)peer.nodeobj;
+        final OrthNodeObject nodeobj = (OrthNodeObject)peer.nodeobj;
         peerObs.apply(new ObserverList.ObserverOp<PeerObserver>() {
             public boolean apply (PeerObserver observer) {
                 observer.connectedToPeer(nodeobj);
@@ -197,11 +204,13 @@ public abstract class OrthPeerManager extends CrowdPeerManager
     public static interface PeerObserver
     {
         /** Called when a peer logs onto this node. */
-        void connectedToPeer (MsoyNodeObject nodeobj);
+        void connectedToPeer (OrthNodeObject nodeobj);
 
         /** Called when a peer logs off of this node. */
         void disconnectedFromPeer (String node);
     }
+
+    protected OrthNodeObject _onobj;
 
     protected final Map<Class<?>, Observation<?>> _observations = Maps.newHashMap();
 }
