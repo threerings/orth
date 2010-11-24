@@ -5,7 +5,7 @@ package com.threerings.orth.data;
 
 import com.threerings.orth.scene.data.EntityMedia;
 
-public interface MediaDesc extends EntityMedia
+public interface MediaDesc
 {
     /** A constant used to indicate that an image does not exceed half thumbnail size in either
      * dimension. */
@@ -27,6 +27,16 @@ public interface MediaDesc extends EntityMedia
      * in the vertical dimension but does not exceed thumbnail size in either dimension. */
     byte HALF_VERTICALLY_CONSTRAINED = 4;
 
+    /**
+     * Returns the path of the URL that references this media.
+     */
+    String getMediaPath ();
+
+    /**
+     * Returns the mime type of this media.
+     */
+    byte getMimeType ();
+    
     /** The size constraint on this media, if any. See {@link #computeConstraint}. */
     byte getConstraint ();
 
