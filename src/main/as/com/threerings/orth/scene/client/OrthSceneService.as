@@ -5,18 +5,16 @@ package com.threerings.orth.scene.client {
 
 import com.threerings.io.TypedArray;
 import com.threerings.orth.scene.data.EntityIdent;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService_ConfirmListener;
 import com.threerings.presents.client.InvocationService_InvocationListener;
 import com.threerings.presents.client.InvocationService_ResultListener;
 import com.threerings.whirled.data.SceneUpdate;
-import com.threerings.whirled.spot.data.Location;
 
 /**
  * An ActionScript version of the Java RoomService interface.
  */
-public interface RoomService extends InvocationService
+public interface OrthSceneService extends InvocationService
 {
     // from Java interface RoomService
     function editRoom (arg1 :InvocationService_ResultListener) :void;
