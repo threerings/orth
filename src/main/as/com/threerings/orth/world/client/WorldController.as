@@ -49,14 +49,6 @@ import com.threerings.msoy.item.data.all.Audio;
 import com.threerings.msoy.item.data.all.Item;
 import com.threerings.msoy.item.data.all.ItemIdent;
 
-import com.threerings.msoy.avrg.client.AVRGamePanel;
-import com.threerings.msoy.game.client.GameContext;
-import com.threerings.msoy.game.client.GameDirector;
-import com.threerings.msoy.game.client.GameGameService;
-import com.threerings.msoy.game.client.ParlorGamePanel;
-import com.threerings.msoy.game.client.TablesWaitingPanel;
-import com.threerings.msoy.game.data.ParlorGameConfig;
-
 import com.threerings.msoy.client.BootablePlaceController;
 import com.threerings.msoy.client.ControlBar;
 import com.threerings.msoy.client.DeploymentConfig;
@@ -111,9 +103,6 @@ import com.threerings.msoy.room.data.RoomObject;
  */
 public class WorldController extends MsoyController
 {
-    // Testing constant, for the time being...
-    public static const FUCK_THE_URL :Boolean = false;
-
     /** Command to display the chat channel menu. */
     public static const POP_CHANNEL_MENU :String = "PopChannelMenu";
 
@@ -135,18 +124,6 @@ public class WorldController extends MsoyController
     /** Command to go to a member's home scene. */
     public static const GO_MEMBER_HOME :String = "GoMemberHome";
 
-    /** Command to play a game. */
-    public static const PLAY_GAME :String = "PlayGame";
-
-    /** Command to show a lobby. PLAY_GAME should be preferred in most cases. */
-    public static const SHOW_LOBBY :String = "ShowLobby";
-
-    /** Command to join a member's current game. */
-    public static const JOIN_PLAYER_GAME :String = "JoinPlayerGame";
-
-    /** Command to join an in-world game. */
-    public static const JOIN_AVR_GAME :String = "JoinAVRGame";
-
     /** Command to invite someone to be a friend. */
     public static const INVITE_FRIEND :String = "InviteFriend";
 
@@ -158,9 +135,6 @@ public class WorldController extends MsoyController
 
     /** Command to logoff an im account. */
     public static const UNREGISTER_IM :String = "UnregisterIM";
-
-    /** Command to view the trophies awarded by a game, arg is [ gameId ] */
-    public static const VIEW_TROPHIES :String = "ViewTrophies";
 
     /** Command to visit a member's current location */
     public static const VISIT_MEMBER :String = "VisitMember";
@@ -176,12 +150,6 @@ public class WorldController extends MsoyController
 
     /** Command to view the "mail" page. */
     public static const VIEW_MAIL :String = "ViewMail";
-
-    /** Command to view details for a specific game. Arg: [ gameId ] */
-    public static const VIEW_GAME :String = "ViewGame";
-
-    /** Command to view comments for a specific game. Arg: [ gameId ] */
-    public static const VIEW_GAME_COMMENTS :String = "ViewGameComments";
 
     /** Command to issue an invite to a current guest. */
     public static const INVITE_GUEST :String = "InviteGuest";
@@ -201,9 +169,6 @@ public class WorldController extends MsoyController
     /** Command to view the passport page. */
     public static const VIEW_PASSPORT :String = "ViewPassport";
 
-    /** Command to display the game menu. */
-    public static const POP_GAME_MENU :String = "PopGameMenu";
-
     /** Command to play music. Arg: null to stop, or [ Audio, playCounter (int) ] */
     public static const PLAY_MUSIC :String = "PlayMusic";
 
@@ -218,9 +183,6 @@ public class WorldController extends MsoyController
 
     /** Command to request detailed info on a party. */
     public static const GET_PARTY_DETAIL :String = "GetPartyDetail";
-
-    /** Command to start the whirled tour. */
-    public static const START_TOUR :String = "StartTour";
 
     // statically reference classes we require
     ItemMarshaller;
@@ -238,26 +200,6 @@ public class WorldController extends MsoyController
             ExternalInterface.addCallback("gwtMediaPlayback", externalPlayback);
         } catch (err :Error) {
             // oh well
-        }
-    }
-
-    /**
-     * Sets (or clears) the current AVRG overlay.
-     */
-    public function setAVRGamePanel (panel :AVRGamePanel) :void
-    {
-        var container :PlaceBox = _wctx.getTopPanel().getPlaceContainer();
-
-        if (_avrGamePanel) {
-            if (_avrGamePanel == panel) {
-                return;
-            }
-            container.removeOverlay(_avrGamePanel);
-            _avrGamePanel = null;
-        }
-        if (panel) {
-            container.addOverlay(panel, PlaceBox.LAYER_AVRG_PANEL);
-            _avrGamePanel = panel;
         }
     }
 
@@ -303,17 +245,14 @@ public class WorldController extends MsoyController
         CommandMenu.addSeparator(menuData);
 
         const place :PlaceView = _wctx.getPlaceView();
-        const allowHistoryToggle :Boolean = !(place is ParlorGamePanel) ||
-            (place as ParlorGamePanel).shouldUseChatOverlay();
-        if (allowHistoryToggle) {
-            menuData.push({ command: TOGGLE_CHAT_HIDE, label: Msgs.GENERAL.get(
+
+        menuData.push({ command: TOGGLE_CHAT_HIDE, label: Msgs.GENERAL.get(
                     Prefs.getShowingChatHistory() ? "b.hide_chat" : "b.show_chat") });
-        }
+
         menuData.push({ command: TOGGLE_CHAT_SIDEBAR, label: Msgs.GENERAL.get(
             Prefs.getSidebarChat() ? "b.overlay_chat" : "b.sidebar_chat") });
-        menuData.push({ command: TOGGLE_OCC_LIST, label: Msgs.GENERAL.get(place is ParlorGamePanel ?
-            (Prefs.getShowingOccupantList() ? "b.hide_player_list" : "b.show_player_list") :
-            (Prefs.getShowingOccupantList() ? "b.hide_occ_list" : "b.show_occ_list")) });
+        menuData.push({ command: TOGGLE_OCC_LIST, label: Msgs.GENERAL.get(
+            Prefs.getShowingOccupantList() ? "b.hide_occ_list" : "b.show_occ_list") });
 
         CommandMenu.addSeparator(menuData);
 
@@ -389,10 +328,6 @@ public class WorldController extends MsoyController
 //                menuData.push({ label: Msgs.GENERAL.get("b.group_page"),
 //                    command: MsoyController.VIEW_GROUP, arg: model.ownerId });
 //            }
-            if (model.gameId != 0) {
-                menuData.push({ label: Msgs.GENERAL.get("b.group_game"),
-                    command: WorldController.PLAY_GAME, arg: model.gameId });
-            }
         }
 
         CommandMenu.addSeparator(menuData);
@@ -434,22 +369,6 @@ public class WorldController extends MsoyController
         };
         var isvc :ItemService = _wctx.getClient().requireService(ItemService) as ItemService;
         isvc.getCatalogId(ident, _wctx.resultListener(resultHandler));
-    }
-
-    /**
-     * Handles the VIEW_GAME command.
-     */
-    public function handleViewGame (gameId :int) :void
-    {
-        displayPage("games", "d_" + gameId);
-    }
-
-    /**
-     * Handles the VIEW_GAME_COMMENTS command.
-     */
-    public function handleViewGameComments (gameId :int) :void
-    {
-        displayPage("games", "d_" + gameId + "_c");
     }
 
     /**
@@ -523,13 +442,7 @@ public class WorldController extends MsoyController
             displayPage("world", "s" + sceneId);
 
         } else {
-            const gameId :int = getCurrentGameId();
-            if (gameId != 0) {
-                displayPage("games", "d_" + gameId);
-
-            } else {
-                displayPage("", "");
-            }
+            displayPage("", "");
         }
     }
 
@@ -552,27 +465,11 @@ public class WorldController extends MsoyController
     }
 
     /**
-     * Handles the VIEW_TROPHIES command.
-     */
-    public function handleViewTrophies (gameId :int) :void
-    {
-        displayPage("games", "d_" + gameId + "_t");
-    }
-
-    /**
      * Handles the VIEW_PASSPORT command.
      */
     public function handleViewPassport () :void
     {
         displayPage("me", "passport");
-    }
-
-    /**
-     * Handles the VIEW_GAMES command.
-     */
-    override public function handleViewGames () :void
-    {
-        displayPage("games", "");
     }
 
     /**
@@ -658,101 +555,10 @@ public class WorldController extends MsoyController
      */
     public function handleGoLocation (placeOid :int) :void
     {
-        if (FUCK_THE_URL || !displayPageGWT("world", "l" + placeOid)) {
+        if (!displayPageGWT("world", "l" + placeOid)) {
             // fall back to breaking the back button
             _wctx.getLocationDirector().moveTo(placeOid);
         }
-    }
-
-    /**
-     * Handles PLAY_GAME.
-     */
-    public function handlePlayGame (gameId :int, ghost :String = null, gport :int = 0) :void
-    {
-        // if we're running in the GWT app, we need to route through GWT to keep the URL valid
-        if (!FUCK_THE_URL && inGWTApp() && displayPage("world", "game_p_" + gameId)) {
-            log.info("Doing play game via URL", "game", gameId, "ghost", ghost, "gport", gport);
-        } else {
-            // otherwise, play the game directly
-            _wctx.getGameDirector().playNow(gameId, 0, ghost, gport);
-        }
-    }
-
-    /**
-     * Handles SHOW_LOBBY.
-     */
-    public function handleShowLobby (gameId :int, ghost :String = null, gport :int = 0) :void
-    {
-        // we do not try to generate a URL for this behavior. PLAY_GAME is preferred, and
-        // this command is rarely used.
-        _wctx.getGameDirector().enterLobby(gameId, ghost, gport);
-    }
-
-    /**
-     * Handles the JOIN_PLAYER_GAME command. (Generated by chat-based invites.)
-     */
-    public function handleJoinPlayerGame (gameId :int, playerId :int) :void
-    {
-        // if we're running in the GWT app, we need to route through GWT to keep the URL valid
-        if (!FUCK_THE_URL && inGWTApp() &&
-                displayPage("world", "game_p_" + gameId + "_" + playerId)) {
-            log.info("Doing join player via URL", "game", gameId, "player", playerId);
-        } else {
-            // otherwise, play the game directly
-            _wctx.getGameDirector().playNow(gameId, playerId);
-        }
-    }
-
-    /**
-     * Handles JOIN_AVR_GAME.
-     */
-    public function handleJoinAVRGame (
-        gameId :int, sceneId :int = int.MIN_VALUE,
-        token :String = "", inviterMemberId :int = 0) :void
-    {
-        // 0 means "no scene"
-        // MIN_VALUE means "user's home, or current scene"
-        if (sceneId == int.MIN_VALUE) {
-            var curScene :int = getCurrentSceneId();
-            sceneId = (curScene != 0) ? curScene : _wctx.getMemberObject().getHomeSceneId();
-        }
-
-        // either we don't want a scene, or we're already in the right one, carry on
-        if (sceneId == getCurrentSceneId()) {
-            _wctx.getGameDirector().activateAVRGame(
-                gameId, StringUtil.deNull(token), inviterMemberId);
-            if (sceneId != 0 && inGWTApp() && !FUCK_THE_URL) {
-                // the AVRG is not really a URL, so tell the browser to display the scene
-                // (do it later so the WorldClient javascript method can exit first)
-                // BUG: This causes problems on IE8 if our GWT app is in an iframe. Instead of
-                // quitely changing the URL, it reloads the frame after a short interval, causing
-                // the AVRG to exit. I suspect it is due to GWT 1.7's history implementation not
-                // being updated to remove IE7 hacks and/or include new IE8 hacks. Only facebook-
-                // integrated games that are not roomless seem to be affected. Since there are
-                // currently none of those, I'm leaving it in for the moment because it still
-                // provides a benefit for on-site AVRGs.
-                // TODO: find a minimum test case and submit to GWT issues or maybe just shoot self
-                DelayUtil.delayFrame(displayPage, ["world", "s" + sceneId]);
-            }
-            return;
-        }
-
-        // observe location changes
-        var adapter :LocationAdapter;
-        // retry this function on location change
-        var didChange :Function = function (place :PlaceObject) :void {
-            _wctx.getLocationDirector().removeLocationObserver(adapter);
-            handleJoinAVRGame(gameId, sceneId, token, inviterMemberId);
-        };
-        // remove the observer on failure
-        var changeFailed :Function = function (placeId :int, reason :String) :void {
-            _wctx.getLocationDirector().removeLocationObserver(adapter);
-        }
-        adapter = new LocationAdapter(null, didChange, changeFailed);
-        _wctx.getLocationDirector().addLocationObserver(adapter);
-
-        // now, move to the scene
-        _wctx.getSceneDirector().moveTo(sceneId);
     }
 
     /**
@@ -803,21 +609,9 @@ public class WorldController extends MsoyController
      */
     public function handleComplainMember (memberId :int, username :String) :void
     {
-        var service :Function;
-        var gctx :GameContext = _wctx.getGameDirector().getGameContext();
-        // if we're playing a game, but it's not an AVRG, this complaint goes to the game server
-        if (gctx != null && _wctx.getGameDirector().getAVRGameBackend() == null) {
-            service = function (complaint :String) :void {
-                var gsvc :GameGameService =
-                    (gctx.getClient().requireService(GameGameService) as GameGameService);
-                gsvc.complainPlayer(memberId, complaint);
-            };
-
-        } else {
-            service = function (complaint :String) :void {
-                msvc().complainMember(memberId, complaint);
-            };
-        }
+        var service :Function = function (complaint :String) :void {
+            msvc().complainMember(memberId, complaint);
+        };
 
         _topPanel.callLater(function () :void { new ComplainDialog(_wctx, username, service); });
     }
@@ -876,20 +670,6 @@ public class WorldController extends MsoyController
     public function getMusicPlayer () :AudioPlayer
     {
         return _musicPlayer;
-    }
-
-    /**
-     * Handles the POP_GAME_MENU command.
-     */
-    public function handlePopGameMenu (trigger :Button) :void
-    {
-        var menuData :Array = [];
-        if (_wctx.getGameDirector().populateGameMenu(menuData)) {
-            if (!_wctx.getGameDirector().isAVRGame()) {
-                addFrameColorOption(menuData);
-            }
-            popControlBarMenu(menuData, trigger);
-        }
     }
 
     /**
@@ -953,19 +733,11 @@ public class WorldController extends MsoyController
     }
 
     /**
-     * Returns the game id, or 0 if none.
-     */
-    public function getCurrentGameId () :int
-    {
-        return _wctx.getGameDirector().getGameId();
-    }
-
-    /**
      * Called by the scene director when we've traveled to a new scene.
      */
     public function wentToScene (sceneId :int) :void
     {
-        if (FUCK_THE_URL || UberClient.isFeaturedPlaceView()) {
+        if (UberClient.isFeaturedPlaceView()) {
             return;
         }
         // this will result in another request to move to the scene we're already in, but we'll
@@ -985,17 +757,6 @@ public class WorldController extends MsoyController
         if (sceneId != 0) {
             displayPageGWT("world", "s" + sceneId);
         }
-    }
-
-    /**
-     * If we're joining a game lobby and have not yet logged onto the world server, we start the
-     * game lobby connection process immediately instead of waiting until we're connected to the
-     * world server. This short-circuits the normal logon-go process.
-     */
-    public function preLogonGo (params :Object) :void
-    {
-        _didFirstLogonGo = true;
-        goToPlace(params);
     }
 
     /**
@@ -1021,28 +782,9 @@ public class WorldController extends MsoyController
             _suppressTokenForScene = true;
             handleVisitMember(int(params["memberScene"]));
 
-        } else if (null != params["gameOid"]) {
-            // note: this check *must* come before the gameId != null check below
-            _suppressTokenForScene = true;
-            _wctx.getGameDirector().enterGame(int(params["gameId"]), int(params["gameOid"]));
-
-        } else if (null != params["gameId"] || null != params["gameLobby"] /*legacy*/) {
-            _suppressTokenForScene = true;
-            var gameId :int = int(params["gameId"]) || int(params["gameLobby"] /* legacy */);
-            _wctx.getGameDirector().playNow(gameId, int(params["playerId"]),
-                params["ghost"] as String, int(params["gport"]),
-                params["inviteToken"] as String, int(params["inviterMemberId"]));
-
         } else if (null != params["noplace"]) {
             // go to no place- we just want to chat with our friends
             _wctx.setPlaceView(new NoPlaceView());
-
-        } else if (null != params["worldGame"]) {
-            handleJoinAVRGame(int(params["worldGame"]), int(params["gameRoomId"]),
-                              params["inviteToken"] as String, int(params["inviterMemberId"]));
-
-        } else if ("true" == params["tour"]) {
-            _wctx.getTourDirector().startTour();
 
         } else if (null != params["groupChat"]) {
             var groupId :int = int(params["groupChat"]);
@@ -1053,9 +795,7 @@ public class WorldController extends MsoyController
             }
 
             // fix the URL
-            if (_wctx.getGameDirector().getGameConfig() != null) {
-                // For now, leave the URL alone if we're in a game.
-            } else if (_wctx.getSceneDirector().getScene() != null) {
+            if (_wctx.getSceneDirector().getScene() != null) {
                 displayPageGWT("world", "s" + _wctx.getSceneDirector().getScene().getId());
             } else {
                 displayPageGWT("world", "m" + _wctx.getMyId());
@@ -1097,14 +837,6 @@ public class WorldController extends MsoyController
             // go to our home scene (this doe the right thing for guests as well)
             _wctx.getSceneDirector().moveTo(_wctx.getMemberObject().getHomeSceneId());
         }
-    }
-
-    /**
-     * Handles the START_TOUR command.
-     */
-    public function handleStartTour () :void
-    {
-        _wctx.getTourDirector().startTour();
     }
 
     // from MsoyController
@@ -1160,21 +892,12 @@ public class WorldController extends MsoyController
         plinfo.sceneId = (scene == null) ? 0 : scene.getId();
         plinfo.sceneName = (scene == null) ? null : scene.getName();
 
-        var gdir :GameDirector = _wctx.getGameDirector();
-        plinfo.gameId = gdir.getGameId();
-        plinfo.gameName = gdir.getGameName();
-        plinfo.avrGame = gdir.isAVRGame();
-
         return plinfo;
     }
 
     // from MsoyController
     override public function canManagePlace () :Boolean
     {
-        // TODO: this function should really be split into canManageRoom and canManageGame because
-        // of AVRGs being both. ShareDialog currently allows a room manager to embed out an AVRG
-        // because of this, but it's not like the feature is that popular
-
         // support can manage any place...
         if (_wctx.getTokens().isSupport()) {
             return true;
@@ -1183,12 +906,6 @@ public class WorldController extends MsoyController
         const view :Object = _topPanel.getPlaceView();
         if (view is RoomView) {
             return RoomView(view).getRoomController().canManageRoom();
-        }
-
-        const gameCfg :ParlorGameConfig = _wctx.getGameDirector().getGameConfig();
-        if (gameCfg != null) {
-            // in games, we can "manage" if we're the owner
-            return gameCfg.game.creatorId == _wctx.getMyId();
         }
 
         return false;
@@ -1207,10 +924,6 @@ public class WorldController extends MsoyController
         var placeCtrl :Object = null;
         if (addWorldItems) {
             placeCtrl = _wctx.getLocationDirector().getPlaceController();
-            if (placeCtrl == null) {
-                // check the gamecontext's place
-                placeCtrl = _wctx.getGameDirector().getGameController();
-            }
         }
 
         var followItem :Object = null;
@@ -1368,13 +1081,8 @@ public class WorldController extends MsoyController
         if (!sanctionClosePlaceView()) {
             return;
         }
-        if (_wctx.getPlaceView() is ParlorGamePanel) {
-            // if we're in a game, closing means closing the game and going back to our place
-            handleMoveBack(true);
-        } else {
-            // if we're in the whirled, closing means closing the flash client totally
-            _wctx.getMsoyClient().closeClient();
-        }
+        // if we're in the whirled, closing means closing the flash client totally
+        _wctx.getMsoyClient().closeClient();
     }
 
     // from MsoyController
@@ -1458,17 +1166,6 @@ public class WorldController extends MsoyController
             // we gotta go somewhere
             _wctx.getSceneDirector().moveTo(_postLogonScene);
             _postLogonScene = 0;
-        }
-    }
-
-    // from ClientObserver
-    override public function clientDidLogoff (event :ClientEvent) :void
-    {
-        super.clientDidLogoff(event);
-
-        // if we're actually terminating our session, clear out our AVG panel
-        if (!event.isSwitchingServers()) {
-            setAVRGamePanel(null);
         }
     }
 
@@ -1596,24 +1293,6 @@ public class WorldController extends MsoyController
     }
 
     // from MsoyController
-    override protected function setIdle (nowIdle :Boolean) :void
-    {
-        const wasIdle :Boolean = isIdle();
-
-        super.setIdle(nowIdle);
-
-        // only change game idleness when it truly changes
-        if (wasIdle != isIdle()) {
-            // let AVRGs know about our idleness changes
-            var gd :GameDirector = _wctx.getGameDirector();
-            if (gd != null) { // studio has no GameDirector
-                // game idleness = whirled idle or whirled away
-                gd.setIdle(isIdle());
-            }
-        }
-    }
-
-    // from MsoyController
     override protected function locationDidChange (place :PlaceObject) :void
     {
         super.locationDidChange(place);
@@ -1667,12 +1346,6 @@ public class WorldController extends MsoyController
         menuData.push({ label: Msgs.WORLD.get("l.recent_scenes"), children: sceneSubmenu });
 
         CommandMenu.addSeparator(menuData);
-        menuData.push({ label: Msgs.GAME.get("b.allGames"), command: MsoyController.VIEW_GAMES });
-        menuData.push({ label: Msgs.GENERAL.get("b.games_waiting"), callback: showTablesWaiting });
-        // and the world tour, baby!
-        menuData.push({ label: Msgs.WORLD.get("b.start_tour"),
-            enabled: !_wctx.getTourDirector().isOnTour(),
-            command: START_TOUR });
         // and our home
         const ourHomeId :int = me.homeSceneId;
         if (ourHomeId != 0) {
@@ -1781,9 +1454,6 @@ public class WorldController extends MsoyController
 
     /** Set to true when we're displaying a page that has an alias, like "world-m1". */
     protected var _suppressTokenForScene :Boolean = true; // also, we suppress the first one
-
-    /** The current AVRG display, if any. */
-    protected var _avrGamePanel :AVRGamePanel;
 
     /** Recently visited scenes, ordered from most-recent to least-recent */
     protected var _recentScenes :Array = [];

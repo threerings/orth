@@ -80,13 +80,7 @@ public class WorldClient extends MsoyClient
 
         _minimized = params["minimized"] != null;
 
-        // if we are going right into a game, do that now and once we get into the game, then we'll
-        // be able to logon to a world with our assigned credentials
-        if (params["gameId"] || params["gameLobby"] /* legacy */) {
-            log.info("Doing pre-logon go to join game", "gameId", params["gameId"]);
-            _wctx.getWorldController().preLogonGo(params);
-
-        } else if (getHostname() == null) {
+        if (getHostname() == null) {
             var loader :URLLoader = new URLLoader();
             var worldClient :WorldClient = this;
             loader.addEventListener(Event.COMPLETE, function () :void {
@@ -160,12 +154,6 @@ public class WorldClient extends MsoyClient
         // listen for theme changes
         var themeUpdater :ThemeUpdater = new ThemeUpdater(this);
         member.addListener(themeUpdater);
-
-        // turn on tutorials for the main web site
-        if (getEmbedding().hasGWT() && DeploymentConfig.enableTutorial) {
-            new MePageTutorial(_wctx);
-            new GeneralTips(_wctx);
-        }
     }
 
     /**
@@ -179,10 +167,6 @@ public class WorldClient extends MsoyClient
 
         // if we're logged into the world server or game server already with this id, ignore
         if (memberId == _wctx.getMyId()) {
-            return;
-        }
-        if ((_wctx.getGameDirector().getGameContext() != null) &&
-                (_wctx.getGameDirector().getGameContext().getMyId() == memberId)) {
             return;
         }
 
@@ -284,11 +268,6 @@ public class WorldClient extends MsoyClient
         _wctx.getMsoyChatDirector().openChannel(nameObj);
     }
 
-    protected function externalStartTour () :void
-    {
-        _wctx.getTourDirector().startTour();
-    }
-
     // from MsoyClient
     override protected function configureBridgeFunctions (dispatcher :IEventDispatcher) :void
     {
@@ -341,7 +320,6 @@ public class WorldClient extends MsoyClient
         ExternalInterface.addCallback("useItem", externalUseItem);
         ExternalInterface.addCallback("clearItem", externalClearItem);
         ExternalInterface.addCallback("openChannel", externalOpenChannel);
-        ExternalInterface.addCallback("startTour", externalStartTour);
     }
 
     // from MsoyClient

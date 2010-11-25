@@ -8,28 +8,23 @@ import com.threerings.whirled.spot.client.SpotSceneDirector;
 import com.threerings.whirled.util.WhirledContext;
 
 import com.threerings.msoy.chat.client.MsoyChatDirector;
-import com.threerings.msoy.game.client.GameDirector;
 import com.threerings.msoy.room.client.MediaDirector;
 import com.threerings.msoy.room.client.MsoySceneDirector;
 import com.threerings.msoy.room.client.WorldProperties;
 
 import com.threerings.msoy.client.ControlBar;
-import com.threerings.msoy.client.MsoyContext;
+import com.threerings.msoy.client.OrthContext;
 import com.threerings.msoy.client.MsoyController;
 import com.threerings.msoy.client.persist.RuntimeSceneRepository;
 import com.threerings.msoy.data.MemberObject;
 import com.threerings.msoy.data.MsoyTokenRing;
 
-import com.threerings.msoy.world.tour.client.TourDirector;
-
 import com.threerings.msoy.party.client.PartyDirector;
-
-import com.threerings.msoy.tutorial.client.TutorialDirector;
 
 /**
  * Defines services for the World client.
  */
-public class WorldContext extends MsoyContext
+public class WorldContext extends OrthContext
     implements WhirledContext
 {
     /** Contains non-persistent properties that are set in various places and can be bound to to be
@@ -76,14 +71,6 @@ public class WorldContext extends MsoyContext
     }
 
     /**
-     * Get the GameDirector.
-     */
-    public function getGameDirector () :GameDirector
-    {
-        return _gameDir;
-    }
-
-    /**
      * Get the WorldDirector.
      */
     public function getWorldDirector () :WorldDirector
@@ -108,27 +95,11 @@ public class WorldContext extends MsoyContext
     }
 
     /**
-     * Get the tour director.
-     */
-    public function getTourDirector () :TourDirector
-    {
-        return _tourDir;
-    }
-
-    /**
      * Get the party director.
      */
     public function getPartyDirector () :PartyDirector
     {
         return _partyDir;
-    }
-
-    /**
-     * Get the tutorial director.
-     */
-    public function getTutorialDirector () :TutorialDirector
-    {
-        return _tutorialDir;
     }
 
     /**
@@ -147,20 +118,20 @@ public class WorldContext extends MsoyContext
         return WorldControlBar(getControlBar());
     }
 
-    // from MsoyContext
+    // from OrthContext
     override public function getTokens () :MsoyTokenRing
     {
         // if we're not logged on, claim to have no privileges
         return (getMemberObject() == null) ? new MsoyTokenRing() : getMemberObject().tokens;
     }
 
-    // from MsoyContext
+    // from OrthContext
     override public function getMsoyController () :MsoyController
     {
         return _controller;
     }
 
-    // from MsoyContext
+    // from OrthContext
     override protected function createControlBar () :ControlBar
     {
         return new WorldControlBar(this);
@@ -172,24 +143,18 @@ public class WorldContext extends MsoyContext
 
         _sceneDir = new MsoySceneDirector(this, _locDir, new RuntimeSceneRepository());
         _spotDir = new SpotSceneDirector(this, _locDir, _sceneDir);
-        _gameDir = new GameDirector(this);
         _worldDir = new WorldDirector(this);
         _memberDir = new MemberDirector(this);
-        _tourDir = new TourDirector(this);
         _partyDir = new PartyDirector(this);
-        _tutorialDir = new TutorialDirector(this);
     }
 
     protected var _controller :WorldController;
 
     protected var _sceneDir :SceneDirector;
     protected var _spotDir :SpotSceneDirector;
-    protected var _gameDir :GameDirector;
     protected var _mediaDir :MediaDirector;
     protected var _worldDir :WorldDirector;
     protected var _memberDir :MemberDirector;
-    protected var _tourDir :TourDirector;
     protected var _partyDir :PartyDirector;
-    protected var _tutorialDir :TutorialDirector;
 }
 }
