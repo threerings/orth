@@ -12,7 +12,7 @@ import com.threerings.whirled.spot.data.SpotSceneObject;
 /**
  * Contains the distributed state of a virtual world room.
  */
-public class OrthSceneObject extends SpotSceneObject
+public class OrthRoomObject extends SpotSceneObject
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>name</code> field. */
@@ -41,7 +41,7 @@ public class OrthSceneObject extends SpotSceneObject
     public var accessControl :int;
 
     /** Our room service marshaller. */
-    public var orthSceneService :OrthSceneMarshaller;
+    public var orthRoomService :OrthRoomMarshaller;
 
     /** Contains the memories for all entities in this room. */
     public var memories :DSet; /* of */ EntityMemories;
@@ -54,7 +54,7 @@ public class OrthSceneObject extends SpotSceneObject
         name = ins.readField(String) as String;
         owner = Name(ins.readObject());
         accessControl = ins.readByte();
-        orthSceneService = OrthSceneMarshaller(ins.readObject());
+        orthRoomService = OrthRoomMarshaller(ins.readObject());
         memories = DSet(ins.readObject());
     }
 }

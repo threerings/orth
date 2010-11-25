@@ -16,7 +16,7 @@ import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneCodes;
-import com.threerings.orth.room.data.OrthSceneObject;
+import com.threerings.orth.room.data.OrthRoomObject;
 
 import flash.events.Event;
 
@@ -320,7 +320,7 @@ public class RoomObjectView extends RoomView
         } else if (SpotSceneObject.OCCUPANT_LOCS == name) {
             moveBody((event.getEntry() as SceneLocation).bodyOid);
 
-        } else if (OrthSceneObject.MEMORIES == name) {
+        } else if (OrthRoomObject.MEMORIES == name) {
             // TODO: this presently should not happen, but we cope and treat it like an add
             var entry :EntityMemories = event.getEntry() as EntityMemories;
             entry.memories.forEach(function (key :String, value :ByteArray) :void {
@@ -414,7 +414,7 @@ public class RoomObjectView extends RoomView
         FurniSprite.setLoadingWatcher(_loadingWatcher);
 
         // save our scene object
-        _roomObj = (plobj as OrthSceneObject);
+        _roomObj = (plobj as OrthRoomObject);
 
         rereadScene();
         updateAllFurni();
@@ -767,7 +767,7 @@ public class RoomObjectView extends RoomView
     protected var _octrl :RoomObjectController;
 
     /** The transitory properties of the current scene. */
-    protected var _roomObj :OrthSceneObject;
+    protected var _roomObj :OrthRoomObject;
 
     /** Monitors and displays loading progress for furni/decor. */
     protected var _loadingWatcher :PlaceLoadingDisplay;

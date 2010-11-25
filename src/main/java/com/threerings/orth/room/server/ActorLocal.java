@@ -4,7 +4,7 @@ import com.threerings.crowd.server.BodyLocal;
 import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
-import com.threerings.orth.room.data.OrthSceneObject;
+import com.threerings.orth.room.data.OrthRoomObject;
 
 public class ActorLocal extends BodyLocal
 {
@@ -23,7 +23,7 @@ public class ActorLocal extends BodyLocal
      * peer move) when the player left a previous room, or because we put them there manually as
      * part of avatar resolution (see {@link MemberManager#finishSetAvatar}).
      */
-    public void putAvatarMemoriesIntoRoom (OrthSceneObject roomObj)
+    public void putAvatarMemoriesIntoRoom (OrthRoomObject roomObj)
     {
         if (memories != null) {
             roomObj.putMemories(memories);
@@ -35,7 +35,7 @@ public class ActorLocal extends BodyLocal
      * Called when we depart a room to remove our avatar memories from the room and store them in
      * this local storage.
      */
-    public void takeAvatarMemoriesFromRoom (ActorObject actor, OrthSceneObject roomObj)
+    public void takeAvatarMemoriesFromRoom (ActorObject actor, OrthRoomObject roomObj)
     {
         final EntityIdent avId = actor.getEntityIdent();
         memories = (avId != null) ? roomObj.takeMemories(avId) : null;
@@ -45,7 +45,7 @@ public class ActorLocal extends BodyLocal
      * Called by the {@link RoomManager} when we're about to enter a room, and also
      * takes care of calling willEnterPartyPlace().
      */
-    public void willEnterRoom (ActorObject memobj, OrthSceneObject roomObj)
+    public void willEnterRoom (ActorObject memobj, OrthRoomObject roomObj)
     {
         putAvatarMemoriesIntoRoom(roomObj);
     }
@@ -54,7 +54,7 @@ public class ActorLocal extends BodyLocal
      * Called by the {@link RoomManager} when we're about to leave a room, and also
      * takes care of calling willLeavePartyPlace().
      */
-    public void willLeaveRoom (ActorObject memobj, OrthSceneObject roomObj)
+    public void willLeaveRoom (ActorObject memobj, OrthRoomObject roomObj)
     {
         // remove our avatar memories from this room
         takeAvatarMemoriesFromRoom(memobj, roomObj);

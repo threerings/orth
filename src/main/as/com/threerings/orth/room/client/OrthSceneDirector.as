@@ -6,7 +6,7 @@ package com.threerings.orth.room.client {
 import com.threerings.io.TypedArray;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.data.OrthSceneMarshaller;
+import com.threerings.orth.room.data.OrthRoomMarshaller;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.dobj.MessageAdapter;
@@ -30,7 +30,7 @@ public class OrthSceneDirector extends SceneDirector
     private const log :Log = Log.getLog(this);
 
     // statically reference classes we require
-    OrthSceneMarshaller;
+    OrthRoomMarshaller;
 
     public function OrthSceneDirector (
         ctx :WorldContext, locDir :LocationDirector, repo :SceneRepository)

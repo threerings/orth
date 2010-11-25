@@ -8,7 +8,7 @@ import com.threerings.whirled.spot.data.SpotSceneObject;
 
 import static com.threerings.orth.Log.log;
 
-public class OrthSceneObject extends SpotSceneObject
+public class OrthRoomObject extends SpotSceneObject
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>name</code> field. */
@@ -42,12 +42,12 @@ public class OrthSceneObject extends SpotSceneObject
     public byte accessControl;
 
     /** Our service marshaller. */
-    public OrthSceneMarshaller orthSceneService;
+    public OrthRoomMarshaller orthRoomService;
 
     /** Contains the memories for all entities in this room. */
     public DSet<EntityMemories> memories = DSet.newDSet();
 
-    public OrthSceneObject ()
+    public OrthRoomObject ()
     {
         super();
     }
@@ -113,12 +113,12 @@ public class OrthSceneObject extends SpotSceneObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setOrthSceneService (OrthSceneMarshaller value)
+    public void setOrthRoomService (OrthRoomMarshaller value)
     {
-        OrthSceneMarshaller ovalue = this.orthSceneService;
+        OrthRoomMarshaller ovalue = this.orthRoomService;
         requestAttributeChange(
             ORTH_SCENE_SERVICE, value, ovalue);
-        this.orthSceneService = value;
+        this.orthRoomService = value;
     }
 
     /**

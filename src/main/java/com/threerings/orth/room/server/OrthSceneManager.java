@@ -17,9 +17,10 @@ import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneCodes;
-import com.threerings.orth.room.data.OrthSceneObject;
+
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
@@ -34,7 +35,7 @@ import com.threerings.whirled.spot.server.SpotSceneManager;
 import static com.threerings.orth.Log.log;
 
 public abstract class OrthSceneManager extends SpotSceneManager
-    implements OrthSceneProvider
+    implements OrthRoomProvider
 {
     public OrthSceneManager ()
     {
@@ -233,7 +234,7 @@ public abstract class OrthSceneManager extends SpotSceneManager
     @Override // from PlaceManager
     protected PlaceObject createPlaceObject ()
     {
-        return new OrthSceneObject();
+        return new OrthRoomObject();
     }
 
     @Override // from SceneManager
@@ -250,8 +251,8 @@ public abstract class OrthSceneManager extends SpotSceneManager
         super.didStartup();
 
         // set up our room object
-        _orthObj = (OrthSceneObject) _plobj;
-        _orthObj.setOrthSceneService(addDispatcher(new OrthSceneDispatcher(this)));
+        _orthObj = (OrthRoomObject) _plobj;
+        _orthObj.setOrthRoomService(addDispatcher(new OrthRoomDispatcher(this)));
         _orthObj.addListener(_roomListener);
 
         OrthScene mscene = (OrthScene) _scene;
@@ -423,7 +424,7 @@ public abstract class OrthSceneManager extends SpotSceneManager
     }
 
     /** The room object. */
-    protected OrthSceneObject _orthObj;
+    protected OrthRoomObject _orthObj;
 
     /** Extra data from scene resolution. */
     protected OrthSceneExtras _extras;
