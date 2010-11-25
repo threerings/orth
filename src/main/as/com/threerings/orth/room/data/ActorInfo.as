@@ -17,7 +17,7 @@ public class ActorInfo extends OccupantInfo
     /**
      * Returns the media that is used to display this actor.
      */
-    public function getMedia () :EntityMedia
+    public function getMedia () :MediaDesc
     {
         return _media;
     }
@@ -59,7 +59,7 @@ public class ActorInfo extends OccupantInfo
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        _media = EntityMedia(ins.readObject());
+        _media = MediaDesc(ins.readObject());
         _ident = EntityIdent(ins.readObject());
         _state = (ins.readField(String) as String);
     }
@@ -72,7 +72,7 @@ public class ActorInfo extends OccupantInfo
         j.add("media", _media, "ident", _ident, "state", _state);
     }
 
-    protected var _media :EntityMedia;
+    protected var _media :MediaDesc;
     protected var _ident :EntityIdent;
     protected var _state :String;
 }

@@ -6,7 +6,7 @@ package com.threerings.orth.room.data {
 import com.threerings.util.Byte;
 import com.threerings.util.Equalable;
 
-public interface EntityMedia extends Equalable
+public interface MediaDesc extends Equalable
 {
     /**
      * Returns the path of the URL that references this media.

@@ -4,6 +4,7 @@
 package com.threerings.orth.room.data;
 
 import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.orth.data.MediaDesc;
 
 /**
  * Contains published information about an actor in a scene (members and pets).
@@ -13,7 +14,7 @@ public abstract class ActorInfo extends OccupantInfo
     /**
      * Returns the media that is used to display this actor.
      */
-    public EntityMedia getMedia ()
+    public MediaDesc getMedia ()
     {
         return _media;
     }
@@ -70,7 +71,7 @@ public abstract class ActorInfo extends OccupantInfo
         buf.append(", state=").append(_state);
     }
 
-    protected EntityMedia _media;
+    protected MediaDesc _media;
     protected EntityIdent _ident;
     protected String _state;
 }

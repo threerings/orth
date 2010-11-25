@@ -5,6 +5,7 @@ package com.threerings.orth.room.data;
 
 import com.samskivert.util.ObjectUtil;
 import com.threerings.io.SimpleStreamableObject;
+import com.threerings.orth.data.MediaDesc;
 
 /** The streamable definition of a piece of furniture in a room. */
 public class FurniData extends SimpleStreamableObject
@@ -16,7 +17,7 @@ public class FurniData extends SimpleStreamableObject
     public EntityIdent item;
 
     /** Info about the media that represents this piece of furni. */
-    public EntityMedia media;
+    public MediaDesc media;
 
     /** The location in the scene. */
     public OrthLocation loc;

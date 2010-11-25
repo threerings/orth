@@ -6,11 +6,11 @@ public interface FurniVisualization
      * Returns a media descriptor for the media that should be used to display our furniture
      * representation.
      */
-    function getFurniMedia () :EntityMedia;
+    function getFurniMedia () :MediaDesc;
 
     /**
      * Returns our raw furniture media which may be null. Don't call this method.
      */
-    function getRawFurniMedia () :EntityMedia;
+    function getRawFurniMedia () :MediaDesc;
 }
 }

@@ -25,7 +25,7 @@ import com.threerings.media.VideoPlayer;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.Prefs;
-import com.threerings.orth.room.data.EntityMedia;
+import com.threerings.orth.data.MediaDesc;
 
 public class MsoyMediaContainer extends MediaContainer
     implements ContextMenuProvider, ISWFBridgeProvider
@@ -54,7 +54,7 @@ public class MsoyMediaContainer extends MediaContainer
     /**
      * Set a new MediaDescriptor.
      */
-    public function setMediaDesc (desc :EntityMedia) :void
+    public function setMediaDesc (desc :MediaDesc) :void
     {
         if (Util.equals(desc, _desc)) {
             return;

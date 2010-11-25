@@ -24,7 +24,7 @@ public class FurniData extends SimpleStreamableObject
     public var item :EntityIdent;
 
     /** Info about the media that represents this piece of furni. */
-    public var media :EntityMedia;
+    public var media :MediaDesc;
 
     /** The location in the scene. */
     public var loc :OrthLocation;
@@ -154,7 +154,7 @@ public class FurniData extends SimpleStreamableObject
         super.readObject(ins);
         id = ins.readShort();
         item = ins.readObject(EntityIdent);
-        media = ins.readObject(EntityMedia);
+        media = ins.readObject(MediaDesc);
         loc = ins.readObject(OrthLocation);
         layoutInfo = ins.readByte();
         scaleX = ins.readFloat();
