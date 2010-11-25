@@ -79,7 +79,6 @@ public class EntityBackend extends ControlBackend
 
         var loc :OrthLocation = _sprite.getLocation();
         o["location"] = [ loc.x, loc.y, loc.z ];
-        o["datapack"] = _sprite.viz.getAndClearDataPack();
         o["env"] = _sprite.getEnvironment();
     }
 
