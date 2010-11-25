@@ -12,9 +12,6 @@ import com.threerings.util.StreamableHashMap;
 
 /**
  * Holds the memories of an entity in a room.
- *
- * This class is cloneable so that we may clone the memories of a user when they leave the room
- * and we wish to leave their puppet behind with the latest updates.
  */
 public class EntityMemories
     implements DSet.Entry, Cloneable

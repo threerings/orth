@@ -788,7 +788,6 @@ public class WorldController extends OrthController
         const us :MemberObject = _wctx.getMemberObject();
         const isUs :Boolean = (memId == us.getMemberId());
         const isMuted :Boolean = !isUs && _wctx.getMuteDirector().isMuted(name);
-        const isPuppet :Boolean = (name is PuppetName);
         const isSupport :Boolean = _wctx.getTokens().isSupport();
         var placeCtrl :Object = null;
         if (addWorldItems) {
@@ -796,7 +795,7 @@ public class WorldController extends OrthController
         }
 
         var followItem :Object = null;
-        if (addWorldItems && !isPuppet) {
+        if (addWorldItems) {
             var followItems :Array = [];
             if (isUs) {
                 // if we have followers, add a menu item for clearing them
@@ -851,17 +850,15 @@ public class WorldController extends OrthController
             const isInOurRoom :Boolean = (placeCtrl is RoomObjectController) &&
                 RoomObjectController(placeCtrl).containsPlayer(name);
             // whisper
-            if (!isPuppet) {
-                menuItems.push({ label: Msgs.GENERAL.get("b.open_channel"), icon: WHISPER_ICON,
-                    command: OPEN_CHANNEL, arg: name, enabled: !muted });
-            }
+            menuItems.push({ label: Msgs.GENERAL.get("b.open_channel"), icon: WHISPER_ICON,
+                command: OPEN_CHANNEL, arg: name, enabled: !muted });
             // add as friend
             if (!onlineFriend) {
                 menuItems.push({ label: Msgs.GENERAL.get("l.add_as_friend"), icon: ADDFRIEND_ICON,
                     command: INVITE_FRIEND, arg: memId, enabled: !muted });
             }
             // visit
-            if ((onlineFriend || isSupport) && !isPuppet) {
+            if ((onlineFriend || isSupport)) {
                 var label :String = onlineFriend ?
                     Msgs.GENERAL.get("b.visit_friend") : "Visit (as agent)";
                 menuItems.push({ label: label, icon: VISIT_ICON,
@@ -878,7 +875,7 @@ public class WorldController extends OrthController
                 menuItems.push(followItem);
             }
             // partying
-            if (!isPuppet && _wctx.getPartyDirector().canInviteToParty()) {
+            if (_wctx.getPartyDirector().canInviteToParty()) {
                 menuItems.push({ label: Msgs.PARTY.get("b.invite_member"),
                     command: INVITE_TO_PARTY, arg: memId,
                     enabled: !muted && !_wctx.getPartyDirector().partyContainsPlayer(memId) });
@@ -891,17 +888,15 @@ public class WorldController extends OrthController
                 icon: BLOCK_ICON,
                 callback: _mctx.getMuteDirector().setMuted, arg: [ name, !muted ] });
             // booting
-            if (!isPuppet && addWorldItems && isInOurRoom &&
+            if (addWorldItems && isInOurRoom &&
                     (placeCtrl is BootablePlaceController) &&
                     BootablePlaceController(placeCtrl).canBoot()) {
                 menuItems.push({ label: Msgs.GENERAL.get("b.boot"),
                     callback: handleBootFromPlace, arg: memId });
             }
             // reporting
-            if (!isPuppet) {
-                menuItems.push({ label: Msgs.GENERAL.get("b.complain"), icon: REPORT_ICON,
-                    command: COMPLAIN_MEMBER, arg: [ memId, name ] });
-            }
+            menuItems.push({ label: Msgs.GENERAL.get("b.complain"), icon: REPORT_ICON,
+                command: COMPLAIN_MEMBER, arg: [ memId, name ] });
         }
 
         // now the items specific to the avatar

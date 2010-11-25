@@ -284,12 +284,11 @@ public class OrthController extends Controller
     /**
      * Handles the POP_MEMBER_MENU command.
      */
-    public function handlePopMemberMenu (name :String, memberId :int, puppet :Boolean = false) :void
+    public function handlePopMemberMenu (name :String, memberId :int) :void
     {
         var menuItems :Array = [];
         // reconstitute the memberName from args
-        var memName :MemberName = puppet ? new PuppetName(name, memberId)
-                                         : new MemberName(name, memberId);
+        var memName :MemberName = new MemberName(name, memberId);
         addMemberMenuItems(memName, menuItems);
         CommandMenu.createMenu(menuItems, _octx.getTopPanel()).popUpAtMouse();
     }

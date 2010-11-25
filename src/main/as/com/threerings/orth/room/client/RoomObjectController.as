@@ -20,6 +20,8 @@ import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniData;
+import com.threerings.orth.room.data.FurniUpdate_Add;
+import com.threerings.orth.room.data.FurniUpdate_Remove;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
@@ -103,7 +105,7 @@ public class RoomObjectController extends RoomController
     public function containsPlayer (name :MemberName) :Boolean
     {
         var info :OccupantInfo = _roomObj.getOccupantInfo(name);
-        return (info != null) && !(info.username is PuppetName);
+        return (info != null);
     }
 
     /**
@@ -134,9 +136,6 @@ public class RoomObjectController extends RoomController
         } else { // shown when clicking on someone else
             if (avatar == null) {
                 return;
-            }
-            if (name is PuppetName) {
-                addPuppetMenuItems(avatar, menuItems);
             }
             var kind :String = Msgs.GENERAL.get(avatar.getDesc());
             var flagItems :Array = [];
@@ -905,38 +904,6 @@ public class RoomObjectController extends RoomController
             }
         }
         return null;
-    }
-
-    /**
-     * Add special menu items for puppets.
-     */
-    protected function addPuppetMenuItems (avatar :MemberSprite, menuItems :Array) :void
-    {
-        var states :Array = avatar.getAvatarStates();
-        var curState :String = avatar.getState();
-        var dance :String = locateAction(states, ["dance", "dancing"]);
-        var items :Array = [];
-        if (dance != null) {
-            if (dance == curState) {
-                items.push({ label: Msgs.NPC.get("b.stop_dance"),
-                    // wrap the arg in an array in case its null
-                    callback: avatar.setState, arg: [ states[0] ] });
-            } else {
-                items.push({ label: Msgs.NPC.get("b.dance"),
-                    callback: avatar.setState, arg: dance });
-            }
-        }
-        // TODO: should these make our own avatar dance as well??
-
-        // TODO: other actions?
-
-        if (items.length > 0) {
-            CommandMenu.addSeparator(items);
-            // add the items after the first separator (should be right after the title)
-            var dex :int = ArrayUtil.indexIf(menuItems,
-                Predicates.createPropertyEquals("type", "separator"));
-            ArrayUtil.splice(menuItems, dex + 1, 0, items);
-        }
     }
 
     /**
