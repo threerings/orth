@@ -1,7 +1,7 @@
 //
 // $Id: RoomController.as 17898 2009-08-24 03:38:13Z ray $
 
-package com.threerings.orth.scene.client {
+package com.threerings.orth.room.client {
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
@@ -15,11 +15,11 @@ import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
-import com.threerings.orth.scene.data.ActorInfo;
-import com.threerings.orth.scene.data.EntityIdent;
-import com.threerings.orth.scene.data.EntityMemories;
-import com.threerings.orth.scene.data.FurniData;
-import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.orth.room.data.ActorInfo;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.EntityMemories;
+import com.threerings.orth.room.data.FurniData;
+import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.util.Log;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
@@ -1037,9 +1037,9 @@ public class RoomController extends SceneController
 }
 
 import com.threerings.orth.client.Resources;
-import com.threerings.orth.scene.client.RoomElementSprite;
-import com.threerings.orth.scene.data.EntityIdent;
-import com.threerings.orth.scene.data.OrthSceneCodes;
+import com.threerings.orth.room.client.RoomElementSprite;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.OrthSceneCodes;
 import com.threerings.util.Log;
 import com.threerings.util.Throttle;
 

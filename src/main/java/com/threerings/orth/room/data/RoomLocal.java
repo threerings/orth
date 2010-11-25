@@ -1,7 +1,7 @@
 //
 // $Id: RoomLocal.java 13697 2008-12-05 21:07:52Z mdb $
 
-package com.threerings.orth.scene.data;
+package com.threerings.orth.room.data;
 
 import com.threerings.crowd.data.OccupantInfo;
 

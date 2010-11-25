@@ -1,8 +1,8 @@
-package com.threerings.orth.scene.server;
+package com.threerings.orth.room.server;
 
 import java.util.List;
 
-import com.threerings.orth.scene.data.EntityMemories;
+import com.threerings.orth.room.data.EntityMemories;
 
 public class OrthSceneExtras
 {

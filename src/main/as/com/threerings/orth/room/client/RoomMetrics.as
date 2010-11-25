@@ -1,14 +1,14 @@
 //
 // $Id: RoomMetrics.as 17626 2009-07-21 21:43:56Z mdb $
 
-package com.threerings.orth.scene.client {
+package com.threerings.orth.room.client {
 
 import flash.geom.Point;
 
 import com.threerings.geom.Vector3;
 
-import com.threerings.orth.scene.data.DecorGeometry;
-import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.orth.room.data.DecorGeometry;
+import com.threerings.orth.room.data.OrthLocation;
 
 /**
  * Room parameters in screen coordinates, and associated conversion routines.

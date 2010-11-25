@@ -1,10 +1,10 @@
-package com.threerings.orth.scene.server;
+package com.threerings.orth.room.server;
 
 import com.threerings.crowd.server.BodyLocal;
-import com.threerings.orth.scene.data.ActorObject;
-import com.threerings.orth.scene.data.EntityIdent;
-import com.threerings.orth.scene.data.EntityMemories;
-import com.threerings.orth.scene.data.OrthSceneObject;
+import com.threerings.orth.room.data.ActorObject;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.EntityMemories;
+import com.threerings.orth.room.data.OrthSceneObject;
 
 public class ActorLocal extends BodyLocal
 {

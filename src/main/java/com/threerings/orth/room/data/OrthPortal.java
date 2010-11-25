@@ -1,7 +1,7 @@
 //
 // $Id: MsoyPortal.java 11759 2008-09-16 16:05:16Z mdb $
 
-package com.threerings.orth.scene.data;
+package com.threerings.orth.room.data;
 
 import com.threerings.whirled.spot.data.Portal;
 

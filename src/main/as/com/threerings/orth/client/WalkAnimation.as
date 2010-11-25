@@ -5,9 +5,9 @@ package com.threerings.orth.client {
 
 import com.threerings.display.AnimationImpl;
 
-import com.threerings.orth.scene.client.OccupantSprite;
-import com.threerings.orth.scene.data.OrthLocation;
-import com.threerings.orth.scene.data.OrthScene;
+import com.threerings.orth.room.client.OccupantSprite;
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthScene;
 
 /**
  * Handles moving an occupant sprite around in a scene.

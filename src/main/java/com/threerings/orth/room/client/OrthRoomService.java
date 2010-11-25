@@ -1,15 +1,14 @@
-package com.threerings.orth.scene.client;
+package com.threerings.orth.room.client;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
 import com.threerings.whirled.spot.data.Location;
 
-import com.threerings.orth.scene.data.EntityIdent;
+import com.threerings.orth.room.data.EntityIdent;
 
-public interface OrthSceneService extends InvocationService
+public interface OrthRoomService extends InvocationService
 {
-
     /**
      * Requests that the specified item be assigned a controller. Other distributed state modifying
      * services will automatically assign a controller to an uncontrolled item the first time they

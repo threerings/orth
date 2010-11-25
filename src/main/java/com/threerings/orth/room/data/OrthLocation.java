@@ -1,7 +1,7 @@
 //
 // $Id: MsoyLocation.java 18925 2010-01-13 20:00:54Z ray $
 
-package com.threerings.orth.scene.data;
+package com.threerings.orth.room.data;
 
 import com.threerings.whirled.spot.data.Location;
 

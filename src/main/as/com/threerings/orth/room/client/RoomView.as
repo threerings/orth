@@ -1,7 +1,7 @@
 //
 // $Id: RoomView.as 18849 2009-12-14 20:14:44Z ray $
 
-package com.threerings.orth.scene.client {
+package com.threerings.orth.room.client {
 import com.threerings.orth.client.OrthPlaceView;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.entity.client.DecorSprite;
@@ -9,12 +9,12 @@ import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.OccupantSprite;
-import com.threerings.orth.scene.client.layout.RoomLayout;
-import com.threerings.orth.scene.client.layout.RoomLayoutFactory;
-import com.threerings.orth.scene.data.DecorCodes;
-import com.threerings.orth.scene.data.DecorGeometry;
-import com.threerings.orth.scene.data.EntityIdent;
-import com.threerings.orth.scene.data.OrthScene;
+import com.threerings.orth.room.client.layout.RoomLayout;
+import com.threerings.orth.room.client.layout.RoomLayoutFactory;
+import com.threerings.orth.room.data.DecorCodes;
+import com.threerings.orth.room.data.DecorGeometry;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.OrthScene;
 
 import flash.display.BitmapData;
 import flash.display.Sprite;
@@ -44,8 +44,8 @@ import com.threerings.ui.MenuUtil;
 import com.threerings.whirled.spot.data.Location;
 import com.threerings.whirled.spot.data.Portal;
 
-import com.threerings.orth.scene.data.FurniData;
-import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.orth.room.data.FurniData;
+import com.threerings.orth.room.data.OrthLocation;
 
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.Msgs;
@@ -1174,7 +1174,7 @@ public class RoomView extends Sprite
 }
 }
 
-import com.threerings.orth.scene.client.RoomElementSprite;
+import com.threerings.orth.room.client.RoomElementSprite;
 
 class BackdropOverlay extends RoomElementSprite
 {

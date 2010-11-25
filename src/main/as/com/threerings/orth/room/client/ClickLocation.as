@@ -1,9 +1,9 @@
 //
 // $Id: ClickLocation.as 10500 2008-08-07 19:14:38Z mdb $
 
-package com.threerings.orth.scene.client {
+package com.threerings.orth.room.client {
 
-import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.orth.room.data.OrthLocation;
 
 /**
  * Returned by RoomView's pointToLocation().

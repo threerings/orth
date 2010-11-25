@@ -25,7 +25,7 @@ import com.threerings.media.VideoPlayer;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.Prefs;
-import com.threerings.orth.scene.data.EntityMedia;
+import com.threerings.orth.room.data.EntityMedia;
 
 public class MsoyMediaContainer extends MediaContainer
     implements ContextMenuProvider, ISWFBridgeProvider

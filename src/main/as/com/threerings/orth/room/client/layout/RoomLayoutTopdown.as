@@ -1,17 +1,17 @@
 //
 // $Id: RoomLayoutTopdown.as 17626 2009-07-21 21:43:56Z mdb $
 
-package com.threerings.orth.scene.client.layout {
+package com.threerings.orth.room.client.layout {
 
 import flash.display.DisplayObject;
 
 import flash.geom.Point;
 
 import com.threerings.geom.Vector3;
-import com.threerings.orth.scene.client.ClickLocation;
-import com.threerings.orth.scene.client.RoomElement;
-import com.threerings.orth.scene.client.RoomView;
-import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.orth.room.client.ClickLocation;
+import com.threerings.orth.room.client.RoomElement;
+import com.threerings.orth.room.client.RoomView;
+import com.threerings.orth.room.data.OrthLocation;
 
 public class RoomLayoutTopdown extends RoomLayoutStandard
 {

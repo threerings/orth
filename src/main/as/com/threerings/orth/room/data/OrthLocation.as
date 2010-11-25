@@ -1,7 +1,7 @@
 //
 // $Id: OrthLocation.as 15889 2009-04-07 21:37:33Z mdb $
 
-package com.threerings.orth.scene.data {
+package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;

@@ -1,8 +1,8 @@
 //
 // $Id$
 
-package com.threerings.orth.scene.client {
-import com.threerings.orth.scene.data.OrthLocation;
+package com.threerings.orth.room.client {
+import com.threerings.orth.room.data.OrthLocation;
 
 import flash.display.BitmapData;
 import flash.display.DisplayObject;

@@ -3,7 +3,7 @@
 
 package com.threerings.orth.data {
 
-import com.threerings.orth.scene.data.EntityMedia;
+import com.threerings.orth.room.data.EntityMedia;
 
 /**
  * A class containing metadata about a media object.

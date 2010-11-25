@@ -1,7 +1,7 @@
 //
 // $Id: ActorInfo.java 16914 2009-05-27 05:54:19Z mdb $
 
-package com.threerings.orth.scene.data {
+package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.ObjectInputStream;
@@ -30,7 +30,7 @@ public class SimpleEntityIdent implements EntityIdent
     // from interface Equalable
     public function equals (other :Object) :Boolean
     {
-        return (other is SimpleEntityIdent) 
+        return (other is SimpleEntityIdent)
             && _type == (other as SimpleEntityIdent).getType()
             && _id == (other as SimpleEntityIdent).getItem();
     }

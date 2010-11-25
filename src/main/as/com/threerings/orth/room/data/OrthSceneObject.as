@@ -1,7 +1,7 @@
 //
 // $Id: RoomObject.as 17833 2009-08-14 23:34:17Z ray $
 
-package com.threerings.orth.scene.data {
+package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.presents.dobj.DSet;
@@ -10,10 +10,10 @@ import com.threerings.util.Name;
 
 import com.threerings.whirled.spot.data.SpotSceneObject;
 
-import com.threerings.orth.scene.data.EntityMemories;
-import com.threerings.orth.scene.data.EntityControl;
-import com.threerings.orth.scene.data.MemoryChangedEvent;
-import com.threerings.orth.scene.data.OrthSceneMarshaller;
+import com.threerings.orth.room.data.EntityMemories;
+import com.threerings.orth.room.data.EntityControl;
+import com.threerings.orth.room.data.MemoryChangedEvent;
+import com.threerings.orth.room.data.OrthSceneMarshaller;
 
 /**
  * Contains the distributed state of a virtual world room.

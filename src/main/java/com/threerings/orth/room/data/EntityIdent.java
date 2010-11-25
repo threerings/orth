@@ -1,7 +1,7 @@
 //
 // $Id: $
 
-package com.threerings.orth.scene.data;
+package com.threerings.orth.room.data;
 
 import com.samskivert.util.ByteEnum;
 import com.threerings.io.Streamable;

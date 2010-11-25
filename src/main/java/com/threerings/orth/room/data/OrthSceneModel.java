@@ -1,4 +1,4 @@
-package com.threerings.orth.scene.data;
+package com.threerings.orth.room.data;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -207,5 +207,5 @@ public class OrthSceneModel extends SceneModel
     }
 
     /** Cached portal info. */
-    protected transient Map<Short, Portal> _portalInfo;    
+    protected transient Map<Short, Portal> _portalInfo;
 }

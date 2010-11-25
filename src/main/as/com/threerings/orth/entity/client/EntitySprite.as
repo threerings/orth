@@ -2,10 +2,10 @@
 // $Id: EntitySprite.as 19612 2010-11-23 16:13:06Z zell $
 
 package com.threerings.orth.entity.client {
-import com.threerings.orth.scene.client.RoomController;
-import com.threerings.orth.scene.client.RoomElement;
-import com.threerings.orth.scene.client.RoomView;
-import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.orth.room.client.RoomController;
+import com.threerings.orth.room.client.RoomElement;
+import com.threerings.orth.room.client.RoomView;
+import com.threerings.orth.room.data.OrthLocation;
 
 import flash.display.BitmapData;
 import flash.display.BlendMode;

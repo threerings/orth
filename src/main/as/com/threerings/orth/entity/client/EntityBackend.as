@@ -3,8 +3,8 @@
 
 package com.threerings.orth.entity.client {
 import com.threerings.orth.client.ControlBackend;
-import com.threerings.orth.scene.client.RoomView;
-import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.orth.room.client.RoomView;
+import com.threerings.orth.room.data.OrthLocation;
 
 import flash.display.DisplayObject;
 

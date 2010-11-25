@@ -1,7 +1,7 @@
 //
 // $Id: Controllable.as 14149 2008-12-31 18:13:55Z mdb $
 
-package com.threerings.orth.scene.data {
+package com.threerings.orth.room.data {
 
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.util.Equalable;

@@ -1,7 +1,7 @@
 //
 // $Id: RoomObjectController.as 19189 2010-05-26 19:37:09Z zell $
 
-package com.threerings.orth.scene.client {
+package com.threerings.orth.room.client {
 import com.threerings.crowd.chat.client.MuteObserver;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.OccupantInfo;
@@ -17,14 +17,14 @@ import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
-import com.threerings.orth.scene.data.ActorInfo;
-import com.threerings.orth.scene.data.ControllableEntity;
-import com.threerings.orth.scene.data.EntityControl;
-import com.threerings.orth.scene.data.EntityMemories;
-import com.threerings.orth.scene.data.FurniData;
-import com.threerings.orth.scene.data.OrthLocation;
-import com.threerings.orth.scene.data.OrthScene;
-import com.threerings.orth.scene.data.OrthSceneModel;
+import com.threerings.orth.room.data.ActorInfo;
+import com.threerings.orth.room.data.ControllableEntity;
+import com.threerings.orth.room.data.EntityControl;
+import com.threerings.orth.room.data.EntityMemories;
+import com.threerings.orth.room.data.FurniData;
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.room.data.OrthSceneModel;
 import com.threerings.presents.dobj.AttributeChangeAdapter;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.util.ArrayUtil;

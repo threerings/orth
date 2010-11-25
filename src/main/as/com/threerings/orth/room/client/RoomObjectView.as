@@ -1,7 +1,7 @@
 //
 // $Id: RoomObjectView.as 18642 2009-11-10 22:55:00Z jamie $
 
-package com.threerings.orth.scene.client {
+package com.threerings.orth.room.client {
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.PlaceLoadingDisplay;
 import com.threerings.orth.client.Prefs;
@@ -12,11 +12,11 @@ import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
-import com.threerings.orth.scene.data.EntityIdent;
-import com.threerings.orth.scene.data.EntityMemories;
-import com.threerings.orth.scene.data.OrthScene;
-import com.threerings.orth.scene.data.OrthSceneCodes;
-import com.threerings.orth.scene.data.OrthSceneObject;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.EntityMemories;
+import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.room.data.OrthSceneObject;
 
 import flash.events.Event;
 
@@ -58,8 +58,8 @@ import com.threerings.whirled.data.SceneUpdate;
 import com.threerings.whirled.spot.data.SpotSceneObject;
 import com.threerings.whirled.spot.data.SceneLocation;
 
-import com.threerings.orth.scene.data.MemoryChangedListener;
-import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.orth.room.data.MemoryChangedListener;
+import com.threerings.orth.room.data.OrthLocation;
 
 
 /**

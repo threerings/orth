@@ -1,12 +1,12 @@
 //
 // $Id$
 
-package com.threerings.orth.scene.server;
+package com.threerings.orth.room.server;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.scene.data.EntityIdent;
-import com.threerings.orth.scene.data.OrthSceneMarshaller;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationDispatcher;
@@ -17,7 +17,7 @@ import com.threerings.whirled.spot.data.Location;
  * Dispatches requests to the {@link OrthSceneProvider}.
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
-           comments="Derived from OrthSceneService.java.")
+           comments="Derived from OrthRoomService.java.")
 public class OrthSceneDispatcher extends InvocationDispatcher<OrthSceneMarshaller>
 {
     /**

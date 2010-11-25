@@ -1,7 +1,7 @@
 //
 // $Id: ActorInfo.as 18101 2009-09-16 21:22:48Z ray $
 
-package com.threerings.orth.scene.data {
+package com.threerings.orth.room.data {
 
 import com.threerings.util.Byte;
 import com.threerings.util.Equalable;

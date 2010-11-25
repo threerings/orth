@@ -1,4 +1,4 @@
-package com.threerings.orth.scene.server;
+package com.threerings.orth.room.server;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -15,16 +15,16 @@ import com.samskivert.util.ResultListener;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.orth.scene.client.OrthSceneService;
-import com.threerings.orth.scene.data.ActorInfo;
-import com.threerings.orth.scene.data.EntityControl;
-import com.threerings.orth.scene.data.EntityIdent;
-import com.threerings.orth.scene.data.EntityMemories;
-import com.threerings.orth.scene.data.ActorObject;
-import com.threerings.orth.scene.data.OrthLocation;
-import com.threerings.orth.scene.data.OrthScene;
-import com.threerings.orth.scene.data.OrthSceneCodes;
-import com.threerings.orth.scene.data.OrthSceneObject;
+import com.threerings.orth.room.client.OrthRoomService;
+import com.threerings.orth.room.data.ActorInfo;
+import com.threerings.orth.room.data.EntityControl;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.EntityMemories;
+import com.threerings.orth.room.data.ActorObject;
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.room.data.OrthSceneObject;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
@@ -123,7 +123,7 @@ public abstract class OrthSceneManager extends SpotSceneManager
 
     @Override
     public void updateMemory (ClientObject caller, EntityIdent ident,
-        String key, byte[] newValue, OrthSceneService.ResultListener listener)
+        String key, byte[] newValue, OrthRoomService.ResultListener listener)
     {
         // do any first-level validation based on the item and the caller
         if (!validateMemoryUpdate((ActorObject)caller, ident)) {

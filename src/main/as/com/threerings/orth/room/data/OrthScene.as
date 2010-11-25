@@ -1,7 +1,7 @@
 //
 // $Id: OrthScene.as 18599 2009-11-05 21:48:58Z jamie $
 
-package com.threerings.orth.scene.data {
+package com.threerings.orth.room.data {
 
 import flash.errors.IllegalOperationError;
 

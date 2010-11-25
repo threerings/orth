@@ -1,7 +1,7 @@
 //
 // $Id: EntityControl.as 12486 2008-10-13 18:19:39Z jamie $
 
-package com.threerings.orth.scene.data {
+package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;

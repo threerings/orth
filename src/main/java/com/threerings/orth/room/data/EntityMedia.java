@@ -1,4 +1,4 @@
-package com.threerings.orth.scene.data;
+package com.threerings.orth.room.data;
 
 import com.threerings.orth.data.MediaDesc;
 

@@ -3,8 +3,6 @@
 
 package com.threerings.orth.data;
 
-import com.threerings.orth.scene.data.EntityMedia;
-
 public interface MediaDesc
 {
     /** A constant used to indicate that an image does not exceed half thumbnail size in either
@@ -36,7 +34,7 @@ public interface MediaDesc
      * Returns the mime type of this media.
      */
     byte getMimeType ();
-    
+
     /** The size constraint on this media, if any. See {@link #computeConstraint}. */
     byte getConstraint ();
 

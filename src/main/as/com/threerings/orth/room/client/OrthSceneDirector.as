@@ -1,12 +1,12 @@
 //
 // $Id: MsoySceneDirector.as 18370 2009-10-13 22:43:55Z jamie $
 
-package com.threerings.orth.scene.client {
+package com.threerings.orth.room.client {
 
 import com.threerings.io.TypedArray;
-import com.threerings.orth.scene.data.OrthPortal;
-import com.threerings.orth.scene.data.OrthScene;
-import com.threerings.orth.scene.data.OrthSceneMarshaller;
+import com.threerings.orth.room.data.OrthPortal;
+import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.dobj.MessageAdapter;
@@ -40,7 +40,7 @@ public class OrthSceneDirector extends SceneDirector
     }
 
     /**
-     * Traverses the specified portal using the OrthSceneService which handles switching between
+     * Traverses the specified portal using the OrthRoomService which handles switching between
      * servers and other useful business.
      *
      * @return true if we issued the request, false if it was rejected for some reason.

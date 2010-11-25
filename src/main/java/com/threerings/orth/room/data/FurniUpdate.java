@@ -1,7 +1,7 @@
 //
 // $Id: FurniUpdate.java 10500 2008-08-07 19:14:38Z mdb $
 
-package com.threerings.orth.scene.data;
+package com.threerings.orth.room.data;
 
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.data.SceneUpdate;

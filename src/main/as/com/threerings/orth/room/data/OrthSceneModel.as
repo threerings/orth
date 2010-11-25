@@ -1,7 +1,7 @@
 //
 // $Id: OrthSceneModel.as 18842 2009-12-11 20:38:56Z zell $
 
-package com.threerings.orth.scene.data {
+package com.threerings.orth.room.data {
 
 import com.threerings.util.ArrayIterator;
 import com.threerings.util.ArrayUtil;

@@ -1,11 +1,11 @@
 //
 // $Id: RoomElement.as 15000 2009-02-24 00:24:42Z mdb $
 
-package com.threerings.orth.scene.client {
+package com.threerings.orth.room.client {
 
 import com.threerings.orth.client.Snapshottable;
 
-import com.threerings.orth.scene.data.OrthLocation;
+import com.threerings.orth.room.data.OrthLocation;
 
 /**
  * Interface for all objects that exist in a scene, and have both scene location in room

@@ -1,7 +1,7 @@
 //
 // $Id: MsoyBodyObject.java 19120 2010-04-13 00:54:16Z ray $
 
-package com.threerings.orth.scene.data;
+package com.threerings.orth.room.data;
 
 import java.util.Set;
 import javax.annotation.Generated;

@@ -3,7 +3,7 @@
 
 package com.threerings.orth.entity.client {
 
-import com.threerings.orth.scene.client.RoomController;
+import com.threerings.orth.room.client.RoomController;
 import com.threerings.util.CommandEvent;
 
 /**

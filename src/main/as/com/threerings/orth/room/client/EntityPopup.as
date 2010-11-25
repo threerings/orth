@@ -1,7 +1,7 @@
 //
 // $Id: EntityPopup.as 16005 2009-04-13 22:56:46Z ray $
 
-package com.threerings.orth.scene.client {
+package com.threerings.orth.room.client {
 
 import com.threerings.orth.entity.client.EntitySprite;
 

@@ -1,11 +1,11 @@
-package com.threerings.orth.scene.data {
+package com.threerings.orth.room.data {
 
-import com.threerings.orth.scene.data.EntityMedia;
+import com.threerings.orth.room.data.EntityMedia;
 
 public interface EntityData
 {
     function getEntityIdent () :EntityIdent;
-    
+
     /**
      * Returns a media descriptor for the media that should be used to display our furniture
      * representation.

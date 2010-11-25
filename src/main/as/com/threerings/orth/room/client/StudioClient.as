@@ -1,7 +1,7 @@
 //
 // $Id: StudioClient.as 12846 2008-10-26 02:37:57Z ray $
 
-package com.threerings.orth.scene.client {
+package com.threerings.orth.room.client {
 
 import flash.display.Stage;
 
