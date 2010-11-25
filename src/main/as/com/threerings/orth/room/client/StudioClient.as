@@ -34,7 +34,7 @@ public class StudioClient extends WorldClient
     }
 
     // from WorldClient
-    override protected function createContext () :MsoyContext
+    override protected function createContext () :OrthContext
     {
         return (_wctx = new StudioContext(this));
     }

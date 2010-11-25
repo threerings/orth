@@ -2,6 +2,7 @@
 // $Id: RoomView.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthPlaceView;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.entity.client.DecorSprite;
@@ -233,7 +234,7 @@ public class RoomView extends Sprite
     }
 
     // from ContextMenuProvider
-    public function populateContextMenu (ctx :MsoyContext, menuItems :Array) :void
+    public function populateContextMenu (ctx :OrthContext, menuItems :Array) :void
     {
         var hit :* = _ctrl.getHitSprite(stage.mouseX, stage.mouseY, true);
         if (hit === undefined) {
