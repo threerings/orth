@@ -2,7 +2,6 @@
 // $Id: RoomLayoutFlatworld.as 17626 2009-07-21 21:43:56Z mdb $
 
 package com.threerings.orth.room.client.layout {
-import com.threerings.msoy.room.client.layout.*;
 
 import flash.display.DisplayObject;
 

@@ -21,9 +21,6 @@ import com.threerings.util.CommandEvent;
 import com.threerings.orth.client.LoadingWatcher;
 import com.threerings.orth.client.Msgs;
 
-import com.threerings.msoy.world.client.WorldContext;
-
-import com.threerings.msoy.room.data.FurniData;
 
 public class FurniSprite extends EntitySprite
 {

@@ -1,13 +1,8 @@
 //
 // $Id: StudioContext.as 12531 2008-10-15 17:47:33Z ray $
 
-package com.threerings.msoy.room.client {
+package com.threerings.orth.room.client {
 
-import com.threerings.msoy.client.MsoyParameters;
-import com.threerings.msoy.data.all.MemberName;
-
-import com.threerings.msoy.world.client.WorldContext;
-import com.threerings.orth.room.client.StudioClient;
 import com.threerings.orth.world.client.WorldContext;
 
 public class StudioContext extends WorldContext

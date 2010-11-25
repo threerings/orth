@@ -35,7 +35,7 @@ import com.threerings.flex.PopUpUtil;
  * Dispatched when the dialog closes due to a CloseEvent or a call to <code>close()</code>.
  * (We avoid Event.CLOSE because it has the same constant as CloseEvent! Grandmafucking Adobe!)
  *
- * @eventType com.threerings.msoy.ui.FloatingPanel.DID_CLOSE
+ * @eventType com.threerings.orth.ui.FloatingPanel.DID_CLOSE
  */
 [Event(name="didClose", type="flash.events.Event")]
 
