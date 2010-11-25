@@ -1,7 +1,7 @@
 //
 // $Id: MsoyController.as 19431 2010-10-22 22:08:36Z zell $
 
-package com.threerings.msoy.client {
+package com.threerings.orth.client {
 
 import flash.events.Event;
 import flash.events.FocusEvent;

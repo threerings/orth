@@ -187,12 +187,6 @@ public class WorldController extends MsoyController
         Prefs.events.addEventListener(Prefs.BLEEPED_MEDIA, handleBleepChange, false, 0, true);
         Prefs.events.addEventListener(Prefs.PREF_SET, handleConfigValueSet, false, 0, true);
         _musicPlayer.addEventListener(MediaPlayerCodes.METADATA, handleMusicMetadata);
-
-        try {
-            ExternalInterface.addCallback("gwtMediaPlayback", externalPlayback);
-        } catch (err :Error) {
-            // oh well
-        }
     }
 
     /**
@@ -460,8 +454,6 @@ public class WorldController extends MsoyController
      */
     public function handleGoScene (sceneId :int) :void
     {
-// commented out Ray 2009-08-20       if (!displayPageGWT("world", "s" + sceneId)) {
-        // just go straight there, the url will be updated when we arrive
         _wctx.getSceneDirector().moveTo(sceneId);
     }
 
@@ -502,10 +494,7 @@ public class WorldController extends MsoyController
      */
     public function handleGoLocation (placeOid :int) :void
     {
-        if (!displayPageGWT("world", "l" + placeOid)) {
-            // fall back to breaking the back button
-            _wctx.getLocationDirector().moveTo(placeOid);
-        }
+        _wctx.getLocationDirector().moveTo(placeOid);
     }
 
     /**
@@ -638,7 +627,7 @@ public class WorldController extends MsoyController
     }
 
     /**
-     * Displays a new page either in our GWT application or by reloading the current web page with
+     * Displays a new page by reloading the current web page with
      * the full GWT application, restoring our current location and then displaying the page.
      */
     public function displayPage (page :String, args :String) :Boolean
@@ -741,13 +730,6 @@ public class WorldController extends MsoyController
                 handleOpenChannel(gm.group);
             }
 
-            // fix the URL
-            if (_wctx.getSceneDirector().getScene() != null) {
-                displayPageGWT("world", "s" + _wctx.getSceneDirector().getScene().getId());
-            } else {
-                displayPageGWT("world", "m" + _wctx.getMyId());
-            }
-
         } else if (null != params["sceneId"]) {
             var sceneId :int = int(params["sceneId"]);
             if (sceneId == 0) {
@@ -770,17 +752,6 @@ public class WorldController extends MsoyController
             }
 
         } else {
-            // display the My Whirled Places grid (and also fall through and go home)
-            // Note this only happens when we are in a specific A/B test group and get here via
-            // the landing page. If the user reloads the client from some other url, the home page
-            // grid will no longer be accessible. Se la vi.
-            if (null != params["myplaces"]) {
-                var ctrlBar :WorldControlBar = (_wctx.getControlBar() as WorldControlBar);
-                if (ctrlBar != null) {
-                    ctrlBar.showHomePageGrid();
-                }
-            }
-
             // go to our home scene (this doe the right thing for guests as well)
             _wctx.getSceneDirector().moveTo(_wctx.getMemberObject().getHomeSceneId());
         }
@@ -1044,12 +1015,8 @@ public class WorldController extends MsoyController
             }
         }
 
-        // there are no recent scenes, so either close the client or go home
-        if (closeInsteadOfHome && inGWTApp()) {
-            _wctx.getWorldClient().closeClient();
-        } else {
-            handleGoScene(_wctx.getMemberObject().getHomeSceneId());
-        }
+        // there are no recent scenes, so go home
+        handleGoScene(_wctx.getMemberObject().getHomeSceneId());
     }
 
     // from MsoyController
@@ -1222,23 +1189,6 @@ public class WorldController extends MsoyController
         }
     }
 
-    /**
-     * Called when we start or stop playing music in GWT.
-     */
-    protected function externalPlayback (started :Boolean) :void
-    {
-        if (started) {
-            if (_musicPlayer.getState() == MediaPlayerCodes.STATE_PLAYING) {
-                _musicPausedForGwt = true;
-                _musicPlayer.pause();
-            }
-
-        } else if (_musicPausedForGwt) {
-            _musicPausedForGwt = false;
-            _musicPlayer.play();
-        }
-    }
-
     // from MsoyController
     override protected function locationDidChange (place :PlaceObject) :void
     {
@@ -1380,9 +1330,6 @@ public class WorldController extends MsoyController
 
     /** Have we displayed music info in a notification? */
     protected var _musicInfoShown :Boolean;
-
-    /** Have we paused the music so that we can play some media in gwt? */
-    protected var _musicPausedForGwt :Boolean;
 
     protected var _musicDialog :PlaylistMusicDialog;
 
