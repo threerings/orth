@@ -2,6 +2,13 @@
 // $Id: WorldClient.as 19262 2010-07-13 22:28:11Z zell $
 
 package com.threerings.orth.world.client {
+import com.threerings.orth.client.ContextMenuProvider;
+import com.threerings.orth.client.OrthClient;
+import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.PlaceBox;
+import com.threerings.orth.client.Prefs;
+import com.threerings.orth.data.UberClientModes;
+import com.threerings.orth.room.client.RoomObjectView;
 
 import flash.display.DisplayObject;
 import flash.display.Stage;
@@ -29,32 +36,11 @@ import com.threerings.presents.net.Credentials;
 
 import com.threerings.whirled.data.Scene;
 
-import com.threerings.msoy.client.ContextMenuProvider;
-import com.threerings.msoy.client.DeploymentConfig;
-import com.threerings.msoy.client.GuestSessionCapture;
-import com.threerings.msoy.client.MsoyClient;
-import com.threerings.msoy.client.MsoyContext;
-import com.threerings.msoy.client.MsoyParameters;
-import com.threerings.msoy.client.PlaceBox;
-import com.threerings.msoy.client.Prefs;
-
-import com.threerings.msoy.data.MemberObject;
-import com.threerings.msoy.data.MsoyAuthResponseData;
-import com.threerings.msoy.data.UberClientModes;
-import com.threerings.msoy.data.WorldCredentials;
-import com.threerings.msoy.data.all.ChannelName;
-import com.threerings.msoy.data.all.GroupName;
-import com.threerings.msoy.data.all.MemberName;
-import com.threerings.msoy.data.all.VisitorInfo;
-
-import com.threerings.msoy.chat.data.MsoyChatChannel;
-import com.threerings.msoy.room.client.RoomObjectView;
-import com.threerings.msoy.world.data.WorldMarshaller;
 
 /**
  * Handles the main services for the world and game clients.
  */
-public class WorldClient extends MsoyClient
+public class WorldClient extends OrthClient
 {
     WorldMarshaller; // static reference for deserialization
 
@@ -291,7 +277,7 @@ public class WorldClient extends MsoyClient
     }
 
     // from MsoyClient
-    override protected function createContext () :MsoyContext
+    override protected function createContext () :OrthContext
     {
         return (_wctx = new WorldContext(this));
     }

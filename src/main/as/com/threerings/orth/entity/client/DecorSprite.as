@@ -4,6 +4,8 @@
 package com.threerings.orth.entity.client {
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.util.Log;
 
 import flash.events.Event;

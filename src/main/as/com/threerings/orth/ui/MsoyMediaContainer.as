@@ -3,6 +3,7 @@
 
 package com.threerings.orth.ui {
 import com.threerings.orth.client.ContextMenuProvider;
+import com.threerings.orth.client.Msgs;
 
 import flash.display.DisplayObject;
 import flash.display.Loader;

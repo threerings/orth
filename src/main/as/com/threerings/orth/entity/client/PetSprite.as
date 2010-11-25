@@ -4,6 +4,7 @@
 package com.threerings.orth.entity.client {
 
 import com.threerings.orth.room.client.RoomController;
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.util.CommandEvent;
 
 /**

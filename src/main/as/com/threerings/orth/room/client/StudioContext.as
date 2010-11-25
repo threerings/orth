@@ -7,6 +7,8 @@ import com.threerings.msoy.client.MsoyParameters;
 import com.threerings.msoy.data.all.MemberName;
 
 import com.threerings.msoy.world.client.WorldContext;
+import com.threerings.orth.room.client.StudioClient;
+import com.threerings.orth.world.client.WorldContext;
 
 public class StudioContext extends WorldContext
 {

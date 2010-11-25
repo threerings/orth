@@ -2,7 +2,7 @@
 // $Id: ActorInfo.java 16914 2009-05-27 05:54:19Z mdb $
 
 package com.threerings.orth.room.data {
-
+import com.threerings.orth.data.MediaDesc;
 import com.threerings.util.ClassUtil;
 import com.threerings.util.Cloneable;
 import com.threerings.util.Hashable;

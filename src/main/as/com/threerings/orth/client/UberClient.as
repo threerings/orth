@@ -2,6 +2,8 @@
 // $Id: UberClient.as 17120 2009-06-05 17:04:09Z zell $
 
 package com.threerings.orth.client {
+import com.threerings.orth.room.client.StudioClient;
+import com.threerings.orth.world.client.WorldClient;
 
 import flash.display.DisplayObject;
 

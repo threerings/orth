@@ -21,6 +21,7 @@ import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
 import com.threerings.presents.dobj.AttributeChangeAdapter;
@@ -1004,9 +1005,9 @@ public class RoomObjectController extends RoomController
 
     protected function roomAttrChanged (event :AttributeChangedEvent) :void
     {
-        if (event.getName() == RoomObject.NAME) {
+        if (event.getName() == OrthRoomObject.NAME) {
             reportLocationName();
-        } else if (event.getName() == RoomObject.OWNER) {
+        } else if (event.getName() == OrthRoomObject.OWNER) {
             reportLocationOwner();
         }
     }
@@ -1015,7 +1016,7 @@ public class RoomObjectController extends RoomController
     protected var _roomObjectView :RoomObjectView;
 
     /** The room object. */
-    protected var _roomObj :RoomObject;
+    protected var _roomObj :OrthRoomObject;
 
     /** The current scene we're viewing. */
     protected var _scene :OrthScene;

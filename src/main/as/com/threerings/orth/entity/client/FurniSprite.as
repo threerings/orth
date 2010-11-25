@@ -4,7 +4,9 @@
 package com.threerings.orth.entity.client {
 import com.threerings.media.MediaContainer;
 import com.threerings.orth.client.LoadingWatcher;
+import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.FurniData;
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.util.ValueEvent;
 
 import flash.display.DisplayObject;

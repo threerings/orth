@@ -2,6 +2,7 @@
 // $Id: MsoyController.as 19431 2010-10-22 22:08:36Z zell $
 
 package com.threerings.orth.client {
+import com.threerings.orth.data.OrthCodes;
 
 import flash.events.Event;
 import flash.events.FocusEvent;
@@ -55,15 +56,7 @@ import com.threerings.presents.client.LogonError;
 
 import com.threerings.crowd.chat.client.ChatCantStealFocus;
 
-import com.threerings.msoy.data.MsoyCodes;
-import com.threerings.msoy.data.PlaceInfo;
 import com.threerings.orth.data.MediaDesc;
-import com.threerings.msoy.data.all.MemberName;
-
-import com.threerings.msoy.room.data.PuppetName;
-
-import com.threerings.msoy.item.data.all.Item;
-import com.threerings.msoy.item.data.all.ItemIdent;
 
 public class OrthController extends Controller
     implements ClientObserver
@@ -162,7 +155,7 @@ public class OrthController extends Controller
     /**
      * Creates and initializes the controller.
      */
-    public function MsoyController (mctx :OrthContext, topPanel :TopPanel)
+    public function OrthController (mctx :OrthContext, topPanel :TopPanel)
     {
         _octx = mctx;
         _octx.getClient().addServiceGroup(CrowdCodes.CROWD_GROUP);
@@ -207,7 +200,7 @@ public class OrthController extends Controller
 
         } else {
             _octx.displayFeedback(
-                MsoyCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
+                OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
 
             // TODO
             // experimental: display a popup with the URL (this could be moved to handleLink()
@@ -422,10 +415,10 @@ public class OrthController extends Controller
         var kind :String = Msgs.GENERAL.get(Item.getTypeKey(Item.AUDIO));
         var menuItems :Array = [];
         menuItems.push({ label: Msgs.GENERAL.get("b.view_item", kind),
-            command: MsoyController.VIEW_ITEM, arg: ident });
+            command: OrthController.VIEW_ITEM, arg: ident });
         if (_octx.isRegistered()) {
             menuItems.push({ label: Msgs.GENERAL.get("b.flag_item", kind),
-                command: MsoyController.FLAG_ITEM, arg: ident });
+                command: OrthController.FLAG_ITEM, arg: ident });
         }
         if (desc.isBleepable()) {
             var isBleeped :Boolean = Prefs.isMediaBleeped(mediaId);
@@ -452,7 +445,7 @@ public class OrthController extends Controller
      */
     public function reconnectClient () :void
     {
-        if (_octx.getMsoyClient().getEmbedding().hasGWT() && ExternalInterface.available) {
+        if (_octx.getOrthClient().getEmbedding().hasGWT() && ExternalInterface.available) {
             ExternalInterface.call("rebootFlashClient");
         } else {
             _octx.getClient().logon();
@@ -561,7 +554,7 @@ public class OrthController extends Controller
         if (pt == "StandAlone" || pt == "External") {
             return false;
         }
-        if (!_octx.getMsoyClient().getEmbedding().hasGWT()) {
+        if (!_octx.getOrthClient().getEmbedding().hasGWT()) {
             return false;
         }
         return true;
@@ -843,6 +836,6 @@ public class OrthController extends Controller
     /** The duration after which we log off idle guests. */
     protected static const MAX_GUEST_IDLE_TIME :int = 60*60*1000;
 
-    private static const log :Log = Log.getLog(MsoyController);
+    private static const log :Log = Log.getLog(OrthController);
 }
 }

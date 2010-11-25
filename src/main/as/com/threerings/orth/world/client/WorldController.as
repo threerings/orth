@@ -2,6 +2,14 @@
 // $Id: WorldController.as 19431 2010-10-22 22:08:36Z zell $
 
 package com.threerings.orth.world.client {
+import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthController;
+import com.threerings.orth.client.Prefs;
+import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.room.client.RoomObjectController;
+import com.threerings.orth.room.client.RoomView;
+import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.room.data.OrthSceneModel;
 
 import flash.display.DisplayObject;
 
@@ -38,68 +46,11 @@ import com.threerings.flex.CommandMenu;
 
 import com.threerings.whirled.data.Scene;
 
-import com.threerings.msoy.utils.Args;
-
-import com.threerings.msoy.group.data.all.GroupMembership;
-import com.threerings.msoy.item.client.FlagItemDialog;
-import com.threerings.msoy.item.client.ItemService;
-import com.threerings.msoy.item.data.ItemMarshaller;
-import com.threerings.msoy.item.data.all.Audio;
-import com.threerings.msoy.item.data.all.Item;
-import com.threerings.msoy.item.data.all.ItemIdent;
-
-import com.threerings.msoy.client.BootablePlaceController;
-import com.threerings.msoy.client.ControlBar;
-import com.threerings.msoy.client.DeploymentConfig;
-import com.threerings.msoy.client.HeaderBar;
-import com.threerings.msoy.client.LogonPanel;
-import com.threerings.msoy.client.MemberService;
-import com.threerings.msoy.client.Msgs;
-import com.threerings.msoy.client.MsoyController;
-import com.threerings.msoy.client.MsoyParameters;
-import com.threerings.msoy.client.NoPlaceView;
-import com.threerings.msoy.client.PlaceBox;
-import com.threerings.msoy.client.Prefs;
-import com.threerings.msoy.client.TopPanel;
-import com.threerings.msoy.client.UberClient;
-
-import com.threerings.msoy.data.Address;
-import com.threerings.msoy.data.MemberObject;
-import com.threerings.msoy.data.MsoyCodes;
-import com.threerings.msoy.data.MsoyCredentials;
-import com.threerings.msoy.data.PlaceInfo;
-import com.threerings.msoy.data.WorldCredentials;
-
-import com.threerings.msoy.data.all.ContactEntry;
-import com.threerings.msoy.data.all.FriendEntry;
-import com.threerings.orth.data.MediaDesc;
-import com.threerings.msoy.data.all.MediaDescSize;
-import com.threerings.msoy.data.all.MemberName;
-import com.threerings.msoy.data.all.VizMemberName;
-
-import com.threerings.msoy.ui.ColorPickerPanel;
-import com.threerings.msoy.ui.MediaWrapper;
-import com.threerings.msoy.ui.MsoyLoadedAsset;
-import com.threerings.msoy.ui.skins.CommentButton;
-
-import com.threerings.msoy.party.data.PartyCodes;
-
-import com.threerings.msoy.room.client.PlaylistMusicDialog;
-import com.threerings.msoy.room.client.RoomObjectController;
-import com.threerings.msoy.room.client.RoomObjectView;
-import com.threerings.msoy.room.client.RoomStudioView;
-import com.threerings.msoy.room.client.RoomView;
-import com.threerings.msoy.room.client.snapshot.SnapshotPanel;
-import com.threerings.msoy.room.data.MsoyScene;
-import com.threerings.msoy.room.data.MsoySceneModel;
-import com.threerings.msoy.room.data.PetName;
-import com.threerings.msoy.room.data.PuppetName;
-import com.threerings.msoy.room.data.RoomObject;
 
 /**
  * Extends the MsoyController with World specific bits.
  */
-public class WorldController extends MsoyController
+public class WorldController extends OrthController
 {
     /** Command to display the chat channel menu. */
     public static const POP_CHANNEL_MENU :String = "PopChannelMenu";
@@ -262,10 +213,10 @@ public class WorldController extends MsoyController
         var roomView :RoomView = _wctx.getPlaceView() as RoomView;
 
         CommandMenu.addTitle(menuData, roomView.getPlaceName());
-        var scene :MsoyScene = _wctx.getSceneDirector().getScene() as MsoyScene;
+        var scene :OrthScene = _wctx.getSceneDirector().getScene() as OrthScene;
         if (scene != null) {
-            var model :MsoySceneModel = scene.getSceneModel() as MsoySceneModel;
-//            if (model.ownerType == MsoySceneModel.OWNER_TYPE_GROUP) {
+            var model :OrthSceneModel = scene.getSceneModel() as OrthSceneModel;
+//            if (model.ownerType == OrthSceneModel.OWNER_TYPE_GROUP) {
 //                menuData.push({ label: Msgs.GENERAL.get("b.group_page"),
 //                    command: MsoyController.VIEW_GROUP, arg: model.ownerId });
 //            }
@@ -301,7 +252,7 @@ public class WorldController extends MsoyController
                 displayPage("stuff", "d_" + ident.type + "_" + ident.itemId);
 
             } else if (result == 0) {
-                _wctx.displayFeedback(MsoyCodes.ITEM_MSGS,
+                _wctx.displayFeedback(OrthCodes.ITEM_MSGS,
                     MessageBundle.compose("m.not_listed", Item.getTypeKey(ident.type)));
 
             } else {
@@ -392,7 +343,7 @@ public class WorldController extends MsoyController
      */
     public function handleFeaturedPlaceClicked () :void
     {
-        if (_wctx.getMsoyClient().isEmbedded()) {
+        if (_wctx.getOrthClient().isEmbedded()) {
             handleViewFullVersion();
         } else {
             var sceneId :int = getCurrentSceneId();
@@ -959,7 +910,7 @@ public class WorldController extends MsoyController
         }
 
         // login/logout
-        if (isUs && !_wctx.getMsoyClient().getEmbedding().hasGWT()) {
+        if (isUs && !_wctx.getOrthClient().getEmbedding().hasGWT()) {
             if (_wctx.getMemberObject().isPermaguest()) {
                 menuItems.push({ label: Msgs.GENERAL.get("b.logon"),
                     callback: function () :void {
@@ -1000,7 +951,7 @@ public class WorldController extends MsoyController
             return;
         }
         // if we're in the whirled, closing means closing the flash client totally
-        _wctx.getMsoyClient().closeClient();
+        _wctx.getOrthClient().closeClient();
     }
 
     // from MsoyController
@@ -1292,7 +1243,7 @@ public class WorldController extends MsoyController
     {
         if (_music != null && _musicDialog == null) {
             var room :RoomObject = _wctx.getLocationDirector().getPlaceObject() as RoomObject;
-            var scene :MsoyScene = _wctx.getSceneDirector().getScene() as MsoyScene;
+            var scene :OrthScene = _wctx.getSceneDirector().getScene() as OrthScene;
             _musicDialog = new PlaylistMusicDialog(
                 _wctx, trigger.localToGlobal(new Point()), room, scene);
             _musicDialog.addCloseCallback(function () :void {

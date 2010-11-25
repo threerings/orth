@@ -6,6 +6,8 @@ import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomElement;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.world.client.WorldContext;
 
 import flash.display.BitmapData;
 import flash.display.BlendMode;
@@ -695,19 +697,6 @@ public class EntitySprite
     {
         var ctrl :RoomController = getController();
         return (ctrl != null) ? ctrl.getEnvironment() : null;
-    }
-
-    /**
-     * Request control of this entity. Called by our backend in response to a request from
-     * usercode. If this succeeds, a <code>gotControl</code> notification will be dispatched when
-     * we hear back from the server.
-     */
-    public function requestControl () :void
-    {
-        var ctrl :RoomController = getController(true);
-        if (ctrl != null) {
-            ctrl.requestControl(_ident);
-        }
     }
 
     /**

@@ -3,8 +3,6 @@
 
 package com.threerings.orth.entity.client {
 
-import com.threerings.orth.client.DeploymentConfig;
-
 public class FurniBackend extends EntityBackend
 {
     override protected function populateControlProperties (o :Object) :void
@@ -17,7 +15,7 @@ public class FurniBackend extends EntityBackend
     protected function showPage_v1 (token :String) :Boolean
     {
         // handleViewUrl will do the "right thing"
-        _ctx.getMsoyController().handleViewUrl(DeploymentConfig.serverURL + "#" + token);
+        _ctx.getOrthController().handleViewUrl(DeploymentConfig.serverURL + "#" + token);
         return true;
     }
 }

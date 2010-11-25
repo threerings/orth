@@ -3,6 +3,7 @@
 
 package com.threerings.orth.room.client {
 import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthSceneCodes;
 
 import flash.display.BitmapData;
 import flash.display.DisplayObject;

@@ -17,6 +17,7 @@ import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneCodes;
 import com.threerings.orth.room.data.OrthRoomObject;
+import com.threerings.orth.world.client.WorldContext;
 
 import flash.events.Event;
 
@@ -275,7 +276,7 @@ public class RoomObjectView extends RoomView
     public function attributeChanged (event :AttributeChangedEvent) :void
     {
         var name :String = event.getName();
-        if (RoomObject.PLAY_COUNT == name) {
+        if (OrthRoomObject.PLAY_COUNT == name) {
             // when the play count changes, it's time for us to re-check the audio
             updateBackgroundAudio();
         }
@@ -293,14 +294,14 @@ public class RoomObjectView extends RoomView
             var sceneLoc :SceneLocation = (event.getEntry() as SceneLocation);
             portalTraversed(sceneLoc.loc, true);
 
-        } else if (RoomObject.MEMORIES == name) {
+        } else if (OrthRoomObject.MEMORIES == name) {
             var entry :EntityMemories = event.getEntry() as EntityMemories;
             entry.memories.forEach(function (key :String, value :ByteArray) :void {
                 dispatchMemoryChanged(entry.ident, key, value);
             });
 
 
-        } else if (RoomObject.PLAYLIST == name) {
+        } else if (OrthRoomObject.PLAYLIST == name) {
             var audio :Audio = event.getEntry() as Audio;
             if (audio.ownerId == _ctx.getMyId()) {
                 _ctx.getMsoyClient().itemUsageChangedToGWT(
@@ -337,7 +338,7 @@ public class RoomObjectView extends RoomView
         if (PlaceObject.OCCUPANT_INFO == name) {
             removeBody((event.getOldEntry() as OccupantInfo).getBodyOid());
 
-        } else if (RoomObject.PLAYLIST == name) {
+        } else if (OrthRoomObject.PLAYLIST == name) {
             var audio :Audio = event.getOldEntry() as Audio;
             if (audio.ownerId == _ctx.getMyId()) {
                 // always assume that if we're present to see a remove, it's unused

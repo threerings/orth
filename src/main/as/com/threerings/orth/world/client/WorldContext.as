@@ -2,24 +2,11 @@
 // $Id: WorldContext.as 18724 2009-11-19 19:21:47Z jamie $
 
 package com.threerings.orth.world.client {
-
+import com.threerings.orth.client.OrthContext;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
 import com.threerings.whirled.util.WhirledContext;
 
-import com.threerings.msoy.chat.client.MsoyChatDirector;
-import com.threerings.msoy.room.client.MediaDirector;
-import com.threerings.msoy.room.client.MsoySceneDirector;
-import com.threerings.msoy.room.client.WorldProperties;
-
-import com.threerings.msoy.client.ControlBar;
-import com.threerings.msoy.client.OrthContext;
-import com.threerings.msoy.client.MsoyController;
-import com.threerings.msoy.client.persist.RuntimeSceneRepository;
-import com.threerings.msoy.data.MemberObject;
-import com.threerings.msoy.data.MsoyTokenRing;
-
-import com.threerings.msoy.party.client.PartyDirector;
 
 /**
  * Defines services for the World client.

@@ -2,6 +2,9 @@
 // $Id: StudioClient.as 12846 2008-10-26 02:37:57Z ray $
 
 package com.threerings.orth.room.client {
+import com.threerings.msoy.room.client.StudioContext;
+import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.world.client.WorldClient;
 
 import flash.display.Stage;
 

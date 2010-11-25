@@ -10,6 +10,7 @@ import com.threerings.orth.client.WalkAnimation;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.Comparators;
 import com.threerings.util.ValueEvent;

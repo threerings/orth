@@ -6,6 +6,7 @@ package com.threerings.orth.room.client {
 import com.threerings.orth.entity.client.EntitySprite;
 
 import com.threerings.orth.ui.FloatingPanel;
+import com.threerings.orth.world.client.WorldContext;
 
 import flash.display.DisplayObject;
 import flash.display.Shape;
@@ -13,9 +14,6 @@ import flash.display.Shape;
 import mx.containers.Canvas;
 
 import com.threerings.orth.client.Msgs;
-import com.threerings.msoy.ui.FloatingPanel;
-
-import com.threerings.msoy.world.client.WorldContext;
 
 /**
  * A pop-up containing a user-code display object of some sort, to display
@@ -29,8 +27,8 @@ public class EntityPopup extends FloatingPanel
         title :String, userPanel :DisplayObject, panelWidth :Number, panelHeight :Number,
         panelColor :uint = 0xFFFFFF, panelAlpha :Number = 1.0, doMasking :Boolean = true)
     {
-        super(ctx,
-            Msgs.GENERAL.get("t.entity_popup", Msgs.GENERAL.get(entitySprite.getDesc()), title));
+        var desc:String = Msgs.GENERAL.get(entitySprite.getDesc());
+        super(ctx, Msgs.GENERAL.get("t.entity_popup", desc, title));
 
         _entitySprite = entitySprite;
 

@@ -2,6 +2,8 @@
 // $Id: FloatingPanel.as 18332 2009-10-11 16:43:21Z jamie $
 
 package com.threerings.orth.ui {
+import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthContext;
 
 import flash.display.DisplayObject;
 
@@ -116,7 +118,7 @@ public class FloatingPanel extends TitleWindow
     /**
      * Create a Floating Panel.
      */
-    public function FloatingPanel (ctx :MsoyContext, title :String = "")
+    public function FloatingPanel (ctx :OrthContext, title :String = "")
     {
         _ctx = ctx;
         this.title = title;
@@ -379,7 +381,7 @@ public class FloatingPanel extends TitleWindow
     }
 
     /** Provides client services. */
-    protected var _ctx :MsoyContext;
+    protected var _ctx :OrthContext;
 
     /** The button bar. */
     protected var _buttonBar :ButtonBar;

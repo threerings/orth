@@ -4,9 +4,13 @@
 package com.threerings.orth.room.client {
 
 import com.threerings.io.TypedArray;
+import com.threerings.orth.client.UberClient;
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
+import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.dobj.MessageAdapter;
@@ -92,7 +96,7 @@ public class OrthSceneDirector extends SceneDirector
     {
         var data :MsoyPendingData = _pendingData as MsoyPendingData;
         if (data != null && data.message != null) {
-            _worldctx.displayFeedback(MsoyCodes.GENERAL_MSGS, data.message);
+            _worldctx.displayFeedback(OrthCodes.GENERAL_MSGS, data.message);
         }
 
         super.moveSucceeded(placeId, config);
@@ -111,7 +115,7 @@ public class OrthSceneDirector extends SceneDirector
         _departingPortalId = -1;
         super.requestFailed(reason);
 
-        _worldctx.displayFeedback(MsoyCodes.GENERAL_MSGS, reason);
+        _worldctx.displayFeedback(OrthCodes.GENERAL_MSGS, reason);
 
         // if we're in the featured place view...
         if (UberClient.isFeaturedPlaceView()) {
@@ -175,7 +179,7 @@ public class OrthSceneDirector extends SceneDirector
         _mssvc.moveTo(data.sceneId, sceneVers, _departingPortalId, data.destLoc, this);
     }
 
-    // from interface OrthSceneService_OrthSceneMoveListener
+    // from interface OrthRoomService_OrthSceneMoveListener
     public function moveToBeHandledByAVRG (gameId :int, sceneId :int) :void
     {
         // We tried to move into a scene that belongs to a Whirled, and we're not
@@ -184,7 +188,7 @@ public class OrthSceneDirector extends SceneDirector
         // issues another explicit move order.
     }
 
-    // from interface OrthSceneService_OrthSceneMoveListener
+    // from interface OrthRoomService_OrthSceneMoveListener
     public function selectGift (lineup :TypedArray, groupName :String) :void
     {
         _worldctx.getWorldDirector().selectAvatar(lineup, groupName, function retryMove () :void {
@@ -216,7 +220,7 @@ public class OrthSceneDirector extends SceneDirector
     {
         super.fetchServices(client);
         // get a handle on our special scene service
-        _mssvc = (client.requireService(OrthSceneService) as OrthSceneService);
+        _mssvc = (client.requireService(OrthRoomService) as OrthRoomService);
     }
 
     /**
@@ -266,7 +270,7 @@ public class OrthSceneDirector extends SceneDirector
 
     protected var _worldctx :WorldContext;
 
-    protected var _mssvc :OrthSceneService;
+    protected var _mssvc :OrthRoomService;
     protected var _postMoveMessage :String;
     protected var _departingPortalId :int = -1;
     protected var _followListener :MessageAdapter = new MessageAdapter(memberMessageReceived);

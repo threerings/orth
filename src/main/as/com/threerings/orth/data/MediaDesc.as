@@ -2,11 +2,13 @@
 // $Id: MediaDesc.as 19417 2010-10-20 20:52:22Z zell $
 
 package com.threerings.orth.data {
+import com.threerings.util.Equalable;
 
 /**
  * A class containing metadata about a media object.
  */
 public interface MediaDesc
+    extends Equalable
 {
     /**
      * Returns the path of the URL that references this media.
@@ -18,7 +20,7 @@ public interface MediaDesc
      */
     function getMimeType () :int;
 
-    /** The size constraint on this media, if any. See {@link #computeConstraint}. */
+    /** The size constraint on this media, if any. */
     function get constraint () :int;
 
     /** The MIME type of the media associated with this item. */

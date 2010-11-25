@@ -16,6 +16,7 @@ import com.threerings.orth.room.data.DecorCodes;
 import com.threerings.orth.room.data.DecorGeometry;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.world.client.WorldContext;
 
 import flash.display.BitmapData;
 import flash.display.Sprite;
