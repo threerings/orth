@@ -30,10 +30,6 @@ public class OrthSceneObject extends SpotSceneObject
     /** The field name of the <code>memories</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String MEMORIES = "memories";
-
-    /** The field name of the <code>controllers</code> field. */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String CONTROLLERS = "controllers";
     // AUTO-GENERATED: FIELDS END
 
     /** The name of this room. */
@@ -50,9 +46,6 @@ public class OrthSceneObject extends SpotSceneObject
 
     /** Contains the memories for all entities in this room. */
     public DSet<EntityMemories> memories = DSet.newDSet();
-
-    /** Contains mappings for all controlled entities in this room. */
-    public DSet<EntityControl> controllers = DSet.newDSet();
 
     public OrthSceneObject ()
     {
@@ -177,57 +170,6 @@ public class OrthSceneObject extends SpotSceneObject
         requestAttributeChange(MEMORIES, value, this.memories);
         DSet<EntityMemories> clone = (value == null) ? null : value.clone();
         this.memories = clone;
-    }
-
-    /**
-     * Requests that the specified entry be added to the
-     * <code>controllers</code> set. The set will not change until the event is
-     * actually propagated through the system.
-     */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void addToControllers (EntityControl elem)
-    {
-        requestEntryAdd(CONTROLLERS, controllers, elem);
-    }
-
-    /**
-     * Requests that the entry matching the supplied key be removed from
-     * the <code>controllers</code> set. The set will not change until the
-     * event is actually propagated through the system.
-     */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void removeFromControllers (Comparable<?> key)
-    {
-        requestEntryRemove(CONTROLLERS, controllers, key);
-    }
-
-    /**
-     * Requests that the specified entry be updated in the
-     * <code>controllers</code> set. The set will not change until the event is
-     * actually propagated through the system.
-     */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void updateControllers (EntityControl elem)
-    {
-        requestEntryUpdate(CONTROLLERS, controllers, elem);
-    }
-
-    /**
-     * Requests that the <code>controllers</code> field be set to the
-     * specified value. Generally one only adds, updates and removes
-     * entries of a distributed set, but certain situations call for a
-     * complete replacement of the set value. The local value will be
-     * updated immediately and an event will be propagated through the
-     * system to notify all listeners that the attribute did
-     * change. Proxied copies of this object (on clients) will apply the
-     * value change when they received the attribute changed notification.
-     */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setControllers (DSet<EntityControl> value)
-    {
-        requestAttributeChange(CONTROLLERS, value, this.controllers);
-        DSet<EntityControl> clone = (value == null) ? null : value.clone();
-        this.controllers = clone;
     }
     // AUTO-GENERATED: METHODS END
 

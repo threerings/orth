@@ -471,14 +471,6 @@ public class EntitySprite
         }
     }
 
-    /**
-     * Called when this client is assigned control of this entity.
-     */
-    public function gotControl () :void
-    {
-        callUserCode("gotControl_v1");
-    }
-
     public function toString () :String
     {
         return "EntitySprite[" + _ident + "]";

@@ -5,15 +5,9 @@ package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.presents.dobj.DSet;
-import com.threerings.util.Iterator;
 import com.threerings.util.Name;
 
 import com.threerings.whirled.spot.data.SpotSceneObject;
-
-import com.threerings.orth.room.data.EntityMemories;
-import com.threerings.orth.room.data.EntityControl;
-import com.threerings.orth.room.data.MemoryChangedEvent;
-import com.threerings.orth.room.data.OrthSceneMarshaller;
 
 /**
  * Contains the distributed state of a virtual world room.
@@ -35,9 +29,6 @@ public class OrthSceneObject extends SpotSceneObject
 
     /** The field name of the <code>memories</code> field. */
     public static const MEMORIES :String = "memories";
-
-    /** The field name of the <code>controllers</code> field. */
-    public static const CONTROLLERS :String = "controllers";
     // AUTO-GENERATED: FIELDS END
 
     /** The name of this room. */
@@ -56,9 +47,6 @@ public class OrthSceneObject extends SpotSceneObject
     public var memories :DSet; /* of */ EntityMemories;
     MemoryChangedEvent; // references to force linkage
 
-    /** Contains mappings for all controlled entities in this room. */
-    public var controllers :DSet; /* of */ EntityControl;
-
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
@@ -68,7 +56,6 @@ public class OrthSceneObject extends SpotSceneObject
         accessControl = ins.readByte();
         orthSceneService = OrthSceneMarshaller(ins.readObject());
         memories = DSet(ins.readObject());
-        controllers = DSet(ins.readObject());
     }
 }
 }

@@ -10,14 +10,6 @@ import com.threerings.orth.room.data.EntityIdent;
 public interface OrthRoomService extends InvocationService
 {
     /**
-     * Requests that the specified item be assigned a controller. Other distributed state modifying
-     * services will automatically assign a controller to an uncontrolled item the first time they
-     * are requested, but if an entity simply wishes to start ticking itself locally, it must first
-     * request control to ensure that the right client handles the ticking.
-     */
-    void requestControl (Client client, EntityIdent item);
-
-    /**
      * Requests to send a sprite message.
      *
      * @param item the identifier of the item on which to trigger the event, or null if it should

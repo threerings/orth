@@ -83,15 +83,6 @@ public class EntityBackend extends ControlBackend
         o["env"] = _sprite.getEnvironment();
     }
 
-    override protected function handleUserCodeConnect (event :Object) :void
-    {
-        super.handleUserCodeConnect(event);
-
-        if (_sprite != null) {
-            _sprite.requestControl();
-        }
-    }
-
     protected function selfDestruct_v1 () :void
     {
         if (_sprite != null) {
@@ -123,14 +114,6 @@ public class EntityBackend extends ControlBackend
     {
         return Microphone.getMicrophone(index);
     }
-
-    // Legacy function disabled: All entities will already have someone in control
-//    protected function requestControl_v1 () :void
-//    {
-//        if (_sprite != null) {
-//            _sprite.requestControl();
-//        }
-//    }
 
     protected function getInstanceId_v1 () :int
     {

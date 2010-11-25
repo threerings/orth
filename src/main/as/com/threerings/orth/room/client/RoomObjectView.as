@@ -299,18 +299,6 @@ public class RoomObjectView extends RoomView
                 dispatchMemoryChanged(entry.ident, key, value);
             });
 
-        } else if (RoomObject.CONTROLLERS == name) {
-            var ctrl :EntityControl = (event.getEntry() as EntityControl);
-            if (ctrl.controllerOid == _ctx.getMemberObject().getOid()) {
-                if (ctrl.controlled is ControllableEntity) {
-                    _ctrl.dispatchEntityGotControl(
-                        (ctrl.controlled as ControllableEntity).getItemIdent());
-
-                } else {
-                    log.warning("Did not expect to receive control of unknown type",
-                        "controlled", ctrl.controlled, "controllerOid", ctrl.controllerOid);
-                }
-            }
 
         } else if (RoomObject.PLAYLIST == name) {
             var audio :Audio = event.getEntry() as Audio;

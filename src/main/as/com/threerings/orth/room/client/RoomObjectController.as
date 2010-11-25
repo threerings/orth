@@ -18,8 +18,6 @@ import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.room.data.ActorInfo;
-import com.threerings.orth.room.data.ControllableEntity;
-import com.threerings.orth.room.data.EntityControl;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;

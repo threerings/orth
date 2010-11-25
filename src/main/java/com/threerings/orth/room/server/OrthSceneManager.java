@@ -2,14 +2,10 @@ package com.threerings.orth.room.server;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
-import com.samskivert.util.Comparators;
 import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ResultListener;
 import com.threerings.crowd.data.BodyObject;
@@ -17,7 +13,6 @@ import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.orth.room.client.OrthRoomService;
 import com.threerings.orth.room.data.ActorInfo;
-import com.threerings.orth.room.data.EntityControl;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.ActorObject;
@@ -56,14 +51,6 @@ public abstract class OrthSceneManager extends SpotSceneManager
             if (!_plobj.occupants.contains(who.getOid())) {
                 return;
             }
-        }
-
-        // if this client does not currently control this entity; ignore the request; if no one
-        // controls it, this will assign this client as controller
-        if (isAction && !ensureEntityControl(caller, item, "triggerAction")) {
-            log.info("Dropping sprite message for lack of control", "who", caller.who(),
-                "item", item, "name", name);
-            return;
         }
 
         // dispatch this as a simple MessageEvent
@@ -109,14 +96,6 @@ public abstract class OrthSceneManager extends SpotSceneManager
             actor = (ActorObject)caller;
         }
 
-        // if this client does not currently control this entity; ignore the request; if no one
-        // controls it, this will assign this client as controller
-        if (!ensureEntityControl(caller, item, "setState")) {
-            log.info("Dropping change state for lack of control", "who", caller.who(),
-                "item", item, "state", state);
-            return;
-        }
-
         // call the public (non-invocation service) method to enact it
         setState(actor, state);
     }
@@ -149,21 +128,8 @@ public abstract class OrthSceneManager extends SpotSceneManager
     }
 
     @Override
-    public void requestControl (ClientObject caller, EntityIdent item)
-    {
-        ensureEntityControl(caller, item, "requestControl");
-        // TODO: throw invocationexception on failure?
-    }
-
-    @Override
     public void changeLocation (ClientObject caller, EntityIdent item, Location newLoc)
     {
-        // if this client does not currently control this entity; ignore the request; if no one
-        // controls it, this will assign this client as controller
-        if (!ensureEntityControl(caller, item, "changeLocation")) {
-            return;
-        }
-
         int oid = findActorOid(item);
         if (oid != 0) {
             _orthObj.updateOccupantLocs(new SceneLocation(newLoc, oid));
@@ -308,26 +274,6 @@ public abstract class OrthSceneManager extends SpotSceneManager
     }
 
     @Override // from PlaceManager
-    protected void bodyUpdated (OccupantInfo info)
-    {
-        super.bodyUpdated(info);
-
-        // if this occupant just disconnected, reassign their controlled entities
-        if (info.status == OccupantInfo.DISCONNECTED) {
-            reassignControllers(info.bodyOid);
-        }
-    }
-
-    @Override // from PlaceManager
-    protected void bodyLeft (int bodyOid)
-    {
-        super.bodyLeft(bodyOid);
-
-        // reassign this occupant's controlled entities
-        reassignControllers(bodyOid);
-    }
-
-    @Override // from PlaceManager
     protected void didShutdown ()
     {
         _orthObj.removeListener(_roomListener);
@@ -394,110 +340,6 @@ public abstract class OrthSceneManager extends SpotSceneManager
             _memSupply.flushMemories(Collections.singleton(removed));
         }
     }
-
-    /**
-     * Checks to see if an item is being controlled by any client. If not, the calling client is
-     * assigned as the item's controller and true is returned. If the item is already being
-     * controlled or is controllable by the calling client, true is returned. Otherwise false is
-     * returned (indicating that another client currently has control of the item or the client
-     * is not allowed to control the item).
-     */
-    protected boolean ensureEntityControl (ClientObject who, EntityIdent item, String from)
-    {
-        EntityControl ctrl = _orthObj.controllers.get(item);
-        if (ctrl == null) {
-            //log.info("Assigning control", "item", item, "to", who.who());
-            _orthObj.addToControllers(new EntityControl(item, who.getOid()));
-            return true;
-        }
-        return (ctrl.controllerOid == who.getOid());
-    }
-
-    /**
-     * Reassigns all scene entities controlled by the specified client to new controllers.
-     */
-    protected void reassignControllers (int bodyOid)
-    {
-        // determine which items were under the control of this user
-        List<EntityIdent> items = Lists.newArrayList();
-        for (EntityControl ctrl : _orthObj.controllers) {
-            if (ctrl.controllerOid == bodyOid) {
-                items.add(ctrl.entity);
-            }
-        }
-        if (items.size() == 0) {
-            return;
-        }
-
-        // clear out the old controller mappings
-        _orthObj.startTransaction();
-        try {
-            for (EntityIdent item : items) {
-                _orthObj.removeFromControllers(item);
-            }
-        } finally {
-            _orthObj.commitTransaction();
-        }
-
-        // assign new mappings to remaining users
-        assignControllers(items);
-    }
-
-    protected boolean isPotentialController (OccupantInfo info)
-    {
-        return info.status != OccupantInfo.DISCONNECTED;
-    }
-
-    /**
-     * Handles a request to select a controller for the supplied set of items.
-     */
-    protected boolean assignControllers (Collection<EntityIdent> items)
-    {
-        // determine the available controllers
-        Map<Integer, Controller> controllers = Maps.newHashMap();
-        for (OccupantInfo info : _orthObj.occupantInfo) {
-            if (isPotentialController(info)) {
-                controllers.put(info.bodyOid, new Controller(info.bodyOid));
-            }
-        }
-
-        // if we have no potential controllers, the controllables will remain uncontrolled (which
-        // is much better than them being out of control :)
-        if (controllers.size() == 0) {
-            return false;
-        }
-
-        // note the current load of these controllers
-        for (EntityControl ctrl : _orthObj.controllers) {
-            Controller owner = controllers.get(ctrl.controllerOid);
-            if (owner != null) {
-                owner.load++;
-            }
-        }
-
-        // choose the least loaded controller that is compatible with the controllable, remove the
-        // controller from the set, assign them control of the controllable, add them back to the
-        // set, then finally move to the next item
-        try {
-            _orthObj.startTransaction();
-            TreeSet<Controller> set = new TreeSet<Controller>(controllers.values());
-            for (EntityIdent ctrlable : items) {
-                for (Controller ctrl : set) {
-                    set.remove(ctrl);
-                    ctrl.load++;
-                    //log.info("Assigning control", "item", ctrlable, "to", ctrl.bodyOid);
-                    _orthObj.addToControllers(new EntityControl(ctrlable, ctrl.bodyOid));
-                    set.add(ctrl);
-                    break;
-                }
-            }
-
-        } finally {
-            _orthObj.commitTransaction();
-        }
-        return true;
-    }
-
 
     /**
      * Determine the actor oid that corresponds to the specified ItemIdent, or return 0 if none
@@ -579,36 +421,6 @@ public abstract class OrthSceneManager extends SpotSceneManager
             }
         }
     }
-
-    /** Used during the process of controller assignment. */
-    protected static class Controller implements Comparable<Controller>
-    {
-        public final int bodyOid;
-        public int load;
-
-        public Controller (int bodyOid) {
-            this.bodyOid = bodyOid;
-        }
-        public boolean equals (Object other) {
-            if (other instanceof Controller) {
-                Controller that = (Controller) other;
-                return (this.bodyOid == that.bodyOid);
-            } else {
-                return false;
-            }
-        }
-        public int hashCode () {
-            return bodyOid;
-        }
-        public int compareTo (Controller other) {
-            // sort first by load, then by body oid
-            int diff = Comparators.compare(load, other.load);
-            if (diff == 0) {
-                diff = Comparators.compare(bodyOid, other.bodyOid);
-            }
-            return diff;
-        }
-    } // End: static class Controller
 
     /** The room object. */
     protected OrthSceneObject _orthObj;

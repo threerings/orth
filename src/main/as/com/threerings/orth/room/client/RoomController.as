@@ -176,14 +176,6 @@ public class RoomController extends SceneController
     }
 
     /**
-     * Requests that this client be given control of the specified item.
-     */
-    public function requestControl (ident :EntityIdent) :void
-    {
-        // see subclasses
-    }
-
-    /**
      * Requests that an item be removed from the owner's inventory.
      */
     public function deleteItem (ident :EntityIdent) :void
@@ -200,30 +192,11 @@ public class RoomController extends SceneController
     }
 
     /**
-     * Called when control of an entity is assigned to us.
-     */
-    public function dispatchEntityGotControl (ident :EntityIdent) :void
-    {
-        var sprite :EntitySprite = _roomView.getEntity(ident);
-        if (sprite != null) {
-            sprite.gotControl();
-        } else {
-            log.info("Received got control for unknown sprite", "item", ident);
-        }
-    }
-
-    /**
-     * Handles a request by an item in our room to send an "action" (requires control) or a
-     * "message" (doesn't require control).
+     * Handles a request by an item in our room to send an "action" or a "message".
      */
     public function sendSpriteMessage (
         ident :EntityIdent, name :String, arg :Object, isAction :Boolean) :void
     {
-        if (isAction && !checkCanRequest(ident, "triggerAction")) {
-            log.info("Dropping message for lack of control", "ident", ident, "name", name);
-            return;
-        }
-
         // send the request off to the server
         var data :ByteArray = ObjectMarshaller.validateAndEncode(arg, MAX_ENCODED_MESSAGE_LENGTH);
         sendSpriteMessage2(ident, name, data, isAction);
@@ -231,7 +204,7 @@ public class RoomController extends SceneController
 
     /**
      * Handles a request by an item in our room to send a "signal" to all the instances of
-     * all the entities in the room. This does not require control.
+     * all the entities in the room.
      */
     public function sendSpriteSignal (ident :EntityIdent, name :String, arg :Object) :void
     {
@@ -240,15 +213,10 @@ public class RoomController extends SceneController
     }
 
     /**
-     * Handles a request by an actor item to change its persistent state.  Requires control.
+     * Handles a request by an actor item to change its persistent state.
      */
     public function setActorState (ident :EntityIdent, actorOid :int, state :String) :void
     {
-        if (!checkCanRequest(ident, "setState")) {
-            log.info("Dropping state change for lack of control", "ident", ident, "state", state);
-            return;
-        }
-
         setActorState2(ident, actorOid, state);
     }
 
@@ -268,8 +236,6 @@ public class RoomController extends SceneController
     public function updateMemory (
         ident :EntityIdent, key :String, value: Object, callback :Function) :void
     {
-        // NOTE: there is no need to be "in control" to update memory.
-
 //        validateKey(key);
         // This will validate that the memory being set isn't greater than the maximum
         // alloted space for all memories, becauses that will surely fail on the server,
@@ -835,24 +801,6 @@ public class RoomController extends SceneController
         }
     }
 
-    /**
-     * Ensures that we can issue a request to update the distributed state of the specified item,
-     * returning true if so, false if we don't yet have a room object or are not in control of that
-     * item.
-     */
-    protected function checkCanRequest (ident :EntityIdent, from :String) :Boolean
-    {
-        // make sure we are in control of this entity (or that no one has control)
-        var result :Object = hasEntityControl(ident);
-        if (result == null || result == true) {
-            // it's ok if nobody has control
-            return true;
-        }
-
-        log.info("Dropping request as we are not controller", "from", from, "item", ident);
-        return false;
-    }
-
 //    protected function validateKey (key :String) :void
 //    {
 //        if (key == null) {
@@ -864,19 +812,6 @@ public class RoomController extends SceneController
 //            }
 //        }
 //    }
-
-    /**
-     * Does this client have control over the specified entity?
-     *
-     * Side-effect: The gotControl() will always be re-dispatched to the entity if it does.
-     * The newest EntityControl will suppress repeats.
-     *
-     * @returns true, false, or null if nobody currently has control.
-     */
-    protected function hasEntityControl (ident :EntityIdent) :Object
-    {
-        return true;
-    }
 
     protected function throttle (ident :EntityIdent, fn :Function, ... args) :void
     {
