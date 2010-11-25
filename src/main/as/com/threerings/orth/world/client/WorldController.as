@@ -46,6 +46,8 @@ import com.threerings.flex.CommandMenu;
 
 import com.threerings.whirled.data.Scene;
 
+import Resources;
+
 
 /**
  * Extends the MsoyController with World specific bits.
@@ -223,7 +225,7 @@ public class WorldController extends OrthController
         }
 
         CommandMenu.addSeparator(menuData);
-        menuData.push({ label: Msgs.GENERAL.get("b.editScene"), icon: ROOM_EDIT_ICON,
+        menuData.push({ label: Msgs.GENERAL.get("b.editScene"), icon: Resources.ROOM_EDIT_ICON,
             command: ROOM_EDIT, enabled: roomView.getRoomController().canManageRoom() });
 
         addFrameColorOption(menuData);
@@ -234,7 +236,7 @@ public class WorldController extends OrthController
             command: MsoyController.VIEW_COMMENT_PAGE });
         menuData.push({ label: Msgs.GENERAL.get("b.snapshot"), icon: SNAPSHOT_ICON,
             command: doSnapshot });
-        menuData.push({ label: Msgs.GENERAL.get("b.music"), icon: MUSIC_ICON,
+        menuData.push({ label: Msgs.GENERAL.get("b.music"), icon: Resources.MUSIC_ICON,
             command: DelayUtil.delayFrame, arg: [ doShowMusic, [ trigger ] ],
             enabled: (_music != null) }); // pop it later so that it avoids the menu itself
 
@@ -850,18 +852,20 @@ public class WorldController extends OrthController
             const isInOurRoom :Boolean = (placeCtrl is RoomObjectController) &&
                 RoomObjectController(placeCtrl).containsPlayer(name);
             // whisper
-            menuItems.push({ label: Msgs.GENERAL.get("b.open_channel"), icon: WHISPER_ICON,
-                command: OPEN_CHANNEL, arg: name, enabled: !muted });
+            menuItems.push({ label: Msgs.GENERAL.get("b.open_channel"),
+                        icon: Resources.WHISPER_ICON,
+                        command: OPEN_CHANNEL, arg: name, enabled: !muted });
             // add as friend
             if (!onlineFriend) {
-                menuItems.push({ label: Msgs.GENERAL.get("l.add_as_friend"), icon: ADDFRIEND_ICON,
-                    command: INVITE_FRIEND, arg: memId, enabled: !muted });
+                menuItems.push({ label: Msgs.GENERAL.get("l.add_as_friend"),
+                            icon: Resources.ADDFRIEND_ICON,
+                            command: INVITE_FRIEND, arg: memId, enabled: !muted });
             }
             // visit
             if ((onlineFriend || isSupport)) {
                 var label :String = onlineFriend ?
                     Msgs.GENERAL.get("b.visit_friend") : "Visit (as agent)";
-                menuItems.push({ label: label, icon: VISIT_ICON,
+                menuItems.push({ label: label, icon: Resources.VISIT_ICON,
                     command: VISIT_MEMBER, arg: memId, enabled: !isInOurRoom });
             }
 // Visit Home disabled. Jon says it's pointless.
@@ -885,7 +889,7 @@ public class WorldController extends OrthController
             // muting
             var muted :Boolean = _mctx.getMuteDirector().isMuted(name);
             menuItems.push({ label: Msgs.GENERAL.get(muted ? "b.unmute" : "b.mute"),
-                icon: BLOCK_ICON,
+                icon: Resources.BLOCK_ICON,
                 callback: _mctx.getMuteDirector().setMuted, arg: [ name, !muted ] });
             // booting
             if (addWorldItems && isInOurRoom &&
@@ -895,7 +899,7 @@ public class WorldController extends OrthController
                     callback: handleBootFromPlace, arg: memId });
             }
             // reporting
-            menuItems.push({ label: Msgs.GENERAL.get("b.complain"), icon: REPORT_ICON,
+            menuItems.push({ label: Msgs.GENERAL.get("b.complain"), icon: Resources.REPORT_ICON,
                 command: COMPLAIN_MEMBER, arg: [ memId, name ] });
         }
 
@@ -1302,29 +1306,5 @@ public class WorldController extends OrthController
     protected static const MAX_RECENT_SCENES :int = 11;
 
     private static const log :Log = Log.getLog(WorldController);
-
-    [Embed(source="../../../../../../../rsrc/media/skins/controlbar/editroom.png")]
-    protected static const ROOM_EDIT_ICON :Class;
-
-    [Embed(source="../../../../../../../rsrc/media/skins/controlbar/music.png")]
-    protected static const MUSIC_ICON :Class;
-
-    [Embed(source="../../../../../../../rsrc/media/skins/controlbar/snapshot.png")]
-    protected static const SNAPSHOT_ICON :Class;
-
-    [Embed(source="../../../../../../../rsrc/media/skins/menu/addfriend.png")]
-    protected static const ADDFRIEND_ICON :Class;
-
-    [Embed(source="../../../../../../../rsrc/media/skins/menu/block.png")]
-    protected static const BLOCK_ICON :Class;
-
-    [Embed(source="../../../../../../../rsrc/media/skins/menu/report.png")]
-    protected static const REPORT_ICON :Class;
-
-    [Embed(source="../../../../../../../rsrc/media/skins/menu/visit.png")]
-    protected static const VISIT_ICON :Class;
-
-    [Embed(source="../../../../../../../rsrc/media/skins/menu/whisper.png")]
-    protected static const WHISPER_ICON :Class;
 }
 }
