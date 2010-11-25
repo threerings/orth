@@ -65,7 +65,7 @@ import com.threerings.msoy.room.data.PuppetName;
 import com.threerings.msoy.item.data.all.Item;
 import com.threerings.msoy.item.data.all.ItemIdent;
 
-public class MsoyController extends Controller
+public class OrthController extends Controller
     implements ClientObserver
 {
     /** Command to show the 'about' dialog. */
