@@ -3,8 +3,6 @@
 
 package com.threerings.orth.data;
 
-import com.threerings.orth.scene.data.EntityMedia;
-
 public interface MediaDesc
 {
     /** A constant used to indicate that an image does not exceed half thumbnail size in either

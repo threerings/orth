@@ -3,13 +3,21 @@
 
 package com.threerings.orth.data {
 
-import com.threerings.orth.scene.data.EntityMedia;
-
 /**
  * A class containing metadata about a media object.
  */
-public interface MediaDesc extends EntityMedia
+public interface MediaDesc
 {
+    /**
+     * Returns the path of the URL that references this media.
+     */
+    function getMediaPath () :String;
+
+    /**
+     * Returns the mime type of this media.
+     */
+    function getMimeType () :int;
+
     /** The size constraint on this media, if any. See {@link #computeConstraint}. */
     function get constraint () :int;
 
