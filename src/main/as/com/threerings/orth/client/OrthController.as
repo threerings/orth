@@ -118,9 +118,6 @@ public class OrthController extends Controller
     /** Command to flag an item, arg is an ItemIdent. */
     public static const FLAG_ITEM :String = "FlagItem";
 
-    /** Command to view all games */
-    public static const VIEW_GAMES :String = "ViewGames";
-
     /** Command to display the full Whirled (used in the embedded client). */
     public static const VIEW_FULL_VERSION :String = "ViewFullVersion";
 
@@ -145,12 +142,6 @@ public class OrthController extends Controller
     /** Command to indicate an audio item was clicked, arg is [ mediaDesc ] */
     public static const AUDIO_CLICKED :String = "AudioClicked";
 
-    /** Command to tweet an message. */
-    public static const TWEET :String = "Tweet";
-
-    /** Command to tweet an invite to a specific game. */
-    public static const TWEET_GAME :String = "TweetGame";
-
     /** Command to show users the subscribe page. */
     public static const SUBSCRIBE :String = "Subscribe";
 
@@ -171,11 +162,11 @@ public class OrthController extends Controller
     /**
      * Creates and initializes the controller.
      */
-    public function MsoyController (mctx :MsoyContext, topPanel :TopPanel)
+    public function MsoyController (mctx :OrthContext, topPanel :TopPanel)
     {
-        _mctx = mctx;
-        _mctx.getClient().addServiceGroup(CrowdCodes.CROWD_GROUP);
-        _mctx.getClient().addClientObserver(this);
+        _octx = mctx;
+        _octx.getClient().addServiceGroup(CrowdCodes.CROWD_GROUP);
+        _octx.getClient().addClientObserver(this);
         _topPanel = topPanel;
 
         // create a timer to poll mouse position and track timing
@@ -187,7 +178,7 @@ public class OrthController extends Controller
         _byebyeTimer.addEventListener(TimerEvent.TIMER, checkIdleLogoff);
 
         // listen for location changes
-        _mctx.getLocationDirector().addLocationObserver(
+        _octx.getLocationDirector().addLocationObserver(
             new LocationAdapter(null, this.locationDidChange, null));
 
         var stage :Stage = mctx.getStage();
@@ -215,13 +206,13 @@ public class OrthController extends Controller
             return true;
 
         } else {
-            _mctx.displayFeedback(
+            _octx.displayFeedback(
                 MsoyCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
 
             // TODO
             // experimental: display a popup with the URL (this could be moved to handleLink()
             // if this method is altered to return a success Boolean
-            new MissedURLDialog(_mctx, url);
+            new MissedURLDialog(_octx, url);
             return false;
         }
     }
@@ -235,7 +226,7 @@ public class OrthController extends Controller
     public function createSharableLink (page :String, friend :Boolean) :String
     {
         var servlet :String = friend ? "friend" : "welcome";
-        return DeploymentConfig.serverURL + servlet + "/" + _mctx.getMyId() + "/" + page;
+        return DeploymentConfig.serverURL + servlet + "/" + _octx.getMyId() + "/" + page;
     }
 
     /**
@@ -307,7 +298,7 @@ public class OrthController extends Controller
         var memName :MemberName = puppet ? new PuppetName(name, memberId)
                                          : new MemberName(name, memberId);
         addMemberMenuItems(memName, menuItems);
-        CommandMenu.createMenu(menuItems, _mctx.getTopPanel()).popUpAtMouse();
+        CommandMenu.createMenu(menuItems, _octx.getTopPanel()).popUpAtMouse();
     }
 
     /**
@@ -315,21 +306,13 @@ public class OrthController extends Controller
      */
     public function handleAbout () :void
     {
-        new AboutDialog(_mctx);
+        new AboutDialog(_octx);
     }
 
     /**
      * Handles the CLOSE_PLACE_VIEW command.
      */
     public function handleClosePlaceView () :void
-    {
-        // handled by our derived classes
-    }
-
-    /**
-     * Handles the VIEW_GAMES command.
-     */
-    public function handleViewGames () :void
     {
         // handled by our derived classes
     }
@@ -348,8 +331,8 @@ public class OrthController extends Controller
     public function handlePopShareDialog () :void
     {
         // do it this way so that we don't mess up the dialog popper.
-        if (!_mctx.getControlBar().shareBtn.selected) {
-            _mctx.getControlBar().shareBtn.activate();
+        if (!_octx.getControlBar().shareBtn.selected) {
+            _octx.getControlBar().shareBtn.activate();
         }
     }
 
@@ -366,7 +349,7 @@ public class OrthController extends Controller
      */
     public function handleSetDisplayState (state :String = null) :void
     {
-        const stage :Stage = _mctx.getStage();
+        const stage :Stage = _octx.getStage();
         const curState :String = stage.displayState;
         if (state == curState) {
             return;
@@ -379,7 +362,7 @@ public class OrthController extends Controller
             stage.displayState = state;
         } catch (se :SecurityError) {
             // it didn't work! Disable the full-screen button
-            _mctx.getControlBar().fullBtn.enabled = false;
+            _octx.getControlBar().fullBtn.enabled = false;
         }
     }
 
@@ -414,7 +397,7 @@ public class OrthController extends Controller
     {
         // give the client a chance to log off, then log back on
         _topPanel.callLater(function () :void {
-            var client :Client = _mctx.getClient();
+            var client :Client = _octx.getClient();
             log.info("Logging on", "creds", creds, "version", DeploymentConfig.version);
             client.setCredentials(creds);
             client.logon();
@@ -426,7 +409,7 @@ public class OrthController extends Controller
      */
     public function handleChatPrefs () :void
     {
-        new ChatPrefsDialog(_mctx);
+        new ChatPrefsDialog(_octx);
     }
 
     public function handleAudioClicked (desc :MediaDesc, ident :ItemIdent) :void
@@ -440,7 +423,7 @@ public class OrthController extends Controller
         var menuItems :Array = [];
         menuItems.push({ label: Msgs.GENERAL.get("b.view_item", kind),
             command: MsoyController.VIEW_ITEM, arg: ident });
-        if (_mctx.isRegistered()) {
+        if (_octx.isRegistered()) {
             menuItems.push({ label: Msgs.GENERAL.get("b.flag_item", kind),
                 command: MsoyController.FLAG_ITEM, arg: ident });
         }
@@ -452,41 +435,6 @@ public class OrthController extends Controller
         }
 
         CommandMenu.createMenu(menuItems, _topPanel).popUpAtMouse();
-    }
-
-    /**
-     * Handles TWEET
-     */
-    public function handleTweet (msg :String) :void
-    {
-        handleViewUrl("http://twitter.com/home?status=" + encodeURIComponent(msg), "_blank");
-    }
-
-    /**
-     * Handles TWEET_GAME
-     */
-    public function handleTweetGame (gameId :int, gameName :String, party :Boolean = true) :void
-    {
-        var shareLink :String = createSharableLink(
-            "world-game_i_" + gameId + "_" + _mctx.getMyId(), true);
-        var tweet :String = Msgs.GAME.get("m.invite_twitter" + (party ? "_party" : ""),
-            gameName, shareLink);
-        handleTweet(tweet);
-    }
-
-    /**
-     * Updates our header and control bars based on our current location. This is called
-     * automatically when the world location changes but must be called explicitly by the game
-     * services when we enter a game as the world services don't know about that.
-     */
-    public function updateLocationDisplay () :void
-    {
-        _mctx.getUpsellDirector().locationUpdated();
-
-//        if (_goMenu != null) {
-//            _goMenu.hide();
-//            // will be nulled automatically...
-//        }
     }
 
     /**
@@ -504,10 +452,10 @@ public class OrthController extends Controller
      */
     public function reconnectClient () :void
     {
-        if (_mctx.getMsoyClient().getEmbedding().hasGWT() && ExternalInterface.available) {
+        if (_octx.getMsoyClient().getEmbedding().hasGWT() && ExternalInterface.available) {
             ExternalInterface.call("rebootFlashClient");
         } else {
-            _mctx.getClient().logon();
+            _octx.getClient().logon();
         }
     }
 
@@ -534,10 +482,10 @@ public class OrthController extends Controller
     {
         if (_logoffMessage != null) {
             _topPanel.setPlaceView(new DisconnectedPanel(
-                _mctx.getClient(), _logoffMessage, reconnectClient));
+                _octx.getClient(), _logoffMessage, reconnectClient));
             _logoffMessage = null;
         } else {
-            _topPanel.setPlaceView(new BlankPlaceView(_mctx));
+            _topPanel.setPlaceView(new BlankPlaceView(_octx));
         }
     }
 
@@ -545,7 +493,7 @@ public class OrthController extends Controller
     public function clientFailedToLogon (event :ClientEvent) :void
     {
         _topPanel.setPlaceView(new DisconnectedPanel(
-            _mctx.getClient(), event.getCause().message, reconnectClient));
+            _octx.getClient(), event.getCause().message, reconnectClient));
     }
 
     // from ClientObserver
@@ -613,7 +561,7 @@ public class OrthController extends Controller
         if (pt == "StandAlone" || pt == "External") {
             return false;
         }
-        if (!_mctx.getMsoyClient().getEmbedding().hasGWT()) {
+        if (!_octx.getMsoyClient().getEmbedding().hasGWT()) {
             return false;
         }
         return true;
@@ -641,11 +589,11 @@ public class OrthController extends Controller
     protected function popControlBarMenu (menuData :Array, trigger :Button) :void
     {
         var menu :CommandMenu = CommandMenu.createMenu(menuData, _topPanel);
-        menu.setBounds(_mctx.getTopPanel().getMainAreaBounds());
+        menu.setBounds(_octx.getTopPanel().getMainAreaBounds());
         menu.setTriggerButton(trigger);
         var r :Rectangle = trigger.getBounds(trigger.stage);
         var y :int;
-        y = Math.min(r.top, _mctx.getControlBar().localToGlobal(new Point()).y);
+        y = Math.min(r.top, _octx.getControlBar().localToGlobal(new Point()).y);
 
         menu.addEventListener(MenuEvent.MENU_SHOW, handleShowMenu);
         menu.addEventListener(MenuEvent.MENU_HIDE, handleHideMenu);
@@ -714,10 +662,10 @@ public class OrthController extends Controller
 
         switch (event.keyCode) {
         case Keyboard.F7:
-            _mctx.getTopPanel().getHeaderBar().getChatTabs().selectedIndex--;
+            _octx.getTopPanel().getHeaderBar().getChatTabs().selectedIndex--;
             break;
         case Keyboard.F8:
-            _mctx.getTopPanel().getHeaderBar().getChatTabs().selectedIndex++;
+            _octx.getTopPanel().getHeaderBar().getChatTabs().selectedIndex++;
             break;
         case Keyboard.F9:
             handleToggleChatHide();
@@ -773,7 +721,7 @@ public class OrthController extends Controller
 
         if (nowIdle != _idle) {
             _idle = nowIdle;
-            var bsvc :BodyService = _mctx.getClient().getService(BodyService) as BodyService;
+            var bsvc :BodyService = _octx.getClient().getService(BodyService) as BodyService;
             // the service may be null if we're in the studio viewer, so just don't worry about it
             if (bsvc != null) {
                 bsvc.setIdle(nowIdle);
@@ -787,7 +735,7 @@ public class OrthController extends Controller
 //    protected function handleUnfocus (event :FocusEvent) :void
 //    {
 //        if (event.target is TextField && event.relatedObject == null) {
-//            _mctx.getStage().addEventListener(MouseEvent.MOUSE_MOVE, handleRefocus);
+//            _octx.getStage().addEventListener(MouseEvent.MOUSE_MOVE, handleRefocus);
 //        }
 //    }
 //
@@ -796,7 +744,7 @@ public class OrthController extends Controller
 //     */
 //    protected function handleRefocus (event :MouseEvent) :void
 //    {
-//        _mctx.getStage().removeEventListener(MouseEvent.MOUSE_MOVE, handleRefocus);
+//        _octx.getStage().removeEventListener(MouseEvent.MOUSE_MOVE, handleRefocus);
 //        checkChatFocus();
 //    }
 
@@ -831,7 +779,7 @@ public class OrthController extends Controller
     protected function checkChatFocus (... ignored) :void
     {
         try {
-            var focus :Object = _mctx.getStage().focus;
+            var focus :Object = _octx.getStage().focus;
             if (!(focus is TextField) && !(focus is ChatCantStealFocus)) {
                 ChatControl.grabFocus();
             }
@@ -854,14 +802,14 @@ public class OrthController extends Controller
     protected function checkIdleLogoff (... ignored) :void
     {
         // only do something if we're logged on and a guest
-        if (_mctx.getClient().isLoggedOn() && !_mctx.isRegistered()) {
+        if (_octx.getClient().isLoggedOn() && !_octx.isRegistered()) {
             _logoffMessage = "m.idle_logoff";
-            _mctx.getClient().logoff(false);
+            _octx.getClient().logoff(false);
         }
     }
 
     /** Provides access to client-side directors and services. */
-    protected var _mctx :MsoyContext;
+    protected var _octx :OrthContext;
 
     /** The topmost panel in the msoy client. */
     protected var _topPanel :TopPanel;
