@@ -117,21 +117,6 @@ public class WorldClient extends OrthClient
             "staticMediaURL", DeploymentConfig.staticMediaURL);
     }
 
-    // from Client
-    override public function gotClientObject (clobj :ClientObject) :void
-    {
-        super.gotClientObject(clobj);
-
-        var member :MemberObject = clobj as MemberObject;
-        if (_featuredPlaceView || member == null) {
-            return;
-        }
-
-        // listen for theme changes
-        var themeUpdater :ThemeUpdater = new ThemeUpdater(this);
-        member.addListener(themeUpdater);
-    }
-
     /**
      * Exposed to javascript so that it may notify us to logon.
      */
@@ -345,7 +330,6 @@ public class WorldClient extends OrthClient
         }
 
         creds.sessionToken = (token == null) ? params["token"] : token;
-        creds.themeId = params["themeId"];
         creds.ident = Prefs.getMachineIdent();
         creds.featuredPlaceView = _featuredPlaceView;
         creds.visitorId = getVisitorId();
