@@ -1,7 +1,7 @@
 //
 // $Id: WorldController.as 19431 2010-10-22 22:08:36Z zell $
 
-package com.threerings.msoy.world.client {
+package com.threerings.orth.world.client {
 
 import flash.display.DisplayObject;
 
@@ -40,7 +40,6 @@ import com.threerings.whirled.data.Scene;
 
 import com.threerings.msoy.utils.Args;
 
-import com.threerings.msoy.chat.client.IMRegisterDialog;
 import com.threerings.msoy.group.data.all.GroupMembership;
 import com.threerings.msoy.item.client.FlagItemDialog;
 import com.threerings.msoy.item.client.ItemService;
@@ -73,7 +72,6 @@ import com.threerings.msoy.data.WorldCredentials;
 
 import com.threerings.msoy.data.all.ContactEntry;
 import com.threerings.msoy.data.all.FriendEntry;
-import com.threerings.msoy.data.all.GatewayEntry;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.msoy.data.all.MediaDescSize;
 import com.threerings.msoy.data.all.MemberName;
@@ -129,12 +127,6 @@ public class WorldController extends MsoyController
 
     /** Command to open the chat interface for a particular chat channel. */
     public static const OPEN_CHANNEL :String = "OpenChannel";
-
-    /** Command to logon to an im account. */
-    public static const REGISTER_IM :String = "RegisterIM";
-
-    /** Command to logoff an im account. */
-    public static const UNREGISTER_IM :String = "UnregisterIM";
 
     /** Command to visit a member's current location */
     public static const VISIT_MEMBER :String = "VisitMember";
@@ -212,22 +204,6 @@ public class WorldController extends MsoyController
     }
 
     /**
-     * Handles the REGISTER_IM command.
-     */
-    public function handleRegisterIM (gateway :String) :void
-    {
-        _topPanel.callLater(function () :void { new IMRegisterDialog(_wctx, gateway); });
-    }
-
-    /**
-     * Handles the UNREGISTER_IM command;
-     */
-    public function handleUnregisterIM (gateway :String) :void
-    {
-        _wctx.getMsoyChatDirector().unregisterIM(gateway);
-    }
-
-    /**
      * Handles the POP_CHANNEL_MENU command.
      */
     public function handlePopChannelMenu (trigger :Button) :void
@@ -277,35 +253,6 @@ public class WorldController extends MsoyController
             menuData.push({ label: Msgs.GENERAL.get("l.groups"), children: groups});
         } else {
             menuData = menuData.concat(groups);
-        }
-
-        var gateways :Array = me.getSortedGateways();
-        if (gateways.length > 0) {
-            CommandMenu.addSeparator(menuData);
-        }
-        for each (var ge :GatewayEntry in gateways) {
-            var subMenuData :Array = [];
-            if (!ge.online) {
-                subMenuData.push(
-                    { label: Msgs.CHAT.get("m.im_login"), command: REGISTER_IM, arg: ge.gateway });
-            } else {
-                var contacts :Array = me.getSortedImContacts(ge.gateway);
-                for each (var ce :ContactEntry in contacts) {
-                    if (!ce.online) {
-                        continue;
-                    }
-                    // TODO: does this need to be disabled if it's already open? Prob not
-                    subMenuData.push(
-                        { label: ce.name.toString(), command: OPEN_CHANNEL, arg: ce.name });
-                }
-                if (contacts.length == 0) {
-                    subMenuData.push({ label: Msgs.CHAT.get("m.no_im_contacts"), enabled: false});
-                }
-                CommandMenu.addSeparator(subMenuData);
-                subMenuData.push({
-                    label:Msgs.CHAT.get("m.im_logout"), command: UNREGISTER_IM, arg: ge.gateway });
-            }
-            menuData.push({ label: Msgs.CHAT.get("m." + ge.gateway), children: subMenuData});
         }
 
         popControlBarMenu(menuData.reverse(), trigger);

@@ -1,7 +1,7 @@
 //
 // $Id: WorldContext.as 18724 2009-11-19 19:21:47Z jamie $
 
-package com.threerings.msoy.world.client {
+package com.threerings.orth.world.client {
 
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.spot.client.SpotSceneDirector;

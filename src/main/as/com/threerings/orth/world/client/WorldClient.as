@@ -1,7 +1,7 @@
 //
 // $Id: WorldClient.as 19262 2010-07-13 22:28:11Z zell $
 
-package com.threerings.msoy.world.client {
+package com.threerings.orth.world.client {
 
 import flash.display.DisplayObject;
 import flash.display.Stage;
