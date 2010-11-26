@@ -161,7 +161,7 @@ public class RoomObjectView extends RoomView
         var avatar :MemberSprite = getMyAvatar();
         if (avatar != null) {
             var occInfo :MemberInfo = (avatar.getOccupantInfo() as MemberInfo);
-            if (occInfo.getItemIdent().equals(new ItemIdent(Item.AVATAR, avatarId))) {
+            if (occInfo.getEntityIdent().equals(new SimpleEntityIdent(Item.AVATAR, avatarId))) {
                 occInfo.setScale(newScale);
                 avatar.setOccupantInfo(occInfo, _roomObj);
             }
@@ -398,7 +398,7 @@ public class RoomObjectView extends RoomView
         var speaker :OccupantSprite = getSpeaker(msg);
         if (speaker != null) {
             // send it to all entities
-            var ident :String = speaker.getItemIdent().toString();
+            var ident :String = speaker.getEntityIdent().toString();
             var name :String = speaker.getOccupantInfo().username.toString();
             for each (var entity :EntitySprite in _entities.values()) {
                 entity.processChatMessage(ident, name, msg.message);
@@ -509,7 +509,7 @@ public class RoomObjectView extends RoomView
     override protected function populateSpriteContextMenu (
         sprite :EntitySprite, menuItems :Array) :void
     {
-        var ident :ItemIdent = sprite.getItemIdent();
+        var ident :EntityIdent = sprite.getEntityIdent();
         if (ident != null) {
             var kind :String = Msgs.GENERAL.get(sprite.getDesc());
             if (ident.type > Item.NOT_A_TYPE) { // -1 is used for the default avatar, etc.
@@ -589,7 +589,7 @@ public class RoomObjectView extends RoomView
     protected function updateBackgroundAudio () :void
     {
         var audio :Audio =
-            _roomObj.playlist.get(new ItemIdent(Item.AUDIO, _roomObj.currentSongId)) as Audio;
+            _roomObj.playlist.get(new SimpleEntityIdent(Item.AUDIO, _roomObj.currentSongId)) as Audio;
         const dispatchStopped :Boolean = (_musicPlayCount >= 0);
         const dispatchStarted :Boolean = (audio != null);
         var entity :EntitySprite;
@@ -637,7 +637,7 @@ public class RoomObjectView extends RoomView
             }
             _occupants.put(bodyOid, occupant);
             addSprite(occupant);
-            dispatchEntityEntered(occupant.getItemIdent());
+            dispatchEntityEntered(occupant.getEntityIdent());
             occupant.setEntering(loc);
             occupant.roomScaleUpdated();
 
@@ -664,7 +664,7 @@ public class RoomObjectView extends RoomView
 
         // if this occupant is a pet, notify GWT that we've got a new pet in the room.
         if (occupant is PetSprite) {
-            var ident :EntityIdent = occupant.getItemIdent();
+            var ident :EntityIdent = occupant.getEntityIdent();
             (_ctx.getClient() as WorldClient).itemUsageChangedToGWT(
                 Item.PET, ident.itemId, Item_UsedAs.PET, _scene.getId());
         }
@@ -679,14 +679,14 @@ public class RoomObjectView extends RoomView
         if (sprite.isMoving()) {
             _pendingRemovals.put(bodyOid, sprite);
         } else {
-            dispatchEntityLeft(sprite.getItemIdent());
+            dispatchEntityLeft(sprite.getEntityIdent());
             removeSprite(sprite);
         }
 
         // if this occupant is a pet, notify GWT that we've removed a pet from the room.
         if (sprite is PetSprite) {
             (_ctx.getClient() as WorldClient).itemUsageChangedToGWT(
-                Item.PET, sprite.getItemIdent().itemId, Item_UsedAs.NOTHING, 0);
+                Item.PET, sprite.getEntityIdent().itemId, Item_UsedAs.NOTHING, 0);
         }
     }
 
@@ -760,7 +760,7 @@ public class RoomObjectView extends RoomView
     override public function getMusicOwner () :int
     {
         var audio :Audio =
-            _roomObj.playlist.get(new ItemIdent(Item.AUDIO, _roomObj.currentSongId)) as Audio;
+            _roomObj.playlist.get(new SimpleEntityIdent(Item.AUDIO, _roomObj.currentSongId)) as Audio;
         return (audio == null) ? 0 : audio.ownerId;
     }
 

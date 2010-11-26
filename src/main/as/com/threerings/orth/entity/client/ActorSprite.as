@@ -82,7 +82,7 @@ public class ActorSprite extends OccupantSprite
         super.setOccupantInfo(newInfo, extraInfo);
 
         // note our new item ident, our entity id in the room
-        setItemIdent((newInfo is ActorInfo) ? (newInfo as ActorInfo).getItemIdent() : null);
+        setEntityIdent((newInfo is ActorInfo) ? (newInfo as ActorInfo).getEntityIdent() : null);
 
         // if the state has changed, dispatch an event
         if (stateChanged) {
@@ -131,8 +131,8 @@ public class ActorSprite extends OccupantSprite
         oldInfo :OccupantInfo, newInfo :OccupantInfo) :Boolean
     {
         // update the item ident
-        const oldIdent :ItemIdent = getItemIdent();
-        const newIdent :ItemIdent = ActorInfo(newInfo).getItemIdent();
+        const oldIdent :EntityIdent = getEntityIdent();
+        const newIdent :EntityIdent = ActorInfo(newInfo).getEntityIdent();
         const identChanged :Boolean = !newIdent.equals(oldIdent);
         if (identChanged) {
             var view :RoomView = _sprite.parent as RoomView;
@@ -145,7 +145,7 @@ public class ActorSprite extends OccupantSprite
             }
 
             // and set the new ident
-            setItemIdent(newIdent);
+            setEntityIdent(newIdent);
         }
 
         // check the media

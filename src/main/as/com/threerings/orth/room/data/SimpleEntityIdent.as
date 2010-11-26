@@ -1,5 +1,5 @@
 //
-// $Id: ActorInfo.java 16914 2009-05-27 05:54:19Z mdb $
+// $Id: $
 
 package com.threerings.orth.room.data {
 

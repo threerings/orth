@@ -343,8 +343,8 @@ public class OccupantSprite extends EntitySprite
 
     public function dispatchEntityMoved (destLoc :OrthLocation) :void
     {
-        if (getItemIdent() != null && _sprite.parent is RoomView) {
-            (_sprite.parent as RoomView).dispatchEntityMoved(getItemIdent(),
+        if (getEntityIdent() != null && _sprite.parent is RoomView) {
+            (_sprite.parent as RoomView).dispatchEntityMoved(getEntityIdent(),
                 (destLoc != null) ? [destLoc.x, destLoc.y, destLoc.z] : null);
         }
     }

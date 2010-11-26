@@ -5,6 +5,7 @@ package com.threerings.orth.entity.client {
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomElement;
 import com.threerings.orth.room.client.RoomView;
+import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthSceneCodes;
 import com.threerings.orth.world.client.WorldContext;
@@ -164,7 +165,7 @@ public class EntitySprite
      * Return the item ident from which this sprite was based or null if it is not an item-based
      * sprite.
      */
-    public function getItemIdent () :ItemIdent
+    public function getEntityIdent () :EntityIdent
     {
         return _ident;
     }
@@ -506,7 +507,7 @@ public class EntitySprite
     /**
      * Configures this sprite with the item it represents.
      */
-    protected function setItemIdent (ident :ItemIdent) :void
+    protected function setEntityIdent (ident :EntityIdent) :void
     {
         _sprite.setItem(ident);
 
@@ -947,7 +948,7 @@ public class EntitySprite
 
     /** Identifies the item we are visualizing. All furniture will have an ident, but only our
      * avatar sprite will know its ident (and only we can update our avatar's memory, etc.).  */
-    protected var _ident :ItemIdent;
+    protected var _ident :EntityIdent;
 
     protected var _glow :GlowFilter;
 

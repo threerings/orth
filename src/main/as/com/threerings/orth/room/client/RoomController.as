@@ -226,7 +226,7 @@ public class RoomController extends SceneController
      */
     public function sendPetChatMessage (msg :String, info :ActorInfo) :void
     {
-        if (checkCanRequest(info.getItemIdent(), "PetService")) {
+        if (checkCanRequest(info.getEntityIdent(), "PetService")) {
             sendPetChatMessage2(msg, info);
         }
     }
@@ -263,7 +263,7 @@ public class RoomController extends SceneController
      */
     public function getEntityIds (type :String = null) :Array
     {
-        var idents :Array = _roomView.getItemIdents();
+        var idents :Array = _roomView.getEntityIdents();
 
         // Filter for items of the correct type, if necessary
         if (type != null) {
@@ -296,7 +296,7 @@ public class RoomController extends SceneController
      */
     public function doAvatarAction (action :String) :void
     {
-        sendSpriteMessage(_roomView.getMyAvatar().getItemIdent(), action, null, true);
+        sendSpriteMessage(_roomView.getMyAvatar().getEntityIdent(), action, null, true);
     }
 
     /**
@@ -305,7 +305,7 @@ public class RoomController extends SceneController
     public function doAvatarState (state :String) :void
     {
         var avatar :MemberSprite = _roomView.getMyAvatar();
-        setActorState(avatar.getItemIdent(), avatar.getOid(), state);
+        setActorState(avatar.getEntityIdent(), avatar.getOid(), state);
     }
 
     /**
@@ -817,7 +817,7 @@ public class RoomController extends SceneController
     protected function throttle (ident :EntityIdent, fn :Function, ... args) :void
     {
         var av :EntitySprite = _roomView.getMyAvatar();
-        if (av != null && av.getItemIdent().equals(ident)) {
+        if (av != null && av.getEntityIdent().equals(ident)) {
             // our own avatar is never throttled
             fn.apply(null, args);
 

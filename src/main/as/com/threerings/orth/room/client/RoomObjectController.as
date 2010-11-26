@@ -26,6 +26,7 @@ import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
+import com.threerings.orth.room.data.SimpleEntityIdent;
 import com.threerings.presents.dobj.AttributeChangeAdapter;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.util.ArrayUtil;
@@ -147,7 +148,7 @@ public class RoomObjectController extends RoomController
                     callback: avatar.toggleBleeped, arg: _wdctx };
             }
 
-            var ident :ItemIdent = avatar.getItemIdent();
+            var ident :EntityIdent = avatar.getEntityIdent();
             if (ident != null && ident.type >= 0) { // -1 is the default avatar, etc
                 flagItems.push({ label: Msgs.GENERAL.get("b.view_item", kind),
                     command: WorldController.VIEW_ITEM, arg: ident });
@@ -197,7 +198,7 @@ public class RoomObjectController extends RoomController
      * Handles a request by an actor to change its location. Returns true if the request was
      * dispatched, false if funny business prevented it.
      */
-    override public function requestMove (ident :ItemIdent, newloc :OrthLocation) :Boolean
+    override public function requestMove (ident :EntityIdent, newloc :OrthLocation) :Boolean
     {
         if (!checkCanRequest(ident, "requestMove")) {
             return false;
@@ -368,7 +369,7 @@ public class RoomObjectController extends RoomController
 
         const memObj :MemberObject = _wdctx.getMemberObject();
         const isPetOwner :Boolean = (PetSprite(pet).getOwnerId() == memObj.getMemberId());
-        const petId :int = occInfo.getItemIdent().itemId;
+        const petId :int = occInfo.getEntityIdent().itemId;
 
         var menuItems :Array = [];
 
@@ -418,7 +419,7 @@ public class RoomObjectController extends RoomController
         return "room"; // EntityControl.ENV_ROOM
     }
 
-    override public function getMemories (ident :ItemIdent) :Object
+    override public function getMemories (ident :EntityIdent) :Object
     {
         var mems :Object = {};
         var entry :EntityMemories = _roomObj.memories.get(ident) as EntityMemories;
@@ -430,7 +431,7 @@ public class RoomObjectController extends RoomController
         return mems;
     }
 
-    override public function lookupMemory (ident :ItemIdent, key :String) :Object
+    override public function lookupMemory (ident :EntityIdent, key :String) :Object
     {
         var entry :EntityMemories = _roomObj.memories.get(ident) as EntityMemories;
         return (entry == null) ? null
@@ -450,7 +451,7 @@ public class RoomObjectController extends RoomController
         }
     }
 
-    override public function deleteItem (ident :ItemIdent) :void
+    override public function deleteItem (ident :EntityIdent) :void
     {
         var svc :ItemService = _wdctx.getClient().requireService(ItemService) as ItemService;
         svc.deleteItem(ident, _wdctx.confirmListener(OrthCodes.EDITING_MSGS));
@@ -506,7 +507,7 @@ public class RoomObjectController extends RoomController
 
         if (itemType == Item.AUDIO) {
             // no-op if it's already here
-            if (_roomObj.playlist.containsKey(new ItemIdent(itemType, itemId))) {
+            if (_roomObj.playlist.containsKey(new SimpleEntityIdent(itemType, itemId))) {
                 return;
             }
             if ((_scene.getPlaylistControl() != OrthSceneModel.ACCESS_EVERYONE) &&
@@ -527,7 +528,7 @@ public class RoomObjectController extends RoomController
         }
 
         var isvc :ItemService = _wdctx.getClient().requireService(ItemService) as ItemService;
-        var ident :ItemIdent = new ItemIdent(itemType, itemId);
+        var ident :EntityIdent = new SimpleEntityIdent(itemType, itemId);
 
         var gotItem :Function = function (item :Item) :void {
             // a function we'll invoke when we're ready to use the item
@@ -589,7 +590,7 @@ public class RoomObjectController extends RoomController
         } else if (itemType == Item.PET) {
             // ensure this pet really is in this room
             for each (var pet :PetSprite in _roomObjectView.getPets()) {
-                if (pet.getItemIdent().itemId == itemId) {
+                if (pet.getEntityIdent().itemId == itemId) {
                     handleOrderPet(itemId, Pet.ORDER_SLEEP);
                     break;
                 }
@@ -597,7 +598,7 @@ public class RoomObjectController extends RoomController
 
         } else if (itemType == Item.AUDIO) {
             // only send a request if it's even here
-            if (_roomObj.playlist.containsKey(new ItemIdent(itemType, itemId))) {
+            if (_roomObj.playlist.containsKey(new SimpleEntityIdent(itemType, itemId))) {
                 _roomObj.roomService.modifyPlaylist(itemId, false,
                     _wdctx.confirmListener("m.music_removed", OrthCodes.WORLD_MSGS));
             }
@@ -751,21 +752,21 @@ public class RoomObjectController extends RoomController
 
     // documentation inherited
     override protected function setActorState2 (
-        ident :ItemIdent, actorOid :int, state :String) :void
+        ident :EntityIdent, actorOid :int, state :String) :void
     {
         throttle(ident, _roomObj.roomService.setActorState, ident, actorOid, state);
     }
 
     // documentation inherited
     override protected function sendSpriteMessage2 (
-        ident :ItemIdent, name :String, data :ByteArray, isAction :Boolean) :void
+        ident :EntityIdent, name :String, data :ByteArray, isAction :Boolean) :void
     {
         throttle(ident, _roomObj.roomService.sendSpriteMessage, ident, name, data, isAction);
     }
 
     // documentation inherited
     override protected function sendSpriteSignal2 (
-        ident :ItemIdent, name :String, data :ByteArray) :void
+        ident :EntityIdent, name :String, data :ByteArray) :void
     {
         throttle(ident, _roomObj.roomService.sendSpriteSignal, name, data);
     }
@@ -774,13 +775,13 @@ public class RoomObjectController extends RoomController
     override protected function sendPetChatMessage2 (msg :String, info :ActorInfo) :void
     {
         var svc :PetService = (_wdctx.getClient().requireService(PetService) as PetService);
-        throttle(info.getItemIdent(), svc.sendChat,
+        throttle(info.getEntityIdent(), svc.sendChat,
             info.bodyOid, _scene.getId(), msg, _wdctx.confirmListener());
     }
 
     // documentation inherited
     override protected function updateMemory2 (
-        ident :ItemIdent, key :String, data: ByteArray, callback :Function) :void
+        ident :EntityIdent, key :String, data: ByteArray, callback :Function) :void
     {
         var resultHandler :Function = function (success :Boolean) :void {
             if (callback != null) {
@@ -817,7 +818,7 @@ public class RoomObjectController extends RoomController
      * returning true if so, false if we don't yet have a room object or are not in control of that
      * item.
      */
-    override protected function checkCanRequest (ident :ItemIdent, from :String) :Boolean
+    override protected function checkCanRequest (ident :EntityIdent, from :String) :Boolean
     {
         if (_roomObj == null) {
             log.warning("Cannot issue request for lack of room object",

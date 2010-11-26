@@ -101,7 +101,7 @@ public class EntityBackend extends ControlBackend
 
     protected function getMyEntityId_v1 () :String
     {
-        return (_sprite == null) ? null : _sprite.getItemIdent().toString();
+        return (_sprite == null) ? null : _sprite.getEntityIdent().toString();
     }
 
     protected function getCamera_v1 (index :String = null) :Camera

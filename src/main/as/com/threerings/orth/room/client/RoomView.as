@@ -339,7 +339,7 @@ public class RoomView extends Sprite
             // trigger a portal traversal
             portalTraversed(sprite.getLocation(), false);
             // and remove the sprite
-            dispatchEntityLeft(sprite.getItemIdent());
+            dispatchEntityLeft(sprite.getEntityIdent());
             removeSprite(sprite);
         }
     }
@@ -573,13 +573,13 @@ public class RoomView extends Sprite
     {
         var decor :DecorGeometry = _scene.getDecorInfo();
         if (_bg != null && decor != null) {
-            dispatchEntityLeft(_bg.getItemIdent());
+            dispatchEntityLeft(_bg.getEntityIdent());
 
             spriteWillUpdate(_bg);
             _bg.updateFromDecor(decor);
             spriteDidUpdate(_bg);
 
-            dispatchEntityEntered(_bg.getItemIdent());
+            dispatchEntityEntered(_bg.getEntityIdent());
         }
     }
 
@@ -620,12 +620,12 @@ public class RoomView extends Sprite
         _entities.forEach(foreach);
     }
 
-    public function getItemIdents () :Array
+    public function getEntityIdents () :Array
     {
         return _entities.keys();
     }
 
-    /*public function getItemIdents (type :String) :Array
+    /*public function getEntityIdents (type :String) :Array
     {
         var keys :Array = _entities.keys();
 
@@ -731,7 +731,7 @@ public class RoomView extends Sprite
      */
     protected function populateSpriteContextMenu (sprite :EntitySprite, menuItems :Array) :void
     {
-        if (sprite.getItemIdent() != null && (sprite is FurniSprite) && _ctrl.canManageRoom() &&
+        if (sprite.getEntityIdent() != null && (sprite is FurniSprite) && _ctrl.canManageRoom() &&
                 sprite.hasCustomConfigPanel()) {
             var kind :String = Msgs.GENERAL.get(sprite.getDesc());
             menuItems.push(MenuUtil.createCommandContextMenuItem(
@@ -975,14 +975,14 @@ public class RoomView extends Sprite
     {
         var sprite :FurniSprite = (_furni.get(furni.id) as FurniSprite);
         if (sprite != null) {
-            dispatchEntityLeft(sprite.getItemIdent());
+            dispatchEntityLeft(sprite.getEntityIdent());
 
             spriteWillUpdate(sprite);
             sprite.update(furni);
             spriteDidUpdate(sprite);
             locationUpdated(sprite);
 
-            dispatchEntityEntered(sprite.getItemIdent());
+            dispatchEntityEntered(sprite.getEntityIdent());
         } else {
             addFurni(furni);
         }
@@ -1071,7 +1071,7 @@ public class RoomView extends Sprite
      */
     protected function addToEntityMap (sprite :EntitySprite) :void
     {
-        var ident :EntityIdent = sprite.getItemIdent();
+        var ident :EntityIdent = sprite.getEntityIdent();
         if (ident != null) {
             _entities.put(ident, sprite);
         }
@@ -1082,7 +1082,7 @@ public class RoomView extends Sprite
      */
     protected function removeFromEntityMap (sprite :EntitySprite) :void
     {
-        _entities.remove(sprite.getItemIdent()); // could be a no-op
+        _entities.remove(sprite.getEntityIdent()); // could be a no-op
     }
 
     /**

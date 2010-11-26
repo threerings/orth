@@ -42,7 +42,7 @@ public class FurniSprite extends EntitySprite
         _furni = furni;
 
         // configure our media and item
-        setItemIdent(furni.getItemIdent());
+        setEntityIdent(furni.getEntityIdent());
         _sprite.setSpriteMediaScale(furni.scaleX, furni.scaleY);
         _sprite.setMediaDesc(furni.media);
 
@@ -87,7 +87,7 @@ public class FurniSprite extends EntitySprite
     public function update (furni :FurniData) :void
     {
         _furni = furni;
-        setItemIdent(furni.getItemIdent());
+        setEntityIdent(furni.getEntityIdent());
         _sprite.setMediaDesc(furni.media);
         scaleUpdated();
         rotationUpdated();

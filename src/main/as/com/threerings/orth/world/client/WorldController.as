@@ -639,7 +639,7 @@ public class WorldController
         new ChatPrefsDialog(_wctx);
     }
 
-    public function handleAudioClicked (desc :MediaDesc, ident :ItemIdent) :void
+    public function handleAudioClicked (desc :MediaDesc, ident :EntityIdent) :void
     {
         if (desc == null || !desc.isBleepable()) {
             return;
@@ -768,7 +768,7 @@ public class WorldController
     /**
      * Handles the VIEW_ITEM command.
      */
-    public function handleViewItem (ident :ItemIdent) :void
+    public function handleViewItem (ident :EntityIdent) :void
     {
         var resultHandler :Function = function (result :Object) :void {
             if (result == null) {
@@ -790,7 +790,7 @@ public class WorldController
     /**
      * Handles the FLAG_ITEM command.
      */
-    public function handleFlagItem (ident :ItemIdent) :void
+    public function handleFlagItem (ident :EntityIdent) :void
     {
         new FlagItemDialog(_wctx, ident);
     }

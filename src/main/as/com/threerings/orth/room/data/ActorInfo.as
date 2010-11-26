@@ -25,7 +25,7 @@ public class ActorInfo extends OccupantInfo
     /**
      * Returns the item identifier that is used to identify this actor.
      */
-    public function getItemIdent () :EntityIdent
+    public function getEntityIdent () :EntityIdent
     {
         return _ident;
     }
