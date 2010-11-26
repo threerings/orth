@@ -2,6 +2,7 @@
 // $Id: WorldController.as 19431 2010-10-22 22:08:36Z zell $
 
 package com.threerings.orth.world.client {
+
 import com.threerings.crowd.chat.client.ChatCantStealFocus;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.client.BodyService;
@@ -121,29 +122,17 @@ public class WorldController
     /** Command to show an (external) URL. */
     public static const VIEW_URL :String = "ViewUrl";
 
-    /** Command to display the full Whirled (used in the embedded client). */
-    public static const VIEW_FULL_VERSION :String = "ViewFullVersion";
-
     /** Command to display the comment page for the current scene or game. */
     public static const VIEW_COMMENT_PAGE :String = "ViewCommentPage";
 
     /** Command to view a member's profile, arg is [ memberId ] */
     public static const VIEW_MEMBER :String = "ViewMember";
 
-    /** Command to view a groups's page, arg is [ groupId ] */
-    public static const VIEW_GROUP :String = "ViewGroup";
-
-    /** Command to view a groups's discussions, arg is [ groupId ] */
-    public static const VIEW_DISCUSSIONS :String = "ViewDiscussions";
-
     /** Command to go to a group's home scene. */
     public static const GO_GROUP_HOME :String = "GoGroupHome";
 
     /** Command to ensure that the share dialog is up. */
     public static const POP_SHARE_DIALOG :String = "PopShareDialog";
-
-    /** Command to show users the subscribe page. */
-    public static const SUBSCRIBE :String = "Subscribe";
 
     /** Command to display the chat channel menu. */
     public static const POP_CHANNEL_MENU :String = "PopChannelMenu";
@@ -172,20 +161,8 @@ public class WorldController
     /** Command to open the chat interface for a particular chat channel. */
     public static const OPEN_CHANNEL :String = "OpenChannel";
 
-    /** Command to visit a member's current location */
-    public static const VISIT_MEMBER :String = "VisitMember";
-
     /** Command to view a "stuff" page. Arg: [ itemType ] */
     public static const VIEW_STUFF :String = "ViewStuff";
-
-    /** Command to view a "shop" page.
-     * Args: nothing to view the general shop,
-     * or [ itemType ] to view a category
-     * or [ itemType, itemId ] to view a specific listing. */
-    public static const VIEW_SHOP :String = "ViewShop";
-
-    /** Command to view the "mail" page. */
-    public static const VIEW_MAIL :String = "ViewMail";
 
     /** Command to issue an invite to a current guest. */
     public static const INVITE_GUEST :String = "InviteGuest";
@@ -193,17 +170,11 @@ public class WorldController
     /** Command to respond to a request to follow another player. */
     public static const RESPOND_FOLLOW :String = "RespondFollow";
 
-    /** Command to open the account creation UI. */
-    public static const CREATE_ACCOUNT :String = "CreateAccount";
-
     /** Command to complain about a member. */
     public static const COMPLAIN_MEMBER :String = "ComplainMember";
 
     /** Command to invoke when the featured place was clicked. */
     public static const FEATURED_PLACE_CLICKED :String = "FeaturedPlaceClicked";
-
-    /** Command to view the passport page. */
-    public static const VIEW_PASSPORT :String = "ViewPassport";
 
     /** Command to play music. Arg: null to stop, or [ Audio, playCounter (int) ] */
     public static const PLAY_MUSIC :String = "PlayMusic";
@@ -321,11 +292,7 @@ public class WorldController
     {
         _didFirstLogonGo = false;
 
-        if (_wctx.getOrthClient().getEmbedding().hasGWT() && ExternalInterface.available) {
-            ExternalInterface.call("rebootFlashClient");
-        } else {
-            _wctx.getClient().logon();
-        }
+        _wctx.getClient().logon();
     }
 
     // from ClientObserver
@@ -452,34 +419,19 @@ public class WorldController
     public function handleViewUrl (url :String, windowOrTab :String = null) :Boolean
     {
         // if our page refers to a Whirled page...
-        var gwtPrefix :String = DeploymentConfig.serverURL + "#";
-        var gwtUrl :String;
-        if (url.indexOf(gwtPrefix) == 0) {
-            gwtUrl = url.substring(gwtPrefix.length);
-        } else if (url.indexOf("#") == 0) {
-            gwtUrl = url.substring(1);
-        } else if (NetUtil.navigateToURL(url, windowOrTab)) {
+        if (NetUtil.navigateToURL(url, windowOrTab)) {
             return true;
-        } else {
-            _wctx.displayFeedback(
-                OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
-
-            // TODO
-            // experimental: display a popup with the URL (this could be moved to handleLink()
-            // if this method is altered to return a success Boolean
-            new MissedURLDialog(_wctx, url);
-            return false;
         }
 
-        // ...extract the page and arguments and tell GWT to display them properly
-        var didx :int = gwtUrl.indexOf("-");
-        if (didx == -1) {
-            return displayPage(gwtUrl, "");
-        } else {
-            return displayPage(gwtUrl.substring(0, didx), gwtUrl.substring(didx+1));
-        }
+        _wctx.displayFeedback(
+            OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
+
+        // TODO
+        // experimental: display a popup with the URL (this could be moved to handleLink()
+        // if this method is altered to return a success Boolean
+        new MissedURLDialog(_wctx, url);
+        return false;
     }
-
 
     /**
      * Handles the POP_GO_MENU command.
@@ -729,14 +681,6 @@ public class WorldController
         var roomView :RoomView = _wctx.getPlaceView() as RoomView;
 
         CommandMenu.addTitle(menuData, roomView.getPlaceName());
-        var scene :OrthScene = _wctx.getSceneDirector().getScene() as OrthScene;
-        if (scene != null) {
-            var model :OrthSceneModel = scene.getSceneModel() as OrthSceneModel;
-//            if (model.ownerType == OrthSceneModel.OWNER_TYPE_GROUP) {
-//                menuData.push({ label: Msgs.GENERAL.get("b.group_page"),
-//                    command: WorldController.VIEW_GROUP, arg: model.ownerId });
-//            }
-        }
 
         CommandMenu.addSeparator(menuData);
         menuData.push({ label: Msgs.GENERAL.get("b.editScene"), icon: Resources.ROOM_EDIT_ICON,
@@ -762,39 +706,7 @@ public class WorldController
      */
     public function handleViewMember (memberId :int) :void
     {
-        displayPage("people", "" + memberId);
-    }
-
-    /**
-     * Handles hte VISIT_MEMBER command.
-     */
-    public function handleVisitMember (memberId :int) :void
-    {
-        _wctx.getWorldDirector().goToMemberLocation(memberId);
-    }
-
-    /**
-     * Handles the VIEW_GROUP command.
-     */
-    public function handleViewGroup (groupId :int) :void
-    {
-        displayPage("groups", "d_" + groupId);
-    }
-
-    /**
-     * Handles the VIEW_DISCUSSIONS command.
-     */
-    public function handleViewDiscussions (groupId :int) :void
-    {
-        displayPage("groups", "f_" + groupId);
-    }
-
-    /**
-     * Handles the VIEW_ROOM command.
-     */
-    public function handleViewRoom (sceneId :int) :void
-    {
-        displayPage("rooms", "room_" + sceneId);
+        log.warning("VIEW_MEMBER not implemented.");
     }
 
     /**
@@ -806,21 +718,6 @@ public class WorldController
         if (sceneId != 0) {
             handleViewRoom(sceneId);
             return;
-        }
-    }
-
-    /**
-     * Handles the VIEW_FULL_VERSION command, used in embedded clients.
-     */
-    public function handleViewFullVersion () :void
-    {
-        // then go to the appropriate place..
-        const sceneId :int = getCurrentSceneId();
-        if (sceneId != 0) {
-            displayPage("world", "s" + sceneId);
-
-        } else {
-            displayPage("", "");
         }
     }
 
@@ -843,47 +740,11 @@ public class WorldController
     }
 
     /**
-     * Handles the VIEW_PASSPORT command.
-     */
-    public function handleViewPassport () :void
-    {
-        displayPage("me", "passport");
-    }
-
-    /**
      * Handles the VIEW_STUFF command.
      */
     public function handleViewStuff (itemType :int) :void
     {
-        displayPage("stuff", ""+itemType);
-    }
-
-    /**
-     * Handles the VIEW_SHOP command.
-     */
-    public function handleViewShop (itemType :int = Item.NOT_A_TYPE, itemId :int = 0) :void
-    {
-        var page :String = "";
-        if (itemType != Item.NOT_A_TYPE) {
-            page += (itemId == 0) ? itemType : ("l_" + itemType + "_" + itemId);
-        }
-        displayPage("shop", page);
-    }
-
-    /**
-     * Handles the VIEW_MAIL command.
-     */
-    public function handleViewMail () :void
-    {
-        displayPage("mail", "");
-    }
-
-    /**
-     * Handles the SHOW_SIGN_UP command.
-     */
-    public function handleShowSignUp () :void
-    {
-        displayPage("account", "create");
+        log.info("VIEW_STUFF not implemented.");
     }
 
     /**
@@ -970,14 +831,6 @@ public class WorldController
     }
 
     /**
-     * Handles the CREATE_ACCOUNT command (generated by the InviteOverlay).
-     */
-    public function handleCreateAccount (invite :String = null) :void
-    {
-        displayPage("account", (invite == null) ? "create" : ("create_" + invite));
-    }
-
-    /**
      * Handles the COMPLAIN_MEMBER command.
      */
     public function handleComplainMember (memberId :int, username :String) :void
@@ -1053,14 +906,6 @@ public class WorldController
         var menuItems :Array = [];
         addPetMenuItems(new PetName(name, petId, ownerId), menuItems);
         CommandMenu.createMenu(menuItems, _wctx.getTopPanel()).popUpAtMouse();
-    }
-
-    /**
-     * Handles SUBSCRIBE.
-     */
-    public function handleSubscribe () :void
-    {
-        displayPage("billing", "subscribe");
     }
 
     /**
@@ -1300,9 +1145,6 @@ public class WorldController
                 menuItems.push({ label: label, icon: Resources.VISIT_ICON,
                     command: VISIT_MEMBER, arg: memId, enabled: !isInOurRoom });
             }
-// Visit Home disabled. Jon says it's pointless.
-//            menuItems.push({ label: Msgs.GENERAL.get("b.visit_home"),
-//                command: GO_MEMBER_HOME, arg: memId });
             // profile
             menuItems.push({ label: Msgs.GENERAL.get("b.view_member"),
                 command: VIEW_MEMBER, arg: memId });
@@ -1654,26 +1496,6 @@ public class WorldController
             _logoffMessage = "m.idle_logoff";
             _wctx.getClient().logoff(false);
         }
-    }
-
-
-
-    /**
-     * Calls our GWT application and requests that the specified page be displayed.
-     */
-    protected function displayPageGWT (page :String, args :String) :Boolean
-    {
-        if (inGWTApp()) {
-            try {
-                if (ExternalInterface.available) {
-                    ExternalInterface.call("displayPage", page, args);
-                    return true;
-                }
-            } catch (e :Error) {
-                log.warning("Unable to display page via Javascript", "page", page, "args", args, e);
-            }
-        }
-        return false;
     }
 
     protected function addRecentScene (scene :Scene) :void
