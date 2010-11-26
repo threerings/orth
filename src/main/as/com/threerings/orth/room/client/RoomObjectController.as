@@ -116,32 +116,6 @@ public class RoomObjectController extends RoomController
             if (avatar != null) {
                 addSelfMenuItems(avatar, menuItems, canControl);
             }
-
-        } else { // shown when clicking on someone else
-            if (avatar == null) {
-                return;
-            }
-            var kind :String = Msgs.GENERAL.get(avatar.getDesc());
-            var flagItems :Array = [];
-
-            var ident :EntityIdent = avatar.getEntityIdent();
-            if (ident != null && ident.getType() >= 0) { // -1 is the default avatar, etc
-                flagItems.push({ label: Msgs.GENERAL.get("b.view_item", kind),
-                    command: WorldController.VIEW_ITEM, arg: ident });
-                if (!us.isPermaguest()) {
-                    flagItems.push({ label: Msgs.GENERAL.get("b.flag_item", kind),
-                        command: WorldController.FLAG_ITEM, arg: ident });
-                }
-            }
-
-            // finally, add whatever makes sense
-            if (flagItems.length != 0) {
-                CommandMenu.addSeparator(menuItems);
-            }
-            if (flagItems.length > 0) {
-                menuItems.push({ label: Msgs.GENERAL.get("l.item_menu", kind), icon: Resources.AVATAR_ICON,
-                    children: flagItems });
-            }
         }
     }
 
