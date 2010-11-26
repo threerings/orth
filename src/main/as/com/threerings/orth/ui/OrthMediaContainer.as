@@ -7,6 +7,7 @@ import flash.display.LoaderInfo;
 
 import flash.events.Event;
 
+import com.threerings.util.Capabilities;
 import com.threerings.util.Util;
 
 import com.threerings.media.MediaContainer;
