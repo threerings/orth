@@ -2,7 +2,7 @@
 // $Id: StudioContext.as 12531 2008-10-15 17:47:33Z ray $
 
 package com.threerings.orth.room.client {
-
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.world.client.WorldContext;
 
 public class StudioContext extends WorldContext

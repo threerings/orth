@@ -46,6 +46,15 @@ public class OrthMediaContainer extends MediaContainer
         super.setMedia((desc == null) ? null : desc.getMediaPath());
     }
 
+    /**
+     * Retrieve the MediaDescriptor we're configured with, or null if we're not fully configured
+     * yet, or media was configured through setMedia().
+     */
+    public function getMediaDesc () :MediaDesc
+    {
+        return _desc;
+    }
+    
     public function setSuppressHitTestPoint (suppress :Boolean) :void
     {
         _suppressHitTestPoint = suppress;

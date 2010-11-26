@@ -6,11 +6,13 @@ package com.threerings.orth.room.client {
 import com.threerings.io.TypedArray;
 import com.threerings.orth.client.UberClient;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
 import com.threerings.orth.room.data.OrthSceneCodes;
 import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.world.client.WorldController;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.dobj.MessageAdapter;

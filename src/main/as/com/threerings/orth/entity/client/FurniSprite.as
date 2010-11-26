@@ -42,7 +42,7 @@ public class FurniSprite extends EntitySprite
         _furni = furni;
 
         // configure our media and item
-        setEntityIdent(furni.getEntityIdent());
+        setEntityIdent(furni.item);
         _sprite.setSpriteMediaScale(furni.scaleX, furni.scaleY);
         _sprite.setMediaDesc(furni.media);
 

@@ -5,6 +5,7 @@ package com.threerings.orth.entity.client {
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.ActorInfo;
+import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.util.DelayUtil;

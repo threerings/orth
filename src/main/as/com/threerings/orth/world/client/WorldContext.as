@@ -2,10 +2,29 @@
 // $Id: WorldContext.as 18724 2009-11-19 19:21:47Z jamie $
 
 package com.threerings.orth.world.client {
-
+import com.threerings.crowd.chat.client.ChatDirector;
+import com.threerings.crowd.client.LocationDirector;
+import com.threerings.crowd.client.OccupantDirector;
+import com.threerings.crowd.client.PlaceView;
+import com.threerings.crowd.data.BodyObject;
+import com.threerings.orth.client.OrthClient;
+import com.threerings.orth.data.OrthName;
+import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ConfirmAdapter;
+import com.threerings.presents.client.InvocationAdapter;
+import com.threerings.presents.client.InvocationService_ConfirmListener;
+import com.threerings.presents.client.InvocationService_InvocationListener;
+import com.threerings.presents.client.InvocationService_ResultListener;
+import com.threerings.presents.client.ResultAdapter;
+import com.threerings.presents.dobj.DObjectManager;
+import com.threerings.util.Log;
+import com.threerings.util.MessageBundle;
+import com.threerings.util.MessageManager;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
 import com.threerings.whirled.util.WhirledContext;
+
+import mx.core.UIComponent;
 
 /**
  * Defines services for the World client.
@@ -239,10 +258,10 @@ public class WorldContext
     /**
      * Returns this client's access control tokens.
      */
-    public function getTokens () :MsoyTokenRing
+    public function getTokens () :OrthTokenRing
     {
         // if we're not logged on, claim to have no privileges
-        return (getMemberObject() == null) ? new MsoyTokenRing() : getMemberObject().tokens;
+        return (getMemberObject() == null) ? new OrthTokenRing() : getMemberObject().tokens;
     }
 
     // from WhirledContext

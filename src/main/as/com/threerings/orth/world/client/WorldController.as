@@ -2,6 +2,12 @@
 // $Id: WorldController.as 19431 2010-10-22 22:08:36Z zell $
 
 package com.threerings.orth.world.client {
+import com.threerings.crowd.chat.client.ChatCantStealFocus;
+import com.threerings.crowd.chat.data.ChatCodes;
+import com.threerings.crowd.client.BodyService;
+import com.threerings.crowd.data.CrowdCodes;
+import com.threerings.flex.ChatControl;
+import com.threerings.flex.CommandButton;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.UberClient;
@@ -14,16 +20,32 @@ import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
+import com.threerings.presents.client.Client;
+import com.threerings.util.ArrayUtil;
+import com.threerings.util.CommandEvent;
+import com.threerings.util.NetUtil;
 
 import flash.display.DisplayObject;
-
+import flash.display.Stage;
+import flash.display.StageDisplayState;
+import flash.events.Event;
 import flash.events.IEventDispatcher;
+import flash.events.KeyboardEvent;
+import flash.events.TextEvent;
+import flash.events.TimerEvent;
 import flash.geom.Point;
 
 import flash.external.ExternalInterface;
+import flash.geom.Rectangle;
+import flash.text.TextField;
+import flash.ui.Keyboard;
+import flash.utils.Timer;
+import flash.utils.getTimer;
 
 import mx.controls.Button;
-
+import mx.controls.Menu;
+import mx.core.IUITextField;
+import mx.events.MenuEvent;
 import mx.styles.StyleManager;
 
 import com.threerings.util.DelayUtil;
@@ -653,10 +675,10 @@ public class WorldController
         var kind :String = Msgs.GENERAL.get(Item.getTypeKey(Item.AUDIO));
         var menuItems :Array = [];
         menuItems.push({ label: Msgs.GENERAL.get("b.view_item", kind),
-            command: OrthController.VIEW_ITEM, arg: ident });
+            command: WorldController.VIEW_ITEM, arg: ident });
         if (_wctx.isRegistered()) {
             menuItems.push({ label: Msgs.GENERAL.get("b.flag_item", kind),
-                command: OrthController.FLAG_ITEM, arg: ident });
+                command: WorldController.FLAG_ITEM, arg: ident });
         }
 
         CommandMenu.createMenu(menuItems, _topPanel).popUpAtMouse();
@@ -1088,7 +1110,7 @@ public class WorldController
     {
         var menuItems :Array = [];
         addPetMenuItems(new PetName(name, petId, ownerId), menuItems);
-        CommandMenu.createMenu(menuItems, _mctx.getTopPanel()).popUpAtMouse();
+        CommandMenu.createMenu(menuItems, _wctx.getTopPanel()).popUpAtMouse();
     }
 
     /**
@@ -1355,10 +1377,10 @@ public class WorldController
 
             CommandMenu.addSeparator(menuItems);
             // muting
-            var muted :Boolean = _mctx.getMuteDirector().isMuted(name);
+            var muted :Boolean = _wctx.getMuteDirector().isMuted(name);
             menuItems.push({ label: Msgs.GENERAL.get(muted ? "b.unmute" : "b.mute"),
                 icon: Resources.BLOCK_ICON,
-                callback: _mctx.getMuteDirector().setMuted, arg: [ name, !muted ] });
+                callback: _wctx.getMuteDirector().setMuted, arg: [ name, !muted ] });
             // booting
             if (addWorldItems && isInOurRoom &&
                     (placeCtrl is BootablePlaceController) &&
@@ -1400,7 +1422,7 @@ public class WorldController
         const ownerMuted :Boolean = _wctx.getMuteDirector().isOwnerMuted(petName);
         if (ownerMuted) {
             menuItems.push({ label: Msgs.GENERAL.get("b.unmute_owner"), icon: BLOCK_ICON,
-                callback: _mctx.getMuteDirector().setMuted,
+                callback: _wctx.getMuteDirector().setMuted,
                 arg: [ new OrthName("", petName.getOwnerId()), false ] });
         } else {
             const isMuted :Boolean = _wctx.getMuteDirector().isMuted(petName);
@@ -1409,7 +1431,7 @@ public class WorldController
                 callback: _wctx.getMuteDirector().setMuted, arg: [ petName, !isMuted ] });
         }
     }
-    
+
     /**
      * Inform our parent web page that our display name has changed.
      */

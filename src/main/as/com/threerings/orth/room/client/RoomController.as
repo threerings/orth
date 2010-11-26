@@ -11,6 +11,7 @@ import com.threerings.flex.PopUpUtil;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.PlaceBox;
 import com.threerings.orth.client.UberClient;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
@@ -226,9 +227,7 @@ public class RoomController extends SceneController
      */
     public function sendPetChatMessage (msg :String, info :ActorInfo) :void
     {
-        if (checkCanRequest(info.getEntityIdent(), "PetService")) {
-            sendPetChatMessage2(msg, info);
-        }
+        sendPetChatMessage2(msg, info);
     }
 
     /**
@@ -601,7 +600,7 @@ public class RoomController extends SceneController
         // maybe add a new tip
         if (hovered && (text != null)) {
             if (isNaN(stageX) || isNaN(stageY)) {
-                var p :Point = sprite.localToGlobal(sprite.getLayoutHotSpot());
+                var p :Point = sprite.viz.localToGlobal(sprite.getLayoutHotSpot());
                 stageX = p.x;
                 stageY = p.y;
             }

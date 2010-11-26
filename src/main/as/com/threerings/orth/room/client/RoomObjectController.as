@@ -12,11 +12,13 @@ import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.Resources;
 import com.threerings.orth.client.UberClient;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.room.data.ActorInfo;
+import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.FurniUpdate_Add;
@@ -26,6 +28,7 @@ import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
 import com.threerings.orth.room.data.SimpleEntityIdent;
+import com.threerings.orth.world.client.WorldController;
 import com.threerings.presents.dobj.AttributeChangeAdapter;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.util.ArrayUtil;
@@ -122,7 +125,7 @@ public class RoomObjectController extends RoomController
             var flagItems :Array = [];
 
             var ident :EntityIdent = avatar.getEntityIdent();
-            if (ident != null && ident.type >= 0) { // -1 is the default avatar, etc
+            if (ident != null && ident.getType() >= 0) { // -1 is the default avatar, etc
                 flagItems.push({ label: Msgs.GENERAL.get("b.view_item", kind),
                     command: WorldController.VIEW_ITEM, arg: ident });
                 if (!us.isPermaguest()) {

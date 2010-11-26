@@ -4,6 +4,7 @@
 package com.threerings.orth.world.client {
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.OrthClient;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.client.PlaceBox;
 import com.threerings.orth.client.Prefs;

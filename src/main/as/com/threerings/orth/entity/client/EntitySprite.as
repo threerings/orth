@@ -486,7 +486,7 @@ public class EntitySprite
      */
     protected function createVisualization () :OrthMediaContainer
     {
-        return new OrthMediaContainer(false);
+        return new OrthMediaContainer();
     }
 
     protected function mediaWillShutdown (event :ValueEvent) :void
@@ -803,7 +803,7 @@ public class EntitySprite
             return getLocation().orient;
 
         case "type":
-            return RoomController.ENTITY_TYPES[_ident.type]; // will return null if unknown type
+            return RoomController.ENTITY_TYPES[_ident.getType()]; // will return null if unknown type
 
         default:
             return null;

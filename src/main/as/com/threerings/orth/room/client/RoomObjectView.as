@@ -17,6 +17,7 @@ import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneCodes;
 import com.threerings.orth.room.data.OrthRoomObject;
+import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
 
 import flash.events.Event;
