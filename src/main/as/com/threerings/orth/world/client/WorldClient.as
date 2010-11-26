@@ -232,38 +232,6 @@ public class WorldClient extends OrthClient
     }
 
     // from MsoyClient
-    override protected function configureBridgeFunctions (dispatcher :IEventDispatcher) :void
-    {
-        super.configureBridgeFunctions(dispatcher);
-        dispatcher.addEventListener(UberClientModes.GOT_EXTERNAL_NAME, bridgeGotExternalName);
-    }
-
-    /**
-     * Called when the embedstub obtains a display name from the external site on which we're
-     * embedded. We use this to replace "Guest XXXX" for permaguests with their external site name.
-     */
-    protected function bridgeGotExternalName (event :Event) :void
-    {
-        var name :String = event["info"]; // EmbedStub.BridgeEvent.info via security boundary
-        log.info("Got external name", "name", name);
-        function maybeConfigureGuest () :void {
-            if (_wctx.getMemberObject().isPermaguest()) {
-                log.info("Using external name", "name", name);
-                _wctx.getMemberDirector().setDisplayName(name);
-            }
-        }
-        if (_wctx.getClient().isLoggedOn()) {
-            maybeConfigureGuest();
-        } else {
-            var adapter :ClientAdapter = new ClientAdapter(null, function (event :*) :void {
-                _wctx.getClient().removeClientObserver(adapter);
-                maybeConfigureGuest();
-            });
-            _wctx.getClient().addClientObserver(adapter);
-        }
-    }
-
-    // from MsoyClient
     override protected function configureExternalFunctions () :void
     {
         super.configureExternalFunctions();
@@ -280,7 +248,7 @@ public class WorldClient extends OrthClient
     }
 
     // from MsoyClient
-    override protected function populateContextMenu (custom :Array) :void
+    protected function populateContextMenu (custom :Array) :void
     {
         try {
             var allObjects :Array = _stage.getObjectsUnderPoint(
