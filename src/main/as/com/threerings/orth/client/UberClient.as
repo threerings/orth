@@ -31,14 +31,6 @@ public class UberClient
     }
 
     /**
-     * Convenience method: Are we showing the featured places?
-     */
-    public static function isFeaturedPlaceView () :Boolean
-    {
-        return (UberClientModes.FEATURED_PLACE == getMode());
-    }
-
-    /**
      * Are we a viewer of some sort, and not a client into the whirled servers?
      */
     public static function isViewer () :Boolean
@@ -109,8 +101,6 @@ public class UberClient
         if ("mode" in params) {
             // if a mode is specified, that overrides all
             mode = parseInt(params["mode"]);
-        } else if ("featuredPlace" in params) {
-            mode = UberClientModes.FEATURED_PLACE;
         } else if ("avatar" in params) {
             mode = UberClientModes.AVATAR_VIEWER;
         } else if ("media" in params) {

@@ -56,20 +56,6 @@ public class RoomObjectController extends RoomController
     public static const SEND_POSTCARD :String = "SendPostcard";
 
     // documentation inherited
-    override public function init (ctx :CrowdContext, config :PlaceConfig) :void
-    {
-        super.init(ctx, config);
-
-        if (UberClient.isFeaturedPlaceView()) {
-            _suppressNormalHovering = true;
-            // show the pointer cursor
-            _roomView.buttonMode = true;
-            _roomView.mouseChildren = false;
-            _roomView.useHandCursor = true;
-        }
-    }
-
-    // documentation inherited
     override protected function createPlaceView (ctx :CrowdContext) :PlaceView
     {
         _roomObjectView = new RoomObjectView(_wdctx, this);

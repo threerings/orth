@@ -10,7 +10,6 @@ public class UberClientModes
      * externally _all_over_the_place_ (as in, possibly out on the interwebs).
      */
     public static const CLIENT :int = 0;
-    public static const FEATURED_PLACE :int = 1;
 
     public static const STUB :int = 10; // we're loaded from an external site
 

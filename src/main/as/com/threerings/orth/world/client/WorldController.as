@@ -173,9 +173,6 @@ public class WorldController
     /** Command to complain about a member. */
     public static const COMPLAIN_MEMBER :String = "ComplainMember";
 
-    /** Command to invoke when the featured place was clicked. */
-    public static const FEATURED_PLACE_CLICKED :String = "FeaturedPlaceClicked";
-
     /** Command to play music. Arg: null to stop, or [ Audio, playCounter (int) ] */
     public static const PLAY_MUSIC :String = "PlayMusic";
 
@@ -722,24 +719,6 @@ public class WorldController
     }
 
     /**
-     * Handles the FEATURED_PLACE_CLICKED command.
-     */
-    public function handleFeaturedPlaceClicked () :void
-    {
-        if (_wctx.getOrthClient().isEmbedded()) {
-            handleViewFullVersion();
-        } else {
-            var sceneId :int = getCurrentSceneId();
-            if (sceneId == 0) {
-                // TODO: before falling back to the initial scene, we should try
-                // any pending scene...
-                sceneId = int(MsoyParameters.get()["sceneId"]);
-            }
-            handleGoScene(sceneId);
-        }
-    }
-
-    /**
      * Handles the VIEW_STUFF command.
      */
     public function handleViewStuff (itemType :int) :void
@@ -955,9 +934,6 @@ public class WorldController
      */
     public function wentToScene (sceneId :int) :void
     {
-        if (UberClient.isFeaturedPlaceView()) {
-            return;
-        }
         // this will result in another request to move to the scene we're already in, but we'll
         // ignore it because we're already there
         if (!_suppressTokenForScene) {

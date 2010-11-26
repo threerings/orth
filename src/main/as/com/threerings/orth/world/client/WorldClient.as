@@ -63,7 +63,7 @@ public class WorldClient extends OrthClient
         var params :Object = MsoyParameters.get();
 
         // if we're an embedded client, turn on the embed header
-        if (isEmbedded() && !_featuredPlaceView) {
+        if (isEmbedded()) {
             _wctx.getUIState().setEmbedded(true);
         }
 
@@ -92,12 +92,6 @@ public class WorldClient extends OrthClient
         } else {
             GuestSessionCapture.capture(this);
             logon();
-        }
-
-        if (_featuredPlaceView) {
-            var overlay :FeaturedPlaceOverlay = new FeaturedPlaceOverlay(_ctx);
-            _ctx.getTopPanel().getPlaceContainer().addOverlay(
-                overlay, PlaceBox.LAYER_FEATURED_PLACE);
         }
     }
 
@@ -296,7 +290,6 @@ public class WorldClient extends OrthClient
 
         creds.sessionToken = (token == null) ? params["token"] : token;
         creds.ident = Prefs.getMachineIdent();
-        creds.featuredPlaceView = _featuredPlaceView;
         creds.visitorId = getVisitorId();
         creds.affiliateId = getAffiliateId();
         creds.vector = getEntryVector();

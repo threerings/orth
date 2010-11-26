@@ -119,11 +119,6 @@ public class OrthSceneDirector extends SceneDirector
 
         _worldctx.displayFeedback(OrthCodes.GENERAL_MSGS, reason);
 
-        // if we're in the featured place view...
-        if (UberClient.isFeaturedPlaceView()) {
-            return; // ...there's nothing we can do but display a black scene
-        }
-
         // otherwise try to deal with the player getting bumped back from a locked scene
         if (reason == OrthSceneCodes.E_ENTRANCE_DENIED) {
             bounceBack(_sceneId, pendingPreviousScene, reason);
