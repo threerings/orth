@@ -3,16 +3,21 @@
 
 package com.threerings.orth.world.client {
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.Prefs;
+import com.threerings.orth.client.UberClient;
+import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.client.RoomObjectController;
+import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.RoomView;
+import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
 
 import flash.display.DisplayObject;
 
+import flash.events.IEventDispatcher;
 import flash.geom.Point;
 
 import flash.external.ExternalInterface;
@@ -640,7 +645,7 @@ public class WorldController
 
     public function handleAudioClicked (desc :MediaDesc, ident :EntityIdent) :void
     {
-        if (desc == null)
+        if (desc == null) {
             return;
         }
 
@@ -1404,7 +1409,7 @@ public class WorldController
                 callback: _wctx.getMuteDirector().setMuted, arg: [ petName, !isMuted ] });
         }
     }
-
+    
     /**
      * Inform our parent web page that our display name has changed.
      */
