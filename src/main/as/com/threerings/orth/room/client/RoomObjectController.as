@@ -150,10 +150,10 @@ public class RoomObjectController extends RoomController
             var ident :ItemIdent = avatar.getItemIdent();
             if (ident != null && ident.type >= 0) { // -1 is the default avatar, etc
                 flagItems.push({ label: Msgs.GENERAL.get("b.view_item", kind),
-                    command: MsoyController.VIEW_ITEM, arg: ident });
+                    command: WorldController.VIEW_ITEM, arg: ident });
                 if (!us.isPermaguest()) {
                     flagItems.push({ label: Msgs.GENERAL.get("b.flag_item", kind),
-                        command: MsoyController.FLAG_ITEM, arg: ident });
+                        command: WorldController.FLAG_ITEM, arg: ident });
                 }
             }
 
@@ -300,7 +300,7 @@ public class RoomObjectController extends RoomController
     {
         switch (furni.actionType) {
         case FurniData.ACTION_URL:
-            _wdctx.getMsoyController().handleViewUrl(furni.splitActionData()[0] as String);
+            _wdctx.getWorldController().handleViewUrl(furni.splitActionData()[0] as String);
             return;
 
         case FurniData.ACTION_PORTAL:
@@ -333,7 +333,7 @@ public class RoomObjectController extends RoomController
         }
 
         var menuItems :Array = [];
-        _wdctx.getMsoyController().addMemberMenuItems(occInfo.username as MemberName, menuItems);
+        _wdctx.getWorldController().addMemberMenuItems(occInfo.username as MemberName, menuItems);
         popActorMenu(avatar, menuItems);
     }
 

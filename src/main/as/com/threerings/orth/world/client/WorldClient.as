@@ -132,7 +132,7 @@ public class WorldClient extends OrthClient
         }
 
         log.info("Logging on via external request", "id", memberId, "token", token);
-        _wctx.getMsoyController().handleLogon(createStartupCreds(token));
+        _wctx.getWorldController().handleLogon(createStartupCreds(token));
     }
 
     /**

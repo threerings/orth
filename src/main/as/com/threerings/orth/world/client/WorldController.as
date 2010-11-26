@@ -31,6 +31,7 @@ import com.threerings.util.ValueEvent;
 import com.threerings.util.Util;
 
 import com.threerings.presents.client.ClientEvent;
+import com.threerings.presents.client.ClientObserver;
 import com.threerings.presents.net.Credentials;
 
 import com.threerings.crowd.client.LocationAdapter;
@@ -50,7 +51,7 @@ import Resources;
 
 
 /**
- * Extends the MsoyController with World specific bits.
+ * Extends the WorldController with World specific bits.
  */
 public class WorldController
     implements ClientObserver
@@ -240,7 +241,14 @@ public class WorldController
      */
     public function getPlaceInfo () :PlaceInfo
     {
-        return new PlaceInfo();
+
+        var plinfo :PlaceInfo = new PlaceInfo();
+
+        var scene :Scene = _wctx.getSceneDirector().getScene();
+        plinfo.sceneId = (scene == null) ? 0 : scene.getId();
+        plinfo.sceneName = (scene == null) ? null : scene.getName();
+
+        return plinfo;
     }
 
     /**
@@ -248,6 +256,16 @@ public class WorldController
      */
     public function canManagePlace () :Boolean
     {
+        // support can manage any place...
+        if (_wctx.getTokens().isSupport()) {
+            return true;
+        }
+
+        const view :Object = _topPanel.getPlaceView();
+        if (view is RoomView) {
+            return RoomView(view).getRoomController().canManageRoom();
+        }
+
         return false;
     }
 
@@ -284,6 +302,8 @@ public class WorldController
      */
     public function reconnectClient () :void
     {
+        _didFirstLogonGo = false;
+
         if (_wctx.getOrthClient().getEmbedding().hasGWT() && ExternalInterface.available) {
             ExternalInterface.call("rebootFlashClient");
         } else {
@@ -300,7 +320,23 @@ public class WorldController
     // from ClientObserver
     public function clientDidLogon (event :ClientEvent) :void
     {
-        // nada
+        var memberObj :MemberObject = _wctx.getMemberObject();
+        // if not a permaguest, save the username that we logged in with
+        if (!memberObj.isPermaguest()) {
+            var name :Name = (_wctx.getClient().getCredentials() as MsoyCredentials).getUsername();
+            if (name != null) {
+                Prefs.setUsername(name.toString());
+            }
+        }
+
+        if (!_didFirstLogonGo) {
+            _didFirstLogonGo = true;
+            goToPlace(MsoyParameters.get());
+        } else if (_postLogonScene != 0) {
+            // we gotta go somewhere
+            _wctx.getSceneDirector().moveTo(_postLogonScene);
+            _postLogonScene = 0;
+        }
     }
 
     // from ClientObserver
@@ -398,9 +434,15 @@ public class WorldController
      */
     public function handleViewUrl (url :String, windowOrTab :String = null) :Boolean
     {
-        if (NetUtil.navigateToURL(url, windowOrTab)) {
+        // if our page refers to a Whirled page...
+        var gwtPrefix :String = DeploymentConfig.serverURL + "#";
+        var gwtUrl :String;
+        if (url.indexOf(gwtPrefix) == 0) {
+            gwtUrl = url.substring(gwtPrefix.length);
+        } else if (url.indexOf("#") == 0) {
+            gwtUrl = url.substring(1);
+        } else if (NetUtil.navigateToURL(url, windowOrTab)) {
             return true;
-
         } else {
             _wctx.displayFeedback(
                 OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
@@ -411,7 +453,16 @@ public class WorldController
             new MissedURLDialog(_wctx, url);
             return false;
         }
+
+        // ...extract the page and arguments and tell GWT to display them properly
+        var didx :int = gwtUrl.indexOf("-");
+        if (didx == -1) {
+            return displayPage(gwtUrl, "");
+        } else {
+            return displayPage(gwtUrl.substring(0, didx), gwtUrl.substring(didx+1));
+        }
     }
+
 
     /**
      * Handles the POP_GO_MENU command.
@@ -453,7 +504,12 @@ public class WorldController
      */
     public function handleClosePlaceView () :void
     {
-        // handled by our derived classes
+        // give the handlers a chance to prevent closure
+        if (!sanctionClosePlaceView()) {
+            return;
+        }
+        // if we're in the whirled, closing means closing the flash client totally
+        _wctx.getOrthClient().closeClient();
     }
 
     /**
@@ -461,7 +517,17 @@ public class WorldController
      */
     public function handleMoveBack (closeInsteadOfHome :Boolean = false) :void
     {
-        // handled by our derived classes
+        // go to the first recent scene that's not the one we're in
+        const curSceneId :int = getCurrentSceneId();
+        for each (var entry :Object in _recentScenes) {
+            if (entry.id != curSceneId) {
+                handleGoScene(entry.id);
+                return;
+            }
+        }
+
+        // there are no recent scenes, so go home
+        handleGoScene(_wctx.getMemberObject().getHomeSceneId());
     }
 
     /**
@@ -480,7 +546,23 @@ public class WorldController
      */
     public function canMoveBack () :Boolean
     {
+        // you can only NOT move back if you are in your home room and there are no
+        // other scenes in your history
+        const curSceneId :int = getCurrentSceneId();
+        var memObj :MemberObject = _wctx.getMemberObject();
+        if (memObj == null) {
+            return false;
+        }
+        if (memObj.getHomeSceneId() != curSceneId) {
+            return true;
+        }
+        for each (var entry :Object in _recentScenes) {
+            if (entry.id != curSceneId) {
+                return true;
+            }
+        }
         return false;
+
     }
 
     /**
@@ -534,6 +616,12 @@ public class WorldController
      */
     public function handleLogon (creds :Credentials) :void
     {
+        // if we're currently logged on, save our current scene so that we can go back there once
+        // we're relogged on as a non-guest; otherwise go to Brave New Whirled
+        const currentSceneId :int = getCurrentSceneId();
+        _postLogonScene = (currentSceneId == 0) ? 1 : currentSceneId;
+        _wctx.getClient().logoff(false);
+
         // give the client a chance to log off, then log back on
         _topPanel.callLater(function () :void {
             var client :Client = _wctx.getClient();
@@ -654,7 +742,7 @@ public class WorldController
             var model :OrthSceneModel = scene.getSceneModel() as OrthSceneModel;
 //            if (model.ownerType == OrthSceneModel.OWNER_TYPE_GROUP) {
 //                menuData.push({ label: Msgs.GENERAL.get("b.group_page"),
-//                    command: MsoyController.VIEW_GROUP, arg: model.ownerId });
+//                    command: WorldController.VIEW_GROUP, arg: model.ownerId });
 //            }
         }
 
@@ -667,7 +755,7 @@ public class WorldController
         menuData.push({ label: Msgs.GENERAL.get("b.viewItems"),
             callback: roomView.viewRoomItems });
         menuData.push({ label: Msgs.GENERAL.get("b.comment"), icon: CommentButton,
-            command: MsoyController.VIEW_COMMENT_PAGE });
+            command: WorldController.VIEW_COMMENT_PAGE });
         menuData.push({ label: Msgs.GENERAL.get("b.snapshot"), icon: SNAPSHOT_ICON,
             command: doSnapshot });
         menuData.push({ label: Msgs.GENERAL.get("b.music"), icon: Resources.MUSIC_ICON,
@@ -1144,29 +1232,6 @@ public class WorldController
         }
     }
 
-    // from MsoyController
-    override public function handleViewUrl (url :String, windowOrTab :String = null) :Boolean
-    {
-        // if our page refers to a Whirled page...
-        var gwtPrefix :String = DeploymentConfig.serverURL + "#";
-        var gwtUrl :String;
-        if (url.indexOf(gwtPrefix) == 0) {
-            gwtUrl = url.substring(gwtPrefix.length);
-        } else if (url.indexOf("#") == 0) {
-            gwtUrl = url.substring(1);
-        } else {
-            return super.handleViewUrl(url, windowOrTab);
-        }
-
-        // ...extract the page and arguments and tell GWT to display them properly
-        var didx :int = gwtUrl.indexOf("-");
-        if (didx == -1) {
-            return displayPage(gwtUrl, "");
-        } else {
-            return displayPage(gwtUrl.substring(0, didx), gwtUrl.substring(didx+1));
-        }
-    }
-
     /**
      * Show (or hide) the tables waiting display.
      */
@@ -1188,36 +1253,7 @@ public class WorldController
         }
     }
 
-    // from MsoyController
-    override public function getPlaceInfo () :PlaceInfo
-    {
-        var plinfo :PlaceInfo = new PlaceInfo();
-
-        var scene :Scene = _wctx.getSceneDirector().getScene();
-        plinfo.sceneId = (scene == null) ? 0 : scene.getId();
-        plinfo.sceneName = (scene == null) ? null : scene.getName();
-
-        return plinfo;
-    }
-
-    // from MsoyController
-    override public function canManagePlace () :Boolean
-    {
-        // support can manage any place...
-        if (_wctx.getTokens().isSupport()) {
-            return true;
-        }
-
-        const view :Object = _topPanel.getPlaceView();
-        if (view is RoomView) {
-            return RoomView(view).getRoomController().canManageRoom();
-        }
-
-        return false;
-    }
-
-    // from MsoyController
-    override public function addMemberMenuItems (
+    public function addMemberMenuItems (
         name :MemberName, menuItems :Array, addWorldItems :Boolean = true) :void
     {
         const memId :int = name.getMemberId();
@@ -1353,7 +1389,7 @@ public class WorldController
                 var creds :WorldCredentials = new WorldCredentials(null, null);
                 creds.ident = "";
                 menuItems.push({ label: Msgs.GENERAL.get("b.logout"),
-                    command: MsoyController.LOGON, arg: creds });
+                    command: WorldController.LOGON, arg: creds });
             }
         }
     }
@@ -1376,97 +1412,6 @@ public class WorldController
         }
     }
 
-    // from MsoyController
-    override public function handleClosePlaceView () :void
-    {
-        // give the handlers a chance to prevent closure
-        if (!sanctionClosePlaceView()) {
-            return;
-        }
-        // if we're in the whirled, closing means closing the flash client totally
-        _wctx.getOrthClient().closeClient();
-    }
-
-    // from MsoyController
-    override public function handleMoveBack (closeInsteadOfHome :Boolean = false) :void
-    {
-        // go to the first recent scene that's not the one we're in
-        const curSceneId :int = getCurrentSceneId();
-        for each (var entry :Object in _recentScenes) {
-            if (entry.id != curSceneId) {
-                handleGoScene(entry.id);
-                return;
-            }
-        }
-
-        // there are no recent scenes, so go home
-        handleGoScene(_wctx.getMemberObject().getHomeSceneId());
-    }
-
-    // from MsoyController
-    override public function canMoveBack () :Boolean
-    {
-        // you can only NOT move back if you are in your home room and there are no
-        // other scenes in your history
-        const curSceneId :int = getCurrentSceneId();
-        var memObj :MemberObject = _wctx.getMemberObject();
-        if (memObj == null) {
-            return false;
-        }
-        if (memObj.getHomeSceneId() != curSceneId) {
-            return true;
-        }
-        for each (var entry :Object in _recentScenes) {
-            if (entry.id != curSceneId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // from MsoyController
-    override public function handleLogon (creds :Credentials) :void
-    {
-        // if we're currently logged on, save our current scene so that we can go back there once
-        // we're relogged on as a non-guest; otherwise go to Brave New Whirled
-        const currentSceneId :int = getCurrentSceneId();
-        _postLogonScene = (currentSceneId == 0) ? 1 : currentSceneId;
-        _wctx.getClient().logoff(false);
-
-        super.handleLogon(creds);
-    }
-
-    // from MsoyController
-    override public function reconnectClient () :void
-    {
-        _didFirstLogonGo = false;
-        super.reconnectClient();
-    }
-
-    // from ClientObserver
-    override public function clientDidLogon (event :ClientEvent) :void
-    {
-        super.clientDidLogon(event);
-
-        var memberObj :MemberObject = _wctx.getMemberObject();
-        // if not a permaguest, save the username that we logged in with
-        if (!memberObj.isPermaguest()) {
-            var name :Name = (_wctx.getClient().getCredentials() as MsoyCredentials).getUsername();
-            if (name != null) {
-                Prefs.setUsername(name.toString());
-            }
-        }
-
-        if (!_didFirstLogonGo) {
-            _didFirstLogonGo = true;
-            goToPlace(MsoyParameters.get());
-        } else if (_postLogonScene != 0) {
-            // we gotta go somewhere
-            _wctx.getSceneDirector().moveTo(_postLogonScene);
-            _postLogonScene = 0;
-        }
-    }
-
     /**
      * Inform our parent web page that our display name has changed.
      */
@@ -1480,7 +1425,7 @@ public class WorldController
         }
     }
 
-    override protected function setControlledPanel (panel :IEventDispatcher) :void
+    protected function setControlledPanel (panel :IEventDispatcher) :void
     {
         // in addition to listening for command events, let's listen
         // for LINK events and handle them all here.
@@ -1603,6 +1548,11 @@ public class WorldController
         if (UberClient.isRegularClient()) {
             updateLocationDisplay();
         }
+        // if we moved to a scene, set things up thusly
+        var scene :Scene = _wctx.getSceneDirector().getScene();
+        if (scene != null) {
+            addRecentScene(scene);
+        }
     }
 
     protected function handlePollIdleMouse (event :TimerEvent) :void
@@ -1687,7 +1637,49 @@ public class WorldController
      */
     protected function populateGoMenu (menuData :Array) :void
     {
-        // see subclass
+        const me :MemberObject = _wctx.getMemberObject();
+        const curSceneId :int = getCurrentSceneId();
+
+        // our groups
+        var groups :Array = [];
+        for each (var gm :GroupMembership in me.getSortedGroups()) {
+            groups.push({ label: gm.group.toString(),
+                command: GO_GROUP_HOME, arg: gm.group.getGroupId() });
+        }
+        if (groups.length == 0) {
+            groups.push({ label: Msgs.GENERAL.get("m.no_groups"), enabled: false });
+        }
+        menuData.push({ label: Msgs.GENERAL.get("l.visit_groups"), children: groups });
+
+        // our friends
+        var friends :Array = [];
+        for each (var fe :FriendEntry in me.getSortedFriends()) {
+            friends.push({ label: fe.name.toString(),
+                command: VISIT_MEMBER, arg: fe.name.getMemberId() });
+        }
+        if (friends.length == 0) {
+            friends.push({ label: Msgs.GENERAL.get("m.no_friends"), enabled: false });
+        }
+        menuData.push({ label: Msgs.GENERAL.get("l.visit_friends"), children: friends });
+
+        // recent scenes
+        var sceneSubmenu :Array = [];
+        for each (var entry :Object in _recentScenes) {
+            sceneSubmenu.unshift({ label: StringUtil.truncate(entry.name, 50, "..."),
+                command: GO_SCENE, arg: entry.id, enabled: (entry.id != curSceneId) });
+        }
+        if (sceneSubmenu.length == 0) {
+            sceneSubmenu.push({ label: Msgs.GENERAL.get("m.none"), enabled: false });
+        }
+        menuData.push({ label: Msgs.WORLD.get("l.recent_scenes"), children: sceneSubmenu });
+
+        CommandMenu.addSeparator(menuData);
+        // and our home
+        const ourHomeId :int = me.homeSceneId;
+        if (ourHomeId != 0) {
+            menuData.push({ label: Msgs.GENERAL.get("b.go_home"), command: GO_SCENE, arg: ourHomeId,
+                enabled: (ourHomeId != curSceneId) });
+        }
     }
 
     /**
@@ -1794,68 +1786,6 @@ public class WorldController
             }
             _wctx.getNotificationDirector().notifyMusic(songName, artist);
             _musicInfoShown = true;
-        }
-    }
-
-    // from MsoyController
-    override protected function locationDidChange (place :PlaceObject) :void
-    {
-        super.locationDidChange(place);
-
-        // if we moved to a scene, set things up thusly
-        var scene :Scene = _wctx.getSceneDirector().getScene();
-        if (scene != null) {
-            addRecentScene(scene);
-        }
-    }
-
-    // from MsoyController
-    override protected function populateGoMenu (menuData :Array) :void
-    {
-        super.populateGoMenu(menuData);
-
-        const me :MemberObject = _wctx.getMemberObject();
-        const curSceneId :int = getCurrentSceneId();
-
-        // our groups
-        var groups :Array = [];
-        for each (var gm :GroupMembership in me.getSortedGroups()) {
-            groups.push({ label: gm.group.toString(),
-                command: GO_GROUP_HOME, arg: gm.group.getGroupId() });
-        }
-        if (groups.length == 0) {
-            groups.push({ label: Msgs.GENERAL.get("m.no_groups"), enabled: false });
-        }
-        menuData.push({ label: Msgs.GENERAL.get("l.visit_groups"), children: groups });
-
-        // our friends
-        var friends :Array = [];
-        for each (var fe :FriendEntry in me.getSortedFriends()) {
-            friends.push({ label: fe.name.toString(),
-                command: VISIT_MEMBER, arg: fe.name.getMemberId() });
-        }
-        if (friends.length == 0) {
-            friends.push({ label: Msgs.GENERAL.get("m.no_friends"), enabled: false });
-        }
-        menuData.push({ label: Msgs.GENERAL.get("l.visit_friends"), children: friends });
-
-        // recent scenes
-        var sceneSubmenu :Array = [];
-        for each (var entry :Object in _recentScenes) {
-            sceneSubmenu.unshift({ label: StringUtil.truncate(entry.name, 50, "..."),
-                command: GO_SCENE, arg: entry.id, enabled: (entry.id != curSceneId) });
-        }
-        if (sceneSubmenu.length == 0) {
-            sceneSubmenu.push({ label: Msgs.GENERAL.get("m.none"), enabled: false });
-        }
-        menuData.push({ label: Msgs.WORLD.get("l.recent_scenes"), children: sceneSubmenu });
-
-        CommandMenu.addSeparator(menuData);
-        // and our home
-        const ourHomeId :int = me.homeSceneId;
-        if (ourHomeId != 0) {
-            menuData.push({ label: Msgs.GENERAL.get("b.go_home"), command: GO_SCENE, arg: ourHomeId,
-                enabled: (ourHomeId != curSceneId) });
         }
     }
 

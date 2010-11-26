@@ -2,11 +2,11 @@
 // $Id: WorldContext.as 18724 2009-11-19 19:21:47Z jamie $
 
 package com.threerings.orth.world.client {
+
 import com.threerings.orth.client.OrthContext;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
 import com.threerings.whirled.util.WhirledContext;
-
 
 /**
  * Defines services for the World client.
@@ -113,7 +113,7 @@ public class WorldContext extends OrthContext
     }
 
     // from OrthContext
-    override public function getMsoyController () :MsoyController
+    override public function getWorldController () :WorldController
     {
         return _controller;
     }
