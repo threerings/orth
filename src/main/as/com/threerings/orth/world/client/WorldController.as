@@ -122,17 +122,8 @@ public class WorldController
     /** Command to show an (external) URL. */
     public static const VIEW_URL :String = "ViewUrl";
 
-    /** Command to display the comment page for the current scene or game. */
-    public static const VIEW_COMMENT_PAGE :String = "ViewCommentPage";
-
     /** Command to view a member's profile, arg is [ memberId ] */
     public static const VIEW_MEMBER :String = "ViewMember";
-
-    /** Command to go to a group's home scene. */
-    public static const GO_GROUP_HOME :String = "GoGroupHome";
-
-    /** Command to ensure that the share dialog is up. */
-    public static const POP_SHARE_DIALOG :String = "PopShareDialog";
 
     /** Command to display the chat channel menu. */
     public static const POP_CHANNEL_MENU :String = "PopChannelMenu";
@@ -163,9 +154,6 @@ public class WorldController
 
     /** Command to view a "stuff" page. Arg: [ itemType ] */
     public static const VIEW_STUFF :String = "ViewStuff";
-
-    /** Command to issue an invite to a current guest. */
-    public static const INVITE_GUEST :String = "InviteGuest";
 
     /** Command to respond to a request to follow another player. */
     public static const RESPOND_FOLLOW :String = "RespondFollow";
@@ -497,17 +485,6 @@ public class WorldController
     }
 
     /**
-     * Handles the POP_SHARE_DIALOG command.
-     */
-    public function handlePopShareDialog () :void
-    {
-        // do it this way so that we don't mess up the dialog popper.
-        if (!_wctx.getControlBar().shareBtn.selected) {
-            _wctx.getControlBar().shareBtn.activate();
-        }
-    }
-
-    /**
      * Can we move back?
      */
     public function canMoveBack () :Boolean
@@ -687,8 +664,6 @@ public class WorldController
 
         menuData.push({ label: Msgs.GENERAL.get("b.viewItems"),
             callback: roomView.viewRoomItems });
-        menuData.push({ label: Msgs.GENERAL.get("b.comment"), icon: CommentButton,
-            command: WorldController.VIEW_COMMENT_PAGE });
         menuData.push({ label: Msgs.GENERAL.get("b.snapshot"), icon: SNAPSHOT_ICON,
             command: doSnapshot });
         menuData.push({ label: Msgs.GENERAL.get("b.music"), icon: Resources.MUSIC_ICON,
@@ -704,18 +679,6 @@ public class WorldController
     public function handleViewMember (memberId :int) :void
     {
         log.warning("VIEW_MEMBER not implemented.");
-    }
-
-    /**
-     * Handles the VIEW_COMMENT_PAGE command.
-     */
-    public function handleViewCommentPage () :void
-    {
-        const sceneId :int = getCurrentSceneId();
-        if (sceneId != 0) {
-            handleViewRoom(sceneId);
-            return;
-        }
     }
 
     /**
@@ -756,14 +719,6 @@ public class WorldController
     public function handleGetPartyDetail (partyId :int) :void
     {
         _wctx.getPartyDirector().getPartyDetail(partyId);
-    }
-
-    /**
-     * Handles the GO_GROUP_HOME command.
-     */
-    public function handleGoGroupHome (groupId :int) :void
-    {
-        _wctx.getWorldDirector().goToGroupHome(groupId);
     }
 
     /**
@@ -967,10 +922,6 @@ public class WorldController
                 memberId = _wctx.getMemberObject().getMemberId();
             }
             handleGoMemberHome(memberId);
-
-        } else if (null != params["groupHome"]) {
-            _suppressTokenForScene = true;
-            handleGoGroupHome(int(params["groupHome"]));
 
         } else if (null != params["memberScene"]) {
             _suppressTokenForScene = true;
