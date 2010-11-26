@@ -194,20 +194,6 @@ public class RoomObjectController extends RoomController
     }
 
     /**
-     * Requests that this client be given control of the specified item.
-     */
-    override public function requestControl (ident :ItemIdent) :void
-    {
-        var result :Object = hasEntityControl(ident);
-        // side-effect of calling hasEntityControl: the sprite will be notified (possibly again)
-        // that it has control if it does
-        if (result == null) {
-            // only if nobody currently has control do we issue the request
-            _roomObj.roomService.requestControl(ident);
-        }
-    }
-
-    /**
      * Handles a request by an actor to change its location. Returns true if the request was
      * dispatched, false if funny business prevented it.
      */
@@ -840,56 +826,6 @@ public class RoomObjectController extends RoomController
         }
 
         return super.checkCanRequest(ident, from);
-    }
-
-    /**
-     * Does this client have control over the specified entity?
-     *
-     * Side-effect: The gotControl() will always be re-dispatched to the entity if it does.
-     * The newest EntityControl will suppress repeats.
-     *
-     * @returns true, false, or null if nobody currently has control.
-     */
-    override protected function hasEntityControl (ident :ItemIdent) :Object
-    {
-        var ourOid :int = _wdctx.getMemberObject().getOid();
-
-        // TODO: see if this can be made more efficient for avatars.
-        // I would think that we could just check the itemId against the user's worn avatar,
-        // but that might not work with certain edge cases (default avatar, for example).
-
-        // first, let's check all the MemberInfos
-        for each (var occInfo :Object in _roomObj.occupantInfo.toArray()) {
-            if (occInfo is MemberInfo) {
-                var winfo :MemberInfo = (occInfo as MemberInfo);
-                if (ident.equals(winfo.getItemIdent())) {
-                    if (winfo.bodyOid == ourOid) {
-                        // dispatch got-control to the avatar, it should supress repeats
-                        dispatchEntityGotControl(ident);
-                        return true;
-
-                    } else {
-                        return false; // we can't control another's avatar!
-                    }
-                }
-            }
-        }
-        // ok, the ident does not belong to a member's avatar..
-
-        var ctrl :EntityControl =
-            _roomObj.controllers.get(new ControllableEntity(ident)) as EntityControl;
-        if (ctrl == null) {
-            return null;
-
-        } else if (ctrl.controllerOid == ourOid) {
-            // redispatch that we have control, just in case the media
-            // started up after the last dispatch...
-            dispatchEntityGotControl(ident);
-            return true;
-
-        } else {
-            return false;
-        }
     }
 
     /**
