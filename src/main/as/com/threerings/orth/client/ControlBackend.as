@@ -7,6 +7,7 @@ import flash.events.EventDispatcher;
 
 import flash.display.LoaderInfo;
 
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.util.Log;
 
 /**
@@ -18,7 +19,7 @@ public class ControlBackend
     /**
      * Initialize a backend to safely communicate with usercode.
      */
-    public function init (ctx :OrthContext, contentLoaderInfo :LoaderInfo) :void
+    public function init (ctx :WorldContext, contentLoaderInfo :LoaderInfo) :void
     {
         _ctx = ctx;
         _sharedEvents = contentLoaderInfo.sharedEvents;
@@ -145,7 +146,7 @@ public class ControlBackend
     }
 
     /** The giver of life. */
-    protected var _ctx :OrthContext;
+    protected var _ctx :WorldContext;
 
     /** Properties populated by usercode. */
     protected var _props :Object;

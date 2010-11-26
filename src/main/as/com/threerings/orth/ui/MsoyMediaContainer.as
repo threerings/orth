@@ -24,7 +24,7 @@ import com.threerings.media.MediaContainer;
 import com.threerings.ui.MenuUtil;
 import com.threerings.media.VideoPlayer;
 
-import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.data.MediaDesc;
 
@@ -76,7 +76,7 @@ public class MsoyMediaContainer extends MediaContainer
     /**
      * Toggle the bleeped status of the media we're holding.
      */
-    public function toggleBleeped (ctx :OrthContext = null) :void
+    public function toggleBleeped (ctx :WorldContext = null) :void
     {
         var nowBleeped :Boolean = !isBleeped();
         // and change the setting. We'll get an event about the change, and react to that.
@@ -111,7 +111,7 @@ public class MsoyMediaContainer extends MediaContainer
     }
 
     // from ContextMenuProvider
-    public function populateContextMenu (ctx :OrthContext, menuItems :Array) :void
+    public function populateContextMenu (ctx :WorldContext, menuItems :Array) :void
     {
         if (isBleepable()) {
             var isBleeped :Boolean = isBleeped();

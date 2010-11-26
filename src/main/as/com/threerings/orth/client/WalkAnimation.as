@@ -5,7 +5,7 @@ package com.threerings.orth.client {
 
 import com.threerings.display.AnimationImpl;
 
-import com.threerings.orth.room.client.OccupantSprite;
+import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
 

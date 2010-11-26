@@ -3,8 +3,8 @@
 
 package com.threerings.orth.ui {
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.OrthContext;
 
+import com.threerings.orth.world.client.WorldContext;
 import flash.display.DisplayObject;
 
 import flash.events.Event;
@@ -118,7 +118,7 @@ public class FloatingPanel extends TitleWindow
     /**
      * Create a Floating Panel.
      */
-    public function FloatingPanel (ctx :OrthContext, title :String = "")
+    public function FloatingPanel (ctx :WorldContext, title :String = "")
     {
         _ctx = ctx;
         this.title = title;
@@ -381,7 +381,7 @@ public class FloatingPanel extends TitleWindow
     }
 
     /** Provides client services. */
-    protected var _ctx :OrthContext;
+    protected var _ctx :WorldContext;
 
     /** The button bar. */
     protected var _buttonBar :ButtonBar;

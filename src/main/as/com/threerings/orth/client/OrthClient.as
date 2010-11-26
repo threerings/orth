@@ -36,7 +36,6 @@ public /*abstract*/ class OrthClient extends CrowdClient
 
         // now create our credentials and context
         _creds = createStartupCreds(null);
-        _ctx = createContext();
 
         // prior to logging on to a server, set up our security policy for that server
         addClientObserver(new ClientAdapter(clientWillLogon));
@@ -77,14 +76,6 @@ public /*abstract*/ class OrthClient extends CrowdClient
     }
 
     /**
-     * Creates the context we'll use with this client.
-     */
-    protected function createContext () :OrthContext
-    {
-        return new OrthContext(this);
-    }
-
-    /**
      * Creates the credentials that will be used to log us on.
      */
     protected function createStartupCreds (token :String) :Credentials
@@ -92,7 +83,6 @@ public /*abstract*/ class OrthClient extends CrowdClient
         throw new Error("abstract");
     }
 
-    protected var _ctx :OrthContext;
     protected var _stage :Stage;
     
     protected var _socketPolicyPort :int;

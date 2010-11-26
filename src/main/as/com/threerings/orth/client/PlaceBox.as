@@ -17,6 +17,7 @@ import caurina.transitions.Tweener;
 
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.FlexUtil;
+import com.threerings.orth.world.client.WorldContext;
 
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.NamedValueEvent;
@@ -62,7 +63,7 @@ public class PlaceBox extends LayeredContainer
     /** The layer priority of the clickable featured place overlay. */
     public static const LAYER_FEATURED_PLACE :int = 100;
 
-    public function PlaceBox (ctx :OrthContext)
+    public function PlaceBox (ctx :WorldContext)
     {
         _ctx = ctx;
         rawChildren.addChild(_mask = new Shape());
@@ -387,7 +388,7 @@ public class PlaceBox extends LayeredContainer
     }
 
     /** The river of life. */
-    protected var _ctx :OrthContext;
+    protected var _ctx :WorldContext;
 
     /** The mask configured on the box or view so that it doesn't overlap outside components. */
     protected var _mask :Shape = new Shape();

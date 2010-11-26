@@ -4,7 +4,7 @@
 package com.threerings.orth.world.client {
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.OrthClient;
-import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.client.PlaceBox;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.data.UberClientModes;
@@ -54,6 +54,8 @@ public class WorldClient extends OrthClient
         // world to jiggle when someone starts walking, then jiggle again when they stop.
         // So: for now we just peg it to MEDIUM.
         stage.quality = StageQuality.MEDIUM;
+
+        _wctx = new WorldContext(this);
 
         // if we are embedded, we won't have a server host in our parameters, so we need to obtain
         // that via an HTTP request, otherwise just logon directly
@@ -259,12 +261,6 @@ public class WorldClient extends OrthClient
             });
             _wctx.getClient().addClientObserver(adapter);
         }
-    }
-
-    // from MsoyClient
-    override protected function createContext () :OrthContext
-    {
-        return (_wctx = new WorldContext(this));
     }
 
     // from MsoyClient
