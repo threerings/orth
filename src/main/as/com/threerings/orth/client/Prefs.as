@@ -54,7 +54,6 @@ public class Prefs
     public static const OCCUPANT_LIST :String = "occupantList";
     public static const LOG_TO_CHAT :String = "logToChat";
     public static const PARTY_GROUP :String = "partyGroup";
-    public static const PERMAGUEST_USERNAME :String = "permaguestUsername";
     public static const USE_CUSTOM_BACKGROUND_COLOR :String = "useCustomBgColor";
     public static const CUSTOM_BACKGROUND_COLOR :String = "customBgColor";
     public static const AUTOSHOW_PREFIX :String = "autoShow_";
@@ -137,21 +136,6 @@ public class Prefs
     public static function setUsername (username :String) :void
     {
         _config.setValue(USERNAME, username);
-    }
-
-    public static function getPermaguestUsername () :String
-    {
-        return (_machineConfig.getValue(PERMAGUEST_USERNAME, null) as String);
-    }
-
-    public static function setPermaguestUsername (username :String) :void
-    {
-        if (username == null) {
-            _machineConfig.remove(PERMAGUEST_USERNAME);
-
-        } else {
-            _machineConfig.setValue(PERMAGUEST_USERNAME, username);
-        }
     }
 
     public static function getMachineIdent () :String

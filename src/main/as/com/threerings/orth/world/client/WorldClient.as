@@ -279,10 +279,6 @@ public class WorldClient extends OrthClient
                 new Name(String(params["user"])), MD5.hash(String(params["pass"])));
             anonymous = false;
 
-        } else if (Prefs.getPermaguestUsername() != null) {
-            creds = new WorldCredentials(new Name(Prefs.getPermaguestUsername()), "");
-            anonymous = false;
-
         } else {
             creds = new WorldCredentials(null, null);
             anonymous = true;

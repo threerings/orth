@@ -290,12 +290,10 @@ public class WorldController
     public function clientDidLogon (event :ClientEvent) :void
     {
         var memberObj :MemberObject = _wctx.getMemberObject();
-        // if not a permaguest, save the username that we logged in with
-        if (!memberObj.isPermaguest()) {
-            var name :Name = (_wctx.getClient().getCredentials() as MsoyCredentials).getUsername();
-            if (name != null) {
-                Prefs.setUsername(name.toString());
-            }
+
+        var name :Name = (_wctx.getClient().getCredentials() as MsoyCredentials).getUsername();
+        if (name != null) {
+            Prefs.setUsername(name.toString());
         }
 
         if (!_didFirstLogonGo) {
@@ -1111,17 +1109,10 @@ public class WorldController
 
         // login/logout
         if (isUs && !_wctx.getOrthClient().getEmbedding().hasGWT()) {
-            if (_wctx.getMemberObject().isPermaguest()) {
-                menuItems.push({ label: Msgs.GENERAL.get("b.logon"),
-                    callback: function () :void {
-                        (new LogonPanel(_wctx)).open();
-                    }});
-            } else {
-                var creds :WorldCredentials = new WorldCredentials(null, null);
-                creds.ident = "";
-                menuItems.push({ label: Msgs.GENERAL.get("b.logout"),
-                    command: WorldController.LOGON, arg: creds });
-            }
+            var creds :WorldCredentials = new WorldCredentials(null, null);
+            creds.ident = "";
+            menuItems.push({ label: Msgs.GENERAL.get("b.logout"),
+                command: WorldController.LOGON, arg: creds });
         }
     }
 
