@@ -16,7 +16,6 @@ import flash.display.Stage;
 import flash.display.StageQuality;
 import flash.events.Event;
 import flash.events.IEventDispatcher;
-import flash.external.ExternalInterface;
 import flash.geom.Point;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
@@ -132,114 +131,12 @@ public class WorldClient extends OrthClient
         _wctx.getWorldController().handleLogon(createStartupCreds(token));
     }
 
-    /**
-     * Exposed to javascript so that it may notify us to move to a new location.
-     */
-    protected function externalClientGo (where :String) :Boolean
-    {
-        if (_wctx.getClient().isLoggedOn()) {
-            log.info("Changing scenes per external request", "where", where);
-            _wctx.getWorldController().goToPlace(new URLVariables(where));
-            return true;
-        } else {
-            log.info("Not ready to change scenes (we're not logged on)", "where", where);
-            return false;
-        }
-    }
-
-    /**
-     * Exposed to javascript so that the it may determine if the current scene is a room.
-     */
-    protected function externalInRoom () :Boolean
-    {
-        return _wctx.getPlaceView() is RoomObjectView;
-    }
-
-    /**
-     * Exposed to javascript so that the it may determine if the scene id.
-     */
-    protected function externalGetSceneId () :int
-    {
-        var scene :Scene = _wctx.getSceneDirector().getScene();
-        return (scene == null) ? 0 : scene.getId();
-    }
-
-    /**
-     * Exposed to javascript so that it may tell us to use this avatar.  If the avatarId of 0 is
-     * passed in, the current avatar is simply cleared away, leaving them with the default.
-     */
-    protected function externalUseAvatar (avatarId :int) :void
-    {
-        _wctx.getWorldDirector().setAvatar(avatarId);
-    }
-
-    /**
-     * Exposed to javascript so that the avatarviewer may update the scale of an avatar
-     * in real-time.
-     */
-    protected function externalUpdateAvatarScale (avatarId :int, newScale :Number) :void
-    {
-        var view :RoomObjectView = _wctx.getPlaceView() as RoomObjectView;
-        if (view != null) {
-            view.updateAvatarScale(avatarId, newScale);
-        }
-    }
-
-    /**
-     * Exposed to javascript so that it may tell us to use items in the current room, either as
-     * background items, or as furni as apporpriate.
-     */
-    protected function externalUseItem (itemType :int, itemId :int) :void
-    {
-        var view :RoomObjectView = _wctx.getPlaceView() as RoomObjectView;
-        if (view != null) {
-            view.getRoomObjectController().useItem(itemType, itemId);
-        }
-    }
-
-    /**
-     * Exposed to javascript so that it may tell us to remove an item from use.
-     */
-    protected function externalClearItem (itemType :int, itemId :int) :void
-    {
-        var view :RoomObjectView = _wctx.getPlaceView() as RoomObjectView;
-        if (view != null) {
-            view.getRoomObjectController().clearItem(itemType, itemId);
-        }
-    }
-
-    /**
-     * Exposed to JavaScript so that it may order us to open chat channels.
-     */
-    protected function externalOpenChannel (type :int, name :String, id :int) :void
-    {
-        var nameObj :Name;
-        if (type == MsoyChatChannel.MEMBER_CHANNEL) {
-            nameObj = new OrthName(name, id);
-        } else if (type == MsoyChatChannel.GROUP_CHANNEL) {
-            nameObj = new GroupName(name, id);
-        } else if (type == MsoyChatChannel.PRIVATE_CHANNEL) {
-            nameObj = new ChannelName(name, id);
-        } else {
-            throw new Error("Unknown channel type: " + type);
-        }
-        _wctx.getMsoyChatDirector().openChannel(nameObj);
-    }
-
     // from MsoyClient
     override protected function configureExternalFunctions () :void
     {
         super.configureExternalFunctions();
 
         ExternalInterface.addCallback("clientLogon", externalClientLogon);
-        ExternalInterface.addCallback("clientGo", externalClientGo);
-        ExternalInterface.addCallback("inRoom", externalInRoom);
-        ExternalInterface.addCallback("getSceneId", externalGetSceneId);
-        ExternalInterface.addCallback("useAvatar", externalUseAvatar);
-        ExternalInterface.addCallback("updateAvatarScale", externalUpdateAvatarScale);
-        ExternalInterface.addCallback("useItem", externalUseItem);
-        ExternalInterface.addCallback("clearItem", externalClearItem);
-        ExternalInterface.addCallback("openChannel", externalOpenChannel);
     }
 
     // from MsoyClient
