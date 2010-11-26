@@ -14,9 +14,6 @@ public class Resources
     [Embed(source="../../../../../../../rsrc/media/skins/menu/avatar.png")]
     public static const AVATAR_ICON:Class;
 
-    [Embed(source="../../../../../../../rsrc/media/skins/menu/bleep.png")]
-    public static const BLEEP_ICON:Class;
-
     [Embed(source="../../../../../../../rsrc/media/loading.swf",
            mimeType="application/octet-stream")]
     public static const SPINNER:Class;
@@ -32,9 +29,6 @@ public class Resources
 
     [Embed(source="../../../../../../../rsrc/media/skins/menu/addfriend.png")]
     public static const ADDFRIEND_ICON :Class;
-
-    [Embed(source="../../../../../../../rsrc/media/skins/menu/block.png")]
-    public static const BLOCK_ICON :Class;
 
     [Embed(source="../../../../../../../rsrc/media/skins/menu/report.png")]
     public static const REPORT_ICON :Class;

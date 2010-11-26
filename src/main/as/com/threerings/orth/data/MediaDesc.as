@@ -52,10 +52,7 @@ public interface MediaDesc
      * Get some identifier that can be used to refer to this media across
      * sessions (used as a key in prefs).
      */
-    /* abstract */ function getMediaId () :String;
-
-    // from MediaDesc
-    function isBleepable () :Boolean;
+    function getMediaId () :String;
 
     /**
      * Is this a zip of some sort?

@@ -13,16 +13,6 @@ import com.threerings.util.NamedValueEvent;
 import com.threerings.util.StringUtil;
 
 /**
- * Dispatched when a piece of media is bleeped or unbleeped.
- * This is dispatched on the 'events' object.
- *
- * @eventType com.threerings.orth.client.Prefs.BLEEPED_MEDIA;
- * name: mediaId (may be the GLOBAL_BLEEP constant)
- * value: bleeped (Boolean)
- */
-[Event(name="bleepedMedia", type="com.threerings.util.NamedValueEvent")]
-
-/**
  * Dispatched when a tutorial id is ignored.
  * This is dispatched on the 'events' object.
  *
@@ -63,7 +53,6 @@ public class Prefs
     public static const CHAT_SIDEBAR :String = "chatSliding"; // legacy name
     public static const OCCUPANT_LIST :String = "occupantList";
     public static const LOG_TO_CHAT :String = "logToChat";
-    public static const BLEEPED_MEDIA :String = "bleepedMedia";
     public static const PARTY_GROUP :String = "partyGroup";
     public static const PERMAGUEST_USERNAME :String = "permaguestUsername";
     public static const USE_CUSTOM_BACKGROUND_COLOR :String = "useCustomBgColor";
@@ -78,14 +67,12 @@ public class Prefs
     /** List of cookies (that the user may see and clear). */
     public static const ALL_KEYS :Array = [
         VOLUME, CHAT_FONT_SIZE, CHAT_DECAY, CHAT_FILTER, CHAT_HISTORY, CHAT_SIDEBAR, OCCUPANT_LIST,
-        LOG_TO_CHAT, BLEEPED_MEDIA, PARTY_GROUP, USE_CUSTOM_BACKGROUND_COLOR,
+        LOG_TO_CHAT, PARTY_GROUP, USE_CUSTOM_BACKGROUND_COLOR,
         CUSTOM_BACKGROUND_COLOR, ROOM_ZOOM, IGNORED_TUTORIAL_IDS, TUTORIAL_PROGRESS_PREFIX,
         AUTOSHOW_PREFIX];
 
     public static const CHAT_FONT_SIZE_MIN :int = 10;
     public static const CHAT_FONT_SIZE_MAX :int = 24;
-
-    public static const GLOBAL_BLEEP :String = "_bleep_";
 
     public static const IS_APRIL_FOOLS :Boolean =
         ((new Date().month) == 3) && ((new Date().date) == 1); // April 1st
@@ -175,30 +162,6 @@ public class Prefs
     public static function setMachineIdent (ident :String) :void
     {
         _config.setValue(MACHINE_IDENT, ident);
-    }
-
-    public static function setMediaBleeped (id :String, bleeped :Boolean) :void
-    {
-        getBleepedMedia().update(id, bleeped);
-    }
-
-    /**
-     * Return true if the specified media is bleeped, regardless of the global bleep setting.
-     */
-    public static function isMediaBleeped (id :String) :Boolean
-    {
-        return getBleepedMedia().contains(id);
-    }
-
-    public static function setGlobalBleep (bleeped :Boolean) :void
-    {
-        _globalBleep = bleeped;
-        events.dispatchEvent(new NamedValueEvent(BLEEPED_MEDIA, GLOBAL_BLEEP, bleeped));
-    }
-
-    public static function isGlobalBleep () :Boolean
-    {
-        return _globalBleep;
     }
 
     public static function getSoundVolume () :Number
@@ -416,9 +379,6 @@ public class Prefs
                 }
             }
             break;
-        case BLEEPED_MEDIA:
-            pushSetElements(getBleepedMedia());
-            break;
         case IGNORED_TUTORIAL_IDS:
             pushSetElements(getIgnoredTutorialIds());
             break;
@@ -440,10 +400,6 @@ public class Prefs
         var count :int = 0;
         for each (var name :String in names) {
             switch (name) {
-            case BLEEPED_MEDIA:
-                count += getBleepedMedia().size();
-                getBleepedMedia().clear();
-                break;
             case IGNORED_TUTORIAL_IDS:
                 count += getIgnoredTutorialIds().size();
                 getIgnoredTutorialIds().clear();
@@ -470,14 +426,6 @@ public class Prefs
         return count;
     }
 
-    protected static function getBleepedMedia () :StringSet
-    {
-        if (_bleepedMedia == null) {
-            _bleepedMedia = new StringSet(_config, BLEEPED_MEDIA);
-        }
-        return _bleepedMedia;
-    }
-
     protected static function getIgnoredTutorialIds () :StringSet
     {
         if (_ignoredTutorialIds == null) {
@@ -488,10 +436,6 @@ public class Prefs
 
     /** The path of our config object. */
     protected static const CONFIG_PATH :String = "rsrc/config/msoy";
-
-    /** A set of media ids that are bleeped. */
-    protected static var _bleepedMedia :StringSet;
-    protected static var _globalBleep :Boolean;
 
     /** A set of tutorial item ids that have been ignored. */
     protected static var _ignoredTutorialIds :StringSet;

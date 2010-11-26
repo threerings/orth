@@ -140,13 +140,6 @@ public class RoomObjectController extends RoomController
             }
             var kind :String = Msgs.GENERAL.get(avatar.getDesc());
             var flagItems :Array = [];
-            var bleepItem :Object = null;
-            if (avatar.isBleepable()) {
-                var key :String = avatar.isBleeped() ? "b.unbleep_avatar" : "b.bleep_avatar";
-                //var key :String = avatar.isBleeped() ? "b.unbleep_item" : "b.bleep_item";
-                bleepItem = { label: Msgs.GENERAL.get(key), icon: Resources.BLEEP_ICON,
-                    callback: avatar.toggleBleeped, arg: _wdctx };
-            }
 
             var ident :EntityIdent = avatar.getEntityIdent();
             if (ident != null && ident.type >= 0) { // -1 is the default avatar, etc
@@ -159,11 +152,8 @@ public class RoomObjectController extends RoomController
             }
 
             // finally, add whatever makes sense
-            if (bleepItem != null || flagItems.length != 0) {
+            if (flagItems.length != 0) {
                 CommandMenu.addSeparator(menuItems);
-            }
-            if (bleepItem != null) {
-                menuItems.push(bleepItem);
             }
             if (flagItems.length > 0) {
                 menuItems.push({ label: Msgs.GENERAL.get("l.item_menu", kind), icon: Resources.AVATAR_ICON,
@@ -374,11 +364,6 @@ public class RoomObjectController extends RoomController
         var menuItems :Array = [];
 
         _wdctx.getWorldController().addPetMenuItems(PetName(occInfo.username), menuItems);
-        if (pet.isBleepable()) {
-            var key :String = pet.isBleeped() ? "b.unbleep_pet" : "b.bleep_pet";
-            menuItems.push({ label: Msgs.GENERAL.get(key), icon: Resources.BLEEP_ICON,
-                             callback: pet.toggleBleeped, arg: _wdctx });
-        }
 
         if (isPetOwner) {
             CommandMenu.addSeparator(menuItems);

@@ -231,7 +231,6 @@ public class WorldController
         stage.addEventListener(KeyboardEvent.KEY_DOWN, handleStageKeyDown, false, int.MAX_VALUE);
         stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown, false, int.MAX_VALUE);
 
-        Prefs.events.addEventListener(Prefs.BLEEPED_MEDIA, handleBleepChange, false, 0, true);
         Prefs.events.addEventListener(Prefs.PREF_SET, handleConfigValueSet, false, 0, true);
         _musicPlayer.addEventListener(MediaPlayerCodes.METADATA, handleMusicMetadata);
     }
@@ -641,7 +640,7 @@ public class WorldController
 
     public function handleAudioClicked (desc :MediaDesc, ident :EntityIdent) :void
     {
-        if (desc == null || !desc.isBleepable()) {
+        if (desc == null)
             return;
         }
 
@@ -653,12 +652,6 @@ public class WorldController
         if (_wctx.isRegistered()) {
             menuItems.push({ label: Msgs.GENERAL.get("b.flag_item", kind),
                 command: OrthController.FLAG_ITEM, arg: ident });
-        }
-        if (desc.isBleepable()) {
-            var isBleeped :Boolean = Prefs.isMediaBleeped(mediaId);
-            var key :String = isBleeped ? "b.unbleep_item" : "b.bleep_item";
-            menuItems.push({ label: Msgs.GENERAL.get(key, kind),
-                callback: Prefs.setMediaBleeped, arg: [ mediaId, !isBleeped ] });
         }
 
         CommandMenu.createMenu(menuItems, _topPanel).popUpAtMouse();
@@ -1049,7 +1042,7 @@ public class WorldController
         _musicPlayer.unload();
 
         const play :Boolean = UberClient.isRegularClient() && (music != null) &&
-            (Prefs.getSoundVolume() > 0) && !isMusicBleeped();
+            (Prefs.getSoundVolume() > 0);
         if (play) {
             _musicPlayer.load(music.audioMedia.getMediaPath(),
                 [ music.audioMedia, music.getIdent() ]);
@@ -1733,17 +1726,6 @@ public class WorldController
         _recentScenes.length = Math.min(_recentScenes.length, MAX_RECENT_SCENES);
     }
 
-    protected function handleBleepChange (event :NamedValueEvent) :void
-    {
-        if (_music == null) {
-            return; // couldn't possibly concern us..
-        }
-        if (isMusicBleeped() == musicIsPlayingOrPaused()) {
-            // just call play again with the same music, it'll handle it
-            handlePlayMusic(_music);
-        }
-    }
-
     protected function handleConfigValueSet (event :NamedValueEvent) :void
     {
         // if the volume got turned up and we were not playing music, play it now.
@@ -1751,12 +1733,6 @@ public class WorldController
                !musicIsPlayingOrPaused()) {
             handlePlayMusic(_music);
         }
-    }
-
-    protected function isMusicBleeped () :Boolean
-    {
-        return Prefs.isGlobalBleep() ||
-            (_music != null && Prefs.isMediaBleeped(_music.audioMedia.getMediaId()));
     }
 
     protected function musicIsPlayingOrPaused () :Boolean

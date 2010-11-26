@@ -520,13 +520,6 @@ public class RoomObjectView extends RoomView
                         Msgs.GENERAL.get("b.flag_item", kind), WorldController.FLAG_ITEM, ident));
                 }
             }
-
-            if (sprite.isBleepable()) {
-                var isBleeped :Boolean = sprite.isBleeped();
-                menuItems.push(MenuUtil.createCommandContextMenuItem(
-                    Msgs.GENERAL.get((isBleeped ? "b.unbleep_item" : "b.bleep_item"), kind),
-                    sprite.toggleBleeped, _ctx));
-            }
         }
 
         super.populateSpriteContextMenu(sprite, menuItems);
