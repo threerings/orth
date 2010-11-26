@@ -47,7 +47,7 @@ import com.threerings.flex.CommandMenu;
 
 import com.threerings.whirled.data.Scene;
 
-import Resources;
+import com.threerings.orth.client.Resources;
 
 
 /**

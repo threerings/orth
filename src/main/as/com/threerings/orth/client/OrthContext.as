@@ -222,6 +222,32 @@ public /*abstract*/ class OrthContext
     }
 
     /**
+     * Return's this client's member name.
+     */
+    public function getMyName () :MemberName
+    {
+        var body :BodyObject = (_client.getClientObject() as BodyObject);
+        return (body == null) ? null : body.getVisibleName() as MemberName;
+    }
+
+    /**
+     * Return this client's member id, or 0 if we're logged off or the viewer.
+     */
+    public function getMyId () :int
+    {
+        var name :MemberName = getMyName();
+        return (name == null) ? 0 : name.getMemberId();
+    }
+
+    /**
+     * Returns this client's access control tokens.
+     */
+    public function getTokens () :MsoyTokenRing
+    {
+        throw new Error("abstract");
+    }
+
+    /**
      * Create an error handling function for use with InvocationService listener adapters.
      */
     protected function chatErrHandler (
