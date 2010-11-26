@@ -84,16 +84,6 @@ public class OrthSceneDirector extends SceneDirector
     }
 
     // from SceneDirector
-    override public function moveTo (sceneId :int) :Boolean
-    {
-        if (sceneId == _sceneId) {
-            // ignore this as we're just hearing back from our browser URL update mechanism
-            return false;
-        }
-        return super.moveTo(sceneId);
-    }
-
-    // from SceneDirector
     override public function moveSucceeded (placeId :int, config :PlaceConfig) :void
     {
         var data :MsoyPendingData = _pendingData as MsoyPendingData;
@@ -102,9 +92,6 @@ public class OrthSceneDirector extends SceneDirector
         }
 
         super.moveSucceeded(placeId, config);
-
-        // tell our controller to update the URL of the browser to reflect our new location
-        _worldctx.getWorldController().wentToScene(_sceneId);
     }
 
     // from SceneDirector
@@ -226,13 +213,6 @@ public class OrthSceneDirector extends SceneDirector
     protected function bounceBack (localSceneId :int, remoteSceneId :int, reason :String) :void
     {
         var ctrl :WorldController = _worldctx.getWorldController();
-
-        // if we tried to move from one scene to another on the same peer, there's nothing to clean
-        // up, just update the URL to make GWT happy
-        if (localSceneId != -1) {
-            ctrl.wentToScene(localSceneId);
-            return;
-        }
 
         // if we came here from a scene on another peer, let's go back there
         if (remoteSceneId != -1) {

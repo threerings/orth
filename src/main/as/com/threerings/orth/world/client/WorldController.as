@@ -841,69 +841,12 @@ public class WorldController
     }
 
     /**
-     * Displays a new page by reloading the current web page with
-     * the full GWT application, restoring our current location and then displaying the page.
-     */
-    public function displayPage (page :String, args :String) :Boolean
-    {
-        if (inGWTApp()) {
-            return displayPageGWT(page, args);
-        }
-
-        // otherwise we're embedded and we need to route through the swizzle servlet to stuff our
-        // session token into a cookie which will magically authenticate us with GWT
-        const ptoken :String = page + (StringUtil.isBlank(args) ? "" : ("-" + args));
-        const stoken :String = (_wctx.getClient().getCredentials() as MsoyCredentials).sessionToken;
-        const url :String = DeploymentConfig.serverURL + "swizzle/" + stoken + "/" + ptoken;
-        log.info("Showing external URL " + url);
-        return super.handleViewUrl(url, null);
-    }
-
-    /**
-     * Displays a new page at a given address either in our GWT application or by reloading the
-     * current web page with the full GWT application, restoring our current location and then
-     * displaying the page.
-     */
-    public function displayAddress (address :Address) :Boolean
-    {
-        if (address.page != null) {
-            return displayPage(address.page.path, Args.join.apply(null, address.args));
-        } else {
-            return handleViewUrl(address.args.join("/"));
-        }
-    }
-
-    /**
      * Returns the current sceneId, or 0 if none.
      */
     public function getCurrentSceneId () :int
     {
         const scene :Scene = _wctx.getSceneDirector().getScene();
         return (scene == null) ? 0 : scene.getId();
-    }
-
-    /**
-     * Called by the scene director when we've traveled to a new scene.
-     */
-    public function wentToScene (sceneId :int) :void
-    {
-        // this will result in another request to move to the scene we're already in, but we'll
-        // ignore it because we're already there
-        if (!_suppressTokenForScene) {
-            displayPageGWT("world", "s" + sceneId);
-        }
-        _suppressTokenForScene = false;
-    }
-
-    /**
-     * Convienience function to restore our GWT page URL for the current scene.
-     */
-    public function restoreSceneURL () :void
-    {
-        const sceneId :int = getCurrentSceneId();
-        if (sceneId != 0) {
-            displayPageGWT("world", "s" + sceneId);
-        }
     }
 
     /**
@@ -945,18 +888,6 @@ public class WorldController
                 //sceneId = _wctx.getMemberObject().getHomeSceneId();
             }
             _wctx.getSceneDirector().moveTo(sceneId);
-
-            // if we have a redirect page we need to show, do that (we do this by hand to avoid
-            // potential infinite loops if something goes awry with opening external pages)
-            try {
-                var redirect :String = params["page"];
-                if (redirect != null && ExternalInterface.available) {
-                	var args :String = params["args"] == null ? "" : params["args"];
-                    ExternalInterface.call("displayPage", redirect, args);
-                }
-            } catch (error :Error) {
-                // nothing we can do here...
-            }
 
         } else {
             // go to our home scene (this doe the right thing for guests as well)

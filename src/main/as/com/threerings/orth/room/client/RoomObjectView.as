@@ -300,14 +300,6 @@ public class RoomObjectView extends RoomView
             entry.memories.forEach(function (key :String, value :ByteArray) :void {
                 dispatchMemoryChanged(entry.ident, key, value);
             });
-
-
-        } else if (OrthRoomObject.PLAYLIST == name) {
-            var audio :Audio = event.getEntry() as Audio;
-            if (audio.ownerId == _ctx.getMyId()) {
-                _ctx.getMsoyClient().itemUsageChangedToGWT(
-                    Item.AUDIO, audio.itemId, audio.used, audio.location);
-            }
         }
     }
 
@@ -338,14 +330,6 @@ public class RoomObjectView extends RoomView
 
         if (PlaceObject.OCCUPANT_INFO == name) {
             removeBody((event.getOldEntry() as OccupantInfo).getBodyOid());
-
-        } else if (OrthRoomObject.PLAYLIST == name) {
-            var audio :Audio = event.getOldEntry() as Audio;
-            if (audio.ownerId == _ctx.getMyId()) {
-                // always assume that if we're present to see a remove, it's unused
-                _ctx.getMsoyClient().itemUsageChangedToGWT(
-                    Item.AUDIO, audio.itemId, Item_UsedAs.NOTHING, 0);
-            }
         }
     }
 
@@ -631,13 +615,6 @@ public class RoomObjectView extends RoomView
             }
             occupant.moveTo(loc, _scene);
         }
-
-        // if this occupant is a pet, notify GWT that we've got a new pet in the room.
-        if (occupant is PetSprite) {
-            var ident :EntityIdent = occupant.getEntityIdent();
-            (_ctx.getClient() as WorldClient).itemUsageChangedToGWT(
-                Item.PET, ident.itemId, Item_UsedAs.PET, _scene.getId());
-        }
     }
 
     protected function removeBody (bodyOid :int) :void
@@ -651,12 +628,6 @@ public class RoomObjectView extends RoomView
         } else {
             dispatchEntityLeft(sprite.getEntityIdent());
             removeSprite(sprite);
-        }
-
-        // if this occupant is a pet, notify GWT that we've removed a pet from the room.
-        if (sprite is PetSprite) {
-            (_ctx.getClient() as WorldClient).itemUsageChangedToGWT(
-                Item.PET, sprite.getEntityIdent().itemId, Item_UsedAs.NOTHING, 0);
         }
     }
 

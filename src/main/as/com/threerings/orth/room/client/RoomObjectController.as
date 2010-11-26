@@ -422,8 +422,6 @@ public class RoomObjectController extends RoomController
     public function useItem (itemType :int, itemId :int) :void
     {
         if (itemType == Item.AVATAR) {
-            // NOTE: this is not used. GWT calls WorldClient.externalUseAvatar, but
-            // we may as well handle this case
             _wdctx.getWorldDirector().setAvatar(itemId);
             return;
         }
@@ -511,8 +509,6 @@ public class RoomObjectController extends RoomController
     public function clearItem (itemType :int, itemId :int) :void
     {
         if (itemType == Item.AVATAR) {
-            // NOTE: this is not used. GWT calls WorldClient.externalUseAvatar, but
-            // we may as well handle this case
             _wdctx.getWorldDirector().setAvatar(0);
 
         } else if (itemType == Item.PET) {
@@ -787,34 +783,8 @@ public class RoomObjectController extends RoomController
 
     override protected function sceneUpdated (update :SceneUpdate) :void
     {
-        var data :FurniData;
-        if (update is SceneAttrsUpdate) {
-            var attrsUpdate :SceneAttrsUpdate = update as SceneAttrsUpdate;
-            var newId :int = attrsUpdate.decor.itemId;
-            var oldId :int = _scene.getDecor().itemId;
-            if (newId != oldId) {
-                if (newId != 0) {
-                    _wdctx.getWorldClient().itemUsageChangedToGWT(
-                        Item.DECOR, newId, Item_UsedAs.BACKGROUND, _scene.getId());
-                }
-                if (oldId != 0) {
-                    _wdctx.getWorldClient().itemUsageChangedToGWT(
-                        Item.DECOR, oldId, Item_UsedAs.NOTHING, 0);
-                }
-            }
-
-        } else if (update is FurniUpdate_Add) {
-            data = (update as FurniUpdate_Add).data;
-            _wdctx.getWorldClient().itemUsageChangedToGWT(
-                data.itemType, data.itemId, Item_UsedAs.FURNITURE, _scene.getId());
-
-        } else if (update is FurniUpdate_Remove) {
-            data = (update as FurniUpdate_Remove).data;
-            _wdctx.getWorldClient().itemUsageChangedToGWT(
-                data.itemType, data.itemId, Item_UsedAs.NOTHING, 0);
-        }
-
         super.sceneUpdated(update);
+
         _roomObjectView.processUpdate(update);
         if (_editor != null) {
             _editor.processUpdate(update);

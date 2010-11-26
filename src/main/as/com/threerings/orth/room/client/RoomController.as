@@ -922,12 +922,6 @@ public class RoomController extends SceneController
     /** The number of pixels we scroll the room on a keypress. */
     protected static const ROOM_SCROLL_INCREMENT :int = 20;
 
-    /** The event to send to GWT when a background property has changed. */
-    protected static const BACKGROUND_CHANGED_EVENT :String = "backgroundChanged";
-
-    /** The event to send to GWT when furni has been added or removed. */
-    protected static const FURNI_CHANGED_EVENT :String = "furniChanged";
-
     /** The amount we alter the y coordinate of tooltips generated under the mouse. */
     protected static const MOUSE_TOOLTIP_Y_OFFSET :int = 50;
 
