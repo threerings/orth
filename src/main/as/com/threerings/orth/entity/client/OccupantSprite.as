@@ -297,7 +297,7 @@ public class OccupantSprite extends EntitySprite
     protected function configureDecorations (oldInfo :OccupantInfo, newInfo :OccupantInfo) :Boolean
     {
         // note that we need to compare the String versions of the names, as that's the difference
-        // we care about here; MemberName compares as the same if the memberId is the same...
+        // we care about here; OrthName compares as the same if the memberId is the same...
         if (isNameChangeRequired(oldInfo, newInfo)) {
             _label.update(newInfo);
             recheckLabel();

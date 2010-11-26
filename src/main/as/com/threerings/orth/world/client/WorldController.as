@@ -486,7 +486,7 @@ public class WorldController
     {
         var menuItems :Array = [];
         // reconstitute the memberName from args
-        var memName :MemberName = new MemberName(name, memberId);
+        var memName :OrthName = new OrthName(name, memberId);
         addMemberMenuItems(memName, menuItems);
         CommandMenu.createMenu(menuItems, _wctx.getTopPanel()).popUpAtMouse();
     }
@@ -1254,7 +1254,7 @@ public class WorldController
     }
 
     public function addMemberMenuItems (
-        name :MemberName, menuItems :Array, addWorldItems :Boolean = true) :void
+        name :OrthName, menuItems :Array, addWorldItems :Boolean = true) :void
     {
         const memId :int = name.getMemberId();
         const us :MemberObject = _wctx.getMemberObject();
@@ -1307,9 +1307,9 @@ public class WorldController
         if (isUs) {
             icon = MediaWrapper.createView(
                 us.memberName.getPhoto(), MediaDescSize.QUARTER_THUMBNAIL_SIZE);
-//        } else if (name is VizMemberName) {
+//        } else if (name is VizOrthName) {
 //            icon = MediaWrapper.createView(
-//                VizMemberName(name).getPhoto(), MediaDesc.QUARTER_THUMBNAIL_SIZE);
+//                VizOrthName(name).getPhoto(), MediaDesc.QUARTER_THUMBNAIL_SIZE);
         }
         CommandMenu.addTitle(menuItems, name.toString(), icon);
         if (isUs) {
@@ -1403,7 +1403,7 @@ public class WorldController
         if (ownerMuted) {
             menuItems.push({ label: Msgs.GENERAL.get("b.unmute_owner"), icon: BLOCK_ICON,
                 callback: _mctx.getMuteDirector().setMuted,
-                arg: [ new MemberName("", petName.getOwnerId()), false ] });
+                arg: [ new OrthName("", petName.getOwnerId()), false ] });
         } else {
             const isMuted :Boolean = _wctx.getMuteDirector().isMuted(petName);
             menuItems.push({ label: Msgs.GENERAL.get(isMuted ? "b.unmute_pet" : "b.mute_pet"),

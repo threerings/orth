@@ -9,9 +9,6 @@ package com.threerings.orth.room.data;
  */
 public class DecorCodes
 {
-    /** Type constant for a room with no background, just bare walls. This constant is deprecated,
-     *  please do not use. Legacy decor of this type will be drawn using default type. */
-    public static final byte DRAWN_ROOM_DEPRECATED = 0;
     /** Type constant for a standard room. The room will use standard layout, and its background
      *  image will be drawn behind all furniture. */
     public static final byte IMAGE_OVERLAY = 1;

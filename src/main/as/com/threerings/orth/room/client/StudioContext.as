@@ -12,7 +12,7 @@ public class StudioContext extends WorldContext
         super(client);
 
         var params :Object = MsoyParameters.get();
-        _name = new MemberName(
+        _name = new OrthName(
             String(params["username"] || params["name"] || "Fester Bestertester"), int.MAX_VALUE);
         _w = Number(params["width"]);
         _h = Number(params["height"]);
@@ -28,7 +28,7 @@ public class StudioContext extends WorldContext
         return isNaN(_h) ? super.getHeight() : _h;
     }
 
-    override public function getMyName () :MemberName
+    override public function getMyName () :OrthName
     {
         return _name;
     }
@@ -39,7 +39,7 @@ public class StudioContext extends WorldContext
     }
 
     /** Our name in the studio. */
-    protected var _name :MemberName;
+    protected var _name :OrthName;
 
     /** An overridden width for the studio. */
     protected var _w :Number;

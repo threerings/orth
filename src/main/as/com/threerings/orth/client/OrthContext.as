@@ -7,6 +7,7 @@ import flash.display.Stage;
 
 import mx.core.UIComponent;
 
+import com.threerings.orth.data.OrthName;
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
@@ -224,10 +225,10 @@ public /*abstract*/ class OrthContext
     /**
      * Return's this client's member name.
      */
-    public function getMyName () :MemberName
+    public function getMyName () :OrthName
     {
         var body :BodyObject = (_client.getClientObject() as BodyObject);
-        return (body == null) ? null : body.getVisibleName() as MemberName;
+        return (body == null) ? null : body.getVisibleName() as OrthName;
     }
 
     /**
@@ -235,7 +236,7 @@ public /*abstract*/ class OrthContext
      */
     public function getMyId () :int
     {
-        var name :MemberName = getMyName();
+        var name :OrthName = getMyName();
         return (name == null) ? 0 : name.getMemberId();
     }
 

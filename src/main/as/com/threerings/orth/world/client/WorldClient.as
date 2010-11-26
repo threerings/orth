@@ -218,7 +218,7 @@ public class WorldClient extends OrthClient
     {
         var nameObj :Name;
         if (type == MsoyChatChannel.MEMBER_CHANNEL) {
-            nameObj = new MemberName(name, id);
+            nameObj = new OrthName(name, id);
         } else if (type == MsoyChatChannel.GROUP_CHANNEL) {
             nameObj = new GroupName(name, id);
         } else if (type == MsoyChatChannel.PRIVATE_CHANNEL) {

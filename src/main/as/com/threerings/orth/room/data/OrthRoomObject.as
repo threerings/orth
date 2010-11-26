@@ -34,7 +34,7 @@ public class OrthRoomObject extends SpotSceneObject
     /** The name of this room. */
     public var name :String;
 
-    /** The name of the owner of this room (MemberName or GroupName). */
+    /** The name of the owner of this room (OrthName or GroupName). */
     public var owner :Name;
 
     /** Access control, as one of the ACCESS constants. Limits who can enter the scene. */

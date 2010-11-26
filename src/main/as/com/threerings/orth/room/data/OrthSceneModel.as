@@ -50,7 +50,7 @@ public class OrthSceneModel extends SceneModel
     /** The id of the owner of this scene, interpreted using ownerType. */
     public var ownerId :int;
 
-    /** The name of the owner, either a MemberName or the group's name. */
+    /** The name of the owner, either a OrthName or the group's name. */
     public var ownerName :Name;
 
     /** The furniture in the scene. */

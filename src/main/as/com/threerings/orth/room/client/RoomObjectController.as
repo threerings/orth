@@ -88,8 +88,8 @@ public class RoomObjectController extends RoomController
         if (occ != null) {
             occ.checkBlocked();
         }
-        if (name is MemberName) {
-            var memberId :int = MemberName(name).getMemberId();
+        if (name is OrthName) {
+            var memberId :int = OrthName(name).getMemberId();
             for each (var pet :PetSprite in _roomObjectView.getPets()) {
                 if (pet.getOwnerId() == memberId) {
                     pet.checkBlocked();
@@ -102,7 +102,7 @@ public class RoomObjectController extends RoomController
     /**
      * Is the specified player in this room?
      */
-    public function containsPlayer (name :MemberName) :Boolean
+    public function containsPlayer (name :OrthName) :Boolean
     {
         var info :OccupantInfo = _roomObj.getOccupantInfo(name);
         return (info != null);
@@ -111,7 +111,7 @@ public class RoomObjectController extends RoomController
     /**
      * Add to the specified menu, any room/avatar related menu items.
      */
-    public function addAvatarMenuItems (name :MemberName, menuItems :Array) :void
+    public function addAvatarMenuItems (name :OrthName, menuItems :Array) :void
     {
         const occInfo :MemberInfo = _roomObj.getOccupantInfo(name) as MemberInfo;
         if (occInfo == null) {
@@ -174,7 +174,7 @@ public class RoomObjectController extends RoomController
     /**
      * Set the specified name hovered or unhovered.
      */
-    public function setHoverName (name :MemberName, hovered :Boolean) :void
+    public function setHoverName (name :OrthName, hovered :Boolean) :void
     {
         setHoverSprite(hovered ? _roomObjectView.getOccupantByName(name) : null);
         _suppressNormalHovering = hovered;
@@ -333,7 +333,7 @@ public class RoomObjectController extends RoomController
         }
 
         var menuItems :Array = [];
-        _wdctx.getWorldController().addMemberMenuItems(occInfo.username as MemberName, menuItems);
+        _wdctx.getWorldController().addMemberMenuItems(occInfo.username as OrthName, menuItems);
         popActorMenu(avatar, menuItems);
     }
 

@@ -113,12 +113,6 @@ public class WorldContext extends OrthContext
     }
 
     // from OrthContext
-    override public function getWorldController () :WorldController
-    {
-        return _controller;
-    }
-
-    // from OrthContext
     override protected function createControlBar () :ControlBar
     {
         return new WorldControlBar(this);
