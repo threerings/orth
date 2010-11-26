@@ -236,7 +236,9 @@ public class MemberSprite extends ActorSprite
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
+import com.threerings.orth.ui.GlowSprite;
 import com.threerings.orth.world.client.WorldController;
+
 import com.threerings.util.Log;
 
 import flash.geom.Rectangle;
