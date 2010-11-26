@@ -76,8 +76,6 @@ public class OccupantSprite extends EntitySprite
         if (occInfo != null) {
             setOccupantInfo(occInfo, extraInfo);
         }
-
-        muteChanged();
     }
 
     override public function roomScaleUpdated () :void
@@ -246,13 +244,6 @@ public class OccupantSprite extends EntitySprite
         if (configureDecorations(oldInfo, newInfo)) {
             arrangeDecorations();
         }
-
-        // TODO: I added this code, but can't for the life of me figure out why it's necessary
-        // and it booches the remixer
-        // check to see if we're blocked
-//        if (_desc != null) {
-//            checkBlocked();
-//        }
     }
 
     override public function snapshot (
@@ -412,15 +403,6 @@ public class OccupantSprite extends EntitySprite
     {
         return (_occInfo != null && _ctx.getMuteDirector() != null &&
              _ctx.getMuteDirector().isMuted(_occInfo.username))
-    }
-
-    /**
-     * When our muteness has changed, update the block. This brutally overrides the block type
-     * in the media container. Implement something more sophisticated if we need it later.
-     */
-    public function muteChanged ():void
-    {
-        _sprite.setBlocked(isMuted() ? "mute": null);
     }
 
     override protected function getSpecialProperty (name :String) :Object

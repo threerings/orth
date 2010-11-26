@@ -30,6 +30,9 @@ public class Resources
     [Embed(source="../../../../../../../rsrc/media/skins/menu/addfriend.png")]
     public static const ADDFRIEND_ICON :Class;
 
+    [Embed(source="../../../../../../../rsrc/media/skins/menu/block.png")]
+    public static const BLOCK_ICON :Class;
+
     [Embed(source="../../../../../../../rsrc/media/skins/menu/report.png")]
     public static const REPORT_ICON :Class;
 

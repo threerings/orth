@@ -16,7 +16,6 @@ import com.threerings.orth.data.MediaDesc;
 public class OrthMediaContainer extends MediaContainer
 {
     public function OrthMediaContainer (desc :MediaDesc = null)
-        blocktype :
     {
         super(null);
         if (desc != null) {
@@ -128,10 +127,10 @@ public class OrthMediaContainer extends MediaContainer
     protected var _maxWidth :int = int.MAX_VALUE;
     protected var _maxHeight :int = int.MAX_VALUE;
 
-    /** The media scale to use when we are not blocked. */
+    /** The media scale to use. */
     protected var _spriteMediaScaleX :Number = 1.0;
 
-    /** The media scale to use when we are not blocked. */
+    /** The media scale to use. */
     protected var _spriteMediaScaleY :Number = 1.0;
 
     /** Our Media descriptor. */

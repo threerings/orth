@@ -2,7 +2,6 @@
 // $Id: RoomObjectController.as 19189 2010-05-26 19:37:09Z zell $
 
 package com.threerings.orth.room.client {
-import com.threerings.crowd.chat.client.MuteObserver;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceConfig;
@@ -46,7 +45,7 @@ import flash.utils.ByteArray;
  * Manages the various interactions that take place in a room scene.
  */
 public class RoomObjectController extends RoomController
-    implements BootablePlaceController, MuteObserver
+    implements BootablePlaceController
 {
     /** Some commands */
     public static const EDIT_DOOR :String = "EditDoor";
@@ -79,25 +78,6 @@ public class RoomObjectController extends RoomController
     public function canBoot () :Boolean
     {
         return canManageRoom();
-    }
-
-    // from interface MuteObserver
-    public function muteChanged (name :Name, nowMuted :Boolean) :void
-    {
-        // when someone becomes muted, it may affect the visibility of their sprite
-        var occ :OccupantSprite = _roomObjectView.getOccupantByName(name);
-        if (occ != null) {
-            occ.checkBlocked();
-        }
-        if (name is OrthName) {
-            var memberId :int = OrthName(name).getMemberId();
-            for each (var pet :PetSprite in _roomObjectView.getPets()) {
-                if (pet.getOwnerId() == memberId) {
-                    pet.checkBlocked();
-                    // keep going: there could be more than one matching pet
-                }
-            }
-        }
     }
 
     /**
@@ -623,7 +603,6 @@ public class RoomObjectController extends RoomController
             Msgs.CHAT, "action", new AvatarChatHandler(false));
         _wdctx.getChatDirector().registerCommandHandler(
             Msgs.CHAT, "state", new AvatarChatHandler(true));
-        _wdctx.getMuteDirector().addMuteObserver(this);
 
         // deactivate any hot zoneiness
         var bar :WorldControlBar = WorldControlBar(_wdctx.getControlBar());
@@ -656,7 +635,6 @@ public class RoomObjectController extends RoomController
 
         _wdctx.getChatDirector().unregisterCommandHandler(Msgs.CHAT, "action");
         _wdctx.getChatDirector().unregisterCommandHandler(Msgs.CHAT, "state");
-        _wdctx.getMuteDirector().removeMuteObserver(this);
 
         _ctx.getClient().removeEventListener(MsoyClient.MINI_WILL_CHANGE, miniWillChange);
 
