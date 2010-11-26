@@ -8,6 +8,7 @@ import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.ui.MsoyMediaContainer;
 import com.threerings.orth.world.client.WorldContext;
 
 import flash.display.BitmapData;
@@ -67,10 +68,10 @@ public class EntitySprite
     }
 
     /**
-     * Return the ItemMediaContainer that depicts this logical sprite. This value never changes and
+     * Return the MsoyMediaContainer that depicts this logical sprite. This value never changes and
      * is never null.
      */
-    public function get viz () :ItemMediaContainer
+    public function get viz () :MsoyMediaContainer
     {
         return _sprite;
     }
@@ -483,9 +484,9 @@ public class EntitySprite
      * Create and return the visual representation of this room entity. This may be overridden
      * by subclasses to return specific implementations.
      */
-    protected function createVisualization () :ItemMediaContainer
+    protected function createVisualization () :MsoyMediaContainer
     {
-        return new ItemMediaContainer(false);
+        return new MsoyMediaContainer(false);
     }
 
     protected function mediaWillShutdown (event :ValueEvent) :void
@@ -938,7 +939,7 @@ public class EntitySprite
     }
 
     /** The visual representation of us. */
-    protected var _sprite :ItemMediaContainer;
+    protected var _sprite :MsoyMediaContainer;
 
     /** The giver of life. */
     protected var _ctx :WorldContext;

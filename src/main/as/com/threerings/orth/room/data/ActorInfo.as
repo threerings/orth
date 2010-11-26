@@ -4,6 +4,7 @@
 package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
+import com.threerings.orth.data.MediaDesc;
 
 import com.threerings.util.Joiner;
 
