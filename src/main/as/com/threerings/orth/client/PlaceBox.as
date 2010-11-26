@@ -207,7 +207,7 @@ public class PlaceBox extends LayeredContainer
         var h :Number = this.height;
         var bounds :Rectangle = new Rectangle(0, 0, w, h);
 
-        if (!_ctx.getOrthClient().isMinimized()) {
+        if (!_ctx.getWorldClient().isMinimized()) {
             _lastFullSize = new Point(w, h);
         }
         var fullSize :Point = _lastFullSize;
@@ -245,7 +245,7 @@ public class PlaceBox extends LayeredContainer
             if (center) {
                 var wmargin :Number = 0;
                 var hmargin :Number = 0;
-                if (_ctx.getOrthClient().getEmbedding().hasPlaceMargins()) {
+                if (_ctx.getWorldClient().getEmbedding().hasPlaceMargins()) {
                     // set the margins somewhere between 0 and 20, making sure they don't cause
                     // shrinking of an already small view
                     // TODO: softwire 700x500
@@ -312,7 +312,7 @@ public class PlaceBox extends LayeredContainer
         }
 
         var zoomable :Zoomable = _placeView != null ? _placeView.asZoomable() : null;
-        if (zoomable == null || _ctx.getOrthClient().isChromeless()) {
+        if (zoomable == null || _ctx.getWorldClient().isChromeless()) {
             return;
         }
 

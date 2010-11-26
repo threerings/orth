@@ -7,9 +7,9 @@ import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
-import com.threerings.orth.client.OrthClient;
 import com.threerings.orth.data.OrthName;
 import com.threerings.presents.client.Client;
+import com.threerings.orth.world.client.WorldClient;
 import com.threerings.presents.client.ConfirmAdapter;
 import com.threerings.presents.client.InvocationAdapter;
 import com.threerings.presents.client.InvocationService_ConfirmListener;
@@ -84,9 +84,9 @@ public class WorldContext
     }
 
     /**
-     * Returns our client as its OrthClient self.
+     * Returns our client as its WorldClient self.
      */
-    public function getOrthClient () :OrthClient
+    public function getWorldClient () :WorldClient
     {
         return _client;
     }
@@ -279,14 +279,6 @@ public class WorldContext
     }
 
     /**
-     * Returns our client casted to a WorldClient.
-     */
-    public function getWorldClient () :WorldClient
-    {
-        return (getClient() as WorldClient);
-    }
-
-    /**
      * Get the media director.
      */
     public function getMediaDirector () :MediaDirector
@@ -365,7 +357,7 @@ public class WorldContext
         };
     }
 
-    protected var _client :OrthClient;
+    protected var _client :WorldClient;
 
     protected var _msgMgr :MessageManager;
     protected var _locDir :LocationDirector;
