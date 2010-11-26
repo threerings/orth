@@ -47,7 +47,7 @@ public class WorldClient extends CrowdClient
     public function WorldClient (stage :Stage, version :String, host :String,
         ports :Array, socketPolicyPort :int)
     {
-        super(stage);
+        super(null);
 
         _stage = stage;
         _socketPolicyPort = socketPolicyPort;
