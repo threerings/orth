@@ -15,6 +15,7 @@ import com.threerings.orth.room.client.OrthSceneDirector;
 import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.presents.client.Client;
 import com.threerings.orth.world.client.WorldClient;
+import com.threerings.orth.world.client.WorldDirector;
 import com.threerings.presents.client.ConfirmAdapter;
 import com.threerings.presents.client.InvocationAdapter;
 import com.threerings.presents.client.InvocationService_ConfirmListener;

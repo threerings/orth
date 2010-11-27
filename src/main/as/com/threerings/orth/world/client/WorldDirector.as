@@ -4,8 +4,6 @@
 package com.threerings.orth.world.client {
 
 import com.threerings.io.TypedArray;
-import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.data.PlayerObject;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.util.Util;
 import com.threerings.util.Log;
@@ -86,6 +84,10 @@ import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
+
+import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.PlayerObject;
+import com.threerings.orth.world.client.WorldContext;
 
 class FollowingNotifier
     implements AttributeChangeListener, SetListener
