@@ -2,7 +2,7 @@
 // $Id: UberClient.as 17120 2009-06-05 17:04:09Z zell $
 
 package com.threerings.orth.client {
-import com.threerings.orth.room.client.StudioClient;
+
 import com.threerings.orth.world.client.WorldClient;
 
 import flash.display.DisplayObject;
@@ -140,19 +140,6 @@ public class UberClient
 
         case UberClientModes.STUB:
             setMode(app, UberClientModes.CLIENT, params);
-            break;
-
-        case UberClientModes.AVATAR_VIEWER:
-        case UberClientModes.PET_VIEWER:
-        case UberClientModes.DECOR_VIEWER:
-        case UberClientModes.FURNI_VIEWER:
-        case UberClientModes.TOY_VIEWER:
-        case UberClientModes.DECOR_EDITOR:
-        case UberClientModes.LAUNCHER_VIEWER:
-            var sc :StudioClient = new StudioClient(app.stage, params);
-            var rsv :RoomStudioView = sc.getPlaceView();
-            rsv.initForViewing(params, mode);
-            Object(app).setViewer(rsv);
             break;
 
         case UberClientModes.GENERIC_VIEWER:

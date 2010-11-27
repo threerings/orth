@@ -53,12 +53,6 @@ public class Msgs
         return _prefs;
     }
 
-    /** The studio message bundle. */
-    public static function get STUDIO () :MessageBundle
-    {
-        return _studio;
-    }
-
     /** The passport message bundle. */
     public static function get PASSPORT () :MessageBundle
     {
@@ -99,7 +93,6 @@ public class Msgs
         _item = msgMgr.getBundle(OrthCodes.ITEM_MSGS);
         _notify = msgMgr.getBundle(OrthCodes.NOTIFY_MSGS);
         _prefs = msgMgr.getBundle(OrthCodes.PREFS_MSGS);
-        _studio = msgMgr.getBundle(OrthCodes.STUDIO_MSGS);
         _passport = msgMgr.getBundle(OrthCodes.PASSPORT_MSGS);
         _party = msgMgr.getBundle(OrthCodes.PARTY_MSGS);
         _homePageGrid = msgMgr.getBundle(OrthCodes.HOME_PAGE_GRID_MSGS);
@@ -113,7 +106,6 @@ public class Msgs
     protected static var _item :MessageBundle;
     protected static var _notify :MessageBundle;
     protected static var _prefs :MessageBundle;
-    protected static var _studio :MessageBundle;
     protected static var _passport :MessageBundle;
     protected static var _party :MessageBundle;
     protected static var _homePageGrid :MessageBundle;
