@@ -29,6 +29,7 @@ import com.threerings.util.Log;
 import com.threerings.util.Name;
 
 import com.threerings.presents.client.ClientAdapter;
+import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.net.BootstrapData;
@@ -59,8 +60,7 @@ public class WorldClient extends CrowdClient
 
         // now create our credentials and context
         setCredentials(createStartupCreds(null));
-        _wctx = new WorldContext(this);
-
+        _wctx = createContext();
 
         // prior to logging on to a server, set up our security policy for that server
         addClientObserver(new ClientAdapter(clientWillLogon));
@@ -122,8 +122,14 @@ public class WorldClient extends CrowdClient
             "build", DeploymentConfig.buildTime, "mediaURL", DeploymentConfig.mediaURL,
             "staticMediaURL", DeploymentConfig.staticMediaURL);
     }
+    /**
+     * Creates the context we'll use with this client.
+     */
+    protected function createContext () :WorldContext
+    {
+        return new WorldContext(this);
+    }
 
-    // from MsoyClient
     protected function populateContextMenu (custom :Array) :void
     {
         try {

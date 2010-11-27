@@ -7,8 +7,11 @@ import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
+import com.threerings.crowd.data.TokenRing;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.PlayerObject;
+import com.threerings.orth.room.client.OrthSceneDirector;
+import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.presents.client.Client;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.presents.client.ConfirmAdapter;
@@ -26,6 +29,8 @@ import com.threerings.whirled.spot.client.SpotSceneDirector;
 import com.threerings.whirled.util.WhirledContext;
 
 import mx.core.UIComponent;
+
+import flash.display.Stage;
 
 /**
  * Defines services for the World client.
@@ -49,11 +54,11 @@ public class WorldContext
         _locDir = new LocationDirector(this);
         _occDir = new OccupantDirector(this);
 
-        _sceneDir = new MsoySceneDirector(this, _locDir, new RuntimeSceneRepository());
-        _spotDir = new SpotSceneDirector(this, _locDir, _sceneDir);
-        _worldDir = new WorldDirector(this);
-        _memberDir = new MemberDirector(this);
-        _partyDir = new PartyDirector(this);
+        // the top panel's constructor will add it to the app's UI hierarchy
+        _topPanel = new TopPanel(this, createControlBar());
+
+        // we create some of our directors in a method that can be overridden
+        createAdditionalDirectors();
 
         // some directors we create here (unsuppressed)
         _mediaDir = new MediaDirector(this);
@@ -259,10 +264,10 @@ public class WorldContext
     /**
      * Returns this client's access control tokens.
      */
-    public function getTokens () :OrthTokenRing
+    public function getTokens () :TokenRing
     {
         // if we're not logged on, claim to have no privileges
-        return (getPlayerObject() == null) ? new OrthTokenRing() : getPlayerObject().tokens;
+        return new TokenRing();
     }
 
     // from WhirledContext
@@ -333,6 +338,19 @@ public class WorldContext
     public function getWorldControlBar () :WorldControlBar
     {
         return WorldControlBar(_topPanel.getControlBar());
+    }
+
+    /**
+     * Create extra directors that we may want to suppress in certain subclasses.
+     */
+    protected function createAdditionalDirectors () :void
+    {
+        _notifyDir = new NotificationDirector(this);
+        _sceneDir = new OrthSceneDirector(this, _locDir, new RuntimeSceneRepository());
+        _spotDir = new SpotSceneDirector(this, _locDir, _sceneDir);
+        _worldDir = new WorldDirector(this);
+        _memberDir = new MemberDirector(this);
+        _partyDir = new PartyDirector(this);
     }
 
     /**
