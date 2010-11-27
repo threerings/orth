@@ -1,0 +1,2 @@
+ - WorldDirector.as and WorldService.as and friends should be Vault services
+ - PlayerObject is what I used in the Vault. I should certainly not use it here in Room/World!
