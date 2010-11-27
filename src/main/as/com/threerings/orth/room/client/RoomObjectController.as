@@ -84,7 +84,7 @@ public class RoomObjectController extends RoomController
      */
     public function addAvatarMenuItems (name :OrthName, menuItems :Array) :void
     {
-        const occInfo :MemberInfo = _roomObj.getOccupantInfo(name) as MemberInfo;
+        const occInfo :PlayerInfo = _roomObj.getOccupantInfo(name) as PlayerInfo;
         if (occInfo == null) {
             return;
         }
@@ -120,7 +120,7 @@ public class RoomObjectController extends RoomController
         var name :String = super.getViewerName(instanceId);
         if (name == null) {
             // look for the name in the OccupantInfos
-            var info :MemberInfo = findOccupantById(instanceId);
+            var info :PlayerInfo = findOccupantById(instanceId);
             if (info != null) {
                 name = info.username.toString();
             }
@@ -244,9 +244,9 @@ public class RoomObjectController extends RoomController
      */
     override public function handleAvatarClicked (avatar :MemberSprite) :void
     {
-        var occInfo :MemberInfo = (avatar.getActorInfo() as MemberInfo);
+        var occInfo :PlayerInfo = (avatar.getActorInfo() as PlayerInfo);
         if (occInfo == null) {
-            log.info("Clicked on non-MemberInfo sprite", "info", avatar.getActorInfo());
+            log.info("Clicked on non-PlayerInfo sprite", "info", avatar.getActorInfo());
             return;
         }
 
@@ -372,7 +372,7 @@ public class RoomObjectController extends RoomController
             return (_scene != null && _scene.canManage(me, allowSupport));
 
         } else { // others
-            var info :MemberInfo = findOccupantById(memberId);
+            var info :PlayerInfo = findOccupantById(memberId);
             return (info != null) && info.isManager();
         }
     }
@@ -734,12 +734,12 @@ public class RoomObjectController extends RoomController
     }
 
     /**
-     * Find a user's MemberInfo by their memberId.
+     * Find a user's PlayerInfo by their memberId.
      */
-    protected function findOccupantById (memberId :int) :MemberInfo
+    protected function findOccupantById (memberId :int) :PlayerInfo
     {
         for each (var obj :Object in _roomObj.occupantInfo.toArray()) {
-            var info :MemberInfo = obj as MemberInfo;
+            var info :PlayerInfo = obj as PlayerInfo;
             if (info != null && info.getId() == memberId) {
                 return info;
             }

@@ -160,7 +160,7 @@ public class RoomObjectView extends RoomView
     {
         var avatar :MemberSprite = getMyAvatar();
         if (avatar != null) {
-            var occInfo :MemberInfo = (avatar.getOccupantInfo() as MemberInfo);
+            var occInfo :PlayerInfo = (avatar.getOccupantInfo() as PlayerInfo);
             if (occInfo.getEntityIdent().equals(new SimpleEntityIdent(Item.AVATAR, avatarId))) {
                 occInfo.setScale(newScale);
                 avatar.setOccupantInfo(occInfo, _roomObj);
@@ -435,8 +435,8 @@ public class RoomObjectView extends RoomView
         // load the decor data we have, even if it's just default values.
         _bg.setLoadedCallback(backgroundFinishedLoading);
 
-        var localOccupant :MemberInfo;
-        localOccupant = _roomObj.occupantInfo.get(_ctx.getClient().getClientOid()) as MemberInfo;
+        var localOccupant :PlayerInfo;
+        localOccupant = _roomObj.occupantInfo.get(_ctx.getClient().getClientOid()) as PlayerInfo;
         if (localOccupant != null && localOccupant.isStatic()) {
             _ctx.displayInfo(OrthCodes.GENERAL_MSGS, "m.static_avatar");
         }

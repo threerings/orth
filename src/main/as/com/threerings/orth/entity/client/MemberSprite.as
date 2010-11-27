@@ -19,7 +19,7 @@ public class MemberSprite extends ActorSprite
     /**
      * Creates a sprite for the supplied member.
      */
-    public function MemberSprite (ctx :WorldContext, occInfo :MemberInfo, extraInfo :Object)
+    public function MemberSprite (ctx :WorldContext, occInfo :PlayerInfo, extraInfo :Object)
     {
         super(ctx, occInfo, extraInfo);
     }
@@ -69,7 +69,7 @@ public class MemberSprite extends ActorSprite
         super.setOccupantInfo(newInfo, extraInfo);
 
         // take care of setting up or changing our PartyIcon
-        var newId :int = (newInfo as MemberInfo).getPartyId();
+        var newId :int = (newInfo as PlayerInfo).getPartyId();
         if (_partyIcon != null && (_partyIcon.id != newId)) {
             _partyIcon.shutdown();
             _partyIcon = null;
@@ -102,8 +102,8 @@ public class MemberSprite extends ActorSprite
                                                       newInfo :OccupantInfo) :Boolean
     {
         return super.isNameChangeRequired(oldInfo, newInfo) || // is true if oldInfo == null
-            (MemberInfo(oldInfo).isSubscriber() != MemberInfo(newInfo).isSubscriber()) ||
-            (MemberInfo(oldInfo).isAway() != MemberInfo(newInfo).isAway());
+            (PlayerInfo(oldInfo).isSubscriber() != PlayerInfo(newInfo).isSubscriber()) ||
+            (PlayerInfo(oldInfo).isAway() != PlayerInfo(newInfo).isAway());
     }
 
     // from OccupantSprite
@@ -111,7 +111,7 @@ public class MemberSprite extends ActorSprite
     {
         switch (name) {
         case "member_id":
-            return (_occInfo as MemberInfo).getId();
+            return (_occInfo as PlayerInfo).getId();
 
         default:
             return super.getSpecialProperty(name);
@@ -130,7 +130,7 @@ public class MemberSprite extends ActorSprite
     {
         // update our scale
         var oldScale :Number = _scale;
-        _scale = (newInfo as MemberInfo).getScale();
+        _scale = (newInfo as PlayerInfo).getScale();
 
         // see if our media has been updated
         var changed :Boolean = super.configureDisplay(oldInfo, newInfo);
@@ -150,7 +150,7 @@ public class MemberSprite extends ActorSprite
         var reconfig :Boolean = super.configureDecorations(oldInfo, newInfo);
 
         // check whether our idle status has changed
-        if (isVisiblyIdle(newInfo as MemberInfo) == (_idleIcon == null)) {
+        if (isVisiblyIdle(newInfo as PlayerInfo) == (_idleIcon == null)) {
             if (_idleIcon == null) {
                 _idleIcon = (new Resources.IDLE_ICON() as DisplayObject);
                 addDecoration(_idleIcon, {
@@ -209,7 +209,7 @@ public class MemberSprite extends ActorSprite
     }
 
     // don't show our idleness if we're AFK
-    protected function isVisiblyIdle (info :MemberInfo) :Boolean
+    protected function isVisiblyIdle (info :PlayerInfo) :Boolean
     {
         return (info.status == OccupantInfo.IDLE) && !info.isAway();
     }

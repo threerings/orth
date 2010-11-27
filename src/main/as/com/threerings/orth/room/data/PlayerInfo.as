@@ -1,5 +1,5 @@
 //
-// $Id: MemberInfo.as 19627 2010-11-24 16:02:41Z zell $
+// $Id: PlayerInfo.as 19627 2010-11-24 16:02:41Z zell $
 
 package com.threerings.orth.room.data {
 
