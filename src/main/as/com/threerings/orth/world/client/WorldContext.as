@@ -10,6 +10,7 @@ import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.TokenRing;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.PlayerObject;
+import com.threerings.orth.room.client.MediaDirector;
 import com.threerings.orth.room.client.OrthSceneDirector;
 import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.presents.client.Client;

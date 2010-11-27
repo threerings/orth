@@ -21,6 +21,7 @@ import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
+import com.threerings.orth.room.data.PetName;
 import com.threerings.presents.client.Client;
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.CommandEvent;

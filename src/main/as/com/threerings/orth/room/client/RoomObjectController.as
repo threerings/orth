@@ -28,6 +28,8 @@ import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
+import com.threerings.orth.room.data.PetInfo;
+import com.threerings.orth.room.data.PetName;
 import com.threerings.orth.room.data.SimpleEntityIdent;
 import com.threerings.orth.world.client.WorldController;
 import com.threerings.presents.dobj.AttributeChangeAdapter;
