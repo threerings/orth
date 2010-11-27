@@ -734,22 +734,6 @@ public class RoomObjectController extends RoomController
     }
 
     /**
-     * Ensures that we can issue a request to update the distributed state of the specified item,
-     * returning true if so, false if we don't yet have a room object or are not in control of that
-     * item.
-     */
-    override protected function checkCanRequest (ident :EntityIdent, from :String) :Boolean
-    {
-        if (_roomObj == null) {
-            log.warning("Cannot issue request for lack of room object",
-                "from", from, "ident", ident);
-            return false;
-        }
-
-        return super.checkCanRequest(ident, from);
-    }
-
-    /**
      * Find a user's MemberInfo by their memberId.
      */
     protected function findOccupantById (memberId :int) :MemberInfo
