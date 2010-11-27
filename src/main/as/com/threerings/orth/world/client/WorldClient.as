@@ -8,7 +8,6 @@ import com.threerings.orth.data.OrthName;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.client.PlaceBox;
 import com.threerings.orth.client.Prefs;
-import com.threerings.orth.data.UberClientModes;
 import com.threerings.orth.room.client.RoomObjectView;
 
 import flash.display.DisplayObject;
@@ -37,6 +36,8 @@ import com.threerings.presents.net.Credentials;
 
 import com.threerings.whirled.data.Scene;
 
+import mx.core.Application;
+
 
 /**
  * Handles the main services for the world and game clients.
@@ -45,12 +46,12 @@ public class WorldClient extends CrowdClient
 {
     WorldMarshaller; // static reference for deserialization
 
-    public function WorldClient (stage :Stage, version :String, host :String,
+    public function WorldClient (app :Application, version :String, host :String,
         ports :Array, socketPolicyPort :int)
     {
         super(null);
 
-        _stage = stage;
+        _app = app;
         _socketPolicyPort = socketPolicyPort;
 
         setVersion(DeploymentConfig.version);
@@ -71,10 +72,18 @@ public class WorldClient extends CrowdClient
         // set up a context menu that blocks funnybiz on the stage
         var menu :ContextMenu = new ContextMenu();
         menu.hideBuiltInItems();
-        UberClient.getApplication().contextMenu = menu;
+        app.contextMenu = menu;
         menu.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenuWillPopUp);
 
         logon();
+    }
+
+    /**
+     * Return the Application.
+     */
+    public function getApplication () :Application
+    {
+        return _app;
     }
 
     /**
@@ -82,7 +91,7 @@ public class WorldClient extends CrowdClient
      */
     public function getStage () :Stage
     {
-        return _stage;
+        return _app.stage;
     }
 
     /**
@@ -177,10 +186,10 @@ public class WorldClient extends CrowdClient
         return creds;
     }
 
+    protected _app :Application;
+
     protected var _wctx :WorldContext;
 
-    protected var _stage :Stage;
-    
     protected var _socketPolicyPort :int;
 
     protected var _loadedPolicies :Object = new Object();

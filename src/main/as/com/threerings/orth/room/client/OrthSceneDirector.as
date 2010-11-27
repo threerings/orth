@@ -4,7 +4,6 @@
 package com.threerings.orth.room.client {
 
 import com.threerings.io.TypedArray;
-import com.threerings.orth.client.UberClient;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.client.OrthSceneFactory;

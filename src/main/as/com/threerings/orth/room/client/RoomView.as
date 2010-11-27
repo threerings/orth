@@ -55,7 +55,6 @@ import com.threerings.orth.client.PlaceBox;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.Snapshottable;
 import com.threerings.orth.client.SnapshotUtil;
-import com.threerings.orth.client.UberClient;
 import com.threerings.orth.client.Zoomable;
 
 /**
@@ -781,9 +780,6 @@ public class RoomView extends Sprite
         }
 
         scaleY = scale;
-        if (UberClient.isRegularClient() && Prefs.isAprilFoolsEnabled()) {
-            scaleY *= -1;
-        }
         scaleX = scale;
 
         configureScrollRect();

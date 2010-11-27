@@ -30,8 +30,7 @@
             configureUncaughtErrors();
 
             this.name = "OrthApplication";
-            var theThis :Application = this;
-            new WorldClient(theThis.stage);
+            new WorldClient(this);
         }
 
         /**

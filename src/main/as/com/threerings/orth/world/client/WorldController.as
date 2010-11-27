@@ -11,7 +11,6 @@ import com.threerings.flex.ChatControl;
 import com.threerings.flex.CommandButton;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.Prefs;
-import com.threerings.orth.client.UberClient;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
@@ -791,8 +790,7 @@ public class WorldController
 
         _musicPlayer.unload();
 
-        const play :Boolean = UberClient.isRegularClient() && (music != null) &&
-            (Prefs.getSoundVolume() > 0);
+        const play :Boolean = (music != null) && (Prefs.getSoundVolume() > 0);
         if (play) {
             _musicPlayer.load(music.audioMedia.getMediaPath(),
                 [ music.audioMedia, music.getIdent() ]);
@@ -1194,9 +1192,7 @@ public class WorldController
      */
     protected function locationDidChange (place :PlaceObject) :void
     {
-        if (UberClient.isRegularClient()) {
-            updateLocationDisplay();
-        }
+        updateLocationDisplay();
         // if we moved to a scene, set things up thusly
         var scene :Scene = _wctx.getSceneDirector().getScene();
         if (scene != null) {

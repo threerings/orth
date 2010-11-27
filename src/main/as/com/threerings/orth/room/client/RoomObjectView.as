@@ -5,7 +5,6 @@ package com.threerings.orth.room.client {
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.PlaceLoadingDisplay;
 import com.threerings.orth.client.Prefs;
-import com.threerings.orth.client.UberClient;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;

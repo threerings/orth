@@ -28,6 +28,7 @@ import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
 import com.threerings.whirled.util.WhirledContext;
 
+import mx.core.Application;
 import mx.core.UIComponent;
 
 import flash.display.Stage;
@@ -87,6 +88,11 @@ public class WorldContext
     public function getStage () :Stage
     {
         return _client.getStage();
+    }
+
+    public function getApplication () :Application
+    {
+        return _client.getApplication();
     }
 
     /**

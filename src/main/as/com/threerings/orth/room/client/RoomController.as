@@ -10,7 +10,6 @@ import com.threerings.flex.CommandMenu;
 import com.threerings.flex.PopUpUtil;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.PlaceBox;
-import com.threerings.orth.client.UberClient;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
@@ -379,7 +378,6 @@ public class RoomController extends SceneController
 
 //            var menu :RadialMenu = new RadialMenu();
 //            menu.dataProvider = menuItems;
-//            menu.popUp(UberClient.getApplication());
         }
     }
 
@@ -424,7 +422,7 @@ public class RoomController extends SceneController
         }
 
         // first, avoid any popups
-        var smgr :ISystemManager = UberClient.getApplication().systemManager;
+        var smgr :ISystemManager = _wdctx.getApplication().systemManager;
         var ii :int;
         var disp :DisplayObject;
         for (ii = smgr.numChildren - 1; ii >= 0; ii--) {
