@@ -7,6 +7,7 @@ import com.threerings.io.TypedArray;
 import com.threerings.orth.client.UberClient;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.room.client.OrthSceneFactory;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
@@ -77,7 +78,7 @@ public class OrthSceneDirector extends SceneDirector
 
         // note our departing portal id and target location in the destination scene
         _departingPortalId = portalId;
-        (_pendingData as MsoyPendingData).destLoc = dest.dest;
+        (_pendingData as OrthPendingData).destLoc = dest.dest;
 
         // now that everything is noted (in case we have to switch servers) ask to move
         sendMoveRequest();
@@ -87,7 +88,7 @@ public class OrthSceneDirector extends SceneDirector
     // from SceneDirector
     override public function moveSucceeded (placeId :int, config :PlaceConfig) :void
     {
-        var data :MsoyPendingData = _pendingData as MsoyPendingData;
+        var data :OrthPendingData = _pendingData as OrthPendingData;
         if (data != null && data.message != null) {
             _worldctx.displayFeedback(OrthCodes.GENERAL_MSGS, data.message);
         }
@@ -100,7 +101,7 @@ public class OrthSceneDirector extends SceneDirector
     {
         // remember which scene we came from, possibly on another peer
         var pendingPreviousScene :int = _pendingData != null ?
-            (_pendingData as MsoyPendingData).previousSceneId : -1;
+            (_pendingData as OrthPendingData).previousSceneId : -1;
 
         _departingPortalId = -1;
         super.requestFailed(reason);
@@ -116,7 +117,7 @@ public class OrthSceneDirector extends SceneDirector
     // from SceneDirector
     override protected function createPendingData () :PendingData
     {
-        return new MsoyPendingData();
+        return new OrthPendingData();
     }
 
     // from SceneDirector
@@ -125,7 +126,7 @@ public class OrthSceneDirector extends SceneDirector
         var result :Boolean = super.prepareMoveTo(sceneId, rl);
         if (result) {
             // super creates a pending request - fill it in with extra data
-            var data :MsoyPendingData = _pendingData as MsoyPendingData;
+            var data :OrthPendingData = _pendingData as OrthPendingData;
             data.previousSceneId = _sceneId;
             data.message = _postMoveMessage;
             _postMoveMessage = null;
@@ -136,7 +137,7 @@ public class OrthSceneDirector extends SceneDirector
     // from SceneDirector
     override protected function sendMoveRequest () :void
     {
-        var data :MsoyPendingData = _pendingData as MsoyPendingData;
+        var data :OrthPendingData = _pendingData as OrthPendingData;
 
         // special code to handle moving to scene 0 (leaving all scenes)
         if (data.sceneId == 0) {
@@ -162,24 +163,6 @@ public class OrthSceneDirector extends SceneDirector
         log.info("Issuing moveTo(" + data.previousSceneId + "->" + data.sceneId + ", " +
                  sceneVers + ", " + _departingPortalId + ", " + data.destLoc + ").");
         _mssvc.moveTo(data.sceneId, sceneVers, _departingPortalId, data.destLoc, this);
-    }
-
-    // from interface OrthSceneService_OrthSceneMoveListener
-    public function moveToBeHandledByAVRG (gameId :int, sceneId :int) :void
-    {
-        // We tried to move into a scene that belongs to a Whirled, and we're not
-        // currently playing that Whirled's AVRG. We fire that game up, and we do
-        // not complete the current move (i.e. we are left in limbo) until the AVRG
-        // issues another explicit move order.
-    }
-
-    // from interface OrthSceneService_OrthSceneMoveListener
-    public function selectGift (lineup :TypedArray, groupName :String) :void
-    {
-        _worldctx.getWorldDirector().selectAvatar(lineup, groupName, function retryMove () :void {
-            // use _pendingData to retry the previous move
-            sendMoveRequest();
-        });
     }
 
     // documentation inherited
