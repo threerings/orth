@@ -134,9 +134,6 @@ public class RoomObjectController extends RoomController
      */
     override public function requestMove (ident :EntityIdent, newloc :OrthLocation) :Boolean
     {
-        if (!checkCanRequest(ident, "requestMove")) {
-            return false;
-        }
         throttle(ident, _roomObj.roomService.changeLocation, ident, newloc);
         return true;
     }
