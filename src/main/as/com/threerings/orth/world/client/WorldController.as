@@ -767,11 +767,7 @@ public class WorldController
      */
     public function handleComplainMember (memberId :int, username :String) :void
     {
-        var service :Function = function (complaint :String) :void {
-            msvc().complainMember(memberId, complaint);
-        };
-
-        _topPanel.callLater(function () :void { new ComplainDialog(_wctx, username, service); });
+        log.warning("COMPLAIN_MEMBER not implemented.");
     }
 
     /**
@@ -779,8 +775,7 @@ public class WorldController
      */
     public function handleBootFromPlace (memberId :int) :void
     {
-        var svc :MemberService = _wctx.getClient().requireService(MemberService) as MemberService;
-        svc.bootFromPlace(memberId, _wctx.confirmListener());
+        log.warning("BOOT_FROM_PLACE not implemented.");        
     }
 
     /**
@@ -1422,14 +1417,6 @@ public class WorldController
     {
         WorldService(_wctx.getClient().requireService(WorldService)).
             ditchFollower(memId, _wctx.listener());
-    }
-
-    /**
-     * Convenience.
-     */
-    protected function msvc () :MemberService
-    {
-        return MemberService(_wctx.getClient().requireService(MemberService));
     }
 
     protected function doSnapshot () :void
