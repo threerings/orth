@@ -1,3 +1,7 @@
  - WorldDirector.as and WorldService.as and friends should be Vault services
  - PlayerObject is what I used in the Vault. I should certainly not use it here in Room/World!
  - DecorGeometry can probably be abandoned and rolled into the new Decor
+ - Note that ControlBar references WorldContext even though it's in orth.client; the reason is
+   that in theory, this bar would be appropriate both for Social rooms and Intervention rooms.
+   We'll see what happens with that. Perhaps more importantly, both ControlBar and WorldControlBar
+   should be at the Who level, with abstracted access to/from the client at the Orth layer.

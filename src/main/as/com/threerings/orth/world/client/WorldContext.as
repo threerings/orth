@@ -3,10 +3,12 @@
 
 package com.threerings.orth.world.client {
 import com.threerings.crowd.chat.client.ChatDirector;
+import com.threerings.msoy.world.client.WorldControlBar;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
+import com.threerings.orth.client.ControlBar;
 import com.threerings.crowd.data.TokenRing;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.PlayerObject;
@@ -338,6 +340,14 @@ public class WorldContext
     public function getWorldControlBar () :WorldControlBar
     {
         return WorldControlBar(_topPanel.getControlBar());
+    }
+
+    /**
+     * Returns the world control bar.
+     */
+    public function getControlBar () :ControlBar
+    {
+        return _topPanel.getControlBar();
     }
 
     /**
