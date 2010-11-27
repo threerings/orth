@@ -17,8 +17,6 @@ import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.PlayerEntry;
 
-import com.threerings.orth.item.data.all.Avatar;
-
 /**
  * Represents a connected orth user.
  */
