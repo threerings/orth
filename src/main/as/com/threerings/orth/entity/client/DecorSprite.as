@@ -2,6 +2,7 @@
 // $Id: DecorSprite.as 19413 2010-10-15 19:28:43Z zell $
 
 package com.threerings.orth.entity.client {
+import com.threerings.orth.entity.client.Decor;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthSceneCodes;
@@ -86,8 +87,8 @@ public class DecorSprite extends FurniSprite
     {
         var furniData :FurniData = new FurniData();
         furniData.itemType = Item.DECOR;
-        furniData.itemId = decor.itemId;
-        furniData.media = decor.getRawFurniMedia();
+        furniData.itemId = decor.getIdent().getItem();
+        furniData.media = decor.getFurniMedia();
 
         // sprite location: center and up-front, but shifted by specified offset
         furniData.loc = new OrthLocation(0.5, 0, 0);
