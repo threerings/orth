@@ -11,6 +11,7 @@ import com.threerings.flex.ChatControl;
 import com.threerings.flex.CommandButton;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.Prefs;
+import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
@@ -201,7 +202,7 @@ public class WorldController
         _wctx.getLocationDirector().addLocationObserver(
             new LocationAdapter(null, this.locationDidChange, null));
 
-        var stage :Stage = mctx.getStage();
+        var stage :Stage = _wctx.getStage();
         setControlledPanel(topPanel.systemManager);
 //        stage.addEventListener(FocusEvent.FOCUS_OUT, handleUnfocus);
         stage.addEventListener(KeyboardEvent.KEY_DOWN, handleStageKeyDown, false, int.MAX_VALUE);
@@ -769,7 +770,7 @@ public class WorldController
      */
     public function handleBootFromPlace (memberId :int) :void
     {
-        log.warning("BOOT_FROM_PLACE not implemented.");        
+        log.warning("BOOT_FROM_PLACE not implemented.");
     }
 
     /**

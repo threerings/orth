@@ -5,6 +5,7 @@ package com.threerings.orth.entity.client {
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.orth.client.Resources;
 import com.threerings.orth.room.client.RoomController;
+import com.threerings.orth.room.data.PlayerInfo;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.util.CommandEvent;
 
@@ -102,7 +103,6 @@ public class MemberSprite extends ActorSprite
                                                       newInfo :OccupantInfo) :Boolean
     {
         return super.isNameChangeRequired(oldInfo, newInfo) || // is true if oldInfo == null
-            (PlayerInfo(oldInfo).isSubscriber() != PlayerInfo(newInfo).isSubscriber()) ||
             (PlayerInfo(oldInfo).isAway() != PlayerInfo(newInfo).isAway());
     }
 
@@ -111,7 +111,7 @@ public class MemberSprite extends ActorSprite
     {
         switch (name) {
         case "member_id":
-            return (_occInfo as PlayerInfo).getId();
+            return (_occInfo as PlayerInfo).getPlayerId();
 
         default:
             return super.getSpecialProperty(name);
@@ -236,6 +236,7 @@ public class MemberSprite extends ActorSprite
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
+import com.threerings.orth.party.data.PartySummary;
 import com.threerings.orth.ui.GlowSprite;
 import com.threerings.orth.world.client.WorldController;
 
