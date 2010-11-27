@@ -3,21 +3,20 @@
 
 package com.threerings.orth.world.client {
 import com.threerings.crowd.chat.client.ChatDirector;
-import com.threerings.msoy.world.client.WorldControlBar;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.orth.client.ControlBar;
 import com.threerings.crowd.data.TokenRing;
+import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.PlayerObject;
+import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.room.client.MediaDirector;
 import com.threerings.orth.room.client.OrthSceneDirector;
 import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.presents.client.Client;
-import com.threerings.orth.world.client.WorldClient;
-import com.threerings.orth.world.client.WorldDirector;
 import com.threerings.presents.client.ConfirmAdapter;
 import com.threerings.presents.client.InvocationAdapter;
 import com.threerings.presents.client.InvocationService_ConfirmListener;
@@ -198,6 +197,14 @@ public class WorldContext
     public function getClient () :Client
     {
         return _client;
+    }
+
+    /**
+     * Returns a reference to the top-level UI container.
+     */
+    public function getTopPanel () :TopPanel
+    {
+        return _topPanel;
     }
 
     // from PresentsContext
@@ -386,6 +393,7 @@ public class WorldContext
     }
 
     protected var _client :WorldClient;
+    protected var _topPanel :TopPanel;
 
     protected var _msgMgr :MessageManager;
     protected var _locDir :LocationDirector;
@@ -393,6 +401,7 @@ public class WorldContext
 
     protected var _controller :WorldController;
 
+    protected var _notifyDir :NotificationDirector;
     protected var _sceneDir :SceneDirector;
     protected var _spotDir :SpotSceneDirector;
     protected var _mediaDir :MediaDirector;
