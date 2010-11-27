@@ -39,13 +39,11 @@ public class PartyBoardInfo extends SimpleStreamableObject
     {
         // start by giving every party a random score between 0 and 1
         float score = RandomUtil.rand.nextFloat();
-        // add their rank in the group. (0, 1, or 2)
-        score += member.getGroupRank(summary.group.getGroupId()).ordinal();
-        // add 3 if their friend is leading the party. (To make it more important than groups)
+        // add 3 if their friend is leading the party
         if (member.isOnlineFriend(info.leaderId)) {
             score += 3;
         }
-        // now, each party is in a "band" determined by group/friend, and then has a random
+        // now, each party is in a "band" determined by friend, and then has a random
         // position within that band.
         _score = score;
     }

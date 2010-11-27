@@ -1,7 +1,7 @@
 //
 // $Id: PartyManager.java 19625 2010-11-24 15:47:54Z zell $
 
-package com.threerings.msoy.party.server;
+package com.threerings.orth.party.server;
 
 import java.util.Set;
 
@@ -22,34 +22,27 @@ import com.threerings.presents.dobj.ObjectDeathListener;
 import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.dobj.RootDObjectManager;
 
-//import com.threerings.crowd.chat.server.SpeakDispatcher;
-//import com.threerings.crowd.chat.server.SpeakHandler;
+import com.threerings.orth.notify.server.NotificationManager;
+import com.threerings.orth.server.MemberNodeActions;
 
-import com.threerings.msoy.data.MemberObject;
-import com.threerings.msoy.data.all.MemberName;
-import com.threerings.msoy.group.data.all.GroupMembership.Rank;
-import com.threerings.msoy.notify.server.MsoyNotificationManager;
-import com.threerings.msoy.server.MemberNodeActions;
-
-import com.threerings.msoy.peer.data.HostedGame;
-import com.threerings.msoy.peer.data.HostedRoom;
-import com.threerings.msoy.peer.data.MsoyNodeObject;
-import com.threerings.msoy.peer.server.MsoyPeerManager;
+import com.threerings.orth.peer.data.HostedRoom;
+import com.threerings.orth.peer.data.OrthNodeObject;
+import com.threerings.orth.peer.server.OrthPeerManager;
 
 import com.threerings.orth.notify.data.GenericNotification;
 import com.threerings.orth.notify.data.Notification;
 
-import com.threerings.msoy.party.data.MemberParty;
-import com.threerings.msoy.party.data.PartierObject;
-import com.threerings.msoy.party.data.PartyAuthName;
-import com.threerings.msoy.party.data.PartyCodes;
-import com.threerings.msoy.party.data.PartyDetail;
-import com.threerings.msoy.party.data.PartyInfo;
-import com.threerings.msoy.party.data.PartyObject;
-import com.threerings.msoy.party.data.PartyPeep;
-import com.threerings.msoy.party.data.PartySummary;
+import com.threerings.orth.party.data.MemberParty;
+import com.threerings.orth.party.data.PartierObject;
+import com.threerings.orth.party.data.PartyAuthName;
+import com.threerings.orth.party.data.PartyCodes;
+import com.threerings.orth.party.data.PartyDetail;
+import com.threerings.orth.party.data.PartyInfo;
+import com.threerings.orth.party.data.PartyObject;
+import com.threerings.orth.party.data.PartyPeep;
+import com.threerings.orth.party.data.PartySummary;
 
-import static com.threerings.msoy.Log.log;
+import static com.threerings.orth.Log.log;
 
 /**
  * Manages a particular party, living on a single node.
@@ -66,7 +59,7 @@ public class PartyManager
     }
 
     /**
-     * Get the party detail, sans the group logo.
+     * Get the party detail.
      */
     public PartyDetail getPartyDetail ()
     {
@@ -77,10 +70,10 @@ public class PartyManager
     public void init (PartyObject partyObj, int creatorId)
     {
         _partyObj = partyObj;
-        _summary = new PartySummary(_partyObj.id, _partyObj.name, _partyObj.group, _partyObj.icon);
+        _summary = new PartySummary(_partyObj.id, _partyObj.name, _partyObj.icon);
         _partyObj.setAccessController(new PartyAccessController(this));
 
-        MsoyNodeObject nodeObj = _peerMgr.getMsoyNodeObject();
+        OrthNodeObject nodeObj = _peerMgr.getOrthNodeObject();
         nodeObj.startTransaction();
         try {
             nodeObj.addToHostedParties(_summary);
@@ -113,7 +106,7 @@ public class PartyManager
             return; // already shut down
         }
 
-        MsoyNodeObject nodeObj = _peerMgr.getMsoyNodeObject();
+        OrthNodeObject nodeObj = _peerMgr.getOrthNodeObject();
         nodeObj.startTransaction();
         try {
             nodeObj.removeFromHostedParties(_partyObj.id);
@@ -138,18 +131,18 @@ public class PartyManager
 
     /**
      * Add the specified player to the party. Called from the PartyRegistry, which also takes care
-     * of filling-in the partyId in the MemberObject. If the method returns normally, the player
+     * of filling-in the partyId in the PlayerObject. If the method returns normally, the player
      * will have been added to the party.
      *
      * @throws InvocationException if the player is not allowed into the party for some reason.
      */
-    public void addPlayer (MemberName name, Rank groupRank)
+    public void addPlayer (OrthName name)
         throws InvocationException
     {
         // TODO: now that we don't modify the _partyObj here, we could simplify the PartyRegistry
         // to not register the dobj until the user successfully joins.
 
-        String snub = _partyObj.mayJoin(name, groupRank, _invitedIds.contains(name.getId()));
+        String snub = _partyObj.mayJoin(name, _invitedIds.contains(name.getId()));
         if (snub != null) {
             throw new InvocationException(snub);
         }
@@ -184,7 +177,7 @@ public class PartyManager
         updatePartyInfo();
     }
 
-    public void inviteAllFriends (MemberObject inviter)
+    public void inviteAllFriends (PlayerObject inviter)
     {
         MemberNodeActions.inviteAllFriendsToParty(inviter, _partyObj.id, _partyObj.name);
     }
@@ -215,30 +208,6 @@ public class PartyManager
         _partyObj.startTransaction();
         try {
             _partyObj.setSceneId(sceneId);
-            updateStatus();
-        } finally {
-            _partyObj.commitTransaction();
-        }
-    }
-
-    // from interface PartyProvider
-    public void setGame (
-        ClientObject caller, int gameId, byte gameState, int gameOid,
-        InvocationService.InvocationListener il)
-        throws InvocationException
-    {
-        requireLeader(caller);
-        if ((_partyObj.gameId == gameId) && (_partyObj.gameState == gameState) &&
-                (_partyObj.gameOid == gameOid)) {
-            return; // NOOP!
-        }
-
-        // update the party's game location
-        _partyObj.startTransaction();
-        try {
-            _partyObj.setGameOid(gameOid);
-            _partyObj.setGameState(gameState);
-            _partyObj.setGameId(gameId);
             updateStatus();
         } finally {
             _partyObj.commitTransaction();
@@ -318,7 +287,7 @@ public class PartyManager
         // send them a notification
         //MemberNodeActions.sendNotification(memberId, createInvite(inviter));
         MemberNodeActions.inviteToParty(
-            memberId, inviter.memberName.toMemberName(), _partyObj.id, _partyObj.name);
+            memberId, inviter.memberName.toOrthName(), _partyObj.id, _partyObj.name);
     }
 
     protected PartierObject requireLeader (ClientObject client)
@@ -374,7 +343,7 @@ public class PartyManager
 
     protected void indicateMemberPartying (int memberId, boolean set)
     {
-        MsoyNodeObject nodeObj = _peerMgr.getMsoyNodeObject();
+        OrthNodeObject nodeObj = _peerMgr.getOrthNodeObject();
 
         if (set) {
             MemberParty mp = new MemberParty(memberId, _partyObj.id);
@@ -404,27 +373,11 @@ public class PartyManager
         }
     }
 
-//    // from SpeakHandler.SpeakerValidator
-//    public boolean isValidSpeaker (DObject speakObj, ClientObject speaker, byte mode)
-//    {
-//        return (speaker instanceof MemberObject) &&
-//            ((MemberObject) speaker).partyId == _partyObj.id;
-//    }
-
     /**
      * Automatically update the status of the party based on the current scene/party.
      */
     protected void updateStatus ()
     {
-        if (_partyObj.gameId != 0) {
-            Tuple<String, HostedGame> game = _peerMgr.getGameHost(_partyObj.gameId);
-            if (game != null) {
-                byte statusType = (_partyObj.gameState == PartyCodes.GAME_STATE_LOBBY)
-                    ? PartyCodes.STATUS_TYPE_LOBBY : PartyCodes.STATUS_TYPE_PLAYING;
-                setStatus(game.right.name, statusType);
-            }
-            return;
-        }
         Tuple<String, HostedRoom> room = _peerMgr.getSceneHost(_partyObj.sceneId);
         if (room != null) {
             setStatus(room.right.name, PartyCodes.STATUS_TYPE_SCENE);
@@ -488,13 +441,13 @@ public class PartyManager
     {
         PartyInfo newInfo = new PartyInfo(_partyObj.id, _partyObj.leaderId, _partyObj.status,
             _partyObj.statusType, _partyObj.peeps.size(), _partyObj.recruitment);
-        MsoyNodeObject nodeObj = _peerMgr.getMsoyNodeObject();
+        OrthNodeObject nodeObj = _peerMgr.getOrthNodeObject();
         if (nodeObj.partyInfos.containsKey(_partyObj.id)) {
             nodeObj.updatePartyInfos(newInfo);
         } else {
             nodeObj.addToPartyInfos(newInfo);
         }
-        // notify the current node (other nodes will be notified by MsoyPeerNode)
+        // notify the current node (other nodes will be notified by OrthPeerNode)
         if (_lastInfo != null) {
             _partyReg.partyInfoChanged(_lastInfo, newInfo);
         }
@@ -508,8 +461,8 @@ public class PartyManager
 
     @Inject protected ClientManager _clmgr;
     @Inject protected InvocationManager _invMgr;
-    @Inject protected MsoyPeerManager _peerMgr;
-    @Inject protected MsoyNotificationManager _notifyMgr;
+    @Inject protected OrthPeerManager _peerMgr;
+    @Inject protected NotificationManager _notifyMgr;
     @Inject protected PartyRegistry _partyReg;
     @Inject protected RootDObjectManager _omgr;
 }

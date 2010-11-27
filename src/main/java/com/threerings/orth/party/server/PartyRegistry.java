@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.msoy.party.server;
+package com.threerings.orth.party.server;
 
 import java.util.List;
 import java.util.Map;
@@ -41,49 +41,37 @@ import com.threerings.crowd.server.PlaceManager;
 import com.threerings.crowd.server.PlaceRegistry;
 import com.threerings.whirled.data.ScenePlace;
 
-import com.threerings.msoy.data.MemberObject;
-import com.threerings.msoy.data.MsoyCodes;
-import com.threerings.msoy.data.MsoyUserObject;
-import com.threerings.msoy.data.all.MemberName;
-import com.threerings.msoy.notify.server.MsoyNotificationManager;
-import com.threerings.msoy.server.MemberLocator;
-import com.threerings.msoy.server.ServerConfig;
-import com.threerings.msoy.server.util.ServiceUnit;
+import com.threerings.orth.data.PlayerObject;
+import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.OrthUserObject;
+import com.threerings.orth.notify.server.NotificationManager;
+import com.threerings.orth.server.MemberLocator;
+import com.threerings.orth.server.ServerConfig;
+import com.threerings.orth.server.util.ServiceUnit;
 
-import com.threerings.msoy.group.data.all.Group;
-import com.threerings.msoy.group.data.all.GroupMembership;
-import com.threerings.msoy.group.data.all.GroupMembership.Rank;
-import com.threerings.msoy.group.server.persist.GroupRecord;
-import com.threerings.msoy.group.server.persist.GroupRepository;
+import com.threerings.orth.notify.data.PartyInviteNotification;
 
-import com.threerings.msoy.notify.data.PartyInviteNotification;
+import com.threerings.orth.peer.data.OrthNodeObject;
+import com.threerings.orth.peer.server.OrthPeerManager;
 
-import com.threerings.msoy.peer.data.MsoyNodeObject;
-import com.threerings.msoy.peer.server.MsoyPeerManager;
+import com.threerings.orth.admin.data.CostsConfigObject;
+import com.threerings.orth.admin.server.RuntimeConfig;
 
-import com.threerings.msoy.admin.data.CostsConfigObject;
-import com.threerings.msoy.admin.server.RuntimeConfig;
+import com.threerings.orth.game.server.PlayerLocator;
 
-import com.threerings.msoy.game.server.PlayerLocator;
+import com.threerings.orth.party.client.PartyBoardService;
+import com.threerings.orth.party.data.PartyAuthName;
+import com.threerings.orth.party.data.PartyBoardInfo;
+import com.threerings.orth.party.data.PartyCodes;
+import com.threerings.orth.party.data.PartyCredentials;
+import com.threerings.orth.party.data.PartyInfo;
+import com.threerings.orth.party.data.PartyLeader;
+import com.threerings.orth.party.data.PartyObject;
+import com.threerings.orth.party.data.PartyOccupantInfo;
+import com.threerings.orth.party.data.PartyPlaceObject;
+import com.threerings.orth.party.data.PartySummary;
 
-import com.threerings.msoy.money.data.all.Currency;
-import com.threerings.msoy.money.data.all.PriceQuote;
-import com.threerings.msoy.money.gwt.CostUpdatedException;
-import com.threerings.msoy.money.server.MoneyLogic;
-
-import com.threerings.msoy.party.client.PartyBoardService;
-import com.threerings.msoy.party.data.PartyAuthName;
-import com.threerings.msoy.party.data.PartyBoardInfo;
-import com.threerings.msoy.party.data.PartyCodes;
-import com.threerings.msoy.party.data.PartyCredentials;
-import com.threerings.msoy.party.data.PartyInfo;
-import com.threerings.msoy.party.data.PartyLeader;
-import com.threerings.msoy.party.data.PartyObject;
-import com.threerings.msoy.party.data.PartyOccupantInfo;
-import com.threerings.msoy.party.data.PartyPlaceObject;
-import com.threerings.msoy.party.data.PartySummary;
-
-import static com.threerings.msoy.Log.log;
+import static com.threerings.orth.Log.log;
 
 /**
  * The PartyRegistry manages all the PartyManagers on a single node. It handles PartyBoard
@@ -97,7 +85,7 @@ public class PartyRegistry
     @Inject public PartyRegistry (InvocationManager invmgr, PresentsConnectionManager conmgr,
                                   ClientManager clmgr, PartyAuthenticator partyAuthor)
     {
-        invmgr.registerDispatcher(new PartyBoardDispatcher(this), MsoyCodes.WORLD_GROUP);
+        invmgr.registerDispatcher(new PartyBoardDispatcher(this), OrthCodes.WORLD_GROUP);
         partyAuthor.init(this); // fiddling to work around a circular dependency
         conmgr.addChainedAuthenticator(partyAuthor);
         clmgr.addSessionFactory(SessionFactory.newSessionFactory(
@@ -110,14 +98,14 @@ public class PartyRegistry
      */
     public void init ()
     {
-        _peerMgr.getMsoyNodeObject().setPeerPartyService(
+        _peerMgr.getOrthNodeObject().setPeerPartyService(
             _invmgr.registerDispatcher(new PeerPartyDispatcher(this)));
     }
 
     /**
      * Return the size of the specified user's party, or 0 if they're not in a party.
      */
-    public int lookupPartyPopulation (MsoyUserObject user)
+    public int lookupPartyPopulation (OrthUserObject user)
     {
         PartySummary party = user.getParty();
         return (party == null) ? 0 : lookupPartyPopulation(party.id);
@@ -144,7 +132,7 @@ public class PartyRegistry
      * Called on the server that hosts the passed-in player, not necessarily on the server
      * hosting the party.
      */
-    public void issueInvite (MemberObject member, MemberName inviter, int partyId, String partyName)
+    public void issueInvite (PlayerObject member, OrthName inviter, int partyId, String partyName)
     {
         _notifyMan.notify(member, new PartyInviteNotification(inviter, partyId, partyName));
     }
@@ -152,7 +140,7 @@ public class PartyRegistry
     /**
      * Called by a PartyPlaceManager when a user enters.
      */
-    public void userEnteringPlace (MsoyUserObject userObj, PartyPlaceObject placeObj)
+    public void userEnteringPlace (OrthUserObject userObj, PartyPlaceObject placeObj)
     {
         PartySummary summary = userObj.getParty();
         if ((summary != null) && !placeObj.getParties().containsKey(summary.id)) {
@@ -166,7 +154,7 @@ public class PartyRegistry
     /**
      * Called by a PartyPlaceManager when a user enters.
      */
-    public void userLeavingPlace (MsoyUserObject userObj, PartyPlaceObject placeObj)
+    public void userLeavingPlace (OrthUserObject userObj, PartyPlaceObject placeObj)
     {
         maybeRemovePartyFromPlace(userObj.getParty(), placeObj);
     }
@@ -174,12 +162,12 @@ public class PartyRegistry
     /**
      * Called when a user's party id changes. Happens in two places:
      * - from PartyManager, when the party is hosted on this node.
-     * - from MsoyPeerNode, for parties hosted on other nodes.
+     * - from OrthPeerNode, for parties hosted on other nodes.
      */
-    public void updateUserParty (int memberId, int partyId, MsoyNodeObject nodeObj)
+    public void updateUserParty (int memberId, int partyId, OrthNodeObject nodeObj)
     {
-        MsoyUserObject memberObj = _memberLocator.lookupMember(memberId);
-        MsoyUserObject playerObj = _playerLocator.lookupPlayer(memberId);
+        OrthUserObject memberObj = _memberLocator.lookupMember(memberId);
+        OrthUserObject playerObj = _playerLocator.lookupPlayer(memberId);
         if (memberObj == null && playerObj == null) {
             return; // this node officially doesn't care
         }
@@ -197,7 +185,7 @@ public class PartyRegistry
     /**
      * Called when a PartyInfo changes. Happens in two places:
      * - from PartyManager, when the info is published.
-     * - from MsoyPeerNode, when it detects an info change.
+     * - from OrthPeerNode, when it detects an info change.
      */
     public void partyInfoChanged (PartyInfo oldInfo, PartyInfo newInfo)
     {
@@ -213,21 +201,12 @@ public class PartyRegistry
     }
 
     /**
-     * Returns the group id of the specified party or 0 if the party does not exist.
-     */
-    public int getPartyGroupId (int partyId)
-    {
-        PartyManager mgr = _parties.get(partyId);
-        return (mgr == null) ? 0 : mgr.getPartyObject().group.getGroupId();
-    }
-
-    /**
      * Requests that the supplied member pre-join the specified party. If the method returns
      * normally, the player will have been added to the specified party.
      *
      * @throws InvocationException if the party cannot be joined for some reason.
      */
-    public void preJoinParty (MemberName name, int partyId, Rank rank)
+    public void preJoinParty (OrthName name, int partyId, Rank rank)
         throws InvocationException
     {
         PartyManager mgr = _parties.get(partyId);
@@ -243,7 +222,7 @@ public class PartyRegistry
     {
         String pnode = _peerMgr.lookupNodeDatum(new Function<NodeObject, String>() {
             public String apply (NodeObject nobj) {
-                return ((MsoyNodeObject)nobj).hostedParties.containsKey(partyId)
+                return ((OrthNodeObject)nobj).hostedParties.containsKey(partyId)
                     ? nobj.nodeName : null;
             }
         });
@@ -258,10 +237,10 @@ public class PartyRegistry
         ClientObject caller, final byte mode, final InvocationService.ResultListener rl)
         throws InvocationException
     {
-        final MemberObject member = (MemberObject)caller;
+        final PlayerObject member = (PlayerObject)caller;
 
         final List<PartyBoardInfo> list = Lists.newArrayList();
-        for (MsoyNodeObject nodeObj : _peerMgr.getMsoyNodeObjects()) {
+        for (OrthNodeObject nodeObj : _peerMgr.getOrthNodeObjects()) {
             for (PartyInfo info : nodeObj.partyInfos) {
                 if ((info.population >= PartyCodes.MAX_PARTY_SIZE) ||
                     (info.recruitment == PartyCodes.RECRUITMENT_CLOSED)) {
@@ -272,10 +251,6 @@ public class PartyRegistry
                     continue; // skip: we want only boards awaiting players.
                 }
                 PartySummary summary = nodeObj.hostedParties.get(info.id);
-                if ((info.recruitment == PartyCodes.RECRUITMENT_GROUP) &&
-                    !member.isGroupMember(summary.group.getGroupId())) {
-                    continue; // skip: user not a group member
-                }
                 PartyBoardInfo boardInfo = new PartyBoardInfo(summary, info);
                 boardInfo.computeScore(member);
                 list.add(boardInfo);
@@ -291,67 +266,19 @@ public class PartyRegistry
     }
 
     // from PartyBoardProvider
-    public void getCreateCost (ClientObject caller, InvocationService.ResultListener rl)
-        throws InvocationException
-    {
-        MemberObject member = (MemberObject)caller;
-
-        PriceQuote quote;
-        if (member.tokens.isSubscriberPlus()) {
-            quote = new PriceQuote(Currency.COINS, 0, 0, 0, 0, 0); // free!
-
-        } else {
-            quote = _moneyLogic.securePrice(
-                member.getMemberId(), PARTY_PURCHASE_KEY, Currency.COINS, getPartyCoinCost());
-        }
-        rl.requestProcessed(quote);
-    }
-
-    // from PartyBoardProvider
     public void createParty (
-        ClientObject caller, final Currency currency, final int authedAmount,
-        final String name, final int groupId, final boolean inviteAllFriends,
+        ClientObject caller, final String name, final boolean inviteAllFriends,
         final PartyBoardService.JoinListener jl)
         throws InvocationException
     {
-        final MemberObject member = (MemberObject)caller;
+        final PlayerObject member = (PlayerObject)caller;
 
         if (member.partyId != 0) {
             // TODO: possibly a better error? Surely this will be blocked on the client
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
-        // verify that the user is at least a member of the specified group
-        final GroupMembership groupInfo = member.groups.get(groupId);
-        if (groupInfo == null) {
-            throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR); // shouldn't happen
-        }
 
-        final int cost = member.tokens.isSubscriberPlus() ? 0 : getPartyCoinCost();
-        _invoker.postUnit(new ServiceUnit("createParty", jl) {
-            public void invokePersistent () throws Exception {
-                _group = _groupRepo.loadGroup(groupId);
-                if ((_group == null) ||
-                        ((_group.partyPerms == Group.Perm.MANAGER) &&
-                        (groupInfo.rank.compareTo(Rank.MANAGER) < 0))) {
-                    throw new InvocationException(PartyCodes.E_GROUP_MGR_REQUIRED);
-                }
-                if (cost != 0) {
-                    _moneyLogic.buyParty(member.getMemberId(), PARTY_PURCHASE_KEY,
-                        currency, authedAmount, Currency.COINS, cost);
-                }
-            }
-            @Override public void handleFailure (Exception error) {
-                if (error instanceof CostUpdatedException) {
-                    jl.priceUpdated(((CostUpdatedException) error).getQuote());
-                } else {
-                    super.handleFailure(error);
-                }
-            }
-            public void handleSuccess () {
-                finishCreateParty(member, name, _group, groupInfo, inviteAllFriends, jl);
-            }
-            protected GroupRecord _group;
-        });
+        finishCreateParty(member, name, inviteAllFriends, jl);
     }
 
     // from PartyBoardProvider & PeerPartyProvider
@@ -369,7 +296,7 @@ public class PartyRegistry
         // otherwise ship it off to the node that handles it
         int sent = _peerMgr.invokeOnNodes(new Function<Tuple<Client,NodeObject>,Boolean>() {
             public Boolean apply (Tuple<Client,NodeObject> clinode) {
-                MsoyNodeObject mnode = (MsoyNodeObject)clinode.right;
+                OrthNodeObject mnode = (OrthNodeObject)clinode.right;
                 if (!mnode.hostedParties.containsKey(partyId)) {
                     return false;
                 }
@@ -393,9 +320,8 @@ public class PartyRegistry
     /**
      * Finish creating a new party.
      */
-    protected void finishCreateParty (MemberObject member, String name, GroupRecord group,
-                                      GroupMembership groupInfo, boolean inviteAllFriends,
-                                      PartyBoardService.JoinListener jl)
+    protected void finishCreateParty (PlayerObject member, String name,
+        boolean inviteAllFriends, PartyBoardService.JoinListener jl)
     {
         PartyObject pobj = null;
         PartyManager mgr = null;
@@ -404,8 +330,13 @@ public class PartyRegistry
             pobj = _omgr.registerObject(new PartyObject());
             pobj.id = _peerMgr.getNextPartyId();
             pobj.name = StringUtil.truncate(name, PartyCodes.MAX_NAME_LENGTH);
-            pobj.group = groupInfo.group;
-            pobj.icon = group.toLogo();
+
+            // TODO: Hackily use the static default group icon until we figure out how best
+            // TODO: to eliminate the icon from the UI
+            pobj.icon = new StaticMediaDesc(MediaMimeTypes.IMAGE_PNG, "photo", "group_logo",
+                // we know that we're 66x60
+                MediaDesc.HALF_VERTICALLY_CONSTRAINED);
+
             pobj.leaderId = member.getMemberId();
             pobj.disband = true;
             if (member.location instanceof ScenePlace) {
@@ -415,7 +346,7 @@ public class PartyRegistry
             // create the PartyManager and add the member
             mgr = _injector.getInstance(PartyManager.class);
             mgr.init(pobj, member.getMemberId());
-            mgr.addPlayer(member.memberName, groupInfo.rank);
+            mgr.addPlayer(member.memberName);
 
             // we're hosting this party so we send them to this same node
             jl.foundParty(pobj.id, ServerConfig.serverHost, ServerConfig.serverPorts[0]);
@@ -449,7 +380,7 @@ public class PartyRegistry
     /**
      * Called when the member represented by the specified user object has joined or left a party.
      */
-    protected void updateUserParty (MsoyUserObject userObj, PartySummary party)
+    protected void updateUserParty (OrthUserObject userObj, PartySummary party)
     {
         // first update the user
         PartySummary oldSummary = userObj.getParty();
@@ -498,7 +429,7 @@ public class PartyRegistry
         final Integer partyKey = partyId;
         return _peerMgr.lookupNodeDatum(new Function<NodeObject, PartyInfo>() {
             public PartyInfo apply (NodeObject nobj) {
-                return ((MsoyNodeObject)nobj).partyInfos.get(partyKey);
+                return ((OrthNodeObject)nobj).partyInfos.get(partyKey);
             }
         });
     }
@@ -538,13 +469,11 @@ public class PartyRegistry
 
     @Inject protected @MainInvoker Invoker _invoker;
     @Inject protected BodyManager _bodyMan;
-    @Inject protected GroupRepository _groupRepo;
     @Inject protected Injector _injector;
     @Inject protected InvocationManager _invmgr;
     @Inject protected MemberLocator _memberLocator;
-    @Inject protected MoneyLogic _moneyLogic;
-    @Inject protected MsoyPeerManager _peerMgr;
-    @Inject protected MsoyNotificationManager _notifyMan;
+    @Inject protected OrthPeerManager _peerMgr;
+    @Inject protected NotificationManager _notifyMan;
     @Inject protected PlaceRegistry _placeReg;
     @Inject protected PlayerLocator _playerLocator;
     @Inject protected RootDObjectManager _omgr;

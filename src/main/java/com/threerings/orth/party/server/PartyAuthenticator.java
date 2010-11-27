@@ -14,11 +14,7 @@ import com.threerings.presents.server.PresentsDObjectMgr;
 
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthAuthCodes;
-import com.threerings.orth.data.all.MemberName;
 import com.threerings.orth.server.AuxAuthenticator;
-
-import com.threerings.orth.group.data.all.GroupMembership.Rank;
-import com.threerings.orth.group.server.persist.GroupRepository;
 
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
@@ -50,28 +46,15 @@ public class PartyAuthenticator extends AuxAuthenticator<PartyCredentials>
     }
 
     @Override // from AuxAuthenticator
-    protected void finishAuthentication (PartyCredentials creds, final MemberName name)
+    protected void finishAuthentication (PartyCredentials creds, final OrthName name)
         throws ServiceException
     {
         final int partyId = creds.partyId;
 
-        // we need to find out the group id of the party in question
-        int groupId = eventCall(new Callable<Integer>() {
-            public Integer call () throws Exception {
-                return _partyReg.getPartyGroupId(partyId);
-            }
-        });
-        if (groupId == 0) {
-            throw new ServiceException(PartyCodes.E_NO_SUCH_PARTY);
-        }
-
-        // load up our rank in the group in question
-        final Rank groupRank = _groupRepo.getRank(groupId, name.getId());
-
         // now we can pre-join the party (to reserve our spot and make sure we're allowed in)
         eventCall(new Callable<Void>() {
             public Void call () throws Exception {
-                _partyReg.preJoinParty(name, partyId, groupRank);
+                _partyReg.preJoinParty(name, partyId);
                 return null;
             }
         });
@@ -108,6 +91,5 @@ public class PartyAuthenticator extends AuxAuthenticator<PartyCredentials>
 
     protected PartyRegistry _partyReg;
 
-    @Inject protected GroupRepository _groupRepo;
     @Inject protected PresentsDObjectMgr _omgr;
 }

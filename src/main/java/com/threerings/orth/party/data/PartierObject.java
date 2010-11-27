@@ -54,9 +54,9 @@ public class PartierObject extends BodyObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setMemberName (VizMemberName value)
+    public void setMemberName (OrthName value)
     {
-        VizMemberName ovalue = this.memberName;
+        OrthName ovalue = this.memberName;
         requestAttributeChange(
             MEMBER_NAME, value, ovalue);
         this.memberName = value;

@@ -18,11 +18,6 @@ public interface PartyBoardService extends InvocationService
          * Reports the connection info for the Whirled node that is hosting the requested party.
          */
         void foundParty (int partyId, String hostname, int port);
-
-        /**
-         * Whoops, the price was updated.
-         */
-        void priceUpdated (PriceQuote newQuote);
     }
 
     /**
@@ -36,15 +31,9 @@ public interface PartyBoardService extends InvocationService
     void locateParty (Client client, int partyId, JoinListener jl);
 
     /**
-     * Get the cost of creating a party. Replies with a PriceQuote.
-     */
-    void getCreateCost (Client client, ResultListener rl);
-
-    /**
      * Creates a new party with the requester as its leader.
      */
-    void createParty (
-        Client client, String name, int groupId, boolean inviteAllFriends, JoinListener jl);
+    void createParty (Client client, String name, boolean inviteAllFriends, JoinListener jl);
 
     /**
      * Retrieve detailed information on a party. Replies with a PartyDetail object.

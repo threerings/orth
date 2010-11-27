@@ -21,7 +21,7 @@ public class PartySummary extends SimpleStreamableObject
     /** The current name of the party. */
     public String name;
 
-    /** The party's icon (the group icon). */
+    /** The party's icon */
     public EntityMedia icon;
 
     /** Suitable for unserialization. */
