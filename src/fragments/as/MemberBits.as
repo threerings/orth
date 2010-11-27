@@ -18,6 +18,14 @@
     }
 
     /**
+     * Handles INVITE_FRIEND.
+     */
+    public function handleInviteFriend (memberId :int) :void
+    {
+        _wctx.getMemberDirector().inviteToBeFriend(memberId);
+    }
+
+    /**
      * Handles booting a user.
      */
     public function handleBootFromPlace (memberId :int) :void

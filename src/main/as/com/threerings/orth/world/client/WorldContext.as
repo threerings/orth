@@ -316,14 +316,6 @@ public class WorldContext
     }
 
     /**
-     * Get the MemberDirector.
-     */
-    public function getMemberDirector () :MemberDirector
-    {
-        return _memberDir;
-    }
-
-    /**
      * Get the party director.
      */
     public function getPartyDirector () :PartyDirector
@@ -356,7 +348,6 @@ public class WorldContext
         _sceneDir = new OrthSceneDirector(this, _locDir, new RuntimeSceneRepository());
         _spotDir = new SpotSceneDirector(this, _locDir, _sceneDir);
         _worldDir = new WorldDirector(this);
-        _memberDir = new MemberDirector(this);
         _partyDir = new PartyDirector(this);
     }
 
@@ -395,7 +386,6 @@ public class WorldContext
     protected var _spotDir :SpotSceneDirector;
     protected var _mediaDir :MediaDirector;
     protected var _worldDir :WorldDirector;
-    protected var _memberDir :MemberDirector;
     protected var _partyDir :PartyDirector;
 }
 }

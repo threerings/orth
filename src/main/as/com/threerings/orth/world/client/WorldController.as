@@ -733,7 +733,7 @@ public class WorldController
      */
     public function handleInviteFriend (memberId :int) :void
     {
-        _wctx.getMemberDirector().inviteToBeFriend(memberId);
+        log.warning("INVITE_FRIEND not implemented.");
     }
 
     /**
