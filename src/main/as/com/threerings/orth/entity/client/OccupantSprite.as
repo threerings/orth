@@ -7,6 +7,7 @@ import com.threerings.display.FilterUtil;
 import com.threerings.media.MediaContainer;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.WalkAnimation;
+import com.threerings.orth.ui.OrthNameLabel;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
@@ -663,10 +664,10 @@ public class OccupantSprite extends EntitySprite
         // nada
     }
 
-    protected function createNameLabel () :MsoyNameLabel
+    protected function createNameLabel () :OrthNameLabel
     {
         // use the default implementation here.
-        return new MsoyNameLabel();
+        return new OrthNameLabel();
     }
 
     /** Contains extra children (nameLabel, decorations) that should not be scaled. */
@@ -677,7 +678,7 @@ public class OccupantSprite extends EntitySprite
      * sprite. Also, the label was not working correctly with the "general purpose" layout code for
      * decorations, which I believe to be the fault of the label (it was returning a negative X
      * coordinate for its bounding rectangle, when in fact it should have started at 0). */
-    protected var _label :MsoyNameLabel = createNameLabel();
+    protected var _label :OrthNameLabel = createNameLabel();
 
     /** Our most recent occupant information. */
     protected var _occInfo :OccupantInfo;

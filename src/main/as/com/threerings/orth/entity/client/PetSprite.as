@@ -4,6 +4,7 @@
 package com.threerings.orth.entity.client {
 
 import com.threerings.orth.room.client.RoomController;
+import com.threerings.orth.ui.OrthNameLabel;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.util.CommandEvent;
 
@@ -91,9 +92,9 @@ public class PetSprite extends ActorSprite
     }
 
     // from OccupantSprite
-    override protected function createNameLabel () :MsoyNameLabel
+    override protected function createNameLabel () :OrthNameLabel
     {
-        return new MsoyNameLabel(true);
+        return new OrthNameLabel(true);
     }
 }
 }
