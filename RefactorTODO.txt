@@ -1,2 +1,3 @@
  - WorldDirector.as and WorldService.as and friends should be Vault services
  - PlayerObject is what I used in the Vault. I should certainly not use it here in Room/World!
+ - DecorGeometry can probably be abandoned and rolled into the new Decor
