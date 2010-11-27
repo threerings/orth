@@ -29,12 +29,6 @@ public class PetSprite extends ActorSprite
         return PetName(_occInfo.username).getOwnerId();
     }
 
-    public function isOwnerMuted () :Boolean
-    {
-        return (_occInfo != null) && _ctx.getMuteDirector() != null &&
-            _ctx.getMuteDirector().isOwnerMuted(PetName(_occInfo.username));
-    }
-
     /**
      * This function sends a chat message to the entire room. Called by our backend
      * in response to a request from usercode.
