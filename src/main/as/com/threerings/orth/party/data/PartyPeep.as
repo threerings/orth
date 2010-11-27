@@ -8,7 +8,7 @@ import com.threerings.io.ObjectInputStream;
 
 import com.threerings.util.ComparisonChain;
 
-import com.threerings.orth.data.all.PlayerEntry;
+import com.threerings.orth.data.PlayerEntry;
 
 /**
  * Represents a fellow party-goer connection.

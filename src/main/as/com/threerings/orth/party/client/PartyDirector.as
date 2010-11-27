@@ -45,9 +45,6 @@ import com.threerings.orth.data.OrthCodes;
 
 import com.threerings.orth.game.client.GameDirector;
 
-import com.threerings.orth.money.data.all.Currency;
-import com.threerings.orth.money.data.all.PriceQuote;
-
 import com.threerings.orth.party.data.PartyBoardMarshaller;
 import com.threerings.orth.party.data.PartyBootstrapData;
 import com.threerings.orth.party.data.PartyCodes;
@@ -230,29 +227,19 @@ public class PartyDirector extends BasicDirector
     /**
      * Create a new party.
      */
-    public function createParty (
-        currency :Currency, authedCost :int, name :String, groupId :int, inviteAllFriends :Boolean)
-        :void
+    public function createParty (name :String, inviteAllFriends :Boolean) :void
     {
         var handleSuccess :Function = function (partyId :int, host :String, port :int) :void {
             connectParty(partyId, host, port);
-            Prefs.setPartyGroup(groupId);
-        };
-        var handleNewPrice :Function = function (price :PriceQuote) :void {
-            // re-open...
-            var panel :CreatePartyPanel = new CreatePartyPanel(_wctx, price);
-            panel.open();
-            panel.init(name, groupId, inviteAllFriends);
         };
         var handleFailure :Function = function (error :String) :void {
             _wctx.displayFeedback(OrthCodes.PARTY_MSGS, error);
             // re-open...
             var panel :CreatePartyPanel = new CreatePartyPanel(_wctx);
             panel.open();
-            panel.init(name, groupId, inviteAllFriends);
+            panel.init(name, inviteAllFriends);
         };
-        _pbsvc.createParty(currency, authedCost, name, groupId, inviteAllFriends,
-            new JoinAdapter(handleSuccess, handleNewPrice, handleFailure));
+        _pbsvc.createParty(name, inviteAllFriends, new JoinAdapter(handleSuccess, handleFailure));
     }
 
     /**
@@ -627,22 +614,13 @@ public class PartyDirector extends BasicDirector
 import com.threerings.presents.client.InvocationAdapter;
 import com.threerings.orth.party.client.PartyBoardService_JoinListener;
 
-import com.threerings.orth.money.data.all.PriceQuote;
-
 class JoinAdapter extends InvocationAdapter
     implements PartyBoardService_JoinListener
 {
-    public function JoinAdapter (
-        foundFunc :Function, costUpdatedFunc :Function, failedFunc :Function)
+    public function JoinAdapter (foundFunc :Function, failedFunc :Function)
     {
         super(failedFunc);
         _foundFunc = foundFunc;
-        _costUpdatedFunc = costUpdatedFunc;
-    }
-
-    public function priceUpdated (newQuote :PriceQuote) :void
-    {
-        _costUpdatedFunc(newQuote);
     }
 
     public function foundParty (partyId :int, hostname :String, port :int) :void
@@ -651,5 +629,4 @@ class JoinAdapter extends InvocationAdapter
     }
 
     protected var _foundFunc :Function;
-    protected var _costUpdatedFunc :Function;
 }

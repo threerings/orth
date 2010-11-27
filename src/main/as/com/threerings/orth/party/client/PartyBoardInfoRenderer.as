@@ -13,9 +13,8 @@ import com.threerings.flex.CommandButton;
 import com.threerings.flex.FlexUtil;
 
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.data.MemberObject;
 import com.threerings.orth.data.MediaDesc;
-import com.threerings.orth.data.all.MediaDescSize;
+import com.threerings.orth.data.PlayerObject;
 import com.threerings.orth.ui.MediaWrapper;
 
 import com.threerings.orth.world.client.WorldContext;
@@ -43,13 +42,13 @@ public class PartyBoardInfoRenderer extends HBox
 
         _picHolder.removeAllChildren();
         _picHolder.addChild(MediaWrapper.createView(
-            Group.logo(party.summary.icon), MediaDescSize.QUARTER_THUMBNAIL_SIZE));
+            party.summary.icon, MediaDescSize.QUARTER_THUMBNAIL_SIZE));
 
         _name.text = party.summary.name;
         _population.text = String(party.info.population);
         PartyDirector.formatStatus(_status, party.info.status, party.info.statusType);
 
-        var us :MemberObject = wctx.getMemberObject();
+        var us :PlayerObject = wctx.getPlayerObject();
         _name.setStyle("fontWeight",
             us.isOnlineFriend(party.info.leaderId) ? "bold" : "normal");
 

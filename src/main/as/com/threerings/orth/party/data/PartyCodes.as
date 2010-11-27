@@ -12,7 +12,7 @@ public class PartyCodes
     public static const RECRUITMENT_OPEN :int = 0;
 
     /** Recruitment constant indicating that only members of the party's group may join. */
-    public static const RECRUITMENT_GROUP :int = 1;
+//    public static const RECRUITMENT_GROUP :int = 1;
 
     /** Recruitment constant indicating nobody but those invited by the leader may join. */
     public static const RECRUITMENT_CLOSED :int = 2;

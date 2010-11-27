@@ -129,7 +129,7 @@ public class PartyBoardPanel extends FloatingPanel
     /** Contains either the loading Label or party List. */
     protected var _content :VBox;
 
-    [Embed(source="../../../../../../../rsrc/media/skins/party/board_header.png")]
+    [Embed(source="../../../../../../../../rsrc/media/skins/party/board_header.png")]
     protected static const PARTY_HEADER :Class;
 }
 }

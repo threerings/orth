@@ -36,10 +36,10 @@ public class PartyDetailPanel extends FloatingPanel
         super.createChildren();
 
         var topBox :HBox = new HBox();
-        topBox.addChild(MediaWrapper.createView(Group.logo(_detail.summary.icon)));
+        topBox.addChild(MediaWrapper.createView(_detail.summary.icon));
 
         var infoBox :VBox = new VBox();
-        infoBox.addChild(FlexUtil.createLabel(_detail.summary.group.toString()));
+        infoBox.addChild(FlexUtil.createLabel("NO GROUP FIXME"));
         var status :Label = FlexUtil.createLabel(null, "partyStatus");
         PartyDirector.formatStatus(status, _detail.info.status, _detail.info.statusType);
         infoBox.addChild(status);
