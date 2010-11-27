@@ -1234,10 +1234,7 @@ public class WorldController
         if (nowIdle != _idle) {
             _idle = nowIdle;
             var bsvc :BodyService = _wctx.getClient().getService(BodyService) as BodyService;
-            // the service may be null if we're in the studio viewer, so just don't worry about it
-            if (bsvc != null) {
-                bsvc.setIdle(nowIdle);
-            }
+            bsvc.setIdle(nowIdle);
         }
     }
 

@@ -46,9 +46,6 @@ public class OrthCodes extends InvocationCodes
     /** Identifies our party message bundle. */
     public static const PARTY_MSGS :String = "party";
 
-    /** Identifies our studio message bundle. */
-    public static const STUDIO_MSGS :String = "studio";
-
     /** Identifies our home page grid message bundle. */
     public static const HOME_PAGE_GRID_MSGS :String = "homepagegrid";
 
