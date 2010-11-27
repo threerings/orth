@@ -15,8 +15,7 @@ import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.EntityIdent;
 
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.data.all.FriendEntry;
-import com.threerings.orth.data.all.PlayerEntry;
+import com.threerings.orth.data.PlayerEntry;
 
 import com.threerings.orth.item.data.all.Avatar;
 
