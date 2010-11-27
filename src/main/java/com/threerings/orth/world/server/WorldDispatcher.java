@@ -57,6 +57,12 @@ public class WorldDispatcher extends InvocationDispatcher<WorldMarshaller>
             );
             return;
 
+        case WorldMarshaller.SET_AVATAR:
+            ((WorldProvider)provider).setAvatar(
+                source, ((Integer)args[0]).intValue(), (InvocationService.ConfirmListener)args[1]
+            );
+            return;
+
         default:
             super.dispatchRequest(source, methodId, args);
             return;

@@ -1,5 +1,5 @@
 //
-// $Id: $
+// $Id: WorldService.java 18317 2009-10-08 23:12:28Z zell $
 
 package com.threerings.orth.world.client;
 
@@ -28,4 +28,9 @@ public interface WorldService extends InvocationService
      * the caller's followers.
      */
     void ditchFollower (Client client, int memberId, InvocationListener listener);
+
+    /**
+     * Set the avatar in use by this user.
+     */
+    void setAvatar (Client client, int avatarId, ConfirmListener listener);
 }

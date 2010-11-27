@@ -35,4 +35,10 @@ public interface WorldProvider extends InvocationProvider
      */
     void inviteToFollow (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)
         throws InvocationException;
+
+    /**
+     * Handles a {@link WorldService#setAvatar} request.
+     */
+    void setAvatar (ClientObject caller, int arg1, InvocationService.ConfirmListener arg2)
+        throws InvocationException;
 }

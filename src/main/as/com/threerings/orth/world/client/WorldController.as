@@ -697,14 +697,6 @@ public class WorldController
     }
 
     /**
-     * Handles the GO_MEMBER_HOME command.
-     */
-    public function handleGoMemberHome (memberId :int) :void
-    {
-        _wctx.getWorldDirector().goToMemberHome(memberId);
-    }
-
-    /**
      * Handles the JOIN_PARTY command.
      */
     public function handleJoinParty (partyId :int) :void

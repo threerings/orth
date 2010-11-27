@@ -5,8 +5,10 @@ package com.threerings.orth.world.data {
 
 import com.threerings.orth.world.client.WorldService;
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService_ConfirmListener;
 import com.threerings.presents.client.InvocationService_InvocationListener;
 import com.threerings.presents.data.InvocationMarshaller;
+import com.threerings.presents.data.InvocationMarshaller_ConfirmMarshaller;
 import com.threerings.presents.data.InvocationMarshaller_ListenerMarshaller;
 import com.threerings.util.Integer;
 
@@ -55,6 +57,19 @@ public class WorldMarshaller extends InvocationMarshaller
         var listener2 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
         listener2.listener = arg2;
         sendRequest(INVITE_TO_FOLLOW, [
+            Integer.valueOf(arg1), listener2
+        ]);
+    }
+
+    /** The method id used to dispatch <code>setAvatar</code> requests. */
+    public static const SET_AVATAR :int = 4;
+
+    // from interface WorldService
+    public function setAvatar (arg1 :int, arg2 :InvocationService_ConfirmListener) :void
+    {
+        var listener2 :InvocationMarshaller_ConfirmMarshaller = new InvocationMarshaller_ConfirmMarshaller();
+        listener2.listener = arg2;
+        sendRequest(SET_AVATAR, [
             Integer.valueOf(arg1), listener2
         ]);
     }

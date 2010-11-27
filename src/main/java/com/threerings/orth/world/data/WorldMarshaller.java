@@ -60,4 +60,17 @@ public class WorldMarshaller extends InvocationMarshaller
             Integer.valueOf(arg2), listener3
         });
     }
+
+    /** The method id used to dispatch {@link #setAvatar} requests. */
+    public static final int SET_AVATAR = 4;
+
+    // from interface WorldService
+    public void setAvatar (Client arg1, int arg2, InvocationService.ConfirmListener arg3)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(arg1, SET_AVATAR, new Object[] {
+            Integer.valueOf(arg2), listener3
+        });
+    }
 }
