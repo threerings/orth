@@ -14,7 +14,9 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.orth.entity.client.Decor;
 import com.threerings.orth.entity.client.DecorSprite;
+import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
+import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.PetInfo;
 import com.threerings.orth.room.data.PlayerInfo;
