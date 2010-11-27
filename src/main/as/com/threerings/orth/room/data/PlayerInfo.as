@@ -5,6 +5,7 @@ package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.party.data.PartyOccupantInfo;
 import com.threerings.orth.room.data.ActorInfo;
 
 import com.threerings.util.Joiner;
@@ -38,18 +39,6 @@ public class PlayerInfo extends ActorInfo
     public function setScale (scale :Number) :void
     {
         _scale = scale;
-    }
-
-    /**
-     * Tests if this player is able to manage the room.
-     * Note that this is not a definitive check, but rather one that can be used by clients
-     * to check other occupants. The value is computed at the time the occupant enters the
-     * room, and is not recomputed even if the room ownership changes. The server should
-     * continue to do definitive checks where it matters.
-     */
-    public function isManager () :Boolean
-    {
-        return (_flags & MANAGER) != 0;
     }
 
     /**
