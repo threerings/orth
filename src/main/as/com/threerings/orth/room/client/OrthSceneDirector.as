@@ -36,7 +36,7 @@ public class OrthSceneDirector extends SceneDirector
     private const log :Log = Log.getLog(this);
 
     // statically reference classes we require
-    OrthRoomMarshaller;
+    OrthSceneMarshaller;
 
     public function OrthSceneDirector (
         ctx :WorldContext, locDir :LocationDirector, repo :SceneRepository)
@@ -46,7 +46,7 @@ public class OrthSceneDirector extends SceneDirector
     }
 
     /**
-     * Traverses the specified portal using the OrthRoomService which handles switching between
+     * Traverses the specified portal using the OrthSceneService which handles switching between
      * servers and other useful business.
      *
      * @return true if we issued the request, false if it was rejected for some reason.
@@ -163,7 +163,7 @@ public class OrthSceneDirector extends SceneDirector
         _mssvc.moveTo(data.sceneId, sceneVers, _departingPortalId, data.destLoc, this);
     }
 
-    // from interface OrthRoomService_OrthSceneMoveListener
+    // from interface OrthSceneService_OrthSceneMoveListener
     public function moveToBeHandledByAVRG (gameId :int, sceneId :int) :void
     {
         // We tried to move into a scene that belongs to a Whirled, and we're not
@@ -172,7 +172,7 @@ public class OrthSceneDirector extends SceneDirector
         // issues another explicit move order.
     }
 
-    // from interface OrthRoomService_OrthSceneMoveListener
+    // from interface OrthSceneService_OrthSceneMoveListener
     public function selectGift (lineup :TypedArray, groupName :String) :void
     {
         _worldctx.getWorldDirector().selectAvatar(lineup, groupName, function retryMove () :void {
@@ -204,7 +204,7 @@ public class OrthSceneDirector extends SceneDirector
     {
         super.fetchServices(client);
         // get a handle on our special scene service
-        _mssvc = (client.requireService(OrthRoomService) as OrthRoomService);
+        _mssvc = (client.requireService(OrthSceneService) as OrthSceneService);
     }
 
     /**
@@ -247,7 +247,7 @@ public class OrthSceneDirector extends SceneDirector
 
     protected var _worldctx :WorldContext;
 
-    protected var _mssvc :OrthRoomService;
+    protected var _mssvc :OrthSceneService;
     protected var _postMoveMessage :String;
     protected var _departingPortalId :int = -1;
     protected var _followListener :MessageAdapter = new MessageAdapter(memberMessageReceived);
