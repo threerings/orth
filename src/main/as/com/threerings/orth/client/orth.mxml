@@ -8,9 +8,9 @@
     width="100%" height="100%"
     preloader="com.threerings.msoy.client.Preloader"
     applicationComplete="doInit();">
-<mx:Style source="../../../../../../rsrc/css/msoy.css"/>
-<mx:Style source="../../../../../../rsrc/css/world-client.css"/>
-<mx:Style source="../../../../../../rsrc/css/room-editor.css"/>
+<mx:Style source="../../../../../../../rsrc/css/orth.css"/>
+<mx:Style source="../../../../../../../rsrc/css/world-client.css"/>
+<mx:Style source="../../../../../../../rsrc/css/room-editor.css"/>
 <mx:Metadata>
     [ResourceBundle("global")]
     [ResourceBundle("general")]

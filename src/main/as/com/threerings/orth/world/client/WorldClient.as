@@ -186,7 +186,7 @@ public class WorldClient extends CrowdClient
         return creds;
     }
 
-    protected _app :Application;
+    protected var _app :Application;
 
     protected var _wctx :WorldContext;
 
