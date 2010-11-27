@@ -25,13 +25,14 @@ import com.threerings.crowd.data.PlaceConfig;
 
 import com.threerings.whirled.client.PendingData;
 import com.threerings.whirled.client.SceneDirector;
+import com.threerings.whirled.client.SceneService_SceneMoveListener;
 import com.threerings.whirled.client.persist.SceneRepository;
 
 /**
  * Handles custom scene traversal and extra bits for Whirled.
  */
 public class OrthSceneDirector extends SceneDirector
-    implements MsoySceneService_MsoySceneMoveListener
+    implements SceneService_SceneMoveListener
 {
     private const log :Log = Log.getLog(this);
 
