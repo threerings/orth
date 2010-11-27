@@ -25,8 +25,8 @@ import com.threerings.orth.item.data.all.Avatar;
  */
 public class PlayerObject extends ActorObject
 {
-    /** The field name of the <code>memberName</code> field. */
-    public static const MEMBER_NAME :String = "memberName";
+    /** The field name of the <code>playerName</code> field. */
+    public static const PLAYER_NAME :String = "playerName";
 
     /** The field name of the <code>following</code> field. */
     public static const FOLLOWING :String = "following";
@@ -51,7 +51,7 @@ public class PlayerObject extends ActorObject
     public static const NOTIFICATION :String = "notification";
 
     /** The member name and id for this user. */
-    public var memberName :OrthName;
+    public var playerName :OrthName;
 
     /** The name of the member this member is following or null. */
     public var following :OrthName;
@@ -74,9 +74,9 @@ public class PlayerObject extends ActorObject
     /**
      * Return this member's unique id.
      */
-    public function getMemberId () :int
+    public function getPlayerId () :int
     {
-        return memberName.getId();
+        return playerName.getId();
     }
 
     /**
@@ -97,7 +97,7 @@ public class PlayerObject extends ActorObject
 
     override public function getVisibleName () :Name
     {
-        return memberName;
+        return playerName;
     }
 
     /**
@@ -112,10 +112,10 @@ public class PlayerObject extends ActorObject
     {
         super.readObject(ins);
 
-        memberName = OrthName(ins.readObject());
+        playerName = OrthName(ins.readObject());
         following = OrthName(ins.readObject());
         followers = DSet(ins.readObject());
-        avatar = Avatar(ins.readObject());
+        avatar = EntityIdent(ins.readObject());
         friends = DSet(ins.readObject());
         walkingId = ins.readInt();
         partyId = ins.readInt();
