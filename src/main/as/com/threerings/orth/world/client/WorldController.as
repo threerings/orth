@@ -77,6 +77,7 @@ import com.threerings.flex.CommandMenu;
 import com.threerings.whirled.data.Scene;
 
 import com.threerings.orth.client.Resources;
+import com.threerings.orth.world.client.BootablePlaceController;
 
 
 /**
