@@ -13,6 +13,7 @@ import com.threerings.orth.client.Resources;
 import com.threerings.orth.client.UberClient;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerObject;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
@@ -88,7 +89,7 @@ public class RoomObjectController extends RoomController
             return;
         }
 
-        const us :MemberObject = _wdctx.getMemberObject();
+        const us :PlayerObject = _wdctx.getPlayerObject();
         const avatar :MemberSprite = _roomObjectView.getOccupant(occInfo.bodyOid) as MemberSprite;
         // avatar may be null if not yet loaded. We check below..
 
@@ -260,7 +261,7 @@ public class RoomObjectController extends RoomController
     /**
      * Create the menu item that allows a user to change their own avatar.
      */
-    protected function createChangeAvatarMenu (us :MemberObject, canControl :Boolean) :Object
+    protected function createChangeAvatarMenu (us :PlayerObject, canControl :Boolean) :Object
     {
         var avItems :Array = [];
         var avatars :Array = (us.avatarCache != null) ? us.avatarCache.toArray() : [];
@@ -300,8 +301,8 @@ public class RoomObjectController extends RoomController
             return;
         }
 
-        const memObj :MemberObject = _wdctx.getMemberObject();
-        const isPetOwner :Boolean = (PetSprite(pet).getOwnerId() == memObj.getId());
+        const memObj :PlayerObject = _wdctx.getPlayerObject();
+        const isPetOwner :Boolean = (PetSprite(pet).getOwnerId() == memObj.getPlayerId());
         const petId :int = occInfo.getEntityIdent().itemId;
 
         var menuItems :Array = [];
@@ -369,8 +370,8 @@ public class RoomObjectController extends RoomController
     override public function canManageRoom (
         memberId :int = 0, allowSupport :Boolean = true) :Boolean
     {
-        var me :MemberObject = _wdctx.getMemberObject();
-        if (memberId == 0 || (memberId == me.getId())) { // self
+        var me :PlayerObject = _wdctx.getPlayerObject();
+        if (memberId == 0 || (memberId == me.getPlayerId())) { // self
             return (_scene != null && _scene.canManage(me, allowSupport));
 
         } else { // others

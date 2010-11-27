@@ -15,6 +15,7 @@ import com.threerings.orth.client.UberClient;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerObject;
 import com.threerings.orth.room.client.RoomObjectController;
 import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.RoomView;
@@ -289,7 +290,7 @@ public class WorldController
     // from ClientObserver
     public function clientDidLogon (event :ClientEvent) :void
     {
-        var memberObj :MemberObject = _wctx.getMemberObject();
+        var memberObj :PlayerObject = _wctx.getPlayerObject();
 
         var name :Name = (_wctx.getClient().getCredentials() as MsoyCredentials).getUsername();
         if (name != null) {
@@ -479,7 +480,7 @@ public class WorldController
         }
 
         // there are no recent scenes, so go home
-        handleGoScene(_wctx.getMemberObject().getHomeSceneId());
+        handleGoScene(_wctx.getPlayerObject().getHomeSceneId());
     }
 
     /**
@@ -490,7 +491,7 @@ public class WorldController
         // you can only NOT move back if you are in your home room and there are no
         // other scenes in your history
         const curSceneId :int = getCurrentSceneId();
-        var memObj :MemberObject = _wctx.getMemberObject();
+        var memObj :PlayerObject = _wctx.getPlayerObject();
         if (memObj == null) {
             return false;
         }
@@ -594,7 +595,7 @@ public class WorldController
     public function handlePopChannelMenu (trigger :Button) :void
     {
         // if we don't yet have a member object, it's too early to pop!
-        const me :MemberObject = _wctx.getMemberObject();
+        const me :PlayerObject = _wctx.getPlayerObject();
         if (me == null) {
             return;
         }
@@ -855,7 +856,7 @@ public class WorldController
             var memberId :int = int(params["memberHome"]);
             if (memberId == 0) {
                 // let's take this as a signal that we're after our own home room
-                memberId = _wctx.getMemberObject().getId();
+                memberId = _wctx.getPlayerObject().getPlayerId();
             }
             handleGoMemberHome(memberId);
 
@@ -870,7 +871,7 @@ public class WorldController
         } else if (null != params["groupChat"]) {
             var groupId :int = int(params["groupChat"]);
             var gm :GroupMembership =
-                _wctx.getMemberObject().groups.get(groupId) as GroupMembership;
+                _wctx.getPlayerObject().groups.get(groupId) as GroupMembership;
             if (gm != null) {
                 handleOpenChannel(gm.group);
             }
@@ -880,13 +881,13 @@ public class WorldController
             if (sceneId == 0) {
                 log.warning("Moving to scene 0, I hope that's what we actually want.",
                     "raw arg", params["sceneId"]);
-                //sceneId = _wctx.getMemberObject().getHomeSceneId();
+                //sceneId = _wctx.getPlayerObject().getHomeSceneId();
             }
             _wctx.getSceneDirector().moveTo(sceneId);
 
         } else {
             // go to our home scene (this doe the right thing for guests as well)
-            _wctx.getSceneDirector().moveTo(_wctx.getMemberObject().getHomeSceneId());
+            _wctx.getSceneDirector().moveTo(_wctx.getPlayerObject().getHomeSceneId());
         }
     }
 
@@ -915,8 +916,8 @@ public class WorldController
         name :OrthName, menuItems :Array, addWorldItems :Boolean = true) :void
     {
         const memId :int = name.getId();
-        const us :MemberObject = _wctx.getMemberObject();
-        const isUs :Boolean = (memId == us.getId());
+        const us :PlayerObject = _wctx.getPlayerObject();
+        const isUs :Boolean = (memId == us.getPlayerId());
         const isMuted :Boolean = !isUs && _wctx.getMuteDirector().isMuted(name);
         const isSupport :Boolean = _wctx.getTokens().isSupport();
         var placeCtrl :Object = null;
@@ -1285,7 +1286,7 @@ public class WorldController
      */
     protected function populateGoMenu (menuData :Array) :void
     {
-        const me :MemberObject = _wctx.getMemberObject();
+        const me :PlayerObject = _wctx.getPlayerObject();
         const curSceneId :int = getCurrentSceneId();
 
         // our groups

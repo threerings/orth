@@ -8,6 +8,7 @@ import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerObject;
 import com.threerings.presents.client.Client;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.presents.client.ConfirmAdapter;
@@ -261,7 +262,7 @@ public class WorldContext
     public function getTokens () :OrthTokenRing
     {
         // if we're not logged on, claim to have no privileges
-        return (getMemberObject() == null) ? new OrthTokenRing() : getMemberObject().tokens;
+        return (getPlayerObject() == null) ? new OrthTokenRing() : getPlayerObject().tokens;
     }
 
     // from WhirledContext
@@ -273,9 +274,9 @@ public class WorldContext
     /**
      * Convenience method.
      */
-    public function getMemberObject () :MemberObject
+    public function getPlayerObject () :PlayerObject
     {
-        return (_client.getClientObject() as MemberObject);
+        return (_client.getClientObject() as PlayerObject);
     }
 
     /**
