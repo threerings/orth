@@ -301,7 +301,7 @@ public class RoomObjectController extends RoomController
         }
 
         const memObj :MemberObject = _wdctx.getMemberObject();
-        const isPetOwner :Boolean = (PetSprite(pet).getOwnerId() == memObj.getMemberId());
+        const isPetOwner :Boolean = (PetSprite(pet).getOwnerId() == memObj.getId());
         const petId :int = occInfo.getEntityIdent().itemId;
 
         var menuItems :Array = [];
@@ -370,7 +370,7 @@ public class RoomObjectController extends RoomController
         memberId :int = 0, allowSupport :Boolean = true) :Boolean
     {
         var me :MemberObject = _wdctx.getMemberObject();
-        if (memberId == 0 || (memberId == me.getMemberId())) { // self
+        if (memberId == 0 || (memberId == me.getId())) { // self
             return (_scene != null && _scene.canManage(me, allowSupport));
 
         } else { // others
@@ -758,7 +758,7 @@ public class RoomObjectController extends RoomController
     {
         for each (var obj :Object in _roomObj.occupantInfo.toArray()) {
             var info :MemberInfo = obj as MemberInfo;
-            if (info != null && info.getMemberId() == memberId) {
+            if (info != null && info.getId() == memberId) {
                 return info;
             }
         }

@@ -860,7 +860,7 @@ public class WorldController
             var memberId :int = int(params["memberHome"]);
             if (memberId == 0) {
                 // let's take this as a signal that we're after our own home room
-                memberId = _wctx.getMemberObject().getMemberId();
+                memberId = _wctx.getMemberObject().getId();
             }
             handleGoMemberHome(memberId);
 
@@ -919,9 +919,9 @@ public class WorldController
     public function addMemberMenuItems (
         name :OrthName, menuItems :Array, addWorldItems :Boolean = true) :void
     {
-        const memId :int = name.getMemberId();
+        const memId :int = name.getId();
         const us :MemberObject = _wctx.getMemberObject();
-        const isUs :Boolean = (memId == us.getMemberId());
+        const isUs :Boolean = (memId == us.getId());
         const isMuted :Boolean = !isUs && _wctx.getMuteDirector().isMuted(name);
         const isSupport :Boolean = _wctx.getTokens().isSupport();
         var placeCtrl :Object = null;
@@ -1308,7 +1308,7 @@ public class WorldController
         var friends :Array = [];
         for each (var fe :FriendEntry in me.getSortedFriends()) {
             friends.push({ label: fe.name.toString(),
-                command: VISIT_MEMBER, arg: fe.name.getMemberId() });
+                command: VISIT_MEMBER, arg: fe.name.getId() });
         }
         if (friends.length == 0) {
             friends.push({ label: Msgs.GENERAL.get("m.no_friends"), enabled: false });

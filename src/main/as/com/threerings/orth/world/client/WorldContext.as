@@ -252,7 +252,7 @@ public class WorldContext
     public function getMyId () :int
     {
         var name :OrthName = getMyName();
-        return (name == null) ? 0 : name.getMemberId();
+        return (name == null) ? 0 : name.getId();
     }
 
     /**

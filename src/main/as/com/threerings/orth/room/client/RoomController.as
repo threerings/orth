@@ -129,7 +129,7 @@ public class RoomController extends SceneController
     public function getViewerName (instanceId :int = 0) :String
     {
         var name :OrthName = _wdctx.getMyName();
-        if (instanceId == 0 || instanceId == name.getMemberId()) {
+        if (instanceId == 0 || instanceId == name.getId()) {
             return name.toString();
         }
         return null;
@@ -452,7 +452,7 @@ public class RoomController extends SceneController
         for (var dex :int = _roomView.numChildren - 1; dex >= 0; dex--) {
             var spr :EntitySprite = (_roomView.getChildAt(dex) as EntitySprite);
             if ((spr != null) && (all || (spr.isActive() && spr.capturesMouse())) &&
-                spr.hitTestPoint(stageX, stageY, true))
+                spr.viz.hitTestPoint(stageX, stageY, true))
             {
                 return spr;
             }

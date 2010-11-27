@@ -111,7 +111,7 @@ public class MemberSprite extends ActorSprite
     {
         switch (name) {
         case "member_id":
-            return (_occInfo as MemberInfo).getMemberId();
+            return (_occInfo as MemberInfo).getId();
 
         default:
             return super.getSpecialProperty(name);
