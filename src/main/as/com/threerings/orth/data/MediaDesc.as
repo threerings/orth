@@ -3,10 +3,13 @@
 
 package com.threerings.orth.data {
 
+import com.threerings.util.Equalable;
+
 /**
  * A class containing metadata about a media object.
  */
 public interface MediaDesc
+    extends Equalable
 {
     /**
      * Returns the path of the URL that references this media.
