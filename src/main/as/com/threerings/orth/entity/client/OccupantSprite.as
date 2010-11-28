@@ -397,15 +397,6 @@ public class OccupantSprite extends EntitySprite
         return "m.occupant";
     }
 
-    /**
-     * Is this occupant muted?
-     */
-    public function isMuted () :Boolean
-    {
-        return (_occInfo != null && _ctx.getMuteDirector() != null &&
-             _ctx.getMuteDirector().isMuted(_occInfo.username))
-    }
-
     override protected function getSpecialProperty (name :String) :Object
     {
         switch (name) {
