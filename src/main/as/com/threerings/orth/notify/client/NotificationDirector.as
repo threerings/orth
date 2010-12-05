@@ -3,6 +3,7 @@
 
 package com.threerings.orth.notify.client {
 
+import com.threerings.crowd.client.CrowdClient;
 import com.threerings.util.Name;
 import com.threerings.util.Set;
 import com.threerings.util.Sets;
@@ -107,7 +108,7 @@ public class NotificationDirector extends BasicDirector
     override protected function clientObjectUpdated (client :Client) :void
     {
         super.clientObjectUpdated(client);
-        client.getClientObject().addListener(this);
+        (client as CrowdClient).bodyOf().addListener(this);
 
         // and, let's always update the control bar button
         if (!_didStartupNotifs) {
