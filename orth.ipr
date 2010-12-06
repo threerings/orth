@@ -171,14 +171,14 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../ooo-libs/aspirin/aspirin.iml" filepath="$PROJECT_DIR$/../ooo-libs/aspirin/aspirin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ooo-libs/depot/depot.iml" filepath="$PROJECT_DIR$/../ooo-libs/depot/depot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../assemblage/aspirin/aspirin.iml" filepath="$PROJECT_DIR$/../assemblage/aspirin/aspirin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../assemblage/depot/depot.iml" filepath="$PROJECT_DIR$/../assemblage/depot/depot.iml" />
       <module fileurl="file://$PROJECT_DIR$/../msoy/msoy.iml" filepath="$PROJECT_DIR$/../msoy/msoy.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ooo-libs/narya/narya.iml" filepath="$PROJECT_DIR$/../ooo-libs/narya/narya.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ooo-libs/nenya/nenya.iml" filepath="$PROJECT_DIR$/../ooo-libs/nenya/nenya.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../assemblage/narya/narya.iml" filepath="$PROJECT_DIR$/../assemblage/narya/narya.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../assemblage/nenya/nenya.iml" filepath="$PROJECT_DIR$/../assemblage/nenya/nenya.iml" />
       <module fileurl="file://$PROJECT_DIR$/orth.iml" filepath="$PROJECT_DIR$/orth.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ooo-libs/samskivert/samskivert.iml" filepath="$PROJECT_DIR$/../ooo-libs/samskivert/samskivert.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../ooo-libs/vilya/vilya.iml" filepath="$PROJECT_DIR$/../ooo-libs/vilya/vilya.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../assemblage/samskivert/samskivert.iml" filepath="$PROJECT_DIR$/../assemblage/samskivert/samskivert.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../assemblage/vilya/vilya.iml" filepath="$PROJECT_DIR$/../assemblage/vilya/vilya.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
