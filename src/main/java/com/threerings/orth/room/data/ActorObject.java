@@ -44,12 +44,6 @@ public abstract class ActorObject extends BodyObject
         return true;
     }
 
-    /**
-     * Returns true if this body has an actor in the scene and as a consequence uses an
-     * OccupantInfo that is instanceof ActorInfo.
-     */
-    public abstract boolean hasActorInfo ();
-
     public abstract EntityIdent getEntityIdent ();
 
     // AUTO-GENERATED: METHODS START
