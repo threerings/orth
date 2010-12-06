@@ -2,7 +2,6 @@
 // $Id: MediaDesc.as 19417 2010-10-20 20:52:22Z zell $
 
 package com.threerings.orth.data {
-import com.threerings.util.Equalable;
 
 import com.threerings.util.Equalable;
 
@@ -22,7 +21,7 @@ public interface MediaDesc
      */
     function getMimeType () :int;
 
-    /** The size constraint on this media, if any. */
+    /** The size constraint on this media, if any. See {@link #computeConstraint}. */
     function get constraint () :int;
 
     /** The MIME type of the media associated with this item. */
@@ -54,7 +53,10 @@ public interface MediaDesc
      * Get some identifier that can be used to refer to this media across
      * sessions (used as a key in prefs).
      */
-    function getMediaId () :String;
+    /* abstract */ function getMediaId () :String;
+
+    // from MediaDesc
+    function isBleepable () :Boolean;
 
     /**
      * Is this a zip of some sort?
