@@ -186,8 +186,8 @@ public class WorldContext
      *        the response arrives from the server (success or failure).
      * @see listener() for a description of the rest of the arguments.
      */
-    public function resultListener (bundle :String, gotResult :Function, errWrap :String = null,
-        component :UIComponent = null, ... logArgs)
+    public function resultListener (gotResult :Function, bundle :String = OrthCodes.GENERAL_MSGS,
+        errWrap :String = null, component :UIComponent = null, ... logArgs)
         :InvocationService_ResultListener
     {
         var success :Function;
@@ -358,6 +358,14 @@ public class WorldContext
     {
         return _partyDir;
     }
+
+    /**
+      * Get the notification director.
+      */
+     public function getNotificationDirector () :NotificationDirector
+     {
+         return _notifyDir;
+     }
 
     /**
      * Returns the top-level world controller.
