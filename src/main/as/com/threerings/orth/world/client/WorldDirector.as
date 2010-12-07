@@ -3,6 +3,7 @@
 
 package com.threerings.orth.world.client {
 import com.threerings.orth.room.data.OrthRoomConfig;
+import com.threerings.orth.room.data.PetMarshaller;
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.BasicDirector;
