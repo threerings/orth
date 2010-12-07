@@ -11,6 +11,7 @@ import com.threerings.orth.client.ControlBar;
 import com.threerings.crowd.data.TokenRing;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.TopPanel;
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthCredentials;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.PlayerObject;
@@ -152,8 +153,8 @@ public class WorldContext
      *        the response arrives from the server (success or failure).
      * @see listener() for a description of the rest of the arguments.
      */
-    public function confirmListener (bundle :String, confirm :* = null, errWrap :String = null,
-        component :UIComponent = null, ... logArgs)
+    public function confirmListener (bundle :String = OrthCodes.GENERAL_MSGS, confirm :* = null,
+        errWrap :String = null, component :UIComponent = null, ... logArgs)
         :InvocationService_ConfirmListener
     {
         var success :Function = function () :void {
