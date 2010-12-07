@@ -2,14 +2,15 @@
 // $Id: EntitySprite.as 19612 2010-11-23 16:13:06Z zell $
 
 package com.threerings.orth.entity.client {
+
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomElement;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.ui.MediaDescContainer;
 import com.threerings.orth.world.client.WorldContext;
-import com.threerings.orth.ui.OrthMediaContainer;
 
 import flash.display.BitmapData;
 import flash.display.BlendMode;
@@ -71,7 +72,7 @@ public class EntitySprite
      * Return the OrthMediaContainer that depicts this logical sprite. This value never changes and
      * is never null.
      */
-    public function get viz () :OrthMediaContainer
+    public function get viz () :MediaDescContainer
     {
         return _sprite;
     }
@@ -486,7 +487,7 @@ public class EntitySprite
      */
     protected function createVisualization () :OrthMediaContainer
     {
-        return new OrthMediaContainer();
+        return new MediaDescContainer();
     }
 
     protected function mediaWillShutdown (event :ValueEvent) :void
@@ -939,7 +940,7 @@ public class EntitySprite
     }
 
     /** The visual representation of us. */
-    protected var _sprite :OrthMediaContainer;
+    protected var _sprite :MediaDescContainer;
 
     /** The giver of life. */
     protected var _ctx :WorldContext;
