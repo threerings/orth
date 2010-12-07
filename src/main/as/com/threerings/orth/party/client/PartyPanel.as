@@ -2,6 +2,7 @@
 // $Id$
 
 package com.threerings.orth.party.client {
+import com.threerings.orth.ui.PlayerList;
 
 import mx.containers.HBox;
 import mx.containers.VBox;
@@ -15,10 +16,8 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.CommandCheckBox;
 import com.threerings.flex.CommandComboBox;
-import com.threerings.flex.FlexUtil;
 
 import com.threerings.orth.ui.FloatingPanel;
-import com.threerings.orth.ui.PlayerList;
 
 import com.threerings.orth.client.Msgs;
 

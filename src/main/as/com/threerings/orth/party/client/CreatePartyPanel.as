@@ -2,23 +2,19 @@
 // $Id$
 
 package com.threerings.orth.party.client {
+import com.threerings.orth.client.Msgs;
+import com.threerings.orth.data.PlayerObject;
+import com.threerings.orth.party.data.PartyCodes;
 
 import mx.containers.Grid;
 
 import mx.controls.CheckBox;
-import mx.controls.Text;
 import mx.controls.TextInput;
 
-import mx.core.ClassFactory;
-
-import com.threerings.util.ComparisonChain;
 import com.threerings.util.StringUtil;
 
-import com.threerings.flex.CommandComboBox;
-import com.threerings.flex.FlexUtil;
 import com.threerings.flex.GridUtil;
 
-import com.threerings.orth.data.OrthName;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.ui.FloatingPanel;
 
@@ -46,10 +42,12 @@ public class CreatePartyPanel extends FloatingPanel
     {
         super.createChildren();
 
+        var us :PlayerObject = _ctx.getPlayerObject();
+
         _name = new TextInput();
         _name.maxChars = PartyCodes.MAX_NAME_LENGTH;
         _name.text = StringUtil.truncate(
-            Msgs.PARTY.get("m.default_name", us.memberName.toString()), PartyCodes.MAX_NAME_LENGTH);
+            Msgs.PARTY.get("m.default_name", us.playerName.toString()), PartyCodes.MAX_NAME_LENGTH);
 
         _inviteAll = new CheckBox();
         _inviteAll.selected = true;
@@ -62,7 +60,7 @@ public class CreatePartyPanel extends FloatingPanel
         addButtons(CANCEL_BUTTON, OK_BUTTON);
     }
 
-    protected function okButtonClicked () :void
+    override protected function okButtonClicked () :void
     {
         WorldContext(_ctx).getPartyDirector().createParty(_name.text, _inviteAll.selected);
         close();

@@ -207,9 +207,7 @@ public class PlaceBox extends LayeredContainer
         var h :Number = this.height;
         var bounds :Rectangle = new Rectangle(0, 0, w, h);
 
-        if (!_ctx.getWorldClient().isMinimized()) {
-            _lastFullSize = new Point(w, h);
-        }
+        _lastFullSize = new Point(w, h);
         var fullSize :Point = _lastFullSize;
         if (fullSize == null) {
             fullSize = new Point(w + 700, h);
@@ -245,13 +243,11 @@ public class PlaceBox extends LayeredContainer
             if (center) {
                 var wmargin :Number = 0;
                 var hmargin :Number = 0;
-                if (_ctx.getWorldClient().getEmbedding().hasPlaceMargins()) {
-                    // set the margins somewhere between 0 and 20, making sure they don't cause
-                    // shrinking of an already small view
-                    // TODO: softwire 700x500
-                    wmargin = Math.max(0, Math.min(20, (fullSize.x - 700) / 2));
-                    hmargin = Math.max(0, Math.min(20, (fullSize.y - 500) / 2));
-                }
+                // set the margins somewhere between 0 and 20, making sure they don't cause
+                // shrinking of an already small view
+                // TODO: softwire 700x500
+                wmargin = Math.max(0, Math.min(20, (fullSize.x - 700) / 2));
+                hmargin = Math.max(0, Math.min(20, (fullSize.y - 500) / 2));
                 _placeView.setPlaceSize(w - wmargin * 2, h - hmargin * 2);
 
                 // NOTE: getSize must be called after setPlaceSize
@@ -312,7 +308,7 @@ public class PlaceBox extends LayeredContainer
         }
 
         var zoomable :Zoomable = _placeView != null ? _placeView.asZoomable() : null;
-        if (zoomable == null || _ctx.getWorldClient().isChromeless()) {
+        if (zoomable == null) {
             return;
         }
 

@@ -6,8 +6,6 @@ package com.threerings.orth.party.client {
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
 
-import com.threerings.orth.client.DeploymentConfig;
-import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthCredentials;
 
@@ -41,7 +39,7 @@ public class PartyContextImpl implements PartyContext
         _client.setVersion(DeploymentConfig.version);
         _client.setServer(hostname, [ port ]);
         _client.setCredentials(pcreds);
-        _wctx.getOrthClient().willConnectToServer(hostname);
+        _wctx.getWorldClient().willConnectToServer(hostname);
         _client.logon();
     }
 
