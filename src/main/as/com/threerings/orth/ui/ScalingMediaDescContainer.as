@@ -4,6 +4,7 @@
 package com.threerings.orth.ui {
 
 import com.threerings.orth.data.MediaDesc;
+import com.threerings.orth.data.MediaDescSize;
 
 public class ScalingMediaDescContainer extends MediaDescContainer
 {
