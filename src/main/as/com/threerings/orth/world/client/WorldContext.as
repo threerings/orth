@@ -127,6 +127,11 @@ public class WorldContext
         }
     }
 
+    public function getVersion () :String
+    {
+        return "DEV";
+    }
+
     /**
      * Create an InvocationListener that will automatically log and report errors to chat.
      *

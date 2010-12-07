@@ -36,7 +36,7 @@ public class PartyContextImpl implements PartyContext
 
         // configure our client and logon
         _client.addServiceGroup(OrthCodes.PARTY_GROUP);
-        _client.setVersion(DeploymentConfig.version);
+        _client.setVersion(_wctx.getVersion());
         _client.setServer(hostname, [ port ]);
         _client.setCredentials(pcreds);
         _wctx.getWorldClient().willConnectToServer(hostname);

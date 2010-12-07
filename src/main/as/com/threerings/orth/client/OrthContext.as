@@ -6,6 +6,17 @@ import com.threerings.presents.util.PresentsContext;
 public interface OrthContext
     extends PresentsContext
 {
+    /**
+     * Saves the session token communicated via the supplied auth response. It is stored in the
+     * credentials of the client so that we can log in more efficiently on a reconnect, and so that
+     * we can log into game servers.
+     */
     function saveSessionToken (arsp :AuthResponseData) :void;
+
+    /**
+     * Return the compiled version identifier for this client. This value is sent over the wire
+     * to validate with the server.
+     */
+    function getVersion () :String;
 }
 }

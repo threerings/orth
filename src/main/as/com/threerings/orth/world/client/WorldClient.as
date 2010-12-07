@@ -40,7 +40,7 @@ public class WorldClient extends CrowdClient
 {
     WorldMarshaller; // static reference for deserialization
 
-    public function WorldClient (app :Application, version :String, host :String,
+    public function WorldClient (app :Application, host :String,
         ports :Array, socketPolicyPort :int)
     {
         super(null);
@@ -49,7 +49,7 @@ public class WorldClient extends CrowdClient
         _socketPolicyPort = socketPolicyPort;
 
         // configure our version
-        setVersion(version);
+        setVersion(_wctx.getVersion());
 
         // configure our server and port info
         setServer(host, ports);
