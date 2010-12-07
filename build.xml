@@ -110,6 +110,7 @@
       <arg value="${deploy.dir}/aslib-config.xml"/>
       <arg value="-compiler.optimize"/>
       <arg value="-compiler.source-path=${asrc.dir}"/>
+      <arg value="-compiler.library-path=lib/tweener.swc"/>
       <arg value="-include-sources=src/main/as/"/>
       <arg value="-output"/>
       <arg value="${deploy.dir}/${ant.project.name}lib.swc"/>
@@ -176,7 +177,7 @@
              classpathref="compile.classpath"/>
     <!-- make sure the record class files are all compiled -->
     <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on" optimize="${build.optimize}"
-           deprecation="on" source="1.5" target="1.5">
+           includeAntRuntime="false" deprecation="on" source="1.5" target="1.5">
       <classpath refid="compile.classpath"/>
       <include name="**/*Record.java"/>
     </javac>

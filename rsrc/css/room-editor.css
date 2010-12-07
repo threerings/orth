@@ -1,0 +1,274 @@
+/**
+ * $Id$
+ *
+ * Room editor style sheet.
+ */
+
+.roomEditScaleDown, .roomEditScaleUp, .roomEditMoveDown, .roomEditMoveUp,
+.roomEditRotateLeft, .roomEditRotateRight, .roomEditFlipH, .roomEditFlipV,
+.roomEditTrash, .roomEditAdd, .roomEditDoor, .roomRemoveDoor, .roomEditLink, .roomRemoveLink,
+.roomEditUndo, .roomEditButtonMakeMyHome, .roomEditCustom,
+.roomEditResetLocation, .roomEditResetScale, .roomEditResetRotation {
+  upSkin: ClassReference(null);
+  downSkin: ClassReference(null);
+  overSkin: ClassReference(null);
+  disabledSkin: ClassReference(null);
+  selectedUpSkin: ClassReference(null);
+  selectedOverSkin: ClassReference(null);
+  selectedDownSkin: ClassReference(null);
+  selectedDisabledSkin: ClassReference(null);
+  skin: ClassReference("com.threerings.msoy.ui.ImageButtonSkin");
+}
+
+.roomEditPanel {
+  paddingTop: 0;
+  paddingBottom: 0;
+  paddingLeft: 0;
+  paddingRight: 0;
+  horizontalGap: 0;
+  verticalGap: 1;
+}
+
+.roomEditDetailsPanelGrid {
+  horizontalGap: 1;
+  verticalGap: 2;
+}
+
+BasePanel {
+  backgroundDisabledColor: #e0eaeb;
+  disabledColor: #e0eaeb;
+}
+
+.roomEditNameBar {
+  backgroundImage: Embed(source="../media/skins/button/roomeditor/name_bar_tile.png",
+          scaleGridTop="10", scaleGridBottom="13",
+          scaleGridLeft="10", scaleGridRight="20");
+  backgroundSize: "100%";
+  borderStyle: "none";
+  paddingBottom: 5;
+  paddingTop: 5;
+  paddingLeft: 8;
+  paddingRight: 8;
+}
+
+.roomEditBackgroundColorRow {
+  paddingTop: 2;
+  paddingBottom: 2;
+}
+
+.roomEditButtonBar { 
+  borderStyle: "none";
+  paddingBottom: 0;
+  paddingTop: 0;
+  paddingLeft: 0;
+  paddingRight: 0;
+  horizontalGap: 3;
+  verticalAlign: "middle";
+} 
+
+.roomEditAccessButtons {
+  buttonStyleName: "roomEditAccessButtonStyle";
+  buttonWidth: 23;
+  buttonHeight: 23;
+  horizontalGap: 0;
+}
+
+.roomEditAccessButtonStyle {
+  paddingBottom: 0;
+  fillAlphas: 0.6, 0.4, 0.6, 0.4;
+}
+
+.roomEditAdvanced { 
+  paddingBottom: 0;
+  paddingTop: 3;
+  paddingLeft: 0;
+  paddingRight: 0;
+  verticalGap: 0;
+} 
+
+.roomEditContents { 
+  paddingBottom: 5;
+  paddingTop: 5;
+  paddingLeft: 8;
+  paddingRight: 8;
+  verticalGap: 2;
+} 
+
+.roomEditLabelContainer { 
+  borderStyle: "none";
+  borderThickness: 0;
+  borderThicknessLeft: 0;
+  borderThicknessRight: 0;
+  borderThicknessTop: 0;
+  borderThicknessBottom: 0;
+  paddingBottom: 0;
+  paddingTop: 0;
+  paddingLeft: 5;
+  paddingRight: 5;
+  horizontalGap: 0;
+  verticalGap: 0;
+}
+
+.roomEditCollapsingContainer { 
+  borderStyle: "none";
+  paddingBottom: 0;
+  paddingTop: 0;
+  paddingLeft: 0;
+  paddingRight: 5;
+  verticalGap: 1;
+}
+
+.roomEditCollapsingContents { 
+  paddingBottom: 5;
+  paddingTop: 2;
+}
+
+.roomEditLeft { 
+  verticalAlign: "bottom";
+  verticalGap: 15;
+}
+
+.roomEditDiv {
+  backgroundSkin: Embed(source="../media/skins/button/roomeditor/dot-separator.png");
+} 
+
+.roomEditRight { 
+  horizontalAlign: "center";
+  verticalAlign: "bottom";
+  verticalGap: 15;
+}
+
+.roomEditScaleDown {
+  image: url("images/ui/editor/scale_down.png");
+}
+
+.roomEditScaleUp {
+  image: url("images/ui/editor/scale_up.png");
+}
+
+.roomEditMoveDown {
+  image: url("images/ui/editor/down-to-floor.png");
+}
+
+.roomEditMoveUp {
+  image: url("images/ui/editor/up-off-floor.png");
+}
+
+.roomEditRotateLeft {
+  image: url("images/ui/editor/rot_left.png");
+}
+
+.roomEditRotateRight {
+  image: url("images/ui/editor/rot_right.png");
+}
+
+.roomEditFlipH {
+  image: url("images/ui/editor/flip_horiz.png");
+}
+
+.roomEditFlipV {
+  image: url("images/ui/editor/flip_vert.png");
+}
+
+.roomEditTrash {
+  image: url("images/ui/editor/put-away.png");
+}
+
+.roomEditAdd {
+  image: url("images/ui/editor/add-stuff.png");
+}
+
+.roomEditDoor {
+  image: url("images/ui/editor/door.png");
+}
+
+.roomRemoveDoor {
+  image: url("images/ui/editor/remove_door.png");
+}
+
+.roomEditLink {
+  image: url("images/ui/editor/make-url.png");
+}
+
+.roomRemoveLink {
+  image: url("images/ui/editor/remove-url.png");
+}
+
+.roomEditUndo {
+  image: url("images/ui/editor/undo-shape.png");
+}
+
+.roomEditCustom { 
+  image: url("images/item/config.png");
+}
+
+.roomEditButtonMakeMyHome {
+  image: url("images/ui/editor/makehome.png");
+}
+
+.roomEditButtonLabel {
+  fontFamily: "Arial";
+  fontSize: 9;
+  fontAntiAliasType: "advanced";
+  kerning: true;
+  textAlign: "center";
+}
+
+.roomEditPanelButton { 
+  paddingBottom: 0;
+  right: 0;
+}
+  
+.roomEditLabel {
+    color: #000000;
+    themeColor: #54a9da;
+    fontFamily: "Arial";
+    fontSize: 9;
+}
+
+.roomEditNameLabel {
+    color: #000000;
+    themeColor: #54a9da;
+    fontSize: 11;
+    fontWeight: "bold";
+}
+
+.roomEditButtonExpand {
+  upSkin: Embed(source="../media/skins/button/roomeditor/rollout_plus.png");
+  overSkin: Embed(source="../media/skins/button/roomeditor/rollout_plus.png");
+  downSkin: Embed(source="../media/skins/button/roomeditor/rollout_plus.png");
+  disabledSkin: Embed(source="../media/skins/button/roomeditor/rollout_plus.png");
+  selectedUpSkin: Embed(source="../media/skins/button/roomeditor/rollout_minus.png");
+  selectedOverSkin: Embed(source="../media/skins/button/roomeditor/rollout_minus.png");
+  selectedDownSkin: Embed(source="../media/skins/button/roomeditor/rollout_minus.png");
+  selectedDisabledSkin: Embed(source="../media/skins/button/roomeditor/rollout_minus.png");
+} 
+
+.roomEditAdvancedContainer {
+  borderStyle: "none";
+  borderThickness: 0;
+  borderThicknessLeft: 0;
+  borderThicknessRight: 0;
+  borderThicknessTop: 0;
+  borderThicknessBottom: 0;
+  paddingBottom: 0;
+  paddingTop: 0;
+  paddingLeft: 3;
+  paddingRight: 3;
+  horizontalGap: 0;
+  verticalGap: 0;
+  horizontalAlign: "center";
+  verticalAlign: "middle";
+}
+
+.roomEditResetLocation {
+  image: url("images/ui/editor/reset_location.png");
+}
+
+.roomEditResetScale {
+  image: url("images/ui/editor/reset_scale.png");
+}
+
+.roomEditResetRotation {
+  image: url("images/ui/editor/reset_rotation.png");
+}

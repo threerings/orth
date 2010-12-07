@@ -1,5 +1,5 @@
 //
-// $Id: MemberName.as 17905 2009-08-24 21:05:57Z ray $
+// $Id: OrthName.as 17905 2009-08-24 21:05:57Z ray $
 
 package com.threerings.orth.data {
 
@@ -24,7 +24,7 @@ public class OrthName extends Name
     };
 
     /**
-     * Create a new MemberName.
+     * Create a new OrthName.
      */
     public function OrthName (displayName :String = "", memberId :int = 0)
     {
