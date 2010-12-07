@@ -48,7 +48,7 @@ public class PlayerObject extends ActorObject
     public static const NOTIFICATION :String = "notification";
 
     /** The member name and id for this user. */
-    public var playerName :OrthName;
+    public var playerName :VizOrthName;
 
     /** The name of the member this member is following or null. */
     public var following :OrthName;
