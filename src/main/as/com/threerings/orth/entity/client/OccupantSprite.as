@@ -5,6 +5,7 @@ package com.threerings.orth.entity.client {
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.display.FilterUtil;
 import com.threerings.media.MediaContainer;
+import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.WalkAnimation;
 import com.threerings.orth.ui.OrthNameLabel;

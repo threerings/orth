@@ -2,6 +2,8 @@
 // $Id: RoomObjectView.as 18642 2009-11-10 22:55:00Z jamie $
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.chat.client.ChatInfoProvider;
+import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.PlaceLoadingDisplay;
 import com.threerings.orth.client.Prefs;
@@ -664,7 +666,7 @@ public class RoomObjectView extends RoomView
     protected function handleMusicStateChanged (event :ValueEvent) :void
     {
         if (event.value == MediaPlayerCodes.STATE_STOPPED) {
-            _roomObj.roomService.songEnded(_musicPlayCount);
+            _roomObj.orthRoomService.songEnded(_musicPlayCount);
         }
     }
 

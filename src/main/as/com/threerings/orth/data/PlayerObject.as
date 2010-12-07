@@ -5,17 +5,12 @@ package com.threerings.orth.data {
 
 import com.threerings.presents.dobj.DSet;
 
-import com.threerings.crowd.data.TokenRing;
-
 import com.threerings.io.ObjectInputStream;
 
 import com.threerings.util.Name;
 
 import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.EntityIdent;
-
-import com.threerings.orth.data.OrthName;
-import com.threerings.orth.data.PlayerEntry;
 
 /**
  * Represents a connected orth user.

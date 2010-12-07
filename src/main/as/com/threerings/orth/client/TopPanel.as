@@ -2,6 +2,7 @@
 // $Id: $
 
 package com.threerings.orth.client {
+import com.threerings.orth.chat.client.ComicOverlay;
 
 import flash.events.Event;
 import flash.geom.Rectangle;
