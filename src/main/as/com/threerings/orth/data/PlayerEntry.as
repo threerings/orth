@@ -19,7 +19,7 @@ public class PlayerEntry
     implements Hashable, DSet_Entry
 {
     /** The display name of the friend. */
-    public var name :OrthName;
+    public var name :VizOrthName;
 
     /**
      * A sort function that may be used for PlayerEntrys
@@ -56,7 +56,7 @@ public class PlayerEntry
     // from interface Streamable
     public function readObject (ins :ObjectInputStream) :void
     {
-        name = OrthName(ins.readObject());
+        name = VizOrthName(ins.readObject());
     }
 
     // from interface Streamable
