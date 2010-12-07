@@ -14,11 +14,9 @@ import mx.core.IFactory;
 import com.threerings.flex.FlexUtil;
 
 import com.threerings.orth.client.PlayerRenderer;
-import com.threerings.orth.data.all.MediaDescSize;
-
-import com.threerings.orth.world.client.WorldContext;
-
+import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.party.data.PartyPeep;
+import com.threerings.orth.world.client.WorldContext;
 
 public class PeepRenderer extends PlayerRenderer
 {

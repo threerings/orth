@@ -485,7 +485,7 @@ public class EntitySprite
      * Create and return the visual representation of this room entity. This may be overridden
      * by subclasses to return specific implementations.
      */
-    protected function createVisualization () :OrthMediaContainer
+    protected function createVisualization () :MediaDescContainer
     {
         return new MediaDescContainer();
     }

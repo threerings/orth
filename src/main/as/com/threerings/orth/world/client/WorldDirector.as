@@ -3,17 +3,12 @@
 
 package com.threerings.orth.world.client {
 
-import com.threerings.io.TypedArray;
-import com.threerings.orth.world.client.WorldContext;
-import com.threerings.util.Util;
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
-import com.threerings.presents.client.ClientAdapter;
 
-import com.threerings.crowd.client.LocationAdapter;
-import com.threerings.crowd.data.PlaceObject;
+import com.threerings.orth.data.OrthCodes;
 
 /**
  * Handles moving around in the virtual world.
@@ -30,8 +25,6 @@ public class WorldDirector extends BasicDirector
     {
         super(ctx);
         _wctx = ctx;
-        _wctx.getLocationDirector().addLocationObserver(
-            new LocationAdapter(null, locationDidChange, null));
 
         _followingNotifier = new FollowingNotifier(_wctx);
     }
@@ -56,7 +49,7 @@ public class WorldDirector extends BasicDirector
     // from BasicDirector
     override protected function registerServices (client :Client) :void
     {
-        client.addServiceGroup(MsoyCodes.WORLD_GROUP);
+        client.addServiceGroup(OrthCodes.WORLD_GROUP);
     }
 
     // from BasicDirector
@@ -75,6 +68,7 @@ public class WorldDirector extends BasicDirector
 }
 }
 
+import com.threerings.orth.data.OrthName;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;

@@ -9,7 +9,9 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.orth.client.ControlBar;
 import com.threerings.crowd.data.TokenRing;
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.TopPanel;
+import com.threerings.orth.data.OrthCredentials;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.PlayerObject;
 import com.threerings.orth.party.client.PartyDirector;
@@ -24,6 +26,7 @@ import com.threerings.presents.client.InvocationService_InvocationListener;
 import com.threerings.presents.client.InvocationService_ResultListener;
 import com.threerings.presents.client.ResultAdapter;
 import com.threerings.presents.dobj.DObjectManager;
+import com.threerings.presents.net.AuthResponseData;
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
@@ -36,11 +39,13 @@ import mx.core.UIComponent;
 
 import flash.display.Stage;
 
+import com.threerings.orth.data.OrthAuthResponseData;
+
 /**
  * Defines services for the World client.
  */
 public class WorldContext
-    implements WhirledContext
+    implements WhirledContext, OrthContext
 {
     /** Contains non-persistent properties that are set in various places and can be bound to to be
      * notified when they change. */
@@ -104,6 +109,20 @@ public class WorldContext
     public function getWorldClient () :WorldClient
     {
         return _client;
+    }
+
+    /**
+     * Saves the session token communicated via the supplied auth response. It is stored in the
+     * credentials of the client so that we can log in more efficiently on a reconnect, and so that
+     * we can log into game servers.
+     */
+    public function saveSessionToken (arsp :AuthResponseData) :void
+    {
+        var rdata :OrthAuthResponseData = (arsp as OrthAuthResponseData);
+        if (rdata.sessionToken != null) {
+            Log.getLog(OrthContext).info("Using session token " + rdata.sessionToken);
+            OrthCredentials(getClient().getCredentials()).sessionToken = rdata.sessionToken;
+        }
     }
 
     /**
@@ -362,7 +381,7 @@ public class WorldContext
      */
     protected function createAdditionalDirectors () :void
     {
-        _notifyDir = new NotificationDirector(this);
+        _notifyDir = new NotificationDirector(this, PlayerObject.NOTIFICATION);
         _sceneDir = new OrthSceneDirector(this, _locDir, new RuntimeSceneRepository());
         _spotDir = new SpotSceneDirector(this, _locDir, _sceneDir);
         _worldDir = new WorldDirector(this);

@@ -1,7 +1,7 @@
 //
 // $Id: MediaDesc.as 18842 2009-12-11 20:38:56Z zell $
 
-package com.threerings.orth.ui {
+package com.threerings.orth.data {
 
 /**
  * A class containing metadata about a media object.
