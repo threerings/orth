@@ -3,7 +3,6 @@
 
 package com.threerings.orth.party.client {
 
-import flash.events.Event;
 import flash.utils.Dictionary;
 
 import mx.core.UIComponent;
@@ -39,11 +38,8 @@ import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.ui.FloatingPanel;
 
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.Prefs;
 
 import com.threerings.orth.data.OrthCodes;
-
-import com.threerings.orth.game.client.GameDirector;
 
 import com.threerings.orth.party.data.PartyBoardMarshaller;
 import com.threerings.orth.party.data.PartyBootstrapData;
@@ -96,8 +92,6 @@ public class PartyDirector extends BasicDirector
         _wctx = ctx;
         _wctx.getLocationDirector().addLocationObserver(
             new LocationAdapter(null, locationDidChange, null));
-        _wctx.getGameDirector().addEventListener(GameDirector.GAMING_STATE_CHANGED,
-            handleGamingStateChanged);
     }
 
     /**
@@ -174,7 +168,7 @@ public class PartyDirector extends BasicDirector
     {
         var menuItems :Array = [];
 
-        _wctx.getOrthController().addMemberMenuItems(peep.name, menuItems, false);
+        _wctx.getWorldController().addMemberMenuItems(peep.name, menuItems, false);
 
         if (_partyObj != null && partyId == _partyObj.id) {
             const peepId :int = peep.name.getId();
@@ -217,14 +211,6 @@ public class PartyDirector extends BasicDirector
     }
 
     /**
-     * Get the cost to start a party from the server.
-     */
-    public function getCreateCost (callback :Function) :void
-    {
-        _pbsvc.getCreateCost(_wctx.resultListener(callback));
-    }
-
-    /**
      * Create a new party.
      */
     public function createParty (name :String, inviteAllFriends :Boolean) :void
@@ -256,7 +242,7 @@ public class PartyDirector extends BasicDirector
 
         // first we have to find out what node is hosting the party in question
         _pbsvc.locateParty(id,
-            new JoinAdapter(connectParty, null, function (cause :String) :void {
+            new JoinAdapter(connectParty, function (cause :String) :void {
                 _wctx.displayFeedback(OrthCodes.PARTY_MSGS, cause);
             }));
     }
@@ -338,27 +324,6 @@ public class PartyDirector extends BasicDirector
         }
     }
 
-    protected function checkFollowGame () :void
-    {
-        if (isPartyLeader()) {
-            return; // we don't follow! (prevent leaving a game we're in)
-        }
-        const gameDir :GameDirector = _wctx.getGameDirector();
-        if (_partyObj.gameId != gameDir.getGameId()) {
-            gameDir.clearAnyGame();
-        }
-        if (_partyObj.gameId != 0) {
-            // join the leader's table and/or game
-            if (_partyObj.gameState == PartyCodes.GAME_STATE_AVRG) {
-                gameDir.activateAVRGame(_partyObj.gameId);
-            } else if (_partyObj.gameOid != 0) {
-                gameDir.enterGame(_partyObj.gameId, _partyObj.gameOid);
-            } else {
-                gameDir.playNow(_partyObj.gameId, _partyObj.leaderId);
-            }
-        }
-    }
-
     protected function partyDidLogon (event :ClientEvent) :void
     {
         var pbd :PartyBootstrapData = (event.getClient().getBootstrapData() as PartyBootstrapData);
@@ -429,11 +394,6 @@ public class PartyDirector extends BasicDirector
 
         // we might need to warp to the party location
         checkFollowScene();
-        if (isPartyLeader()) {
-            handleGamingStateChanged();
-        } else {
-            checkFollowGame();
-        }
     }
 
     /**
@@ -491,40 +451,6 @@ public class PartyDirector extends BasicDirector
     }
 
     /**
-     * Called whenever our gaming state changes.
-     */
-    protected function handleGamingStateChanged (ignored :Event = null) :void
-    {
-        if (!isPartyLeader()) {
-            return;
-        }
-
-        const gameDir :GameDirector = _wctx.getGameDirector();
-        var gameId :int = gameDir.getGameId();
-        var gameState :int = PartyCodes.GAME_STATE_NONE;
-        var gameOid :int = 0;
-        if (gameId != 0) {
-            if (gameDir.isAVRGame()) {
-                gameState = PartyCodes.GAME_STATE_AVRG;
-
-            } else if (gameDir.isInParlorTable()) {
-                gameState = PartyCodes.GAME_STATE_LOBBY;
-
-            } else if (gameDir.isInParlorGame()) {
-                gameState = PartyCodes.GAME_STATE_INGAME;
-                gameOid = gameDir.getParlorGameOid();
-
-            } else {
-                gameId = 0; // we're LOOKING at the lobby for a parlor game, but nothing else
-            }
-        }
-        if ((gameId != _partyObj.gameId) || (gameState != _partyObj.gameState)) {
-            _partyObj.partyService.setGame(gameId, gameState, gameOid,
-                _wctx.listener(OrthCodes.PARTY_MSGS));
-        }
-    }
-
-    /**
      * Handles changes on the party object.
      */
     protected function partyAttrChanged (event :AttributeChangedEvent) :void
@@ -535,7 +461,6 @@ public class PartyDirector extends BasicDirector
             break;
 
         case PartyObject.GAME_ID:
-            checkFollowGame();
             break;
 
         case PartyObject.LEADER_ID:
@@ -566,7 +491,7 @@ public class PartyDirector extends BasicDirector
     {
         super.clientObjectUpdated(client);
 
-        var assignedPartyId :int = _wctx.getMemberObject().partyId;
+        var assignedPartyId :int = _wctx.getPlayerObject().partyId;
         if (assignedPartyId != 0) {
             // join it!
             DelayUtil.delayFrame(joinParty, [ assignedPartyId ]);
