@@ -3,3 +3,4 @@ target
 .DS_Store
 ~$
 _temp_flex_config.xml$
+.orig$
