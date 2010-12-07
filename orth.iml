@@ -43,6 +43,15 @@
     <orderEntry type="module" module-name="nenya" />
     <orderEntry type="module" module-name="vilya" />
     <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MAVEN_REPOSITORY$/com/adobe/as3corelib/0.93/as3corelib-0.93.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="commons-codec.jar">
         <CLASSES>
           <root url="jar://$EXT_LIBS_DIR$/commons-codec.jar!/" />
