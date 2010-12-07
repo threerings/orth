@@ -109,7 +109,7 @@ public class PlayerObject extends ActorObject
     {
         super.readObject(ins);
 
-        playerName = OrthName(ins.readObject());
+        playerName = VizOrthName(ins.readObject());
         following = OrthName(ins.readObject());
         followers = DSet(ins.readObject());
         avatar = EntityIdent(ins.readObject());
