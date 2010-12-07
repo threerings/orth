@@ -20,7 +20,6 @@ import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneCodes;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.PlayerInfo;
-import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldController;
 
@@ -31,14 +30,10 @@ import flash.geom.Rectangle;
 
 import flash.utils.ByteArray;
 
-import com.threerings.util.ImmutableProxyObject;
 import com.threerings.util.Map;
 import com.threerings.util.Name;
 import com.threerings.util.Predicates;
-import com.threerings.util.ValueEvent;
 
-import com.threerings.presents.dobj.AttributeChangedEvent;
-import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -56,9 +51,6 @@ import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.ui.MenuUtil;
 
-import com.threerings.media.AudioPlayer;
-import com.threerings.media.MediaPlayerCodes;
-
 import com.threerings.whirled.data.SceneUpdate;
 
 import com.threerings.whirled.spot.data.SpotSceneObject;
@@ -72,8 +64,7 @@ import com.threerings.orth.room.data.OrthLocation;
  * Extends the base roomview with the ability to view a RoomObject, view chat, and edit.
  */
 public class RoomObjectView extends RoomView
-    implements AttributeChangeListener, SetListener, MessageListener,
-               ChatSnooper, ChatDisplay, ChatInfoProvider,
+    implements SetListener, MessageListener, ChatSnooper, ChatDisplay, ChatInfoProvider,
                MemoryChangedListener
 {
     /**
@@ -277,16 +268,6 @@ public class RoomObjectView extends RoomView
         return _occupants.values().filter(Predicates.createIs(PetSprite));
     }
 
-    // from interface AttributeChangedListener
-    public function attributeChanged (event :AttributeChangedEvent) :void
-    {
-        var name :String = event.getName();
-        if (OrthRoomObject.PLAY_COUNT == name) {
-            // when the play count changes, it's time for us to re-check the audio
-            updateBackgroundAudio();
-        }
-    }
-
     // from interface SetListener
     public function entryAdded (event :EntryAddedEvent) :void
     {
@@ -411,10 +392,6 @@ public class RoomObjectView extends RoomView
 
         _roomObj.addListener(this);
 
-        var player :AudioPlayer = _ctx.getWorldController().getMusicPlayer();
-        player.addEventListener(MediaPlayerCodes.STATE, handleMusicStateChanged);
-        player.addEventListener(MediaPlayerCodes.METADATA, handleMusicMetadata);
-
         addAllOccupants();
 
         // we add ourselves as a chat display so that we can trigger speak actions on avatars
@@ -461,11 +438,6 @@ public class RoomObjectView extends RoomView
         }
 
         removeAllOccupants();
-
-        var player :AudioPlayer = _ctx.getWorldController().getMusicPlayer();
-        player.removeEventListener(MediaPlayerCodes.STATE, handleMusicStateChanged);
-        player.removeEventListener(MediaPlayerCodes.METADATA, handleMusicMetadata);
-        _ctx.getWorldController().handlePlayMusic(null);
 
         super.didLeavePlace(plobj);
 
@@ -521,37 +493,7 @@ public class RoomObjectView extends RoomView
     {
         super.backgroundFinishedLoading();
 
-        // play any music..
-        updateBackgroundAudio();
-
         _octrl.backgroundFinishedLoading();
-    }
-
-    /**
-     * Restart playing the background audio.
-     */
-    protected function updateBackgroundAudio () :void
-    {
-        var audio :Audio =
-            _roomObj.playlist.get(new SimpleEntityIdent(Item.AUDIO, _roomObj.currentSongId)) as Audio;
-        const dispatchStopped :Boolean = (_musicPlayCount >= 0);
-        const dispatchStarted :Boolean = (audio != null);
-        var entity :EntitySprite;
-        if (dispatchStopped) {
-            for each (entity in _entities.values()) {
-                entity.processMusicStartStop(false);
-            }
-        }
-
-        // play the new music
-        _ctx.getWorldController().handlePlayMusic(audio);
-        _musicPlayCount = _roomObj.playCount;
-
-        if (dispatchStarted) {
-            for each (entity in _entities.values()) {
-                entity.processMusicStartStop(true);
-            }
-        }
     }
 
     protected function addBody (occInfo :OccupantInfo) :void
@@ -658,41 +600,6 @@ public class RoomObjectView extends RoomView
                 addBody(occInfo);
             }
         }
-    }
-
-    /**
-     * Called after we've told the music player about our music and the state changes.
-     */
-    protected function handleMusicStateChanged (event :ValueEvent) :void
-    {
-        if (event.value == MediaPlayerCodes.STATE_STOPPED) {
-            _roomObj.orthRoomService.songEnded(_musicPlayCount);
-        }
-    }
-
-    /**
-     * Dispatch music metadata to all entites.
-     */
-    protected function handleMusicMetadata (event :ValueEvent) :void
-    {
-        var metadata :Object = new ImmutableProxyObject(event.value);
-        for each (var entity :EntitySprite in _entities.values()) {
-            entity.processMusicId3(metadata);
-        }
-    }
-
-    override public function getMusicId3 () :Object
-    {
-        var metadata :Object = _ctx.getWorldController().getMusicPlayer().getMetadata();
-        // if non-null, wrap it up to prevent the users from fucking it up
-        return (metadata == null) ? null : new ImmutableProxyObject(metadata);
-    }
-
-    override public function getMusicOwner () :int
-    {
-        var audio :Audio =
-            _roomObj.playlist.get(new SimpleEntityIdent(Item.AUDIO, _roomObj.currentSongId)) as Audio;
-        return (audio == null) ? 0 : audio.ownerId;
     }
 
     /** _ctrl, casted as a RoomObjectController. */

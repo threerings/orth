@@ -8,6 +8,7 @@ import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
 import com.threerings.flex.CommandMenu;
+import com.threerings.orth.chat.client.ChatOverlay;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.Resources;
 import com.threerings.orth.client.TopPanel;
@@ -424,139 +425,12 @@ public class RoomObjectController extends RoomController
         return _updates.length != 0;
     }
 
-    /**
-     * This is called from JavaScript to select this room's decor, audio, or add a piece of furni.
-     */
-    public function useItem (itemType :int, itemId :int) :void
-    {
-        if (itemType == Item.AVATAR) {
-            _wdctx.getWorldDirector().setAvatar(itemId);
-            return;
-        }
-        if (itemType == Item.PET) {
-            var svc :PetService = _ctx.getClient().requireService(PetService) as PetService;
-            svc.callPet(itemId, _wdctx.confirmListener("m.pet_called"));
-            return;
-        }
-
-        if (itemType == Item.AUDIO) {
-            // no-op if it's already here
-            if (_roomObj.playlist.containsKey(new SimpleEntityIdent(itemType, itemId))) {
-                return;
-            }
-            if ((_scene.getPlaylistControl() != OrthSceneModel.ACCESS_EVERYONE) &&
-                    !canManageRoom()) {
-                _wdctx.displayFeedback(OrthCodes.WORLD_MSGS, "e.no_playlist_perm");
-                return;
-            }
-
-        } else {
-            if (!canManageRoom()) {
-                _wdctx.displayFeedback(OrthCodes.EDITING_MSGS, "e.no_permission");
-                return;
-            }
-        }
-
-        if (itemType != Item.DECOR && itemType != Item.AUDIO) {
-            _openEditor = true;
-        }
-
-        var isvc :ItemService = _wdctx.getClient().requireService(ItemService) as ItemService;
-        var ident :EntityIdent = new SimpleEntityIdent(itemType, itemId);
-
-        var gotItem :Function = function (item :Item) :void {
-            // a function we'll invoke when we're ready to use the item
-            var useNewItem :Function = function () :void {
-                if (item.getType() == Item.DECOR) {
-                    var newScene :OrthScene = _scene.clone() as OrthScene;
-                    var newSceneModel :OrthSceneModel = OrthSceneModel(newScene.getSceneModel());
-                    newSceneModel.decor = item as Decor;
-                    applyUpdate(new SceneUpdateAction(_wdctx, _scene, newScene));
-
-                } else if (item.getType() == Item.AUDIO) {
-                    // audio is different
-                    var rsp :String = "m.music_added" + (canManageRoom(0, false) ? "" : "_temp");
-                    _roomObj.orthRoomService.modifyPlaylist(item.itemId, true,
-                        _wdctx.confirmListener(rsp, OrthCodes.WORLD_MSGS));
-
-                } else {
-                    // create a generic furniture descriptor
-                    var furni :FurniData = new FurniData();
-                    furni.id = _scene.getNextFurniId(0);
-                    furni.itemType = item.getType();
-                    furni.itemId = item.itemId;
-                    furni.media = item.getFurniMedia();
-                    if (item is Furniture) {
-                        furni.hotSpotX = (item as Furniture).hotSpotX;
-                        furni.hotSpotY = (item as Furniture).hotSpotY;
-                    }
-                    // create it at the front of the scene, centered on the floor
-                    _roomView.setInitialFurniLocation(furni);
-                    applyUpdate(new FurniUpdateAction(_wdctx, null, furni));
-                }
-            };
-
-            if (item.isUsed()) {
-                var msg :String = Item.getTypeKey(itemType);
-                (new ItemUsedDialog(_wdctx, Msgs.ITEM.get(msg), function () :void {
-                    isvc.reclaimItem(ident,
-                        _wdctx.confirmListener(useNewItem, OrthCodes.EDITING_MSGS,
-                            "e.failed_to_remove", null, "Failed to reclaim item", "item", ident));
-                })).open(true);
-            } else {
-                useNewItem();
-            }
-        };
-
-        isvc.peepItem(ident, _wdctx.resultListener(gotItem, OrthCodes.EDITING_MSGS));
-    }
-
-    /**
-     * This is called from JavaScript to clear an item from use, be it furni, decor, a pet, etc.
-     */
-    public function clearItem (itemType :int, itemId :int) :void
-    {
-        if (itemType == Item.AVATAR) {
-            _wdctx.getWorldDirector().setAvatar(0);
-
-        } else if (itemType == Item.PET) {
-            // ensure this pet really is in this room
-            for each (var pet :PetSprite in _roomObjectView.getPets()) {
-                if (pet.getEntityIdent().itemId == itemId) {
-                    handleOrderPet(itemId, Pet.ORDER_SLEEP);
-                    break;
-                }
-            }
-
-        } else if (itemType == Item.AUDIO) {
-            // only send a request if it's even here
-            if (_roomObj.playlist.containsKey(new SimpleEntityIdent(itemType, itemId))) {
-                _roomObj.orthRoomService.modifyPlaylist(itemId, false,
-                    _wdctx.confirmListener("m.music_removed", OrthCodes.WORLD_MSGS));
-            }
-
-        } else if (itemType == Item.DECOR) {
-            var newScene :OrthScene = _scene.clone() as OrthScene;
-            var newSceneModel :OrthSceneModel = (newScene.getSceneModel() as OrthSceneModel);
-            newSceneModel.decor = OrthSceneModel.defaultOrthSceneModelDecor();
-            applyUpdate(new SceneUpdateAction(_wdctx, _scene, newScene));
-
-        } else {
-            for each (var furni :FurniData in _scene.getFurni()) {
-                if (furni.itemType == itemType && furni.itemId == itemId) {
-                    applyUpdate(new FurniUpdateAction(_wdctx, furni, null));
-                    break;
-                }
-            }
-        }
-    }
-
     // documentation inherited
     override public function willEnterPlace (plobj :PlaceObject) :void
     {
         super.willEnterPlace(plobj);
 
-        _roomObj = (plobj as RoomObject);
+        _roomObj = (plobj as OrthRoomObject);
         _roomObj.addListener(_roomAttrListener);
 
         // report our location name and owner to interested listeners
