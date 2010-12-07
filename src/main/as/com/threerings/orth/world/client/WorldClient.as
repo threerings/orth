@@ -2,7 +2,7 @@
 // $Id: WorldClient.as 19262 2010-07-13 22:28:11Z zell $
 
 package com.threerings.orth.world.client {
-import com.adobe.crypto.MD5;
+
 import com.threerings.crowd.client.CrowdClient;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
@@ -20,13 +20,11 @@ import flash.utils.Dictionary;
 import mx.core.Application;
 
 import com.threerings.util.Log;
-import com.threerings.util.Name;
 
 import com.threerings.presents.client.ClientAdapter;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.net.BootstrapData;
-import com.threerings.presents.net.Credentials;
 
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.Prefs;
@@ -58,8 +56,12 @@ public class WorldClient extends CrowdClient
 
         log.info("Starting up", "capabilities", Capabilities.serverString);
 
-        // now create our credentials and context
-        setCredentials(createStartupCreds(null));
+        // now create our credentials
+        var creds :WorldCredentials = createStartupCreds();
+        creds.ident = Prefs.getMachineIdent();
+        setCredentials(creds);
+
+        //  and context
         _wctx = WorldContext(createContext());
 
         // prior to logging on to a server, set up our security policy for that server
@@ -133,6 +135,12 @@ public class WorldClient extends CrowdClient
         return new WorldContext(this);
     }
 
+
+    protected function createStartupCreds () :WorldCredentials
+    {
+        throw new Error("abstract");
+    }
+
     /**
      * Called to process ContextMenuEvent.MENU_SELECT.
      */
@@ -177,28 +185,6 @@ public class WorldClient extends CrowdClient
         } catch (e :Error) {
             log.warning("Error populating context menu", e);
         }
-    }
-
-    protected function createStartupCreds (token :String) :Credentials
-    {
-        var params :Object = OrthParameters.get();
-        var creds :WorldCredentials;
-        var anonymous :Boolean;
-
-        if ((params["pass"] != null) && (params["user"] != null)) {
-            creds = new WorldCredentials(
-                new Name(String(params["user"])), MD5.hash(String(params["pass"])));
-            anonymous = false;
-
-        } else {
-            creds = new WorldCredentials(null, null);
-            anonymous = true;
-        }
-
-        creds.sessionToken = (token == null) ? params["token"] : token;
-        creds.ident = Prefs.getMachineIdent();
-
-        return creds;
     }
 
     protected var _app :Application;

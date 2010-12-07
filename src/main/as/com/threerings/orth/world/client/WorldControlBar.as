@@ -2,6 +2,8 @@
 // $Id: WorldControlBar.as 18485 2009-10-24 01:12:12Z jamie $
 
 package com.threerings.orth.world.client {
+import com.threerings.orth.room.client.RoomView;
+import com.threerings.orth.ui.FloatingPanel;
 
 import flash.events.MouseEvent;
 

@@ -2,7 +2,8 @@
 // $Id: MediaDirector.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.room.client {
-
+import com.threerings.orth.entity.client.MemberSprite;
+import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.BasicDirector;

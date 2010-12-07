@@ -8,6 +8,9 @@ public class OrthSceneCodes
     /** A message event type dispatched on the room object. */
     public static const SPRITE_SIGNAL :String = "sprSig";
 
+    /** A message even dispatched on the member object to followers. */
+    public static const FOLLOWEE_MOVED :String = "folMov";
+    
     /** A room layer that is in front of normal furniture and such. */
     public static const FOREGROUND_LAYER :int = 0;
 

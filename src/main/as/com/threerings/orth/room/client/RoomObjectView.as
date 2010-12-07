@@ -13,11 +13,14 @@ import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
+import com.threerings.orth.room.data.FurniUpdate_Remove;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneCodes;
 import com.threerings.orth.room.data.OrthRoomObject;
+import com.threerings.orth.room.data.PlayerInfo;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.world.client.WorldController;
 
 import flash.events.Event;
 
@@ -116,7 +119,7 @@ public class RoomObjectView extends RoomView
         if (_zoom == null) {
             _zoom = Prefs.getRoomZoom();
         }
-        return _ctx.getMsoyClient().isChromeless() ? FIT_WIDTH : super.getZoom();
+        return super.getZoom();
     }
 
     // from Zoomable, via RoomView
@@ -404,9 +407,6 @@ public class RoomObjectView extends RoomView
         rereadScene();
         updateAllFurni();
 
-        // listen for client minimization events
-        _ctx.getClient().addEventListener(MsoyClient.MINI_WILL_CHANGE, miniWillChange);
-
         _roomObj.addListener(this);
 
         var player :AudioPlayer = _ctx.getWorldController().getMusicPlayer();
@@ -457,9 +457,6 @@ public class RoomObjectView extends RoomView
         if (comicOverlay != null) {
             comicOverlay.didLeavePlace(this);
         }
-
-        // stop listening for client minimization events
-        _ctx.getClient().removeEventListener(MsoyClient.MINI_WILL_CHANGE, miniWillChange);
 
         removeAllOccupants();
 
@@ -526,14 +523,6 @@ public class RoomObjectView extends RoomView
         updateBackgroundAudio();
 
         _octrl.backgroundFinishedLoading();
-    }
-
-    /**
-     * Called when the client is minimized or unminimized.
-     */
-    protected function miniWillChange (event :ValueEvent) :void
-    {
-        relayout();
     }
 
     /**

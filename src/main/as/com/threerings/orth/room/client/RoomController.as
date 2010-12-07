@@ -21,6 +21,7 @@ import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.world.client.WorldControlBar;
 import com.threerings.util.Log;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;

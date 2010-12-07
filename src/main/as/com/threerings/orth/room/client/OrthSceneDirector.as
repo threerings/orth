@@ -11,6 +11,7 @@ import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
 import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldController;
 import com.threerings.presents.client.Client;
@@ -207,23 +208,16 @@ public class OrthSceneDirector extends SceneDirector
 
         // we have nowhere to go back. let's just go home.
         var memberId :int = _worldctx.getMyId();
-        if (!OrthName.isViewer(memberId)) {
-            log.info("Scene locked, returning home", "memberId", memberId);
-            ctrl.handleGoMemberHome(memberId);
-            return;
-        }
-
-        // we're a viewer and don't have a home! just go to the generic public area.
-        log.info("Scene locked, am viewer, have no home, going to common scene.");
-        var commonAreaId :int = 1; // = SceneRecord.PUBLIC_ROOM.getSceneId()
-        ctrl.handleGoScene(commonAreaId);
+        log.info("Scene locked, returning home", "memberId", memberId);
+        ctrl.handleGoMemberHome(memberId);
+        return;
     }
 
     protected function memberMessageReceived (event :MessageEvent) :void
     {
         if (event.getName() == OrthSceneCodes.FOLLOWEE_MOVED) {
             var sceneId :int = int(event.getArgs()[0]);
-            log.info("Following " + _worldctx.getMemberObject().following + " to " + sceneId + ".");
+            log.info("Following " + _worldctx.getPlayerObject().following + " to " + sceneId + ".");
             moveTo(sceneId);
         }
     }

@@ -3,7 +3,6 @@
 
 package com.threerings.orth.room.data {
 
-import com.threerings.io.Streamable;
 import com.threerings.util.ByteEnum;
 
 public class FurniAction extends ByteEnum

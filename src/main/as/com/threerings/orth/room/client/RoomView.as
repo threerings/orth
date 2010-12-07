@@ -2,6 +2,7 @@
 // $Id: RoomView.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.entity.client.Decor;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.client.OrthPlaceView;
 import com.threerings.orth.data.MediaDesc;
@@ -260,7 +261,7 @@ public class RoomView extends Sprite
         _layout.updateScreenLocation(sprite, sprite.getLayoutHotSpot());
 
         if (sprite == _bg && _scene.getSceneType() == DecorCodes.FIXED_IMAGE) {
-            sprite.x += getScrollOffset();
+            sprite.viz.x += getScrollOffset();
         }
 
         // if we moved the _centerSprite, possibly update the scroll position
@@ -496,7 +497,7 @@ public class RoomView extends Sprite
     /**
      * Sets the background sprite. If the data value is null, simply removes the old one.
      */
-    public function setBackground (decor :DecorGeometry) :void
+    public function setBackground (decor :Decor) :void
     {
         if (_bg != null) {
             removeSprite(_bg);

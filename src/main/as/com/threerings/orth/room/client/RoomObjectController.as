@@ -10,11 +10,15 @@ import com.threerings.crowd.util.CrowdContext;
 import com.threerings.flex.CommandMenu;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.Resources;
+import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.client.UberClient;
+import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.PlayerObject;
 import com.threerings.orth.entity.client.ActorSprite;
+import com.threerings.orth.entity.client.Avatar;
+import com.threerings.orth.entity.client.Decor;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
@@ -30,8 +34,11 @@ import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
 import com.threerings.orth.room.data.PetInfo;
 import com.threerings.orth.room.data.PetName;
+import com.threerings.orth.room.data.PlayerInfo;
 import com.threerings.orth.room.data.SimpleEntityIdent;
+import com.threerings.orth.ui.MediaWrapper;
 import com.threerings.orth.world.client.BootablePlaceController;
+import com.threerings.orth.world.client.WorldControlBar;
 import com.threerings.orth.world.client.WorldController;
 import com.threerings.presents.dobj.AttributeChangeAdapter;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -137,7 +144,7 @@ public class RoomObjectController extends RoomController
      */
     override public function requestMove (ident :EntityIdent, newloc :OrthLocation) :Boolean
     {
-        throttle(ident, _roomObj.roomService.changeLocation, ident, newloc);
+        throttle(ident, _roomObj.orthRoomService.changeLocation, ident, newloc);
         return true;
     }
 
@@ -161,7 +168,7 @@ public class RoomObjectController extends RoomController
         var handleResult :Function = function (result :Object) :void {
             DoorTargetEditController.start(furniData, _wdctx);
         };
-        _roomObj.roomService.editRoom(_wdctx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
+        _roomObj.orthRoomService.editRoom(_wdctx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
     }
 
     /**
@@ -191,7 +198,7 @@ public class RoomObjectController extends RoomController
         var handleResult :Function = function (result :Object) :void {
             beginRoomEditing();
         };
-        _roomObj.roomService.editRoom(_wdctx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
+        _roomObj.orthRoomService.editRoom(_wdctx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
     }
 
     /**
@@ -199,7 +206,7 @@ public class RoomObjectController extends RoomController
      */
     public function handleRoomRate (rating :Number) :void
     {
-        _roomObj.roomService.rateRoom(rating, _wdctx.listener());
+        _roomObj.orthRoomService.rateRoom(rating, _wdctx.listener());
     }
 
     /**
@@ -207,7 +214,7 @@ public class RoomObjectController extends RoomController
      */
     public function handlePublishRoom () :void
     {
-        _roomObj.roomService.publishRoom(_wdctx.listener(OrthCodes.EDITING_MSGS));
+        _roomObj.orthRoomService.publishRoom(_wdctx.listener(OrthCodes.EDITING_MSGS));
 
         // TODO: remove this bubbley hint someday?
         BubblePopup.showHelpBubble(_wdctx, _wdctx.getControlBar().shareBtn,
@@ -388,7 +395,7 @@ public class RoomObjectController extends RoomController
 
     override public function rateRoom (rating :Number, onSuccess :Function) :void
     {
-        _roomObj.roomService.rateRoom(rating, _wdctx.resultListener(onSuccess));
+        _roomObj.orthRoomService.rateRoom(rating, _wdctx.resultListener(onSuccess));
     }
 
     /**
@@ -469,7 +476,7 @@ public class RoomObjectController extends RoomController
                 } else if (item.getType() == Item.AUDIO) {
                     // audio is different
                     var rsp :String = "m.music_added" + (canManageRoom(0, false) ? "" : "_temp");
-                    _roomObj.roomService.modifyPlaylist(item.itemId, true,
+                    _roomObj.orthRoomService.modifyPlaylist(item.itemId, true,
                         _wdctx.confirmListener(rsp, OrthCodes.WORLD_MSGS));
 
                 } else {
@@ -524,7 +531,7 @@ public class RoomObjectController extends RoomController
         } else if (itemType == Item.AUDIO) {
             // only send a request if it's even here
             if (_roomObj.playlist.containsKey(new SimpleEntityIdent(itemType, itemId))) {
-                _roomObj.roomService.modifyPlaylist(itemId, false,
+                _roomObj.orthRoomService.modifyPlaylist(itemId, false,
                     _wdctx.confirmListener("m.music_removed", OrthCodes.WORLD_MSGS));
             }
 
@@ -579,10 +586,6 @@ public class RoomObjectController extends RoomController
         _roomView.addEventListener(Event.ENTER_FRAME, checkMouse, false, int.MIN_VALUE);
         _roomView.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyEvent);
         _roomView.stage.addEventListener(KeyboardEvent.KEY_UP, keyEvent);
-
-        // watch for when we're un-minimized and the display list is valid, so that we can open the
-        // editor, and place things correctly when necessary
-        _ctx.getClient().addEventListener(MsoyClient.MINI_WILL_CHANGE, miniWillChange);
     }
 
     // documentation inherited
@@ -595,8 +598,6 @@ public class RoomObjectController extends RoomController
 
         _wdctx.getChatDirector().unregisterCommandHandler(Msgs.CHAT, "action");
         _wdctx.getChatDirector().unregisterCommandHandler(Msgs.CHAT, "state");
-
-        _ctx.getClient().removeEventListener(MsoyClient.MINI_WILL_CHANGE, miniWillChange);
 
         _roomView.removeEventListener(MouseEvent.CLICK, mouseClicked);
         _roomView.removeEventListener(Event.ENTER_FRAME, checkMouse);
@@ -615,19 +616,6 @@ public class RoomObjectController extends RoomController
         _scene = null;
 
         super.didLeavePlace(plobj);
-    }
-
-    /**
-     * Called when the client is minimized and unminimized.
-     */
-    protected function miniWillChange (event :ValueEvent) :void
-    {
-        if (!(event.value as Boolean)) {
-            if (_openEditor && !isRoomEditing()) {
-                beginRoomEditing();
-            }
-            _openEditor = false;
-        }
     }
 
     /**
@@ -653,7 +641,7 @@ public class RoomObjectController extends RoomController
      */
     protected function updateRoom (update :SceneUpdate) :void
     {
-        _roomObj.roomService.updateRoom(update, _wdctx.listener(OrthCodes.EDITING_MSGS));
+        _roomObj.orthRoomService.updateRoom(update, _wdctx.listener(OrthCodes.EDITING_MSGS));
     }
 
     override protected function checkMouse2 (
@@ -677,21 +665,21 @@ public class RoomObjectController extends RoomController
     override protected function setActorState2 (
         ident :EntityIdent, actorOid :int, state :String) :void
     {
-        throttle(ident, _roomObj.roomService.setActorState, ident, actorOid, state);
+        throttle(ident, _roomObj.orthRoomService.setActorState, ident, actorOid, state);
     }
 
     // documentation inherited
     override protected function sendSpriteMessage2 (
         ident :EntityIdent, name :String, data :ByteArray, isAction :Boolean) :void
     {
-        throttle(ident, _roomObj.roomService.sendSpriteMessage, ident, name, data, isAction);
+        throttle(ident, _roomObj.orthRoomService.sendSpriteMessage, ident, name, data, isAction);
     }
 
     // documentation inherited
     override protected function sendSpriteSignal2 (
         ident :EntityIdent, name :String, data :ByteArray) :void
     {
-        throttle(ident, _roomObj.roomService.sendSpriteSignal, name, data);
+        throttle(ident, _roomObj.orthRoomService.sendSpriteSignal, name, data);
     }
 
     // documentation inherited
@@ -717,7 +705,7 @@ public class RoomObjectController extends RoomController
         };
 
         // ship the update request off to the server
-        throttle(ident, _roomObj.roomService.updateMemory,
+        throttle(ident, _roomObj.orthRoomService.updateMemory,
             ident, key, data, _wdctx.resultListener(resultHandler));
     }
 

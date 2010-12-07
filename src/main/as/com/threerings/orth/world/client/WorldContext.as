@@ -18,6 +18,7 @@ import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.room.client.MediaDirector;
 import com.threerings.orth.room.client.OrthSceneDirector;
 import com.threerings.orth.notify.client.NotificationDirector;
+import com.threerings.orth.room.client.persist.RuntimeSceneRepository;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ConfirmAdapter;
 import com.threerings.presents.client.InvocationAdapter;
