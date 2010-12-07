@@ -3,8 +3,8 @@
 
 package com.threerings.orth.world.client {
 import com.adobe.crypto.MD5;
+import com.threerings.crowd.client.CrowdClient;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.OrthClient;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.ui.MenuUtil;
 
@@ -38,17 +38,23 @@ import com.threerings.orth.world.data.WorldCredentials;
 /**
  * Handles the main services for the world and game clients.
  */
-public class WorldClient extends OrthClient
+public class WorldClient extends CrowdClient
 {
     WorldMarshaller; // static reference for deserialization
 
     public function WorldClient (app :Application, version :String, host :String,
         ports :Array, socketPolicyPort :int)
     {
-        super(version, host, ports);
+        super(null);
 
         _app = app;
         _socketPolicyPort = socketPolicyPort;
+
+        // configure our version
+        setVersion(version);
+
+        // configure our server and port info
+        setServer(host, ports);
 
         log.info("Starting up", "capabilities", Capabilities.serverString);
 
@@ -65,6 +71,7 @@ public class WorldClient extends OrthClient
         app.contextMenu = menu;
         menu.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenuWillPopUp);
 
+        // finally logon
         logon();
     }
 
@@ -121,7 +128,7 @@ public class WorldClient extends OrthClient
     /**
      * Creates the context we'll use with this client.
      */
-    override protected function createContext () :OrthContext
+    protected function createContext () :OrthContext
     {
         return new WorldContext(this);
     }
