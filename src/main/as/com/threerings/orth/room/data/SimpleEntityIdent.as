@@ -9,6 +9,13 @@ import com.threerings.util.ComparisonChain;
 
 public class SimpleEntityIdent implements EntityIdent
 {
+    public static function fromString (entityId :String):EntityIdent
+    {
+        var tokens :Array = entityId.split(":");
+
+        return new SimpleEntityIdent(tokens[0], tokens[1]);
+    }
+
     public function SimpleEntityIdent (type :int, id :int)
     {
         _type = type;

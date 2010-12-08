@@ -9,7 +9,7 @@ import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthSceneCodes;
-import com.threerings.orth.ui.MediaDescContainer;
+import com.threerings.orth.room.data.SimpleEntityIdent;
 import com.threerings.orth.world.client.WorldContext;
 
 import flash.display.BitmapData;
@@ -511,8 +511,6 @@ public class EntitySprite
      */
     protected function setEntityIdent (ident :EntityIdent) :void
     {
-        _sprite.setItem(ident);
-
         _ident = ident;
     }
 
@@ -853,7 +851,7 @@ public class EntitySprite
         var ctrl :RoomController = getController();
 
         return (ctrl == null) ? null :
-            ctrl.getEntityProperty(Ident.fromString(entityId), key);
+            ctrl.getEntityProperty(SimpleEntityIdent.fromString(entityId), key);
     }
 
     /**
