@@ -2,7 +2,7 @@
 // $Id: EntitySprite.as 19612 2010-11-23 16:13:06Z zell $
 
 package com.threerings.orth.entity.client {
-
+import com.threerings.orth.room.client.EntityMediaContainer;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomElement;
 import com.threerings.orth.room.client.RoomView;
@@ -72,7 +72,7 @@ public class EntitySprite
      * Return the OrthMediaContainer that depicts this logical sprite. This value never changes and
      * is never null.
      */
-    public function get viz () :MediaDescContainer
+    public function get viz () :EntityMediaContainer
     {
         return _sprite;
     }
@@ -485,9 +485,9 @@ public class EntitySprite
      * Create and return the visual representation of this room entity. This may be overridden
      * by subclasses to return specific implementations.
      */
-    protected function createVisualization () :MediaDescContainer
+    protected function createVisualization () :EntityMediaContainer
     {
-        return new MediaDescContainer();
+        return new EntityMediaContainer();
     }
 
     protected function mediaWillShutdown (event :ValueEvent) :void
@@ -853,7 +853,7 @@ public class EntitySprite
         var ctrl :RoomController = getController();
 
         return (ctrl == null) ? null :
-            ctrl.getEntityProperty(ItemIdent.fromString(entityId), key);
+            ctrl.getEntityProperty(Ident.fromString(entityId), key);
     }
 
     /**
@@ -940,7 +940,7 @@ public class EntitySprite
     }
 
     /** The visual representation of us. */
-    protected var _sprite :MediaDescContainer;
+    protected var _sprite :EntityMediaContainer;
 
     /** The giver of life. */
     protected var _ctx :WorldContext;

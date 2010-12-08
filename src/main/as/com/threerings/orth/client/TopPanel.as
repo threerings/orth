@@ -2,6 +2,7 @@
 // $Id: $
 
 package com.threerings.orth.client {
+import com.threerings.orth.chat.client.ChatOverlay;
 import com.threerings.orth.chat.client.ComicOverlay;
 
 import flash.events.Event;
@@ -17,11 +18,6 @@ import mx.controls.Label;
 import mx.controls.scrollClasses.ScrollBar;
 
 import com.threerings.crowd.client.PlaceView;
-import com.threerings.util.ValueEvent;
-
-import com.threerings.msoy.chat.client.ChatTabBar;
-import com.threerings.msoy.chat.client.ChatOverlay;
-import com.threerings.msoy.chat.client.ComicOverlay;
 
 import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.world.client.WorldContext;
@@ -87,7 +83,7 @@ public class TopPanel extends Canvas
         addChild(_controlBar);
 
         // show a subtle build-stamp on dev builds
-        if (DeploymentConfig.devDeployment) {
+        if (_ctx.isDevelopment()) {
             var buildStamp :Label = new Label();
             buildStamp.includeInLayout = false;
             buildStamp.mouseEnabled = false;
@@ -158,7 +154,7 @@ public class TopPanel extends Canvas
     /**
      * Sets the specified view as the current place view.
      */
-    public function setPlaceView (view :PlaceView) :void
+    public function setPlaceView (view :OrthPlaceView) :void
     {
         _placeBox.setPlaceView(view);
         layoutPanels();
@@ -273,7 +269,7 @@ public class TopPanel extends Canvas
      */
     public function getHeaderBarHeight () :int
     {
-        return HeaderBar.getHeight(_ctx.getOrthClient());
+        return HeaderBar.getHeight(_ctx.getWorldClient());
     }
 
     protected function stageResized (event :Event) :void

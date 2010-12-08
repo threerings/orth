@@ -12,7 +12,9 @@ import com.threerings.flex.CommandButton;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.TopPanel;
+import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.MediaDesc;
+import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.PlayerObject;
@@ -20,9 +22,12 @@ import com.threerings.orth.room.client.RoomObjectController;
 import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.OrthPlaceInfo;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
 import com.threerings.orth.room.data.PetName;
+import com.threerings.orth.ui.MediaWrapper;
+import com.threerings.orth.world.data.WorldCredentials;
 import com.threerings.presents.client.Client;
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.CommandEvent;
@@ -164,12 +169,6 @@ public class WorldController
     /** Command to complain about a member. */
     public static const COMPLAIN_MEMBER :String = "ComplainMember";
 
-    /** Command to play music. Arg: null to stop, or [ Audio, playCounter (int) ] */
-    public static const PLAY_MUSIC :String = "PlayMusic";
-
-    /** Get info about the currently-playing music. */
-    public static const MUSIC_INFO :String = "MusicInfo";
-
     /** Command to join a party. */
     public static const JOIN_PARTY :String = "JoinParty";
 
@@ -178,9 +177,6 @@ public class WorldController
 
     /** Command to request detailed info on a party. */
     public static const GET_PARTY_DETAIL :String = "GetPartyDetail";
-
-    // statically reference classes we require
-    ItemMarshaller;
 
     public function WorldController (ctx :WorldContext, topPanel :TopPanel)
     {
@@ -215,10 +211,10 @@ public class WorldController
     /**
      * Returns information about the place or places the user is currently in.
      */
-    public function getPlaceInfo () :PlaceInfo
+    public function getPlaceInfo () :OrthPlaceInfo
     {
 
-        var plinfo :PlaceInfo = new PlaceInfo();
+        var plinfo :OrthPlaceInfo = new OrthPlaceInfo();
 
         var scene :Scene = _wctx.getSceneDirector().getScene();
         plinfo.sceneId = (scene == null) ? 0 : scene.getId();
@@ -294,14 +290,14 @@ public class WorldController
     {
         var memberObj :PlayerObject = _wctx.getPlayerObject();
 
-        var name :Name = (_wctx.getClient().getCredentials() as MsoyCredentials).getUsername();
+        var name :Name = (_wctx.getClient().getCredentials() as OrthCredentials).getUsername();
         if (name != null) {
             Prefs.setUsername(name.toString());
         }
 
         if (!_didFirstLogonGo) {
             _didFirstLogonGo = true;
-            goToPlace(MsoyParameters.get());
+            goToPlace(OrthParameters.get());
         } else if (_postLogonScene != 0) {
             // we gotta go somewhere
             _wctx.getSceneDirector().moveTo(_postLogonScene);
@@ -440,7 +436,7 @@ public class WorldController
     public function handlePopMemberMenu (name :String, memberId :int) :void
     {
         var menuItems :Array = [];
-        // reconstitute the memberName from args
+        // reconstitute the playerName from args
         var memName :OrthName = new OrthName(name, memberId);
         addMemberMenuItems(memName, menuItems);
         CommandMenu.createMenu(menuItems, _wctx.getTopPanel()).popUpAtMouse();
@@ -464,7 +460,7 @@ public class WorldController
             return;
         }
         // if we're in the whirled, closing means closing the flash client totally
-        _wctx.getOrthClient().closeClient();
+        _wctx.getWorldClient().closeClient();
     }
 
     /**
@@ -569,7 +565,7 @@ public class WorldController
         // give the client a chance to log off, then log back on
         _topPanel.callLater(function () :void {
             var client :Client = _wctx.getClient();
-            log.info("Logging on", "creds", creds, "version", DeploymentConfig.version);
+            log.info("Logging on", "creds", creds, "version", _wctx.getVersion());
             client.setCredentials(creds);
             client.logon();
         });
@@ -588,7 +584,7 @@ public class WorldController
      */
     public function handleOpenChannel (name :Name) :void
     {
-        _wctx.getMsoyChatDirector().openChannel(name);
+        _wctx.getOrthChatDirector().openChannel(name);
     }
 
     /**
@@ -605,7 +601,7 @@ public class WorldController
         var menuData :Array = [];
         menuData.push({ label: Msgs.GENERAL.get("b.chatPrefs"), command: CHAT_PREFS });
         menuData.push({ label: Msgs.GENERAL.get("b.clearChat"),
-            callback: _wctx.getMsoyChatDirector().clearAllDisplays });
+            callback: _wctx.getOrthChatDirector().clearAllDisplays });
         CommandMenu.addSeparator(menuData);
 
         const place :PlaceView = _wctx.getPlaceView();
@@ -774,36 +770,6 @@ public class WorldController
     }
 
     /**
-     * Handles PLAY_MUSIC.
-     */
-    public function handlePlayMusic (music :Audio) :void
-    {
-        if (!Util.equals(music, _music)) {
-            _musicInfoShown = false;
-        }
-        _music = music;
-
-        _musicPlayer.unload();
-
-        const play :Boolean = (music != null) && (Prefs.getSoundVolume() > 0);
-        if (play) {
-            _musicPlayer.load(music.audioMedia.getMediaPath(),
-                [ music.audioMedia, music.getIdent() ]);
-        }
-        if (music == null && _musicDialog != null) {
-            _musicDialog.close();
-        }
-    }
-
-    /**
-     * Handles MUSIC_INFO.
-     */
-    public function handleMusicInfo () :void
-    {
-        handleViewItem(_music.getIdent());
-    }
-
-    /**
      * Handles INVITE_TO_PARTY.
      */
     public function handleInviteToParty (memberId :int) :void
@@ -958,7 +924,7 @@ public class WorldController
         var icon :* = null;
         if (isUs) {
             icon = MediaWrapper.createView(
-                us.memberName.getPhoto(), MediaDescSize.QUARTER_THUMBNAIL_SIZE);
+                us.playerName.getPhoto(), MediaDescSize.QUARTER_THUMBNAIL_SIZE);
 //        } else if (name is VizOrthName) {
 //            icon = MediaWrapper.createView(
 //                VizOrthName(name).getPhoto(), MediaDesc.QUARTER_THUMBNAIL_SIZE);
@@ -1028,7 +994,7 @@ public class WorldController
         }
 
         // login/logout
-        if (isUs && !_wctx.getOrthClient().getEmbedding().hasGWT()) {
+        if (isUs && !_wctx.getWorldClient().getEmbedding().hasGWT()) {
             var creds :WorldCredentials = new WorldCredentials(null, null);
             creds.ident = "";
             menuItems.push({ label: Msgs.GENERAL.get("b.logout"),
@@ -1418,20 +1384,6 @@ public class WorldController
         }
     }
 
-    protected function doShowMusic (trigger :Button) :void
-    {
-        if (_music != null && _musicDialog == null) {
-            var room :RoomObject = _wctx.getLocationDirector().getPlaceObject() as RoomObject;
-            var scene :OrthScene = _wctx.getSceneDirector().getScene() as OrthScene;
-            _musicDialog = new PlaylistMusicDialog(
-                _wctx, trigger.localToGlobal(new Point()), room, scene);
-            _musicDialog.addCloseCallback(function () :void {
-                _musicDialog = null;
-            });
-            _musicDialog.open();
-        }
-    }
-
     protected function addFrameColorOption (menuData :Array) :void
     {
         menuData.push({ label: Msgs.GENERAL.get("b.frame_color"),
@@ -1452,17 +1404,6 @@ public class WorldController
     /** Giver of life, context. */
     protected var _wctx :WorldContext;
 
-    /** The player of music. */
-    protected var _musicPlayer :Mp3AudioPlayer = new Mp3AudioPlayer();
-
-    /** The currently playing music. */
-    protected var _music :Audio;
-
-    /** Have we displayed music info in a notification? */
-    protected var _musicInfoShown :Boolean;
-
-    protected var _musicDialog :PlaylistMusicDialog;
-
     protected var _snapPanel :SnapshotPanel;
 
     protected var _tablesPanel :TablesWaitingPanel;
@@ -1482,7 +1423,7 @@ public class WorldController
     /** Recently visited scenes, ordered from most-recent to least-recent */
     protected var _recentScenes :Array = [];
 
-    /** The topmost panel in the msoy client. */
+    /** The topmost panel in the orth client. */
     protected var _topPanel :TopPanel;
 
     /** A special logoff message to use when we disconnect. */

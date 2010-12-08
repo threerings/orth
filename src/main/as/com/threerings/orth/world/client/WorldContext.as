@@ -127,6 +127,11 @@ public class WorldContext
         }
     }
 
+    public function isDevelopment ():Boolean
+    {
+        return true;
+    }
+
     public function getVersion () :String
     {
         return "DEV";

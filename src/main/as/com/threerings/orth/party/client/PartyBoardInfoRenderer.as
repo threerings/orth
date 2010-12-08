@@ -2,6 +2,7 @@
 // $Id: PartyBoardInfoRenderer.as 19431 2010-10-22 22:08:36Z zell $
 
 package com.threerings.orth.party.client {
+import com.threerings.orth.data.MediaDescSize;
 
 import flash.events.MouseEvent;
 
