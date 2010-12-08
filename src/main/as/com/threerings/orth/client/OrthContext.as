@@ -14,6 +14,11 @@ public interface OrthContext
     function saveSessionToken (arsp :AuthResponseData) :void;
 
     /**
+     * Let us know whether or not this is a development environment.
+     */
+    function isDevelopment () :Boolean;
+
+    /**
      * Return the compiled version identifier for this client. This value is sent over the wire
      * to validate with the server.
      */
