@@ -1,0 +1,368 @@
+/**
+ * $Id$
+ *
+ * Our Flash client style sheet. Abandon hope all ye who enter here.
+ */
+
+Application {
+  backgroundColor: #ffffff;
+  backgroundGradientColors: #ffffff, #ffffff;
+  backgroundGradientAlphas: 0.83, 1;
+  themeColor: #000000;
+  color: #000000;
+}
+
+Panel {
+  backgroundAlpha: 1;
+  backgroundColor: #ffffff;
+  borderAlpha: 1;
+  borderColor: #000000;
+  borderThickness: 0;
+  borderThicknessLeft: 0;
+  borderThicknessRight: 0;
+  borderThicknessTop: 0;
+  borderThicknessBottom: 0;
+  cornerRadius: 0;
+  dropShadowColor: #443522;
+  dropShadowEnabled: true;
+  footerColors: #ffffff, #c7c7c7;
+  headerColors: #000000, #444444;
+  highlightAlphas: 0, 0;
+  modalTransparencyBlur: 0;
+  shadowDistance: 2;
+  textAlign: left;
+}
+
+TitleWindow {
+  roundedBottomCorners: true; /* false ? */
+  headerHeight: 23;
+  titleStyleName: "msoyTitleStyle";
+  closeButtonOverSkin: Embed(source="../../pages/images/ui/close_over.png");
+  closeButtonDisabledSkin: Embed(source="../../pages/images/ui/close.png");
+  closeButtonDownSkin: Embed(source="../../pages/images/ui/close_down.png");
+  closeButtonUpSkin: Embed(source="../../pages/images/ui/close.png");
+
+  borderColor: #3db8eb;
+  borderAlpha: 1;
+  borderThicknessLeft: 3;
+  borderThicknessRight: 3;
+  borderThicknessBottom: 3;
+  borderThicknessTop: 0;
+  borderThickness: 0;
+  borderSides: "left right bottom";
+  cornerRadius: 4;
+  backgroundColor: #FFFFFF;
+  backgroundAlpha: 0.90;
+  backgroundImage: null;
+  titleBackgroundSkin: Embed(source="../media/skins/window/sexy_title.png",
+          scaleGridTop="8", scaleGridBottom="14",
+          scaleGridLeft="8", scaleGridRight="28");
+  paddingTop: 10px;
+  paddingRight: 10px;
+  paddingBottom: 10px;
+  paddingLeft: 10px;
+
+  horizontalAlign: center;
+
+  /* this cascades to our children */
+  color: black;
+}
+
+List {
+  backgroundAlpha: 0;
+  borderStyle: none;
+}
+
+.comboDropdown {
+  /* Undo some of our above changes to List */
+  backgroundAlpha: 1;
+  borderStyle: "solid";
+}
+
+.sexyTabber {
+  backgroundAlpha: 0;
+  backgroundColor: #f97527;
+  borderStyle: solid;
+  borderColor: #000000;
+  borderThickness: 1;
+  horizontalGap: 2;
+  horizontalAlign: "center";
+  color: #000000;
+  tabStyleName: "sexyTab";
+}
+
+.sexyTab {
+  borderThickness: 1;
+  borderColor: #000000;
+  cornerRadius: 4;
+  color: #000000;
+  textRollOverColor: #000000;
+  backgroundAlpha: 1;
+  highlightAlphas: 0, 0;
+  fillAlphas: 1, 1;
+  fillColors: #3fa3cc, #3fa3cc;
+  fontFamily: "Arial";
+  fontSize: 12;
+}
+
+.msoyTitleStyle {
+  color: #FFFFFF;
+  fontWeight: bold;
+}
+
+.topPanel {
+  backgroundColor: #ffffff;
+}
+
+/*
+.accordianHeader {
+  fontFamily: Arial;
+  fontSize: 12px;
+  paddingLeft: 4px;
+  paddingTop: 4px;
+  paddingBottom: 4px;
+  paddingRight: 4px;
+}
+
+Accordion {
+  backgroundAlpha: 0;
+  headerStyleName: "accordianHeader";
+}
+*/
+
+/*Accordion {
+  headerHeight: 20;
+  dropShadowEnabled: true;
+  shadowDirection: center;
+  borderStyle: solid;
+  borderThickness: 5;
+  backgroundAlpha: 0.41;
+  highlightAlphas: 0, 0;
+  fillAlphas: 1, 1, 1, 1;
+  fillColors: #3e3123, #5c442d, #dbb56c, #fad58f;
+  selectedFillColors: #453929, #5c4932;
+  themeColor: #d8c49f;
+  borderColor: #d8c49f;
+  color: #d8c49f;
+  textRollOverColor: #fd019f;
+  textSelectedColor: #fd019f;
+  openDuration: 225;
+}*/
+
+TextInput {
+  backgroundAlpha: 1;
+  color: #000000;
+  backgroundColor: #e9f6fb;
+  backgroundDisabledColor: #eeeeee;
+  borderStyle: inset;
+  borderColor: #d5dcdf;
+  borderThickness: 2;
+  cornerRadius: 0;
+  textIndent: 2;
+  dropShadowEnabled: false;
+}
+
+TextArea {
+  color: black;
+}
+
+NumericStepper {
+  backgroundAlpha: 1;
+  color: #000000;
+  cornerRadius: 4;
+  highlightAlphas: 0, 0;
+  fillAlphas: 1, 1, 1, 1;
+  fillColors: #dadfe3, #9eabb2, #dadfe3, #9eabb2;
+}
+
+ComboBox {
+  fontSize: 9;
+  color: black;
+  disabledColor: #666666;
+  upSkin: Embed(source="../media/skins/combobox/up.png",
+          scaleGridTop="5", scaleGridBottom="13",
+          scaleGridLeft="5", scaleGridRight="40");
+  overSkin: Embed(source="../media/skins/combobox/up.png",
+          scaleGridTop="5", scaleGridBottom="13",
+          scaleGridLeft="5", scaleGridRight="40");
+  downSkin: Embed(source="../media/skins/combobox/up.png",
+          scaleGridTop="5", scaleGridBottom="13",
+          scaleGridLeft="5", scaleGridRight="40");
+  disabledSkin: Embed(source="../media/skins/combobox/disabled.png",
+          scaleGridTop="5", scaleGridBottom="13",
+          scaleGridLeft="5", scaleGridRight="40");
+}
+
+CheckBox, RadioButton {
+  color: black;
+  textRollOverColor: black;
+  textSelectedColor: black;
+}
+
+/** Note: we could remove this style and revert to the default flex skin, which works fine.
+    But our custom images look really nice. */
+CheckBox {
+  upIcon: Embed(source="../media/skins/checkbox/checkbox.png");
+  overIcon: Embed(source="../media/skins/checkbox/checkbox_over.png");
+  downIcon: Embed(source="../media/skins/checkbox/checkbox_over.png");
+  selectedUpIcon: Embed(source="../media/skins/checkbox/checkbox_selected.png");
+  selectedOverIcon: Embed(source="../media/skins/checkbox/checkbox_selected.png");
+  selectedDownIcon: Embed(source="../media/skins/checkbox/checkbox_over.png");
+}
+
+HSlider {
+  labelOffset: -8;
+  thumbOffset: 0;
+  dataTipOffset: 16;
+  tickLength: 5;
+  tickOffset: -3;
+  tickThickness: 1;
+  showTrackHighlight: false;
+  fillAlphas: 1, 1, 1, 1;
+  fillColors: #d5dcdf, #9eabb2, #9eabb2, #d5dcdf;
+}
+
+/** TODO: make this .blueButton and make the base button all nekkid, or something. */
+Button {
+  cornerRadius: 0;
+  paddingBottom: 0;
+  paddingTop: 0;
+  paddingLeft: 7;
+  paddingRight: 7;
+  color: white;
+  textRollOverColor: white;
+  textSelectedColor: white;
+  upSkin: Embed(source="../media/skins/button/blue_up.png",
+          scaleGridTop="9", scaleGridBottom="10",
+          scaleGridLeft="9", scaleGridRight="10");
+  overSkin: Embed(source="../media/skins/button/blue_over.png",
+          scaleGridTop="9", scaleGridBottom="10",
+          scaleGridLeft="9", scaleGridRight="10");
+  downSkin: Embed(source="../media/skins/button/blue_down.png",
+          scaleGridTop="9", scaleGridBottom="10",
+          scaleGridLeft="9", scaleGridRight="10");
+  disabledSkin: Embed(source="../media/skins/button/blue_disabled.png",
+          scaleGridTop="9", scaleGridBottom="10",
+          scaleGridLeft="9", scaleGridRight="10");
+}
+
+.orangeButton {
+  upSkin: Embed(source="../media/skins/button/orange_up.png",
+          scaleGridTop="9", scaleGridBottom="10",
+          scaleGridLeft="9", scaleGridRight="10");
+  overSkin: Embed(source="../media/skins/button/orange_over.png",
+          scaleGridTop="9", scaleGridBottom="10",
+          scaleGridLeft="9", scaleGridRight="10");
+  downSkin: Embed(source="../media/skins/button/orange_down.png",
+          scaleGridTop="9", scaleGridBottom="10",
+          scaleGridLeft="9", scaleGridRight="10");
+  disabledSkin: Embed(source="../media/skins/button/orange_disabled.png",
+          scaleGridTop="9", scaleGridBottom="10",
+          scaleGridLeft="9", scaleGridRight="10");
+}
+
+ColorPicker {
+  /* For some reason, this is inheriting Button skins, and since
+     we specify upSkin/downSkin/etc for Button, we need to specify
+     that here too, rather than rely on the "skin" style. */
+  overSkin: ClassReference("mx.skins.halo.ColorPickerSkin");
+  disabledSkin: ClassReference("mx.skins.halo.ColorPickerSkin");
+  downSkin: ClassReference("mx.skins.halo.ColorPickerSkin");
+  upSkin: ClassReference("mx.skins.halo.ColorPickerSkin");
+}
+
+PopUpButton {
+  fillAlphas: 1, 1, 1, 1;
+  fillColors: #d5dcdf, #9ba8b0, #9ba8b0, #d5dcdf;
+}
+
+ButtonBar {
+  horizontalGap: 6;
+  horizontalAlign: "right";
+}
+
+VScrollBar, HScrollBar {
+  highlightAlphas: 0.38, 0;
+  fillAlphas: 1, 0.82, 0.79, 0.82;
+  fillColors: #ffffff, #ffffff, #ffffff, #ffffff;
+  trackColors: #e0e0e0, #f0f0f0;
+  themeColor: #ffffff;
+  borderColor: #E0E0E0;
+  iconColor: #cccccc;
+  thumbOffset: 0;
+}
+
+Menu {
+  openDuration: 0;
+  backgroundImage: Embed(source="../media/skins/menu/background.png",
+    scaleGridTop="3", scaleGridBottom="26", scaleGridLeft="3", scaleGridRight="26");
+  backgroundSize: "100%";
+  backgroundColor: white;
+  rollOverColor: #7DBFF8;
+  dropShadowEnabled: true;
+  backgroundAlpha: 0.8;
+  borderStyle: none;
+  color: #000000;
+  disabledColor: #808080;
+  separatorSkin: Embed(source="../media/skins/menu/separator_skin.png");
+  branchIcon: Embed(source="../media/skins/menu/whitearrow.png");
+}
+
+MenuBar {
+  cornerRadius: 4;
+  backgroundAlpha: 1;
+  backgroundColor: #ffffff;
+  fillAlphas: 1, 1;
+  fillColors: #d2d8dc, #9ba8b0;
+  rollOverColor: #c8d0d3;
+  selectionColor: #54a9da;
+  themeColor: #000000;
+}
+
+HRule {
+  strokeColor: #d5dcdf;
+  shadowColor: #9facb3;
+  strokeWidth: 2;
+}
+
+LinkButton {
+  fontWeight: "normal";
+  color: #AAB5B9;
+  textRollOverColor: #AAB5B9;
+  textSelectedColor: #AAB5B9;
+  skin: ClassReference(null);
+  paddingLeft: 0;
+  paddingTop: 0;
+  paddingBottom: 0;
+  paddingRight: 0;
+}
+
+ProgressBar {
+  barColor: #54a9da;
+}
+
+ListBase {
+  rollOverColor: #c8d0d3;
+  selectionColor: #54a9da;
+}
+
+Tree {
+  openDuration: 0;
+}
+
+TabNavigator, TabBar {
+  borderStyle: none;
+  borderThickness: 0;
+  borderColor: black;
+  tabHeight: 20;
+}
+
+.menuTitle {
+  disabledColor: black;
+  fontWeight: bold;
+}
+
+.underLink {
+  color: black;
+  textDecoration: underline;
+}
