@@ -53,6 +53,23 @@ public class FurniData extends SimpleStreamableObject
     /** The action, interpreted using actionType. */
     public var actionData :String;
 
+    /**
+     * Set whether or not this furni doesn't scale.
+     */
+    public function setNoScale (noscale :Boolean) :void
+    {
+        setLayoutInfo(NOSCALE_FLAG, noscale);
+    }
+
+    /**
+     * Is this furniture non-scaling?
+     */
+    public function isNoScale () :Boolean
+    {
+        return isLayoutInfo(NOSCALE_FLAG);
+    }
+
+
     // from DSet_Entry
     public function getKey () :Object
     {
@@ -184,5 +201,27 @@ public class FurniData extends SimpleStreamableObject
         out.writeField(actionData);
     }
 
+    /**
+     * Set a layoutInfo flag on or off.
+     */
+    protected function setLayoutInfo (flag :int, on :Boolean) :void
+    {
+        if (on) {
+            layoutInfo |= flag;
+        } else {
+            layoutInfo &= ~flag;
+        }
+    }
+
+    /**
+     * Test a layoutInfo flag.
+     */
+    protected function isLayoutInfo (flag :int) :Boolean
+    {
+        return (layoutInfo & flag) != 0;
+    }    
+
+    /** layoutInfo bitmask flag constant. Indicates if the furni is non-scaling. */
+    protected static const NOSCALE_FLAG :int = (1 << 0);
 }
 }

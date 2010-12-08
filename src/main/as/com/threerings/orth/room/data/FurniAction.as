@@ -7,17 +7,23 @@ import com.threerings.util.ByteEnum;
 
 public class FurniAction extends ByteEnum
 {
+    public static const NONE :FurniAction = new FurniAction("NONE", 0);
+
     public function FurniAction (name :String, code :int)
     {
         super(name, code);
     }
 
     public function isPortal () :Boolean {
-        throw new Error("abstract");
+        return false;
     }
 
     public function isURL () :Boolean {
-        throw new Error("abstract");
+        return false;
+    }
+
+    public function isHelpPage () :Boolean {
+        return true;
     }
 }
 }

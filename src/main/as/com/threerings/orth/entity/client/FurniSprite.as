@@ -3,13 +3,12 @@
 
 package com.threerings.orth.entity.client {
 import com.threerings.media.MediaContainer;
-import com.threerings.orth.client.LoadingWatcher;
 import com.threerings.orth.room.client.RoomController;
+import com.threerings.orth.room.data.FurniAction;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.util.ValueEvent;
 
-import flash.display.DisplayObject;
 import flash.display.LoaderInfo;
 
 import flash.events.MouseEvent;
@@ -58,13 +57,7 @@ public class FurniSprite extends EntitySprite
 
     override public function getDesc () :String
     {
-        switch (_furni.actionType) {
-        case FurniData.ACTION_PORTAL:
-            return "m.portal";
-
-        default:
-            return "m.furni";
-        }
+        return _furni.actionType.isPortal() ? "m.portal" : "m.furni";
     }
 
     public function getFurniData () :FurniData
@@ -87,7 +80,7 @@ public class FurniSprite extends EntitySprite
     public function update (furni :FurniData) :void
     {
         _furni = furni;
-        setEntityIdent(furni.getEntityIdent());
+        setEntityIdent(furni.item);
         _sprite.setMediaDesc(furni.media);
         scaleUpdated();
         rotationUpdated();
@@ -99,26 +92,22 @@ public class FurniSprite extends EntitySprite
         // clear out any residuals from the last action
         var actionData :Array = _furni.splitActionData();
 
-        switch (_furni.actionType) {
-        case FurniData.ACTION_NONE:
-            // no tooltip
-            return null;
-
-        case FurniData.ACTION_URL:
-            // if there's no description, use the URL
-            return String(actionData[actionData.length - 1]);
-
-        case FurniData.ACTION_PORTAL:
-            return Msgs.GENERAL.get("i.trav_portal", String(actionData[actionData.length-1]));
-
-        case FurniData.ACTION_HELP_PAGE:
-            return Msgs.GENERAL.get("i.help_page", String(actionData[0]));
-
-        default:
-            log.warning("Tooltip: unknown furni action type",
-                "actionType", _furni.actionType, "actionData", _furni.actionData);
+        if (_furni.actionType == FurniAction.NONE) {
             return null;
         }
+        if (_furni.actionType.isPortal()) {
+            return Msgs.GENERAL.get("i.trav_portal", String(actionData[actionData.length-1]));
+        }
+        if (_furni.actionType.isURL()) {
+            // if there's no description, use the URL
+            return String(actionData[actionData.length - 1]);
+        }
+        if (_furni.actionType.isHelpPage()) {
+            return Msgs.GENERAL.get("i.help_page", String(actionData[0]));
+        }
+        log.warning("Tooltip: unknown furni action type", "actionType", _furni.actionType,
+            "actionData", _furni.actionData);
+        return null;
     }
 
     /**
@@ -181,41 +170,26 @@ public class FurniSprite extends EntitySprite
     // documentation inherited
     override public function hasAction () :Boolean
     {
-        switch (_furni.actionType) {
-        case FurniData.ACTION_NONE:
-            return false;
-
-        default:
-            return true;
-        }
+        return _furni.actionType != FurniAction.NONE;
     }
 
     override public function capturesMouse () :Boolean
     {
-        switch (_furni.actionType) {
-        case FurniData.ACTION_NONE:
+        if (_furni.actionType == FurniAction.NONE) {
             return (_furni.actionData == null);
-
-        default:
-            return super.capturesMouse();
         }
+        return super.capturesMouse();
     }
 
     override public function toString () :String
     {
-        return "FurniSprite[" + _furni.itemType + ":" + _furni.itemId + "]";
+        return "FurniSprite[" + _furni.item + "]";
     }
 
     // documentation inherited
     override public function getHoverColor () :uint
     {
-        switch (_furni.actionType) {
-        case FurniData.ACTION_PORTAL:
-            return PORTAL_HOVER;
-
-        default:
-            return OTHER_HOVER;
-        }
+        return _furni.actionType.isPortal() ? PORTAL_HOVER : OTHER_HOVER;
     }
 
     override protected function postClickAction () :void
