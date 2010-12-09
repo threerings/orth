@@ -13,6 +13,12 @@ public class EntityType extends ByteEnum
 
     public function getPropertyType () :String
     {
+//     ENTITY_TYPES[ItemTypes.FURNITURE] = "furni";
+//     ENTITY_TYPES[ItemTypes.TOY] = "furni";
+//     ENTITY_TYPES[ItemTypes.DECOR] = "furni";
+//     ENTITY_TYPES[ItemTypes.AVATAR] = "avatar";
+//     ENTITY_TYPES[ItemTypes.OCCUPANT] = "avatar";
+//     ENTITY_TYPES[ItemTypes.PET] = "pet";
         throw new Error("abstract");
     }
 
