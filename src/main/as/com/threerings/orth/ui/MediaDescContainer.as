@@ -40,6 +40,7 @@ public class MediaDescContainer extends MediaContainer
         }
 
         _desc = desc;
+        super.setMedia((desc == null) ? null : desc.getMediaPath());
         return true;
     }
 
