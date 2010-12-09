@@ -11,6 +11,6 @@ import com.threerings.orth.room.data.DecorGeometry;
 public interface Decor
     extends Entity, DecorGeometry
 {
-    
+
 }
 }
