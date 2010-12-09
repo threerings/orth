@@ -52,6 +52,11 @@ public class MediaDescContainer extends MediaContainer
         return _desc;
     }
 
+    override public function toString () :String
+    {
+        return "MediaDescContainer[desc=" + _desc + "]";
+    }
+
     /** Our Media descriptor. */
     protected var _desc :MediaDesc;
 }
