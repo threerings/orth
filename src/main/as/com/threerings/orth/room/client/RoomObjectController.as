@@ -225,26 +225,21 @@ public class RoomObjectController extends RoomController
      */
     override public function handleFurniClicked (furni :FurniData) :void
     {
-        switch (furni.actionType) {
-        case FurniData.ACTION_URL:
+        if (furni.actionType.isURL()) {
             _wdctx.getWorldController().handleViewUrl(furni.splitActionData()[0] as String);
-            return;
 
-        case FurniData.ACTION_PORTAL:
+        } else if (furni.actionType.isPortal()) {
             (_wdctx.getSceneDirector() as OrthSceneDirector).traversePortal(furni.id);
-            return;
 
-        case FurniData.ACTION_HELP_PAGE:
+        } else if (furni.actionType.isHelpPage()) {
             var actionData :Array = furni.splitActionData();
             var tabName :String = String(actionData[0]);
             var url :String = String(actionData[1]);
             // TBD: how to display help pages?
-            return;
 
-        default:
+        } else {
             log.warning("Clicked on unhandled furni action type",
                "actionType", furni.actionType, "actionData", furni.actionData);
-            return;
         }
     }
 
