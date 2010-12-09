@@ -10,7 +10,7 @@ import com.threerings.orth.room.client.OrthSceneFactory;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
-import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldController;
@@ -109,7 +109,7 @@ public class OrthSceneDirector extends SceneDirector
         _worldctx.displayFeedback(OrthCodes.GENERAL_MSGS, reason);
 
         // otherwise try to deal with the player getting bumped back from a locked scene
-        if (reason == OrthSceneCodes.E_ENTRANCE_DENIED) {
+        if (reason == OrthRoomCodes.E_ENTRANCE_DENIED) {
             bounceBack(_sceneId, pendingPreviousScene, reason);
         }
     }
@@ -215,7 +215,7 @@ public class OrthSceneDirector extends SceneDirector
 
     protected function memberMessageReceived (event :MessageEvent) :void
     {
-        if (event.getName() == OrthSceneCodes.FOLLOWEE_MOVED) {
+        if (event.getName() == OrthRoomCodes.FOLLOWEE_MOVED) {
             var sceneId :int = int(event.getArgs()[0]);
             log.info("Following " + _worldctx.getPlayerObject().following + " to " + sceneId + ".");
             moveTo(sceneId);

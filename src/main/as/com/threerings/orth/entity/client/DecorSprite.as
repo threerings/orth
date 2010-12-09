@@ -5,7 +5,7 @@ package com.threerings.orth.entity.client {
 
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
-import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.util.Log;
 
@@ -36,7 +36,7 @@ public class DecorSprite extends FurniSprite
 
     override public function getRoomLayer () :int
     {
-        return OrthSceneCodes.DECOR_LAYER;
+        return OrthRoomCodes.DECOR_LAYER;
     }
 
     public function updateFromDecor (decor :Decor) :void

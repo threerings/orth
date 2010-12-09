@@ -329,11 +329,11 @@ public class RoomObjectView extends RoomView
     {
         var args :Array = event.getArgs();
         switch (event.getName()) {
-        case OrthSceneCodes.SPRITE_MESSAGE:
+        case OrthRoomCodes.SPRITE_MESSAGE:
             dispatchSpriteMessage((args[0] as EntityIdent), (args[1] as String),
                                   (args[2] as ByteArray), (args[3] as Boolean));
             break;
-        case OrthSceneCodes.SPRITE_SIGNAL:
+        case OrthRoomCodes.SPRITE_SIGNAL:
             dispatchSpriteSignal((args[0] as String), (args[1] as ByteArray));
             break;
         }

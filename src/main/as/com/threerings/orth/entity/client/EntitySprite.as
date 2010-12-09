@@ -2,13 +2,14 @@
 // $Id: EntitySprite.as 19612 2010-11-23 16:13:06Z zell $
 
 package com.threerings.orth.entity.client {
+
 import com.threerings.orth.room.client.EntityMediaContainer;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomElement;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthLocation;
-import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.SimpleEntityIdent;
 import com.threerings.orth.world.client.WorldContext;
 
@@ -105,13 +106,13 @@ public class EntitySprite
     // from RoomElement
     public function getLayoutType () :int
     {
-        return OrthSceneCodes.LAYOUT_NORMAL;
+        return OrthRoomCodes.LAYOUT_NORMAL;
     }
 
     // from RoomElement
     public function getRoomLayer () :int
     {
-        return OrthSceneCodes.FURNITURE_LAYER;
+        return OrthRoomCodes.FURNITURE_LAYER;
     }
 
     // from RoomElement
@@ -802,7 +803,7 @@ public class EntitySprite
             return getLocation().orient;
 
         case "type":
-            return RoomController.ENTITY_TYPES[_ident.getType()]; // will return null if unknown type
+            return _ident.getType().getPropertyType();
 
         default:
             return null;

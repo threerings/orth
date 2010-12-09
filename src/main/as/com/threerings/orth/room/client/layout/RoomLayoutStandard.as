@@ -6,7 +6,7 @@ import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.room.data.DecorGeometry;
-import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.room.data.OrthRoomCodes;
 
 import flash.display.DisplayObject;
 
@@ -277,7 +277,7 @@ public class RoomLayoutStandard implements RoomLayout
                 ", falling back to LAYOUT_NORMAL.");
             // fall through to LAYOUT_NORMAL
 
-        case OrthSceneCodes.LAYOUT_NORMAL:
+        case OrthRoomCodes.LAYOUT_NORMAL:
             var loc :OrthLocation = target.getLocation();
             var screen :Point = _metrics.roomToScreen(loc.x, loc.y, loc.z);
             var scale :Number = _metrics.scaleAtDepth(loc.z) * getDecorScale(target);
@@ -285,7 +285,7 @@ public class RoomLayoutStandard implements RoomLayout
             target.setScreenLocation(screen.x - offset.x, screen.y - offset.y, scale);
             break;
 
-        case OrthSceneCodes.LAYOUT_FILL:
+        case OrthRoomCodes.LAYOUT_FILL:
             var disp :DisplayObject = (target as DisplayObject);
             disp.x = 0;
             disp.y = 0;

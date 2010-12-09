@@ -969,7 +969,7 @@ public class RoomController extends SceneController
 import com.threerings.orth.client.Resources;
 import com.threerings.orth.room.client.RoomElementSprite;
 import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.util.Log;
 import com.threerings.util.Throttle;
 
@@ -987,7 +987,7 @@ class WalkTarget extends RoomElementSprite
 
     override public function getRoomLayer () :int
     {
-        return OrthSceneCodes.FURNITURE_LAYER;
+        return OrthRoomCodes.FURNITURE_LAYER;
     }
 
     // from RoomElement

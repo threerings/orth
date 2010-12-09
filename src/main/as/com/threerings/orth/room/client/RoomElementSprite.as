@@ -3,7 +3,7 @@
 
 package com.threerings.orth.room.client {
 import com.threerings.orth.room.data.OrthLocation;
-import com.threerings.orth.room.data.OrthSceneCodes;
+import com.threerings.orth.room.data.OrthRoomCodes;
 
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
@@ -52,13 +52,13 @@ public class RoomElementSprite extends Sprite
     // from RoomElement
     public function getLayoutType () :int
     {
-        return OrthSceneCodes.LAYOUT_NORMAL;
+        return OrthRoomCodes.LAYOUT_NORMAL;
     }
 
     // from RoomElement
     public function getRoomLayer () :int
     {
-        return OrthSceneCodes.FOREGROUND_LAYER;
+        return OrthRoomCodes.FOREGROUND_LAYER;
     }
 
     // from RoomElement

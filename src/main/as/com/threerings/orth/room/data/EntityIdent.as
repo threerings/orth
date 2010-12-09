@@ -10,7 +10,10 @@ import com.threerings.util.Hashable;
 
 public interface EntityIdent extends Streamable, Hashable, Comparable
 {
-    function getType () :int;
+    function getType () :EntityType;
     function getItem () :int;
+
+    /** Create a dependable string representation of this Ident, on the format typeNum:itemNum */
+    function toString () :String;
 }
 }

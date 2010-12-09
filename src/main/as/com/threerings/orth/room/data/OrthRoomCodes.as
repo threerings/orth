@@ -1,6 +1,6 @@
 package com.threerings.orth.room.data
 {
-public class OrthSceneCodes
+public class OrthRoomCodes
 {
     /** A message event type dispatched on the room object. */
     public static const SPRITE_MESSAGE :String = "sprMsg";
@@ -10,7 +10,10 @@ public class OrthSceneCodes
 
     /** A message even dispatched on the member object to followers. */
     public static const FOLLOWEE_MOVED :String = "folMov";
-    
+
+    /** Error reported when the entity is denied entrance to a scene. */
+    public static const E_ENTRANCE_DENIED :String = "e.entrance_denied";
+
     /** A room layer that is in front of normal furniture and such. */
     public static const FOREGROUND_LAYER :int = 0;
 
