@@ -626,19 +626,6 @@ public class WorldController
         }
         menuData.push({ label: Msgs.GENERAL.get("l.friends"), children: friends });
 
-        var groups :Array = (me.groups != null) ? me.getSortedGroups() : [];
-        groups = groups.map(function (gm :GroupMembership, index :int, array :Array) :Object {
-            return { label: gm.group.toString(), command: OPEN_CHANNEL, arg: gm.group };
-        });
-        if (groups.length == 0) {
-            groups.push({ label: Msgs.GENERAL.get("m.no_groups"),
-                          enabled : false });
-        } else if (groups.length > 4) {
-            menuData.push({ label: Msgs.GENERAL.get("l.groups"), children: groups});
-        } else {
-            menuData = menuData.concat(groups);
-        }
-
         popControlBarMenu(menuData.reverse(), trigger);
     }
 
@@ -663,9 +650,6 @@ public class WorldController
             callback: roomView.viewRoomItems });
         menuData.push({ label: Msgs.GENERAL.get("b.snapshot"), icon: SNAPSHOT_ICON,
             command: doSnapshot });
-        menuData.push({ label: Msgs.GENERAL.get("b.music"), icon: Resources.MUSIC_ICON,
-            command: DelayUtil.delayFrame, arg: [ doShowMusic, [ trigger ] ],
-            enabled: (_music != null) }); // pop it later so that it avoids the menu itself
 
         popControlBarMenu(menuData, trigger);
     }
@@ -778,14 +762,6 @@ public class WorldController
     }
 
     /**
-     * Access the music player. Don't be too nefarious now boys!
-     */
-    public function getMusicPlayer () :AudioPlayer
-    {
-        return _musicPlayer;
-    }
-
-    /**
      * Handles the POP_PET_MENU command.
      */
     public function handlePopPetMenu (name :String, petId :int, ownerId :int) :void
@@ -810,30 +786,9 @@ public class WorldController
     public function goToPlace (params :Object) :void
     {
         // first, see if we should hit a specific scene
-        if (null != params["memberHome"]) {
-            _suppressTokenForScene = true;
-            var memberId :int = int(params["memberHome"]);
-            if (memberId == 0) {
-                // let's take this as a signal that we're after our own home room
-                memberId = _wctx.getPlayerObject().getPlayerId();
-            }
-            handleGoMemberHome(memberId);
-
-        } else if (null != params["memberScene"]) {
-            _suppressTokenForScene = true;
-            handleVisitMember(int(params["memberScene"]));
-
-        } else if (null != params["noplace"]) {
+        if (null != params["noplace"]) {
             // go to no place- we just want to chat with our friends
             _wctx.setPlaceView(new NoPlaceView());
-
-        } else if (null != params["groupChat"]) {
-            var groupId :int = int(params["groupChat"]);
-            var gm :GroupMembership =
-                _wctx.getPlayerObject().groups.get(groupId) as GroupMembership;
-            if (gm != null) {
-                handleOpenChannel(gm.group);
-            }
 
         } else if (null != params["sceneId"]) {
             var sceneId :int = int(params["sceneId"]);
@@ -843,31 +798,6 @@ public class WorldController
                 //sceneId = _wctx.getPlayerObject().getHomeSceneId();
             }
             _wctx.getSceneDirector().moveTo(sceneId);
-
-        } else {
-            // go to our home scene (this doe the right thing for guests as well)
-            _wctx.getSceneDirector().moveTo(_wctx.getPlayerObject().getHomeSceneId());
-        }
-    }
-
-    /**
-     * Show (or hide) the tables waiting display.
-     */
-    public function showTablesWaiting (show :Boolean = true) :void
-    {
-        if (show) {
-            if (_tablesPanel == null) {
-                _tablesPanel = new TablesWaitingPanel(_wctx);
-                _tablesPanel.addCloseCallback(function () :void {
-                    _tablesPanel = null;
-                });
-                _tablesPanel.open();
-            } else {
-                _tablesPanel.refresh();
-            }
-
-        } else if (_tablesPanel != null) {
-            _tablesPanel.close();
         }
     }
 
@@ -1243,17 +1173,6 @@ public class WorldController
         const me :PlayerObject = _wctx.getPlayerObject();
         const curSceneId :int = getCurrentSceneId();
 
-        // our groups
-        var groups :Array = [];
-        for each (var gm :GroupMembership in me.getSortedGroups()) {
-            groups.push({ label: gm.group.toString(),
-                command: GO_GROUP_HOME, arg: gm.group.getGroupId() });
-        }
-        if (groups.length == 0) {
-            groups.push({ label: Msgs.GENERAL.get("m.no_groups"), enabled: false });
-        }
-        menuData.push({ label: Msgs.GENERAL.get("l.visit_groups"), children: groups });
-
         // our friends
         var friends :Array = [];
         for each (var fe :FriendEntry in me.getSortedFriends()) {
@@ -1275,26 +1194,6 @@ public class WorldController
             sceneSubmenu.push({ label: Msgs.GENERAL.get("m.none"), enabled: false });
         }
         menuData.push({ label: Msgs.WORLD.get("l.recent_scenes"), children: sceneSubmenu });
-
-        CommandMenu.addSeparator(menuData);
-        // and our home
-        const ourHomeId :int = me.homeSceneId;
-        if (ourHomeId != 0) {
-            menuData.push({ label: Msgs.GENERAL.get("b.go_home"), command: GO_SCENE, arg: ourHomeId,
-                enabled: (ourHomeId != curSceneId) });
-        }
-    }
-
-    /**
-     * Log off guests who have been idle for too long.
-     */
-    protected function checkIdleLogoff (... ignored) :void
-    {
-        // only do something if we're logged on and a guest
-        if (_wctx.getClient().isLoggedOn() && !_wctx.isRegistered()) {
-            _logoffMessage = "m.idle_logoff";
-            _wctx.getClient().logoff(false);
-        }
     }
 
     protected function addRecentScene (scene :Scene) :void
@@ -1314,45 +1213,6 @@ public class WorldController
 
         // and make sure we're not tracking too many
         _recentScenes.length = Math.min(_recentScenes.length, MAX_RECENT_SCENES);
-    }
-
-    protected function handleConfigValueSet (event :NamedValueEvent) :void
-    {
-        // if the volume got turned up and we were not playing music, play it now.
-        if ((event.name == Prefs.VOLUME) && (event.value > 0) && (_music != null) &&
-               !musicIsPlayingOrPaused()) {
-            handlePlayMusic(_music);
-        }
-    }
-
-    protected function musicIsPlayingOrPaused () :Boolean
-    {
-        switch (_musicPlayer.getState()) {
-        default: return false;
-        case MediaPlayerCodes.STATE_PLAYING: // fall through
-        case MediaPlayerCodes.STATE_STOPPED: // fall through
-        case MediaPlayerCodes.STATE_PAUSED: return true;
-        }
-    }
-
-    protected function handleMusicMetadata (event :ValueEvent) :void
-    {
-        if (_musicInfoShown) {
-            return;
-        }
-        var id3 :Object = event.value;
-        var artist :String = id3.artist as String;
-        var songName :String = id3.songName as String;
-        if (!StringUtil.isBlank(artist) || !StringUtil.isBlank(songName)) {
-            if (StringUtil.isBlank(artist)) {
-                artist = "unknown";
-            }
-            if (StringUtil.isBlank(songName)) {
-                songName = "unknown";
-            }
-            _wctx.getNotificationDirector().notifyMusic(songName, artist);
-            _musicInfoShown = true;
-        }
     }
 
     /**
@@ -1406,8 +1266,6 @@ public class WorldController
 
     protected var _snapPanel :SnapshotPanel;
 
-    protected var _tablesPanel :TablesWaitingPanel;
-
     protected var _picker :ColorPickerPanel;
 
     /** Tracks whether we've done our first-logon movement so that we avoid trying to redo it as we
@@ -1416,9 +1274,6 @@ public class WorldController
 
     /** A scene to which to go after we logon. */
     protected var _postLogonScene :int;
-
-    /** Set to true when we're displaying a page that has an alias, like "world-m1". */
-    protected var _suppressTokenForScene :Boolean = true; // also, we suppress the first one
 
     /** Recently visited scenes, ordered from most-recent to least-recent */
     protected var _recentScenes :Array = [];
