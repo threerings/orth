@@ -8,6 +8,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
 import com.threerings.flex.CommandMenu;
 import com.threerings.flex.PopUpUtil;
+import com.threerings.orth.chat.client.ChatOverlay;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.PlaceBox;
 import com.threerings.orth.data.OrthName;
@@ -20,6 +21,7 @@ import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.SimpleEntityIdent;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldControlBar;
 import com.threerings.util.Log;
@@ -276,7 +278,7 @@ public class RoomController extends SceneController
         // Convert from EntityIdents to entityId Strings
         return idents.map(
             function (id :EntityIdent, ... etc) :String {
-                return id.toString();
+                return SimpleEntityIdent.toString(id);
             });
     }
 

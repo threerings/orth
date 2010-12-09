@@ -9,6 +9,11 @@ import com.threerings.util.ComparisonChain;
 
 public class SimpleEntityIdent implements EntityIdent
 {
+    public static function toString (id :EntityIdent) :String
+    {
+        return id.getType() + ":" + id.getItem();
+    }
+
     public static function fromString (entityId :String):EntityIdent
     {
         var tokens :Array = entityId.split(":");
