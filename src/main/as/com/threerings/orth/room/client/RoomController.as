@@ -495,7 +495,7 @@ public class RoomController extends SceneController
                 var cloc :ClickLocation = _roomView.layout.pointToAvatarLocation(
                     sx, sy, _shiftDownSpot, RoomMetrics.N_UP);
 
-                if (cloc != null && _wdctx.worldProps.userControlsAvatar) {
+                if (cloc != null) {
                     addAvatarYOffset(cloc);
                     if (cloc.loc.y != 0) {
                         _flyTarget.setLocation(cloc.loc);
@@ -644,7 +644,7 @@ public class RoomController extends SceneController
                 hitter.mouseClick(event);
             }
 
-        } else if (_wdctx.worldProps.userControlsAvatar) {
+        } else {
             var curLoc :OrthLocation = _roomView.getMyCurrentLocation();
             if (curLoc == null) {
                 return; // we've already left, ignore the click
