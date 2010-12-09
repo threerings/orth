@@ -2,6 +2,7 @@
 // $Id: RoomLayoutFactory.as 14311 2009-01-09 19:46:49Z ray $
 
 package com.threerings.orth.room.client.layout {
+import com.threerings.orth.room.data.DecorCodes;
 import com.threerings.orth.room.data.DecorGeometry;
 
 import com.threerings.orth.room.client.RoomView;
@@ -40,10 +41,10 @@ public class RoomLayoutFactory {
             return RoomLayoutStandard;
         }
 
-        if (decor.getDecorType() == Decor.FLAT_LAYOUT) {
+        if (decor.getDecorType() == DecorCodes.FLAT_LAYOUT) {
             return RoomLayoutFlatworld;
 
-        } else if (decor.getDecorType() == Decor.TOPDOWN_LAYOUT) {
+        } else if (decor.getDecorType() == DecorCodes.TOPDOWN_LAYOUT) {
             return RoomLayoutTopdown;
 
         } else {
