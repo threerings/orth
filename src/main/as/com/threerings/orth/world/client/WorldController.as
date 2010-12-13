@@ -9,6 +9,8 @@ import com.threerings.crowd.client.BodyService;
 import com.threerings.crowd.data.CrowdCodes;
 import com.threerings.flex.ChatControl;
 import com.threerings.flex.CommandButton;
+import com.threerings.orth.client.AboutDialog;
+import com.threerings.orth.client.ChatPrefsDialog;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.TopPanel;
@@ -32,6 +34,7 @@ import com.threerings.orth.world.data.WorldCredentials;
 import com.threerings.presents.client.Client;
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.CommandEvent;
+import com.threerings.util.Controller;
 import com.threerings.util.NetUtil;
 
 import flash.display.DisplayObject;
@@ -90,7 +93,7 @@ import com.threerings.orth.world.client.BootablePlaceController;
 /**
  * Extends the WorldController with World specific bits.
  */
-public class WorldController
+public class WorldController extends Controller
     implements ClientObserver
 {
     /** Command to show the 'about' dialog. */
@@ -194,8 +197,6 @@ public class WorldController
 //        stage.addEventListener(FocusEvent.FOCUS_OUT, handleUnfocus);
         stage.addEventListener(KeyboardEvent.KEY_DOWN, handleStageKeyDown, false, int.MAX_VALUE);
         stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown, false, int.MAX_VALUE);
-
-        Prefs.events.addEventListener(Prefs.PREF_SET, handleConfigValueSet, false, 0, true);
     }
 
     /**
@@ -211,24 +212,6 @@ public class WorldController
         plinfo.sceneName = (scene == null) ? null : scene.getName();
 
         return plinfo;
-    }
-
-    /**
-     * Can we "manage" the current place.
-     */
-    public function canManagePlace () :Boolean
-    {
-        // support can manage any place...
-        if (_wctx.getTokens().isSupport()) {
-            return true;
-        }
-
-        const view :Object = _topPanel.getPlaceView();
-        if (view is RoomView) {
-            return RoomView(view).getRoomController().canManageRoom();
-        }
-
-        return false;
     }
 
     /**
@@ -264,8 +247,6 @@ public class WorldController
      */
     public function reconnectClient () :void
     {
-        _didFirstLogonGo = false;
-
         _wctx.getClient().logon();
     }
 
@@ -278,20 +259,9 @@ public class WorldController
     // from ClientObserver
     public function clientDidLogon (event :ClientEvent) :void
     {
-        var memberObj :PlayerObject = _wctx.getPlayerObject();
-
         var name :Name = (_wctx.getClient().getCredentials() as WorldCredentials).getUsername();
         if (name != null) {
             Prefs.setUsername(name.toString());
-        }
-
-        if (!_didFirstLogonGo) {
-            _didFirstLogonGo = true;
-            goToPlace(OrthParameters.get());
-        } else if (_postLogonScene != 0) {
-            // we gotta go somewhere
-            _wctx.getSceneDirector().moveTo(_postLogonScene);
-            _postLogonScene = 0;
         }
     }
 
@@ -453,9 +423,6 @@ public class WorldController
                 return;
             }
         }
-
-        // there are no recent scenes, so go home
-        handleGoScene(_wctx.getPlayerObject().getHomeSceneId());
     }
 
     /**
@@ -463,15 +430,11 @@ public class WorldController
      */
     public function canMoveBack () :Boolean
     {
-        // you can only NOT move back if you are in your home room and there are no
-        // other scenes in your history
+        // you can only NOT move back if you are there are no other scenes in your history
         const curSceneId :int = getCurrentSceneId();
         var memObj :PlayerObject = _wctx.getPlayerObject();
         if (memObj == null) {
             return false;
-        }
-        if (memObj.getHomeSceneId() != curSceneId) {
-            return true;
         }
         for each (var entry :Object in _recentScenes) {
             if (entry.id != curSceneId) {
@@ -757,27 +720,6 @@ public class WorldController
         return (scene == null) ? 0 : scene.getId();
     }
 
-    /**
-     * Figure out where we should be going, and go there.
-     */
-    public function goToPlace (params :Object) :void
-    {
-        // first, see if we should hit a specific scene
-        if (null != params["noplace"]) {
-            // go to no place- we just want to chat with our friends
-            _wctx.setPlaceView(new NoPlaceView());
-
-        } else if (null != params["sceneId"]) {
-            var sceneId :int = int(params["sceneId"]);
-            if (sceneId == 0) {
-                log.warning("Moving to scene 0, I hope that's what we actually want.",
-                    "raw arg", params["sceneId"]);
-                //sceneId = _wctx.getPlayerObject().getHomeSceneId();
-            }
-            _wctx.getSceneDirector().moveTo(sceneId);
-        }
-    }
-
     public function addMemberMenuItems (
         name :OrthName, menuItems :Array, addWorldItems :Boolean = true) :void
     {
@@ -785,7 +727,6 @@ public class WorldController
         const us :PlayerObject = _wctx.getPlayerObject();
         const isUs :Boolean = (memId == us.getPlayerId());
         const isMuted :Boolean = !isUs && _wctx.getMuteDirector().isMuted(name);
-        const isSupport :Boolean = _wctx.getTokens().isSupport();
         var placeCtrl :Object = null;
         if (addWorldItems) {
             placeCtrl = _wctx.getLocationDirector().getPlaceController();
@@ -857,7 +798,7 @@ public class WorldController
                             command: INVITE_FRIEND, arg: memId, enabled: !muted });
             }
             // visit
-            if ((onlineFriend || isSupport)) {
+            if (onlineFriend) {
                 var label :String = onlineFriend ?
                     Msgs.GENERAL.get("b.visit_friend") : "Visit (as agent)";
                 menuItems.push({ label: label, icon: Resources.VISIT_ICON,
@@ -940,7 +881,7 @@ public class WorldController
         }
     }
 
-    protected function setControlledPanel (panel :IEventDispatcher) :void
+    override protected function setControlledPanel (panel :IEventDispatcher) :void
     {
         // in addition to listening for command events, let's listen
         // for LINK events and handle them all here.
@@ -1232,10 +1173,6 @@ public class WorldController
     protected var _snapPanel :SnapshotPanel;
 
     protected var _picker :ColorPickerPanel;
-
-    /** Tracks whether we've done our first-logon movement so that we avoid trying to redo it as we
-     * subsequently move between servers (and log off and on in the process). */
-    protected var _didFirstLogonGo :Boolean;
 
     /** A scene to which to go after we logon. */
     protected var _postLogonScene :int;

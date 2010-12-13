@@ -27,5 +27,7 @@ public interface OrthContext
      * to validate with the server.
      */
     function getVersion () :String;
+
+    function getTopPanel () :TopPanel;
 }
 }

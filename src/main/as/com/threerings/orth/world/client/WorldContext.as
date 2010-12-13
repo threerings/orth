@@ -3,10 +3,12 @@
 
 package com.threerings.orth.world.client {
 import com.threerings.crowd.chat.client.ChatDirector;
+import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
+import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.client.ControlBar;
 import com.threerings.crowd.data.TokenRing;
 import com.threerings.orth.client.OrthContext;
@@ -226,6 +228,11 @@ public class WorldContext
         return _client;
     }
 
+    public function getMuteDirector () :MuteDirector
+    {
+        return _muteDir;
+    }
+
     /**
      * Returns a reference to the top-level UI container.
      */
@@ -256,6 +263,12 @@ public class WorldContext
     public function getChatDirector () :ChatDirector
     {
         // let's see if we can get away with this
+        return null;
+    }
+
+    public function getOrthChatDirector () :OrthChatDirector
+    {
+
         return null;
     }
 
@@ -402,6 +415,7 @@ public class WorldContext
         _spotDir = new SpotSceneDirector(this, _locDir, _sceneDir);
         _worldDir = new WorldDirector(this);
         _partyDir = new PartyDirector(this);
+        _muteDir = new MuteDirector(this);
     }
 
     /**
@@ -450,5 +464,6 @@ public class WorldContext
     protected var _mediaDir :MediaDirector;
     protected var _worldDir :WorldDirector;
     protected var _partyDir :PartyDirector;
+    protected var _muteDir:MuteDirector;
 }
 }
