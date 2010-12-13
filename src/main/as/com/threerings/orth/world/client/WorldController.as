@@ -18,6 +18,7 @@ import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.PlayerObject;
+import com.threerings.orth.room.client.DisconnectedPanel;
 import com.threerings.orth.room.client.RoomObjectController;
 import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.RoomView;
