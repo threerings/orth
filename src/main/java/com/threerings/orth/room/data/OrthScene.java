@@ -8,6 +8,8 @@ import com.threerings.whirled.data.SceneImpl;
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.spot.data.Portal;
 
+import com.threerings.orth.entity.data.Decor;
+
 public class OrthScene extends SceneImpl
 {
     public OrthScene (SceneModel model, PlaceConfig config)
@@ -57,7 +59,7 @@ public class OrthScene extends SceneImpl
      */
     public byte getSceneType ()
     {
-        return _orthModel.decorInfo.getDecorType();
+        return _orthModel.decor.getDecorType();
     }
 
     /**
@@ -65,7 +67,7 @@ public class OrthScene extends SceneImpl
      */
     public short getDepth ()
     {
-        return _orthModel.decorInfo.getDepth();
+        return _orthModel.decor.getDepth();
     }
 
     /**
@@ -73,7 +75,7 @@ public class OrthScene extends SceneImpl
      */
     public short getWidth ()
     {
-        return _orthModel.decorInfo.getWidth();
+        return _orthModel.decor.getWidth();
     }
 
     /**
@@ -82,7 +84,7 @@ public class OrthScene extends SceneImpl
      */
     public float getHorizon ()
     {
-        return _orthModel.decorInfo.getHorizon();
+        return _orthModel.decor.getHorizon();
     }
 
     /**
@@ -103,9 +105,9 @@ public class OrthScene extends SceneImpl
     /**
      * Retrieve the decor geometry information.
      */
-    public DecorGeometry getDecorInfo ()
+    public Decor getDecorInfo ()
     {
-        return _orthModel.decorInfo;
+        return _orthModel.decor;
     }
 
     /**

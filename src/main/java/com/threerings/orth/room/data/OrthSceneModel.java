@@ -10,6 +10,8 @@ import com.threerings.util.Name;
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.spot.data.Portal;
 
+import com.threerings.orth.entity.data.Decor;
+
 import static com.threerings.orth.Log.log;
 
 
@@ -54,7 +56,7 @@ public class OrthSceneModel extends SceneModel
     public EntityIdent decorIdent;
 
     /** Decor information. */
-    public DecorGeometry decorInfo;
+    public Decor decor;
 
     public OrthSceneModel ()
     {
