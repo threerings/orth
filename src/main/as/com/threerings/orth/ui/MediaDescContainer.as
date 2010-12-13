@@ -40,6 +40,7 @@ public class MediaDescContainer extends MediaContainer
         }
 
         _desc = desc;
+        super.setMedia((desc == null) ? null : desc.getMediaPath());
         return true;
     }
 
@@ -50,6 +51,11 @@ public class MediaDescContainer extends MediaContainer
     public function getMediaDesc () :MediaDesc
     {
         return _desc;
+    }
+
+    override public function toString () :String
+    {
+        return "MediaDescContainer[desc=" + _desc + "]";
     }
 
     /** Our Media descriptor. */
