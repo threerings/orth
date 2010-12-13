@@ -49,10 +49,6 @@ import com.threerings.orth.data.OrthAuthResponseData;
 public class WorldContext
     implements WhirledContext, OrthContext
 {
-    /** Contains non-persistent properties that are set in various places and can be bound to to be
-     * notified when they change. */
-    public var worldProps :WorldProperties = new WorldProperties();
-
     public function WorldContext (client :WorldClient)
     {
         super(client);
@@ -429,6 +425,14 @@ public class WorldContext
             }
             displayFeedback(bundle, cause);
         };
+    }
+
+    /**
+     * Creates a potentially custom version of our control bar.
+     */
+    protected function createControlBar () :ControlBar
+    {
+        return new ControlBar(this);
     }
 
     protected var _client :WorldClient;
