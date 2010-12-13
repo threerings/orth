@@ -299,6 +299,47 @@ public class RoomController extends SceneController
     }
 
     /**
+     * Called from user code to show a custom popup.
+     */
+    public function showEntityPopup (
+        sprite :EntitySprite, title :String, panel :DisplayObject, w :Number, h :Number,
+        color :uint = 0xFFFFFF, alpha :Number = 1.0, mask :Boolean = true) :Boolean
+    {
+//        if (_entityAllowedToPop != sprite) {
+//            return false;
+//        }
+
+        // other people's avatars cannot put a popup on our screen...
+        if ((sprite is MemberSprite) && (sprite != _roomView.getMyAvatar())) {
+            return false;
+        }
+
+        if (isNaN(w) || isNaN(h) || w <= 0 || h <= 0 || title == null || panel == null) {
+            return false;
+        }
+
+        // close any existing popup
+        if (_entityPopup != null) {
+            _entityPopup.close();
+        }
+
+        _entityPopup = new EntityPopup(_wdctx, sprite, title, panel, w, h, color, alpha, mask);
+        _entityPopup.addCloseCallback(entityPopupClosed);
+        _entityPopup.open();
+        return true;
+    }
+
+    /**
+     * Clear any popup belonging to the specified sprite.
+     */
+    public function clearEntityPopup (sprite :EntitySprite) :void
+    {
+        if (_entityPopup != null && _entityPopup.getOwningEntity() == sprite) {
+            _entityPopup.close(); // will trigger callback that clears _entityPopup
+        }
+    }
+
+    /**
      * Handles FURNI_CLICKED.
      */
     public function handleFurniClicked (furni :FurniData) :void
@@ -858,47 +899,6 @@ public class RoomController extends SceneController
         }
         return showEntityPopup(sprite, Msgs.GENERAL.get("t.config_item"), configger,
             configger.width, configger.height, 0xFFFFFF, 1.0, false);
-    }
-
-    /**
-     * Called from user code to show a custom popup.
-     */
-    internal function showEntityPopup (
-        sprite :EntitySprite, title :String, panel :DisplayObject, w :Number, h :Number,
-        color :uint = 0xFFFFFF, alpha :Number = 1.0, mask :Boolean = true) :Boolean
-    {
-//        if (_entityAllowedToPop != sprite) {
-//            return false;
-//        }
-
-        // other people's avatars cannot put a popup on our screen...
-        if ((sprite is MemberSprite) && (sprite != _roomView.getMyAvatar())) {
-            return false;
-        }
-
-        if (isNaN(w) || isNaN(h) || w <= 0 || h <= 0 || title == null || panel == null) {
-            return false;
-        }
-
-        // close any existing popup
-        if (_entityPopup != null) {
-            _entityPopup.close();
-        }
-
-        _entityPopup = new EntityPopup(_wdctx, sprite, title, panel, w, h, color, alpha, mask);
-        _entityPopup.addCloseCallback(entityPopupClosed);
-        _entityPopup.open();
-        return true;
-    }
-
-    /**
-     * Clear any popup belonging to the specified sprite.
-     */
-    public function clearEntityPopup (sprite :EntitySprite) :void
-    {
-        if (_entityPopup != null && _entityPopup.getOwningEntity() == sprite) {
-            _entityPopup.close(); // will trigger callback that clears _entityPopup
-        }
     }
 
     /**
