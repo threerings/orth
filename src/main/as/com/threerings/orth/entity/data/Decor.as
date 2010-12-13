@@ -9,8 +9,6 @@ package com.threerings.orth.entity.data {
 public interface Decor
     extends Entity
 {
-    function setType (type :int) :void;
-
     function getHorizon () :Number;
 
     function getDepth () :int;

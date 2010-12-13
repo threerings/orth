@@ -2,6 +2,7 @@
 // $Id: OrthScene.as 18599 2009-11-05 21:48:58Z jamie $
 
 package com.threerings.orth.room.data {
+import com.threerings.orth.entity.data.Decor;
 
 import flash.errors.IllegalOperationError;
 
@@ -29,7 +30,7 @@ public class OrthScene extends SceneImpl
      */
     public function getSceneType () :int
     {
-        return _orthModel.decorInfo.getDecorType();
+        return _orthModel.decor.getDecorType();
     }
 
     /**
@@ -37,7 +38,7 @@ public class OrthScene extends SceneImpl
      */
     public function getDepth () :int
     {
-        return _orthModel.decorInfo.getDepth();
+        return _orthModel.decor.getDepth();
     }
 
     /**
@@ -45,12 +46,12 @@ public class OrthScene extends SceneImpl
      */
     public function getWidth () :int
     {
-        return _orthModel.decorInfo.getWidth();
+        return _orthModel.decor.getWidth();
     }
 
     public function getHeight () :int
     {
-        return _orthModel.decorInfo.getHeight();
+        return _orthModel.decor.getHeight();
     }
 
     /**
@@ -59,7 +60,7 @@ public class OrthScene extends SceneImpl
      */
     public function getHorizon () :Number
     {
-        return _orthModel.decorInfo.getHorizon();
+        return _orthModel.decor.getHorizon();
     }
 
     /**
@@ -71,19 +72,11 @@ public class OrthScene extends SceneImpl
     }
 
     /**
-     * Retrieve an identifier for the room decor entity.
-     */
-    public function getDecorIdent () :EntityIdent
-    {
-        return _orthModel.decorIdent;
-    }
-
-    /**
      * Retrieve the room decor information object.
      */
     public function getDecorInfo () :Decor
     {
-        return _orthModel.decorInfo;
+        return _orthModel.decor;
     }
 
     /**

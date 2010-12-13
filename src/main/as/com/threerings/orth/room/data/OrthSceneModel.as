@@ -2,7 +2,7 @@
 // $Id: OrthSceneModel.as 18842 2009-12-11 20:38:56Z zell $
 
 package com.threerings.orth.room.data {
-
+import com.threerings.orth.entity.data.Decor;
 import com.threerings.util.ArrayIterator;
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.Iterator;
@@ -59,11 +59,8 @@ public class OrthSceneModel extends SceneModel
     /** The entrance location. */
     public var entrance :OrthLocation;
 
-    /** Decor item reference. */
-    public var decorIdent :EntityIdent;
-
     /** Decor item geometry. */
-    public var decorInfo :Decor;
+    public var decor :Decor;
 
     /** Constructor. */
     public function OrthSceneModel ()
@@ -199,8 +196,7 @@ public class OrthSceneModel extends SceneModel
         model.ownerName = ownerName;
         model.furnis = (furnis.clone() as TypedArray);
         model.entrance = (entrance.clone() as OrthLocation);
-        model.decorIdent = decorIdent;
-        model.decorInfo = decorInfo;
+        model.decor = decor;
         return model;
     }
 
@@ -215,8 +211,7 @@ public class OrthSceneModel extends SceneModel
         out.writeObject(ownerName);
         out.writeObject(furnis);
         out.writeObject(entrance);
-        out.writeObject(decorIdent);
-        out.writeObject(decorInfo);
+        out.writeObject(decor);
     }
 
     // documentation inherited
@@ -230,8 +225,7 @@ public class OrthSceneModel extends SceneModel
         ownerName = Name(ins.readObject());
         furnis = TypedArray(ins.readObject());
         entrance = OrthLocation(ins.readObject());
-        decorIdent = EntityIdent(ins.readObject());
-        decorInfo = Decor(ins.readObject());
+        decor = Decor(ins.readObject());
     }
 
     /** Cached portal info. Not streamed. */
