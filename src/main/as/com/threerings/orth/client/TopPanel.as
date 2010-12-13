@@ -148,7 +148,7 @@ public class TopPanel extends Canvas
     /**
      * Sets the specified view as the current place view.
      */
-    public function setPlaceView (view :OrthPlaceView) :void
+    public function setPlaceView (view :PlaceView) :void
     {
         _placeBox.setPlaceView(view);
         layoutPanels();
