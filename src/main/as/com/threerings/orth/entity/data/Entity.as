@@ -1,7 +1,7 @@
 //
 // $Id: $
 
-package com.threerings.orth.entity.client {
+package com.threerings.orth.entity.data {
 
 import com.threerings.presents.dobj.DSet_Entry;
 

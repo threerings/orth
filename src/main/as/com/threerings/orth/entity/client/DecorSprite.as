@@ -2,7 +2,7 @@
 // $Id: DecorSprite.as 19413 2010-10-15 19:28:43Z zell $
 
 package com.threerings.orth.entity.client {
-
+import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomCodes;

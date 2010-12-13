@@ -2,7 +2,7 @@
 // $Id: RoomView.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.room.client {
-import com.threerings.orth.entity.client.Decor;
+import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.client.OrthPlaceView;
 import com.threerings.orth.data.MediaDesc;

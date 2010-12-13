@@ -13,7 +13,7 @@ import com.threerings.crowd.client.LocationAdapter;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.orth.entity.client.Decor;
+import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
