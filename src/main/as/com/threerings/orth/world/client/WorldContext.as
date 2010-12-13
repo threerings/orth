@@ -148,8 +148,8 @@ public class WorldContext
      *        Specifying an odd number of arguments uses the first arg as the primary log message,
      *        instead of something generic like "An error occurred".
      */
-    public function listener (bundle:String, errWrap :String = null, ... logArgs)
-        :InvocationService_InvocationListener
+    public function listener (bundle :String = OrthCodes.GENERAL_MSGS,
+        errWrap :String = null, ... logArgs) :InvocationService_InvocationListener
     {
         return new InvocationAdapter(chatErrHandler(bundle, errWrap, null, logArgs));
     }
