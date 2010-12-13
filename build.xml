@@ -98,7 +98,7 @@
     activate ActionScript library build.
   </echo></target>
 
-  <target name="aslib" unless="no_build_aslib" depends="-checkaslib,-noteaslib">
+  <target name="aslib" unless="no_build_aslib" depends="-prepare,-checkaslib,-noteaslib">
     <copy file="etc/aslib-config.xml.in" tofile="${deploy.dir}/aslib-config.xml">
       <filterset>
         <filter token="flex_sdk_dir" value="${flexsdk.dir}"/>
