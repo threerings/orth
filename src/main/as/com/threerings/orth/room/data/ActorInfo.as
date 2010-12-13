@@ -39,6 +39,14 @@ public class ActorInfo extends OccupantInfo
         return _state;
     }
 
+    /**
+     * Returns true if this actor is idle.
+     */
+    public function isIdle () :Boolean
+    {
+        return (status == OccupantInfo.IDLE);
+    }
+
     override public function clone () :Object
     {
         var that :ActorInfo = super.clone() as ActorInfo;
