@@ -233,11 +233,13 @@ public class MemberSprite extends ActorSprite
 }
 }
 
+import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.party.data.PartySummary;
 import com.threerings.orth.ui.GlowSprite;
+import com.threerings.orth.ui.ScalingMediaDescContainer;
 import com.threerings.orth.world.client.WorldController;
 
 import com.threerings.util.Log;
@@ -260,8 +262,8 @@ class PartyIcon extends GlowSprite
             return;
         }
 
-        _icon = ScalingMsoyMediaContainer.createView(
-            Group.logo(summ.icon), MediaDescSize.QUARTER_THUMBNAIL_SIZE);
+        _icon = ScalingMediaDescContainer.createView(
+            summ.icon, MediaDescSize.QUARTER_THUMBNAIL_SIZE);
         _icon.x = _icon.maxW / -2; // position with 0 at center
         addChild(_icon);
 
@@ -284,5 +286,5 @@ class PartyIcon extends GlowSprite
     }
 
     protected var _host :MemberSprite;
-    protected var _icon :ScalingMsoyMediaContainer;
+    protected var _icon :ScalingMediaDescContainer;
 }
