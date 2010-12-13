@@ -2,6 +2,7 @@
 // $Id: SubtitleGlyph.as 19754 2010-12-07 16:19:29Z zell $
 
 package com.threerings.orth.chat.client {
+import com.threerings.orth.utils.TextUtil;
 
 import flash.events.MouseEvent;
 
@@ -13,10 +14,8 @@ import mx.managers.PopUpManager;
 
 import com.threerings.flex.PopUpUtil;
 
-import com.threerings.msoy.client.UberClient;
 import com.threerings.orth.data.MediaDesc;
 
-import com.threerings.msoy.utils.TextUtil;
 import com.threerings.orth.ui.MediaWrapper;
 
 public class SubtitleGlyph extends ChatGlyph
