@@ -16,6 +16,7 @@ import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniUpdate_Remove;
+import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneCodes;
 import com.threerings.orth.room.data.OrthRoomObject;

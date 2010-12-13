@@ -27,7 +27,7 @@ public class WalkAnimation extends AnimationImpl
 
         // calculate the duration- walk speed is specified in pixels/second.
         _duration = int(1000 * Math.sqrt((dx * dx) + (dy * dy) + (dz * dz)) /
-            spr.getMoveSpeed(scene.getDecorInfo().getActorScale()));
+            spr.getMoveSpeed(scene.getDecor().getActorScale()));
     }
 
     /**

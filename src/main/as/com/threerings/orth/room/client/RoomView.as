@@ -544,8 +544,8 @@ public class RoomView extends Sprite
     public function setScene (scene :OrthScene) :void
     {
         _scene = scene;
-        updateLayout(scene.getDecorInfo());
-        _backdrop.update(scene.getDecorInfo());
+        updateLayout(scene.getDecor());
+        _backdrop.update(scene.getDecor());
         relayout();
     }
 
@@ -571,7 +571,7 @@ public class RoomView extends Sprite
      */
     public function updateBackground () :void
     {
-        var decor :Decor = _scene.getDecorInfo();
+        var decor :Decor = _scene.getDecor();
         if (_bg != null && decor != null) {
             dispatchEntityLeft(_bg.getEntityIdent());
 
