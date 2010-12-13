@@ -2,10 +2,12 @@
 // $Id: PlaceBox.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.client {
+import com.threerings.orth.world.client.WorldContext;
 
 import flash.display.DisplayObject;
 import flash.display.InteractiveObject;
 import flash.display.Shape;
+import flash.events.Event;
 import flash.filters.GlowFilter;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -17,7 +19,6 @@ import caurina.transitions.Tweener;
 
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.FlexUtil;
-import com.threerings.orth.world.client.WorldContext;
 
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.NamedValueEvent;
@@ -51,9 +52,6 @@ public class PlaceBox extends LayeredContainer
     /** The layer priority of history chat messages. */
     public static const LAYER_CHAT_HISTORY :int = 35;
 
-    /** The layer priority of tutorial panel. */
-    public static const LAYER_TUTORIAL :int = 40;
-
     /** The layer priority of place buttons. */
     public static const LAYER_PLACE_CONTROL :int = 45;
 
@@ -74,13 +72,13 @@ public class PlaceBox extends LayeredContainer
         return _placeView;
     }
 
-    public function setPlaceView (view :OrthPlaceView) :void
+    public function setPlaceView (view :PlaceView) :void
     {
         // throw an exception now if it's not a display object
         var disp :DisplayObject = DisplayObject(view);
         setBaseLayer(disp);
-
         _placeView = view;
+        _orthPlaceView = view as OrthPlaceView;
 
         updateFrameBackgroundColor();
 
@@ -102,12 +100,12 @@ public class PlaceBox extends LayeredContainer
     }
 
     /**
-     * Gets the background color of the current place or black if it is not an msoy view.
+     * Gets the background color of the current place or black if it is not an orth view.
      */
     public function getPlaceBackgroundColor () :uint
     {
-        if (_placeView != null) {
-            return _placeView.getBackgroundColor();
+        if (_orthPlaceView != null) {
+            return _orthPlaceView.getBackgroundColor();
         } else {
             return 0x000000;
         }
@@ -120,8 +118,8 @@ public class PlaceBox extends LayeredContainer
     {
         if (Prefs.getUseCustomBackgroundColor()) {
             return Prefs.getCustomBackgroundColor();
-        } else if (_placeView != null) {
-            return _placeView.getBackgroundColor();
+        } else if (_orthPlaceView != null) {
+            return _orthPlaceView.getBackgroundColor();
         } else {
             return 0xffffff;
         }
@@ -184,7 +182,7 @@ public class PlaceBox extends LayeredContainer
     {
         super.setActualSize(width, height);
 
-        if (_placeView == null) {
+        if (_orthPlaceView == null) {
             setMasked(this, 0, 0, this.width, this.height);
         }
 
@@ -207,7 +205,6 @@ public class PlaceBox extends LayeredContainer
         var h :Number = this.height;
         var bounds :Rectangle = new Rectangle(0, 0, w, h);
 
-        _lastFullSize = new Point(w, h);
         var fullSize :Point = _lastFullSize;
         if (fullSize == null) {
             fullSize = new Point(w + 700, h);
@@ -236,10 +233,10 @@ public class PlaceBox extends LayeredContainer
         }
 
         // now inform the place view of its new size
-        if (_placeView != null) {
+        if (_orthPlaceView != null) {
             // center the view and add margins if view is centered
             var size :Point = null;
-            var center :Boolean = _placeView.isCentered();
+            var center :Boolean = _orthPlaceView.isCentered();
             if (center) {
                 var wmargin :Number = 0;
                 var hmargin :Number = 0;
@@ -248,16 +245,16 @@ public class PlaceBox extends LayeredContainer
                 // TODO: softwire 700x500
                 wmargin = Math.max(0, Math.min(20, (fullSize.x - 700) / 2));
                 hmargin = Math.max(0, Math.min(20, (fullSize.y - 500) / 2));
-                _placeView.setPlaceSize(w - wmargin * 2, h - hmargin * 2);
+                _orthPlaceView.setPlaceSize(w - wmargin * 2, h - hmargin * 2);
 
                 // NOTE: getSize must be called after setPlaceSize
-                size = _placeView.getSize();
+                size = _orthPlaceView.getSize();
                 if (size == null || isNaN(size.x) || isNaN(size.y)) {
                     center = false;
                 }
             }
 
-            var view :DisplayObject = _placeView as DisplayObject;
+            var view :DisplayObject = _orthPlaceView as DisplayObject;
             if (center) {
                 view.x = Math.max((w - size.x) / 2, wmargin);
                 view.y = Math.max((h - size.y) / 2, hmargin);
@@ -274,7 +271,7 @@ public class PlaceBox extends LayeredContainer
                 bounds.size = size;
 
             } else {
-                _placeView.setPlaceSize(w, h);
+                _orthPlaceView.setPlaceSize(w, h);
                 setMasked(_base, 0, 0, w, h);
             }
 
@@ -307,7 +304,7 @@ public class PlaceBox extends LayeredContainer
             _zoomLbl = null;
         }
 
-        var zoomable :Zoomable = _placeView != null ? _placeView.asZoomable() : null;
+        var zoomable :Zoomable = _orthPlaceView != null ? _orthPlaceView.asZoomable() : null;
         if (zoomable == null) {
             return;
         }
@@ -389,8 +386,11 @@ public class PlaceBox extends LayeredContainer
     /** The object currently being masked, either this or _placeView. */
     protected var _masked :DisplayObject;
 
-    /** The current msoy place view (may be null if not implemented). */
-    protected var _placeView :OrthPlaceView;
+    /** The current place view. */
+    protected var _placeView :PlaceView;
+
+    /** The current orth place view (may be null if not implemented). */
+    protected var _orthPlaceView :OrthPlaceView;
 
     protected var _roomBounds :Rectangle;
 
