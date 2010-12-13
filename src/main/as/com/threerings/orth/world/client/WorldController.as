@@ -95,9 +95,6 @@ public class WorldController
     /** Command to show the 'about' dialog. */
     public static const ABOUT :String = "About";
 
-    /** Command to close the current place view. */
-    public static const CLOSE_PLACE_VIEW :String = "ClosePlaceView";
-
     /** Command to move back to the previous location. */
     public static const MOVE_BACK :String = "MoveBack";
 
@@ -151,9 +148,6 @@ public class WorldController
     /** Command to go to a particular scene. */
     public static const GO_SCENE :String = "GoScene";
 
-    /** Command to go to a member's home scene. */
-    public static const GO_MEMBER_HOME :String = "GoMemberHome";
-
     /** Command to invite someone to be a friend. */
     public static const INVITE_FRIEND :String = "InviteFriend";
 
@@ -190,10 +184,6 @@ public class WorldController
         _idleTimer = new Timer(1000);
         _idleTimer.addEventListener(TimerEvent.TIMER, handlePollIdleMouse);
 
-        // create a timer that checks whether we should be logged out for being idle too long
-        _byebyeTimer = new Timer(MAX_GUEST_IDLE_TIME, 1);
-        _byebyeTimer.addEventListener(TimerEvent.TIMER, checkIdleLogoff);
-
         // listen for location changes
         _wctx.getLocationDirector().addLocationObserver(
             new LocationAdapter(null, this.locationDidChange, null));
@@ -205,7 +195,6 @@ public class WorldController
         stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown, false, int.MAX_VALUE);
 
         Prefs.events.addEventListener(Prefs.PREF_SET, handleConfigValueSet, false, 0, true);
-        _musicPlayer.addEventListener(MediaPlayerCodes.METADATA, handleMusicMetadata);
     }
 
     /**
@@ -290,7 +279,7 @@ public class WorldController
     {
         var memberObj :PlayerObject = _wctx.getPlayerObject();
 
-        var name :Name = (_wctx.getClient().getCredentials() as OrthCredentials).getUsername();
+        var name :Name = (_wctx.getClient().getCredentials() as WorldCredentials).getUsername();
         if (name != null) {
             Prefs.setUsername(name.toString());
         }
@@ -448,19 +437,6 @@ public class WorldController
     public function handleAbout () :void
     {
         new AboutDialog(_wctx);
-    }
-
-    /**
-     * Handles the CLOSE_PLACE_VIEW command.
-     */
-    public function handleClosePlaceView () :void
-    {
-        // give the handlers a chance to prevent closure
-        if (!sanctionClosePlaceView()) {
-            return;
-        }
-        // if we're in the whirled, closing means closing the flash client totally
-        _wctx.getWorldClient().closeClient();
     }
 
     /**
@@ -1106,12 +1082,6 @@ public class WorldController
      */
     protected function setIdle (nowIdle :Boolean) :void
     {
-        // take care of auto-logoff regardless of whether we're "away"
-        _byebyeTimer.reset();
-        if (nowIdle) {
-            _byebyeTimer.start();
-        }
-
         if (nowIdle != _idle) {
             _idle = nowIdle;
             var bsvc :BodyService = _wctx.getClient().getService(BodyService) as BodyService;
@@ -1288,9 +1258,6 @@ public class WorldController
     protected var _idleMousePoint :Point;
 
     protected var _idleStamp :Number;
-
-    /** A timer to log us out if we've been idle too long. */
-    protected var _byebyeTimer :Timer;
 
     /** Handlers that can perform actions and/or abort the exiting of a place. */
     protected var _placeExitHandlers :Array = [];
