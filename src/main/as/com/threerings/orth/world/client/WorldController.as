@@ -1057,12 +1057,6 @@ public class WorldController
         resetIdleTracking(event);
 
         switch (event.keyCode) {
-        case Keyboard.F7:
-            _wctx.getTopPanel().getHeaderBar().getChatTabs().selectedIndex--;
-            break;
-        case Keyboard.F8:
-            _wctx.getTopPanel().getHeaderBar().getChatTabs().selectedIndex++;
-            break;
         case Keyboard.F9:
             handleToggleChatHide();
             break;

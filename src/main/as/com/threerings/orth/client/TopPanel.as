@@ -63,12 +63,6 @@ public class TopPanel extends Canvas
         var chatTabs :ChatTabBar = new ChatTabBar(_ctx);
         _ctx.getOrthChatDirector().setChatTabs(chatTabs);
 
-        _headerBar = new HeaderBar(_ctx, this, chatTabs);
-        _headerBar.includeInLayout = false;
-        _headerBar.setStyle("left", 0);
-        _headerBar.setStyle("right", 0);
-        addChild(_headerBar);
-
         _placeBox = new PlaceBox(_ctx);
         _placeBox.autoLayout = false;
         _placeBox.includeInLayout = false;
@@ -88,7 +82,7 @@ public class TopPanel extends Canvas
             buildStamp.includeInLayout = false;
             buildStamp.mouseEnabled = false;
             buildStamp.mouseChildren = false;
-            buildStamp.text = "Build: " + DeploymentConfig.buildTime;
+            buildStamp.text = "Build: " + _ctx.getVersion();
             buildStamp.setStyle("color", "#F7069A");
             buildStamp.setStyle("fontSize", 8);
             buildStamp.setStyle("bottom", getControlBarHeight());
@@ -189,7 +183,7 @@ public class TopPanel extends Canvas
 
     /**
      * Returns a rectangle in stage coordinates that specifies the main game area.  This is
-     * basically just the bounds on the client, minus the any margins from control/header bars, etc.
+     * basically just the bounds on the client, minus the any margins from control bar, etc.
      */
     public function getMainAreaBounds () :Rectangle
     {
@@ -203,14 +197,6 @@ public class TopPanel extends Canvas
     public function getControlBar () :ControlBar
     {
         return _controlBar;
-    }
-
-    /**
-     * Returns a reference to our HeaderBar component
-     */
-    public function getHeaderBar () :HeaderBar
-    {
-        return _headerBar;
     }
 
     /**
@@ -237,10 +223,6 @@ public class TopPanel extends Canvas
             }
             _leftPanel = null;
             layoutPanels();
-            // HACK ATTACK: jiggle the selected tab so that the room occupant list shows up when
-            // we leave a game.
-            // TODO: when we have time HAW HAW HAW HAW, clean up the chat overlay/sidebar code
-            _headerBar.getChatTabs().selectedIndex = _headerBar.getChatTabs().selectedIndex;
         }
     }
 
@@ -264,14 +246,6 @@ public class TopPanel extends Canvas
             RoomObjectView(view).getRoomObjectController().isRoomEditing();
     }
 
-    /**
-     * Returns the height of the header bar.
-     */
-    public function getHeaderBarHeight () :int
-    {
-        return HeaderBar.getHeight(_ctx.getWorldClient());
-    }
-
     protected function stageResized (event :Event) :void
     {
         layoutPanels();
@@ -287,10 +261,9 @@ public class TopPanel extends Canvas
 
         // center control bar in the "footer". we shall put other things here soon
         _controlBar.setStyle("bottom", 0);
-        _headerBar.setStyle("top", 0);
 
         if (_leftPanel != null) {
-            _leftPanel.setStyle("top", getHeaderBarHeight());
+            _leftPanel.setStyle("top", 0);
             _leftPanel.setStyle("left", 0);
             _leftPanel.setStyle("bottom", getControlBarHeight());
 
@@ -312,7 +285,7 @@ public class TopPanel extends Canvas
             return; // nothing doing if we're not in control
         }
 
-        var top :int = getHeaderBarHeight();
+        var top :int = 0;
         var left :int = 0;
         var right :int = 0;
         var bottom :int = 0;
@@ -345,9 +318,6 @@ public class TopPanel extends Canvas
 
     /** The current right panel component. */
     protected var _leftPanel :UIComponent;
-
-    /** Header bar at the top of the window. */
-    protected var _headerBar :HeaderBar;
 
     /** Control bar at the bottom of the window. */
     protected var _controlBar :ControlBar;
