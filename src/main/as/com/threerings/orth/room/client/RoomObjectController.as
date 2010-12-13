@@ -23,6 +23,8 @@ import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
+import com.threerings.orth.room.client.updates.UpdateAction;
+import com.threerings.orth.room.client.updates.UpdateStack;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;

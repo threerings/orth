@@ -15,7 +15,7 @@ public class FurniBackend extends EntityBackend
     protected function showPage_v1 (token :String) :Boolean
     {
         // handleViewUrl will do the "right thing"
-        _ctx.getOrthController().handleViewUrl(DeploymentConfig.serverURL + "#" + token);
+        _ctx.getWorldController().handleViewUrl(DeploymentConfig.serverURL + "#" + token);
         return true;
     }
 }
