@@ -14,7 +14,7 @@ import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.room.client.layout.RoomLayout;
 import com.threerings.orth.room.client.layout.RoomLayoutFactory;
 import com.threerings.orth.room.data.DecorCodes;
-import com.threerings.orth.room.data.DecorGeometry;
+import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.world.client.WorldContext;
@@ -557,7 +557,7 @@ public class RoomView extends Sprite
     /**
      * Updates the layout object, creating a new one if necessary.
      */
-    protected function updateLayout (decor :DecorGeometry) :void
+    protected function updateLayout (decor :Decor) :void
     {
         if (! (RoomLayoutFactory.isDecorSupported(_layout, decor))) {
             _layout = RoomLayoutFactory.createLayout(decor, this);
@@ -571,7 +571,7 @@ public class RoomView extends Sprite
      */
     public function updateBackground () :void
     {
-        var decor :DecorGeometry = _scene.getDecorInfo();
+        var decor :Decor = _scene.getDecorInfo();
         if (_bg != null && decor != null) {
             dispatchEntityLeft(_bg.getEntityIdent());
 

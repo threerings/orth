@@ -7,7 +7,7 @@ import flash.geom.Point;
 
 import com.threerings.geom.Vector3;
 
-import com.threerings.orth.room.data.DecorGeometry;
+import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.data.OrthLocation;
 
 /**
@@ -79,7 +79,7 @@ public class RoomMetrics
     protected var walldefs :Array;
 
     /** Read and update metrics. */
-    public function update (decor :DecorGeometry) :void
+    public function update (decor :Decor) :void
     {
         // I'm using 'this' to make clear which assignments are for public props
         this.focal = Math.max(1, DEFAULT_FOCAL);    // nb: focal length must not be zero

@@ -8,7 +8,7 @@ import flash.display.Graphics;
 
 import flash.geom.Point;
 
-import com.threerings.orth.room.data.DecorGeometry;
+import com.threerings.orth.entity.data.Decor;
 
 /**
  * Helper class that draws a room backdrop with four walls, floor, and ceiling.
@@ -16,7 +16,7 @@ import com.threerings.orth.room.data.DecorGeometry;
 public class RoomBackdrop
 {
     /** Refresh room metrics. */
-    public function update (decor :DecorGeometry) :void
+    public function update (decor :Decor) :void
     {
         _decor = decor;
         _metrics.update(decor);
@@ -117,7 +117,7 @@ public class RoomBackdrop
         }
     }
 
-    protected var _decor :DecorGeometry;
+    protected var _decor :Decor;
 
     /** The RoomMetrics for doing our layout. */
     protected var _metrics :RoomMetrics = new RoomMetrics();

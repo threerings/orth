@@ -3,7 +3,7 @@
 
 package com.threerings.orth.room.client.layout {
 import com.threerings.orth.room.data.DecorCodes;
-import com.threerings.orth.room.data.DecorGeometry;
+import com.threerings.orth.entity.data.Decor;
 
 import com.threerings.orth.room.client.RoomView;
 
@@ -16,7 +16,7 @@ public class RoomLayoutFactory {
      * Returns true if the specified layout supports the specified decor type.
      * Single layout can support multiple decor types.
      */
-    public static function isDecorSupported (layout :RoomLayout, decor :DecorGeometry) :Boolean
+    public static function isDecorSupported (layout :RoomLayout, decor :Decor) :Boolean
     {
         var layoutClass :Class = layoutClassForDecor(decor);
         return Object(layout).constructor === layoutClass;
@@ -25,7 +25,7 @@ public class RoomLayoutFactory {
     /**
      * Creates a new, uninitialized room layout instance for the specified decor.
      */
-    public static function createLayout (decor :DecorGeometry, view :RoomView) :RoomLayout
+    public static function createLayout (decor :Decor, view :RoomView) :RoomLayout
     {
         var layoutClass :Class = layoutClassForDecor(decor);
         return new layoutClass(view);
@@ -34,7 +34,7 @@ public class RoomLayoutFactory {
     /**
      * Returns a layout class appropriate for the given decor type.
      */
-    protected static function layoutClassForDecor (decor :DecorGeometry) :Class
+    protected static function layoutClassForDecor (decor :Decor) :Class
     {
         if (decor == null) {
             // this should only happen during room initialization

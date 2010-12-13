@@ -3,7 +3,7 @@
 
 package com.threerings.orth.room.client.layout {
 import com.threerings.orth.room.client.RoomMetrics;
-import com.threerings.orth.room.data.DecorGeometry;
+import com.threerings.orth.entity.data.Decor;
 
 import flash.geom.Point;
 
@@ -20,7 +20,7 @@ public interface RoomLayout {
     /**
      * Updates the room layout object with fresh data.
      */
-    function update (data :DecorGeometry) :void;
+    function update (data :Decor) :void;
 
     /**
      * Get the room metrics used in the layout.

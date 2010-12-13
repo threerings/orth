@@ -5,7 +5,7 @@ package com.threerings.orth.room.client.layout {
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.FurniSprite;
-import com.threerings.orth.room.data.DecorGeometry;
+import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.data.OrthRoomCodes;
 
 import flash.display.DisplayObject;
@@ -39,7 +39,7 @@ public class RoomLayoutStandard implements RoomLayout
     }
 
     // from interface RoomLayout
-    public function update (data :DecorGeometry) :void
+    public function update (data :Decor) :void
     {
         _decor = data;
         _metrics.update(data);
@@ -398,7 +398,7 @@ public class RoomLayoutStandard implements RoomLayout
     protected var _metrics :RoomMetrics;
 
     /** The decor. */
-    protected var _decor :DecorGeometry;
+    protected var _decor :Decor;
 
     /** RoomView object that contains this instance. */
     protected var _parentView :RoomView;

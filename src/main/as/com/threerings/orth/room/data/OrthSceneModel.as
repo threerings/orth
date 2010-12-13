@@ -63,7 +63,7 @@ public class OrthSceneModel extends SceneModel
     public var decorIdent :EntityIdent;
 
     /** Decor item geometry. */
-    public var decorInfo :DecorGeometry;
+    public var decorInfo :Decor;
 
     /** Constructor. */
     public function OrthSceneModel ()
@@ -231,7 +231,7 @@ public class OrthSceneModel extends SceneModel
         furnis = TypedArray(ins.readObject());
         entrance = OrthLocation(ins.readObject());
         decorIdent = EntityIdent(ins.readObject());
-        decorInfo = DecorGeometry(ins.readObject());
+        decorInfo = Decor(ins.readObject());
     }
 
     /** Cached portal info. Not streamed. */

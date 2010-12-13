@@ -81,7 +81,7 @@ public class OrthScene extends SceneImpl
     /**
      * Retrieve the room decor information object.
      */
-    public function getDecorInfo () :DecorGeometry
+    public function getDecorInfo () :Decor
     {
         return _orthModel.decorInfo;
     }
