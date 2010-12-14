@@ -55,7 +55,6 @@ import mx.managers.ToolTipManager;
  */
 public class RoomController extends SceneController
 {
-
     /** Logging facilities. */
     protected static const log :Log = Log.getLog(RoomController);
 

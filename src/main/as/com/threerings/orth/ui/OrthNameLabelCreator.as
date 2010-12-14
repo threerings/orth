@@ -23,15 +23,14 @@ public class OrthNameLabelCreator
     }
 
     // from NameLabelCreator
-    public function createLabel (name :Name, extraInfo :Object) :NameLabel
+    public function createLabel (name :Name) :NameLabel
     {
         if (!(name is VizOrthName)) {
             Log.getLog(this).warning("OrthNameLabelCreator only supports VizOrthName");
             return null;
         }
 
-        // here in orthland, the extraInfo is currently the user's subscriber status
-        return new LabelBox(_mctx, name as VizOrthName, Boolean(extraInfo), _forRoom);
+        return new LabelBox(_mctx, name as VizOrthName, _forRoom);
     }
 
     protected var _mctx :OrthContext;
@@ -70,11 +69,10 @@ class LabelBox extends HBox
     implements NameLabel
 {
     public function LabelBox (
-        mctx :OrthContext, name :VizOrthName, subscriber :Boolean, forRoom :Boolean)
+        mctx :OrthContext, name :VizOrthName, forRoom :Boolean)
     {
         _mctx = mctx;
         _name = name;
-        _subscriber = subscriber;
         _forRoom = forRoom;
 
         verticalScrollPolicy = ScrollPolicy.OFF;
@@ -128,7 +126,6 @@ class LabelBox extends HBox
 
         _label = new OrthNameLabel();
         _label.setName(_name.toString());
-        _label.setSubscriber(_subscriber);
         addChild(new FlexWrapper(_label));
     }
 
@@ -150,7 +147,6 @@ class LabelBox extends HBox
 
     protected var _mctx :OrthContext;
     protected var _name :VizOrthName;
-    protected var _subscriber :Boolean;
     protected var _forRoom :Boolean;
     protected var _label :OrthNameLabel;
 }
