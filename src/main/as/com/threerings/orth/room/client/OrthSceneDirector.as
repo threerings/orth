@@ -208,7 +208,7 @@ public class OrthSceneDirector extends SceneDirector
         }
 
         // The Orth layer doesn't know how to deal with this; subclasses need to take over here
-        return;
+        return false;
     }
 
     protected function memberMessageReceived (event :MessageEvent) :void
