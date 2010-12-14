@@ -2,13 +2,14 @@
 // $Id: MsoyChatDirector.as 19656 2010-11-29 04:36:17Z zell $
 
 package com.threerings.orth.chat.client {
-import com.threerings.msoy.chat.client.*;
+
 import com.threerings.orth.chat.data.OrthChatChannel;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.ChannelName;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.RoomName;
 
 import flash.utils.getTimer; // function
@@ -40,24 +41,6 @@ import com.threerings.crowd.chat.data.UserMessage;
 
 import com.whirled.ui.PlayerList;
 
-import com.threerings.msoy.client.DeploymentConfig;
-import com.threerings.msoy.client.Msgs;
-import com.threerings.msoy.client.MsoyContext;
-import com.threerings.msoy.data.MemberObject;
-import com.threerings.msoy.data.MsoyCodes;
-import com.threerings.msoy.data.PrimaryPlace;
-import com.threerings.msoy.data.all.ChannelName;
-import com.threerings.msoy.data.all.GroupName;
-import com.threerings.msoy.data.all.JabberName;
-import com.threerings.msoy.data.all.MemberName;
-import com.threerings.msoy.data.all.RoomName;
-
-import com.threerings.msoy.chat.data.MsoyChatChannel;
-import com.threerings.msoy.chat.data.JabberMarshaller;
-import com.threerings.msoy.chat.client.JabberService;
-
-import com.threerings.msoy.room.data.RoomObject;
-
 /**
  * Handles the dispatching of chat messages based on their "channel" (room/game, individual, or
  * actual custom channel). Manages chat history tracking for same.
@@ -74,27 +57,6 @@ public class OrthChatDirector extends ChatDirector
     {
         super(ctx, ctx.getMessageManager(), OrthCodes.CHAT_MSGS);
         _mctx = ctx;
-
-        registerCommandHandler(Msgs.CHAT, "away", new AwayHandler());
-        registerCommandHandler(Msgs.CHAT, "bleepall", new BleepAllHandler());
-
-        // override the broadcast command from ChatDirector
-        registerCommandHandler(Msgs.CHAT, "broadcast", new OrthBroadcastHandler());
-
-        // Ye Olde Easter Eggs
-        registerCommandHandler(Msgs.CHAT, "~egg", new HackHandler(function (args :String) :void {
-            _handlers.remove("~egg");
-            _mctx.getControlBar().setFullOn();
-            SubtitleGlyph.thumbsEnabled = true;
-            displayFeedback(null, MessageBundle.taint("Easter eggs enabled:\n" +
-                " * Full-screen button (no chat, due to flash security).\n" +
-                " * Chat link hover pics.\n" +
-                "\n" +
-                "These experimental features may be removed in the future. Let us know if you " +
-                "find them incredibly useful."));
-        }));
-
-        registerCommandHandler(Msgs.CHAT, "wipe", new WipeHandler());
 
         addChatDisplay(_chatHistory = new HistoryList(this));
 
@@ -156,10 +118,10 @@ public class OrthChatDirector extends ChatDirector
     }
 
     /**
-     * Opens the chat interface for the supplied player, group or private chat channel, selecting
+     * Opens the chat interface for the supplied player or private chat channel, selecting
      * the appropriate tab if said channel is already open.
      *
-     * @param name either a OrthName, GroupName, ChannelName or RoomName.
+     * @param name either a OrthName, ChannelName or RoomName.
      */
     public function openChannel (name :Name) :void
     {
@@ -233,7 +195,7 @@ public class OrthChatDirector extends ChatDirector
         super.enteredLocation(place);
 
         // let our occupant list know about our new location
-        if (place is RoomObject) {
+        if (place is OrthRoomObject) {
             _roomOccList.setPlaceObject(place);
         }
         _chatTabs.setPlaceName(PrimaryPlace(place).getName());
@@ -311,7 +273,6 @@ public class OrthChatDirector extends ChatDirector
     {
         super.fetchServices(client);
         _csservice = (client.requireService(ChannelSpeakService) as ChannelSpeakService);
-        _jservice = (client.requireService(JabberService) as JabberService);
     }
 
     // from ChatDirector
@@ -384,6 +345,5 @@ public class OrthChatDirector extends ChatDirector
     protected var _gamePlace :PlaceObject;
 
     protected var _csservice :ChannelSpeakService;
-    protected var _jservice :JabberService;
 }
 }

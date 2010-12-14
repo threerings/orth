@@ -71,7 +71,7 @@ public class SubtitleGlyph extends ChatGlyph
             _pop = MediaWrapper.createView(thumbnail);
             _pop.x = event.stageX + 10;
             _pop.y = event.stageY - (_pop.height/2);
-            PopUpManager.addPopUp(_pop, UberClient.getApplication(), false);
+            PopUpManager.addPopUp(_pop, _overlay.getContext().getApplication(), false);
             PopUpUtil.fit(_pop);
         }
     }
