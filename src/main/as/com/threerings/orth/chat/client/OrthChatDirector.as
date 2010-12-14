@@ -5,7 +5,7 @@ package com.threerings.orth.chat.client {
 
 import com.threerings.orth.chat.data.OrthChatChannel;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.data.ChannelName;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
@@ -53,7 +53,7 @@ public class OrthChatDirector extends ChatDirector
     // statically reference classes we require
     ChannelSpeakMarshaller;
 
-    public function OrthChatDirector (ctx :OrthContext)
+    public function OrthChatDirector (ctx :WorldContext)
     {
         super(ctx, ctx.getMessageManager(), OrthCodes.CHAT_MSGS);
         _mctx = ctx;
@@ -332,7 +332,7 @@ public class OrthChatDirector extends ChatDirector
     }
 
     /** Casted form of our context. */
-    protected var _mctx :OrthContext;
+    protected var _mctx :WorldContext;
 
     /** You may utter 8 things per 5 seconds, but large things count as two. */
     protected var _throttle :Throttle = new Throttle(8, 5000);
