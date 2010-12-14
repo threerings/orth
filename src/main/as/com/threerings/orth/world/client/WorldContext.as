@@ -128,6 +128,20 @@ public class WorldContext
     }
 
     // from OrthContext
+    public function getMyId () :int
+    {
+        var name :OrthName = getMyName();
+        return (name == null) ? 0 : name.getId();
+    }
+
+    // from OrthContext
+    public function getMyName () :OrthName
+    {
+        var body :BodyObject = _client.bodyOf());
+        return (body == null) ? null : body.getVisibleName() as OrthName;
+    }
+
+    // from OrthContext
     public function isDevelopment ():Boolean
     {
         return true;
@@ -284,24 +298,6 @@ public class WorldContext
     public function getSceneDirector () :SceneDirector
     {
         return _sceneDir;
-    }
-
-    /**
-     * Return's this client's member name.
-     */
-    public function getMyName () :OrthName
-    {
-        var body :BodyObject = (_client.getClientObject() as BodyObject);
-        return (body == null) ? null : body.getVisibleName() as OrthName;
-    }
-
-    /**
-     * Return this client's member id, or 0 if we're logged off or the viewer.
-     */
-    public function getMyId () :int
-    {
-        var name :OrthName = getMyName();
-        return (name == null) ? 0 : name.getId();
     }
 
     /**

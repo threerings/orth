@@ -57,6 +57,16 @@ public interface OrthContext
     function saveSessionToken (arsp :AuthResponseData) :void;
 
     /**
+     * Return's this client's member name, or null if we're not logged in.
+     */
+    function getMyName () :OrthName;
+
+    /**
+     * Return this client's member id, or 0 if we're logged off.
+     */
+    function getMyId () :int;
+
+    /**
      * Let us know whether or not this is a development environment.
      */
     function isDevelopment () :Boolean;
