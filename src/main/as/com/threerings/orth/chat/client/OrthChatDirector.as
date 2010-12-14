@@ -9,6 +9,7 @@ import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.data.ChannelName;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PrimaryPlace;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.RoomName;
 
