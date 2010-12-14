@@ -145,11 +145,9 @@ public class RoomView extends Sprite
         return new Point(metrics.sceneWidth * scaleX, metrics.sceneHeight * scaleY);
     }
 
-    // from OrthPlaceView
     public function getBackgroundColor () :uint
     {
-        // TODO
-        return 0;
+        return _ctx.getTopPanel().getPlaceContainer().getPlaceBackgroundColor();
     }
 
     // from OrthPlaceView

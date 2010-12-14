@@ -106,7 +106,7 @@ public class RoomObjectView extends RoomView
         if (_scene != null) {
             return _scene.getBackgroundColor();
         }
-        return 0x000000;
+        return super.getBackgroundColor();
     }
 
     // from Zoomable, via RoomView

@@ -54,8 +54,6 @@ public class Prefs
     public static const OCCUPANT_LIST :String = "occupantList";
     public static const LOG_TO_CHAT :String = "logToChat";
     public static const PARTY_GROUP :String = "partyGroup";
-    public static const USE_CUSTOM_BACKGROUND_COLOR :String = "useCustomBgColor";
-    public static const CUSTOM_BACKGROUND_COLOR :String = "customBgColor";
     public static const AUTOSHOW_PREFIX :String = "autoShow_";
     public static const ROOM_ZOOM :String = "roomZoom";
     public static const IGNORED_TUTORIAL_IDS :String = "ignoredTutIds";
@@ -66,9 +64,8 @@ public class Prefs
     /** List of cookies (that the user may see and clear). */
     public static const ALL_KEYS :Array = [
         VOLUME, CHAT_FONT_SIZE, CHAT_DECAY, CHAT_FILTER, CHAT_HISTORY, CHAT_SIDEBAR, OCCUPANT_LIST,
-        LOG_TO_CHAT, PARTY_GROUP, USE_CUSTOM_BACKGROUND_COLOR,
-        CUSTOM_BACKGROUND_COLOR, ROOM_ZOOM, IGNORED_TUTORIAL_IDS, TUTORIAL_PROGRESS_PREFIX,
-        AUTOSHOW_PREFIX];
+        LOG_TO_CHAT, PARTY_GROUP,ROOM_ZOOM, IGNORED_TUTORIAL_IDS, TUTORIAL_PROGRESS_PREFIX,
+        AUTOSHOW_PREFIX ];
 
     public static const CHAT_FONT_SIZE_MIN :int = 10;
     public static const CHAT_FONT_SIZE_MAX :int = 24;
@@ -278,26 +275,6 @@ public class Prefs
     public static function setPartyGroup (groupId :int) :void
     {
         _config.setValue(PARTY_GROUP, groupId);
-    }
-
-    public static function getUseCustomBackgroundColor () :Boolean
-    {
-        return (_config.getValue(USE_CUSTOM_BACKGROUND_COLOR, true) as Boolean);
-    }
-
-    public static function setUseCustomBackgroundColor (value :Boolean) :void
-    {
-        _config.setValue(USE_CUSTOM_BACKGROUND_COLOR, value);
-    }
-
-    public static function getCustomBackgroundColor () :uint
-    {
-        return (_config.getValue(CUSTOM_BACKGROUND_COLOR, 0xffffff) as uint);
-    }
-
-    public static function setCustomBackgroundColor (value :uint) :void
-    {
-        _config.setValue(CUSTOM_BACKGROUND_COLOR, value);
     }
 
     public static function isTutorialIgnored (id :String) :Boolean

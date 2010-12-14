@@ -62,9 +62,6 @@ public class PlaceBox extends LayeredContainer
     {
         _ctx = ctx;
         rawChildren.addChild(_mask = new Shape());
-
-        // use a weak reference
-        Prefs.events.addEventListener(Prefs.PREF_SET, handlePrefsUpdated, false, 0, true);
     }
 
     public function getPlaceView () :PlaceView
@@ -79,8 +76,6 @@ public class PlaceBox extends LayeredContainer
         setBaseLayer(disp);
         _placeView = view;
         _orthPlaceView = view as OrthPlaceView;
-
-        updateFrameBackgroundColor();
 
         // TODO: why is this type-check here? surely when the place view changes it needs to be
         // laid out regardless of type
@@ -104,11 +99,7 @@ public class PlaceBox extends LayeredContainer
      */
     public function getPlaceBackgroundColor () :uint
     {
-        if (_orthPlaceView != null) {
-            return _orthPlaceView.getBackgroundColor();
-        } else {
-            return 0x000000;
-        }
+        return 0x000000;
     }
 
     /**
@@ -116,13 +107,7 @@ public class PlaceBox extends LayeredContainer
      */
     public function getFrameBackgroundColor () :uint
     {
-        if (Prefs.getUseCustomBackgroundColor()) {
-            return Prefs.getCustomBackgroundColor();
-        } else if (_orthPlaceView != null) {
-            return _orthPlaceView.getBackgroundColor();
-        } else {
-            return 0xffffff;
-        }
+        return 0xffffff;
     }
 
     /**
@@ -365,16 +350,6 @@ public class PlaceBox extends LayeredContainer
         _mask.graphics.beginFill(0xFFFFFF);
         _mask.graphics.drawRect(x, y, w, h);
         _mask.graphics.endFill();
-    }
-
-    protected function handlePrefsUpdated (evt :NamedValueEvent) :void
-    {
-        switch (evt.name) {
-        case Prefs.USE_CUSTOM_BACKGROUND_COLOR:
-        case Prefs.CUSTOM_BACKGROUND_COLOR:
-            updateFrameBackgroundColor();
-            break;
-        }
     }
 
     /** The river of life. */

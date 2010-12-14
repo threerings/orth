@@ -584,8 +584,6 @@ public class WorldController extends Controller
         menuData.push({ label: Msgs.GENERAL.get("b.editScene"), icon: Resources.ROOM_EDIT_ICON,
             command: ROOM_EDIT, enabled: roomView.getRoomController().canManageRoom() });
 
-        addFrameColorOption(menuData);
-
         menuData.push({ label: Msgs.GENERAL.get("b.viewItems"),
             callback: roomView.viewRoomItems });
         menuData.push({ label: Msgs.GENERAL.get("b.snapshot"), icon: SNAPSHOT_ICON,
@@ -1150,29 +1148,10 @@ public class WorldController extends Controller
         }
     }
 
-    protected function addFrameColorOption (menuData :Array) :void
-    {
-        menuData.push({ label: Msgs.GENERAL.get("b.frame_color"),
-            command: doShowColorPicker });
-    }
-
-    protected function doShowColorPicker () :void
-    {
-        if (_picker == null) {
-            _picker = new ColorPickerPanel(_wctx);
-            _picker.addCloseCallback(function () :void {
-                _picker = null;
-            });
-            _picker.open();
-        }
-    }
-
     /** Giver of life, context. */
     protected var _wctx :WorldContext;
 
     protected var _snapPanel :SnapshotPanel;
-
-    protected var _picker :ColorPickerPanel;
 
     /** A scene to which to go after we logon. */
     protected var _postLogonScene :int;
