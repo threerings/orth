@@ -192,9 +192,10 @@ public class OrthSceneDirector extends SceneDirector
     }
 
     /**
-     * Do whatever cleanup is appropriate after we failed to enter a locked room.
+     * Do whatever cleanup is appropriate after we failed to enter a locked room. Returns true
+     * if the problem was handled, false for subclasses to take over.
      */
-    protected function bounceBack (localSceneId :int, remoteSceneId :int, reason :String) :void
+    protected function bounceBack (localSceneId :int, remoteSceneId :int, reason :String) :Boolean
     {
         var ctrl :WorldController = _worldctx.getWorldController();
 
@@ -203,13 +204,10 @@ public class OrthSceneDirector extends SceneDirector
             log.info("Returning to remote scene", "sceneId", remoteSceneId);
             _postMoveMessage = reason; // remember the error message
             ctrl.handleGoScene(remoteSceneId);
-            return;
+            return true;
         }
 
-        // we have nowhere to go back. let's just go home.
-        var memberId :int = _worldctx.getMyId();
-        log.info("Scene locked, returning home", "memberId", memberId);
-        ctrl.handleGoMemberHome(memberId);
+        // The Orth layer doesn't know how to deal with this; subclasses need to take over here
         return;
     }
 
