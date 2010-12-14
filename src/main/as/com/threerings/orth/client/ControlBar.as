@@ -24,10 +24,11 @@ import com.threerings.flex.FlexUtil;
 
 import com.threerings.presents.client.ClientAdapter;
 
+import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.ui.FloatingPanel;
 import com.threerings.orth.notify.client.NotificationDisplay;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.world.client.WorldController;
 
 /**
@@ -69,7 +70,7 @@ public class ControlBar extends HBox
     /**
      * Construct.
      */
-    public function ControlBar (ctx :WorldContext)
+    public function ControlBar (ctx :OrthContext)
     {
         _ctx = ctx;
 
@@ -205,7 +206,7 @@ public class ControlBar extends HBox
     {
         _chatControl = new ChatControl(_ctx, Msgs.GENERAL.get("b.chat_send"));
         _chatControl.chatInput.height = getControlHeight();
-        _chatControl.chatInput.maxChars = MsoyChatDirector.MAX_CHAT_LENGTH;
+        _chatControl.chatInput.maxChars = OrthChatDirector.MAX_CHAT_LENGTH;
 
         chatOptsBtn = createButton("controlBarButtonChat", "i.channel");
         chatOptsBtn.toggle = true;
@@ -378,7 +379,7 @@ public class ControlBar extends HBox
     protected static const NOTIFICATION_SECTION :int = 1;
 
     /** Our clientside context. */
-    protected var _ctx :WorldContext;
+    protected var _ctx :OrthContext;
 
     /** Button visibility conditions. */
     protected var _conditions :Dictionary = new Dictionary(true);
@@ -395,6 +396,6 @@ public class ControlBar extends HBox
     protected var _buttons :ButtonPalette;
 
     /** Displays incoming notifications. */
-    protected var _notificationDisplay :MsoyNotificationDisplay;
+    protected var _notificationDisplay :NotificationDisplay;
 }
 }
