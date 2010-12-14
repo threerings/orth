@@ -4,6 +4,7 @@
 package com.threerings.orth.world.client {
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.MuteDirector;
+import com.threerings.crowd.util.CrowdContext;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
@@ -53,8 +54,6 @@ public class WorldContext
 {
     public function WorldContext (client :WorldClient)
     {
-        super(client);
-
         _client = client;
 
         // initialize the message manager
@@ -62,6 +61,7 @@ public class WorldContext
 
         _locDir = new LocationDirector(this);
         _occDir = new OccupantDirector(this);
+        _chatDir = new OrthChatDirector(this);
 
         // the top panel's constructor will add it to the app's UI hierarchy
         _topPanel = new TopPanel(this, createControlBar());
@@ -74,25 +74,31 @@ public class WorldContext
         _controller = new WorldController(this, _topPanel);
     }
 
-    /**
-     * Get the width of the client.
-     * By default this is just the stage width, but that should not be assumed!
-     * Certain subclasses override this method and in the future it could become
-     * more complicated due to embedding.
-     */
+    // from PresentsContext
+    public function getClient () :Client
+    {
+        return _client;
+    }
+
+    // from PresentsContext
+    public function getDObjectManager () :DObjectManager
+    {
+        return _client.getDObjectManager();
+    }
+
+    // from OrthContext
     public function getWidth () :Number
     {
         return _client.getStage().stageWidth;
     }
 
-    /**
-     * Get the height of the client. Please review the the notes in getWidth().
-     */
+    // from OrthContext
     public function getHeight () :Number
     {
         return _client.getStage().stageHeight;
     }
 
+    // from OrthContext
     public function getStage () :Stage
     {
         return _client.getStage();
@@ -111,11 +117,7 @@ public class WorldContext
         return _client;
     }
 
-    /**
-     * Saves the session token communicated via the supplied auth response. It is stored in the
-     * credentials of the client so that we can log in more efficiently on a reconnect, and so that
-     * we can log into game servers.
-     */
+    // from OrthContext
     public function saveSessionToken (arsp :AuthResponseData) :void
     {
         var rdata :OrthAuthResponseData = (arsp as OrthAuthResponseData);
@@ -125,42 +127,38 @@ public class WorldContext
         }
     }
 
+    // from OrthContext
     public function isDevelopment ():Boolean
     {
         return true;
     }
 
+    // from OrthContext
     public function getVersion () :String
     {
         return "DEV";
     }
 
-    /**
-     * Create an InvocationListener that will automatically log and report errors to chat.
-     *
-     * @param bundle the MessgeBundle to use to translate the error message.
-     * @param errWrap if not null, a translation key used to report the error, with the
-     *        'cause' String from the server as it's argument.
-     * @param logArgs arguments to use when logging the error. An even number of arguments
-     *        may be specified in the "description", value, "description", value format.
-     *        Specifying an odd number of arguments uses the first arg as the primary log message,
-     *        instead of something generic like "An error occurred".
-     */
+    // from OrthContext
+    public function getTopPanel () :TopPanel
+    {
+        return _topPanel;
+    }
+
+    // from OrthContext
+    public function getOrthChatDirector () :OrthChatDirector
+    {
+        return null;
+    }
+
+    // from OrthContext
     public function listener (bundle :String = OrthCodes.GENERAL_MSGS,
         errWrap :String = null, ... logArgs) :InvocationService_InvocationListener
     {
         return new InvocationAdapter(chatErrHandler(bundle, errWrap, null, logArgs));
     }
 
-    /**
-     * Create a ConfirmListener that will automatically log and report errors to chat.
-     *
-     * @param confirm if a String, a message that will be reported on success. If a function,
-     *        it will be run on success.
-     * @param component if non-null, a component that will be disabled, and re-enabled when
-     *        the response arrives from the server (success or failure).
-     * @see listener() for a description of the rest of the arguments.
-     */
+    // from OrthContext
     public function confirmListener (bundle :String = OrthCodes.GENERAL_MSGS, confirm :* = null,
         errWrap :String = null, component :UIComponent = null, ... logArgs)
         :InvocationService_ConfirmListener
@@ -181,14 +179,7 @@ public class WorldContext
         return new ConfirmAdapter(success, chatErrHandler(bundle, errWrap, component, logArgs));
     }
 
-    /**
-     * Create a ResultListener that will automatically log and report errors to chat.
-     *
-     * @param gotResult a function that will be passed a single result argument from the server.
-     * @param component if non-null, a component that will be disabled, and re-enabled when
-     *        the response arrives from the server (success or failure).
-     * @see listener() for a description of the rest of the arguments.
-     */
+    // from OrthContext
     public function resultListener (gotResult :Function, bundle :String = OrthCodes.GENERAL_MSGS,
         errWrap :String = null, component :UIComponent = null, ... logArgs)
         :InvocationService_ResultListener
@@ -206,45 +197,40 @@ public class WorldContext
         return new ResultAdapter(success, chatErrHandler(bundle, errWrap, component, logArgs));
     }
 
-    /**
-     * Convenience method.
-     */
+    // from OrthContext
     public function displayFeedback (bundle :String, message :String) :void
     {
         getChatDirector().displayFeedback(bundle, message);
     }
 
-    /**
-     * Convenience method.
-     */
+    // from OrthContext
     public function displayInfo (bundle :String, message :String, localType :String = null) :void
     {
         getChatDirector().displayInfo(bundle, message, localType);
     }
 
-    // from PresentsContext
-    public function getClient () :Client
-    {
-        return _client;
-    }
-
+    // from OrthContext
     public function getMuteDirector () :MuteDirector
     {
         return _muteDir;
     }
 
-    /**
-     * Returns a reference to the top-level UI container.
-     */
-    public function getTopPanel () :TopPanel
+    // from OrthContext
+    public function getMediaDirector () :MediaDirector
     {
-        return _topPanel;
+        return _mediaDir;
     }
 
-    // from PresentsContext
-    public function getDObjectManager () :DObjectManager
+    // from OrthContext
+    public function getPartyDirector () :PartyDirector
     {
-        return _client.getDObjectManager();
+        return _partyDir;
+    }
+
+    // from OrthContext
+    public function getNotificationDirector () :NotificationDirector
+    {
+        return _notifyDir;
     }
 
     // from CrowdContext
@@ -266,12 +252,6 @@ public class WorldContext
         return null;
     }
 
-    public function getOrthChatDirector () :OrthChatDirector
-    {
-
-        return null;
-    }
-
     /**
      * Get the message manager.
      */
@@ -288,16 +268,22 @@ public class WorldContext
         return _topPanel.getPlaceView();
     }
 
-    // documentation inherited from superinterface CrowdContext
+    // from CrowdContext
     public function setPlaceView (view :PlaceView) :void
     {
         _topPanel.setPlaceView(view);
     }
 
-    // documentation inherited from superinterface CrowdContext
+    // from CrowdContext
     public function clearPlaceView (view :PlaceView) :void
     {
         _topPanel.clearPlaceView(view);
+    }
+
+    // from WhirledContext
+    public function getSceneDirector () :SceneDirector
+    {
+        return _sceneDir;
     }
 
     /**
@@ -327,26 +313,12 @@ public class WorldContext
         return new TokenRing();
     }
 
-    // from WhirledContext
-    public function getSceneDirector () :SceneDirector
-    {
-        return _sceneDir;
-    }
-
     /**
      * Convenience method.
      */
     public function getPlayerObject () :PlayerObject
     {
         return (_client.getClientObject() as PlayerObject);
-    }
-
-    /**
-     * Get the media director.
-     */
-    public function getMediaDirector () :MediaDirector
-    {
-        return _mediaDir;
     }
 
     /**
@@ -364,22 +336,6 @@ public class WorldContext
     {
         return _spotDir;
     }
-
-    /**
-     * Get the party director.
-     */
-    public function getPartyDirector () :PartyDirector
-    {
-        return _partyDir;
-    }
-
-    /**
-      * Get the notification director.
-      */
-     public function getNotificationDirector () :NotificationDirector
-     {
-         return _notifyDir;
-     }
 
     /**
      * Returns the top-level world controller.
@@ -455,6 +411,7 @@ public class WorldContext
     protected var _msgMgr :MessageManager;
     protected var _locDir :LocationDirector;
     protected var _occDir :OccupantDirector;
+    protected var _chatDir :OrthChatDirector;
 
     protected var _controller :WorldController;
 
@@ -464,6 +421,6 @@ public class WorldContext
     protected var _mediaDir :MediaDirector;
     protected var _worldDir :WorldDirector;
     protected var _partyDir :PartyDirector;
-    protected var _muteDir:MuteDirector;
+    protected var _muteDir: MuteDirector;
 }
 }
