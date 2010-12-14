@@ -137,7 +137,7 @@ public class WorldContext
     // from OrthContext
     public function getMyName () :OrthName
     {
-        var body :BodyObject = _client.bodyOf());
+        var body :BodyObject = _client.bodyOf();
         return (body == null) ? null : body.getVisibleName() as OrthName;
     }
 

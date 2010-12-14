@@ -3,6 +3,7 @@
 
 package com.threerings.orth.client {
 import com.threerings.orth.chat.client.ChatOverlay;
+import com.threerings.orth.chat.client.ChatTabBar;
 import com.threerings.orth.chat.client.ComicOverlay;
 
 import flash.events.Event;
@@ -20,6 +21,7 @@ import mx.controls.scrollClasses.ScrollBar;
 import com.threerings.crowd.client.PlaceView;
 
 import com.threerings.orth.room.client.RoomObjectView;
+import com.threerings.orth.world.client.BlankPlaceView;
 import com.threerings.orth.world.client.WorldContext;
 
 /**

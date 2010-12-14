@@ -6,6 +6,7 @@ import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.room.client.MediaDirector;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.OrthName;
 import com.threerings.presents.client.InvocationService_ConfirmListener;
 import com.threerings.presents.client.InvocationService_InvocationListener;
 import com.threerings.presents.client.InvocationService_ResultListener;
