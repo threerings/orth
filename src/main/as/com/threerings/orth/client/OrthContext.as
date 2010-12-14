@@ -82,7 +82,12 @@ public interface OrthContext
      */
     function getOrthChatDirector () :OrthChatDirector;
 
-        /**
+    /**
+     * Get the message manager.
+     */
+    function getMessageManager () :MessageManager;
+
+    /**
      * Create an InvocationListener that will automatically log and report errors to chat.
      *
      * @param bundle the MessgeBundle to use to translate the error message.
