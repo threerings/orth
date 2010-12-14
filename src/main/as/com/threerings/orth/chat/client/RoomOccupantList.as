@@ -124,7 +124,6 @@ import com.whirled.ui.NameLabelCreator;
 
 import com.threerings.orth.data.OrthName;
 
-import com.threerings.orth.data.OrthUserOccupantInfo;
 import com.threerings.orth.data.VizOrthName;
 
 class RoomOccupantRecord

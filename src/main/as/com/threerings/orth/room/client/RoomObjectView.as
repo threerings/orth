@@ -4,6 +4,7 @@
 package com.threerings.orth.room.client {
 import com.threerings.orth.chat.client.ChatInfoProvider;
 import com.threerings.orth.chat.client.ComicOverlay;
+import com.threerings.orth.chat.data.OrthChatChannel;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.PlaceLoadingDisplay;
 import com.threerings.orth.client.Prefs;
@@ -18,7 +19,6 @@ import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniUpdate_Remove;
 import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.data.OrthSceneCodes;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.PlayerInfo;
 import com.threerings.orth.world.client.WorldContext;
@@ -59,6 +59,8 @@ import com.threerings.whirled.spot.data.SceneLocation;
 
 import com.threerings.orth.room.data.MemoryChangedListener;
 import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.SceneAttrsUpdate;
+import com.threerings.orth.room.data.SceneOwnershipUpdate;
 
 
 /**
@@ -484,7 +486,7 @@ public class RoomObjectView extends RoomView
      */
     protected function getSpeaker (msg :ChatMessage) :OccupantSprite
     {
-        if (msg is UserMessage && MsoyChatChannel.typeIsForRoom(msg.localtype, _scene.getId())) {
+        if (msg is UserMessage && OrthChatChannel.typeIsForRoom(msg.localtype, _scene.getId())) {
             return getOccupantByName(UserMessage(msg).getSpeakerDisplayName());
         }
         return null;

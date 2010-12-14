@@ -1,6 +1,7 @@
 package com.threerings.orth.client
 {
 import com.threerings.crowd.chat.client.MuteDirector;
+import com.threerings.util.MessageManager;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.orth.party.client.PartyDirector;

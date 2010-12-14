@@ -842,7 +842,7 @@ public class WorldController extends Controller
         }
 
         // login/logout
-        if (isUs && !_wctx.getWorldClient().getEmbedding().hasGWT()) {
+        if (isUs) {
             var creds :WorldCredentials = new WorldCredentials(null, null);
             creds.ident = "";
             menuItems.push({ label: Msgs.GENERAL.get("b.logout"),

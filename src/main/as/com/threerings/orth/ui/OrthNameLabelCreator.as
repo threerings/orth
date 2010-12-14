@@ -2,7 +2,7 @@
 // $Id: OrthNameLabelCreator.as 19754 2010-12-07 16:19:29Z zell $
 
 package com.threerings.orth.ui {
-`
+
 import com.threerings.util.Log;
 import com.threerings.util.Name;
 
@@ -60,7 +60,7 @@ import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.MediaDescSize;
-import com.threerings.orth.data.all.VizOrthName;
+import com.threerings.orth.data.VizOrthName;
 import com.threerings.orth.ui.MediaWrapper;
 import com.threerings.orth.ui.OrthNameLabel;
 

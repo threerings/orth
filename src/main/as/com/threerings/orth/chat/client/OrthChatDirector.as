@@ -145,7 +145,7 @@ public class OrthChatDirector extends ChatDirector
     override public function clientDidLogon (event :ClientEvent) :void
     {
         super.clientDidLogon(event);
-        _chatTabs.memberObjectUpdated(_mctx.getMemberObject());
+        _chatTabs.memberObjectUpdated(_mctx.getPlayerObject());
     }
 
     // from ChatDirector

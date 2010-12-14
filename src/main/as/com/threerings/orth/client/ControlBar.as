@@ -155,14 +155,6 @@ public class ControlBar extends HBox
     }
 
     /**
-     * Called to tell us what the game button should look like.
-     */
-    public function setGameButtonIcon (icon :MediaDesc) :void
-    {
-        setGameButtonStyle(icon);
-    }
-
-    /**
      * Configures the chat input background color.
      */
     public function setChatColor (color :uint) :void
