@@ -57,6 +57,11 @@ import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.TellFeedbackMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
+/**
+ * TODO: Currently this class reaches into the world.* subpackage while itself residing
+ * outside it. It does this so it can handle place-oriented chatting. This may or may not
+ * be OK. Come back to this later.
+ */
 public class ChatOverlay
     implements ChatDisplay
 {
@@ -106,6 +111,11 @@ public class ChatOverlay
 
         layout();
         displayChat(true);
+    }
+
+    public function getContext () :WorldContext
+    {
+        return _ctx;
     }
 
     /**
