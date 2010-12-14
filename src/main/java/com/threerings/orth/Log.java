@@ -1,12 +1,12 @@
 //
-// $Id: Log.java 9280 2008-05-27 22:25:08Z mdb $
+// $Id: $
 
 package com.threerings.orth;
 
 import com.samskivert.util.Logger;
 
 /**
- * Contains a reference to the log object used by the Whirled project.
+ * Contains a reference to the log object used by the Orth project.
  */
 public class Log
 {
