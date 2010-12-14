@@ -162,7 +162,7 @@ public class WorldContext
     // from OrthContext
     public function getOrthChatDirector () :OrthChatDirector
     {
-        return null;
+        return _chatDir;
     }
 
     // from OrthContext
@@ -262,13 +262,10 @@ public class WorldContext
     // from CrowdContext
     public function getChatDirector () :ChatDirector
     {
-        // let's see if we can get away with this
-        return null;
+        return _chatDir;
     }
 
-    /**
-     * Get the message manager.
-     */
+    // from OrthContext
     public function getMessageManager () :MessageManager
     {
         return _msgMgr;
