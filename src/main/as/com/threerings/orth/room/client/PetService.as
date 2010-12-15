@@ -1,3 +1,5 @@
+//
+// $Id$
 package com.threerings.orth.room.client {
 
 import com.threerings.presents.client.Client;
