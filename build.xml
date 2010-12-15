@@ -92,7 +92,7 @@
     activate ActionScript library build.
   </echo></target>
 
-  <target name="aslib" unless="no_build_aslib" depends="-checkaslib,-noteaslib">
+  <target name="aslib" unless="no_build_aslib" depends="prepare,-checkaslib,-noteaslib">
     <copy file="etc/aslib-config.xml.in" tofile="${deploy.dir}/aslib-config.xml">
       <filterset>
         <filter token="flex_sdk_dir" value="${flexsdk.dir}"/>
@@ -104,6 +104,7 @@
       <arg value="${deploy.dir}/aslib-config.xml"/>
       <arg value="-compiler.optimize"/>
       <arg value="-compiler.source-path=${asrc.dir}"/>
+      <arg value="-compiler.library-path=lib/tweener.swc"/>
       <arg value="-include-sources=src/main/as/"/>
       <arg value="-output"/>
       <arg value="${deploy.dir}/${ant.project.name}lib.swc"/>
