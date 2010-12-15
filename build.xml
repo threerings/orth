@@ -73,12 +73,7 @@
       <fileset dir="${src.dir}" includes="**/*.properties"/>
       <fileset dir="${src.dir}" includes="**/*.tmpl"/>
     </copy>
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" includeAntRuntime="false"
-           debug="on" optimize="${build.optimize}" deprecation="on" source="1.5" target="1.5">
-      <classpath refid="build.classpath"/>
-      <compilerarg value="-Xlint"/>
-      <compilerarg value="-Xlint:-serial"/>
-    </javac>
+    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath"/>
   </target>
 
   <target name="-checkaslib">
@@ -174,11 +169,9 @@
     <taskdef name="grecord" classname="com.samskivert.depot.tools.GenRecordTask"
              classpathref="build.classpath"/>
     <!-- make sure the record class files are all compiled -->
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on" optimize="${build.optimize}"
-           deprecation="on" source="1.5" target="1.5">
-      <classpath refid="build.classpath"/>
+    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Record.java"/>
-    </javac>
+    </ooojavac>
     <!-- now update the source files -->
     <grecord classpathref="build.classpath">
       <fileset dir="${src.dir}" includes="**/*Record.java"/>
@@ -188,11 +181,9 @@
   <!-- generates additional methods for distributed object classes -->
   <target name="gendobj" depends="preptools"> 
     <!-- make sure the dobject class files are all compiled -->
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" includeAntRuntime="false" debug="on"
-           optimize="${build.optimize}" deprecation="on" source="1.5" target="1.5">
-      <classpath refid="build.classpath"/>
+    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Object.java"/>
-    </javac>
+    </ooojavac>
     <!-- now generate the associated files -->
     <gendobj classpathref="build.classpath">
       <fileset dir="${src.dir}" includes="**/*Object.java"/>
@@ -206,8 +197,7 @@
   <!-- generates marshaller and dispatcher classes for all invocation service declarations -->
   <target name="genservice" depends="preptools"> 
     <!-- make sure the service class files are all compiled -->
-    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}">
-      <classpath refid="build.classpath"/>
+    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Service.java"/>
       <exclude name="**/InvocationService.java"/>
     </ooojavac>
@@ -231,12 +221,10 @@
   <!-- generates sender and decoder classes for all invocation receiver declarations -->
   <target name="genreceiver" depends="preptools">
     <!-- make sure the receiver class files are all compiled -->
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" includeAntRuntime="false"
-           debug="on" optimize="${build.optimize}" deprecation="on" source="1.5" target="1.5">
-      <classpath refid="build.classpath"/>
+    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Receiver.java"/>
       <exclude name="**/InvocationReceiver.java"/>
-    </javac>
+    </ooojavac>
     <!-- now generate the associated files -->
     <genreceiver header="lib/SOURCE_HEADER" classpathref="build.classpath">
       <fileset dir="${src.dir}" includes="**/*Receiver.java"
