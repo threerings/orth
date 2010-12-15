@@ -54,7 +54,7 @@
     <orderEntry type="module-library">
       <library name="commons-codec.jar">
         <CLASSES>
-          <root url="jar://$EXT_LIBS_DIR$/commons-codec.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.4/commons-codec-1.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -64,7 +64,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$EXT_LIBS_DIR$/guava.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/r07/guava-r07.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -73,7 +73,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$EXT_LIBS_DIR$/guice.jar!/" />
+          <root url="jar://$MAVEN_REPOSITORY$/com/google/inject/guice/2.0/guice-2.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
