@@ -1,7 +1,7 @@
 //
 // $Id: $
 
-package com.threerings.orth.player.data;
+package com.threerings.orth.data;
 
 import com.threerings.presents.data.InvocationCodes;
 
