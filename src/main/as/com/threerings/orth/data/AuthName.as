@@ -2,16 +2,15 @@
 //
 // $Id$
 
-package com.threerings.orth.player.data {
+package com.threerings.orth.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.orth.player.data.PlayerName;
-import com.threerings.orth.data.MediaDesc;
+import com.threerings.util.Name;
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class VizPlayerName extends PlayerName
+public class AuthName extends Name
 {
 // GENERATED CLASSDECL END
 
@@ -19,19 +18,18 @@ public class VizPlayerName extends PlayerName
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        _photo = ins.readObject(MediaDesc);
+        _id = ins.readInt();
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeObject(_photo);
+        out.writeInt(_id);
     }
 
-    protected var _photo :MediaDesc;
+    protected var _id :int;
 // GENERATED STREAMING END
 
-    protected var _photo :MediaDesc;
 // GENERATED CLASSFINISH START
 }
 }

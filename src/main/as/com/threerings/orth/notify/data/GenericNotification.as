@@ -1,3 +1,39 @@
+// GENERATED PREAMBLE START
+//
+// $Id$
+
+package com.threerings.orth.notify.data {
+
+import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
+import com.threerings.orth.notify.data.Notification;
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
+public class GenericNotification extends Notification
+{
+// GENERATED CLASSDECL END
+// GENERATED STREAMING START
+    override public function readObject (ins :ObjectInputStream) :void
+    {
+        super.readObject(ins);
+        _msg = ins.readField(String);
+        _cat = ins.readByte();
+    }
+
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+        out.writeField(_msg);
+        out.writeByte(_cat);
+    }
+
+    protected var _msg :String;
+    protected var _cat :int;
+// GENERATED STREAMING END
+// GENERATED CLASSFINISH START
+}
+}
+// GENERATED CLASSFINISH END
 //
 // $Id: $
 
