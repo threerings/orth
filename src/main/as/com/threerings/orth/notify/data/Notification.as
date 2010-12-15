@@ -8,10 +8,23 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
 // GENERATED PREAMBLE END
+
+/**
+ * Notification from the server to the client.  Notifications are sent as messages on the
+ * MemberObject.
+ */
 // GENERATED CLASSDECL START
 public class Notification extends SimpleStreamableObject
 {
 // GENERATED CLASSDECL END
+    // TODO: these are just placeholder categories. These will expand and users will
+    // be able to customize a filtering level.
+    public static const SYSTEM :int = 0;
+    public static const INVITE :int = 1;
+    public static const PERSONAL :int = 2;
+    public static const BUTTSCRATCHING :int = 3; // your friends doing things
+    public static const LOWEST :int = 4; // people coming and going, other incidentals
+
 // GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void
     {
@@ -24,34 +37,6 @@ public class Notification extends SimpleStreamableObject
     }
 
 // GENERATED STREAMING END
-// GENERATED CLASSFINISH START
-}
-}
-// GENERATED CLASSFINISH END
-//
-// $Id: $
-
-package com.threerings.orth.notify.data {
-
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
-import com.threerings.io.SimpleStreamableObject;
-
-import com.threerings.util.Name;
-
-/**
- * Notification from the server to the client.  Notifications are sent as messages on the
- * MemberObject.
- */
-public /* abstract */ class Notification extends SimpleStreamableObject
-{
-    // TODO: these are just placeholder categories. These will expand and users will
-    // be able to customize a filtering level.
-    public static const SYSTEM :int = 0;
-    public static const INVITE :int = 1;
-    public static const PERSONAL :int = 2;
-    public static const BUTTSCRATCHING :int = 3; // your friends doing things
-    public static const LOWEST :int = 4; // people coming and going, other incidentals
 
     /** Called if the notification is clicked, client-side only. Note that this should
      * NOT execute the primary action of the notification, this is just called if any part of it
@@ -135,16 +120,7 @@ public /* abstract */ class Notification extends SimpleStreamableObject
         return null;
     }
 
-    // from SimpleStreamableObject
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-    }
-
-    // from SimpleStreamableObject
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        throw new Error();
-    }
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END
