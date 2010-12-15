@@ -30,8 +30,6 @@ public class VizPlayerName extends PlayerName
 
     protected var _photo :MediaDesc;
 // GENERATED STREAMING END
-
-    protected var _photo :MediaDesc;
 // GENERATED CLASSFINISH START
 }
 }
