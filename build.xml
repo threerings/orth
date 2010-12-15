@@ -2,56 +2,56 @@
 <!-- build configuration -->
 <project name="orth" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
   <!-- configuration parameters -->
-  <property name="src.dir"     value="src/main/java"/>
+  <property name="src.dir"      value="src/main/java"/>
   <property name="asrc.dir"     value="src/main/as"/>
   <property name="rsrc.dir"     value="src/main/resources"/>
   <property name="deploy.dir"   value="dist"/>
+  <property name="javalib.dir"  location="${deploy.dir}/javalib"/>
+  <property name="aslib.dir"    location="${deploy.dir}/aslib"/>
   <property name="savedoc.dir"  value="docs"/>
   <property name="javadoc.home" value="${deploy.dir}/docs"/>
   <property name="classes.dir"  value="${deploy.dir}/classes"/>
-  <property name="gwtjar.dir"  value="${deploy.dir}/gwt-jar"/>
+  <property name="gwtjar.dir"   value="${deploy.dir}/gwt-jar"/>
 
-  <property name="maven-ant.vers" value="2.1.1"/>
-  <property name="maven-ant.dir" value="${user.home}/.m2/ant-support"/>
-  <property name="maven-ant.jar" value="${maven-ant.dir}/maven-ant-tasks-${maven-ant.vers}.jar"/>
-  <property name="maven-ant.url"
-            value="http://mirrors.ibiblio.org/pub/mirrors/apache/maven/binaries"/>
-  <condition property="maven-ant.exists"><available file="${maven-ant.jar}"/></condition>
-  <target name="-download-maven-ant" unless="maven-ant.exists">
-    <mkdir dir="${maven-ant.dir}"/>
-    <get src="${maven-ant.url}/maven-ant-tasks-${maven-ant.vers}.jar"
-         dest="${maven-ant.jar}" usetimestamp="true"/>
-  </target>
-
-  <target name="-init-maven-ant" depends="-download-maven-ant">
-    <taskdef resource="org/apache/maven/artifact/ant/antlib.xml"
-             uri="urn:maven-artifact-ant" classpath="${maven-ant.jar}"/>
-    <artifact:pom id="pom" file="pom.xml"/>
-    <artifact:dependencies pathId="compile.classpath" pomRefId="pom" useScope="compile"/>
-    <artifact:dependencies pathId="testlibs.classpath" pomRefId="pom" useScope="test"/>
-
-    <artifact:pom id="as-pom" file="as-pom.xml"/>
-    <artifact:dependencies filesetId="aslibs.fileset" pomRefId="as-pom" useScope="compile"/>
-    <copy todir="${deploy.dir}/lib">
-      <fileset refid="aslibs.fileset"/>
-      <mapper type="flatten"/>
-    </copy>
-  </target>
+  <!-- bring in our standard build support -->
+  <ant antfile="bootstrap.xml"/>
+  <import file="${user.home}/.m2/ant-support/1.1/build-support.xml"/>
 
   <!-- -prepares the application directories -->
-  <target name="-prepare" depends="-init-maven-ant">
-    <mkdir dir="${deploy.dir}"/>
-    <mkdir dir="${deploy.dir}/lib"/>
+  <target name="prepare" depends="-init-ooo">
+    <mkdir dir="${aslib.dir}"/>
+    <mkdir dir="${javalib.dir}"/>
+    <mkdir dir="${classes.dir}"/>
     <mkdir dir="${javadoc.home}"/>
-    <path id="built.classpath">
-      <path refid="compile.classpath"/>
+    <path id="build.classpath">
       <pathelement location="${classes.dir}"/>
+      <fileset dir="${javalib.dir}" includes="*.jar"/>
     </path>
   </target>
 
+  <target name="mavendeps" depends="prepare">
+    <artifact:pom id="pom" file="pom.xml"/>
+    <artifact:dependencies filesetId="javalibs.fileset" pomRefId="pom" useScope="compile"/>
+    <copy todir="${javalib.dir}">
+      <fileset refid="javalibs.fileset"/>
+      <mapper type="flatten"/>
+    </copy>
+
+    <artifact:pom id="as-pom" file="as-pom.xml"/>
+    <artifact:dependencies filesetId="aslibs.fileset" pomRefId="as-pom" useScope="compile"/>
+    <copy todir="${aslib.dir}">
+      <fileset refid="aslibs.fileset"/>
+      <chainedmapper>
+        <mapper type="flatten"/>
+        <mapper type="regexp" from="(.+?)(-SNAPSHOT)?.swc" to="\1.swc"/>
+        <mapper type="regexp" from="(.*)-([^-])+.swc" to="\1.swc"/>
+      </chainedmapper>
+    </copy>
+  </target>
+
   <!-- makes sure our tools are compiled and defines the ant tasks -->
-  <target name="-preptools" depends="-prepare">
-    <taskdef resource="com/threerings/presents/tools.properties" classpathref="compile.classpath"/>
+  <target name="preptools" depends="prepare">
+    <taskdef resource="com/threerings/presents/tools.properties" classpathref="build.classpath"/>
   </target>
 
   <!-- cleans out the intermediate build files -->
@@ -68,15 +68,14 @@
   </target>
 
   <!-- build the java class files -->
-  <target name="compile" depends="-prepare">
-    <mkdir dir="${classes.dir}"/>
+  <target name="compile" depends="prepare">
     <copy todir="${classes.dir}">
       <fileset dir="${src.dir}" includes="**/*.properties"/>
       <fileset dir="${src.dir}" includes="**/*.tmpl"/>
     </copy>
     <javac srcdir="${src.dir}" destdir="${classes.dir}" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on" source="1.5" target="1.5">
-      <classpath refid="compile.classpath"/>
+      <classpath refid="build.classpath"/>
       <compilerarg value="-Xlint"/>
       <compilerarg value="-Xlint:-serial"/>
     </javac>
@@ -117,12 +116,12 @@
     <delete file="${deploy.dir}/aslib-config.xml"/>
   </target>
 
-  <target name="javadoc" depends="-prepare">
+  <target name="javadoc" depends="prepare">
     <javadoc sourcepath="${src.dir}" packagenames="com.threerings.*"
              destdir="${javadoc.home}" stylesheetfile="docs/stylesheet.css"
              additionalparam="-breakiterator"
              link="http://www.threerings.net/code/orth/docs/api">
-      <classpath refid="compile.classpath"/>
+      <classpath refid="build.classpath"/>
       <link href="http://java.sun.com/j2se/1.5/docs/api/"/>
       <!-- ant documentation is not available online, sorry kids -->
       <link href="file:///usr/share/doc/ant-doc/javadocs"/>
@@ -155,10 +154,10 @@
   </target>
 
   <!-- a target for rebuilding everything -->
-  <target name="distall" depends="dist,javadoc,asdoc"/>
+  <target name="distall" depends="mavendeps,dist,javadoc,asdoc"/>
 
   <!-- builds our distribution files (war and jar) -->
-  <target name="dist" depends="-prepare,compile,procstream,aslib">
+  <target name="dist" depends="prepare,compile,procstream,aslib">
     <!-- build our various jar files -->
     <jar destfile="${deploy.dir}/${ant.project.name}.jar" basedir="${classes.dir}"/>
     <copy todir="${gwtjar.dir}">
@@ -171,46 +170,49 @@
   </target>
 
   <!-- generates fields for persistent record classes -->
-  <target name="genrecord" depends="-prepare">
+  <target name="genrecord" depends="prepare">
     <taskdef name="grecord" classname="com.samskivert.depot.tools.GenRecordTask"
-             classpathref="compile.classpath"/>
+             classpathref="build.classpath"/>
     <!-- make sure the record class files are all compiled -->
     <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on" optimize="${build.optimize}"
            deprecation="on" source="1.5" target="1.5">
-      <classpath refid="compile.classpath"/>
+      <classpath refid="build.classpath"/>
       <include name="**/*Record.java"/>
     </javac>
     <!-- now update the source files -->
-    <grecord classpathref="built.classpath">
+    <grecord classpathref="build.classpath">
       <fileset dir="${src.dir}" includes="**/*Record.java"/>
     </grecord>
   </target>
 
   <!-- generates additional methods for distributed object classes -->
-  <target name="gendobj" depends="-preptools"> 
+  <target name="gendobj" depends="preptools"> 
     <!-- make sure the dobject class files are all compiled -->
     <javac srcdir="${src.dir}" destdir="${classes.dir}" includeAntRuntime="false" debug="on"
            optimize="${build.optimize}" deprecation="on" source="1.5" target="1.5">
-      <classpath refid="compile.classpath"/>
+      <classpath refid="build.classpath"/>
       <include name="**/*Object.java"/>
     </javac>
     <!-- now generate the associated files -->
-    <gendobj classpathref="built.classpath">
+    <gendobj classpathref="build.classpath">
       <fileset dir="${src.dir}" includes="**/*Object.java"/>
     </gendobj>
+    <genascriptstreamable classpathref="build.classpath" header="lib/SOURCE_HEADER"
+      asroot="${asrc.dir}">
+      <fileset dir="${src.dir}" includes="**/*Object.java"/>
+    </genascriptstreamable>
   </target>
 
   <!-- generates marshaller and dispatcher classes for all invocation service declarations -->
-  <target name="genservice" depends="-preptools"> 
+  <target name="genservice" depends="preptools"> 
     <!-- make sure the service class files are all compiled -->
-    <javac srcdir="${src.dir}" destdir="${classes.dir}" includeAntRuntime="false" debug="on"
-           optimize="${build.optimize}" deprecation="on" source="1.5" target="1.5">
-      <classpath refid="compile.classpath"/>
+    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}">
+      <classpath refid="build.classpath"/>
       <include name="**/*Service.java"/>
       <exclude name="**/InvocationService.java"/>
-    </javac>
+    </ooojavac>
     <!-- now generate the associated files -->
-    <genservice header="lib/SOURCE_HEADER" asroot="src/main/as" classpathref="built.classpath">
+    <genservice header="lib/SOURCE_HEADER" asroot="src/main/as" classpathref="build.classpath">
       <fileset dir="${src.dir}" includes="**/*Service.java">
         <exclude name="**/InvocationService.java"/>
         <exclude name="**/peer/**"/>
@@ -220,33 +222,33 @@
       <providerless service="SimulatorService"/>
       <providerless service="TimeBaseService"/>
     </genservice>
-    <genservice header="lib/SOURCE_HEADER" classpathref="built.classpath">
+    <genservice header="lib/SOURCE_HEADER" classpathref="build.classpath">
       <fileset dir="${src.dir}" includes="**/peer/**/*Service.java"/>
       <fileset dir="${src.dir}" includes="**/admin/**/*Service.java"/>
     </genservice>
   </target>
 
   <!-- generates sender and decoder classes for all invocation receiver declarations -->
-  <target name="genreceiver" depends="-preptools">
+  <target name="genreceiver" depends="preptools">
     <!-- make sure the receiver class files are all compiled -->
     <javac srcdir="${src.dir}" destdir="${classes.dir}" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on" source="1.5" target="1.5">
-      <classpath refid="compile.classpath"/>
+      <classpath refid="build.classpath"/>
       <include name="**/*Receiver.java"/>
       <exclude name="**/InvocationReceiver.java"/>
     </javac>
     <!-- now generate the associated files -->
-    <genreceiver header="lib/SOURCE_HEADER" classpathref="built.classpath">
+    <genreceiver header="lib/SOURCE_HEADER" classpathref="build.classpath">
       <fileset dir="${src.dir}" includes="**/*Receiver.java"
         excludes="**/InvocationReceiver.java"/>
     </genreceiver>
   </target>
 
   <!-- adds readField and writeField methods to Stremable classes -->
-  <target name="procstream" depends="-preptools">
+  <target name="procstream" depends="preptools">
     <!-- now instrument the associated files -->
     <instream outdir="${classes.dir}">
-      <path refid="built.classpath"/>
+      <path refid="build.classpath"/>
       <fileset dir="${classes.dir}" includes="**/data/*.class"/>
       <fileset dir="${classes.dir}" includes="**/net/*.class"/>
       <fileset dir="${classes.dir}" includes="**/dobj/*.class"/>

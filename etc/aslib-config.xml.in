@@ -43,7 +43,6 @@
       <!-- compiler.external-library-path: list of SWC files or directories to compile against but to omit from linking-->
       <external-library-path>
          <path-element>@flex_sdk_dir@/frameworks/libs/player/{targetPlayerMajorVersion}/playerglobal.swc</path-element>
-         <path-element>lib</path-element>
          <path-element>@flex_sdk_dir@/frameworks/libs</path-element>
          <path-element>@flex_sdk_dir@/frameworks/libs/player</path-element>
          <path-element>@flex_sdk_dir@/frameworks/locale/{locale}</path-element>
@@ -106,6 +105,15 @@
       <keep-generated-actionscript>false</keep-generated-actionscript>
       <!-- compiler.library-path: list of SWC files or directories that contain SWC files-->
       <library-path>
+        <path-element>../dist/aslib/as3isolib-fp9.swc</path-element>
+        <path-element>../dist/aslib/signals.swc</path-element>
+
+        <path-element>../dist/aslib/aspirin.swc</path-element>
+        <path-element>../dist/aslib/flexlib-bin.swc</path-element>
+        <path-element>../dist/aslib/naryalib.swc</path-element>
+        <path-element>../dist/aslib/nenyalib.swc</path-element>
+        <path-element>../dist/aslib/vilyalib.swc</path-element>
+        <path-element>../dist/aslib/whirledlib.swc</path-element>
       </library-path>
       <!-- compiler.locale: specifies the locale for internationalization-->
       <locale>
