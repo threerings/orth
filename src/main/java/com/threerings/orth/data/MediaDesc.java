@@ -34,7 +34,7 @@ public interface MediaDesc
      * Returns the mime type of this media.
      */
     byte getMimeType ();
-    
+
     /** The size constraint on this media, if any. See {@link #computeConstraint}. */
     byte getConstraint ();
 
