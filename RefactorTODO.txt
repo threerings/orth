@@ -1,0 +1,17 @@
+ - WorldDirector.as and WorldService.as and friends should be Vault services
+
+ - PlayerObject is what I used in the Vault. I should certainly not use it here in Room/World!
+
+ - DecorGeometry can probably be abandoned and rolled into the new Decor
+
+ - Note that ControlBar references WorldContext even though it's in orth.client; the reason is
+   that in theory, this bar would be appropriate both for Social rooms and Intervention rooms.
+   We'll see what happens with that. Perhaps more importantly, both ControlBar and WorldControlBar
+   should be at the Who level, with abstracted access to/from the client at the Orth layer.
+
+ - The Party system as imported from MSOY could form the basis of the Doctor one. Unlike a lot of
+   the MSOY systems, this one was nicely architected both on the server and on the client. It
+   currently relies on Groups, but this dependency can be eliminated (since we don't have groups
+   or anything like them on Doctor, possibly with the exception of guilds). For parties to be of
+   use to us, of course, they will have to play nice not just with the social rooms but with the
+   intervention engine as well.
