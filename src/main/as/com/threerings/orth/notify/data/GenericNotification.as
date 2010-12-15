@@ -6,40 +6,7 @@ package com.threerings.orth.notify.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.orth.notify.data.Notification;
 // GENERATED PREAMBLE END
-// GENERATED CLASSDECL START
-public class GenericNotification extends Notification
-{
-// GENERATED CLASSDECL END
-// GENERATED STREAMING START
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-        _msg = ins.readField(String);
-        _cat = ins.readByte();
-    }
-
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        super.writeObject(out);
-        out.writeField(_msg);
-        out.writeByte(_cat);
-    }
-
-    protected var _msg :String;
-    protected var _cat :int;
-// GENERATED STREAMING END
-// GENERATED CLASSFINISH START
-}
-}
-// GENERATED CLASSFINISH END
-//
-// $Id: $
-
-package com.threerings.orth.notify.data {
-
-import com.threerings.io.ObjectInputStream;
 
 import com.threerings.util.Name;
 
@@ -52,8 +19,10 @@ import com.threerings.util.Name;
  *
  * If you need to specify a sender, it's time to write a custom class, brah.
  */
+// GENERATED CLASSDECL START
 public class GenericNotification extends Notification
 {
+// GENERATED CLASSDECL END
     public function GenericNotification (
         msg :String = null, category :int = 0, sender :Name = null)
     {
@@ -77,17 +46,28 @@ public class GenericNotification extends Notification
         return _sender;
     }
 
+// GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-
-        _msg = ins.readField(String) as String;
+        _msg = ins.readField(String);
         _cat = ins.readByte();
-        // _sender cannot come from the server
+    }
+
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+        out.writeField(_msg);
+        out.writeByte(_cat);
     }
 
     protected var _msg :String;
     protected var _cat :int;
+// GENERATED STREAMING END
+
+    // _sender cannot come from the server
     protected var _sender :Name;
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END

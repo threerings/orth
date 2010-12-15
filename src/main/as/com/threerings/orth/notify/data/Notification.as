@@ -9,6 +9,8 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
 // GENERATED PREAMBLE END
 
+import com.threerings.util.Name;
+
 /**
  * Notification from the server to the client.  Notifications are sent as messages on the
  * MemberObject.
