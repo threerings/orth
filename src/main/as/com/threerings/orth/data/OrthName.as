@@ -9,50 +9,19 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.util.Name;
 import com.threerings.presents.dobj.DSet_Entry;
 // GENERATED PREAMBLE END
+
+import com.threerings.util.Comparators;
+import com.threerings.util.Integer;
+
+
+/**
+ * Extends Name with persistent member information.
+ */
 // GENERATED CLASSDECL START
 public class OrthName extends Name
     implements DSet_Entry
 {
 // GENERATED CLASSDECL END
-// GENERATED STREAMING START
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-        _id = ins.readInt();
-    }
-
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        super.writeObject(out);
-        out.writeInt(_id);
-    }
-
-    protected var _id :int;
-// GENERATED STREAMING END
-// GENERATED CLASSFINISH START
-}
-}
-// GENERATED CLASSFINISH END
-//
-// $Id: MemberName.as 17905 2009-08-24 21:05:57Z ray $
-
-package com.threerings.orth.data {
-
-import com.threerings.presents.dobj.DSet_Entry;
-
-import com.threerings.util.Comparators;
-import com.threerings.util.Integer;
-import com.threerings.util.Name;
-
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
-
-/**
- * Extends Name with persistent member information.
- */
-public class OrthName extends Name
-    implements DSet_Entry
-{
     /** A sort function for sorting Names by their display portion, case insensitively.  */
     public static const BY_DISPLAY_NAME :Function = function (n1 :Name, n2 :Name) :int {
         return Comparators.compareStringsInsensitively(n1.toString(), n2.toString());
@@ -102,27 +71,31 @@ public class OrthName extends Name
         return (other is OrthName) && ((other as OrthName)._id == _id);
     }
 
-    // from interface Streamable
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-        _id = ins.readInt();
-    }
-
-    // from interface Streamable
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        super.writeObject(out);
-        out.writeInt(_id);
-    }
-
     // from Name
     override protected function normalize (name :String) :String
     {
         return name; // do not adjust
     }
 
-    /** The member id of the member we represent. */
+// GENERATED STREAMING START
+    override public function readObject (ins :ObjectInputStream) :void
+    {
+        super.readObject(ins);
+        _id = ins.readInt();
+    }
+
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+        out.writeInt(_id);
+    }
+
     protected var _id :int;
+// GENERATED STREAMING END
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END
+
+
+
