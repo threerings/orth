@@ -232,6 +232,21 @@
     </genreceiver>
   </target>
 
+  <target name="genstreamable" depends="preptools">
+      <!-- make sure the streamable class files are all compiled -->
+      <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
+        <include name="**/data/*.java"/>
+      </ooojavac>
+     <genascriptstreamable classpathref="build.classpath" header="lib/SOURCE_HEADER"
+                           asroot="${asrc.dir}">
+       <fileset dir="${src.dir}">
+         <include name="**/data/*.java"/>
+         <exclude name="**/*Object.java"/>
+         <exclude name="**/*_CustomFieldSerializer.java"/>
+       </fileset>
+     </genascriptstreamable>
+  </target>
+
   <!-- adds readField and writeField methods to Stremable classes -->
   <target name="procstream" depends="preptools">
     <!-- now instrument the associated files -->
