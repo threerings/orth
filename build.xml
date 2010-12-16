@@ -142,6 +142,7 @@
       <jvmarg value="-Xbootclasspath/p:${flexsdk.dir}/asdoc/lib/xalan.jar"/>
       <arg value="+flexlib=${flexsdk.dir}/frameworks"/>
       <arg line="-library-path ${flexsdk.dir}/frameworks/libs"/>
+      <arg line="-library-path ${aslib.dir}"/>
       <arg line="-templates-path ${flexsdk.dir}/asdoc/templates"/>
       <arg line="-doc-sources ${asrc.dir}"/>
       <arg line="-output ${deploy.dir}/asdocs"/>
@@ -158,7 +159,10 @@
     <copy todir="${gwtjar.dir}">
       <fileset dir="${rsrc.dir}" includes="com/**"/>
       <fileset dir="${src.dir}" includes="com/threerings/orth/scene/data/*.java"/>
-      <fileset dir="${src.dir}" includes="com/threerings/orth/data/*.java"/>
+      <fileset dir="${src.dir}">
+        <include name="com/threerings/orth/data/OrthName*.java"/>
+        <include name="com/threerings/orth/data/MediaDesc*.java"/>
+      </fileset>
     </copy>
     <jar destfile="${deploy.dir}/${ant.project.name}-gwt.jar" basedir="${gwtjar.dir}"/>
     <delete dir="${gwtjar.dir}"/>
