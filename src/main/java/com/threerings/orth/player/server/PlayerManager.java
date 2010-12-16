@@ -9,7 +9,7 @@ import com.google.inject.Singleton;
 import com.threerings.presents.annotation.EventThread;
 import com.threerings.presents.server.InvocationManager;
 
-import com.threerings.orth.player.data.OrthCodes;
+import com.threerings.orth.data.OrthCodes;
 
 /**
  * Manage Orth Players.
