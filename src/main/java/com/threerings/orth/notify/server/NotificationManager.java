@@ -28,8 +28,6 @@ public abstract class NotificationManager
 
     /**
      * Sends a notification to the specified member.
-     * @return true if the notification was sent or queued, or false if the notification
-     * was discarded because the recipient is unavailable to the sender.
      */
     public void notify (DObject target, Notification note)
     {

@@ -18,6 +18,7 @@ import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerNode;
 import com.threerings.presents.server.PresentsSession;
 
+import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.data.OrthNodeObject;

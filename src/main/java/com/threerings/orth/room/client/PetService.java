@@ -20,7 +20,7 @@ public interface PetService extends InvocationService
 
     /**
      * Issues an order to the specified pet. Different orders have different access control
-     * restrictions, see the {@link Pet} order constants for details.
+     * restrictions, see the (TODO) Pet order constants for details.
      */
     void orderPet (Client client, int petId, int order, ConfirmListener listener);
 

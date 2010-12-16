@@ -35,7 +35,7 @@ public interface MediaDesc
      */
     byte getMimeType ();
     
-    /** The size constraint on this media, if any. See {@link #computeConstraint}. */
+    /** The size constraint on this media, if any. */
     byte getConstraint ();
 
     /** Create and return a new MediaDesc, identical except with the new constraint. */
