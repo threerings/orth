@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.orth.player.data;
+package com.threerings.orth.aether.data;
 
 import javax.annotation.Generated;
 import com.threerings.presents.data.ClientObject;

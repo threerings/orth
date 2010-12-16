@@ -1,10 +1,10 @@
 //
 // $Id$
-package com.threerings.orth.player.server;
+package com.threerings.orth.aether.server;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.player.data.PlayerMarshaller;
+import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationDispatcher;
 import com.threerings.presents.server.InvocationException;

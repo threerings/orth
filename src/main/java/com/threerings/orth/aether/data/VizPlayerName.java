@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.orth.player.data;
+package com.threerings.orth.aether.data;
 
 import com.threerings.orth.data.MediaDesc;
 

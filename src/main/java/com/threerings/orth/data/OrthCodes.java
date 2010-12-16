@@ -10,5 +10,5 @@ import com.threerings.presents.data.InvocationCodes;
  */
 public interface OrthCodes extends InvocationCodes
 {
-    public static final String PLAYER_GROUP = "orth.player";
+    public static final String AETHER_GROUP = "orth.aether";
 }

@@ -2,13 +2,13 @@
 //
 // $Id$
 
-package com.threerings.orth.player.data {
+package com.threerings.orth.aether.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.presents.data.ClientObject;
 import org.osflash.signals.Signal;
-import com.threerings.orth.player.data.VizPlayerName;
+import com.threerings.orth.aether.data.VizPlayerName;
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
@@ -52,7 +52,7 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
-import com.threerings.orth.player.data.PlayerObject;
+import com.threerings.orth.aether.data.PlayerObject;
 
 class Signaller
     implements AttributeChangeListener, SetListener, ElementUpdateListener

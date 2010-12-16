@@ -10,6 +10,6 @@ import com.threerings.presents.data.InvocationCodes;
  */
 public class OrthCodes extends InvocationCodes
 {
-    public static const PLAYER_GROUP :String = "orth.player";
+    public static const PLAYER_GROUP :String = "orth.aether";
 }
 }
