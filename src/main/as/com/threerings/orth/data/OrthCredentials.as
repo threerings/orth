@@ -35,6 +35,17 @@ public class OrthCredentials extends Credentials
     protected var _username :Name;
 // GENERATED STREAMING END
 
+    public function OrthCredentials (username :Name)
+    {
+        _username = username;
+    }
+
+    public function getUsername () :Name
+    {
+        return _username;
+    }
+
+
 // GENERATED CLASSFINISH START
 }
 }
