@@ -2,6 +2,7 @@
 // $Id: $
 
 package com.threerings.orth.client {
+import com.threerings.orth.ui.FloatingPanel;
 
 import flash.events.Event;
 
@@ -9,7 +10,7 @@ import mx.containers.HBox;
 import mx.containers.VBox;
 
 import mx.controls.Label;
-import mx.controls.Spacer;
+
 import mx.controls.Text;
 import mx.controls.TextInput;
 import mx.core.UITextField;
@@ -32,7 +33,7 @@ import com.threerings.orth.aether.data.AetherCredentials;
 
 public class LogonPanel extends FloatingPanel
 {
-    public function LogonPanel (ctx :AetherContext)
+    public function LogonPanel (ctx :OrthContext)
     {
         super(ctx, Msgs.GENERAL.get("t.logon"));
     }
@@ -116,7 +117,7 @@ public class LogonPanel extends FloatingPanel
         prompt.setStyle("textAlign", "center");
         box.addChild(prompt);
 
-        const joinBtn :CommandButton = new CommandButton(null, MsoyController.SHOW_SIGN_UP);
+        const joinBtn :CommandButton = new CommandButton(null, OrthController.SHOW_SIGN_UP);
         joinBtn.styleName = "joinNowButton";
         box.addChild(joinBtn);
     }
@@ -151,23 +152,23 @@ public class LogonPanel extends FloatingPanel
         _logonBtn.enabled = false;
 
         _observer = new ClientAdapter(null, didLogon, null, null, failed, failed);
-        _ctx.getClient().addClientObserver(observer);
+        _ctx.getClient().addClientObserver(_observer);
 
         var creds :AetherCredentials = new AetherCredentials(
             new Name(_username.text), MD5.hash(_password.text));
-        CommandEvent.dispatch(this, AetherController.LOGON, creds);
+        CommandEvent.dispatch(this, OrthController.LOGON, creds);
     }
 
     protected function didLogon (...ignored) :void
     {
         close();
 
-        _ctx.getClient().removeClientObserver(observer);
+        _ctx.getClient().removeClientObserver(_observer);
     }
 
     protected function failed (evt :ClientEvent) :void
     {
-        evt.getClient().removeClientObserver(observer);
+        evt.getClient().removeClientObserver(_observer);
 
         Log.getLog(this).debug("failed: " + Msgs.GENERAL.get(evt.getCause().message));
         _error.text = "Logon failed: " + Msgs.GENERAL.get(evt.getCause().message);
