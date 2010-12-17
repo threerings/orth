@@ -3,11 +3,17 @@
 
 package com.threerings.orth.aether.client {
 
+import com.threerings.orth.aether.data.AetherCredentials;
+import com.threerings.orth.client.PolicyLoader;
+import com.threerings.orth.client.Prefs;
 import com.threerings.presents.client.Client;
 
 import mx.core.Application;
 
 import flash.display.Stage;
+import flash.system.Capabilities;
+import flash.events.ContextMenuEvent;
+import flash.ui.ContextMenu;
 
 public class AetherClient extends Client
 {
@@ -22,56 +28,47 @@ public class AetherClient extends Client
         // configure our server and port info
         setServer(host, ports);
 
-        // now create our credentials
-        var creds :Credentials = createStartupCreds();
-        creds.ident = Prefs.getMachineIdent();
-        setCredentials(creds);
+        // and context
+        _wctx = AetherContext(createContext(app));
 
-        //  and context
-        _wctx = WorldContext(createContext());
+        // because we're the ur-client, initialize the policy loader
+        PolicyLoader.init(socketPolicyPort);
 
-        // prior to logging on to a server, set up our security policy for that server
-        addClientObserver(new ClientAdapter(clientWillLogon));
+        // then register with it, as any client would
+        PolicyLoader.registerClient(this);
 
         // set up a context menu that blocks funnybiz on the stage
         var menu :ContextMenu = new ContextMenu();
         menu.hideBuiltInItems();
         app.contextMenu = menu;
         menu.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenuWillPopUp);
+    }
 
-        // finally logon
-        log.info("Starting up", "capabilities", Capabilities.serverString);
+    public function logonWithCredentials (creds :AetherCredentials) :Boolean
+    {
+        if (isLoggedOn()) {
+            return false;
+        }
 
+        creds.ident = Prefs.getMachineIdent();
+        setCredentials(creds);
         logon();
-    }
-
-    /**
-     * Return the Application.
-     */
-    public function getApplication () :Application
-    {
-        return _app;
-    }
-
-    /**
-     * Return the Stage.
-     */
-    public function getStage () :Stage
-    {
-        return _app.stage;
     }
 
     /**
      * Creates the context we'll use with this client.
      */
-    protected function createContext () :AetherContext
+    protected function createContext (app :Application) :AetherContext
     {
-        return new AetherContext(this);
+        return new AetherContext(app, this);
     }
 
+    /**
+     * Creates the credentials we'll use to log on.
+     */
     protected function createStartupCreds () :AetherCredentials
     {
-        
+        return new AetherCredentials("");
     }
 }
 }

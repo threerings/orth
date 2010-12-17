@@ -40,7 +40,7 @@ public class AetherCredentials extends OrthCredentials
      * Creates credentials with the specified username and password. The other public fields should
      * be set before logging in.
      */
-    public function AetherCredentials (username :Name, password :String)
+    public function AetherCredentials (username :Name, password :String = null)
     {
         super(username);
 
