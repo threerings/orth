@@ -107,6 +107,7 @@
       <library-path>
         <path-element>../dist/aslib/as3isolib-fp9.swc</path-element>
         <path-element>../dist/aslib/signals.swc</path-element>
+        <path-element>../dist/aslib/as3corelib.swc</path-element>
 
         <path-element>../dist/aslib/aspirin.swc</path-element>
         <path-element>../dist/aslib/flexlib-bin.swc</path-element>
