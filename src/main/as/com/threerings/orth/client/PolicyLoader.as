@@ -3,11 +3,19 @@
 
 package com.threerings.orth.client {
 
+import flash.system.Security;
+
+import com.threerings.util.Log;
+
+import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ClientAdapter;
+import com.threerings.presents.client.ClientEvent;
+
 public class PolicyLoader
 {
     public static function init (policyPort :int) :void
     {
-        _policyPort = policyPort;
+        _socketPolicyPort = policyPort;
     }
 
     public static function registerClient (client :Client) :void
@@ -24,11 +32,11 @@ public class PolicyLoader
      */
     protected static function clientWillLogon (event :ClientEvent) :void
     {
-        var hostName :String = event.getClient().getHostname();
+        var hostname :String = event.getClient().getHostname();
 
         if (!_loadedPolicies[hostname]) {
             var url :String = "xmlsocket://" + hostname + ":" + _socketPolicyPort;
-            log.info("Loading security policy", "url", url);
+            Log.getLog(PolicyLoader).info("Loading security policy", "url", url);
             Security.loadPolicyFile(url);
             _loadedPolicies[hostname] = true;
         }
