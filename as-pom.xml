@@ -8,11 +8,15 @@
   <name>orth</name>
 
   <repositories>
-   <repository>
-     <id>as3corelib-repo</id>
-     <url>https://github.com/samskivert/as3corelib/raw/master/repository</url>
-   </repository>
- </repositories>
+    <repository>
+      <id>as3corelib-repo</id>
+      <url>https://github.com/samskivert/as3corelib/raw/master/repository</url>
+    </repository>
+    <repository>
+      <id>ooo</id>
+      <url>https://build.earth.threerings.net/maven-repository</url>
+    </repository>
+  </repositories>
 
   <dependencies>
     <dependency>
