@@ -19,7 +19,7 @@ public class PlayerDirector extends BasicDirector
     // from BasicDirector
     override protected function registerServices (client :Client) :void
     {
-        client.addServiceGroup(OrthCodes.PLAYER_GROUP);
+        client.addServiceGroup(OrthCodes.AETHER_GROUP);
     }
 
     // from BasicDirector

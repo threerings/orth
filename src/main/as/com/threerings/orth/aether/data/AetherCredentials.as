@@ -7,7 +7,11 @@ package com.threerings.orth.aether.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.orth.data.OrthCredentials;
+
 // GENERATED PREAMBLE END
+
+import com.threerings.util.Name;
+import com.threerings.util.Joiner;
 
 /**
  * Used to authenticate a aether session.
@@ -47,14 +51,6 @@ public class AetherCredentials extends OrthCredentials
         _password = password;
     }
 
-    // from interface Streamable
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        super.writeObject(out);
-        out.writeField(ident);
-        out.writeField(_password);
-    }
-
     // documentation inherited
     override protected function toStringJoiner (j :Joiner) :void
     {
@@ -62,7 +58,6 @@ public class AetherCredentials extends OrthCredentials
         j.add("password", _password);
     }
 
-    protected var _password :String;
 // GENERATED CLASSFINISH START
 }
 }
