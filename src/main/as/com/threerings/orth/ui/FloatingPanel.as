@@ -2,9 +2,6 @@
 // $Id: FloatingPanel.as 18332 2009-10-11 16:43:21Z jamie $
 
 package com.threerings.orth.ui {
-import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.OrthContext;
-import com.threerings.orth.world.client.WorldContext;
 import flash.display.DisplayObject;
 
 import flash.events.Event;
@@ -30,6 +27,9 @@ import com.threerings.util.CommandEvent;
 
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.PopUpUtil;
+
+import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthContext;
 
 /**
  * Dispatched when the dialog closes due to a CloseEvent or a call to <code>close()</code>.
