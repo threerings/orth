@@ -3,7 +3,10 @@
 
 package com.threerings.orth.client {
 
+import flash.display.BitmapData;
 import flash.display.DisplayObject;
+
+import flash.geom.Matrix;
 
 import flash.utils.Dictionary;
 
@@ -22,6 +25,7 @@ import com.threerings.util.Log;
  * fiddling with rawChildren and competing for the top spot.
  */
 public class LayeredContainer extends Container
+    implements Snapshottable
 {
     public const log :Log = Log.getLog(this);
 
@@ -37,6 +41,17 @@ public class LayeredContainer extends Container
             removeChild(_base);
             _base = null;
         }
+    }
+
+    // from interface Snapshottable
+    public function snapshot (
+        bitmapData :BitmapData, matrix :Matrix, childPredicate :Function = null) :Boolean
+    {
+        return SnapshotUtil.snapshot(this, bitmapData, matrix,
+            // enhance the predicate to avoid snapping the base
+            function (disp :DisplayObject) :Boolean {
+                return (disp != _base) && (childPredicate == null || childPredicate(disp));
+            });
     }
 
     /**
