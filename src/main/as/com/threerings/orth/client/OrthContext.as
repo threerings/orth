@@ -181,6 +181,9 @@ public class OrthContext
         var username :Name = AetherCredentials(_client.getCredentials()).getUsername();
 
         // creating the new context will create the client and trigger the login
+        // note: it will never actually work like this; WorldContext needs to be an interface,
+        // and the implementation instantiated will depend on what type of world location it is
+        // we're moving into
         _wctx = new WorldContext(this, hostname, ports, username, _sessionToken);
     }
 

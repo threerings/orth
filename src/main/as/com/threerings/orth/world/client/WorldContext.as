@@ -13,6 +13,11 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.util.Name;
 
+/**
+ * ORTH TODO: This must be an interface, not a subclass. This is true for much of the
+ * world subpackage, as e.g. rooms derive from threerings.whirled whereas interventions
+ * derive directly from threerings.crowd.
+ */
 public class WorldContext
     implements CrowdContext
 {
