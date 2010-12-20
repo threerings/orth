@@ -18,9 +18,11 @@ public class OrthController extends Controller
     /** Command to display sign-up info for guests (TODO: not implemented). */
     public static const SHOW_SIGN_UP :String = "ShowSignUp";
 
-    public function OrthController (octx:OrthContext, topPanel:TopPanel)
+    public function OrthController (octx :OrthContext, topPanel :TopPanel)
     {
         _octx = octx;
+
+        setControlledPanel(topPanel);
     }
 
     /**
