@@ -13,6 +13,8 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.util.Name;
 
+import flash.display.DisplayObject;
+
 /**
  * ORTH TODO: This must be an interface, not a subclass. This is true for much of the
  * world subpackage, as e.g. rooms derive from threerings.whirled whereas interventions
@@ -86,13 +88,15 @@ public class WorldContext
     // from CrowdContext
     public function setPlaceView (view :PlaceView):void
     {
-        _octx.topPanel.setPlaceView(view);
+        // TODO: OrthPlaceView.selfAsDisplayObject()?
+        _octx.topPanel.setMainView(DisplayObject(view));
     }
 
     // from CrowdContext
     public function clearPlaceView (view :PlaceView):void
     {
-        _octx.topPanel.clearPlaceView(view);
+        // TODO: OrthPlaceView.selfAsDisplayObject()?
+        _octx.topPanel.clearPlaceView(DisplayObject(view));
     }
 
     protected var _client :WorldClient;
