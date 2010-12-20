@@ -2,13 +2,14 @@
 // $Id$
 
 package com.threerings.orth.client {
-import com.threerings.util.Log;
-import com.threerings.util.MessageManager;
-import com.threerings.util.Name;
 
 import mx.core.Application;
 
 import flash.display.Stage;
+
+import com.threerings.util.Log;
+import com.threerings.util.MessageManager;
+import com.threerings.util.Name;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
@@ -31,7 +32,7 @@ import com.threerings.orth.world.client.WorldContext;
  *
  * Never confuse the two contexts. They represent different systems. This one is primary, in that
  * there is always an {@link OrthContext} and always an {@link AetherClient}, but only some of
- * the time is that true for {@link com.threerings.orth.world.client.WorldContext} and {@link WorldClient}.
+ * the time is that true for {@link WorldContext} and {@link WorldClient}.
  */
 public class OrthContext
     implements PresentsContext
@@ -51,13 +52,14 @@ public class OrthContext
         // create our deployment configuration early, as almost everything might depend on it
         _config = createConfig();
 
-        // the top panel's constructor will add it to the app's UI hierarchy
-        _topPanel = new TopPanel(this);
-
         // create our ur-client
         _client = createClient(hostname, ports);
 
-        _controller = new OrthController(this, _topPanel);
+        // the top panel's constructor will add it to the app's UI hierarchy
+        _topPanel = createTopPanel();
+
+        // finally we create the controller, which relies on the previous setup to have concluded
+        _controller = createController();
     }
 
     /**
@@ -168,7 +170,7 @@ public class OrthContext
     }
 
     /**
-     * To be explicitly called when we've created a {@link com.threerings.orth.world.client.WorldContext} with a {@link WorldClient}
+     * To be explicitly called when we've created a {@link WorldContext} with a {@link WorldClient}
      * and are about to log into the corresponding world server.
      */
     public function enterWorld (hostname :String, ports :Array) :void
@@ -211,6 +213,14 @@ public class OrthContext
     }
 
     /**
+     * Create our TopPanel instance. Subclasses customize this to instantiate their own.
+     */
+    protected function createTopPanel () :TopPanel
+    {
+        return new TopPanel(this, new OrthPlaceBox(this));
+    }
+
+    /**
      * Create this deployment's {@link OrthDeploymentConfig}. By default an utterly trivial
      * class is returned; any serious application will want to override this method.
      */
@@ -218,6 +228,16 @@ public class OrthContext
     {
         return new TrivialDeploymentConfig();
     }
+
+    /**
+     * Create the TopPanel controller, which must subclass {@link OrthController}. Subclasses
+     * will return something that implements their application's commands.
+     */
+    protected function createController () :OrthController
+    {
+        return new OrthController(this, _topPanel);
+    }
+
 
     protected var _app :Application;
     protected var _client :AetherClient;
