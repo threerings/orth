@@ -3,7 +3,7 @@
 
 package com.threerings.orth.client
 {
-public interface DeploymentConfig
+public interface OrthDeploymentConfig
 {
     /**
      * Return the version identifier of the current client. This is sent over the wire to the

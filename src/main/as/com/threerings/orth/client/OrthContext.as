@@ -133,7 +133,7 @@ public class OrthContext
      * The Orth layer uses a nonsensical development configuration. This method should be
      * overridden in any real application.
      */
-    public function get deployment () :DeploymentConfig
+    public function get deployment () :OrthDeploymentConfig
     {
         return _config;
     }
@@ -211,7 +211,7 @@ public class OrthContext
     protected var _client :AetherClient;
     protected var _topPanel :TopPanel;
     protected var _controller :OrthController;
-    protected var _config :DeploymentConfig = new OrthDeploymentConfig();
+    protected var _config :OrthDeploymentConfig = new OrthDeploymentConfig();
 
     protected var _wctx :WorldContext;
 
@@ -224,9 +224,9 @@ public class OrthContext
 }
 }
 
-import com.threerings.orth.client.DeploymentConfig;
+import com.threerings.orth.client.OrthDeploymentConfig;
 
-class OrthDeploymentConfig implements DeploymentConfig
+class OrthDeploymentConfig implements OrthDeploymentConfig
 {
     public function getVersion () :String
     {
