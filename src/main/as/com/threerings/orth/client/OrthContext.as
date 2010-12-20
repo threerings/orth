@@ -40,13 +40,16 @@ public class OrthContext
     {
         _app = app;
 
-        // initialize the policy loader
-        PolicyLoader.init(policyPort);
-
         // initialize the message manager
         _msgMgr = new MessageManager();
         // and our convenience holder
         Msgs.init(_msgMgr);
+
+        // initialize the policy loader
+        PolicyLoader.init(policyPort);
+
+        // create our deployment configuration early, as almost everything might depend on it
+        _config = createConfig();
 
         // the top panel's constructor will add it to the app's UI hierarchy
         _topPanel = new TopPanel(this);
@@ -207,11 +210,20 @@ public class OrthContext
         return new AetherClient(this, hostname, ports);
     }
 
+    /**
+     * Create this deployment's {@link OrthDeploymentConfig}. By default an utterly trivial
+     * class is returned; any serious application will want to override this method.
+     */
+    protected function createConfig () :OrthDeploymentConfig
+    {
+        return new TrivialDeploymentConfig();
+    }
+
     protected var _app :Application;
     protected var _client :AetherClient;
     protected var _topPanel :TopPanel;
     protected var _controller :OrthController;
-    protected var _config :OrthDeploymentConfig = new OrthDeploymentConfig();
+    protected var _config :OrthDeploymentConfig;
 
     protected var _wctx :WorldContext;
 
@@ -226,7 +238,7 @@ public class OrthContext
 
 import com.threerings.orth.client.OrthDeploymentConfig;
 
-class OrthDeploymentConfig implements OrthDeploymentConfig
+class TrivialDeploymentConfig implements OrthDeploymentConfig
 {
     public function getVersion () :String
     {
