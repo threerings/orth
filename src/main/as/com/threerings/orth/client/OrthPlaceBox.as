@@ -10,33 +10,30 @@ import flash.geom.Point;
 
 import mx.core.UIComponent;
 
-import com.threerings.crowd.client.PlaceView;
-
 /**
- * A component that holds our place views and sets up a mask to ensure that the place view does not
- * render outside the box's bounds.
+ * A component that holds our main view and sets up a mask to ensure that it doesn't render
+ * outside the box's bounds.
  */
-public class PlaceBox extends LayeredContainer
+public class OrthPlaceBox extends LayeredContainer
 {
-    public function PlaceBox (ctx :OrthContext)
+    public function OrthPlaceBox (ctx :OrthContext)
     {
         _octx = ctx;
         rawChildren.addChild(_mask = new Shape());
     }
 
-    public function getPlaceView () :PlaceView
+    public function getMainView () :DisplayObject
     {
-        return _placeView;
+        return _mainView;
     }
 
-    public function setPlaceView (view :PlaceView) :void
+    public function setMainView (view :DisplayObject) :void
     {
         // throw an exception now if it's not a display object
-        var disp :DisplayObject = DisplayObject(view);
-        setBaseLayer(disp);
-        _placeView = view;
+        setBaseLayer(view);
+        _mainView = view;
 
-        layoutPlaceView();
+        layoutMainView();
     }
 
     override public function addOverlay (overlay :DisplayObject, layer :int) :void
@@ -49,11 +46,11 @@ public class PlaceBox extends LayeredContainer
         }
     }
 
-    public function clearPlaceView (view :PlaceView) :Boolean
+    public function clearMainView (view :DisplayObject) :Boolean
     {
-        if ((_placeView != null) && (view == null || view == _placeView)) {
+        if ((_mainView != null) && (view == null || view == _mainView)) {
             clearBaseLayer();
-            _placeView = null;
+            _mainView = null;
             return true;
         }
         return false;
@@ -68,7 +65,7 @@ public class PlaceBox extends LayeredContainer
         var stagePoint :Point = new Point(stageX, stageY);
         for (var ii :int = 0; ii < numChildren; ii ++) {
             var child :DisplayObject = unwrap(getChildAt(ii));
-            if (child == _placeView) {
+            if (child == _mainView) {
                 continue;
             }
             // note that we want hitTestPoint() to be able to modify the value of the
@@ -85,8 +82,8 @@ public class PlaceBox extends LayeredContainer
     }
 
     /**
-     * This must be called on when our size is changed to allow us update our PlaceView mask and
-     * resize the PlaceView itself.
+     * This must be called on when our size is changed to allow us update our MainView mask and
+     * resize the MainView itself.
      */
     override public function setActualSize (width :Number, height :Number) :void
     {
@@ -97,17 +94,17 @@ public class PlaceBox extends LayeredContainer
         // any PlaceLayer layers get informed of the size change
         for (var ii :int = 0; ii < numChildren; ii ++) {
             var child :DisplayObject = unwrap(getChildAt(ii));
-            if (child == _placeView) {
+            if (child == _mainView) {
                 continue; // we'll handle this later
             } else if (child is PlaceLayer) {
                 PlaceLayer(child).setPlaceSize(width, height);
             }
         }
 
-        layoutPlaceView();
+        layoutMainView();
     }
 
-    protected function layoutPlaceView () :void
+    protected function layoutMainView () :void
     {
         var w :Number = this.width;
         var h :Number = this.height;
@@ -120,12 +117,12 @@ public class PlaceBox extends LayeredContainer
         _base.x = 0;
         _base.y = 0;
 
-        if (_placeView is UIComponent) {
-            UIComponent(_placeView).setActualSize(w, h);
-        } else if (_placeView is PlaceLayer) {
-            PlaceLayer(_placeView).setPlaceSize(w, h);
-        } else if (_placeView != null) {
-            log.warning("PlaceView is not a PlaceLayer or an UIComponent.");
+        if (_mainView is UIComponent) {
+            UIComponent(_mainView).setActualSize(w, h);
+        } else if (_mainView is PlaceLayer) {
+            PlaceLayer(_mainView).setPlaceSize(w, h);
+        } else if (_mainView != null) {
+            log.warning("MainView is not a PlaceLayer or an UIComponent.");
         }
     }
 
@@ -157,11 +154,9 @@ public class PlaceBox extends LayeredContainer
     protected var _masked :DisplayObject;
 
     /** The current place view. */
-    protected var _placeView :PlaceView;
+    protected var _mainView :DisplayObject;
 
     /** The size of the area the last time he had an unminimized layout. */
     protected var _lastFullSize :Point;
-
-    protected static const CLEAN_BOUNDS :Boolean = true;
 }
 }

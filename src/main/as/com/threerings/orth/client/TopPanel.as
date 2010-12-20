@@ -3,6 +3,7 @@
 
 package com.threerings.orth.client {
 
+import flash.display.DisplayObject;
 import flash.events.Event;
 import flash.geom.Rectangle;
 
@@ -14,14 +15,12 @@ import mx.containers.Canvas;
 import mx.controls.Label;
 import mx.controls.scrollClasses.ScrollBar;
 
-import com.threerings.crowd.client.PlaceView;
-
 public class TopPanel extends Canvas
 {
     /**
      * Construct the top panel.
      */
-    public function TopPanel (octx :OrthContext)
+    public function TopPanel (octx :OrthContext, placeBox :OrthPlaceBox)
     {
         _octx = octx;
         percentWidth = 100;
@@ -30,7 +29,7 @@ public class TopPanel extends Canvas
         horizontalScrollPolicy = ScrollPolicy.OFF;
         styleName = "topPanel";
 
-        _placeBox = new PlaceBox(_octx);
+        _placeBox = placeBox;
         _placeBox.autoLayout = false;
         _placeBox.includeInLayout = false;
         addChild(_placeBox);
@@ -56,15 +55,14 @@ public class TopPanel extends Canvas
         app.addChild(this);
         app.stage.addEventListener(Event.RESIZE, stageResized);
 
-        // display something until someone comes along and sets a real view on us
-        setPlaceView(new BlankPlaceView(_octx));
+        setMainView(getBlankPlaceView());
     }
 
     /**
      * Get the flex container that is holding the PlaceView. This is useful if you want to overlay
      * things over the placeview or register to receive flex-specific events.
      */
-    public function getPlaceContainer () :PlaceBox
+    public function getPlaceContainer () :OrthPlaceBox
     {
         return _placeBox;
     }
@@ -72,27 +70,27 @@ public class TopPanel extends Canvas
     /**
      * Returns the currently configured place view.
      */
-    public function getPlaceView () :PlaceView
+    public function getMainView () :DisplayObject
     {
-        return _placeBox.getPlaceView();
+        return _placeBox.getMainView();
     }
 
     /**
      * Sets the specified view as the current place view.
      */
-    public function setPlaceView (view :PlaceView) :void
+    public function setMainView (view :DisplayObject) :void
     {
-        _placeBox.setPlaceView(view);
+        _placeBox.setMainView(view);
         layoutPanels();
     }
 
     /**
      * Clear the specified place view, or null to clear any.
      */
-    public function clearPlaceView (view :PlaceView) :void
+    public function clearPlaceView (view :DisplayObject) :void
     {
-        if (_placeBox.clearPlaceView(view)) {
-            setPlaceView(new BlankPlaceView(_octx));
+        if (_placeBox.clearMainView(view)) {
+            setMainView(getBlankPlaceView());
         }
     }
 
@@ -147,10 +145,20 @@ public class TopPanel extends Canvas
         _placeBox.setActualSize(_octx.getWidth(), _octx.getHeight());
     }
 
+    /**
+     * To be overridden by subclasses that want to return something more interesting.
+     */
+    protected function getBlankPlaceView () :DisplayObject
+    {
+        var canvas :Canvas = new Canvas();
+        canvas.setStyle("background-color", "#663300");
+        return canvas;
+    }
+
     /** The giver of life. */
     protected var _octx :OrthContext;
 
     /** The box that will hold the placeview. */
-    protected var _placeBox :PlaceBox;
+    protected var _placeBox :OrthPlaceBox;
 }
 }
