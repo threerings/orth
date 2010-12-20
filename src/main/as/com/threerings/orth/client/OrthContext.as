@@ -2,7 +2,6 @@
 // $Id$
 
 package com.threerings.orth.client {
-import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.util.Log;
 import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
@@ -16,6 +15,7 @@ import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.util.PresentsContext;
 
 import com.threerings.orth.aether.client.AetherClient;
+import com.threerings.orth.aether.data.AetherCredentials;
 
 import com.threerings.orth.world.client.WorldContext;
 
@@ -25,7 +25,7 @@ import com.threerings.orth.world.client.WorldContext;
  * the services that take place over the Aether link.
  *
  * Whenever the player is in a world location, this context additionally returns a non-null
- * reference to a {@link com.threerings.orth.world.client.WorldContext}, which is the nexus of the entirely distinct other half
+ * reference to a {@link WorldContext}, which is the nexus of the entirely distinct other half
  * of the client's workings: a separate client connected to its own server and distributed object
  * system and, consequently, a different set of directors to take advantage of it all.
  *
@@ -52,7 +52,7 @@ public class OrthContext
         _topPanel = new TopPanel(this);
 
         // create our ur-client
-        _client = new AetherClient(this, hostname, ports);
+        _client = createClient(hostname, ports);
 
         _controller = new OrthController(this, _topPanel);
     }
@@ -197,6 +197,14 @@ public class OrthContext
             // but let it happen
         }
         _wctx == null;
+    }
+
+    /**
+     * Create our AetherClient. Subclasses customize this to instantiate their own.
+     */
+    protected function createClient (hostname :String, ports :Array) :AetherClient
+    {
+        return new AetherClient(this, hostname, ports);
     }
 
     protected var _app :Application;
