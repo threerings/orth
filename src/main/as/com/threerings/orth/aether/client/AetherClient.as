@@ -4,6 +4,7 @@
 package com.threerings.orth.aether.client {
 import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.AetherCredentials;
+import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
@@ -26,6 +27,9 @@ import flash.utils.Dictionary;
 
 public class AetherClient extends Client
 {
+    // reference classes that would otherwise not be linked in
+    PlayerObject;
+
     public function AetherClient (ctx :OrthContext, host :String, ports :Array)
     {
         super();
