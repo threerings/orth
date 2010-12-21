@@ -11,10 +11,9 @@ import com.google.common.collect.Maps;
 import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList;
 
-import com.threerings.crowd.peer.server.CrowdPeerManager;
-
 import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.data.NodeObject;
+import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.peer.server.PeerNode;
 import com.threerings.presents.server.PresentsSession;
 
@@ -26,7 +25,7 @@ import com.threerings.orth.peer.data.OrthNodeObject;
 /**
  *
  */
-public abstract class OrthPeerManager extends CrowdPeerManager
+public abstract class OrthPeerManager extends PeerManager
 {
     /** Our {@link PeerObserver}s. */
     public final ObserverList<PeerObserver> peerObs = ObserverList.newFastUnsafe();
@@ -46,13 +45,20 @@ public abstract class OrthPeerManager extends CrowdPeerManager
         super(cycle);
     }
 
-    @Override // from CrowdPeerManager
+    @Override // from PeerManager
     protected NodeObject createNodeObject ()
     {
         return (_onobj = new OrthNodeObject());
     }
 
-    @Override // from CrowdPeerManager
+
+    @Override // from PeerManager
+    protected ClientInfo createClientInfo ()
+    {
+        return new OrthClientInfo();
+    }
+
+    @Override // from PeerManager
     protected void initClientInfo (PresentsSession client, ClientInfo info)
     {
         super.initClientInfo(client, info);
