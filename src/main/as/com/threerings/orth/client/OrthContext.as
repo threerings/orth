@@ -7,6 +7,8 @@ import mx.core.Application;
 
 import flash.display.Stage;
 
+import org.swiftsuspenders.Injector;
+
 import com.threerings.util.Log;
 import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
@@ -37,31 +39,117 @@ import com.threerings.orth.world.client.WorldContext;
 public class OrthContext
     implements PresentsContext
 {
-    public function OrthContext (app :Application, hostname :String, ports :Array, policyPort :int)
+    public static function run (app :Application) :OrthContext
     {
-        _app = app;
+        return runClient(app, new OrthModule());
+    }
 
-        // initialize the message manager
-        _msgMgr = new MessageManager();
+    public static function runClient (app :Application, module :OrthModule) :OrthContext
+    {
+        // create our injector
+        var injector :Injector = new Injector();
+
+        // set up orth bindings
+        module.configure(app, injector);
+
+        // and kick start our context
+        return injector.getInstance(OrthContext);
+    }
+
+    public function OrthContext ()
+    {
         // and our convenience holder
         Msgs.init(_msgMgr);
 
         // initialize the policy loader
-        PolicyLoader.init(policyPort);
+        PolicyLoader.init(/* TODO */ 1234);
 
-        // create our deployment configuration early, as almost everything might depend on it
-        _config = createConfig();
+        // map our deployment configuration early, as almost everything might depend on it
+//        _config.init();
 
         // create our ur-client
-        _client = createClient(hostname, ports);
+//        _client.init();
 
         // the top panel's constructor will add it to the app's UI hierarchy
-        _topPanel = createTopPanel();
+//        _topPanel.init();
 
         // finally we create the controller, which relies on the previous setup to have concluded
-        _controller = createController();
+//        _controller.init();
     }
 
+    // from PresentsContext
+    public function getClient () :Client
+    {
+        return _client;
+    }
+
+    // from PresentsContext
+    public function getDObjectManager () :DObjectManager
+    {
+        return _client.getDObjectManager();
+    }
+
+    public function saveSessionToken (sessionToken :String):void
+    {
+        _sessionToken = sessionToken;
+    }
+
+    /**
+     * To be explicitly called when we've created a {@link WorldContext} with a {@link WorldClient}
+     * and are about to log into the corresponding world server.
+     */
+    public function enterWorld (hostname :String, ports :Array) :void
+    {
+        if (_wctx != null) {
+            log.error("Aii! Being given a new world context with an old one in place!");
+            // but let it happen
+        }
+
+        // for now, fish our username out of our aether creds. should always be correct,
+        // but possibly not the most elegant
+
+        var username :Name = AetherCredentials(_client.getCredentials()).getUsername();
+
+        // creating the new context will create the client and trigger the login
+        // note: it will never actually work like this; WorldContext needs to be an interface,
+        // and the implementation instantiated will depend on what type of world location it is
+        // we're moving into
+
+        _injector.mapValue(String, hostname, "worldHostname");
+        _injector.mapValue(Array, ports, "worldPorts");
+
+        _injector.mapValue(WorldContext, _injector.getInstance(WorldContext));
+    }
+
+    /**
+     * To be explicitly called when we've finished leaving a world location.
+     */
+    public function leftWorld () :void
+    {
+        if (_wctx == null) {
+            log.error("Aii Leaving the world with no configured world context.");
+            // but let it happen
+        }
+        _wctx == null;
+    }
+
+    [Inject] protected var _injector :Injector;
+    [Inject] protected var _app :Application;
+    [Inject] protected var _client :AetherClient;
+    [Inject] protected var _topPanel :TopPanel;
+    [Inject] protected var _controller :OrthController;
+    [Inject] protected var _config :OrthDeploymentConfig;
+
+    [Inject] protected var _wctx :WorldContext;
+
+    [Inject] protected var _msgMgr :MessageManager;
+
+    protected var _sessionToken :String;
+
+    private static var log :Log = Log.getLog(OrthContext);
+
+
+    // CRAP
     /**
      * Return a reference to our {@link AetherClient}.
      */
@@ -79,7 +167,7 @@ public class OrthContext
     }
 
     /**
-     * Return a reference to our {@link com.threerings.orth.client.TopPanel}, the single child of our {@link Application}.
+     * Return a reference to our {@link com.threerings.orth.client.TopPanel}, the single child of ou
      */
     public function get topPanel () :TopPanel
     {
@@ -150,123 +238,7 @@ public class OrthContext
     public function get wctx () :WorldContext
     {
         return _wctx;
-    }
-
-    // from PresentsContext
-    public function getClient () :Client
-    {
-        return _client;
-    }
-
-    // from PresentsContext
-    public function getDObjectManager () :DObjectManager
-    {
-        return _client.getDObjectManager();
-    }
-
-    public function saveSessionToken (sessionToken :String):void
-    {
-        _sessionToken = sessionToken;
-    }
-
-    /**
-     * To be explicitly called when we've created a {@link WorldContext} with a {@link WorldClient}
-     * and are about to log into the corresponding world server.
-     */
-    public function enterWorld (hostname :String, ports :Array) :void
-    {
-        if (_wctx != null) {
-            log.error("Aii! Being given a new world context with an old one in place!");
-            // but let it happen
-        }
-
-        // for now, fish our username out of our aether creds. should always be correct,
-        // but possibly not the most elegant
-
-        var username :Name = AetherCredentials(_client.getCredentials()).getUsername();
-
-        // creating the new context will create the client and trigger the login
-        // note: it will never actually work like this; WorldContext needs to be an interface,
-        // and the implementation instantiated will depend on what type of world location it is
-        // we're moving into
-        _wctx = new WorldContext(this, hostname, ports, username, _sessionToken);
-    }
-
-    /**
-     * To be explicitly called when we've finished leaving a world location.
-     */
-    public function leftWorld () :void
-    {
-        if (_wctx == null) {
-            log.error("Aii Leaving the world with no configured world context.");
-            // but let it happen
-        }
-        _wctx == null;
-    }
-
-    /**
-     * Create our AetherClient. Subclasses customize this to instantiate their own.
-     */
-    protected function createClient (hostname :String, ports :Array) :AetherClient
-    {
-        return new AetherClient(this, hostname, ports);
-    }
-
-    /**
-     * Create our TopPanel instance. Subclasses customize this to instantiate their own.
-     */
-    protected function createTopPanel () :TopPanel
-    {
-        return new TopPanel(this, new OrthPlaceBox(this));
-    }
-
-    /**
-     * Create this deployment's {@link OrthDeploymentConfig}. By default an utterly trivial
-     * class is returned; any serious application will want to override this method.
-     */
-    protected function createConfig () :OrthDeploymentConfig
-    {
-        return new TrivialDeploymentConfig();
-    }
-
-    /**
-     * Create the TopPanel controller, which must subclass {@link OrthController}. Subclasses
-     * will return something that implements their application's commands.
-     */
-    protected function createController () :OrthController
-    {
-        return new OrthController(this, _topPanel);
-    }
-
-
-    protected var _app :Application;
-    protected var _client :AetherClient;
-    protected var _topPanel :TopPanel;
-    protected var _controller :OrthController;
-    protected var _config :OrthDeploymentConfig;
-
-    protected var _wctx :WorldContext;
-
-    protected var _msgMgr :MessageManager;
-
-    protected var _sessionToken :String;
-
-    private static var log :Log = Log.getLog(OrthContext);
+     }
 
 }
-}
-
-import com.threerings.orth.client.OrthDeploymentConfig;
-
-class TrivialDeploymentConfig implements OrthDeploymentConfig
-{
-    public function getVersion () :String
-    {
-        return "DEV";
-    }
-
-    public function isDevelopment () :Boolean
-    {
-        return true;
-    }
 }

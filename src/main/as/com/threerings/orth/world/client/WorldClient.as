@@ -2,13 +2,15 @@
 // $Id: $
 package com.threerings.orth.world.client
 {
-import com.threerings.crowd.client.CrowdClient;
-
 import com.threerings.util.Name;
 
 import com.threerings.presents.net.Credentials;
 
+import com.threerings.crowd.client.CrowdClient;
+
+import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
+
 import com.threerings.orth.world.data.WorldCredentials;
 
 /**
@@ -22,7 +24,7 @@ public class WorldClient extends CrowdClient
         _wctx = wctx;
 
         // configure our version
-        setVersion(_wctx.octx.deployment.getVersion());
+        setVersion(_config.getVersion());
 
         // configure our server and port info
         setServer(host, ports);
@@ -42,6 +44,7 @@ public class WorldClient extends CrowdClient
         return new WorldCredentials(username, sessionToken);
     }
 
-    protected var _wctx :WorldContext;
+    [Inject] protected var _wctx :WorldContext;
+    [Inject] protected var _config :OrthDeploymentConfig;
 }
 }

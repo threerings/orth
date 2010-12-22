@@ -1,19 +1,28 @@
 //
 // $Id: $
+
 package com.threerings.orth.world.client
 {
+import flash.display.DisplayObject;
+
+import org.swiftsuspenders.Injector;
+
+import com.threerings.util.MessageManager;
+import com.threerings.util.Name;
+
+import com.threerings.presents.client.Client;
+import com.threerings.presents.dobj.DObjectManager;
+
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.util.CrowdContext;
-import com.threerings.orth.client.OrthContext;
-import com.threerings.orth.data.OrthCodes;
-import com.threerings.presents.client.Client;
-import com.threerings.presents.dobj.DObjectManager;
-import com.threerings.util.Name;
 
-import flash.display.DisplayObject;
+import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.TopPanel;
+import com.threerings.orth.data.OrthCodes;
+
 
 /**
  * ORTH TODO: This must be an interface, not a subclass. This is true for much of the
@@ -23,34 +32,9 @@ import flash.display.DisplayObject;
 public class WorldContext
     implements CrowdContext
 {
-    public function WorldContext (ctx :OrthContext, hostname :String, ports :Array,
-        username :Name, sessionToken :String)
+    public function WorldContext ()
     {
-        _octx = ctx;
-
-        _client = new WorldClient(this, hostname, ports, username, sessionToken);
-
-        _locDir = new LocationDirector(this);
-        _occDir = new OccupantDirector(this);
-
-        // NOT ACTUALLY USED
-        _chatDir = new ChatDirector(this, ctx.getMessageManager(), OrthCodes.CHAT_MSGS);
-    }
-
-    /**
-     * Return a reference to the {@link OrthContext}. This value is never null.
-     */
-    public function get octx () :OrthContext
-    {
-        return _octx;
-    }
-
-    /**
-     * Return a reference to our {@link com.threerings.orth.world.client.WorldClient}.
-     */
-    public function get client () :WorldClient
-    {
-        return _client;
+        _injector.mapValue(WorldClient, _injector.getInstance(WorldClient));
     }
 
     // from PresentsContext
@@ -89,21 +73,23 @@ public class WorldContext
     public function setPlaceView (view :PlaceView):void
     {
         // TODO: OrthPlaceView.selfAsDisplayObject()?
-        _octx.topPanel.setMainView(DisplayObject(view));
+        _topPanel.setMainView(DisplayObject(view));
     }
 
     // from CrowdContext
     public function clearPlaceView (view :PlaceView):void
     {
         // TODO: OrthPlaceView.selfAsDisplayObject()?
-        _octx.topPanel.clearPlaceView(DisplayObject(view));
+        _topPanel.clearPlaceView(DisplayObject(view));
     }
 
-    protected var _client :WorldClient;
-    protected var _octx :OrthContext;
+    [Inject] protected var _injector :Injector;
+    [Inject] protected var _client :WorldClient;
+    [Inject] protected var _topPanel :TopPanel;
 
-    protected var _locDir :LocationDirector;
-    protected var _occDir :OccupantDirector;
-    protected var _chatDir :ChatDirector;
+    [Inject] protected var _msgMgr :MessageManager;
+    [Inject] protected var _locDir :LocationDirector;
+    [Inject] protected var _occDir :OccupantDirector;
+    [Inject] protected var _chatDir :ChatDirector;
 }
 }

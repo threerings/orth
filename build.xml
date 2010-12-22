@@ -46,6 +46,7 @@
         <mapper type="regexp" from="(.+?)(-SNAPSHOT)?.swc" to="\1.swc"/>
         <mapper type="regexp" from="(.*)-([^-])+.swc" to="\1.swc"/>
       </chainedmapper>
+      <fileset dir="lib" includes="**/*.swc"/>
     </copy>
   </target>
 
