@@ -18,33 +18,36 @@ import com.threerings.orth.world.data.WorldCredentials;
  */
 public class WorldClient extends CrowdClient
 {
-    public function WorldClient (wctx :WorldContext, host :String, ports :Array,
-        username :Name, sessionToken :String)
+    [PostConstruct]
+    public function initialize () :void
     {
-        _wctx = wctx;
+        // let the policy loader know about us
+        PolicyLoader.registerClient(this);
 
         // configure our version
         setVersion(_config.getVersion());
+    }
+
+    public function logonWithCredentials (
+        host:String, ports: Array, creds :WorldCredentials) :Boolean
+    {
+        if (isLoggedOn()) {
+            logoff(false);
+        }
 
         // configure our server and port info
         setServer(host, ports);
 
-        // let the policy loader know about us
-        PolicyLoader.registerClient(this);
-
-        // create our credentials, which are sessionToken based
-        setCredentials(buildCredentials(username, sessionToken));
-
-        // and kick off the login procedure
+        setCredentials(creds);
         logon();
+        return true;
     }
 
-    protected function buildCredentials (username :Name, sessionToken :String) :Credentials
+    public function buildCredentials (username :Name, sessionToken :String) :Credentials
     {
         return new WorldCredentials(username, sessionToken);
     }
 
-    [Inject] protected var _wctx :WorldContext;
-    [Inject] protected var _config :OrthDeploymentConfig;
+    [Inject] public var _config :OrthDeploymentConfig;
 }
 }

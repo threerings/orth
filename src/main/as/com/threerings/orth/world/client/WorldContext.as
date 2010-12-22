@@ -29,12 +29,16 @@ import com.threerings.orth.data.OrthCodes;
  * world subpackage, as e.g. rooms derive from threerings.whirled whereas interventions
  * derive directly from threerings.crowd.
  */
+[Inject]
 public class WorldContext
     implements CrowdContext
 {
-    public function WorldContext ()
+    public function WorldContext (msgMgr :MessageManager)
     {
-        _injector.mapValue(WorldClient, _injector.getInstance(WorldClient));
+        // crowd stuff
+        _injector.mapValue(LocationDirector, new LocationDirector(this));
+        _injector.mapValue(OccupantDirector, new OccupantDirector(this));
+        _injector.mapValue(ChatDirector, new ChatDirector(this, msgMgr, OrthCodes.CHAT_MSGS));
     }
 
     // from PresentsContext
@@ -83,13 +87,12 @@ public class WorldContext
         _topPanel.clearPlaceView(DisplayObject(view));
     }
 
-    [Inject] protected var _injector :Injector;
-    [Inject] protected var _client :WorldClient;
-    [Inject] protected var _topPanel :TopPanel;
+    [Inject] public var _injector :Injector;
+    [Inject] public var _client :WorldClient;
+    [Inject] public var _topPanel :TopPanel;
 
-    [Inject] protected var _msgMgr :MessageManager;
-    [Inject] protected var _locDir :LocationDirector;
-    [Inject] protected var _occDir :OccupantDirector;
-    [Inject] protected var _chatDir :ChatDirector;
+    [Inject] public var _locDir :LocationDirector;
+    [Inject] public var _occDir :OccupantDirector;
+    [Inject] public var _chatDir :ChatDirector;
 }
 }

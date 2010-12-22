@@ -17,30 +17,26 @@ import mx.controls.scrollClasses.ScrollBar;
 
 public class TopPanel extends Canvas
 {
-    /**
-     * Construct the top panel.
-     */
-    public function TopPanel (octx :OrthContext, placeBox :OrthPlaceBox)
+    [PostConstruct]
+    public function initTopPanel () :void
     {
-        _octx = octx;
         percentWidth = 100;
         percentHeight = 100;
         verticalScrollPolicy = ScrollPolicy.OFF;
         horizontalScrollPolicy = ScrollPolicy.OFF;
         styleName = "topPanel";
 
-        _placeBox = placeBox;
         _placeBox.autoLayout = false;
         _placeBox.includeInLayout = false;
         addChild(_placeBox);
 
         // show a subtle build-stamp on dev builds
-        if (_octx.deployment.isDevelopment()) {
+        if (_devConf.isDevelopment()) {
             var buildStamp :Label = new Label();
             buildStamp.includeInLayout = false;
             buildStamp.mouseEnabled = false;
             buildStamp.mouseChildren = false;
-            buildStamp.text = "Build: " + _octx.deployment.getVersion();
+            buildStamp.text = "Build: " + _devConf.getVersion();
             buildStamp.setStyle("color", "#F7069A");
             buildStamp.setStyle("fontSize", 8);
             buildStamp.setStyle("bottom", 0);
@@ -50,7 +46,7 @@ public class TopPanel extends Canvas
         }
 
         // clear out the application and install ourselves as the only child
-        var app :Application = _octx.app;
+        var app :Application = _app;
         app.removeAllChildren();
         app.addChild(this);
         app.stage.addEventListener(Event.RESIZE, stageResized);
@@ -101,8 +97,8 @@ public class TopPanel extends Canvas
     {
         var left :Number = _placeBox.getStyle("left");
         var top :Number = _placeBox.getStyle("top");
-        var width :Number = _octx.getWidth() - _placeBox.getStyle("right") - left;
-        var height :Number = _octx.getHeight() - _placeBox.getStyle("bottom") - top;
+        var width :Number = _width - _placeBox.getStyle("right") - left;
+        var height :Number = _height - _placeBox.getStyle("bottom") - top;
         return new Rectangle(left, top, width, height);
     }
 
@@ -112,8 +108,8 @@ public class TopPanel extends Canvas
      */
     public function getMainAreaBounds () :Rectangle
     {
-        var height: Number = _octx.getHeight() - _placeBox.getStyle("bottom");
-        return new Rectangle(0, _placeBox.getStyle("top"), _octx.getWidth(), height);
+        var height: Number = _height - _placeBox.getStyle("bottom");
+        return new Rectangle(0, _placeBox.getStyle("top"), _width, height);
     }
 
     protected function stageResized (event :Event) :void
@@ -125,8 +121,8 @@ public class TopPanel extends Canvas
     {
         // Pin the app to the stage.
         // This became necessary for "stubs" after we upgraded to flex 3.2.
-        _octx.app.width = _octx.getWidth();
-        _octx.app.height = _octx.getHeight();
+        _app.width = _width;
+        _app.height = _height;
 
         updatePlaceViewSize();
     }
@@ -142,7 +138,7 @@ public class TopPanel extends Canvas
         _placeBox.setStyle("bottom", 0);
         _placeBox.setStyle("right", 0);
         _placeBox.setStyle("left", 0); // + ScrollBar.THICKNESS);
-        _placeBox.setActualSize(_octx.getWidth(), _octx.getHeight());
+        _placeBox.setActualSize(_width, _height);
     }
 
     /**
@@ -155,10 +151,11 @@ public class TopPanel extends Canvas
         return canvas;
     }
 
-    /** The giver of life. */
-    protected var _octx :OrthContext;
+    [Inject] public var _app :Application;
+    [Inject] public var _devConf :OrthDeploymentConfig;
+    [Inject] public var _placeBox :OrthPlaceBox;
 
-    /** The box that will hold the placeview. */
-    protected var _placeBox :OrthPlaceBox;
+    [Inject(name="clientWidth")] public var _width :Number
+    [Inject(name="clientHeight")] public var _height :Number;
 }
 }

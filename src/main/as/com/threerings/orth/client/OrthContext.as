@@ -41,23 +41,32 @@ public class OrthContext
 {
     public static function run (app :Application) :OrthContext
     {
-        return runClient(app, new OrthModule());
+        return runClient(app, OrthContext, new OrthModule());
     }
 
-    public static function runClient (app :Application, module :OrthModule) :OrthContext
+    public static function runClient (
+        app :Application, ctxClass :Class, module :OrthModule) :OrthContext
     {
         // create our injector
         var injector :Injector = new Injector();
 
-        // set up orth bindings
+        // then set up orth bindings
         module.configure(app, injector);
 
-        // and kick start our context
-        return injector.getInstance(OrthContext);
+        var ctx :OrthContext = new ctxClass();
+
+        // first hard-code the un-injected contexrt
+        injector.mapValue(OrthContext, ctx);
+
+        injector.injectInto(ctx);
+
+        return ctx;
     }
 
-    public function OrthContext ()
+    [PostConstruct]
+    public function initialize () :void
     {
+        log.info("I am supposedly initialized", "_msgMgr", _msgMgr);
         // and our convenience holder
         Msgs.init(_msgMgr);
 
@@ -133,18 +142,18 @@ public class OrthContext
         _wctx == null;
     }
 
-    [Inject] protected var _injector :Injector;
-    [Inject] protected var _app :Application;
-    [Inject] protected var _client :AetherClient;
-    [Inject] protected var _topPanel :TopPanel;
-    [Inject] protected var _controller :OrthController;
-    [Inject] protected var _config :OrthDeploymentConfig;
+    [Inject] public var _injector :Injector;
+    [Inject] public var _app :Application;
+    [Inject] public var _client :AetherClient;
+    [Inject] public var _topPanel :TopPanel;
+    [Inject] public var _controller :OrthController;
+    [Inject] public var _config :OrthDeploymentConfig;
 
-    [Inject] protected var _wctx :WorldContext;
+    [Inject] public var _wctx :WorldContext;
 
-    [Inject] protected var _msgMgr :MessageManager;
+    [Inject] public var _msgMgr :MessageManager;
 
-    protected var _sessionToken :String;
+    protected  var _sessionToken :String;
 
     private static var log :Log = Log.getLog(OrthContext);
 

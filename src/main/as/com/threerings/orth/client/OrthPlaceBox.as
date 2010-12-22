@@ -16,9 +16,8 @@ import mx.core.UIComponent;
  */
 public class OrthPlaceBox extends LayeredContainer
 {
-    public function OrthPlaceBox (ctx :OrthContext)
+    public function OrthPlaceBox ()
     {
-        _octx = ctx;
         rawChildren.addChild(_mask = new Shape());
     }
 
@@ -143,9 +142,6 @@ public class OrthPlaceBox extends LayeredContainer
         _mask.graphics.drawRect(x, y, w, h);
         _mask.graphics.endFill();
     }
-
-    /** The river of life. */
-    protected var _octx :OrthContext;
 
     /** The mask configured on the box or view so that it doesn't overlap outside components. */
     protected var _mask :Shape = new Shape();

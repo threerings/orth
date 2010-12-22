@@ -2,6 +2,9 @@
 // $Id$
 
 package com.threerings.orth.client {
+import com.threerings.crowd.chat.client.ChatDirector;
+import com.threerings.crowd.client.LocationDirector;
+import com.threerings.crowd.client.OccupantDirector;
 
 import flash.display.Stage;
 
@@ -11,7 +14,6 @@ import org.swiftsuspenders.Injector;
 
 import com.threerings.util.MessageManager;
 
-import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.AetherClient;
 
 import com.threerings.orth.world.client.WorldClient;
@@ -50,9 +52,11 @@ public class OrthModule
         injector.mapSingleton(AetherClient);
 
          // to begin with, we have no WorldContext
-        injector.mapValue(WorldContext, null);
+        // injector.mapValue(WorldContext, null);
+        injector.mapSingleton(WorldContext); // THIS IS NOT RIGHT, TESTING TESITN
+        injector.mapSingleton(WorldClient);
     }
-}            
+}
 }
 
 import com.threerings.orth.client.OrthDeploymentConfig;
