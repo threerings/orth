@@ -63,27 +63,20 @@ public class OrthContext
         return ctx;
     }
 
+    [Inject(name="policyPort")]
+    public function initPolicyLoader (policyPort :int) :void
+    {
+        // initialize the policy loader
+        PolicyLoader.init(policyPort);
+    }
+
     [PostConstruct]
     public function initialize () :void
     {
-        log.info("I am supposedly initialized", "_msgMgr", _msgMgr);
-        // and our convenience holder
+        // initialize our convenience holder
         Msgs.init(_msgMgr);
 
-        // initialize the policy loader
-        PolicyLoader.init(/* TODO */ 1234);
-
-        // map our deployment configuration early, as almost everything might depend on it
-//        _config.init();
-
-        // create our ur-client
-//        _client.init();
-
-        // the top panel's constructor will add it to the app's UI hierarchy
-//        _topPanel.init();
-
-        // finally we create the controller, which relies on the previous setup to have concluded
-//        _controller.init();
+        // more startup bits will be added here in time...
     }
 
     // from PresentsContext
@@ -98,16 +91,11 @@ public class OrthContext
         return _client.getDObjectManager();
     }
 
-    public function saveSessionToken (sessionToken :String):void
-    {
-        _sessionToken = sessionToken;
-    }
-
     /**
      * To be explicitly called when we've created a {@link WorldContext} with a {@link WorldClient}
      * and are about to log into the corresponding world server.
      */
-    public function enterWorld (hostname :String, ports :Array) :void
+    public function enterWorld (ctxClass :Class, hostname :String, ports :Array) :void
     {
         if (_wctx != null) {
             log.error("Aii! Being given a new world context with an old one in place!");
@@ -119,15 +107,18 @@ public class OrthContext
 
         var username :Name = AetherCredentials(_client.getCredentials()).getUsername();
 
-        // creating the new context will create the client and trigger the login
-        // note: it will never actually work like this; WorldContext needs to be an interface,
-        // and the implementation instantiated will depend on what type of world location it is
-        // we're moving into
+        // create (but do not inject) the concrete WorldContext subclass we were given
+        _wctx = new ctxClass();
 
+        // configure the host/ports to connect to
         _injector.mapValue(String, hostname, "worldHostname");
         _injector.mapValue(Array, ports, "worldPorts");
 
-        _injector.mapValue(WorldContext, _injector.getInstance(WorldContext));
+        // map WorldClass to our instance for the duration of this world session
+        _injector.mapValue(WorldContext, _wctx);
+
+        // and perform injection, bootstrapping the world logon proceure
+        _wctx = _injector.getInstance(ctxClass);
     }
 
     /**
@@ -143,111 +134,11 @@ public class OrthContext
     }
 
     [Inject] public var _injector :Injector;
-    [Inject] public var _app :Application;
     [Inject] public var _client :AetherClient;
-    [Inject] public var _topPanel :TopPanel;
-    [Inject] public var _controller :OrthController;
-    [Inject] public var _config :OrthDeploymentConfig;
-
-    [Inject] public var _wctx :WorldContext;
-
     [Inject] public var _msgMgr :MessageManager;
 
-    protected  var _sessionToken :String;
+    protected var _wctx :WorldContext;
 
-    private static var log :Log = Log.getLog(OrthContext);
-
-
-    // CRAP
-    /**
-     * Return a reference to our {@link AetherClient}.
-     */
-    public function get client () :AetherClient
-    {
-        return _client;
-    }
-
-    /**
-     * Return a reference to the top-level Application.
-     */
-    public function get app () :Application
-    {
-        return _app;
-    }
-
-    /**
-     * Return a reference to our {@link com.threerings.orth.client.TopPanel}, the single child of ou
-     */
-    public function get topPanel () :TopPanel
-    {
-        return _topPanel;
-    }
-
-    /**
-     * Get the width of the client.
-     *
-     * By default this is just the stage width, but subclasses may override this method.
-     */
-    public function getWidth () :Number
-    {
-        return _app.stage.stageWidth;
-    }
-
-    /**
-     * Get the width of the client.
-     *
-     * By default this is just the stage height, but subclasses may override this method.
-     */
-    public function getHeight () :Number
-    {
-        return _app.stage.stageHeight;
-    }
-
-    /**
-     * Return a reference to our Stage.
-     */
-    public function get stage () :Stage
-    {
-        return _app.stage;
-    }
-
-    /**
-     * Return a reference to the {@link com.threerings.orth.client.OrthController}.
-     */
-    public function get controller () :OrthController
-    {
-        return _controller;
-    }
-
-    /**
-     * Returns a reference to our Message Manager. This is as global singleton.
-     */
-    public function getMessageManager () :MessageManager
-    {
-        return _msgMgr;
-    }
-
-
-    /**
-     * Returns our current deployment configuration. These are constant that vary from build to
-     * build but are not fetched over the wire. They are typically compiled into the client.
-     *
-     * The Orth layer uses a nonsensical development configuration. This method should be
-     * overridden in any real application.
-     */
-    public function get deployment () :OrthDeploymentConfig
-    {
-        return _config;
-    }
-
-    /**
-     * Returns a reference to the current {@link com.threerings.orth.world.client.WorldContext}, if there is one, or null if we
-     * are not currently in a location.
-     */
-    public function get wctx () :WorldContext
-    {
-        return _wctx;
-     }
-
+    protected static const log :Log = Log.getLog(OrthContext);
 }
 }

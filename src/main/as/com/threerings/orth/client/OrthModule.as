@@ -31,7 +31,6 @@ public class OrthModule
 
          // set up a bunch of singletons
         injector.mapSingleton(MessageManager);
-        injector.mapSingleton(OrthContext);
         injector.mapSingleton(OrthController);
         injector.mapSingleton(OrthPlaceBox);
         injector.mapSingleton(TopPanel);
@@ -48,7 +47,8 @@ public class OrthModule
 
         // client configuration
         injector.mapValue(String, "TODO", "aetherHostname");
-        injector.mapValue(Array, "TODO", "aetherPorts");
+        injector.mapValue(Array, [ "TODO" ], "aetherPorts");
+        injector.mapValue(int, 1234, "policyPort");
         injector.mapSingleton(AetherClient);
 
          // to begin with, we have no WorldContext

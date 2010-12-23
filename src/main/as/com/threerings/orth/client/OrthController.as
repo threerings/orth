@@ -1,10 +1,16 @@
 //
 // $Id: $
-package com.threerings.orth.client
-{
+package com.threerings.orth.client {
+
+import org.swiftsuspenders.Injector;
+
 import com.threerings.util.Controller;
 import com.threerings.util.Log;
 
+import com.threerings.orth.client.OrthDeploymentConfig;
+import com.threerings.orth.client.TopPanel;
+
+import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherCredentials;
 
 public class OrthController extends Controller
@@ -18,11 +24,10 @@ public class OrthController extends Controller
     /** Command to display sign-up info for guests (TODO: not implemented). */
     public static const SHOW_SIGN_UP :String = "ShowSignUp";
 
-    public function OrthController (octx :OrthContext, topPanel :TopPanel)
+    [PostConstruct]
+    public function initOrthController () :void
     {
-        _octx = octx;
-
-        setControlledPanel(topPanel);
+        setControlledPanel(_topPanel);
     }
 
     /**
@@ -30,7 +35,7 @@ public class OrthController extends Controller
      */
     public function handleAbout () :void
     {
-        new AboutDialog(_octx);
+        _injector.getInstance(AboutDialog);
     }
 
     /**
@@ -39,13 +44,16 @@ public class OrthController extends Controller
     public function handleLogon (creds :AetherCredentials) :void
     {
         // give the client a chance to log off, then log back on
-        _octx.topPanel.callLater(function () :void {
-            log.info("Logging on", "creds", creds, "version", _octx.deployment.getVersion());
-            _octx.client.logonWithCredentials(creds);
+        _topPanel.callLater(function () :void {
+            log.info("Logging on", "creds", creds, "version", _depCon.getVersion());
+            _client.logonWithCredentials(creds);
         });
     }
 
-    protected var _octx :OrthContext;
+    [Inject] public var _injector :Injector;
+    [Inject] public var _topPanel :TopPanel;
+    [Inject] public var _client :AetherClient;
+    [Inject] public var _depCon :OrthDeploymentConfig;
 
     protected static var log :Log = Log.getLog(OrthController);
 }

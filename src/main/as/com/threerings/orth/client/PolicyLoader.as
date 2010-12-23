@@ -15,6 +15,7 @@ public class PolicyLoader
 {
     public static function init (policyPort :int) :void
     {
+        log.info("PolicyLoader configured.", "port", policyPort);
         _socketPolicyPort = policyPort;
     }
 
@@ -45,5 +46,7 @@ public class PolicyLoader
     protected static var _loadedPolicies :Object = new Object();
 
     protected static var _socketPolicyPort :int;
+
+    protected static const log :Log = Log.getLog(PolicyLoader);
 }
 }
