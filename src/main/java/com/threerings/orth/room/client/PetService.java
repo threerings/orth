@@ -3,7 +3,6 @@
 
 package com.threerings.orth.room.client;
 
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
 /**
@@ -16,17 +15,16 @@ public interface PetService extends InvocationService
      * room occupied by the caller. If the pet is loaded, it will simply move to the room occupied
      * by the caller. In both cases, the pet will automatically be placed in follow mode.
      */
-    void callPet (Client client, int petId, ConfirmListener listener);
+    void callPet (int petId, ConfirmListener listener);
 
     /**
      * Issues an order to the specified pet. Different orders have different access control
      * restrictions, see the (TODO) Pet order constants for details.
      */
-    void orderPet (Client client, int petId, int order, ConfirmListener listener);
+    void orderPet (int petId, int order, ConfirmListener listener);
 
     /**
      * Sends a chat message from the pet with specified id and name.
      */
-    public void sendChat (
-        Client client, int bodyOid, int sceneId, String message, ConfirmListener listener);
+    public void sendChat (int bodyOid, int sceneId, String message, ConfirmListener listener);
 }
