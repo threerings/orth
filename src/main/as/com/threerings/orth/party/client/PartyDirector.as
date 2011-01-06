@@ -29,10 +29,13 @@ import com.threerings.presents.dobj.ObjectAccessError;
 import com.threerings.presents.util.SafeSubscriber;
 
 import com.threerings.crowd.client.LocationAdapter;
+import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.data.Scene;
 
+import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.orth.notify.data.Notification;
 
 import com.threerings.orth.ui.FloatingPanel;
@@ -48,7 +51,6 @@ import com.threerings.orth.party.data.PartyDetail;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
 
-import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldControlBar;
 
 /**
@@ -86,12 +88,10 @@ public class PartyDirector extends BasicDirector
         Object(label).text = Msgs.PARTY.get("m.status_" + statusType, status);
     }
 
-    public function PartyDirector (ctx :WorldContext)
+    public function PartyDirector ()
     {
-        super(ctx);
-        _wctx = ctx;
-        _wctx.getLocationDirector().addLocationObserver(
-            new LocationAdapter(null, locationDidChange, null));
+        super(_octx);
+        _locDir.addLocationObserver(new LocationAdapter(null, locationDidChange, null));
     }
 
     /**
@@ -125,7 +125,7 @@ public class PartyDirector extends BasicDirector
 
     public function isPartyLeader () :Boolean
     {
-        return (_partyObj != null) && (_partyObj.leaderId == _wctx.getMyId());
+        return (_partyObj != null) && (_partyObj.leaderId == _octx.getMyId());
     }
 
     /**
@@ -134,45 +134,22 @@ public class PartyDirector extends BasicDirector
     public function createAppropriatePartyPanel () :FloatingPanel
     {
         if (_partyObj != null) {
-            return new PartyPanel(_wctx, _partyObj);
-        } else {
-            return new PartyBoardPanel(_wctx);
+            var panel :PartyPanel = _injector.getInstance(PartyPanel);
+            panel.init(_partyObj);
+            return panel;
         }
+        return _injector.getInstance(PartyBoardPanel);
     }
-
-//    /**
-//     * Show the main, or an alternate, party board, trying to avoid having
-//     * a fuckton of them on the screen.
-//     */
-//    public function showBoard (mode :int = PartyCodes.BOARD_NORMAL) :void
-//    {
-//        var inParty :Boolean = (_partyObj != null);
-//        var btn :CommandButton = getButton();
-//
-//        // first of all, if we're already showing a board, pop it down
-//        if (!inParty && btn.selected) {
-//            btn.activate();
-//        }
-//
-//        // if we're not in a party and want standard mode, pop the standard button
-//        if (!inParty && (mode == PartyCodes.BOARD_NORMAL)) {
-//            btn.activate();
-//
-//        } else {
-//            // open the board desired
-//            new PartyBoardPanel(_wctx, mode).open();
-//        }
-//    }
 
     public function popPeepMenu (peep :PartyPeep, partyId :int) :void
     {
         var menuItems :Array = [];
 
-        _wctx.getWorldController().addMemberMenuItems(peep.name, menuItems, false);
+        _orthCtrl.addMemberMenuItems(peep.name, menuItems, false);
 
         if (_partyObj != null && partyId == _partyObj.id) {
             const peepId :int = peep.name.getId();
-            const ourId :int = _wctx.getMyId();
+            const ourId :int = _octx.getMyId();
             if (_partyObj.leaderId == ourId && peepId != ourId) {
                 CommandMenu.addSeparator(menuItems);
                 menuItems.push({ label: Msgs.PARTY.get("b.boot"),
@@ -182,7 +159,7 @@ public class PartyDirector extends BasicDirector
             }
         }
 
-        CommandMenu.createMenu(menuItems, _wctx.getTopPanel()).popUpAtMouse();
+        CommandMenu.createMenu(menuItems, _topPanel).popUpAtMouse();
     }
 
     /**
@@ -191,7 +168,7 @@ public class PartyDirector extends BasicDirector
     public function getPartyBoard (
         resultHandler :Function, mode :int = PartyCodes.BOARD_NORMAL) :void
     {
-        _pbsvc.getPartyBoard(mode, _wctx.resultListener(resultHandler, OrthCodes.PARTY_MSGS));
+        _pbsvc.getPartyBoard(mode, _octx.resultListener(resultHandler, OrthCodes.PARTY_MSGS));
     }
 
     /**
@@ -205,7 +182,7 @@ public class PartyDirector extends BasicDirector
         _detailRequests[partyId] = true;
         var handleFailure :Function = function (error :String) :void {
             delete _detailRequests[partyId];
-            _wctx.displayFeedback(OrthCodes.PARTY_MSGS, error);
+            _octx.displayFeedback(OrthCodes.PARTY_MSGS, error);
         };
         _pbsvc.getPartyDetail(partyId, new ResultAdapter(gotPartyDetail, handleFailure));
     }
@@ -219,9 +196,9 @@ public class PartyDirector extends BasicDirector
             connectParty(partyId, host, port);
         };
         var handleFailure :Function = function (error :String) :void {
-            _wctx.displayFeedback(OrthCodes.PARTY_MSGS, error);
+            _octx.displayFeedback(OrthCodes.PARTY_MSGS, error);
             // re-open...
-            var panel :CreatePartyPanel = new CreatePartyPanel(_wctx);
+            var panel :CreatePartyPanel = _injector.getInstance(CreatePartyPanel);
             panel.open();
             panel.init(name, inviteAllFriends);
         };
@@ -243,7 +220,7 @@ public class PartyDirector extends BasicDirector
         // first we have to find out what node is hosting the party in question
         _pbsvc.locateParty(id,
             new JoinAdapter(connectParty, function (cause :String) :void {
-                _wctx.displayFeedback(OrthCodes.PARTY_MSGS, cause);
+                _octx.displayFeedback(OrthCodes.PARTY_MSGS, cause);
             }));
     }
 
@@ -276,22 +253,22 @@ public class PartyDirector extends BasicDirector
 
     public function assignLeader (memberId :int) :void
     {
-        _partyObj.partyService.assignLeader(memberId, _wctx.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.assignLeader(memberId, _octx.listener(OrthCodes.PARTY_MSGS));
     }
 
     public function updateStatus (status :String) :void
     {
-        _partyObj.partyService.updateStatus(status, _wctx.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.updateStatus(status, _octx.listener(OrthCodes.PARTY_MSGS));
     }
 
     public function updateRecruitment (recruitment :int) :void
     {
-        _partyObj.partyService.updateRecruitment(recruitment, _wctx.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.updateRecruitment(recruitment, _octx.listener(OrthCodes.PARTY_MSGS));
     }
 
     public function updateDisband (disband :Boolean) :void
     {
-        _partyObj.partyService.updateDisband(disband, _wctx.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.updateDisband(disband, _octx.listener(OrthCodes.PARTY_MSGS));
     }
 
     /**
@@ -299,12 +276,12 @@ public class PartyDirector extends BasicDirector
      */
     public function bootMember (memberId :int) :void
     {
-        _partyObj.partyService.bootMember(memberId, _wctx.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.bootMember(memberId, _octx.listener(OrthCodes.PARTY_MSGS));
     }
 
     public function inviteMember (memberId :int) :void
     {
-        _partyObj.partyService.inviteMember(memberId, _wctx.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.inviteMember(memberId, _octx.listener(OrthCodes.PARTY_MSGS));
     }
 
     // from BasicDirector
@@ -320,7 +297,7 @@ public class PartyDirector extends BasicDirector
     protected function checkFollowScene () :void
     {
         if (_partyObj.sceneId != 0) {
-            _wctx.getSceneDirector().moveTo(_partyObj.sceneId);
+            _sceneDir.moveTo(_partyObj.sceneId);
         }
     }
 
@@ -334,7 +311,7 @@ public class PartyDirector extends BasicDirector
     protected function partyLogonFailed (event :ClientEvent) :void
     {
         log.warning("Failed to logon to party server", "cause", event.getCause());
-        _wctx.displayFeedback(OrthCodes.PARTY_MSGS, event.getCause().message);
+        _octx.displayFeedback(OrthCodes.PARTY_MSGS, event.getCause().message);
     }
 
     protected function partyConnectFailed (event :ClientEvent) :void
@@ -351,7 +328,7 @@ public class PartyDirector extends BasicDirector
 
         // report via world chat that we lost our party connection
         if (cause != null) {
-            _wctx.displayFeedback(OrthCodes.PARTY_MSGS,
+            _octx.displayFeedback(OrthCodes.PARTY_MSGS,
                 MessageBundle.tcompose("e.lost_party", cause.message));
         }
     }
@@ -411,7 +388,8 @@ public class PartyDirector extends BasicDirector
         }
 
         // pop open the new one
-        panel = new PartyDetailPanel(_wctx, detail);
+        panel = _injector.getInstance(PartyDetailPanel);
+        panel.init(detail);
         _detailPanels[detail.info.id] = panel;
         panel.addCloseCallback(function () :void {
             delete _detailPanels[detail.info.id];
@@ -442,10 +420,10 @@ public class PartyDirector extends BasicDirector
     {
         // if we're the leader of the party, change the party's location when we move
         if (isPartyLeader()) {
-            var scene :Scene = _wctx.getSceneDirector().getScene();
+            var scene :Scene = _sceneDir.getScene();
             var sceneId :int = (scene == null) ? 0 : scene.getId();
             if (sceneId != _partyObj.sceneId) {
-                _partyObj.partyService.moveParty(sceneId, _wctx.listener(OrthCodes.PARTY_MSGS));
+                _partyObj.partyService.moveParty(sceneId, _octx.listener(OrthCodes.PARTY_MSGS));
             }
         }
     }
@@ -466,7 +444,7 @@ public class PartyDirector extends BasicDirector
         case PartyObject.LEADER_ID:
             var newLeader :PartyPeep = _partyObj.peeps.get(event.getValue()) as PartyPeep;
             if (newLeader != null) {
-                _wctx.getNotificationDirector().addGenericNotification(
+                _notDir.addGenericNotification(
                     MessageBundle.tcompose("m.party_leader", newLeader.name.toString()),
                     Notification.PERSONAL);
             }
@@ -481,7 +459,7 @@ public class PartyDirector extends BasicDirector
     {
         switch (event.getName()) {
         case PartyObject.NOTIFICATION:
-            _wctx.getNotificationDirector().addNotification(Notification(event.getArgs()[0]));
+            _notDir.addNotification(Notification(event.getArgs()[0]));
             break;
         }
     }
@@ -491,7 +469,7 @@ public class PartyDirector extends BasicDirector
     {
         super.clientObjectUpdated(client);
 
-        var assignedPartyId :int = _wctx.getPlayerObject().partyId;
+        var assignedPartyId :int = _octx.getPlayerObject().partyId;
         if (assignedPartyId != 0) {
             // join it!
             DelayUtil.delayFrame(joinParty, [ assignedPartyId ]);
@@ -519,10 +497,14 @@ public class PartyDirector extends BasicDirector
      */
     protected function getButton () :CommandButton
     {
-        return WorldControlBar(_wctx.getControlBar()).partyBtn;
+        return WorldControlBar(_octx.getControlBar()).partyBtn;
     }
 
-    protected var _wctx :WorldContext;
+    [Inject] public var _octx :OrthContext;
+    [Inject] public var _notDir :NotificationDirector;
+    [Inject] public var _sceneDir :SceneDirector;
+    [Inject] public var _locDir :LocationDirector;
+
     protected var _pbsvc :PartyBoardService;
 
     protected var _pctx :PartyContextImpl;

@@ -12,21 +12,23 @@ import com.threerings.flex.CommandButton;
 import com.threerings.flex.FlexUtil;
 
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.ui.FloatingPanel;
 import com.threerings.orth.ui.MediaWrapper;
 import com.threerings.orth.ui.PlayerList;
 
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldController;
+import com.threerings.orth.party.client.PartyDirector;
 
 import com.threerings.orth.party.data.PartyDetail;
 import com.threerings.orth.party.data.PartyPeep;
 
 public class PartyDetailPanel extends FloatingPanel
 {
-    public function PartyDetailPanel (ctx :WorldContext, detail :PartyDetail)
+    public function PartyDetailPanel (detail :PartyDetail)
     {
-        super(ctx, detail.summary.name);
+        super(detail.summary.name);
         showCloseButton = true;
         _detail = detail;
     }
@@ -46,7 +48,7 @@ public class PartyDetailPanel extends FloatingPanel
         infoBox.addChild(FlexUtil.createLabel(
             Msgs.PARTY.get("l.recruit_" + _detail.info.recruitment) + "  " +
                 _detail.info.population));
-        if (WorldContext(_ctx).getPartyDirector().getPartyId() != _detail.info.id) {
+        if (_partyDir.getPartyId() != _detail.info.id) {
             infoBox.addChild(new CommandButton(Msgs.PARTY.get("b.join"),
                 WorldController.JOIN_PARTY, _detail.info.id));
         }
@@ -54,11 +56,14 @@ public class PartyDetailPanel extends FloatingPanel
         addChild(topBox);
 
         var roster :PlayerList = new PlayerList(
-            PeepRenderer.createFactory(WorldContext(_ctx), _detail.info),
+            PeepRenderer.createFactory(_ctx, _detail.info),
             PartyPeep.createSortByOrder(_detail.info));
         addChild(roster);
         roster.setData(_detail.peeps);
     }
+
+    [Inject] public var _ctx :OrthContext;
+    [Inject] public var _partyDir :PartyDirector;
 
     protected var _detail :PartyDetail;
 }

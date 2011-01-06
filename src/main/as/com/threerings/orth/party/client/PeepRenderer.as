@@ -29,10 +29,10 @@ public class PeepRenderer extends PlayerRenderer
     /**
      * Return a factory for use with this renderer.
      */
-    public static function createFactory (ctx :WorldContext, partyInfo :Object = null) :IFactory
+    public static function createFactory (ctx :OrthContext, partyInfo :Object = null) :IFactory
     {
         var cf :ClassFactory = new ClassFactory(PeepRenderer);
-        cf.properties = { mctx: ctx, partyInfo: partyInfo };
+        cf.properties = { ctx: ctx, partyInfo: partyInfo };
         return cf;
     }
 
@@ -63,7 +63,7 @@ public class PeepRenderer extends PlayerRenderer
     protected function handleClick (event :MouseEvent) :void
     {
         if (data != null) {
-            WorldContext(mctx).getPartyDirector().popPeepMenu(PartyPeep(data), partyInfo.id);
+            ctx.getPartyDirector().popPeepMenu(PartyPeep(data), partyInfo.id);
         }
     }
 

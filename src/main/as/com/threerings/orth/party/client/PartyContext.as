@@ -5,7 +5,7 @@ package com.threerings.orth.party.client {
 
 import com.threerings.presents.util.PresentsContext;
 
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.client.OrthContext;
 
 import com.threerings.orth.party.data.PartierObject;
 
@@ -17,7 +17,7 @@ public interface PartyContext extends PresentsContext
     /**
      * Returns the context we use to obtain basic client services.
      */
-    function getWorldContext () :WorldContext;
+    function getOrthContext () :OrthContext;
 
     /**
      * Returns our client object casted as a PartierObject.

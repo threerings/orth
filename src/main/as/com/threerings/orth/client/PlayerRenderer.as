@@ -16,7 +16,7 @@ import mx.core.ScrollPolicy;
 public class PlayerRenderer extends HBox
 {
     // Initialized by the ClassFactory
-    public var mctx :WorldContext;
+    public var ctx :OrthContext;
 
     public function PlayerRenderer ()
     {

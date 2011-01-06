@@ -6,6 +6,8 @@ package com.threerings.orth.party.client {
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
 
+import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthCredentials;
 
@@ -19,9 +21,8 @@ import com.threerings.orth.party.data.PartyCredentials;
  */
 public class PartyContextImpl implements PartyContext
 {
-    public function PartyContextImpl (wctx :WorldContext)
+    public function PartyContextImpl ()
     {
-        _wctx = wctx;
         _client = new Client(null);
     }
 
@@ -31,15 +32,16 @@ public class PartyContextImpl implements PartyContext
     public function connect (partyId :int, hostname :String, port :int) :void
     {
         var pcreds :PartyCredentials = new PartyCredentials(null);
-        pcreds.sessionToken = (_wctx.getClient().getCredentials() as OrthCredentials).sessionToken;
+        pcreds.sessionToken = (_ctx.getClient().getCredentials() as OrthCredentials).sessionToken;
         pcreds.partyId = partyId;
+
+        PolicyLoader.registerClient(_client);
 
         // configure our client and logon
         _client.addServiceGroup(OrthCodes.PARTY_GROUP);
         _client.setVersion(_wctx.getVersion());
         _client.setServer(hostname, [ port ]);
         _client.setCredentials(pcreds);
-        _wctx.getWorldClient().willConnectToServer(hostname);
         _client.logon();
     }
 
@@ -56,9 +58,9 @@ public class PartyContextImpl implements PartyContext
     }
 
     // from PartyContext
-    public function getWorldContext () :WorldContext
+    public function getOrthContext () :OrthContext
     {
-        return _wctx;
+        return _ctx;
     }
 
     // from PartyContext
@@ -67,7 +69,8 @@ public class PartyContextImpl implements PartyContext
         return (_client.getClientObject() as PartierObject);
     }
 
-    protected var _wctx :WorldContext;
+    [Inject] public var _ctx :OrthContext;
+    [Inject(name="sessionToken")] public var _sessionToken :String;
     protected var _client :Client;
 }
 }

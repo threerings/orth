@@ -26,7 +26,7 @@ import com.threerings.orth.party.data.PartyBoardInfo;
 public class PartyBoardInfoRenderer extends HBox
 {
     // Initialized by ClassFactory
-    public var wctx :WorldContext;
+    public var ctx :OrthContext;
 
     public function PartyBoardInfoRenderer ()
     {
@@ -49,7 +49,7 @@ public class PartyBoardInfoRenderer extends HBox
         _population.text = String(party.info.population);
         PartyDirector.formatStatus(_status, party.info.status, party.info.statusType);
 
-        var us :PlayerObject = wctx.getPlayerObject();
+        var us :PlayerObject = ctx.getPlayerObject();
         _name.setStyle("fontWeight",
             us.isOnlineFriend(party.info.leaderId) ? "bold" : "normal");
 
@@ -82,7 +82,7 @@ public class PartyBoardInfoRenderer extends HBox
     {
         var party :PartyBoardInfo = PartyBoardInfo(data);
         if (party != null) {
-            wctx.getPartyDirector().getPartyDetail(party.info.id);
+            ctx.getPartyDirector().getPartyDetail(party.info.id);
         }
     }
 

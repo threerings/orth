@@ -19,9 +19,9 @@ import com.threerings.flex.CommandComboBox;
 
 import com.threerings.orth.ui.FloatingPanel;
 
+import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.Msgs;
-
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.client.OrthContext;
 
 import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyObject;
@@ -30,10 +30,8 @@ import com.threerings.orth.party.data.PartyPeep;
 public class PartyPanel extends FloatingPanel
     implements AttributeChangeListener
 {
-    public function PartyPanel (ctx :WorldContext, partyObj :PartyObject)
+    public function init (partyObj :PartyObject) :void
     {
-        super(ctx, partyObj.name);
-        _wctx = ctx;
         showCloseButton = true;
 
         _partyObj = partyObj;
@@ -60,7 +58,6 @@ public class PartyPanel extends FloatingPanel
         super.createChildren();
 
         var isLeader :Boolean = (_partyObj.leaderId == _ctx.getMyId());
-        var partyDir :PartyDirector = _wctx.getPartyDirector();
 
         _roster = new PlayerList(
             PeepRenderer.createFactory(_wctx, _partyObj), PartyPeep.createSortByOrder(_partyObj));
@@ -92,7 +89,7 @@ public class PartyPanel extends FloatingPanel
         for (var ii :int = 0; ii < PartyCodes.RECRUITMENT_COUNT; ii++) {
             options.push({ label: Msgs.PARTY.get("l.recruit_" + ii), data: ii });
         }
-        _recruit = new CommandComboBox(partyDir.updateRecruitment);
+        _recruit = new CommandComboBox(_partyDir.updateRecruitment);
         _recruit.dataProvider = options;
         _recruit.selectedData = _partyObj.recruitment;
         _recruit.enabled = isLeader;
@@ -102,10 +99,10 @@ public class PartyPanel extends FloatingPanel
         spacer.percentWidth = 100;
         hbox.addChild(spacer);
 
-        hbox.addChild(new CommandButton(Msgs.PARTY.get("b.leave"), partyDir.clearParty));
+        hbox.addChild(new CommandButton(Msgs.PARTY.get("b.leave"), _partyDir.clearParty));
         box.addChild(hbox);
 
-        _disband = new CommandCheckBox(Msgs.PARTY.get("b.disband"), partyDir.updateDisband);
+        _disband = new CommandCheckBox(Msgs.PARTY.get("b.disband"), _partyDir.updateDisband);
         _disband.selected = _partyObj.disband;
         _disband.enabled = isLeader;
         box.addChild(_disband);
@@ -144,11 +141,12 @@ public class PartyPanel extends FloatingPanel
 
     protected function commitStatus (event :FlexEvent) :void
     {
-        _wctx.getPartyDirector().updateStatus(_status.text);
-        _wctx.getControlBar().giveChatFocus();
+        _partyDir.updateStatus(_status.text);
+        _controlBar.giveChatFocus();
     }
 
-    protected var _wctx :WorldContext;
+    [Inject] public var _ctx :OrthContext;
+    [Inject] public var _controlBar :ControlBar;
 
     protected var _partyObj :PartyObject;
 

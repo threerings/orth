@@ -20,22 +20,19 @@ import com.threerings.orth.ui.FloatingPanel;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.data.OrthCodes;
 
-import com.threerings.orth.world.client.WorldContext;
-
 import com.threerings.orth.party.data.PartyCodes;
 
 public class PartyBoardPanel extends FloatingPanel
 {
-    public function PartyBoardPanel (ctx :WorldContext, mode :int = PartyCodes.BOARD_NORMAL)
+    public function PartyBoardPanel (mode :int = PartyCodes.BOARD_NORMAL)
     {
-        super(ctx, Msgs.PARTY.get("t.board_" + mode));
+        super(Msgs.PARTY.get("t.board_" + mode));
         showCloseButton = true;
         setButtonWidth(0);
-        _wctx = ctx;
         _mode = mode;
 
         var cf :ClassFactory = new ClassFactory(PartyBoardInfoRenderer);
-        cf.properties = { wctx: _wctx };
+        cf.properties = { ctx: _ctx };
         _partyList = new List();
         _partyList.selectable = false;
         _partyList.itemRenderer = cf;

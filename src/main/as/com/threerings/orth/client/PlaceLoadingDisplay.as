@@ -3,8 +3,6 @@
 
 package com.threerings.orth.client {
 
-import com.threerings.orth.ui.LoadingSpinner;
-
 import flash.display.LoaderInfo;
 import flash.display.Sprite;
 
@@ -21,12 +19,15 @@ import caurina.transitions.Tweener;
 
 import mx.events.ResizeEvent;
 
+import com.threerings.orth.client.OrthPlaceBox;
+import com.threerings.orth.ui.LoadingSpinner;
+
 public class PlaceLoadingDisplay extends Sprite
     implements LoadingWatcher
 {
-    public function PlaceLoadingDisplay (box :PlaceBox)
+    [PostConstruct]
+    public function initPlaceLoadingDisplay () :void
     {
-        _box = box;
         _box.addEventListener(ResizeEvent.RESIZE, handleBoxResized);
         addChild(_spinner = new LoadingSpinner());
     }
@@ -68,7 +69,7 @@ public class PlaceLoadingDisplay extends Sprite
 
         // make sure we're showing
         if (parent == null) {
-            _box.addOverlay(this, PlaceBox.LAYER_ROOM_SPINNER);
+            _box.addOverlay(this, OrthPlaceBox.LAYER_ROOM_SPINNER);
         }
     }
 
@@ -159,7 +160,7 @@ public class PlaceLoadingDisplay extends Sprite
         }
     }
 
-    protected var _box :PlaceBox;
+    [Inject] public var _box :OrthPlaceBox;
     protected var _primary :LoaderInfo
     protected var _secondaryCount :int;
     protected var _spinner :LoadingSpinner;

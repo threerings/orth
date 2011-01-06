@@ -3,7 +3,9 @@
 
 package com.threerings.orth.party.client {
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.PlayerObject;
+import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.party.data.PartyCodes;
 
 import mx.containers.Grid;
@@ -15,7 +17,6 @@ import com.threerings.util.StringUtil;
 
 import com.threerings.flex.GridUtil;
 
-import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.ui.FloatingPanel;
 
 /**
@@ -23,9 +24,9 @@ import com.threerings.orth.ui.FloatingPanel;
  */
 public class CreatePartyPanel extends FloatingPanel
 {
-    public function CreatePartyPanel (ctx :WorldContext)
+    public function CreatePartyPanel ()
     {
-        super(ctx, Msgs.PARTY.get("t.create"));
+        super(Msgs.PARTY.get("t.create"));
         setButtonWidth(0);
     }
 
@@ -62,9 +63,12 @@ public class CreatePartyPanel extends FloatingPanel
 
     override protected function okButtonClicked () :void
     {
-        WorldContext(_ctx).getPartyDirector().createParty(_name.text, _inviteAll.selected);
+        _partyDir.createParty(_name.text, _inviteAll.selected);
         close();
     }
+
+    [Inject] public var _ctx :OrthContext;
+    [Inject] public var _partyDir :PartyDirector;
 
     protected var _name :TextInput;
 
