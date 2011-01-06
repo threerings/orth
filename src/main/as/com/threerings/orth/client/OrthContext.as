@@ -4,6 +4,7 @@
 package com.threerings.orth.client {
 
 import mx.core.Application;
+import mx.core.UIComponent;
 
 import flash.display.Stage;
 
@@ -14,11 +15,15 @@ import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
 
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService_ConfirmListener;
+import com.threerings.presents.client.InvocationService_InvocationListener;
+import com.threerings.presents.client.InvocationService_ResultListener;
 import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.util.PresentsContext;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherCredentials;
+import com.threerings.orth.aether.data.PlayerName;
 
 import com.threerings.orth.world.client.WorldContext;
 
@@ -91,14 +96,35 @@ public class OrthContext
         return _client.getDObjectManager();
     }
 
-    // from OrthContext
+    /**
+     * A convenience method for returning our player's playerId. I think this method should
+     * go away once everything compiles properly. We return 0 if we're not yet logged on.
+     */
+    public function getMyId () :int
+    {
+        if (_client.getClientObject() != null) {
+            return PlayerObject(_client.getClientObject()).playerName.getId();
+        }
+    }
+
+    /**
+     * A convenience method for returning our player's display name. I think this method should
+     * go away once everything compiles properly. We return null if we're not yet logged on.
+     */
+    public function getMyName () :PlayerName
+    {
+        if (_client.getClientObject() != null) {
+            return PlayerObject(_client.getClientObject()).playerName;
+        }
+        return null;
+    }
+
     public function listener (bundle :String = OrthCodes.GENERAL_MSGS,
         errWrap :String = null, ... logArgs) :InvocationService_InvocationListener
     {
         return new InvocationAdapter(chatErrHandler(bundle, errWrap, null, logArgs));
     }
 
-    // from OrthContext
     public function confirmListener (bundle :String = OrthCodes.GENERAL_MSGS, confirm :* = null,
         errWrap :String = null, component :UIComponent = null, ... logArgs)
         :InvocationService_ConfirmListener
@@ -119,7 +145,6 @@ public class OrthContext
         return new ConfirmAdapter(success, chatErrHandler(bundle, errWrap, component, logArgs));
     }
 
-    // from OrthContext
     public function resultListener (gotResult :Function, bundle :String = OrthCodes.GENERAL_MSGS,
         errWrap :String = null, component :UIComponent = null, ... logArgs)
         :InvocationService_ResultListener
@@ -137,14 +162,12 @@ public class OrthContext
         return new ResultAdapter(success, chatErrHandler(bundle, errWrap, component, logArgs));
     }
 
-    // from OrthContext
     public function displayFeedback (bundle :String, message :String) :void
     {
 // ORTH TODO
 //        getChatDirector().displayFeedback(bundle, message);
     }
 
-    // from OrthContext
     public function displayInfo (bundle :String, message :String, localType :String = null) :void
     {
 // ORTH TODO

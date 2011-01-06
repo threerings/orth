@@ -7,6 +7,7 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
 
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthCredentials;
@@ -39,7 +40,7 @@ public class PartyContextImpl implements PartyContext
 
         // configure our client and logon
         _client.addServiceGroup(OrthCodes.PARTY_GROUP);
-        _client.setVersion(_wctx.getVersion());
+        _client.setVersion(_depConf.getVersion());
         _client.setServer(hostname, [ port ]);
         _client.setCredentials(pcreds);
         _client.logon();
@@ -71,6 +72,8 @@ public class PartyContextImpl implements PartyContext
 
     [Inject] public var _ctx :OrthContext;
     [Inject(name="sessionToken")] public var _sessionToken :String;
+    [Inject] public var _depConf :OrthDeploymentConfig;
+
     protected var _client :Client;
 }
 }

@@ -41,6 +41,7 @@ import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.ui.FloatingPanel;
 
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthContext;
 
 import com.threerings.orth.data.OrthCodes;
 
@@ -56,6 +57,7 @@ import com.threerings.orth.world.client.WorldControlBar;
 /**
  * Manages party stuff on the client.
  */
+[Inject]
 public class PartyDirector extends BasicDirector
 {
     // reference the PartyBoardMarshaller class
@@ -88,9 +90,16 @@ public class PartyDirector extends BasicDirector
         Object(label).text = Msgs.PARTY.get("m.status_" + statusType, status);
     }
 
-    public function PartyDirector ()
+    public function PartyDirector (ctx :OrthContext)
     {
-        super(_octx);
+        super(ctx);
+
+        _octx = ctx;
+    }
+
+    [PostConstruct]
+    public function initPartyDirector () :void
+    {
         _locDir.addLocationObserver(new LocationAdapter(null, locationDidChange, null));
     }
 
@@ -500,10 +509,11 @@ public class PartyDirector extends BasicDirector
         return WorldControlBar(_octx.getControlBar()).partyBtn;
     }
 
-    [Inject] public var _octx :OrthContext;
     [Inject] public var _notDir :NotificationDirector;
     [Inject] public var _sceneDir :SceneDirector;
     [Inject] public var _locDir :LocationDirector;
+
+    protected var _octx :OrthContext;
 
     protected var _pbsvc :PartyBoardService;
 

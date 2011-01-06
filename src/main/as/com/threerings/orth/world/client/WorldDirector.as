@@ -2,18 +2,23 @@
 // $Id: WorldDirector.as 18771 2009-11-24 22:03:46Z jamie $
 
 package com.threerings.orth.world.client {
-import com.threerings.orth.room.data.OrthRoomConfig;
-import com.threerings.orth.room.data.PetMarshaller;
+
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
 
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
+
+import com.threerings.orth.room.data.OrthRoomConfig;
+import com.threerings.orth.room.data.PetMarshaller;
 
 /**
  * Handles moving around in the virtual world.
+ *
  */
+[Inject]
 public class WorldDirector extends BasicDirector
 {
     public const log :Log = Log.getLog(this);
@@ -22,22 +27,21 @@ public class WorldDirector extends BasicDirector
     PetMarshaller;
     OrthRoomConfig;
 
-    public function WorldDirector (ctx :WorldContext)
+    public function WorldDirector (ctx :OrthContext)
     {
         super(ctx);
-        _wctx = ctx;
 
-        _followingNotifier = new FollowingNotifier(_wctx);
+        _octx = ctx;
+
+        _followingNotifier = new FollowingNotifier(_octx);
     }
 
     /**
      * Request a change to our avatar.
-     *
-     * @param newScale a new scale to use, or 0 to retain the avatar's last scale.
      */
     public function setAvatar (avatarId :int) :void
     {
-        _wsvc.setAvatar(avatarId, _wctx.confirmListener());
+        _wsvc.setAvatar(avatarId, _octx.confirmListener());
     }
 
     // from BasicDirector
@@ -50,7 +54,7 @@ public class WorldDirector extends BasicDirector
     // from BasicDirector
     override protected function registerServices (client :Client) :void
     {
-        client.addServiceGroup(OrthCodes.WORLD_GROUP);
+        client.addServiceGroup(OrthCodes.ROOM_GROUP);
     }
 
     // from BasicDirector
@@ -62,7 +66,7 @@ public class WorldDirector extends BasicDirector
         _wsvc = (client.requireService(WorldService) as WorldService);
     }
 
-    protected var _wctx :WorldContext;
+    protected var _octx :OrthContext;
     protected var _wsvc :WorldService;
 
     protected var _followingNotifier :FollowingNotifier;
@@ -80,16 +84,16 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerObject;
-import com.threerings.orth.world.client.WorldContext;
 
 class FollowingNotifier
     implements AttributeChangeListener, SetListener
 {
-    public function FollowingNotifier (wctx :WorldContext)
+    public function FollowingNotifier (octx :OrthContext)
     {
-        _wctx = wctx;
+        _octx = octx;
     }
 
     public function attributeChanged (event :AttributeChangedEvent) :void
@@ -98,10 +102,10 @@ class FollowingNotifier
         case PlayerObject.FOLLOWING:
             var leader :OrthName = event.getValue() as OrthName;
             if (leader != null) {
-                _wctx.displayFeedback(OrthCodes.GENERAL_MSGS,
+                _octx.displayFeedback(OrthCodes.GENERAL_MSGS,
                     MessageBundle.tcompose("m.following", leader));
             } else if (event.getOldValue() != null) {
-                _wctx.displayFeedback(OrthCodes.GENERAL_MSGS,
+                _octx.displayFeedback(OrthCodes.GENERAL_MSGS,
                     MessageBundle.tcompose("m.not_following", event.getOldValue()));
             }
             break;
@@ -109,7 +113,7 @@ class FollowingNotifier
         case PlayerObject.FOLLOWERS:
             var followers :DSet = event.getValue() as DSet;
             if (followers.size() == 0) {
-                _wctx.displayFeedback(OrthCodes.GENERAL_MSGS, "m.follows_cleared");
+                _octx.displayFeedback(OrthCodes.GENERAL_MSGS, "m.follows_cleared");
             }
             break;
         }
@@ -118,7 +122,7 @@ class FollowingNotifier
     public function entryAdded (event :EntryAddedEvent) :void
     {
         if (PlayerObject.FOLLOWERS == event.getName()) {
-            _wctx.displayFeedback(OrthCodes.GENERAL_MSGS,
+            _octx.displayFeedback(OrthCodes.GENERAL_MSGS,
                 MessageBundle.tcompose("m.new_follower", event.getEntry() as OrthName));
         }
     }
@@ -131,10 +135,10 @@ class FollowingNotifier
     public function entryRemoved (event :EntryRemovedEvent) :void
     {
         if (PlayerObject.FOLLOWERS == event.getName()) {
-            _wctx.displayFeedback(OrthCodes.GENERAL_MSGS,
+            _octx.displayFeedback(OrthCodes.GENERAL_MSGS,
                 MessageBundle.tcompose("m.follower_ditched", event.getOldEntry() as OrthName));
         }
     }
 
-    protected var _wctx :WorldContext;
+    protected var _octx :OrthContext;
 }

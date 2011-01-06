@@ -13,8 +13,11 @@ public class OrthCodes extends InvocationCodes
     /** Defines our aether invocation services group. */
     public static const AETHER_GROUP :String = "orth.aether";
 
+    /** Defines our room invocation services group. */
+    public static const ROOM_GROUP :String = "orth.room";
+
     /** Defines our party invocation services group. */
-    public static const PARTY_GROUP :String = "msoy.party";
+    public static const PARTY_GROUP :String = "orth.party";
 
     /** Identifies our general message bundle. */
     public static const GENERAL_MSGS :String = "general";

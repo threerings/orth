@@ -2,41 +2,51 @@
 // $Id: MediaDirector.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.room.client {
-import com.threerings.orth.entity.client.MemberSprite;
-import com.threerings.orth.entity.client.PetSprite;
+
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.ClientEvent;
 
 import com.threerings.crowd.client.LocationAdapter;
+import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.orth.entity.data.Decor;
+import com.threerings.orth.client.OrthContext;
+
+import com.threerings.orth.entity.client.MemberSprite;
+import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
+import com.threerings.orth.entity.data.Decor;
+
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.PetInfo;
 import com.threerings.orth.room.data.PlayerInfo;
 import com.threerings.orth.room.data.FurniData;
-import com.threerings.orth.world.client.WorldContext;
 
 /**
  * Handles the loading of various media.
  */
+[Inject]
 public class MediaDirector extends BasicDirector
 {
     public static const log :Log = Log.getLog(MediaDirector);
 
-    public function MediaDirector (ctx :WorldContext)
+    public function MediaDirector (ctx :OrthContext)
     {
         super(ctx);
-        _wctx = ctx;
 
-        ctx.getLocationDirector().addLocationObserver(new LocationAdapter(null, locationDidChange));
+        _octx = ctx;
+    }
+
+    [PostConstruct]
+    public function initMediaDirector () :void
+    {
+        _locDir.addLocationObserver(new LocationAdapter(null, locationDidChange));
     }
 
     /**
@@ -47,19 +57,19 @@ public class MediaDirector extends BasicDirector
     public function getSprite (occInfo :OccupantInfo, extraInfo :Object) :OccupantSprite
     {
         if (occInfo is PlayerInfo) {
-            var isOurs :Boolean = _wctx.getMyName().equals(occInfo.username);
+            var isOurs :Boolean = _octx.getMyName().equals(occInfo.username);
             if (isOurs && _ourAvatar != null) {
                 _ourAvatar.setOccupantInfo(occInfo, extraInfo);
                 return _ourAvatar;
             }
-            var sprite :MemberSprite = new MemberSprite(_wctx, occInfo as PlayerInfo, extraInfo);
+            var sprite :MemberSprite = new MemberSprite(_octx, occInfo as PlayerInfo, extraInfo);
             if (isOurs) {
                 _ourAvatar = sprite;
             }
             return sprite;
 
         } else if (occInfo is PetInfo) {
-            return new PetSprite(_wctx, occInfo as PetInfo, extraInfo);
+            return new PetSprite(_octx, occInfo as PetInfo, extraInfo);
 
         } else {
             log.warning("Don't know how to create sprite for occupant " + occInfo + ".");
@@ -72,7 +82,7 @@ public class MediaDirector extends BasicDirector
      */
     public function getFurni (furni :FurniData) :FurniSprite
     {
-        return new FurniSprite(_wctx, furni);
+        return new FurniSprite(_octx, furni);
     }
 
     /**
@@ -80,7 +90,7 @@ public class MediaDirector extends BasicDirector
      */
     public function getDecor (decor :Decor) :DecorSprite
     {
-        return new DecorSprite(_wctx, decor);
+        return new DecorSprite(_octx, decor);
     }
 
     /**
@@ -125,7 +135,9 @@ public class MediaDirector extends BasicDirector
     }
 
     /** A casted copy of the context. */
-    protected var _wctx :WorldContext;
+    protected var _octx :OrthContext;
+
+    [Inject] public var _locDir :LocationDirector;
 
     /** Our very own avatar: avoid loading and unloading it. */
     protected var _ourAvatar :MemberSprite;
