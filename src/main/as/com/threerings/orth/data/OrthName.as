@@ -28,7 +28,7 @@ public class OrthName extends Name
     };
 
     /**
-     * Create a new MemberName.
+     * Create a new OrthName.
      */
     public function OrthName (displayName :String = "", memberId :int = 0)
     {

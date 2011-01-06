@@ -91,6 +91,66 @@ public class OrthContext
         return _client.getDObjectManager();
     }
 
+    // from OrthContext
+    public function listener (bundle :String = OrthCodes.GENERAL_MSGS,
+        errWrap :String = null, ... logArgs) :InvocationService_InvocationListener
+    {
+        return new InvocationAdapter(chatErrHandler(bundle, errWrap, null, logArgs));
+    }
+
+    // from OrthContext
+    public function confirmListener (bundle :String = OrthCodes.GENERAL_MSGS, confirm :* = null,
+        errWrap :String = null, component :UIComponent = null, ... logArgs)
+        :InvocationService_ConfirmListener
+    {
+        var success :Function = function () :void {
+            if (component != null) {
+                component.enabled = true;
+            }
+            if (confirm is Function) {
+                (confirm as Function)();
+            } else if (confirm is String) {
+                displayFeedback(bundle, String(confirm));
+            }
+        };
+        if (component != null) {
+            component.enabled = false;
+        }
+        return new ConfirmAdapter(success, chatErrHandler(bundle, errWrap, component, logArgs));
+    }
+
+    // from OrthContext
+    public function resultListener (gotResult :Function, bundle :String = OrthCodes.GENERAL_MSGS,
+        errWrap :String = null, component :UIComponent = null, ... logArgs)
+        :InvocationService_ResultListener
+    {
+        var success :Function;
+        if (component == null) {
+            success = gotResult;
+        } else {
+            component.enabled = false;
+            success = function (result :Object) :void {
+                component.enabled = true;
+                gotResult(result);
+            };
+        }
+        return new ResultAdapter(success, chatErrHandler(bundle, errWrap, component, logArgs));
+    }
+
+    // from OrthContext
+    public function displayFeedback (bundle :String, message :String) :void
+    {
+// ORTH TODO
+//        getChatDirector().displayFeedback(bundle, message);
+    }
+
+    // from OrthContext
+    public function displayInfo (bundle :String, message :String, localType :String = null) :void
+    {
+// ORTH TODO
+//        getChatDirector().displayInfo(bundle, message, localType);
+    }
+
     /**
      * To be explicitly called when we've created a {@link WorldContext} with a {@link WorldClient}
      * and are about to log into the corresponding world server.

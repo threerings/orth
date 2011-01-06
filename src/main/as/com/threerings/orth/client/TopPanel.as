@@ -10,6 +10,8 @@ import flash.geom.Rectangle;
 import mx.core.Application;
 import mx.core.ScrollPolicy;
 
+import mx.core.UIComponent;
+
 import mx.containers.Canvas;
 
 import mx.controls.Label;
@@ -30,28 +32,43 @@ public class TopPanel extends Canvas
         _placeBox.includeInLayout = false;
         addChild(_placeBox);
 
+        // set up the control bar
+        _controlBar = controlBar;
+        _controlBar.includeInLayout = false;
+        _controlBar.init(this);
+        _controlBar.setStyle("left", 0);
+        _controlBar.setStyle("right", 0);
+        addChild(_controlBar);
+
         // show a subtle build-stamp on dev builds
-        if (_devConf.isDevelopment()) {
+        if (_depConf.isDevelopment()) {
             var buildStamp :Label = new Label();
             buildStamp.includeInLayout = false;
             buildStamp.mouseEnabled = false;
             buildStamp.mouseChildren = false;
-            buildStamp.text = "Build: " + _devConf.getVersion();
+            buildStamp.text = "Build: " + _depConf.getVersion();
             buildStamp.setStyle("color", "#F7069A");
             buildStamp.setStyle("fontSize", 8);
-            buildStamp.setStyle("bottom", 0);
+            buildStamp.setStyle("bottom", getControlBarHeight());
             // The scrollbar isn't really this thick, but it's pretty close.
             buildStamp.setStyle("right", ScrollBar.THICKNESS);
             addChild(buildStamp);
         }
 
         // clear out the application and install ourselves as the only child
-        var app :Application = _app;
-        app.removeAllChildren();
-        app.addChild(this);
-        app.stage.addEventListener(Event.RESIZE, stageResized);
+        _app.removeAllChildren();
+        _app.addChild(this);
+        _app.stage.addEventListener(Event.RESIZE, stageResized);
 
         setMainView(getBlankPlaceView());
+    }
+
+    /**
+     * Gets the height of the area at the bottom of the screen that contains the control bar.
+     */
+    public function getControlBarHeight () :Number
+    {
+        return _controlBar.getBarHeight();
     }
 
     /**
@@ -112,6 +129,14 @@ public class TopPanel extends Canvas
         return new Rectangle(0, _placeBox.getStyle("top"), _width, height);
     }
 
+    /**
+     * Returns a reference to our ControlBar component.
+     */
+    public function getControlBar () :ControlBar
+    {
+        return _controlBar;
+    }
+
     protected function stageResized (event :Event) :void
     {
         layoutPanels();
@@ -121,8 +146,12 @@ public class TopPanel extends Canvas
     {
         // Pin the app to the stage.
         // This became necessary for "stubs" after we upgraded to flex 3.2.
+
         _app.width = _width;
         _app.height = _height;
+
+        // center control bar in the "footer". we shall put other things here soon
+        _controlBar.setStyle("bottom", 0);
 
         updatePlaceViewSize();
     }
@@ -133,12 +162,21 @@ public class TopPanel extends Canvas
             return; // nothing doing if we're not in control
         }
 
-        // w -= ScrollBar.THICKNESS;
-        _placeBox.setStyle("top", 0);
-        _placeBox.setStyle("bottom", 0);
-        _placeBox.setStyle("right", 0);
-        _placeBox.setStyle("left", 0); // + ScrollBar.THICKNESS);
-        _placeBox.setActualSize(_width, _height);
+        var top :int = 0;
+        var left :int = 0;
+        var right :int = 0;
+        var bottom :int = 0;
+        var w :int = _width;
+        var h :int = _height;
+
+        bottom += getControlBarHeight();
+        h -= getControlBarHeight();
+
+        _placeBox.setStyle("top", top);
+        _placeBox.setStyle("bottom", bottom);
+        _placeBox.setStyle("right", right);
+        _placeBox.setStyle("left", left);
+        _placeBox.setActualSize(w, h);
     }
 
     /**
@@ -152,10 +190,13 @@ public class TopPanel extends Canvas
     }
 
     [Inject] public var _app :Application;
-    [Inject] public var _devConf :OrthDeploymentConfig;
+    [Inject] public var _depConf :OrthDeploymentConfig;
     [Inject] public var _placeBox :OrthPlaceBox;
 
     [Inject(name="clientWidth")] public var _width :Number
     [Inject(name="clientHeight")] public var _height :Number;
+
+    /** Control bar at the bottom of the window. */
+    protected var _controlBar :ControlBar;
 }
 }
