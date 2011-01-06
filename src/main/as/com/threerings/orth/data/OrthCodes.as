@@ -10,7 +10,11 @@ import com.threerings.presents.data.InvocationCodes;
  */
 public class OrthCodes extends InvocationCodes
 {
+    /** Defines our aether invocation services group. */
     public static const AETHER_GROUP :String = "orth.aether";
+
+    /** Defines our party invocation services group. */
+    public static const PARTY_GROUP :String = "msoy.party";
 
     /** Identifies our general message bundle. */
     public static const GENERAL_MSGS :String = "general";
