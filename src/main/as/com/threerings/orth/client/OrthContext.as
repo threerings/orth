@@ -152,6 +152,15 @@ public class OrthContext
     }
 
     /**
+     * Return a reference to the current {@link WorldContext}, or null if the player is
+     * not currently in a location.
+     */
+    public function get wctx () :WorldContext
+    {
+        return _wctx;
+    }
+
+    /**
      * To be explicitly called when we've created a {@link WorldContext} with a {@link WorldClient}
      * and are about to log into the corresponding world server.
      */
