@@ -200,6 +200,7 @@ public class OrthContext
             // but let it happen
         }
         _wctx == null;
+        _injector.unmap(WorldContext);
     }
 
     [Inject] public var _injector :Injector;
