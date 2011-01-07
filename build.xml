@@ -54,7 +54,7 @@
   <!-- cleans out the intermediate build files -->
   <target name="clean">
     <delete>
-        <fileset dir="${deploy.dir}" includes="*.jar,*.swc,,*-dependencies.xml,classes/,docs/"/>
+        <fileset dir="${deploy.dir}" includes="*.jar,*.swc,*-dependencies.xml,classes/,docs/"/>
     </delete>
   </target>
 
