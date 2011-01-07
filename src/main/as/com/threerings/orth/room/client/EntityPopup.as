@@ -6,7 +6,7 @@ package com.threerings.orth.room.client {
 import com.threerings.orth.entity.client.EntitySprite;
 
 import com.threerings.orth.ui.FloatingPanel;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 
 import flash.display.DisplayObject;
 import flash.display.Shape;
@@ -23,7 +23,7 @@ import com.threerings.orth.client.Msgs;
 public class EntityPopup extends FloatingPanel
 {
     public function EntityPopup (
-        ctx :WorldContext, entitySprite :EntitySprite,
+        ctx :RoomContext, entitySprite :EntitySprite,
         title :String, userPanel :DisplayObject, panelWidth :Number, panelHeight :Number,
         panelColor :uint = 0xFFFFFF, panelAlpha :Number = 1.0, doMasking :Boolean = true)
     {

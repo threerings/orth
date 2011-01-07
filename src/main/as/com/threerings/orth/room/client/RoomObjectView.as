@@ -21,7 +21,7 @@ import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.PlayerInfo;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldController;
 
 import flash.events.Event;
@@ -73,7 +73,7 @@ public class RoomObjectView extends RoomView
     /**
      * Create a roomview.
      */
-    public function RoomObjectView (ctx :WorldContext, ctrl :RoomObjectController)
+    public function RoomObjectView (ctx :RoomContext, ctrl :RoomObjectController)
     {
         super(ctx, ctrl);
         _octrl = ctrl;

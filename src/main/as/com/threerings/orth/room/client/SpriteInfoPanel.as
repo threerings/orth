@@ -8,7 +8,7 @@ import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityType;
 import com.threerings.orth.ui.FloatingPanel;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldControlBar;
 
 import mx.collections.ArrayCollection;
@@ -37,7 +37,7 @@ public class SpriteInfoPanel extends FloatingPanel
     /**
      * Construct a SpriteInfoPanel.
      */
-    public function SpriteInfoPanel (ctx :WorldContext, sprites :Array /* of EntitySprite */)
+    public function SpriteInfoPanel (ctx :RoomContext, sprites :Array /* of EntitySprite */)
     {
         super(ctx, Msgs.WORLD.get("t.item_info"));
         showCloseButton = true;

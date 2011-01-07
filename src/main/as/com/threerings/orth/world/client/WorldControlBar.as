@@ -12,7 +12,7 @@ import flash.geom.Point;
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.FlexUtil;
 import com.threerings.orth.client.ControlBar;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 
 /**
  * Configures the control bar with World-specific stuff.
@@ -36,7 +36,7 @@ public class WorldControlBar extends ControlBar
     /**
      * Constructor.
      */
-    public function WorldControlBar (ctx :WorldContext)
+    public function WorldControlBar (ctx :RoomContext)
     {
         super(ctx);
         _wctx = ctx;
@@ -121,8 +121,8 @@ public class WorldControlBar extends ControlBar
         }
     }
 
-    /** Our context, cast as a WorldContext. */
-    protected var _wctx :WorldContext;
+    /** Our context, cast as a RoomContext. */
+    protected var _wctx :RoomContext;
 
     protected var _hotOn :Boolean;
 }

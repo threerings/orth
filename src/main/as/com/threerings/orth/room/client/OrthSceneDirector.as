@@ -13,7 +13,7 @@ import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
 import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldController;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;

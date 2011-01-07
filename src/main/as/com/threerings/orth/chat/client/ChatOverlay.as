@@ -6,14 +6,14 @@ import com.threerings.orth.chat.data.OrthChatChannel;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.client.LayeredContainer;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.PlaceBox;
+import com.threerings.orth.client.OrthPlaceBox;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.VizOrthName;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.PetName;
 import com.threerings.orth.utils.TextUtil;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldController;
 
 import flash.display.BlendMode;
@@ -94,7 +94,7 @@ public class ChatOverlay
     }
 
     public function ChatOverlay (
-        ctx :WorldContext, target :LayeredContainer, scrollBarSide :int = SCROLL_BAR_LEFT,
+        ctx :RoomContext, target :LayeredContainer, scrollBarSide :int = SCROLL_BAR_LEFT,
         includeOccupantList :Boolean = true)
     {
         _ctx = ctx;
@@ -113,7 +113,7 @@ public class ChatOverlay
         displayChat(true);
     }
 
-    public function getContext () :WorldContext
+    public function getContext () :RoomContext
     {
         return _ctx;
     }
@@ -170,7 +170,7 @@ public class ChatOverlay
 
         if (display) {
             if (!_target.containsOverlay(_historyOverlay)) {
-                _target.addOverlay(_historyOverlay, PlaceBox.LAYER_CHAT_HISTORY);
+                _target.addOverlay(_historyOverlay, OrthPlaceBox.LAYER_CHAT_HISTORY);
             }
             if (_historyBar != null && !_target.contains(_historyBar)) {
                 _target.addChild(_historyBar);
@@ -377,7 +377,7 @@ public class ChatOverlay
                 ScrollBar.THICKNESS : 0);
             glyph.y = ypos;
             ypos -= 1;
-            glyph.setTransparent(_chatContainer == null && _target is PlaceBox);
+            glyph.setTransparent(_chatContainer == null && _target is OrthPlaceBox);
             glyph.setClickable(_glyphsClickableAlways);
         }
 
@@ -479,7 +479,7 @@ public class ChatOverlay
     protected function setHistoryEnabled (
         historyEnabled :Boolean, forceClear :Boolean = false) :void
     {
-        if (!(_target is PlaceBox)) {
+        if (!(_target is OrthPlaceBox)) {
             // always show history on a non-PlaceBox
             historyEnabled = true;
         }
@@ -503,7 +503,7 @@ public class ChatOverlay
 
     protected function putInSidebar (sidebar :Boolean) :void
     {
-        if (!(_target is PlaceBox)) {
+        if (!(_target is OrthPlaceBox)) {
             return; // never slide on a non-PlaceBox
         }
 
@@ -530,14 +530,14 @@ public class ChatOverlay
             setClickable(_showingHistory, false);
             _ctx.getTopPanel().clearLeftPanel(_chatContainer);
             if (_chatContainer.containsOccupantList()) {
-                _target.addOverlay(_occupantList, PlaceBox.LAYER_CHAT_LIST);
+                _target.addOverlay(_occupantList, OrthPlaceBox.LAYER_CHAT_LIST);
             }
             _chatContainer = null;
-            _target.addOverlay(_historyOverlay, PlaceBox.LAYER_CHAT_HISTORY);
+            _target.addOverlay(_historyOverlay, OrthPlaceBox.LAYER_CHAT_HISTORY);
             if (!_target.containsOverlay(_historyOverlay)) {
-                _target.addOverlay(_historyOverlay, PlaceBox.LAYER_CHAT_HISTORY);
+                _target.addOverlay(_historyOverlay, OrthPlaceBox.LAYER_CHAT_HISTORY);
             }
-            var showingHistory :Boolean = Prefs.getShowingChatHistory() || (!(_target is PlaceBox));
+            var showingHistory :Boolean = Prefs.getShowingChatHistory() || (!(_target is OrthPlaceBox));
             if (showingHistory) {
                 _target.addChild(_historyBar);
             }
@@ -568,7 +568,7 @@ public class ChatOverlay
             if (_chatContainer != null) {
                 _chatContainer.displayOccupantList(_occupantList);
             } else {
-                _target.addOverlay(_occupantList, PlaceBox.LAYER_CHAT_LIST);
+                _target.addOverlay(_occupantList, OrthPlaceBox.LAYER_CHAT_LIST);
             }
 
         } else {
@@ -614,7 +614,7 @@ public class ChatOverlay
 
         _historyExtent = (_targetBounds.height - PAD) / SUBTITLE_HEIGHT_GUESS;
 
-        if (Prefs.getShowingChatHistory() || shouldUseSidebar() || !(_target is PlaceBox)) {
+        if (Prefs.getShowingChatHistory() || shouldUseSidebar() || !(_target is OrthPlaceBox)) {
             if (_historyBar == null) {
                 _historyBar = new VScrollBar();
                 _historyBar.addEventListener(FlexEvent.UPDATE_COMPLETE, configureHistoryBarSize);
@@ -678,16 +678,16 @@ public class ChatOverlay
         // If we're on the room tab, display any System message that do not have a custom localtype
         if (type == BROADCAST || type == PAID_BROADCAST ||
             (msg is SystemMessage && msg.localtype == ChatCodes.PLACE_CHAT_TYPE)) {
-            // in WorldContext we pull out the scene and check the id against the current localtype
-            if (_ctx is WorldContext) {
+            // in RoomContext we pull out the scene and check the id against the current localtype
+            if (_ctx is RoomContext) {
                 var currentScene :OrthScene =
-                    (_ctx as WorldContext).getSceneDirector().getScene() as OrthScene;
+                    (_ctx as RoomContext).getSceneDirector().getScene() as OrthScene;
                 if (currentScene != null &&
                     OrthChatChannel.typeIsForRoom(_localtype, currentScene.getId())) {
                     return true;
                 }
 
-            // in non-WorldContext we just watch for PLACE_CHAT_TYPE
+            // in non-RoomContext we just watch for PLACE_CHAT_TYPE
             } else {
                 if (_localtype == ChatCodes.PLACE_CHAT_TYPE) {
                     return true;
@@ -1246,7 +1246,7 @@ public class ChatOverlay
     /** The font for all chat. */
     protected static const FONT :String = "Arial";
 
-    protected var _ctx :WorldContext;
+    protected var _ctx :RoomContext;
 
     /** Contains chat when we're in sidebar mode. */
     protected var _chatContainer :ChatContainer;

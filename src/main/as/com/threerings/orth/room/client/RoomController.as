@@ -22,7 +22,7 @@ import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.SimpleEntityIdent;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldControlBar;
 import com.threerings.util.Log;
 import com.threerings.util.Map;
@@ -70,7 +70,7 @@ public class RoomController extends SceneController
     // documentation inherited
     override public function init (ctx :CrowdContext, config :PlaceConfig) :void
     {
-        _wdctx = (ctx as WorldContext);
+        _wdctx = (ctx as RoomContext);
         _throttleChecker.addEventListener(TimerEvent.TIMER, handleCheckThrottles);
         super.init(ctx, config);
     }
@@ -915,7 +915,7 @@ public class RoomController extends SceneController
     protected static const MOUSE_TOOLTIP_Y_OFFSET :int = 50;
 
     /** The life-force of the client. */
-    protected var _wdctx :WorldContext;
+    protected var _wdctx :RoomContext;
 
     /** The room view that we're controlling. */
     protected var _roomView :RoomView;

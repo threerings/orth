@@ -6,7 +6,7 @@ import com.threerings.orth.chat.data.OrthChatChannel;
 import com.threerings.orth.client.LayeredContainer;
 import com.threerings.orth.client.PlaceBox;
 import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 
 import flash.display.BlendMode;
 import flash.display.Graphics;
@@ -39,7 +39,7 @@ public class ComicOverlay extends ChatOverlay
     /**
      * Construct a comic chat overlay.
      */
-    public function ComicOverlay (ctx :WorldContext, target :LayeredContainer)
+    public function ComicOverlay (ctx :RoomContext, target :LayeredContainer)
     {
         super(ctx, target);
 
@@ -100,9 +100,9 @@ public class ComicOverlay extends ChatOverlay
             // We simply do not want to display system-type messages in bubbles
             // 2009-02-24  Ray
             //displayBubble(msg, type);
-        } else if (_ctx is WorldContext) {
+        } else if (_ctx is RoomContext) {
             var scene :OrthScene =
-                (_ctx as WorldContext).getSceneDirector().getScene() as OrthScene;
+                (_ctx as RoomContext).getSceneDirector().getScene() as OrthScene;
             if (scene != null && OrthChatChannel.typeIsForRoom(msg.localtype, scene.getId())) {
                 if (type != IGNORECHAT) {
                     displayBubble(msg, type);

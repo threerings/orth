@@ -17,7 +17,7 @@ import com.threerings.orth.ui.FloatingPanel;
 import com.threerings.orth.ui.MediaWrapper;
 import com.threerings.orth.ui.PlayerList;
 
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldController;
 import com.threerings.orth.party.client.PartyDirector;
 

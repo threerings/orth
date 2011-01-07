@@ -176,7 +176,7 @@ public class WorldController extends Controller
     /** Command to request detailed info on a party. */
     public static const GET_PARTY_DETAIL :String = "GetPartyDetail";
 
-    public function WorldController (ctx :WorldContext, topPanel :TopPanel)
+    public function WorldController (ctx :RoomContext, topPanel :TopPanel)
     {
         _wctx = ctx;
 
@@ -1149,7 +1149,7 @@ public class WorldController extends Controller
     }
 
     /** Giver of life, context. */
-    protected var _wctx :WorldContext;
+    protected var _wctx :RoomContext;
 
     protected var _snapPanel :SnapshotPanel;
 

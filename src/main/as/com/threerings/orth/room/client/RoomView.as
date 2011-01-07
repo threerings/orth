@@ -3,7 +3,7 @@
 
 package com.threerings.orth.room.client {
 import com.threerings.orth.entity.data.Decor;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.client.OrthPlaceView;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.entity.client.DecorSprite;
@@ -17,7 +17,7 @@ import com.threerings.orth.room.data.DecorCodes;
 import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 
 import flash.display.BitmapData;
 import flash.display.Sprite;
@@ -70,7 +70,7 @@ public class RoomView extends Sprite
     /**
      * Constructor.
      */
-    public function RoomView (ctx :WorldContext, ctrl :RoomController)
+    public function RoomView (ctx :RoomContext, ctrl :RoomController)
     {
         _ctx = ctx;
         _ctrl = ctrl;
@@ -233,7 +233,7 @@ public class RoomView extends Sprite
     }
 
     // from ContextMenuProvider
-    public function populateContextMenu (ctx :WorldContext, menuItems :Array) :void
+    public function populateContextMenu (ctx :RoomContext, menuItems :Array) :void
     {
         var hit :* = _ctrl.getHitSprite(stage.mouseX, stage.mouseY, true);
         if (hit === undefined) {
@@ -1114,7 +1114,7 @@ public class RoomView extends Sprite
     protected var _suppressAutoScroll :Boolean = false;
 
     /** The msoy context. */
-    protected var _ctx :WorldContext;
+    protected var _ctx :RoomContext;
 
     /** Are we actually showing? */
     protected var _showing :Boolean = true;

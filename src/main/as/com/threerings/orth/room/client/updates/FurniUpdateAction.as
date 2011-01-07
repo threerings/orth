@@ -10,7 +10,7 @@ import com.threerings.orth.room.data.FurniUpdate;
 import com.threerings.orth.room.data.FurniUpdate_Add;
 import com.threerings.orth.room.data.FurniUpdate_Change;
 import com.threerings.orth.room.data.FurniUpdate_Remove;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 
 /**
  * Generates a command to update a single piece of furni.
@@ -19,7 +19,7 @@ public class FurniUpdateAction
     implements UpdateAction
 {
     /** Create a new furni update command. */
-    public function FurniUpdateAction (ctx :WorldContext, oldData :FurniData, newData :FurniData)
+    public function FurniUpdateAction (ctx :RoomContext, oldData :FurniData, newData :FurniData)
     {
         _ctx = ctx;
         _oldData = oldData;
@@ -58,7 +58,7 @@ public class FurniUpdateAction
         return furniUpdate;
     }
 
-    protected var _ctx :WorldContext;
+    protected var _ctx :RoomContext;
     protected var _oldData :FurniData;
     protected var _newData :FurniData;
 }

@@ -17,6 +17,8 @@ import mx.containers.Canvas;
 import mx.controls.Label;
 import mx.controls.scrollClasses.ScrollBar;
 
+import com.threerings.orth.client.ControlBar;
+
 public class TopPanel extends Canvas
 {
     [PostConstruct]
@@ -33,7 +35,6 @@ public class TopPanel extends Canvas
         addChild(_placeBox);
 
         // set up the control bar
-        _controlBar = controlBar;
         _controlBar.includeInLayout = false;
         _controlBar.init(this);
         _controlBar.setStyle("left", 0);
@@ -192,11 +193,9 @@ public class TopPanel extends Canvas
     [Inject] public var _app :Application;
     [Inject] public var _depConf :OrthDeploymentConfig;
     [Inject] public var _placeBox :OrthPlaceBox;
+    [Inject] public var _controlBar :ControlBar;
 
     [Inject(name="clientWidth")] public var _width :Number
     [Inject(name="clientHeight")] public var _height :Number;
-
-    /** Control bar at the bottom of the window. */
-    protected var _controlBar :ControlBar;
 }
 }

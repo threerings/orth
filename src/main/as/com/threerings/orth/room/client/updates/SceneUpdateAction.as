@@ -4,7 +4,7 @@
 package com.threerings.orth.room.client.updates {
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.SceneAttrsUpdate;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.util.Log;
 
 import com.threerings.whirled.data.SceneUpdate;
@@ -16,7 +16,7 @@ public class SceneUpdateAction
     implements UpdateAction
 {
     /** Create a new furni update command. */
-    public function SceneUpdateAction (ctx :WorldContext, oldScene :OrthScene, newScene :OrthScene)
+    public function SceneUpdateAction (ctx :RoomContext, oldScene :OrthScene, newScene :OrthScene)
     {
         _ctx = ctx;
         _oldSceneData = new Object();
@@ -67,6 +67,6 @@ public class SceneUpdateAction
 
     protected var _oldSceneData :Object;
     protected var _newSceneData :Object;
-    protected var _ctx :WorldContext;
+    protected var _ctx :RoomContext;
 }
 }

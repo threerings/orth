@@ -117,7 +117,7 @@ public class PartyBoardPanel extends FloatingPanel
         }
     }
 
-    protected var _wctx :WorldContext;
+    protected var _wctx :RoomContext;
 
     protected var _mode :int;
 

@@ -5,7 +5,7 @@ package com.threerings.orth.client {
 import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.ui.MediaWrapper;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 
 import mx.containers.HBox;
 import mx.containers.VBox;

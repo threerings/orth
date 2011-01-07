@@ -12,7 +12,7 @@ import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthCredentials;
 
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyCredentials;

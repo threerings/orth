@@ -14,11 +14,12 @@ import com.threerings.flex.CommandButton;
 import com.threerings.flex.FlexUtil;
 
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.PlayerObject;
 import com.threerings.orth.ui.MediaWrapper;
 
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldController;
 
 import com.threerings.orth.party.data.PartyBoardInfo;
