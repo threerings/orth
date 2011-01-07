@@ -13,9 +13,12 @@
   <property name="classes.dir"  value="${deploy.dir}/classes"/>
   <property name="gwtjar.dir"   value="${deploy.dir}/gwt-jar"/>
 
+  <!-- Use the flex 4 class name of mxmlc instead of the flex 3 version in build-support -->
+  <property name="mxmlc.class" value="flex2.tools.Mxmlc" />
   <!-- bring in our standard build support -->
+  <property name="ooo-build.vers" value="1.3"/>
   <ant antfile="bootstrap.xml"/>
-  <import file="${user.home}/.m2/ant-support/1.1/build-support.xml"/>
+  <import file="${user.home}/.m2/ant-support/${ooo-build.vers}/build-support.xml"/>
 
   <!-- -prepares the application directories -->
   <target name="prepare" depends="-init-ooo">
@@ -105,8 +108,8 @@
       </filterset>
     </copy>
     <java jar="${flexsdk.dir}/lib/compc.jar" fork="true" failonerror="true">
-      <arg value="-load-config"/>
-      <arg value="${deploy.dir}/aslib-config.xml"/>
+      <arg value="+flexlib=${flexsdk.dir}/frameworks"/>
+      <arg value="-load-config+=${deploy.dir}/aslib-config.xml"/>
       <arg value="-compiler.optimize"/>
       <arg value="-compiler.source-path=${asrc.dir}"/>
       <arg value="-include-sources=src/main/as/"/>
