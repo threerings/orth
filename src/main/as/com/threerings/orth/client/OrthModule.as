@@ -2,6 +2,9 @@
 // $Id$
 
 package com.threerings.orth.client {
+import com.threerings.util.Log;
+import flashx.funk.ioc.IModule;
+import flashx.funk.ioc.AbstractModule;
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
@@ -10,8 +13,6 @@ import flash.display.Stage;
 
 import mx.core.Application;
 
-import org.swiftsuspenders.Injector;
-
 import com.threerings.util.MessageManager;
 
 import com.threerings.orth.aether.client.AetherClient;
@@ -19,57 +20,28 @@ import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
 
-public class OrthModule
+public class OrthModule extends AbstractModule
 {
-    public function configure (app :Application, injector :Injector) :void
+    public function OrthModule (app :Application)
     {
-        // map the injector itself
-        injector.mapValue(Injector, injector);
+        _app = app; 
+        bind(OrthModule).toInstance(this);
+        bind(IModule).toInstance(this);
 
-         // and the supplied application
-        injector.mapValue(Application, app);
+        // and the supplied application
+        bind(Application).toInstance(_app);
 
-         // set up a bunch of singletons
-        injector.mapSingleton(MessageManager);
-        injector.mapSingleton(OrthController);
-        injector.mapSingleton(OrthPlaceBox);
-        injector.mapSingleton(TopPanel);
-
-         // bind to our trivial deployment config
-        var config :OrthDeploymentConfig = new TrivialDeploymentConfig();
-        injector.mapValue(OrthDeploymentConfig, config);
+        // set up a bunch of singletons
+        bind(MessageManager).asSingleton();
+        bind(OrthController).asSingleton();
+        bind(OrthPlaceBox).asSingleton();
+        bind(TopPanel).asSingleton();
 
         // a handy stage reference
-        injector.mapValue(Stage, app.stage);
-        // client width and height, defaults to app dimensions
-        injector.mapValue(Number, app.stage.stageWidth, "clientWidth");
-        injector.mapValue(Number, app.stage.stageHeight, "clientHeight");
-
-        // client configuration
-        injector.mapValue(String, "TODO", "aetherHostname");
-        injector.mapValue(Array, [ "TODO" ], "aetherPorts");
-        injector.mapValue(int, 1234, "policyPort");
-        injector.mapSingleton(AetherClient);
-
-         // to begin with, we have no WorldContext
-        // injector.mapValue(WorldContext, null);
-        injector.mapSingleton(WorldContext); // THIS IS NOT RIGHT, TESTING TESITN
-        injector.mapSingleton(WorldClient);
+        bind(Stage).toInstance(_app.stage);
     }
+
+    protected var _app :Application;
+    private static const log :Log = Log.getLog(OrthModule);
 }
-}
-
-import com.threerings.orth.client.OrthDeploymentConfig;
-
-class TrivialDeploymentConfig implements OrthDeploymentConfig
-{
-    public function getVersion () :String
-    {
-        return "DEV";
-    }
-
-    public function isDevelopment () :Boolean
-    {
-        return true;
-    }
 }

@@ -2,12 +2,13 @@
 // $Id$
 
 package com.threerings.orth.client {
+import flashx.funk.ioc.inject;
+import com.threerings.orth.client.OrthDeploymentConfig;
+import flashx.funk.ioc.IModule;
 
 import mx.core.Application;
 
 import flash.display.Stage;
-
-import org.swiftsuspenders.Injector;
 
 import com.threerings.util.Log;
 import com.threerings.util.MessageManager;
@@ -39,44 +40,12 @@ import com.threerings.orth.world.client.WorldContext;
 public class OrthContext
     implements PresentsContext
 {
-    public static function run (app :Application) :OrthContext
-    {
-        return runClient(app, OrthContext, new OrthModule());
-    }
-
-    public static function runClient (
-        app :Application, ctxClass :Class, module :OrthModule) :OrthContext
-    {
-        // create our injector
-        var injector :Injector = new Injector();
-
-        // then set up orth bindings
-        module.configure(app, injector);
-
-        var ctx :OrthContext = new ctxClass();
-
-        // first hard-code the un-injected contexrt
-        injector.mapValue(OrthContext, ctx);
-
-        injector.injectInto(ctx);
-
-        return ctx;
-    }
-
-    [Inject(name="policyPort")]
-    public function initPolicyLoader (policyPort :int) :void
-    {
-        // initialize the policy loader
-        PolicyLoader.init(policyPort);
-    }
-
-    [PostConstruct]
-    public function initialize () :void
+    public function OrthContext ()
     {
         // initialize our convenience holder
-        Msgs.init(_msgMgr);
+        Msgs.init(inject(MessageManager));
 
-        // more startup bits will be added here in time...
+        PolicyLoader.init(inject(OrthDeploymentConfig).policyPort);
     }
 
     // from PresentsContext
@@ -120,14 +89,14 @@ public class OrthContext
         _wctx = new ctxClass();
 
         // configure the host/ports to connect to
-        _injector.mapValue(String, hostname, "worldHostname");
-        _injector.mapValue(Array, ports, "worldPorts");
+        //_injector.mapValue(String, hostname, "worldHostname");
+        //_injector.mapValue(Array, ports, "worldPorts");
 
-        // map WorldClass to our instance for the duration of this world session
-        _injector.mapValue(WorldContext, _wctx);
+        //// map WorldClass to our instance for the duration of this world session
+        //_injector.mapValue(WorldContext, _wctx);
 
-        // and perform injection, bootstrapping the world logon proceure
-        _wctx = _injector.getInstance(ctxClass);
+        //// and perform injection, bootstrapping the world logon proceure
+        //_wctx = _injector.getInstance(ctxClass);
     }
 
     /**
@@ -142,9 +111,7 @@ public class OrthContext
         _wctx == null;
     }
 
-    [Inject] public var _injector :Injector;
-    [Inject] public var _client :AetherClient;
-    [Inject] public var _msgMgr :MessageManager;
+    protected var _client :AetherClient = inject(AetherClient);
 
     protected var _wctx :WorldContext;
 

@@ -2,6 +2,8 @@
 // $Id: $
 
 package com.threerings.orth.client {
+import flash.display.Stage;
+import flashx.funk.ioc.inject;
 
 import flash.display.DisplayObject;
 import flash.events.Event;
@@ -17,9 +19,10 @@ import mx.controls.scrollClasses.ScrollBar;
 
 public class TopPanel extends Canvas
 {
-    [PostConstruct]
-    public function initTopPanel () :void
+    public function TopPanel ()
     {
+        _width = inject(Stage).stageWidth;
+        _height = inject(Stage).stageHeight;
         percentWidth = 100;
         percentHeight = 100;
         verticalScrollPolicy = ScrollPolicy.OFF;
@@ -31,12 +34,13 @@ public class TopPanel extends Canvas
         addChild(_placeBox);
 
         // show a subtle build-stamp on dev builds
-        if (_devConf.isDevelopment()) {
+        var devConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
+        if (devConf.development) {
             var buildStamp :Label = new Label();
             buildStamp.includeInLayout = false;
             buildStamp.mouseEnabled = false;
             buildStamp.mouseChildren = false;
-            buildStamp.text = "Build: " + _devConf.getVersion();
+            buildStamp.text = "Build: " + devConf.version;
             buildStamp.setStyle("color", "#F7069A");
             buildStamp.setStyle("fontSize", 8);
             buildStamp.setStyle("bottom", 0);
@@ -46,10 +50,9 @@ public class TopPanel extends Canvas
         }
 
         // clear out the application and install ourselves as the only child
-        var app :Application = _app;
-        app.removeAllChildren();
-        app.addChild(this);
-        app.stage.addEventListener(Event.RESIZE, stageResized);
+        _app.removeAllChildren();
+        _app.addChild(this);
+        _app.stage.addEventListener(Event.RESIZE, stageResized);
 
         setMainView(getBlankPlaceView());
     }
@@ -151,11 +154,10 @@ public class TopPanel extends Canvas
         return canvas;
     }
 
-    [Inject] public var _app :Application;
-    [Inject] public var _devConf :OrthDeploymentConfig;
-    [Inject] public var _placeBox :OrthPlaceBox;
+    protected var _app :Application = inject(Application);
+    protected var _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
 
-    [Inject(name="clientWidth")] public var _width :Number
-    [Inject(name="clientHeight")] public var _height :Number;
+    protected var _width :Number
+    protected var _height :Number;
 }
 }

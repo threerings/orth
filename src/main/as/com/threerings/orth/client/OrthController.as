@@ -1,8 +1,8 @@
 //
 // $Id: $
 package com.threerings.orth.client {
-
-import org.swiftsuspenders.Injector;
+import flashx.funk.ioc.IModule;
+import flashx.funk.ioc.inject;
 
 import com.threerings.util.Controller;
 import com.threerings.util.Log;
@@ -24,8 +24,7 @@ public class OrthController extends Controller
     /** Command to display sign-up info for guests (TODO: not implemented). */
     public static const SHOW_SIGN_UP :String = "ShowSignUp";
 
-    [PostConstruct]
-    public function initOrthController () :void
+    public function OrthController ()
     {
         setControlledPanel(_topPanel);
     }
@@ -35,7 +34,7 @@ public class OrthController extends Controller
      */
     public function handleAbout () :void
     {
-        _injector.getInstance(AboutDialog);
+        _mod.getInstance(AboutDialog);
     }
 
     /**
@@ -45,15 +44,15 @@ public class OrthController extends Controller
     {
         // give the client a chance to log off, then log back on
         _topPanel.callLater(function () :void {
-            log.info("Logging on", "creds", creds, "version", _depCon.getVersion());
+            log.info("Logging on", "creds", creds, "version", _depCon.version);
             _client.logonWithCredentials(creds);
         });
     }
 
-    [Inject] public var _injector :Injector;
-    [Inject] public var _topPanel :TopPanel;
-    [Inject] public var _client :AetherClient;
-    [Inject] public var _depCon :OrthDeploymentConfig;
+    protected var _mod :IModule = inject(IModule);
+    protected var _topPanel :TopPanel = inject(TopPanel);
+    protected var _client :AetherClient = inject(AetherClient);
+    protected var _depCon :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 
     protected static var log :Log = Log.getLog(OrthController);
 }

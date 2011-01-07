@@ -2,6 +2,7 @@
 // $Id$
 
 package com.threerings.orth.aether.client {
+import flashx.funk.ioc.inject;
 import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.orth.aether.data.PlayerObject;
@@ -27,36 +28,28 @@ import flash.utils.Dictionary;
 
 import mx.core.Application;
 
-import org.swiftsuspenders.Injector;
-
-[Inject(name='aetherHostname', name="aetherPorts")]
 public class AetherClient extends Client
 {
     // reference classes that would otherwise not be linked in
     PlayerObject;
 
-    public function AetherClient (host :String, ports :Array)
+    public function AetherClient ()
     {
-        super();
+        var depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 
         // configure our server and port info
-        setServer(host, ports);
+        setServer(depConf.host, depConf.ports);
 
         // then register with it, as any client would
         PolicyLoader.registerClient(this);
-    }
-
-    [PostConstruct]
-    public function initialize () :void
-    {
         // configure our version
-        setVersion(_depConf.getVersion());
+        setVersion(depConf.version);
 
         // set up a context menu that blocks funnybiz on the stage
         var menu :ContextMenu = new ContextMenu();
         menu.hideBuiltInItems();
         menu.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenuWillPopUp);
-        _app.contextMenu = menu;
+        inject(Application).contextMenu = menu;
     }
 
     public function logonWithCredentials (creds :AetherCredentials) :Boolean
@@ -82,7 +75,8 @@ public class AetherClient extends Client
             Prefs.setMachineIdent(rdata.ident);
         }
         if (rdata.sessionToken != null) {
-            _injector.mapValue(String, rdata.sessionToken, "sessionToken");
+            // TODO - scoped injection
+            //_injector.mapValue(String, rdata.sessionToken, "sessionToken");
         }
     }
 
@@ -131,10 +125,7 @@ public class AetherClient extends Client
         }
     }
 
-    [Inject] public var _injector :Injector;
-    [Inject] public var _stage :Stage;
-    [Inject] public var _app :Application;
-    [Inject] public var _depConf :OrthDeploymentConfig;
+    protected var _stage :Stage = inject(Stage);
 
     private static const log :Log = Log.getLog(AetherClient);
 }

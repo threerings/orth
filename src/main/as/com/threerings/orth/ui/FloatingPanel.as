@@ -2,6 +2,7 @@
 // $Id: FloatingPanel.as 18332 2009-10-11 16:43:21Z jamie $
 
 package com.threerings.orth.ui {
+import flashx.funk.ioc.inject;
 import flash.display.DisplayObject;
 
 import flash.events.Event;
@@ -379,7 +380,7 @@ public class FloatingPanel extends TitleWindow
     }
 
     /** Our topmost display container. */
-    [Inject] public var _topPanel :TopPanel;
+    protected var _topPanel :TopPanel = inject(TopPanel);
 
     /** The button bar. */
     protected var _buttonBar :ButtonBar;
