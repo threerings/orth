@@ -24,11 +24,11 @@ import com.threerings.crowd.data.OccupantInfo;
 public class ActorSprite extends OccupantSprite
 {
     /**
-     * Creates an actor sprite for the supplied actor.
+     * Initializes an actor sprite for the supplied actor.
      */
-    public function ActorSprite (ctx :OrthContext, occInfo :ActorInfo, extraInfo :Object)
+    public function initActorSprite (occInfo :ActorInfo, extraInfo :Object) :void
     {
-        super(ctx, occInfo, extraInfo);
+        super.initOccupantSprite(occInfo, extraInfo);
     }
 
     /**

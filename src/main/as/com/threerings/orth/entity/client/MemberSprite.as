@@ -21,11 +21,11 @@ import com.threerings.orth.room.data.PlayerInfo;
 public class MemberSprite extends ActorSprite
 {
     /**
-     * Creates a sprite for the supplied member.
+     * Initializes a sprite for the supplied member.
      */
-    public function MemberSprite (ctx :OrthContext, occInfo :PlayerInfo, extraInfo :Object)
+    public function initMemberSprite (occInfo :PlayerInfo, extraInfo :Object)
     {
-        super(ctx, occInfo, extraInfo);
+        super.initActorSprite(occInfo, extraInfo);
     }
 
     /**

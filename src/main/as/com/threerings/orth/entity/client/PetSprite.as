@@ -16,9 +16,9 @@ import com.threerings.orth.ui.OrthNameLabel;
  */
 public class PetSprite extends ActorSprite
 {
-    public function PetSprite (ctx :OrthContext, occInfo :PetInfo, extraInfo :Object)
+    public function initPetSprite (occInfo :PetInfo, extraInfo :Object) :void
     {
-        super(ctx, occInfo, extraInfo);
+        super.initActorSprite();
     }
 
     /**

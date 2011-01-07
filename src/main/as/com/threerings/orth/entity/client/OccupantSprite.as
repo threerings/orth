@@ -56,11 +56,11 @@ public class OccupantSprite extends EntitySprite
     public static const DEC_WEIGHT_IDLE :int = 500;
 
     /**
-     * Creates a sprite for the supplied occupant.
+     * Initializes a sprite for the supplied occupant.
      */
-    public function OccupantSprite (ctx :OrthContext, occInfo :OccupantInfo, extraInfo :Object)
+    public function initOccupantSprite (occInfo :OccupantInfo, extraInfo :Object) :void
     {
-        super(ctx);
+        super.initEntitySprite();
 
         // The label often jumps visibly when the actor is hovered over, a pixel up or down, and/or
         // left or right. As far as I (Ray) can figure, when the glow filter is applied it's doing
@@ -579,11 +579,7 @@ public class OccupantSprite extends EntitySprite
         // little in Whirled, and we've decided we don't care. Avatars with hidden names are cool,
         // and you can still click on the avatar to do whatever you need to do.
         // Also, the room's occupant list can be used to act on other avatars.
-        if (Prefs.isAprilFoolsEnabled()) {
-            _label.y = baseY / _extras.scaleY;
-        } else {
-            _label.y = (baseY - _label.height) / _extras.scaleY;
-        }
+        _label.y = (baseY - _label.height) / _extras.scaleY;
     }
 
     /**
@@ -592,16 +588,11 @@ public class OccupantSprite extends EntitySprite
      */
     protected function arrangeDecorations () :void
     {
-        const FOOL :Boolean = Prefs.isAprilFoolsEnabled();
-
         // note: may overflow the media area..
         var hotSpot :Point = getMediaHotSpot();
         var hotX :Number = Math.abs(_sprite.getMediaScaleX() * _locScale) * hotSpot.x;
 
         var baseY :Number = _label.y; // we depend on recheckLabel()
-        if (FOOL) {
-            baseY += _label.height;
-        }
         if (_decorations != null) {
             // place the decorations over the name label, with our best guess as to their size
             for (var ii :int = 0; ii < _decorations.length; ii++) {
@@ -611,14 +602,8 @@ public class OccupantSprite extends EntitySprite
                     rect = dec.getRect(dec);
                 }
                 dec.x = (hotX - (rect.width/2) - rect.x) / _extras.scaleX;
-                if (FOOL) {
-                    baseY += DECORATION_PAD;
-                    dec.y = (baseY - rect.y);
-                    baseY += rect.height;
-                } else {
-                    baseY -= (rect.height + DECORATION_PAD);
-                    dec.y = (baseY - rect.y);
-                }
+                baseY -= (rect.height + DECORATION_PAD);
+                dec.y = (baseY - rect.y);
             }
         }
 

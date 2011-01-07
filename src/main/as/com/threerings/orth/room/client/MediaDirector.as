@@ -28,6 +28,8 @@ import com.threerings.orth.room.data.PetInfo;
 import com.threerings.orth.room.data.PlayerInfo;
 import com.threerings.orth.room.data.FurniData;
 
+import org.swiftsuspenders.Injector;
+
 /**
  * Handles the loading of various media.
  */
@@ -62,14 +64,17 @@ public class MediaDirector extends BasicDirector
                 _ourAvatar.setOccupantInfo(occInfo, extraInfo);
                 return _ourAvatar;
             }
-            var sprite :MemberSprite = new MemberSprite(_octx, occInfo as PlayerInfo, extraInfo);
+            var mSprite :MemberSprite = _injector.getInstance(MemberSprite);
+            mSprite.initMemberSprite(occInfo as PlayerInfo, extraInfo);
             if (isOurs) {
-                _ourAvatar = sprite;
+                _ourAvatar = mSprite;
             }
-            return sprite;
+            return mSprite;
 
         } else if (occInfo is PetInfo) {
-            return new PetSprite(_octx, occInfo as PetInfo, extraInfo);
+            var pSprite :PetSprite = _injector.getInstance(PetSprite);
+            pSprite.initPetSprite(occInfo as PetInfo, extraInfo);
+            return pSprite;
 
         } else {
             log.warning("Don't know how to create sprite for occupant " + occInfo + ".");
@@ -82,7 +87,9 @@ public class MediaDirector extends BasicDirector
      */
     public function getFurni (furni :FurniData) :FurniSprite
     {
-        return new FurniSprite(_octx, furni);
+        var fSprite :FurniSprite = _injector.getInstance(FurniSprite);
+        fSprite.initFurniSprite(furni);
+        return fSprite;
     }
 
     /**
@@ -90,7 +97,9 @@ public class MediaDirector extends BasicDirector
      */
     public function getDecor (decor :Decor) :DecorSprite
     {
-        return new DecorSprite(_octx, decor);
+        var dSprite :DecorSprite = _injector.getInstance(DecorSprite);
+        dSprite.initDecorSprite(decor);
+        return dSprite;
     }
 
     /**
@@ -137,6 +146,7 @@ public class MediaDirector extends BasicDirector
     /** A casted copy of the context. */
     protected var _octx :OrthContext;
 
+    [Inject] public var _injector :Injector;
     [Inject] public var _locDir :LocationDirector;
 
     /** Our very own avatar: avoid loading and unloading it. */

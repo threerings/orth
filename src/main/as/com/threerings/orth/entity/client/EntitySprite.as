@@ -57,12 +57,10 @@ public class EntitySprite
     public static const OTHER_HOVER :uint = 0xFF993F; // orange
 
     /**
-     * Construct a EntitySprite.
+     * Initialize an EntitySprite.
      */
-    public function EntitySprite (ctx :OrthContext)
+    public function initEntitySprite () :void
     {
-        _ctx = ctx;
-
         _sprite = createVisualization();
 
         _sprite.addEventListener(MediaContainer.WILL_SHUTDOWN, mediaWillShutdown);
@@ -942,12 +940,10 @@ public class EntitySprite
     }
 
     [Inject] public var _injector :Injector;
+    [Inject] public var _ctx :OrthContext;
 
     /** The visual representation of us. */
     protected var _sprite :EntityMediaContainer;
-
-    /** The giver of life. */
-    protected var _ctx :OrthContext;
 
     /** The current logical coordinate of this media. */
     protected const _loc :OrthLocation = new OrthLocation();

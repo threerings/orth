@@ -18,12 +18,12 @@ import com.threerings.orth.room.data.OrthRoomCodes;
 public class DecorSprite extends FurniSprite
 {
     /**
-     * Construct a new DecorSprite.
+     * Initializes a new DecorSprite.
      */
-    public function DecorSprite (ctx :OrthContext, decor :Decor)
+    public function initDecorSprite (decor :Decor) :void
     {
         var furniData :FurniData = makeFurniData(decor);
-        super(ctx, furniData);
+        super.initFurniSprite(furniData);
         setLocation(furniData.loc);
 
         _sprite.setSuppressHitTestPoint(true);

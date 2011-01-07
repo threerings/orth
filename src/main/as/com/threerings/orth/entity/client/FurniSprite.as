@@ -34,11 +34,12 @@ public class FurniSprite extends EntitySprite
     }
 
     /**
-     * Construct a new FurniSprite.
+     * Initializes a new FurniSprite.
      */
-    public function FurniSprite (ctx :OrthContext, furni :FurniData)
+    public function initFurniSprite (furni :FurniData)
     {
-        super(ctx);
+        super.initEntitySprite();
+
         _furni = furni;
 
         // configure our media and item
