@@ -15,15 +15,20 @@ import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
 
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ConfirmAdapter;
+import com.threerings.presents.client.InvocationAdapter;
 import com.threerings.presents.client.InvocationService_ConfirmListener;
 import com.threerings.presents.client.InvocationService_InvocationListener;
 import com.threerings.presents.client.InvocationService_ResultListener;
+import com.threerings.presents.client.ResultAdapter;
 import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.util.PresentsContext;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.data.OrthCodes;
 
 import com.threerings.orth.world.client.WorldContext;
 
@@ -105,6 +110,7 @@ public class OrthContext
         if (_client.getClientObject() != null) {
             return PlayerObject(_client.getClientObject()).playerName.getId();
         }
+        return 0;
     }
 
     /**
@@ -225,6 +231,30 @@ public class OrthContext
         _wctx == null;
         _injector.unmap(WorldContext);
     }
+
+    /**
+     * Create an error handling function for use with InvocationService listener adapters.
+     */
+    protected function chatErrHandler (
+        bundle :String, errWrap :String, component :UIComponent, logArgs :Array) :Function
+    {
+        return function (cause :String) :void {
+            if (component != null) {
+                component.enabled = true;
+            }
+            var args :Array = logArgs.concat("cause", cause); // make a copy, we're reentrant
+            if (args.length % 2 == 0) {
+                args.unshift("Reporting failure");
+            }
+            Log.getLog(OrthContext).info.apply(null, args);
+
+            if (errWrap != null) {
+                cause = MessageBundle.compose(errWrap, cause);
+            }
+            displayFeedback(bundle, cause);
+        };
+    }
+
 
     [Inject] public var _injector :Injector;
     [Inject] public var _client :AetherClient;
