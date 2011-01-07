@@ -101,22 +101,15 @@
   </echo></target>
 
   <target name="aslib" unless="no_build_aslib" depends="-checkaslib,-noteaslib">
-    <copy file="etc/aslib-config.xml.in" tofile="${deploy.dir}/aslib-config.xml">
-      <filterset>
-        <filter token="flex_sdk_dir" value="${flexsdk.dir}"/>
-        <filter token="lib_name" value="${ant.project.name}"/>
-      </filterset>
-    </copy>
     <java jar="${flexsdk.dir}/lib/compc.jar" fork="true" failonerror="true">
       <arg value="+flexlib=${flexsdk.dir}/frameworks"/>
-      <arg value="-load-config+=${deploy.dir}/aslib-config.xml"/>
+      <arg value="-load-config+=etc/aslib-config.xml"/>
       <arg value="-compiler.optimize"/>
       <arg value="-compiler.source-path=${asrc.dir}"/>
       <arg value="-include-sources=src/main/as/"/>
       <arg value="-output"/>
       <arg value="${deploy.dir}/${ant.project.name}lib.swc"/>
     </java>
-    <delete file="${deploy.dir}/aslib-config.xml"/>
   </target>
 
   <target name="javadoc" depends="prepare">

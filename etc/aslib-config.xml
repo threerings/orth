@@ -17,10 +17,10 @@
   </compiler>
 
   <metadata>
-    <title>@lib_name@</title>
+    <title>orth</title>
     <creator>Three Rings Design, Inc.</creator>
     <publisher>Three Rings Design, Inc.</publisher>
-    <description>http://threerings.net/code/@lib_name@/</description>
+    <description>http://threerings.net/code/orth/</description>
     <language>EN</language>
   </metadata>
 </flex-config>
