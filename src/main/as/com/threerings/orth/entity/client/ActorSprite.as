@@ -2,19 +2,21 @@
 // $Id: ActorSprite.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.entity.client {
+
+import com.threerings.util.DelayUtil;
+import com.threerings.util.Log;
+import com.threerings.util.Util;
+
+import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.data.MediaDesc;
+
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthLocation;
-import com.threerings.orth.world.client.WorldContext;
-import com.threerings.util.DelayUtil;
-import com.threerings.util.Log;
-import com.threerings.util.Util;
 
 import com.threerings.crowd.data.OccupantInfo;
-
-import com.threerings.orth.data.MediaDesc;
 
 /**
  * Handles sprites for actors (members and pets).
@@ -24,7 +26,7 @@ public class ActorSprite extends OccupantSprite
     /**
      * Creates an actor sprite for the supplied actor.
      */
-    public function ActorSprite (ctx :WorldContext, occInfo :ActorInfo, extraInfo :Object)
+    public function ActorSprite (ctx :OrthContext, occInfo :ActorInfo, extraInfo :Object)
     {
         super(ctx, occInfo, extraInfo);
     }
@@ -178,7 +180,7 @@ public class ActorSprite extends OccupantSprite
     // from EntitySprite
     override protected function createBackend () :EntityBackend
     {
-        return new ActorBackend();
+        return _injector.getInstance(ActorBackend);
     }
 }
 }

@@ -7,8 +7,9 @@ import flash.events.EventDispatcher;
 
 import flash.display.LoaderInfo;
 
-import com.threerings.orth.world.client.WorldContext;
 import com.threerings.util.Log;
+
+import com.threerings.orth.client.OrthContext;
 
 /**
  * The base class for communicating with MsoyControl instances
@@ -19,7 +20,7 @@ public class ControlBackend
     /**
      * Initialize a backend to safely communicate with usercode.
      */
-    public function init (ctx :WorldContext, contentLoaderInfo :LoaderInfo) :void
+    public function init (ctx :OrthContext, contentLoaderInfo :LoaderInfo) :void
     {
         _ctx = ctx;
         _sharedEvents = contentLoaderInfo.sharedEvents;
@@ -130,8 +131,13 @@ public class ControlBackend
      */
     protected function startTransaction_v1 () :void
     {
-        if (_ctx != null) { // _ctx may be null in the avatarviewer, places like that
+        // _ctx may be null in the avatarviewer, places like that
+        if (_ctx != null) {
             _ctx.getClient().getInvocationDirector().startTransaction();
+            // if there is a world context, start a transaction there too
+            if (_ctx.wctx != null) {
+                _ctx.wctx.getClient().getInvocationDirector().startTransaction();
+            }
         }
     }
 
@@ -142,11 +148,14 @@ public class ControlBackend
     {
         if (_ctx != null) { // _ctx may be null in the avatarviewer, places like that
             _ctx.getClient().getInvocationDirector().commitTransaction();
+            if (_ctx.wctx != null) {
+                _ctx.wctx.getClient().getInvocationDirector().startTransaction();
+            }
         }
     }
 
     /** The giver of life. */
-    protected var _ctx :WorldContext;
+    protected var _ctx :OrthContext;;
 
     /** Properties populated by usercode. */
     protected var _props :Object;

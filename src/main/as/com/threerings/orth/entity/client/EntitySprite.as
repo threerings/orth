@@ -3,16 +3,6 @@
 
 package com.threerings.orth.entity.client {
 
-import com.threerings.orth.room.client.EntityMediaContainer;
-import com.threerings.orth.room.client.RoomController;
-import com.threerings.orth.room.client.RoomElement;
-import com.threerings.orth.room.client.RoomView;
-import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.orth.room.data.OrthLocation;
-import com.threerings.orth.room.data.OrthRoomCodes;
-import com.threerings.orth.room.data.SimpleEntityIdent;
-import com.threerings.orth.world.client.WorldContext;
-
 import flash.display.BitmapData;
 import flash.display.BlendMode;
 import flash.display.DisplayObject;
@@ -32,6 +22,19 @@ import com.threerings.util.StringUtil;
 import com.threerings.util.ValueEvent;
 
 import com.threerings.display.FilterUtil;
+
+import com.threerings.orth.client.OrthContext;
+
+import com.threerings.orth.room.client.EntityMediaContainer;
+import com.threerings.orth.room.client.RoomController;
+import com.threerings.orth.room.client.RoomElement;
+import com.threerings.orth.room.client.RoomView;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthRoomCodes;
+import com.threerings.orth.room.data.SimpleEntityIdent;
+
+import org.swiftsuspenders.Injector;
 
 
 /**
@@ -56,7 +59,7 @@ public class EntitySprite
     /**
      * Construct a EntitySprite.
      */
-    public function EntitySprite (ctx :WorldContext)
+    public function EntitySprite (ctx :OrthContext)
     {
         _ctx = ctx;
 
@@ -689,7 +692,7 @@ public class EntitySprite
      */
     protected function createBackend () :EntityBackend
     {
-        return new EntityBackend();
+        return _injector.getInstance(EntityBackend);
     }
 
     /**
@@ -938,11 +941,13 @@ public class EntitySprite
         return (_backend != null) && _backend.hasUserCode(name);
     }
 
+    [Inject] public var _injector :Injector;
+
     /** The visual representation of us. */
     protected var _sprite :EntityMediaContainer;
 
     /** The giver of life. */
-    protected var _ctx :WorldContext;
+    protected var _ctx :OrthContext;
 
     /** The current logical coordinate of this media. */
     protected const _loc :OrthLocation = new OrthLocation();

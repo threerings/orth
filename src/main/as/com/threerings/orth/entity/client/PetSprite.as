@@ -5,18 +5,18 @@ package com.threerings.orth.entity.client {
 
 import com.threerings.util.CommandEvent;
 
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.room.data.PetName;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.PetInfo;
 import com.threerings.orth.ui.OrthNameLabel;
-import com.threerings.orth.world.client.WorldContext;
 
 /**
  * Extends {@link ActorSprite} with pet-specific stuff.
  */
 public class PetSprite extends ActorSprite
 {
-    public function PetSprite (ctx :WorldContext, occInfo :PetInfo, extraInfo :Object)
+    public function PetSprite (ctx :OrthContext, occInfo :PetInfo, extraInfo :Object)
     {
         super(ctx, occInfo, extraInfo);
     }
@@ -85,7 +85,7 @@ public class PetSprite extends ActorSprite
     // from ActorSprite
     override protected function createBackend () :EntityBackend
     {
-        return new PetBackend();
+        return _injector.getInstance(PetBackend);
     }
 
     // from OccupantSprite

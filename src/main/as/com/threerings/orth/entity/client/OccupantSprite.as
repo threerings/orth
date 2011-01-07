@@ -2,20 +2,6 @@
 // $Id: OccupantSprite.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.entity.client {
-import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.display.FilterUtil;
-import com.threerings.media.MediaContainer;
-import com.threerings.orth.chat.client.ComicOverlay;
-import com.threerings.orth.client.Prefs;
-import com.threerings.orth.client.WalkAnimation;
-import com.threerings.orth.room.client.RoomView;
-import com.threerings.orth.room.data.OrthLocation;
-import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.ui.OrthNameLabel;
-import com.threerings.orth.world.client.WorldContext;
-import com.threerings.util.ArrayUtil;
-import com.threerings.util.Comparators;
-import com.threerings.util.ValueEvent;
 
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
@@ -26,6 +12,24 @@ import flash.events.ProgressEvent;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+
+import com.threerings.util.ArrayUtil;
+import com.threerings.util.Comparators;
+import com.threerings.util.ValueEvent;
+
+import com.threerings.display.FilterUtil;
+import com.threerings.media.MediaContainer;
+
+import com.threerings.crowd.data.OccupantInfo;
+
+import com.threerings.orth.chat.client.ComicOverlay;
+import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.Prefs;
+import com.threerings.orth.client.WalkAnimation;
+import com.threerings.orth.room.client.RoomView;
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.ui.OrthNameLabel;
 
 /**
  * Displays a visualization of an occupant in a scene (could be a member, a pet, a MOB, all sorts
@@ -54,7 +58,7 @@ public class OccupantSprite extends EntitySprite
     /**
      * Creates a sprite for the supplied occupant.
      */
-    public function OccupantSprite (ctx :WorldContext, occInfo :OccupantInfo, extraInfo :Object)
+    public function OccupantSprite (ctx :OrthContext, occInfo :OccupantInfo, extraInfo :Object)
     {
         super(ctx);
 

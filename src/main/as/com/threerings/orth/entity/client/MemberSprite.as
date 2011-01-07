@@ -2,15 +2,18 @@
 // $Id: MemberSprite.as 19627 2010-11-24 16:02:41Z zell $
 
 package com.threerings.orth.entity.client {
-import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.orth.client.Resources;
-import com.threerings.orth.room.client.RoomController;
-import com.threerings.orth.room.data.PlayerInfo;
-import com.threerings.orth.world.client.WorldContext;
-import com.threerings.util.CommandEvent;
 
 import flash.display.DisplayObject;
 import flash.geom.Rectangle;
+
+import com.threerings.util.CommandEvent;
+
+import com.threerings.crowd.data.OccupantInfo;
+
+import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.Resources;
+import com.threerings.orth.room.client.RoomController;
+import com.threerings.orth.room.data.PlayerInfo;
 
 /**
  * Displays a sprite for a member in a scene.
@@ -20,7 +23,7 @@ public class MemberSprite extends ActorSprite
     /**
      * Creates a sprite for the supplied member.
      */
-    public function MemberSprite (ctx :WorldContext, occInfo :PlayerInfo, extraInfo :Object)
+    public function MemberSprite (ctx :OrthContext, occInfo :PlayerInfo, extraInfo :Object)
     {
         super(ctx, occInfo, extraInfo);
     }
@@ -178,7 +181,7 @@ public class MemberSprite extends ActorSprite
     override protected function createBackend () :EntityBackend
     {
         _preferredY = 0;
-        return new AvatarBackend();
+        return _injector.getInstance(AvatarBackend);
     }
 
     /**

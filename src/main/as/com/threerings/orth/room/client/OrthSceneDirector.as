@@ -4,6 +4,7 @@
 package com.threerings.orth.room.client {
 
 import com.threerings.io.TypedArray;
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.client.OrthSceneFactory;
@@ -32,6 +33,7 @@ import com.threerings.whirled.client.persist.SceneRepository;
 /**
  * Handles custom scene traversal and extra bits for Whirled.
  */
+[Inject]
 public class OrthSceneDirector extends SceneDirector
     implements SceneService_SceneMoveListener
 {
@@ -41,10 +43,10 @@ public class OrthSceneDirector extends SceneDirector
     OrthSceneMarshaller;
 
     public function OrthSceneDirector (
-        ctx :WorldContext, locDir :LocationDirector, repo :SceneRepository)
+        ctx :OrthContext, locDir :LocationDirector, repo :SceneRepository)
     {
-        super(ctx, locDir, repo, new OrthSceneFactory());
-        _worldctx = ctx;
+        super(ctx.wctx, locDir, repo, new OrthSceneFactory());
+        _octx = ctx;
     }
 
     /**
@@ -90,7 +92,7 @@ public class OrthSceneDirector extends SceneDirector
     {
         var data :OrthPendingData = _pendingData as OrthPendingData;
         if (data != null && data.message != null) {
-            _worldctx.displayFeedback(OrthCodes.GENERAL_MSGS, data.message);
+            _octx.displayFeedback(OrthCodes.GENERAL_MSGS, data.message);
         }
 
         super.moveSucceeded(placeId, config);
@@ -106,7 +108,7 @@ public class OrthSceneDirector extends SceneDirector
         _departingPortalId = -1;
         super.requestFailed(reason);
 
-        _worldctx.displayFeedback(OrthCodes.GENERAL_MSGS, reason);
+        _octx.displayFeedback(OrthCodes.GENERAL_MSGS, reason);
 
         // otherwise try to deal with the player getting bumped back from a locked scene
         if (reason == OrthRoomCodes.E_ENTRANCE_DENIED) {
@@ -197,13 +199,11 @@ public class OrthSceneDirector extends SceneDirector
      */
     protected function bounceBack (localSceneId :int, remoteSceneId :int, reason :String) :Boolean
     {
-        var ctrl :WorldController = _worldctx.getWorldController();
-
         // if we came here from a scene on another peer, let's go back there
         if (remoteSceneId != -1) {
             log.info("Returning to remote scene", "sceneId", remoteSceneId);
             _postMoveMessage = reason; // remember the error message
-            ctrl.handleGoScene(remoteSceneId);
+            _worldCtrl.handleGoScene(remoteSceneId);
             return true;
         }
 
@@ -215,12 +215,14 @@ public class OrthSceneDirector extends SceneDirector
     {
         if (event.getName() == OrthRoomCodes.FOLLOWEE_MOVED) {
             var sceneId :int = int(event.getArgs()[0]);
-            log.info("Following " + _worldctx.getPlayerObject().following + " to " + sceneId + ".");
+            log.info("Following " + _octx.getPlayerObject().following + " to " + sceneId + ".");
             moveTo(sceneId);
         }
     }
 
-    protected var _worldctx :WorldContext;
+    [Inject] public var _worldCtrl :WorldController;
+
+    protected var _octx :OrthContext;
 
     protected var _mssvc :OrthSceneService;
     protected var _postMoveMessage :String;

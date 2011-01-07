@@ -2,21 +2,25 @@
 // $Id: DecorSprite.as 19413 2010-10-15 19:28:43Z zell $
 
 package com.threerings.orth.entity.client {
+
+import flash.events.Event;
+
+import com.threerings.util.Log;
+
+import com.threerings.orth.client.OrthContext;
+
 import com.threerings.orth.entity.data.Decor;
+
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomCodes;
-import com.threerings.orth.world.client.WorldContext;
-import com.threerings.util.Log;
-
-import flash.events.Event;
 
 public class DecorSprite extends FurniSprite
 {
     /**
      * Construct a new DecorSprite.
      */
-    public function DecorSprite (ctx :WorldContext, decor :Decor)
+    public function DecorSprite (ctx :OrthContext, decor :Decor)
     {
         var furniData :FurniData = makeFurniData(decor);
         super(ctx, furniData);
