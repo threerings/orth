@@ -2,16 +2,16 @@
 <!-- build configuration -->
 <project name="orth" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
   <!-- configuration parameters -->
-  <property name="src.dir"      value="src/main/java"/>
-  <property name="asrc.dir"     value="src/main/as"/>
-  <property name="rsrc.dir"     value="src/main/resources"/>
-  <property name="deploy.dir"   value="dist"/>
-  <property name="javalib.dir"  location="${deploy.dir}/javalib"/>
-  <property name="aslib.dir"    location="${deploy.dir}/aslib"/>
-  <property name="savedoc.dir"  value="docs"/>
-  <property name="javadoc.home" value="${deploy.dir}/docs"/>
-  <property name="classes.dir"  value="${deploy.dir}/classes"/>
-  <property name="gwtjar.dir"   value="${deploy.dir}/gwt-jar"/>
+  <property name="src.dir"      location="src/main/java"/>
+  <property name="asrc.dir"     location="src/main/as"/>
+  <property name="rsrc.dir"     location="src/main/resources"/>
+  <property name="deploy.dir"   location="dist"/>
+  <property name="as.dependencies" location="${deploy.dir}/as-build-dependencies.xml"/>
+  <property name="java.dependencies" location="${deploy.dir}/java-build-dependencies.xml"/>
+  <property name="savedoc.dir"  location="docs"/>
+  <property name="javadoc.home" location="${deploy.dir}/docs"/>
+  <property name="classes.dir"  location="${deploy.dir}/classes"/>
+  <property name="gwtjar.dir"   location="${deploy.dir}/gwt-jar"/>
 
   <!-- Use the flex 4 class name of mxmlc instead of the flex 3 version in build-support -->
   <property name="mxmlc.class" value="flex2.tools.Mxmlc" />
@@ -21,36 +21,25 @@
   <import file="${user.home}/.m2/ant-support/${ooo-build.vers}/build-support.xml"/>
 
   <!-- -prepares the application directories -->
-  <target name="prepare" depends="-init-ooo">
-    <mkdir dir="${aslib.dir}"/>
-    <mkdir dir="${javalib.dir}"/>
+  <target name="prepare" depends="mavendeps">
     <mkdir dir="${classes.dir}"/>
     <mkdir dir="${javadoc.home}"/>
     <path id="build.classpath">
       <pathelement location="${classes.dir}"/>
-      <fileset dir="${javalib.dir}" includes="*.jar"/>
+      <fileset refid="javalibs.fileset"/>
     </path>
   </target>
 
-  <target name="mavendeps" depends="prepare">
-    <artifact:pom id="pom" file="pom.xml"/>
-    <artifact:dependencies filesetId="javalibs.fileset" pomRefId="pom" useScope="compile"/>
-    <copy todir="${javalib.dir}">
-      <fileset refid="javalibs.fileset"/>
-      <mapper type="flatten"/>
-    </copy>
-
-    <artifact:pom id="as-pom" file="as-pom.xml"/>
-    <artifact:dependencies filesetId="aslibs.fileset" pomRefId="as-pom" useScope="compile"/>
-    <copy todir="${aslib.dir}">
-      <fileset refid="aslibs.fileset"/>
-      <chainedmapper>
-        <mapper type="flatten"/>
-        <mapper type="regexp" from="(.+?)(-SNAPSHOT)?.swc" to="\1.swc"/>
-        <mapper type="regexp" from="(.*)-([^-])+.swc" to="\1.swc"/>
-      </chainedmapper>
-      <fileset dir="lib" includes="**/*.swc"/>
-    </copy>
+  <target name="mavendeps" depends="-init-ooo">
+    <artifact:dependencies filesetId="javalibs.fileset"
+        cacheDependencyRefs="true" dependencyRefsBuildFile="${java.dependencies}">
+        <pom file="pom.xml"/>
+    </artifact:dependencies>
+    <artifact:dependencies filesetId="aslibs.fileset"
+        cacheDependencyRefs="true" dependencyRefsBuildFile="${as.dependencies}">
+        <pom file="as-pom.xml"/>
+    </artifact:dependencies>
+    <pathconvert pathsep="," property="aslib.path" refid="aslibs.fileset"/>
   </target>
 
   <!-- makes sure our tools are compiled and defines the ant tasks -->
@@ -64,10 +53,9 @@
 
   <!-- cleans out the intermediate build files -->
   <target name="clean">
-    <delete dir="${deploy.dir}/classes"/>
-    <delete dir="${deploy.dir}/docs"/>
-    <delete failonerror="false"><fileset dir="${deploy.dir}" includes="*.jar"/></delete>
-    <delete failonerror="false"><fileset dir="${deploy.dir}" includes="*.swc"/></delete>
+    <delete>
+        <fileset dir="${deploy.dir}" includes="*.jar,*.swc,,*-dependencies.xml,classes/,docs/"/>
+    </delete>
   </target>
 
   <!-- wipes the entire build directory clean -->
@@ -100,11 +88,11 @@
     activate ActionScript library build.
   </echo></target>
 
-  <target name="aslib" unless="no_build_aslib" depends="-checkaslib,-noteaslib">
+  <target name="aslib" unless="no_build_aslib" depends="-checkaslib,-noteaslib,mavendeps">
     <java jar="${flexsdk.dir}/lib/compc.jar" fork="true" failonerror="true">
       <arg value="+flexlib=${flexsdk.dir}/frameworks"/>
-      <arg value="-load-config+=etc/aslib-config.xml"/>
-      <arg value="-compiler.optimize"/>
+      <arg value="-metadata.title=orth"/>
+      <arg value="-compiler.library-path+=${aslib.path}"/>
       <arg value="-compiler.source-path=${asrc.dir}"/>
       <arg value="-include-sources=src/main/as/"/>
       <arg value="-output"/>
@@ -135,7 +123,7 @@
   </target>
 
   <!-- builds the ActionScript documention -->
-  <target name="asdoc" unless="no_build_aslib" depends="-checkaslib">
+  <target name="asdoc" unless="no_build_aslib" depends="-checkaslib,mavendeps">
     <mkdir dir="${deploy.dir}/asdocs"/>
     <java classpath="${flexsdk.dir}/lib/asdoc.jar" classname="flex2.tools.ASDoc" fork="true">
       <jvmarg value="-Xmx1024m"/>
@@ -143,7 +131,7 @@
       <jvmarg value="-Xbootclasspath/p:${flexsdk.dir}/asdoc/lib/xalan.jar"/>
       <arg value="+flexlib=${flexsdk.dir}/frameworks"/>
       <arg line="-library-path ${flexsdk.dir}/frameworks/libs"/>
-      <arg line="-library-path ${aslib.dir}"/>
+      <arg line="-library-path+=${aslib.path}"/>
       <arg line="-templates-path ${flexsdk.dir}/asdoc/templates"/>
       <arg line="-doc-sources ${asrc.dir}"/>
       <arg line="-output ${deploy.dir}/asdocs"/>
@@ -151,7 +139,7 @@
   </target>
 
   <!-- a target for rebuilding everything -->
-  <target name="distall" depends="mavendeps,dist,javadoc,asdoc"/>
+  <target name="distall" depends="dist,javadoc,asdoc"/>
 
   <!-- builds our distribution files (war and jar) -->
   <target name="dist" depends="prepare,compile,procstream,aslib">

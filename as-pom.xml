@@ -61,5 +61,11 @@
       <scope>compile</scope>
       <type>swc</type>
     </dependency>
+    <dependency>
+        <groupId>org.swiftsuspenders</groupId>
+        <artifactId>swiftsuspenders</artifactId>
+        <version>1.5.1</version>
+        <type>swc</type>
+    </dependency>
   </dependencies>
 </project>
