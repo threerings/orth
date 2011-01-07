@@ -16,6 +16,10 @@
       <id>ooo</id>
       <url>https://build.earth.threerings.net/maven-repository</url>
     </repository>
+    <repository>
+      <id>ooo-maven-repo</id>
+      <url>http://ooo-maven.googlecode.com/hg/repository</url>
+    </repository>
   </repositories>
 
   <dependencies>
