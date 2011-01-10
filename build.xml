@@ -234,19 +234,17 @@
           description="Deploys our build artifacts to a Maven repository.">
     <artifact:deploy file="${deploy.dir}/${ant.project.name}.jar" uniqueVersion="false">
       <remoteRepository url="${maven.deploy.repo}"/>
-      <pom refid="pom"/>
+      <pom file="pom.xml"/>
     </artifact:deploy>
 
-    <artifact:pom id="as-pom" file="as-pom.xml"/>
     <artifact:deploy file="${deploy.dir}/${ant.project.name}lib.swc" uniqueVersion="false">
       <remoteRepository url="${maven.deploy.repo}"/>
-      <pom refid="as-pom"/>
+      <pom file="as-pom.xml"/>
     </artifact:deploy>
 
-    <artifact:pom id="gwt-pom" file="gwt-pom.xml"/>
     <artifact:deploy file="${deploy.dir}/${ant.project.name}-gwt.jar" uniqueVersion="false">
       <remoteRepository url="${maven.deploy.repo}"/>
-      <pom refid="gwt-pom"/>
+      <pom file="gwt-pom.xml"/>
     </artifact:deploy>
   </target>
 </project>
