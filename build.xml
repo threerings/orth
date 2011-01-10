@@ -13,10 +13,8 @@
   <property name="classes.dir"  location="${deploy.dir}/classes"/>
   <property name="gwtjar.dir"   location="${deploy.dir}/gwt-jar"/>
 
-  <!-- Use the flex 4 class name of mxmlc instead of the flex 3 version in build-support -->
-  <property name="mxmlc.class" value="flex2.tools.Mxmlc" />
   <!-- bring in our standard build support -->
-  <property name="ooo-build.vers" value="1.3"/>
+  <property name="ooo-build.vers" value="1.4"/>
   <ant antfile="bootstrap.xml"/>
   <import file="${user.home}/.m2/ant-support/${ooo-build.vers}/build-support.xml"/>
 
@@ -72,32 +70,9 @@
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath"/>
   </target>
 
-  <target name="-checkaslib">
-    <condition property="no_build_aslib">
-      <not><available file="${flexsdk.dir}/lib/compc.jar"/></not>
-    </condition>
-    <condition property="no_rebuild_aslib"><or>
-      <isset property="no_build_aslib"/>
-      <uptodate targetfile="${deploy.dir}/${ant.project.name}lib.swc">
-        <srcfiles dir="${asrc.dir}" includes="**/*.as"/>
-      </uptodate>
-    </or></condition>
-  </target>
-  <target name="-noteaslib" if="no_build_aslib"><echo>
-    NOTE: not building ActionScript library. Pass -Dflexsdk.dir=DIR to
-    activate ActionScript library build.
-  </echo></target>
-
-  <target name="aslib" unless="no_build_aslib" depends="-checkaslib,-noteaslib,mavendeps">
-    <java jar="${flexsdk.dir}/lib/compc.jar" fork="true" failonerror="true">
-      <arg value="+flexlib=${flexsdk.dir}/frameworks"/>
-      <arg value="-metadata.title=orth"/>
-      <arg value="-compiler.library-path+=${aslib.path}"/>
-      <arg value="-compiler.source-path=${asrc.dir}"/>
-      <arg value="-include-sources=src/main/as/"/>
-      <arg value="-output"/>
-      <arg value="${deploy.dir}/${ant.project.name}lib.swc"/>
-    </java>
+  <target name="aslib" depends="mavendeps">
+      <compc4 srcdir="${asrc.dir}" libpath="${aslib.path}"
+          dest="${deploy.dir}/${ant.project.name}lib.swc"/>
   </target>
 
   <target name="javadoc" depends="prepare">
@@ -123,8 +98,9 @@
   </target>
 
   <!-- builds the ActionScript documention -->
-  <target name="asdoc" unless="no_build_aslib" depends="-checkaslib,mavendeps">
+  <target name="asdoc" unless="no_build_aslib" depends="mavendeps">
     <mkdir dir="${deploy.dir}/asdocs"/>
+    <requireflex/>
     <java classpath="${flexsdk.dir}/lib/asdoc.jar" classname="flex2.tools.ASDoc" fork="true">
       <jvmarg value="-Xmx1024m"/>
       <jvmarg value="-Dsun.io.useCanonCashes=false"/>
