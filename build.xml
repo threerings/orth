@@ -14,7 +14,7 @@
   <property name="gwtjar.dir"   location="${deploy.dir}/gwt-jar"/>
 
   <!-- bring in our standard build support -->
-  <property name="ooo-build.vers" value="1.5"/>
+  <property name="ooo-build.vers" value="1.6"/>
   <ant antfile="bootstrap.xml"/>
   <import file="${user.home}/.m2/ant-support/${ooo-build.vers}/build-support.xml"/>
 
