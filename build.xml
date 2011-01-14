@@ -14,7 +14,7 @@
   <property name="gwtjar.dir"   location="${deploy.dir}/gwt-jar"/>
 
   <!-- bring in our standard build support -->
-  <property name="ooo-build.vers" value="1.11"/>
+  <property name="ooo-build.vers" value="1.13"/>
   <ant antfile="bootstrap.xml"/>
   <import file="${user.home}/.m2/ant-support/${ooo-build.vers}/build-support.xml"/>
 
@@ -24,20 +24,13 @@
     <mkdir dir="${javadoc.home}"/>
     <path id="build.classpath">
       <pathelement location="${classes.dir}"/>
-      <fileset refid="javalibs.fileset"/>
+      <fileset refid="pom.xml"/>
     </path>
   </target>
 
   <target name="mavendeps" depends="-init-ooo">
-    <artifact:dependencies filesetId="javalibs.fileset"
-        cacheDependencyRefs="true" dependencyRefsBuildFile="${java.dependencies}">
-        <pom file="pom.xml"/>
-    </artifact:dependencies>
-    <artifact:dependencies filesetId="aslibs.fileset"
-        cacheDependencyRefs="true" dependencyRefsBuildFile="${as.dependencies}">
-        <pom file="as-pom.xml"/>
-    </artifact:dependencies>
-    <pathconvert pathsep="," property="aslib.path" refid="aslibs.fileset"/>
+    <mavendep pom="pom.xml"/>
+    <mavendep pom="as-pom.xml" pathprop="aslib.path"/>
   </target>
 
   <!-- makes sure our tools are compiled and defines the ant tasks -->
