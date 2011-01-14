@@ -66,15 +66,9 @@
       <type>swc</type>
     </dependency>
     <dependency>
-        <groupId>org.swiftsuspenders</groupId>
-        <artifactId>swiftsuspenders</artifactId>
-        <version>1.5.1</version>
-        <type>swc</type>
-    </dependency>
-    <dependency>
       <groupId>flashx</groupId>
       <artifactId>funkinjection</artifactId>
-      <version>0.1</version>
+      <version>0.2</version>
       <type>swc</type>
     </dependency>
   </dependencies>
