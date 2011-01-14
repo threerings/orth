@@ -380,7 +380,7 @@ public class FloatingPanel extends TitleWindow
     }
 
     /** Our topmost display container. */
-    protected var _topPanel :TopPanel = inject(TopPanel);
+    protected const _topPanel :TopPanel = inject(TopPanel);
 
     /** The button bar. */
     protected var _buttonBar :ButtonBar;

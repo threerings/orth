@@ -111,7 +111,7 @@ public class OrthContext
         _wctx == null;
     }
 
-    protected var _client :AetherClient = inject(AetherClient);
+    protected const _client :AetherClient = inject(AetherClient);
 
     protected var _wctx :WorldContext;
 

@@ -34,7 +34,7 @@ public class TopPanel extends Canvas
         addChild(_placeBox);
 
         // show a subtle build-stamp on dev builds
-        var devConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
+        const devConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
         if (devConf.development) {
             var buildStamp :Label = new Label();
             buildStamp.includeInLayout = false;
@@ -154,8 +154,8 @@ public class TopPanel extends Canvas
         return canvas;
     }
 
-    protected var _app :Application = inject(Application);
-    protected var _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
+    protected const _app :Application = inject(Application);
+    protected const _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
 
     protected var _width :Number
     protected var _height :Number;

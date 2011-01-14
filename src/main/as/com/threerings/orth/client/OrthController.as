@@ -49,10 +49,10 @@ public class OrthController extends Controller
         });
     }
 
-    protected var _mod :IModule = inject(IModule);
-    protected var _topPanel :TopPanel = inject(TopPanel);
-    protected var _client :AetherClient = inject(AetherClient);
-    protected var _depCon :OrthDeploymentConfig = inject(OrthDeploymentConfig);
+    protected const _mod :IModule = inject(IModule);
+    protected const _topPanel :TopPanel = inject(TopPanel);
+    protected const _client :AetherClient = inject(AetherClient);
+    protected const _depCon :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 
     protected static var log :Log = Log.getLog(OrthController);
 }

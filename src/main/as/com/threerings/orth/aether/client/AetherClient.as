@@ -35,7 +35,7 @@ public class AetherClient extends Client
 
     public function AetherClient ()
     {
-        var depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
+        const depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 
         // configure our server and port info
         setServer(depConf.host, depConf.ports);
@@ -125,7 +125,7 @@ public class AetherClient extends Client
         }
     }
 
-    protected var _stage :Stage = inject(Stage);
+    protected const _stage :Stage = inject(Stage);
 
     private static const log :Log = Log.getLog(AetherClient);
 }
