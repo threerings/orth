@@ -322,7 +322,7 @@ public class RoomController extends SceneController
             _entityPopup.close();
         }
 
-        _entityPopup = new EntityPopup(_wdctx, sprite, title, panel, w, h, color, alpha, mask);
+        _entityPopup = new EntityPopup(sprite, title, panel, w, h, color, alpha, mask);
         _entityPopup.addCloseCallback(entityPopupClosed);
         _entityPopup.open();
         return true;

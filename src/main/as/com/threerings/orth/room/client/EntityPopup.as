@@ -23,12 +23,12 @@ import com.threerings.orth.client.Msgs;
 public class EntityPopup extends FloatingPanel
 {
     public function EntityPopup (
-        ctx :WorldContext, entitySprite :EntitySprite,
-        title :String, userPanel :DisplayObject, panelWidth :Number, panelHeight :Number,
-        panelColor :uint = 0xFFFFFF, panelAlpha :Number = 1.0, doMasking :Boolean = true)
+        entitySprite :EntitySprite, title :String, userPanel :DisplayObject, panelWidth :Number,
+        panelHeight :Number, panelColor :uint = 0xFFFFFF, panelAlpha :Number = 1.0,
+        doMasking :Boolean = true)
     {
         var desc:String = Msgs.GENERAL.get(entitySprite.getDesc());
-        super(ctx, Msgs.GENERAL.get("t.entity_popup", desc, title));
+        super(Msgs.GENERAL.get("t.entity_popup", desc, title));
 
         _entitySprite = entitySprite;
 
