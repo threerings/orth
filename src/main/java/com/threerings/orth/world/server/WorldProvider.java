@@ -1,6 +1,5 @@
 //
 // $Id$
-
 package com.threerings.orth.world.server;
 
 import javax.annotation.Generated;

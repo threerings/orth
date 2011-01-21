@@ -1,12 +1,10 @@
 //
 // $Id$
-
 package com.threerings.orth.world.data;
 
 import javax.annotation.Generated;
 
 import com.threerings.orth.world.client.WorldService;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
 
@@ -26,12 +24,12 @@ public class WorldMarshaller extends InvocationMarshaller
     public static final int DITCH_FOLLOWER = 1;
 
     // from interface WorldService
-    public void ditchFollower (Client arg1, int arg2, InvocationService.InvocationListener arg3)
+    public void ditchFollower (int arg1, InvocationService.InvocationListener arg2)
     {
-        ListenerMarshaller listener3 = new ListenerMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, DITCH_FOLLOWER, new Object[] {
-            Integer.valueOf(arg2), listener3
+        ListenerMarshaller listener2 = new ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(DITCH_FOLLOWER, new Object[] {
+            Integer.valueOf(arg1), listener2
         });
     }
 
@@ -39,12 +37,12 @@ public class WorldMarshaller extends InvocationMarshaller
     public static final int FOLLOW_MEMBER = 2;
 
     // from interface WorldService
-    public void followMember (Client arg1, int arg2, InvocationService.InvocationListener arg3)
+    public void followMember (int arg1, InvocationService.InvocationListener arg2)
     {
-        ListenerMarshaller listener3 = new ListenerMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, FOLLOW_MEMBER, new Object[] {
-            Integer.valueOf(arg2), listener3
+        ListenerMarshaller listener2 = new ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(FOLLOW_MEMBER, new Object[] {
+            Integer.valueOf(arg1), listener2
         });
     }
 
@@ -52,12 +50,12 @@ public class WorldMarshaller extends InvocationMarshaller
     public static final int INVITE_TO_FOLLOW = 3;
 
     // from interface WorldService
-    public void inviteToFollow (Client arg1, int arg2, InvocationService.InvocationListener arg3)
+    public void inviteToFollow (int arg1, InvocationService.InvocationListener arg2)
     {
-        ListenerMarshaller listener3 = new ListenerMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, INVITE_TO_FOLLOW, new Object[] {
-            Integer.valueOf(arg2), listener3
+        ListenerMarshaller listener2 = new ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(INVITE_TO_FOLLOW, new Object[] {
+            Integer.valueOf(arg1), listener2
         });
     }
 
@@ -65,12 +63,12 @@ public class WorldMarshaller extends InvocationMarshaller
     public static final int SET_AVATAR = 4;
 
     // from interface WorldService
-    public void setAvatar (Client arg1, int arg2, InvocationService.ConfirmListener arg3)
+    public void setAvatar (int arg1, InvocationService.ConfirmListener arg2)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, SET_AVATAR, new Object[] {
-            Integer.valueOf(arg2), listener3
+        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
+        listener2.listener = arg2;
+        sendRequest(SET_AVATAR, new Object[] {
+            Integer.valueOf(arg1), listener2
         });
     }
 }

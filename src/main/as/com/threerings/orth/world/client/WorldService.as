@@ -1,6 +1,5 @@
 //
 // $Id$
-
 package com.threerings.orth.world.client {
 
 import com.threerings.presents.client.Client;

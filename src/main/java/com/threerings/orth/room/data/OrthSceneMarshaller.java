@@ -1,12 +1,10 @@
 //
 // $Id$
-
 package com.threerings.orth.room.data;
 
 import javax.annotation.Generated;
 
 import com.threerings.orth.room.client.OrthSceneService;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.whirled.client.SceneService;
 import com.threerings.whirled.data.SceneMarshaller;
@@ -27,12 +25,12 @@ public class OrthSceneMarshaller extends InvocationMarshaller
     public static final int MOVE_TO = 1;
 
     // from interface OrthSceneService
-    public void moveTo (Client arg1, int arg2, int arg3, int arg4, OrthLocation arg5, SceneService.SceneMoveListener arg6)
+    public void moveTo (int arg1, int arg2, int arg3, OrthLocation arg4, SceneService.SceneMoveListener arg5)
     {
-        SceneMarshaller.SceneMoveMarshaller listener6 = new SceneMarshaller.SceneMoveMarshaller();
-        listener6.listener = arg6;
-        sendRequest(arg1, MOVE_TO, new Object[] {
-            Integer.valueOf(arg2), Integer.valueOf(arg3), Integer.valueOf(arg4), arg5, listener6
+        SceneMarshaller.SceneMoveMarshaller listener5 = new SceneMarshaller.SceneMoveMarshaller();
+        listener5.listener = arg5;
+        sendRequest(MOVE_TO, new Object[] {
+            Integer.valueOf(arg1), Integer.valueOf(arg2), Integer.valueOf(arg3), arg4, listener5
         });
     }
 }

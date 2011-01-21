@@ -1,6 +1,5 @@
 //
 // $Id$
-
 package com.threerings.orth.world.data {
 
 import com.threerings.orth.world.client.WorldService;

@@ -1,6 +1,5 @@
 //
 // $Id$
-
 package com.threerings.orth.party.data {
 
 import com.threerings.orth.party.client.PartyBoardService_JoinListener;
