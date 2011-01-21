@@ -14,7 +14,7 @@
   <property name="gwtjar.dir"   location="${deploy.dir}/gwt-jar"/>
 
   <!-- bring in our standard build support -->
-  <property name="ooo-build.vers" value="1.13"/>
+  <property name="ooo-build.vers" value="1.16"/>
   <ant antfile="bootstrap.xml"/>
   <import file="${user.home}/.m2/ant-support/${ooo-build.vers}/build-support.xml"/>
 
@@ -24,22 +24,22 @@
     <mkdir dir="${javadoc.home}"/>
     <path id="build.classpath">
       <pathelement location="${classes.dir}"/>
-      <fileset refid="pom.xml"/>
+      <fileset refid="pom"/>
     </path>
   </target>
 
   <target name="mavendeps" depends="-init-ooo">
-    <mavendep pom="pom.xml"/>
-    <mavendep pom="as-pom.xml" pathprop="aslib.path"/>
+    <mavendep id="pom"/>
+    <mavendep id="as-pom" pathprop="aslib.path"/>
   </target>
 
   <!-- makes sure our tools are compiled and defines the ant tasks -->
   <target name="preptools" depends="prepare">
-    <artifact:dependencies pathId="tools.classpath">
-        <remoteRepository refid="ooo.maven.depends.repo"/>
-        <dependency groupId="com.threerings" artifactId="narya-tools" version="1.4-SNAPSHOT"/>
-    </artifact:dependencies>
-    <taskdef resource="com/threerings/presents/tools.properties" classpathref="tools.classpath"/>
+    <mavendep id="tools">
+      <artifact:remoteRepository refid="ooo.maven.depends.repo"/>
+      <artifact:dependency groupId="com.threerings" artifactId="narya-tools" version="1.5-SNAPSHOT"/>
+    </mavendep>
+    <taskdef resource="com/threerings/presents/tools.properties" classpathref="tools.path"/>
   </target>
 
   <!-- cleans out the intermediate build files -->
@@ -110,8 +110,8 @@
   <!-- a target for rebuilding everything -->
   <target name="distall" depends="dist,javadoc,asdoc"/>
 
-  <!-- builds our distribution files (war and jar) -->
-  <target name="dist" depends="prepare,compile,procstream,aslib">
+  <!-- builds our jar files -->
+  <target name="dist" depends="compile,procstream">
     <!-- build our various jar files -->
     <jar destfile="${deploy.dir}/${ant.project.name}.jar" basedir="${classes.dir}"/>
     <copy todir="${gwtjar.dir}">
