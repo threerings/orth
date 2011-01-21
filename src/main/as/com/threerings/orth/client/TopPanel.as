@@ -2,6 +2,8 @@
 // $Id: $
 
 package com.threerings.orth.client {
+import flash.display.Stage;
+import flashx.funk.ioc.inject;
 
 import flash.display.DisplayObject;
 import flash.events.Event;
@@ -17,9 +19,10 @@ import mx.controls.scrollClasses.ScrollBar;
 
 public class TopPanel extends Canvas
 {
-    [PostConstruct]
-    public function initTopPanel () :void
+    public function TopPanel ()
     {
+        _width = inject(Stage).stageWidth;
+        _height = inject(Stage).stageHeight;
         percentWidth = 100;
         percentHeight = 100;
         verticalScrollPolicy = ScrollPolicy.OFF;
@@ -38,12 +41,13 @@ public class TopPanel extends Canvas
         addChild(_controlBar);
 
         // show a subtle build-stamp on dev builds
-        if (_depConf.development) {
+        var depConf: OrthDeploymentConfig = inject(OrthDeploymentConfig);
+        if (depConf.development) {
             var buildStamp :Label = new Label();
             buildStamp.includeInLayout = false;
             buildStamp.mouseEnabled = false;
             buildStamp.mouseChildren = false;
-            buildStamp.text = "Build: " + _depConf.version;
+            buildStamp.text = "Build: " + depConf.version;
             buildStamp.setStyle("color", "#F7069A");
             buildStamp.setStyle("fontSize", 8);
             buildStamp.setStyle("bottom", getControlBarHeight());
@@ -126,14 +130,6 @@ public class TopPanel extends Canvas
         return new Rectangle(0, _placeBox.getStyle("top"), _width, height);
     }
 
-    /**
-     * Returns a reference to our ControlBar component.
-     */
-    public function getControlBar () :ControlBar
-    {
-        return _controlBar;
-    }
-
     protected function stageResized (event :Event) :void
     {
         layoutPanels();
@@ -143,7 +139,6 @@ public class TopPanel extends Canvas
     {
         // Pin the app to the stage.
         // This became necessary for "stubs" after we upgraded to flex 3.2.
-
         _app.width = _width;
         _app.height = _height;
 
@@ -170,6 +165,7 @@ public class TopPanel extends Canvas
         h -= getControlBarHeight();
 
         _placeBox.setStyle("top", top);
+
         _placeBox.setStyle("bottom", bottom);
         _placeBox.setStyle("right", right);
         _placeBox.setStyle("left", left);
@@ -186,12 +182,11 @@ public class TopPanel extends Canvas
         return canvas;
     }
 
-    [Inject] public var _app :Application;
-    [Inject] public var _depConf :OrthDeploymentConfig;
-    [Inject] public var _placeBox :OrthPlaceBox;
-    [Inject] public var _controlBar :ControlBar;
+    protected const _app :Application = inject(Application);
+    protected const _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
+    protected const _controlBar :ControlBar = inject(ControlBar);
 
-    [Inject(name="clientWidth")] public var _width :Number
-    [Inject(name="clientHeight")] public var _height :Number;
+    protected var _width :Number
+    protected var _height :Number;
 }
 }
