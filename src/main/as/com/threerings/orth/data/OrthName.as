@@ -8,6 +8,8 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.util.Name;
 import com.threerings.presents.dobj.DSet_Entry;
+import com.threerings.util.Comparators;
+import com.threerings.util.Integer;
 // GENERATED PREAMBLE END
 
 import com.threerings.util.Comparators;

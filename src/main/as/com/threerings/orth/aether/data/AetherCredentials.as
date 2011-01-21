@@ -6,8 +6,10 @@ package com.threerings.orth.aether.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+import com.threerings.presents.net.UsernamePasswordCreds;
 import com.threerings.orth.data.OrthCredentials;
-
+import com.threerings.util.Name;
+import com.threerings.util.Joiner;
 // GENERATED PREAMBLE END
 
 import com.threerings.util.Name;
@@ -17,7 +19,7 @@ import com.threerings.util.Joiner;
  * Used to authenticate a aether session.
  */
 // GENERATED CLASSDECL START
-public class AetherCredentials extends OrthCredentials
+public class AetherCredentials extends UsernamePasswordCreds
 {
 // GENERATED CLASSDECL END
 // GENERATED STREAMING START
@@ -27,17 +29,14 @@ public class AetherCredentials extends OrthCredentials
     {
         super.readObject(ins);
         ident = ins.readField(String);
-        _password = ins.readField(String);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
         out.writeField(ident);
-        out.writeField(_password);
     }
 
-    protected var _password :String;
 // GENERATED STREAMING END
 
     /**

@@ -2,6 +2,7 @@
 // $Id$
 
 package com.threerings.orth.aether.client {
+import com.threerings.orth.data.AuthName;
 import flashx.funk.ioc.inject;
 import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.AetherCredentials;
@@ -31,6 +32,7 @@ import mx.core.Application;
 public class AetherClient extends Client
 {
     // reference classes that would otherwise not be linked in
+    AuthName;
     PlayerObject;
 
     public function AetherClient ()
