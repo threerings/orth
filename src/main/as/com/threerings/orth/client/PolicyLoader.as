@@ -15,8 +15,10 @@ public class PolicyLoader
 {
     public static function init (policyPort :int) :void
     {
-        log.info("PolicyLoader configured.", "port", policyPort);
-        _socketPolicyPort = policyPort;
+        if (policyPort != _socketPolicyPort) {
+            log.info("PolicyLoader configured.", "port", policyPort);
+            _socketPolicyPort = policyPort;
+        }
     }
 
     public static function registerClient (client :Client) :void
