@@ -24,13 +24,13 @@
     <mkdir dir="${javadoc.home}"/>
     <path id="build.classpath">
       <pathelement location="${classes.dir}"/>
-      <fileset refid="pom"/>
+      <fileset refid="pom.xml.fileset"/>
     </path>
   </target>
 
   <target name="mavendeps" depends="-init-ooo">
-    <mavendep id="pom"/>
-    <mavendep id="as-pom" pathprop="aslib.path"/>
+    <mavendep pom="pom.xml"/>
+    <mavendep pom="as-pom.xml" pathprop="aslib.path"/>
   </target>
 
   <!-- makes sure our tools are compiled and defines the ant tasks -->
@@ -43,10 +43,13 @@
   </target>
 
   <!-- cleans out the intermediate build files -->
-  <target name="clean">
+  <target name="clean" depends="-init-contrib">
     <delete>
-        <fileset dir="${deploy.dir}" includes="*.jar,*.swc,*-dependencies.xml,classes/,docs/"/>
+        <fileset dir="${deploy.dir}" includes="*.jar,*.swc,classes/,docs/"/>
     </delete>
+    <cleanmavendepcache pom="pom.xml"/>
+    <cleanmavendepcache pom="as-pom.xml"/>
+    <cleanmavendepcache id="tools"/>
   </target>
 
   <!-- wipes the entire build directory clean -->
