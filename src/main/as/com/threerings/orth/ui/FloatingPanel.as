@@ -2,6 +2,7 @@
 // $Id: FloatingPanel.as 18332 2009-10-11 16:43:21Z jamie $
 
 package com.threerings.orth.ui {
+import flashx.funk.ioc.inject;
 import flash.display.DisplayObject;
 
 import flash.events.Event;
@@ -29,7 +30,7 @@ import com.threerings.flex.CommandButton;
 import com.threerings.flex.PopUpUtil;
 
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.TopPanel;
 
 /**
  * Dispatched when the dialog closes due to a CloseEvent or a call to <code>close()</code>.
@@ -118,9 +119,8 @@ public class FloatingPanel extends TitleWindow
     /**
      * Create a Floating Panel.
      */
-    public function FloatingPanel (ctx :OrthContext, title :String = "")
+    public function FloatingPanel (title :String = "")
     {
-        _ctx = ctx;
         this.title = title;
 
         // Add a listener for the CLOSE event. It's only possible to be dispatched if
@@ -141,15 +141,14 @@ public class FloatingPanel extends TitleWindow
      * Pop up this FloatingPanel.
      *
      * @param modal if true, all other UI elements are inactive until this panel is closed.
-     * @param parent if non-null, an alternate parent for this panel.  otherwise
-     *               _ctx.getRootPanel() will be used.
+     * @param parent if non-null, an alternate parent for this panel, else TopPanel is used.
      * @param boolean center if true, center.
      */
     public function open (
         modal :Boolean = false, parent :DisplayObject = null, center :Boolean = true) :void
     {
         // fall back to the top panel if no explicit parent was provided
-        _parent = (parent == null) ? _ctx.topPanel : parent;
+        _parent = (parent == null) ? _topPanel : parent;
 
         PopUpManager.addPopUp(this, _parent, modal);
         if (center) {
@@ -377,11 +376,11 @@ public class FloatingPanel extends TitleWindow
      */
     protected function didOpen () :void
     {
-        PopUpUtil.avoidOtherPopups(this, _ctx.topPanel.getPlaceViewBounds(), PADDING);
+        PopUpUtil.avoidOtherPopups(this, _topPanel.getPlaceViewBounds(), PADDING);
     }
 
-    /** Provides client services. */
-    protected var _ctx :OrthContext;
+    /** Our topmost display container. */
+    protected const _topPanel :TopPanel = inject(TopPanel);
 
     /** The button bar. */
     protected var _buttonBar :ButtonBar;

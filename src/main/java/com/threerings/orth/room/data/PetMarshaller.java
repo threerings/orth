@@ -5,7 +5,6 @@ package com.threerings.orth.room.data;
 import javax.annotation.Generated;
 
 import com.threerings.orth.room.client.PetService;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
 
@@ -25,12 +24,12 @@ public class PetMarshaller extends InvocationMarshaller
     public static final int CALL_PET = 1;
 
     // from interface PetService
-    public void callPet (Client arg1, int arg2, InvocationService.ConfirmListener arg3)
+    public void callPet (int arg1, InvocationService.ConfirmListener arg2)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
-        listener3.listener = arg3;
-        sendRequest(arg1, CALL_PET, new Object[] {
-            Integer.valueOf(arg2), listener3
+        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
+        listener2.listener = arg2;
+        sendRequest(CALL_PET, new Object[] {
+            Integer.valueOf(arg1), listener2
         });
     }
 
@@ -38,12 +37,12 @@ public class PetMarshaller extends InvocationMarshaller
     public static final int ORDER_PET = 2;
 
     // from interface PetService
-    public void orderPet (Client arg1, int arg2, int arg3, InvocationService.ConfirmListener arg4)
+    public void orderPet (int arg1, int arg2, InvocationService.ConfirmListener arg3)
     {
-        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, ORDER_PET, new Object[] {
-            Integer.valueOf(arg2), Integer.valueOf(arg3), listener4
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(ORDER_PET, new Object[] {
+            Integer.valueOf(arg1), Integer.valueOf(arg2), listener3
         });
     }
 
@@ -51,12 +50,12 @@ public class PetMarshaller extends InvocationMarshaller
     public static final int SEND_CHAT = 3;
 
     // from interface PetService
-    public void sendChat (Client arg1, int arg2, int arg3, String arg4, InvocationService.ConfirmListener arg5)
+    public void sendChat (int arg1, int arg2, String arg3, InvocationService.ConfirmListener arg4)
     {
-        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
-        listener5.listener = arg5;
-        sendRequest(arg1, SEND_CHAT, new Object[] {
-            Integer.valueOf(arg2), Integer.valueOf(arg3), arg4, listener5
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(SEND_CHAT, new Object[] {
+            Integer.valueOf(arg1), Integer.valueOf(arg2), arg3, listener4
         });
     }
 }

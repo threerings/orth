@@ -12,7 +12,6 @@ import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList;
 
 import com.threerings.crowd.peer.server.CrowdPeerManager;
-
 import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerNode;
@@ -50,6 +49,13 @@ public abstract class OrthPeerManager extends CrowdPeerManager
     protected NodeObject createNodeObject ()
     {
         return (_onobj = new OrthNodeObject());
+    }
+
+
+    @Override // from CrowdPeerManager
+    protected ClientInfo createClientInfo ()
+    {
+        return new OrthClientInfo();
     }
 
     @Override // from CrowdPeerManager

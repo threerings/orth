@@ -2,12 +2,14 @@
 // $Id$
 
 package com.threerings.orth.aether.client {
+import flashx.funk.ioc.inject;
 import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.AetherCredentials;
+import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthController;
+import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.client.Prefs;
 import com.threerings.presents.client.Client;
@@ -24,28 +26,30 @@ import flash.system.Capabilities;
 import flash.ui.ContextMenu;
 import flash.utils.Dictionary;
 
+import mx.core.Application;
+
 public class AetherClient extends Client
 {
-    public function AetherClient (ctx :OrthContext, host :String, ports :Array)
+    // reference classes that would otherwise not be linked in
+    PlayerObject;
+
+    public function AetherClient ()
     {
-        super();
-
-        _octx = ctx;
-
-        // configure our version
-        setVersion(_octx.deployment.getVersion());
+        const depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 
         // configure our server and port info
-        setServer(host, ports);
+        setServer(depConf.host, depConf.ports);
 
         // then register with it, as any client would
         PolicyLoader.registerClient(this);
+        // configure our version
+        setVersion(depConf.version);
 
         // set up a context menu that blocks funnybiz on the stage
         var menu :ContextMenu = new ContextMenu();
         menu.hideBuiltInItems();
         menu.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenuWillPopUp);
-        _octx.app.contextMenu = menu;
+        inject(Application).contextMenu = menu;
     }
 
     public function logonWithCredentials (creds :AetherCredentials) :Boolean
@@ -71,7 +75,8 @@ public class AetherClient extends Client
             Prefs.setMachineIdent(rdata.ident);
         }
         if (rdata.sessionToken != null) {
-            _octx.saveSessionToken(rdata.sessionToken);
+            // TODO - scoped injection
+            //_injector.mapValue(String, rdata.sessionToken, "sessionToken");
         }
     }
 
@@ -99,16 +104,15 @@ public class AetherClient extends Client
 
     protected function populateContextMenu (custom :Array) :void
     {
-        var stage :Stage = _octx.stage;
         try {
-            var allObjs :Array = stage.getObjectsUnderPoint(new Point(stage.mouseX, stage.mouseY));
+            var allObjs :Array = _stage.getObjectsUnderPoint(new Point(_stage.mouseX, _stage.mouseY));
             var seen :Dictionary = new Dictionary();
             for each (var disp :DisplayObject in allObjs) {
                 try {
                     while (disp != null && !(disp in seen)) {
                         seen[disp] = true;
                         if (disp is ContextMenuProvider) {
-                            (disp as ContextMenuProvider).populateContextMenu(_octx, custom);
+                            (disp as ContextMenuProvider).populateContextMenu(custom);
                         }
                         disp = disp.parent;
                     }
@@ -121,7 +125,7 @@ public class AetherClient extends Client
         }
     }
 
-    protected var _octx :OrthContext;
+    protected const _stage :Stage = inject(Stage);
 
     private static const log :Log = Log.getLog(AetherClient);
 }

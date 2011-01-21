@@ -2,64 +2,51 @@
 <!-- build configuration -->
 <project name="orth" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
   <!-- configuration parameters -->
-  <property name="src.dir"      value="src/main/java"/>
-  <property name="asrc.dir"     value="src/main/as"/>
-  <property name="rsrc.dir"     value="src/main/resources"/>
-  <property name="deploy.dir"   value="dist"/>
-  <property name="javalib.dir"  location="${deploy.dir}/javalib"/>
-  <property name="aslib.dir"    location="${deploy.dir}/aslib"/>
-  <property name="savedoc.dir"  value="docs"/>
-  <property name="javadoc.home" value="${deploy.dir}/docs"/>
-  <property name="classes.dir"  value="${deploy.dir}/classes"/>
-  <property name="gwtjar.dir"   value="${deploy.dir}/gwt-jar"/>
+  <property name="src.dir"      location="src/main/java"/>
+  <property name="asrc.dir"     location="src/main/as"/>
+  <property name="rsrc.dir"     location="src/main/resources"/>
+  <property name="deploy.dir"   location="dist"/>
+  <property name="as.dependencies" location="${deploy.dir}/as-build-dependencies.xml"/>
+  <property name="java.dependencies" location="${deploy.dir}/java-build-dependencies.xml"/>
+  <property name="savedoc.dir"  location="docs"/>
+  <property name="javadoc.home" location="${deploy.dir}/docs"/>
+  <property name="classes.dir"  location="${deploy.dir}/classes"/>
+  <property name="gwtjar.dir"   location="${deploy.dir}/gwt-jar"/>
 
   <!-- bring in our standard build support -->
+  <property name="ooo-build.vers" value="1.13"/>
   <ant antfile="bootstrap.xml"/>
-  <import file="${user.home}/.m2/ant-support/1.1/build-support.xml"/>
+  <import file="${user.home}/.m2/ant-support/${ooo-build.vers}/build-support.xml"/>
 
   <!-- -prepares the application directories -->
-  <target name="prepare" depends="-init-ooo">
-    <mkdir dir="${aslib.dir}"/>
-    <mkdir dir="${javalib.dir}"/>
+  <target name="prepare" depends="mavendeps">
     <mkdir dir="${classes.dir}"/>
     <mkdir dir="${javadoc.home}"/>
     <path id="build.classpath">
       <pathelement location="${classes.dir}"/>
-      <fileset dir="${javalib.dir}" includes="*.jar"/>
+      <fileset refid="pom.xml"/>
     </path>
   </target>
 
-  <target name="mavendeps" depends="prepare">
-    <artifact:pom id="pom" file="pom.xml"/>
-    <artifact:dependencies filesetId="javalibs.fileset" pomRefId="pom" useScope="compile"/>
-    <copy todir="${javalib.dir}">
-      <fileset refid="javalibs.fileset"/>
-      <mapper type="flatten"/>
-    </copy>
-
-    <artifact:pom id="as-pom" file="as-pom.xml"/>
-    <artifact:dependencies filesetId="aslibs.fileset" pomRefId="as-pom" useScope="compile"/>
-    <copy todir="${aslib.dir}">
-      <fileset refid="aslibs.fileset"/>
-      <chainedmapper>
-        <mapper type="flatten"/>
-        <mapper type="regexp" from="(.+?)(-SNAPSHOT)?.swc" to="\1.swc"/>
-        <mapper type="regexp" from="(.*)-([^-])+.swc" to="\1.swc"/>
-      </chainedmapper>
-    </copy>
+  <target name="mavendeps" depends="-init-ooo">
+    <mavendep pom="pom.xml"/>
+    <mavendep pom="as-pom.xml" pathprop="aslib.path"/>
   </target>
 
   <!-- makes sure our tools are compiled and defines the ant tasks -->
   <target name="preptools" depends="prepare">
-    <taskdef resource="com/threerings/presents/tools.properties" classpathref="build.classpath"/>
+    <artifact:dependencies pathId="tools.classpath">
+        <remoteRepository refid="ooo.maven.depends.repo"/>
+        <dependency groupId="com.threerings" artifactId="narya-tools" version="1.4-SNAPSHOT"/>
+    </artifact:dependencies>
+    <taskdef resource="com/threerings/presents/tools.properties" classpathref="tools.classpath"/>
   </target>
 
   <!-- cleans out the intermediate build files -->
   <target name="clean">
-    <delete dir="${deploy.dir}/classes"/>
-    <delete dir="${deploy.dir}/docs"/>
-    <delete failonerror="false"><fileset dir="${deploy.dir}" includes="*.jar"/></delete>
-    <delete failonerror="false"><fileset dir="${deploy.dir}" includes="*.swc"/></delete>
+    <delete>
+        <fileset dir="${deploy.dir}" includes="*.jar,*.swc,*-dependencies.xml,classes/,docs/"/>
+    </delete>
   </target>
 
   <!-- wipes the entire build directory clean -->
@@ -76,39 +63,9 @@
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath"/>
   </target>
 
-  <target name="-checkaslib">
-    <condition property="no_build_aslib">
-      <not><available file="${flexsdk.dir}/lib/compc.jar"/></not>
-    </condition>
-    <condition property="no_rebuild_aslib"><or>
-      <isset property="no_build_aslib"/>
-      <uptodate targetfile="${deploy.dir}/${ant.project.name}lib.swc">
-        <srcfiles dir="${asrc.dir}" includes="**/*.as"/>
-      </uptodate>
-    </or></condition>
-  </target>
-  <target name="-noteaslib" if="no_build_aslib"><echo>
-    NOTE: not building ActionScript library. Pass -Dflexsdk.dir=DIR to
-    activate ActionScript library build.
-  </echo></target>
-
-  <target name="aslib" unless="no_build_aslib" depends="prepare,-checkaslib,-noteaslib">
-    <copy file="etc/aslib-config.xml.in" tofile="${deploy.dir}/aslib-config.xml">
-      <filterset>
-        <filter token="flex_sdk_dir" value="${flexsdk.dir}"/>
-        <filter token="lib_name" value="${ant.project.name}"/>
-      </filterset>
-    </copy>
-    <java jar="${flexsdk.dir}/lib/compc.jar" fork="true" failonerror="true">
-      <arg value="-load-config"/>
-      <arg value="${deploy.dir}/aslib-config.xml"/>
-      <arg value="-compiler.optimize"/>
-      <arg value="-compiler.source-path=${asrc.dir}"/>
-      <arg value="-include-sources=src/main/as/"/>
-      <arg value="-output"/>
-      <arg value="${deploy.dir}/${ant.project.name}lib.swc"/>
-    </java>
-    <delete file="${deploy.dir}/aslib-config.xml"/>
+  <target name="aslib" depends="mavendeps">
+      <compc4 srcdir="${asrc.dir}" libpath="${aslib.path}"
+          dest="${deploy.dir}/${ant.project.name}lib.swc"/>
   </target>
 
   <target name="javadoc" depends="prepare">
@@ -134,15 +91,16 @@
   </target>
 
   <!-- builds the ActionScript documention -->
-  <target name="asdoc" unless="no_build_aslib" depends="-checkaslib">
+  <target name="asdoc" unless="no_build_aslib" depends="mavendeps">
     <mkdir dir="${deploy.dir}/asdocs"/>
+    <requireflex/>
     <java classpath="${flexsdk.dir}/lib/asdoc.jar" classname="flex2.tools.ASDoc" fork="true">
       <jvmarg value="-Xmx1024m"/>
       <jvmarg value="-Dsun.io.useCanonCashes=false"/>
       <jvmarg value="-Xbootclasspath/p:${flexsdk.dir}/asdoc/lib/xalan.jar"/>
       <arg value="+flexlib=${flexsdk.dir}/frameworks"/>
       <arg line="-library-path ${flexsdk.dir}/frameworks/libs"/>
-      <arg line="-library-path ${aslib.dir}"/>
+      <arg line="-library-path+=${aslib.path}"/>
       <arg line="-templates-path ${flexsdk.dir}/asdoc/templates"/>
       <arg line="-doc-sources ${asrc.dir}"/>
       <arg line="-output ${deploy.dir}/asdocs"/>
@@ -150,7 +108,7 @@
   </target>
 
   <!-- a target for rebuilding everything -->
-  <target name="distall" depends="mavendeps,dist,javadoc,asdoc"/>
+  <target name="distall" depends="dist,javadoc,asdoc"/>
 
   <!-- builds our distribution files (war and jar) -->
   <target name="dist" depends="prepare,compile,procstream,aslib">
@@ -183,7 +141,7 @@
   </target>
 
   <!-- generates additional methods for distributed object classes -->
-  <target name="gendobj" depends="preptools"> 
+  <target name="gendobj" depends="preptools">
     <!-- make sure the dobject class files are all compiled -->
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Object.java"/>
@@ -199,7 +157,7 @@
   </target>
 
   <!-- generates marshaller and dispatcher classes for all invocation service declarations -->
-  <target name="genservice" depends="preptools"> 
+  <target name="genservice" depends="preptools">
     <!-- make sure the service class files are all compiled -->
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Service.java"/>
@@ -265,23 +223,21 @@
   </target>
 
   <property name="maven.deploy.repo" value="file://${user.home}/.m2/repository"/>
-  <target name="maven-deploy" depends="distall" 
+  <target name="maven-deploy" depends="distall"
           description="Deploys our build artifacts to a Maven repository.">
     <artifact:deploy file="${deploy.dir}/${ant.project.name}.jar" uniqueVersion="false">
       <remoteRepository url="${maven.deploy.repo}"/>
-      <pom refid="pom"/>
+      <pom file="pom.xml"/>
     </artifact:deploy>
 
-    <artifact:pom id="as-pom" file="as-pom.xml"/>
     <artifact:deploy file="${deploy.dir}/${ant.project.name}lib.swc" uniqueVersion="false">
       <remoteRepository url="${maven.deploy.repo}"/>
-      <pom refid="as-pom"/>
+      <pom file="as-pom.xml"/>
     </artifact:deploy>
 
-    <artifact:pom id="gwt-pom" file="gwt-pom.xml"/>
     <artifact:deploy file="${deploy.dir}/${ant.project.name}-gwt.jar" uniqueVersion="false">
       <remoteRepository url="${maven.deploy.repo}"/>
-      <pom refid="gwt-pom"/>
+      <pom file="gwt-pom.xml"/>
     </artifact:deploy>
   </target>
 </project>

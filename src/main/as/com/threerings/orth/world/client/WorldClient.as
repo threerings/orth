@@ -2,13 +2,16 @@
 // $Id: $
 package com.threerings.orth.world.client
 {
-import com.threerings.crowd.client.CrowdClient;
-
+import flashx.funk.ioc.inject;
 import com.threerings.util.Name;
 
 import com.threerings.presents.net.Credentials;
 
+import com.threerings.crowd.client.CrowdClient;
+
+import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
+
 import com.threerings.orth.world.data.WorldCredentials;
 
 /**
@@ -16,32 +19,35 @@ import com.threerings.orth.world.data.WorldCredentials;
  */
 public class WorldClient extends CrowdClient
 {
-    public function WorldClient (wctx :WorldContext, host :String, ports :Array,
-        username :Name, sessionToken :String)
+    public function WorldClient ()
     {
-        _wctx = wctx;
+        // let the policy loader know about us
+        PolicyLoader.registerClient(this);
 
         // configure our version
-        setVersion(_wctx.octx.deployment.getVersion());
+        setVersion(_config.version);
+    }
+
+    public function logonWithCredentials (
+        host:String, ports: Array, creds :WorldCredentials) :Boolean
+    {
+        if (isLoggedOn()) {
+            logoff(false);
+        }
 
         // configure our server and port info
         setServer(host, ports);
 
-        // let the policy loader know about us
-        PolicyLoader.registerClient(this);
-
-        // create our credentials, which are sessionToken based
-        setCredentials(buildCredentials(username, sessionToken));
-
-        // and kick off the login procedure
+        setCredentials(creds);
         logon();
+        return true;
     }
 
-    protected function buildCredentials (username :Name, sessionToken :String) :Credentials
+    public function buildCredentials (username :Name, sessionToken :String) :Credentials
     {
         return new WorldCredentials(username, sessionToken);
     }
 
-    protected var _wctx :WorldContext;
+    protected const _config :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 }
 }
