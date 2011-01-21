@@ -12,6 +12,8 @@ public class OrthCodes extends InvocationCodes
 {
     public static const AETHER_GROUP :String = "orth.aether";
 
+    public static const WORLD_GROUP :String = "orth.world";
+
     /** Identifies our general message bundle. */
     public static const GENERAL_MSGS :String = "general";
 
