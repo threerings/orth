@@ -25,9 +25,6 @@ import com.threerings.orth.party.data.PartyBoardInfo;
 
 public class PartyBoardInfoRenderer extends HBox
 {
-    // Initialized by ClassFactory
-    public var wctx :WorldContext;
-
     public function PartyBoardInfoRenderer ()
     {
         addEventListener(MouseEvent.CLICK, handleClick);
