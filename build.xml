@@ -129,6 +129,9 @@
     <delete dir="${gwtjar.dir}"/>
   </target>
 
+  <target name="gencode" depends="gendobj,genreceiver,genrecord,genservice,genstreamable"
+    description="Runs all gen tasks"/>
+
   <!-- generates fields for persistent record classes -->
   <target name="genrecord" depends="prepare">
     <taskdef name="grecord" classname="com.samskivert.depot.tools.GenRecordTask"
