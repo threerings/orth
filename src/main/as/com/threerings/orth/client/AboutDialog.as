@@ -2,9 +2,9 @@
 // $Id: AboutDialog.as 12951 2008-10-29 01:25:28Z ray $
 
 package com.threerings.orth.client {
-import flashx.funk.ioc.inject;
-
 import flash.system.Capabilities;
+
+import flashx.funk.ioc.inject;
 
 import mx.controls.Text;
 

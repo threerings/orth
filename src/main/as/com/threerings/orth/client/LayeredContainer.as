@@ -4,13 +4,13 @@
 package com.threerings.orth.client {
 
 import flash.display.DisplayObject;
-
 import flash.utils.Dictionary;
 
 import mx.core.Container;
 import mx.core.UIComponent;
 
 import com.threerings.flex.FlexWrapper;
+
 import com.threerings.util.Log;
 
 /**

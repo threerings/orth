@@ -6,11 +6,12 @@ package com.threerings.orth.world.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+
+import com.threerings.util.Name;
+
 import com.threerings.orth.data.OrthCredentials;
 
 // GENERATED PREAMBLE END
-
-import com.threerings.util.Name;
 
 // GENERATED CLASSDECL START
 public class WorldCredentials extends OrthCredentials

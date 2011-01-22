@@ -2,20 +2,15 @@
 // $Id$
 
 package com.threerings.orth.client {
-import com.threerings.util.Log;
-import flashx.funk.ioc.IModule;
-import flashx.funk.ioc.AbstractModule;
-import com.threerings.crowd.chat.client.ChatDirector;
-import com.threerings.crowd.client.LocationDirector;
-import com.threerings.crowd.client.OccupantDirector;
-
 import flash.display.Stage;
+
+import flashx.funk.ioc.AbstractModule;
+import flashx.funk.ioc.IModule;
 
 import mx.core.Application;
 
+import com.threerings.util.Log;
 import com.threerings.util.MessageManager;
-
-import com.threerings.orth.aether.client.AetherClient;
 
 public class OrthModule extends AbstractModule
 {

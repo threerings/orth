@@ -2,8 +2,26 @@
 // $Id$
 
 package com.threerings.orth.aether.client {
-import com.threerings.orth.data.AuthName;
+import flash.display.DisplayObject;
+import flash.display.Stage;
+import flash.events.ContextMenuEvent;
+import flash.geom.Point;
+import flash.system.Capabilities;
+import flash.ui.ContextMenu;
+import flash.utils.Dictionary;
+
 import flashx.funk.ioc.inject;
+
+import mx.core.Application;
+
+import com.threerings.ui.MenuUtil;
+
+import com.threerings.util.Log;
+
+import com.threerings.presents.client.Client;
+import com.threerings.presents.dobj.DObjectManager;
+import com.threerings.presents.net.BootstrapData;
+
 import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.orth.aether.data.PlayerObject;
@@ -13,21 +31,7 @@ import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.client.Prefs;
-import com.threerings.presents.client.Client;
-import com.threerings.presents.dobj.DObjectManager;
-import com.threerings.presents.net.BootstrapData;
-import com.threerings.ui.MenuUtil;
-import com.threerings.util.Log;
-
-import flash.display.DisplayObject;
-import flash.display.Stage;
-import flash.events.ContextMenuEvent;
-import flash.geom.Point;
-import flash.system.Capabilities;
-import flash.ui.ContextMenu;
-import flash.utils.Dictionary;
-
-import mx.core.Application;
+import com.threerings.orth.data.AuthName;
 
 public class AetherClient extends Client
 {

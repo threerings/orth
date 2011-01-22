@@ -7,11 +7,10 @@ import flashx.funk.ioc.inject;
 import com.threerings.util.Controller;
 import com.threerings.util.Log;
 
-import com.threerings.orth.client.OrthDeploymentConfig;
-import com.threerings.orth.client.TopPanel;
-
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherCredentials;
+import com.threerings.orth.client.OrthDeploymentConfig;
+import com.threerings.orth.client.TopPanel;
 
 public class OrthController extends Controller
 {

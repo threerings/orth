@@ -4,21 +4,21 @@
 package com.threerings.orth.notify.client {
 
 import com.threerings.crowd.client.CrowdClient;
+
 import com.threerings.util.Name;
 import com.threerings.util.Set;
 import com.threerings.util.Sets;
 
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
-import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.client.ClientAdapter;
-import com.threerings.presents.util.PresentsContext;
-
+import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
+import com.threerings.presents.util.PresentsContext;
 
-import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.notify.data.GenericNotification;
+import com.threerings.orth.notify.data.Notification;
 
 public class NotificationDirector extends BasicDirector
     implements MessageListener

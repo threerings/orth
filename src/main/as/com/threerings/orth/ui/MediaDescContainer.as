@@ -3,9 +3,9 @@
 
 package com.threerings.orth.ui {
 
-import com.threerings.util.Util;
-
 import com.threerings.media.MediaContainer;
+
+import com.threerings.util.Util;
 
 import com.threerings.orth.data.MediaDesc;
 

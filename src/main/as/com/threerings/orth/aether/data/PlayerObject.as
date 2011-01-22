@@ -4,11 +4,14 @@
 
 package com.threerings.orth.aether.data {
 
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
-import com.threerings.presents.data.ClientObject;
 import org.osflash.signals.Signal;
+
+import com.threerings.io.ObjectInputStream;
+
+import com.threerings.presents.data.ClientObject;
+
 import com.threerings.orth.aether.data.VizPlayerName;
+
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START

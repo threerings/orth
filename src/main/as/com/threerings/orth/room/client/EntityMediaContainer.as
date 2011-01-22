@@ -4,16 +4,13 @@
 package com.threerings.orth.room.client {
 
 import flash.display.LoaderInfo;
-
 import flash.events.Event;
 import flash.events.IEventDispatcher;
 
 import mx.core.Application;
 import mx.core.FlexGlobals;
 import mx.core.ISWFBridgeProvider;
-
 import mx.events.SWFBridgeEvent;
-
 import mx.managers.IMarshalSystemManager;
 
 import com.threerings.util.Capabilities;

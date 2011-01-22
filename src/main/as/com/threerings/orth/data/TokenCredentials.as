@@ -6,8 +6,9 @@ package com.threerings.orth.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+
 import com.threerings.presents.net.Credentials;
-import com.threerings.util.Name;
+
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START

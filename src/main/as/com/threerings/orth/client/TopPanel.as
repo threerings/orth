@@ -2,20 +2,18 @@
 // $Id: $
 
 package com.threerings.orth.client {
-import flash.display.Stage;
-import flashx.funk.ioc.inject;
-
 import flash.display.DisplayObject;
+import flash.display.Stage;
 import flash.events.Event;
 import flash.geom.Rectangle;
 
-import mx.core.Application;
-import mx.core.ScrollPolicy;
+import flashx.funk.ioc.inject;
 
 import mx.containers.Canvas;
-
 import mx.controls.Label;
 import mx.controls.scrollClasses.ScrollBar;
+import mx.core.Application;
+import mx.core.ScrollPolicy;
 
 public class TopPanel extends Canvas
 {

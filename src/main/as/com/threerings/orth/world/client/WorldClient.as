@@ -3,15 +3,15 @@
 package com.threerings.orth.world.client
 {
 import flashx.funk.ioc.inject;
+
+import com.threerings.crowd.client.CrowdClient;
+
 import com.threerings.util.Name;
 
 import com.threerings.presents.net.Credentials;
 
-import com.threerings.crowd.client.CrowdClient;
-
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
-
 import com.threerings.orth.world.data.WorldCredentials;
 
 /**

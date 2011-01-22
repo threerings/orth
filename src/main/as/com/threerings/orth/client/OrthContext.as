@@ -3,12 +3,6 @@
 
 package com.threerings.orth.client {
 import flashx.funk.ioc.inject;
-import com.threerings.orth.client.OrthDeploymentConfig;
-import flashx.funk.ioc.IModule;
-
-import mx.core.Application;
-
-import flash.display.Stage;
 
 import com.threerings.util.Log;
 import com.threerings.util.MessageManager;
@@ -20,7 +14,7 @@ import com.threerings.presents.util.PresentsContext;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherCredentials;
-
+import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.world.client.WorldContext;
 
 /**
