@@ -17,9 +17,6 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.orth.aether.client.AetherClient;
 
-import com.threerings.orth.world.client.WorldClient;
-import com.threerings.orth.world.client.WorldContext;
-
 public class OrthModule extends AbstractModule
 {
     public function OrthModule (app :Application)
