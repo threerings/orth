@@ -23,8 +23,6 @@ public class PlayerObject extends ClientObject
     public var playerName :VizPlayerName;
 
     public var playerNameChanged :Signal = new Signal(VizPlayerName, VizPlayerName);
-    public var messageReceived :Signal = new Signal(String, Array);
-    public var destroyed :Signal = new Signal();
 
     public static const PLAYER_NAME :String = "playerName";
 
@@ -67,8 +65,7 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.orth.aether.data.PlayerObject;
 
 class Signaller
-    implements AttributeChangeListener, SetListener, ElementUpdateListener, MessageListener,
-        ObjectDeathListener, OidListListener
+    implements AttributeChangeListener, SetListener, ElementUpdateListener
 {
     public function Signaller (obj :PlayerObject)
     {
@@ -127,36 +124,6 @@ class Signaller
                 return;
         }
         signal.dispatch(event.getIndex(), event.getValue(), event.getOldValue());
-    }
-
-    public function messageReceived (event :MessageEvent) :void
-    {
-        _obj.messageReceived.dispatch(event.getName(), event.getArgs());
-    }
-
-    public function objectDestroyed (event :ObjectDestroyedEvent) :void
-    {
-        _obj.destroyed.dispatch();
-    }
-
-    public function objectAdded (event:ObjectAddedEvent) :void
-    {
-        var signal :Signal;
-        switch (event.getName()) {
-            default:
-                return;
-        }
-        signal.dispatch(event.getOid());
-    }
-
-    public function objectRemoved (event :ObjectRemovedEvent) :void
-    {
-        var signal :Signal;
-        switch (event.getName()) {
-            default:
-                return;
-        }
-        signal.dispatch(event.getOid());
     }
 
     protected var _obj :PlayerObject;
