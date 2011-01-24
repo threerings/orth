@@ -51,11 +51,12 @@ public class AetherClient extends Client
         // configure our version
         setVersion(depConf.version);
 
+        // TODO - reenable without Application for non-flex clients
         // set up a context menu that blocks funnybiz on the stage
-        var menu :ContextMenu = new ContextMenu();
-        menu.hideBuiltInItems();
-        menu.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenuWillPopUp);
-        inject(Application).contextMenu = menu;
+        //var menu :ContextMenu = new ContextMenu();
+        //menu.hideBuiltInItems();
+        //menu.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenuWillPopUp);
+        //inject(Application).contextMenu = menu;
     }
 
     public function logonWithCredentials (creds :AetherCredentials) :Boolean
