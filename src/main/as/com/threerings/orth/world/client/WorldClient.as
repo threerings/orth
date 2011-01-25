@@ -21,11 +21,12 @@ public class WorldClient extends CrowdClient
 {
     public function WorldClient ()
     {
+        const config :OrthDeploymentConfig = inject(OrthDeploymentConfig);
         // let the policy loader know about us
-        PolicyLoader.registerClient(this);
+        PolicyLoader.registerClient(this, config.policyPort);
 
         // configure our version
-        setVersion(_config.version);
+        setVersion(config.version);
     }
 
     public function logonWithCredentials (
@@ -48,6 +49,5 @@ public class WorldClient extends CrowdClient
         return new WorldCredentials(username, sessionToken);
     }
 
-    protected const _config :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 }
 }

@@ -47,7 +47,7 @@ public class AetherClient extends Client
         setServer(depConf.host, depConf.ports);
 
         // then register with it, as any client would
-        PolicyLoader.registerClient(this);
+        PolicyLoader.registerClient(this, depConf.policyPort);
         // configure our version
         setVersion(depConf.version);
 

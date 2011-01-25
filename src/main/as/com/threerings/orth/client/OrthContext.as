@@ -38,8 +38,6 @@ public class OrthContext
     {
         // initialize our convenience holder
         Msgs.init(inject(MessageManager));
-
-        PolicyLoader.init(inject(OrthDeploymentConfig).policyPort);
     }
 
     // from PresentsContext

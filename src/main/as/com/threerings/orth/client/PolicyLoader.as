@@ -13,16 +13,12 @@ import com.threerings.presents.client.ClientEvent;
 
 public class PolicyLoader
 {
-    public static function init (policyPort :int) :void
+    public static function registerClient (client :Client, policyPort :int) :void
     {
         if (policyPort != _socketPolicyPort) {
             log.info("PolicyLoader configured.", "port", policyPort);
             _socketPolicyPort = policyPort;
         }
-    }
-
-    public static function registerClient (client :Client) :void
-    {
         client.addClientObserver(new ClientAdapter(clientWillLogon));
     }
 
