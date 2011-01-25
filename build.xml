@@ -111,7 +111,7 @@
   </target>
 
   <!-- a target for rebuilding everything -->
-  <target name="distall" depends="dist,aslib,javadoc,asdoc"/>
+  <target name="distall" depends="dist,aslib"/>
 
   <!-- builds our jar files -->
   <target name="dist" depends="compile,procstream">
