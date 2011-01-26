@@ -66,17 +66,12 @@ public class CreatePartyPanel extends FloatingPanel
 
     override protected function okButtonClicked () :void
     {
-        _partydir.createParty(_name.text, _inviteAll.selected);
+        inject(PartyDirector).createParty(_name.text, _inviteAll.selected);
         close();
     }
-
-    [Inject] public var _ctx :OrthContext;
-    [Inject] public var _partyDir :PartyDirector;
 
     protected var _name :TextInput;
 
     protected var _inviteAll :CheckBox;
-
-    protected const _partydir :PartyDirector = inject(PartyDirector);
 }
 }

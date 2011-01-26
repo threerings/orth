@@ -33,7 +33,6 @@ import com.threerings.whirled.client.persist.SceneRepository;
 /**
  * Handles custom scene traversal and extra bits for Whirled.
  */
-[Inject]
 public class OrthSceneDirector extends SceneDirector
     implements SceneService_SceneMoveListener
 {
@@ -42,11 +41,10 @@ public class OrthSceneDirector extends SceneDirector
     // statically reference classes we require
     OrthSceneMarshaller;
 
-    public function OrthSceneDirector (
-        ctx :OrthContext, locDir :LocationDirector, repo :SceneRepository)
+    public function OrthSceneDirector ()
     {
-        super(ctx.wctx, locDir, repo, new OrthSceneFactory());
-        _octx = ctx;
+        super(_octx.wctx, inject(LocationDirector),
+            inject(SceneRepository), new OrthSceneFactory());
     }
 
     /**
@@ -220,9 +218,8 @@ public class OrthSceneDirector extends SceneDirector
         }
     }
 
-    [Inject] public var _worldCtrl :WorldController;
-
-    protected var _octx :OrthContext;
+    protected const _worldCtrl :WorldController = init(WorldController);
+    protected const _octx :OrthContext = init(OrthContext);
 
     protected var _mssvc :OrthSceneService;
     protected var _postMoveMessage :String;

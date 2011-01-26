@@ -8,6 +8,8 @@ import mx.containers.VBox;
 
 import mx.controls.Label;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.FlexUtil;
 
@@ -56,14 +58,13 @@ public class PartyDetailPanel extends FloatingPanel
         addChild(topBox);
 
         var roster :PlayerList = new PlayerList(
-            PeepRenderer.createFactory(_ctx, _detail.info),
+            PeepRenderer.createFactory(_detail.info),
             PartyPeep.createSortByOrder(_detail.info));
         addChild(roster);
         roster.setData(_detail.peeps);
     }
 
-    [Inject] public var _ctx :OrthContext;
-    [Inject] public var _partyDir :PartyDirector;
+    protected const  _partyDir :PartyDirector = inject(PartyDirector);
 
     protected var _detail :PartyDetail;
 }

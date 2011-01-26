@@ -23,7 +23,7 @@ public class MemberSprite extends ActorSprite
     /**
      * Initializes a sprite for the supplied member.
      */
-    public function initMemberSprite (occInfo :PlayerInfo, extraInfo :Object)
+    public function MemberSprite (occInfo :PlayerInfo, extraInfo :Object)
     {
         super.initActorSprite(occInfo, extraInfo);
     }

@@ -18,7 +18,6 @@ import com.threerings.orth.room.data.PetMarshaller;
  * Handles moving around in the virtual world.
  *
  */
-[Inject]
 public class WorldDirector extends BasicDirector
 {
     public const log :Log = Log.getLog(this);

@@ -11,10 +11,13 @@ import mx.controls.Label;
 import mx.core.ClassFactory;
 import mx.core.IFactory;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.flex.FlexUtil;
 
 import com.threerings.orth.client.PlayerRenderer;
 import com.threerings.orth.data.MediaDescSize;
+import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.room.client.RoomContext;
 
@@ -29,10 +32,10 @@ public class PeepRenderer extends PlayerRenderer
     /**
      * Return a factory for use with this renderer.
      */
-    public static function createFactory (ctx :OrthContext, partyInfo :Object = null) :IFactory
+    public static function createFactory (partyInfo :Object = null) :IFactory
     {
         var cf :ClassFactory = new ClassFactory(PeepRenderer);
-        cf.properties = { ctx: ctx, partyInfo: partyInfo };
+        cf.properties = { partyInfo: partyInfo };
         return cf;
     }
 
@@ -63,7 +66,7 @@ public class PeepRenderer extends PlayerRenderer
     protected function handleClick (event :MouseEvent) :void
     {
         if (data != null) {
-            ctx.getPartyDirector().popPeepMenu(PartyPeep(data), partyInfo.id);
+            _partyDir.popPeepMenu(PartyPeep(data), partyInfo.id);
         }
     }
 
@@ -71,5 +74,7 @@ public class PeepRenderer extends PlayerRenderer
     {
         return MediaDescSize.QUARTER_THUMBNAIL_SIZE;
     }
+
+    protected const _partyDir :PartyDirector = inject(PartyDirector);
 }
 }

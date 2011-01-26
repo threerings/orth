@@ -33,14 +33,14 @@ public class PartyContextImpl implements PartyContext
     public function connect (partyId :int, hostname :String, port :int) :void
     {
         var pcreds :PartyCredentials = new PartyCredentials(null);
-        pcreds.sessionToken = (_ctx.getClient().getCredentials() as OrthCredentials).sessionToken;
+        pcreds.sessionToken = OrthCredentials(inject(AetherClient).getCredentials()).sessionToken;
         pcreds.partyId = partyId;
 
         PolicyLoader.registerClient(_client);
 
         // configure our client and logon
         _client.addServiceGroup(OrthCodes.PARTY_GROUP);
-        _client.setVersion(_depConf.getVersion());
+        _client.setVersion(_depConf.version);
         _client.setServer(hostname, [ port ]);
         _client.setCredentials(pcreds);
         _client.logon();
@@ -70,9 +70,8 @@ public class PartyContextImpl implements PartyContext
         return (_client.getClientObject() as PartierObject);
     }
 
-    [Inject] public var _ctx :OrthContext;
-    [Inject(name="sessionToken")] public var _sessionToken :String;
-    [Inject] public var _depConf :OrthDeploymentConfig;
+    protected const _ctx :OrthContext = inject(OrthContext);
+    protected const _depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 
     protected var _client :Client;
 }

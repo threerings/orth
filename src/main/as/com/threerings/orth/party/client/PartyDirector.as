@@ -57,7 +57,6 @@ import com.threerings.orth.world.client.WorldControlBar;
 /**
  * Manages party stuff on the client.
  */
-[Inject]
 public class PartyDirector extends BasicDirector
 {
     // reference the PartyBoardMarshaller class
@@ -143,11 +142,10 @@ public class PartyDirector extends BasicDirector
     public function createAppropriatePartyPanel () :FloatingPanel
     {
         if (_partyObj != null) {
-            var panel :PartyPanel = _injector.getInstance(PartyPanel);
-            panel.init(_partyObj);
+            var panel :PartyPanel = new PartyPanel(_partyObj);
             return panel;
         }
-        return _injector.getInstance(PartyBoardPanel);
+        return new PartyBoardPanel();
     }
 
     public function popPeepMenu (peep :PartyPeep, partyId :int) :void
@@ -207,7 +205,7 @@ public class PartyDirector extends BasicDirector
         var handleFailure :Function = function (error :String) :void {
             _octx.displayFeedback(OrthCodes.PARTY_MSGS, error);
             // re-open...
-            var panel :CreatePartyPanel = _injector.getInstance(CreatePartyPanel);
+            var panel :CreatePartyPanel = new CreatePartyPanel();
             panel.open();
             panel.init(name, inviteAllFriends);
         };
@@ -397,8 +395,7 @@ public class PartyDirector extends BasicDirector
         }
 
         // pop open the new one
-        panel = _injector.getInstance(PartyDetailPanel);
-        panel.init(detail);
+        panel = new PartyDetailPanel(detail);
         _detailPanels[detail.info.id] = panel;
         panel.addCloseCallback(function () :void {
             delete _detailPanels[detail.info.id];
@@ -509,9 +506,9 @@ public class PartyDirector extends BasicDirector
         return WorldControlBar(_octx.getControlBar()).partyBtn;
     }
 
-    [Inject] public var _notDir :NotificationDirector;
-    [Inject] public var _sceneDir :SceneDirector;
-    [Inject] public var _locDir :LocationDirector;
+    protected const _notDir :NotificationDirector = inject(NotificationDirector);
+    protected const _sceneDir :SceneDirector = inject(SceneDirector);
+    protected const _locDir :LocationDirector = inject(LocationDiretor);
 
     protected var _octx :OrthContext;
 

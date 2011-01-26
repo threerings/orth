@@ -30,7 +30,7 @@ import com.threerings.orth.party.data.PartyPeep;
 public class PartyPanel extends FloatingPanel
     implements AttributeChangeListener
 {
-    public function init (partyObj :PartyObject) :void
+    public function PartyPanel (partyObj :PartyObject)
     {
         showCloseButton = true;
 
@@ -145,8 +145,8 @@ public class PartyPanel extends FloatingPanel
         _controlBar.giveChatFocus();
     }
 
-    [Inject] public var _ctx :OrthContext;
-    [Inject] public var _controlBar :ControlBar;
+    protected const _ctx :OrthContext = inject(OrthContext);
+    protected const _controlBar :ControlBar = inject(ControlBar);
 
     protected var _partyObj :PartyObject;
 

@@ -3,6 +3,8 @@
 
 package com.threerings.orth.entity.client {
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.orth.client.OrthController;
 
 public class FurniBackend extends EntityBackend
@@ -21,6 +23,6 @@ public class FurniBackend extends EntityBackend
         return true;
     }
 
-    [Inject] public var _orthCtrl :OrthController;
+    protected const _orthCtrl :OrthController = inject(OrthController);
 }
 }

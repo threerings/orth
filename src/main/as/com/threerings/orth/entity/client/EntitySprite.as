@@ -15,6 +15,8 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.media.MediaContainer;
 
 import com.threerings.util.Log;
@@ -22,8 +24,6 @@ import com.threerings.util.StringUtil;
 import com.threerings.util.ValueEvent;
 
 import com.threerings.display.FilterUtil;
-
-import com.threerings.orth.client.OrthContext;
 
 import com.threerings.orth.room.client.EntityMediaContainer;
 import com.threerings.orth.room.client.RoomController;
@@ -33,9 +33,6 @@ import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.SimpleEntityIdent;
-
-import org.swiftsuspenders.Injector;
-
 
 /**
  * A base sprite that concerns itself with the mundane details of loading and communication with
@@ -529,7 +526,7 @@ public class EntitySprite
 
         _backend = createBackend();
         if (_backend != null) {
-            _backend.init(_ctx, info);
+            _backend.init(info);
             _backend.setSprite(this);
         }
     }
@@ -690,7 +687,7 @@ public class EntitySprite
      */
     protected function createBackend () :EntityBackend
     {
-        return _injector.getInstance(EntityBackend);
+        return new EntityBackend();
     }
 
     /**
@@ -938,9 +935,6 @@ public class EntitySprite
     {
         return (_backend != null) && _backend.hasUserCode(name);
     }
-
-    [Inject] public var _injector :Injector;
-    [Inject] public var _ctx :OrthContext;
 
     /** The visual representation of us. */
     protected var _sprite :EntityMediaContainer;

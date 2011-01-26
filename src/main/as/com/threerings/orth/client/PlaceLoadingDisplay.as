@@ -25,8 +25,7 @@ import com.threerings.orth.ui.LoadingSpinner;
 public class PlaceLoadingDisplay extends Sprite
     implements LoadingWatcher
 {
-    [PostConstruct]
-    public function initPlaceLoadingDisplay () :void
+    public function PlaceLoadingDisplay ()
     {
         _box.addEventListener(ResizeEvent.RESIZE, handleBoxResized);
         addChild(_spinner = new LoadingSpinner());
@@ -160,10 +159,11 @@ public class PlaceLoadingDisplay extends Sprite
         }
     }
 
-    [Inject] public var _box :OrthPlaceBox;
     protected var _primary :LoaderInfo
     protected var _secondaryCount :int;
     protected var _spinner :LoadingSpinner;
     protected var _unloadies :Dictionary = new Dictionary(true);
+
+    protected const _box :OrthPlaceBox = inject(OrthPlaceBox);
 }
 }

@@ -7,6 +7,8 @@ import flash.events.EventDispatcher;
 
 import flash.display.LoaderInfo;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.util.Log;
 
 import com.threerings.orth.client.OrthContext;
@@ -20,9 +22,8 @@ public class ControlBackend
     /**
      * Initialize a backend to safely communicate with usercode.
      */
-    public function init (ctx :OrthContext, contentLoaderInfo :LoaderInfo) :void
+    public function init (contentLoaderInfo :LoaderInfo) :void
     {
-        _ctx = ctx;
         _sharedEvents = contentLoaderInfo.sharedEvents;
         _sharedEvents.addEventListener("controlConnect", handleUserCodeConnect, false, 0, true);
     }
@@ -155,7 +156,7 @@ public class ControlBackend
     }
 
     /** The giver of life. */
-    protected var _ctx :OrthContext;;
+    protected var _ctx :OrthContext = inject(OrthContext);
 
     /** Properties populated by usercode. */
     protected var _props :Object;
