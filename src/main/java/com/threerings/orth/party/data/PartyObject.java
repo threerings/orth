@@ -8,6 +8,7 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.data.MediaDesc;
+import com.threerings.orth.data.OrthName;
 
 public class PartyObject extends DObject
     implements /*SpeakObject,*/ Cloneable

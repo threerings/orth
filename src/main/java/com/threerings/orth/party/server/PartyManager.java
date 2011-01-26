@@ -22,6 +22,7 @@ import com.threerings.presents.dobj.ObjectDeathListener;
 import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.dobj.RootDObjectManager;
 
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.server.MemberNodeActions;
 
