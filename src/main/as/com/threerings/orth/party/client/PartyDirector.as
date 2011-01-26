@@ -94,11 +94,7 @@ public class PartyDirector extends BasicDirector
         super(ctx);
 
         _octx = ctx;
-    }
 
-    [PostConstruct]
-    public function initPartyDirector () :void
-    {
         _locDir.addLocationObserver(new LocationAdapter(null, locationDidChange, null));
     }
 

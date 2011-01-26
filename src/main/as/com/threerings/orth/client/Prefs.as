@@ -4,9 +4,12 @@
 package com.threerings.orth.client {
 
 import flash.events.EventDispatcher;
+import flash.media.SoundMixer;
+import flash.media.SoundTransform;
 
 import com.threerings.util.Config;
 import com.threerings.util.NamedValueEvent;
+import com.threerings.util.StringUtil;
 
 /**
  * Dispatched when a preference is changed.

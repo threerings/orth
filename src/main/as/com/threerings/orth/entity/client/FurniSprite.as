@@ -36,10 +36,8 @@ public class FurniSprite extends EntitySprite
     /**
      * Initializes a new FurniSprite.
      */
-    public function initFurniSprite (furni :FurniData)
+    public function FurniSprite (furni :FurniData)
     {
-        super.initEntitySprite();
-
         _furni = furni;
 
         // configure our media and item

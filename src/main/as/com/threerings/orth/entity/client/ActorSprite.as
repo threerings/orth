@@ -26,9 +26,9 @@ public class ActorSprite extends OccupantSprite
     /**
      * Initializes an actor sprite for the supplied actor.
      */
-    public function initActorSprite (occInfo :ActorInfo, extraInfo :Object) :void
+    public function ActorSprite (occInfo :ActorInfo, extraInfo :Object)
     {
-        super.initOccupantSprite(occInfo, extraInfo);
+        super(occInfo, extraInfo);
     }
 
     /**

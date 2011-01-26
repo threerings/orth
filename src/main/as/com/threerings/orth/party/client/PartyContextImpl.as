@@ -3,9 +3,12 @@
 
 package com.threerings.orth.party.client {
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
 
+import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;

@@ -20,7 +20,7 @@ public class DecorSprite extends FurniSprite
     /**
      * Initializes a new DecorSprite.
      */
-    public function initDecorSprite (decor :Decor) :void
+    public function DecorSprite (decor :Decor)
     {
         var furniData :FurniData = makeFurniData(decor);
         super.initFurniSprite(furniData);

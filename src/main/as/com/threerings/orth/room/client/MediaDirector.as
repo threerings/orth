@@ -3,6 +3,8 @@
 
 package com.threerings.orth.room.client {
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.BasicDirector;
@@ -40,11 +42,7 @@ public class MediaDirector extends BasicDirector
         super(ctx);
 
         _octx = ctx;
-    }
 
-    [PostConstruct]
-    public function initMediaDirector () :void
-    {
         _locDir.addLocationObserver(new LocationAdapter(null, locationDidChange));
     }
 
@@ -137,7 +135,7 @@ public class MediaDirector extends BasicDirector
     /** A casted copy of the context. */
     protected var _octx :OrthContext;
 
-    protected const _locDir :LocationDirector = init(LocationDirector);
+    protected const _locDir :LocationDirector = inject(LocationDirector);
 
     /** Our very own avatar: avoid loading and unloading it. */
     protected var _ourAvatar :MemberSprite;

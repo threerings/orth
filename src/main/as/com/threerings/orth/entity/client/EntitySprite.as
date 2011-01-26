@@ -56,7 +56,7 @@ public class EntitySprite
     /**
      * Initialize an EntitySprite.
      */
-    public function initEntitySprite () :void
+    public function EntitySprite ()
     {
         _sprite = createVisualization();
 
