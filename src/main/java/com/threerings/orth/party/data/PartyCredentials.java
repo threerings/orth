@@ -3,17 +3,17 @@
 
 package com.threerings.orth.party.data;
 
-import com.threerings.orth.data.OrthCredentials;
+import com.threerings.orth.data.TokenCredentials;
 
 /**
  * Used to authenticate a party session.
  */
-public class PartyCredentials extends OrthCredentials
+public class PartyCredentials extends TokenCredentials
 {
     /** The party that the authenticating user wishes to join. */
     public int partyId;
 
-    @Override // from OrthCredentials
+    @Override // from TokenCredentials
     protected void toString (StringBuilder buf)
     {
         super.toString(buf);
