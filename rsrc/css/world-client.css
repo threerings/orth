@@ -1,0 +1,834 @@
+/**
+ * $Id$
+ *
+ * Flash client style sheet.
+ */
+
+/* Only encode A-Z,a-z,0-9, and period. */
+/*
+@font-face {
+  fontFamily: "Trebuchet";
+  advancedAntiAliasing: true;
+  src: url("../fonts/trebuc.ttf");
+  unicodeRange:
+    U+0041-U+005A,
+    U+0061-U+007A,
+    U+0030-U+0039,
+    U+002E-U+002E;
+}
+*/
+
+/* Only encode A-Z,a-z,0-9, and period. */
+/*
+@font-face {
+  fontFamily: "Trebuchet";
+  advancedAntiAliasing: true;
+  fontWeight: bold;
+  src: url("../fonts/trebucbd.ttf");
+  unicodeRange:
+    U+0041-U+005A,
+    U+0061-U+007A,
+    U+0030-U+0039,
+    U+002E-U+002E;
+}
+
+global {
+  fontFamily: "Trebuchet";
+}
+*/
+
+EntityPopup {
+  titleBackgroundSkin: Embed(source="../media/skins/window/entity_title.png",
+          scaleGridTop="8", scaleGridBottom="14",
+          scaleGridLeft="8", scaleGridRight="28");
+  backgroundImage: null;
+  borderColor: #729b46;
+}
+
+/* Zero-padding popups */
+FriendsListPanel, PartyPanel, PartyBoardPanel, PartyDetailPanel, EntityPopup, SpriteInfoPanel {
+  paddingTop: 0;
+  paddingBottom: 0;
+  paddingLeft: 0;
+  paddingRight: 0;
+}
+
+Stars {
+  horizontalGap: 0;
+}
+
+FriendsListPanel, PartyPanel, PartyBoardPanel, PartyDetailPanel {
+  verticalGap: 0;
+}
+
+GameOverPanel {
+  titleStyleName: "gameOverTitle";
+  headerHeight: 32;
+}
+
+.topPanel {
+  backgroundColor: #ffffff;
+}
+
+.largeBlueButton {
+  /* TODO: scale9? */
+  upSkin: Embed(source="../media/skins/button/lgBlue_up.png");
+  overSkin: Embed(source="../media/skins/button/lgBlue_over.png");
+  downSkin: Embed(source="../media/skins/button/lgBlue_down.png");
+  disabledSkin: Embed(source="../media/skins/button/lgBlue_disabled.png");
+  selectedDisabledSkin: Embed(source="../media/skins/button/lgBlue_disabled.png");
+  color: #ffffff;
+  textRollOverColor: #ffffff;
+  textSelectedColor: #ffffff;
+  fontSize: 16;
+}
+
+.joinNowButton {
+  image: url("images/ui/joinnow.png");
+}
+
+.logonButton {
+  image: url("images/ui/logon.png");
+}
+
+.unselectedRoomTab, .attentionRoomTab, .unselectedTellTab, .attentionTellTab, .unselectedGroupTab,
+    .attentionGroupTab {
+  fontFamily: Arial;
+  fontWeight: bold;
+  closeSkin: Embed(source="../media/skins/tab/close_small.png");
+  color: #8bbcdc;
+}
+
+.selectedRoomTab, .selectedTellTab, .selectedGroupTab {
+  color: #0c61a8;
+  fontFamily: Arial;
+  fontWeight: bold;
+  closeSkin: Embed(source="../media/skins/tab/close_small.png");
+}
+
+.tabShine {
+  borderStyle: none;
+  backgroundColor: #188ab5;
+  maxAlpha: 0.3;
+  period: 2.0;
+}
+
+.controlBar, .headerBar { 
+  horizontalGap: 0;
+  verticalGap: 0;
+  borderStyle: "none";
+  paddingBottom: 0;
+  paddingTop: 0;
+  paddingRight: 0;
+}
+
+.buttonPalette {
+  paddingBottom: 2;
+  paddingTop: 2;
+  paddingLeft: 5;
+  paddingRight: 5;
+  horizontalGap: 8;
+  verticalGap: 8;
+  verticalAlign: "middle";
+  horizontalAlign: "center";
+  backgroundColor: white;
+  backgroundAlphaClosed: 0;
+  backgroundAlphaOpen: .85;
+}
+
+/* Normally our floating panels have 10px of border, but if they don't you might
+   want to set _buttonBar.styleName = "buttonPadding"; */
+.buttonPadding {
+  paddingBottom: 10;
+  paddingTop: 10;
+  paddingLeft: 10;
+  paddingRight: 10;
+  horizontalAlign: "right";
+}
+
+.currencyLabel {
+  color: white;
+  fontSize: 12;
+  fontWeight: "bold";
+}
+
+.controlBar {
+  backgroundImage: Embed(source="../media/skins/controlbar/bg.png");
+  backgroundSize: "100%";
+  horizontalGap: 8;
+  verticalAlign: "middle";
+  paddingLeft: 8;
+}
+
+/** All these buttons use the ImageButtonSkin and need the per-state skins cleared out. */
+.imageButton,
+.controlBarButtonGo, .controlBarButtonRoom, .controlBarButtonChat,
+.controlBarButtonInstructions, .controlBarButtonShare, .controlBarButtonScores,
+.controlBarHoverZone, .controlBarFriendButton, .controlBarTalkButton,
+.controlBarIdleButton, .controlBarScaleButton, .controlBarGameButton, .tickButton,
+.controlBarButtonVolume0, .controlBarButtonVolume1, .controlBarButtonVolume2,
+.controlBarButtonVolume3, .controlBarButtonVolume4, .controlBarHomePageGridButton,
+.controlBarPartyButton, .controlBarConfig, .notificationToggle,
+.headerBarBack, .placeZoomButton,
+.joinNowButton, .logonButton, .tourNext, .trophyFeedTrophy,
+.closeButton {
+
+  /** clear out the CheckBox foreground icons too */
+  icon: ClassReference(null);
+  upIcon: ClassReference(null);
+  overIcon: ClassReference(null);
+  downIcon: ClassReference(null);
+  disabledIcon: ClassReference(null);
+  selectedUpIcon: ClassReference(null);
+  selectedOverIcon: ClassReference(null);
+  selectedDownIcon: ClassReference(null);
+  selectedDisabledIcon: ClassReference(null);
+
+  upSkin: ClassReference(null);
+  downSkin: ClassReference(null);
+  overSkin: ClassReference(null);
+  disabledSkin: ClassReference(null);
+  selectedUpSkin: ClassReference(null);
+  selectedOverSkin: ClassReference(null);
+  selectedDownSkin: ClassReference(null);
+  selectedDisabledSkin: ClassReference(null);
+  skin: ClassReference("com.threerings.msoy.ui.ImageButtonSkin");
+}
+
+.controlBarButtonChat {
+  image: Embed(source="../media/skins/controlbar/chatoptions.png");
+}
+
+.controlBarButtonGo {
+  image: Embed(source="../media/skins/controlbar/go.png");
+}
+
+.controlBarButtonRoom {
+  image: Embed(source="../media/skins/controlbar/room.png");
+}
+
+.controlBarConfig {
+  image: Embed(source="../media/skins/controlbar/config.png");
+}
+
+.controlBarButtonInstructions {
+  image: Embed(source="../media/skins/controlbar/instructions.png");
+}
+
+.controlBarButtonShare {
+  image: Embed(source="../media/skins/controlbar/share.png");
+}
+
+.controlBarButtonScores {
+  image: Embed(source="../media/skins/controlbar/score.png");
+}
+
+.controlBarHoverZone {
+  image: Embed(source="../media/skins/controlbar/clickable.png");
+}
+
+.controlBarFriendButton {
+  image: Embed(source="../media/skins/controlbar/friends.png");
+}
+
+.controlBarTalkButton {
+  image: Embed(source="../media/skins/controlbar/talk.png");
+}
+
+.controlBarIdleButton {
+  image: Embed(source="../media/skins/controlbar/idle.png");
+}
+
+.controlBarScaleButton {
+  image: Embed(source="../media/skins/controlbar/scale.png");
+}
+
+.controlBarGameButton {
+  image: Embed(source="../media/skins/controlbar/instructions.png");
+}
+
+.controlBarHomePageGridButton {
+  image: Embed(source="../media/skins/controlbar/grid.png");
+}
+
+.controlBarPartyButton {
+  image: Embed(source="../media/skins/controlbar/party.png");
+  highlightAlpha: .5;
+}
+
+.headerBarBack {
+  image: Embed(source="../media/skins/headerbar/back.png");
+}
+
+.tickButton {
+  image: Embed(source="../media/skins/controlbar/tick.png");
+}
+
+.notificationToggle {
+  image: Embed(source="../media/skins/controlbar/notifications.png");
+}
+
+.placeZoomButton {
+  image: Embed(source="../media/skins/place/zoom.png");
+}
+
+.tourNext {
+  image: url("images/rooms/tour_next.png");
+}
+
+.attentionLabel {
+  fontWeight: "bold";
+  color: red;
+}
+
+.sliderPopup {
+  backgroundSkin: Embed(source="../media/skins/controlbar/slider_background.png",
+          scaleGridTop="1", scaleGridBottom="23",
+          scaleGridLeft="1", scaleGridRight="31");
+  backgroundSize: "100%";
+  dropShadowEnabled: "true";
+}
+
+.volumeSlider {
+  showTrackHighlight: true;
+}
+
+.avatarCellSelected { 
+  backgroundColor: #54a9da;
+}
+
+.chatControl {  
+  verticalAlign: "middle";
+  backgroundAlpha: 0;
+}
+
+ChatInput {
+  color: #000000;
+  themeColor: #3db8eb;
+  fontFamily: "Arial";
+  fontSize: 12;
+  borderStyle: "solid";
+  borderThickness: 1px;
+  borderColor: #309dc1;
+  prompt: Embed(source="../media/skins/controlbar/typetochat.png");
+}
+
+.chatTargetButton {
+    borderColor: #000000;
+    fontWeight: "bold";
+    fillAlphas: 1, 1;
+    fillColors: #E6EEEE, #FFFFFF;
+}
+
+.headerBar {
+  paddingLeft: 0;
+  backgroundImage: Embed(source="../media/skins/headerbar/bg.png");
+  backgroundSize: "100%";
+}
+
+.closeButton {
+  height: 13px;
+  width: 13px;
+  image: Embed(source="../../pages/images/ui/client_close_default.png");
+}
+
+.heightButton {
+  height: 13px;
+  width: 13px;
+  overSkin: Embed(source="../../pages/images/ui/client_height_over.png");
+  disabledSkin: Embed(source="../../pages/images/ui/client_height_default.png");
+  downSkin: Embed(source="../../pages/images/ui/client_height_down.png");
+  upSkin: Embed(source="../../pages/images/ui/client_height_default.png");
+  selectedOverSkin: Embed(source="../../pages/images/ui/client_height_over.png");
+  selectedDisabledSkin: Embed(source="../../pages/images/ui/client_height_default.png");
+  selectedDownSkin: Embed(source="../../pages/images/ui/client_height_down.png");
+  selectedUpSkin: Embed(source="../../pages/images/ui/client_height_default.png");
+}
+
+.locationName {
+  fontSize: 12px;
+  fontWeight: bold;
+  color: black;
+  textAlign: center;
+}
+
+.headerBox {
+  paddingBottom: 2px;
+  paddingLeft: 5px;
+  verticalAlign: bottom;
+  horizontalGap: 0px;
+}
+
+.headerLink {
+  fontSize: 10px;
+  color: #0c60a7;
+}
+
+.editButton {
+  paddingLeft: 0;
+  paddingRight: 0;
+  paddingTop: 0;
+  paddingBottom: 0;
+} 
+
+.plusButton {
+  icon: Embed(source="../media/skins/button/roomeditor/rollout_plus.png");
+}
+
+.minusButton {
+  icon: Embed(source="../media/skins/button/roomeditor/rollout_minus.png");
+}
+
+.placeZoomLabel {
+  fontSize: 10;
+  fontWeight: bold;
+  color: black;
+  textAlign: right;
+  delay: 3;
+  fade: 1;
+}
+
+.roomToolTip {
+  /** Sheeit I still can't force these tips to look good with a bigger font, even
+    though I can hack it for gameInfoTip. Another time.
+  fontSize: 12;
+  */
+  backgroundColor: #000000;
+}
+
+.infoTip {
+  fontSize: 12;
+  backgroundColor: #FFFFFF;
+  borderColor: #FFFFFF;
+  borderStyle: "errorTipRight";
+  paddingBottom: 8;
+  paddingLeft: 4;
+  paddingRight: 8;
+  paddingTop: 4;
+}
+
+.contentsBox, .titleBox, .infoBox {
+  horizontalGap: 0;
+  verticalGap: 0;
+}
+
+.titleBox {
+  borderStyle: "solid";
+  borderThickness: 1px;
+  borderSides: "right";
+  borderColor: #000000;
+  verticalAlign: middle;
+  paddingLeft: 4px;
+  paddingRight: 4px;
+}
+
+.titleBox, .tabsFillerBox {
+  backgroundColor: #000000;
+}
+
+.startBox {
+  verticalAlign: bottom;
+}
+
+/** Lobby UI styles */
+
+.lobbyLink {
+  fontSize: 14px;
+  verticalAlign: middle;
+  color: white;
+  textDecoration: underline;
+}
+
+.lobbyInfo {
+  fontSize: 12;
+  paddingLeft: 7;
+  paddingRight: 7;
+}
+
+.lobbyLoadingBox {
+  horizontalAlign: center;
+  verticalAlign: middle;
+  fontSize: 16;
+  fontWeight: bold;
+}
+
+.lobbyTitle {
+  fontSize: 18px;
+  color: #628191;
+}
+
+/** Lobby splash panel */
+.lobbySplashPanel {
+  horizontalAlign: center;
+  verticalGap: 0;
+}
+
+.lobbySplashButton {
+  fontFamily: Helvetica;
+  fontSize: 24px;
+}
+
+.lobbySplashPlaying {
+  fontSize: 14px;
+  fontWeight: bold;
+}
+
+.lobbySplashInstructions {
+  fontSize: 11px;
+  color: #999999;
+  textDecoration: underline;
+}
+
+.lobbyMatchPanel {
+}
+
+.tableHeader {
+  paddingTop: 5px;
+}
+
+.tableMessage {
+  fontWeight: "normal";
+  paddingLeft: 10px;
+  paddingTop: 10px;
+  paddingRight: 10px;
+  paddingBottom: 5px;
+}
+
+.tableList {
+  borderStyle: none;
+  alternatingItemColors: #8eb1cc, #000000; /* second color is not used; see TableList code */
+}
+
+.tableSummaryTitle, .createTip, .playlistTitle {
+  fontWeight: "bold";
+  fontSize: 11px;
+}
+
+.tableSummaryStatus {
+  color: #666666;
+}
+
+.pendingTableList, .runningTableList {
+  verticalGap: 5;
+}
+
+.tableCreationPanel {
+  fontSize: 10px;
+  fontWeight: bold;
+}
+
+/*.lobbyLabel {
+  fontWeight: bold;
+}*/
+
+.lobbyTablePanel {
+  verticalGap: 10;
+}
+
+.seatsGrid {
+  backgroundColor: #8eb1cc;
+  backgroundAlpha: 1;
+  paddingLeft: 5px;
+  paddingRight: 5px;
+  paddingTop: 10px;
+  paddingBottom: 10px;
+  horizontalGap: 5;
+  verticalGap: 20;
+  borderAlpha: 0;
+  cornerRadius: 4;
+}
+
+.seatPanel {
+  horizontalAlign: "center";
+  verticalGap: 0;
+  borderThickness: 0;
+  borderStyle: "none";
+}
+
+/** Header styles */
+
+.headerCloseBox {
+  paddingLeft: 3px;
+  paddingTop: 4px;
+  paddingRight: 3px;
+  paddingBottom: 3px;
+  horizontalGap: 3px;
+}
+
+.friendCheckBox {
+  horizontalAlign: center;
+  verticalGap: 0;
+  borderStyle: none;
+  borderThickness: 0;
+}
+
+.chatContainer {
+  borderThickness: 0;
+  borderStyle: "solid";
+  borderColor: #000000;
+}
+
+.topLevelLabel {
+  color: black;
+}
+
+.gameChatContainer {
+  backgroundColor: white;
+  borderColor: #aaaaaa;
+  borderSides: "right";
+  borderStyle: solid;
+  borderThickness: 1;
+}
+
+.playerList {
+  selectionColor: #437393;
+}
+
+.gameListContainer {
+  backgroundColor: white;
+  borderStyle: none;
+  horizontalGap: 0;
+  verticalGap: 0;
+}
+
+/*
+ * The embedHeader is presently disabled for all clients.
+.embedHeaderPlaceName {
+  fontWeight: bold;
+  fontSize: 12;
+  color: white;
+}
+
+.embedHeaderSignupButton {
+  upSkin: Embed(source="../media/skins/embedheader/signup_default.jpg");
+  overSkin: Embed(source="../media/skins/embedheader/signup_over.jpg");
+  downSkin: Embed(source="../media/skins/embedheader/signup_down.jpg");
+}
+
+.embedHeaderLogonButton {
+  upSkin: Embed(source="../media/skins/embedheader/logon_default.jpg");
+  overSkin: Embed(source="../media/skins/embedheader/logon_over.jpg");
+  downSkin: Embed(source="../media/skins/embedheader/logon_down.jpg");
+}
+
+.embedHeaderAllgamesButton {
+  upSkin: Embed(source="../media/skins/embedheader/allgames_default.jpg");
+  overSkin: Embed(source="../media/skins/embedheader/allgames_over.jpg");
+  downSkin: Embed(source="../media/skins/embedheader/allgames_down.jpg");
+}
+* End: embedHeader disable
+*/
+
+.noPlaceView {
+  backgroundColor: white;
+}
+
+.panelToggle {
+  icon: ClassReference(null);
+  upIcon: ClassReference(null);
+  overIcon: ClassReference(null);
+  downIcon: ClassReference(null);
+  disabledIcon: ClassReference(null);
+  selectedUpIcon: ClassReference(null);
+  selectedOverIcon: ClassReference(null);
+  selectedDownIcon: ClassReference(null);
+  selectedDisabledIcon: ClassReference(null);
+  upSkin: Embed(source="../media/skins/checkbox/panel.png");
+  overSkin: Embed(source="../media/skins/checkbox/panel_over.png");
+  downSkin: Embed(source="../media/skins/checkbox/panel.png"); /* TODO? */
+  disabledSkin: Embed(source="../media/skins/checkbox/panel_disabled.png");
+  selectedUpSkin: Embed(source="../media/skins/checkbox/panel_selected.png");
+  selectedOverSkin: Embed(source="../media/skins/checkbox/panel_selected_over.png");
+  selectedDownSkin: Embed(source="../media/skins/checkbox/panel_selected.png"); /* TODO? */
+  selectedDisabledSkin: Embed(source="../media/skins/checkbox/panel_selected.png"); /* TODO? */
+}
+
+.notificationDisplay {
+  horizontalGap: 0;
+  verticalGap: 0;
+  borderStyle: none;
+  paddingRight: 5px;
+  paddingBottom: 4px;
+  paddingLeft: 0px;
+  paddingTop: 3px;
+}
+
+.notificationCanvas {
+  backgroundImage: Embed(source="../media/skins/controlbar/notif_display_background.png",
+                         scaleGridTop="9", scaleGridBottom="10",
+                         scaleGridLeft="5", scaleGridRight="19");
+  backgroundSize: "100%";
+}
+
+.notificationHistoryDisplay {
+  backgroundColor: white;
+  borderColor: #408fd9;
+  borderStyle: "solid";
+  borderThickness: 2;
+  cornerRadius: 3;
+  backgroundAlpha: 0.85;
+  verticalGap: 0;
+}
+
+.notificationHistoryCell {
+  backgroundAlpha: 0;
+  borderSides: "top";
+  borderColor: #777777;
+  borderStyle: "solid";
+  borderThickness: 1;
+  paddingLeft: 3;
+  paddingRight: 3;
+  paddingTop: 3;
+  paddingBottom: 3;
+}
+
+.gameOverTitle {
+  fontSize: 24;
+  color: #ffffff;
+  textAlign: center;
+}
+
+.gameOverMessage {
+  fontSize: 12;
+  color: #519cdd;
+}
+
+.playerLabel {
+  color: black;
+  fontSize: 12;
+}
+
+.friendStatusLabel {
+  color: #568EAF;
+  fontSize: 10;
+}
+
+.friendStatusLabelMuted {
+  color: red;
+  fontSize: 10;
+}
+
+.panelBottomSeparator {
+  backgroundColor: #2E7399;
+  backgroundAlpha: 1;
+  borderStyle: "solid";
+  borderColor: #408FD9;
+  borderSides: "left right";
+  borderThickness: 2;
+}
+
+.panelBottom {
+  backgroundColor: #64b3e0;
+  backgroundAlpha: 0.5;
+  borderThickness: 0;
+  verticalGap: 0;
+  paddingLeft: 5;
+  paddingRight: 5;
+  paddingTop: 3;
+  paddingBottom: 3;
+}
+
+.sexyTextInput, .statusEdit, .statusEditHover, .partyStatus {
+  backgroundAlpha: 0;
+  borderStyle: "none";
+  color: #22668d;
+}
+
+.partyStatus, .statusEdit, .statusEditHover {
+  fontSize: 10;
+}
+
+.sexyTextInput, .statusEdit {
+  textDecoration: "none";
+}
+
+.statusEditHover {
+  textDecoration: "underline";
+}
+
+.trophyPanelTitle, .trophyFeederPanelTitle {
+  fontSize: 16;
+  fontWeight: bold;
+}
+
+.trophyPanelName, .trophyFeederPanelName {
+  fontSize: 14;
+  fontWeight: bold;
+}
+
+.trophyPanelHidden {
+  fontStyle: italic;
+}
+
+.selectPlayersPanelTitle {
+  fontSize: 14;
+  fontWeight: bold;
+}
+
+.selectPlayersPanelPlayerBox {
+  paddingTop: 6;
+  paddingBottom: 6;
+  paddingLeft: 4;
+  paddingRight: 4;
+  borderThickness: 0;
+  borderStyle :none;
+}
+
+.selectPlayersPanelPlayerName, .selectPlayersPanelStatus, .selectPlayersPanelTip, .selectPlayersPanelSelectAll {
+  fontSize: 12;
+}
+
+.selectPlayersPanelDontShowAgain {
+  fontSize :10;
+}
+
+.broadcastPanel {
+  fontSize :12;
+}
+
+.shareDialogHeader {
+  fontSize :12;
+}
+
+.avatarPickerInstructions {
+  fontSize: 12;
+  fontWeight: bold;
+}
+
+.avatarPickerGrid {
+}
+
+.avatarPickerCell {
+  horizontalAlign: "center";
+}
+
+.tutorialPanel {
+}
+
+.tutorialProfessor {
+}
+
+.tutorialText {
+  color: #0d496d;
+  fontSize: 14.5;
+}
+
+.tutorialIcon {
+}
+
+.tutorialActionButton {
+}
+
+.tutorialActionText {
+  color: white;
+  paddingLeft: 7;
+  paddingRight: 7;
+  fontSize: 14;
+  textAlign: center;
+}
+
+.tutorialIgnoreLink {
+  color: #AAB5B9;
+  textRollOverColor: #5a9fb9;
+  textAlign: right;
+}

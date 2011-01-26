@@ -2,15 +2,27 @@
 // $Id$
 
 package com.threerings.orth.client {
+
+import mx.core.UIComponent;
+
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
 import com.threerings.util.MessageManager;
+import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ConfirmAdapter;
+import com.threerings.presents.client.InvocationAdapter;
+import com.threerings.presents.client.InvocationService_ConfirmListener;
+import com.threerings.presents.client.InvocationService_InvocationListener;
+import com.threerings.presents.client.InvocationService_ResultListener;
+import com.threerings.presents.client.ResultAdapter;
 import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.util.PresentsContext;
+
+import com.threerings.orth.data.OrthCodes;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherCredentials;
@@ -61,6 +73,66 @@ public class OrthContext
         return _wctx;
     }
 
+    // from OrthContext
+    public function listener (bundle :String = OrthCodes.GENERAL_MSGS,
+        errWrap :String = null, ... logArgs) :InvocationService_InvocationListener
+    {
+        return new InvocationAdapter(chatErrHandler(bundle, errWrap, null, logArgs));
+    }
+
+    // from OrthContext
+    public function confirmListener (bundle :String = OrthCodes.GENERAL_MSGS, confirm :* = null,
+        errWrap :String = null, component :UIComponent = null, ... logArgs)
+        :InvocationService_ConfirmListener
+    {
+        var success :Function = function () :void {
+            if (component != null) {
+                component.enabled = true;
+            }
+            if (confirm is Function) {
+                (confirm as Function)();
+            } else if (confirm is String) {
+                displayFeedback(bundle, String(confirm));
+            }
+        };
+        if (component != null) {
+            component.enabled = false;
+        }
+        return new ConfirmAdapter(success, chatErrHandler(bundle, errWrap, component, logArgs));
+    }
+
+    // from OrthContext
+    public function resultListener (gotResult :Function, bundle :String = OrthCodes.GENERAL_MSGS,
+        errWrap :String = null, component :UIComponent = null, ... logArgs)
+        :InvocationService_ResultListener
+    {
+        var success :Function;
+        if (component == null) {
+            success = gotResult;
+        } else {
+            component.enabled = false;
+            success = function (result :Object) :void {
+                component.enabled = true;
+                gotResult(result);
+            };
+        }
+        return new ResultAdapter(success, chatErrHandler(bundle, errWrap, component, logArgs));
+    }
+
+    // from OrthContext
+    public function displayFeedback (bundle :String, message :String) :void
+    {
+// ORTH TODO
+//        getChatDirector().displayFeedback(bundle, message);
+    }
+
+    // from OrthContext
+    public function displayInfo (bundle :String, message :String, localType :String = null) :void
+    {
+// ORTH TODO
+//        getChatDirector().displayInfo(bundle, message, localType);
+    }
+
     /**
      * To be explicitly called when we've created a {@link WorldContext} with a {@link WorldClient}
      * and are about to log into the corresponding world server.
@@ -102,6 +174,31 @@ public class OrthContext
         }
         _wctx == null;
     }
+
+    /**
+     * Create an error handling function for use with InvocationService listener adapters.
+     */
+    protected function chatErrHandler (
+        bundle :String, errWrap :String, component :UIComponent, logArgs :Array) :Function
+    {
+        return function (cause :String) :void {
+            if (component != null) {
+                component.enabled = true;
+            }
+            var args :Array = logArgs.concat("cause", cause); // make a copy, we're reentrant
+            if (args.length % 2 == 0) {
+                args.unshift("Reporting failure");
+            }
+            Log.getLog(OrthContext).info.apply(null, args);
+
+            if (errWrap != null) {
+                cause = MessageBundle.compose(errWrap, cause);
+            }
+            displayFeedback(bundle, cause);
+        };
+    }
+
+
 
     protected const _client :AetherClient = inject(AetherClient);
 
