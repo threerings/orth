@@ -3,7 +3,6 @@
 
 package com.threerings.orth.party.client;
 
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
 /**

@@ -2,13 +2,12 @@
 // $Id$
 package com.threerings.orth.room.data {
 
-import com.threerings.util.Integer;
-
+import com.threerings.orth.room.client.PetService;
+import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService_ConfirmListener;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.data.InvocationMarshaller_ConfirmMarshaller;
-
-import com.threerings.orth.room.client.PetService;
+import com.threerings.util.Integer;
 
 /**
  * Provides the implementation of the <code>PetService</code> interface

@@ -3,7 +3,6 @@
 
 package com.threerings.orth.room.client;
 
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
 import com.threerings.whirled.client.SceneService.SceneMoveListener;

@@ -2,6 +2,7 @@
 // $Id$
 package com.threerings.orth.aether.client {
 
+import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
 /**
