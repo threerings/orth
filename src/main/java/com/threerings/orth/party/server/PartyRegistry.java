@@ -43,6 +43,7 @@ import com.threerings.whirled.data.ScenePlace;
 
 import com.threerings.orth.data.PlayerObject;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.OrthUserObject;
 import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.server.MemberLocator;
