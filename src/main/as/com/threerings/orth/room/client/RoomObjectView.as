@@ -384,7 +384,7 @@ public class RoomObjectView extends RoomView
     {
         // set load-all to false, as we're going to just load the decor item first.
         _loadAllMedia = false;
-        _loadingWatcher = _injector.getInstance(PlaceLoadingDisplay);
+        _loadingWatcher = new PlaceLoadingDisplay();
         FurniSprite.setLoadingWatcher(_loadingWatcher);
 
         // save our scene object

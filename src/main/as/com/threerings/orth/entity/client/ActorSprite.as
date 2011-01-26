@@ -180,7 +180,7 @@ public class ActorSprite extends OccupantSprite
     // from EntitySprite
     override protected function createBackend () :EntityBackend
     {
-        return _injector.getInstance(ActorBackend);
+        return new ActorBackend();
     }
 }
 }

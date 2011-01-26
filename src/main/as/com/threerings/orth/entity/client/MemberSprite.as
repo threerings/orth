@@ -181,7 +181,7 @@ public class MemberSprite extends ActorSprite
     override protected function createBackend () :EntityBackend
     {
         _preferredY = 0;
-        return _injector.getInstance(AvatarBackend);
+        return new AvatarBackend();
     }
 
     /**

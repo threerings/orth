@@ -136,7 +136,7 @@ public class FurniSprite extends EntitySprite
 
     override protected function createBackend () :EntityBackend
     {
-        return _injector.getInstance(FurniBackend);
+        return new FurniBackend();
     }
 
     override protected function useLocationScale () :Boolean

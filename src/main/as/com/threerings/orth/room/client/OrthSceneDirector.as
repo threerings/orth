@@ -3,7 +3,26 @@
 
 package com.threerings.orth.room.client {
 
+import flashx.funk.ioc.inject;
+
+import com.threerings.util.Log;
+import com.threerings.util.ResultListener;
+
 import com.threerings.io.TypedArray;
+
+import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ClientEvent;
+import com.threerings.presents.dobj.MessageAdapter;
+import com.threerings.presents.dobj.MessageEvent;
+
+import com.threerings.crowd.client.LocationDirector;
+import com.threerings.crowd.data.PlaceConfig;
+
+import com.threerings.whirled.client.PendingData;
+import com.threerings.whirled.client.SceneDirector;
+import com.threerings.whirled.client.SceneService_SceneMoveListener;
+import com.threerings.whirled.client.persist.SceneRepository;
+
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
@@ -15,20 +34,6 @@ import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldController;
-import com.threerings.presents.client.Client;
-import com.threerings.presents.client.ClientEvent;
-import com.threerings.presents.dobj.MessageAdapter;
-import com.threerings.presents.dobj.MessageEvent;
-import com.threerings.util.Log;
-import com.threerings.util.ResultListener;
-
-import com.threerings.crowd.client.LocationDirector;
-import com.threerings.crowd.data.PlaceConfig;
-
-import com.threerings.whirled.client.PendingData;
-import com.threerings.whirled.client.SceneDirector;
-import com.threerings.whirled.client.SceneService_SceneMoveListener;
-import com.threerings.whirled.client.persist.SceneRepository;
 
 /**
  * Handles custom scene traversal and extra bits for Whirled.
@@ -218,8 +223,8 @@ public class OrthSceneDirector extends SceneDirector
         }
     }
 
-    protected const _worldCtrl :WorldController = init(WorldController);
-    protected const _octx :OrthContext = init(OrthContext);
+    protected const _worldCtrl :WorldController = inject(WorldController);
+    protected const _octx :OrthContext = inject(OrthContext);
 
     protected var _mssvc :OrthSceneService;
     protected var _postMoveMessage :String;

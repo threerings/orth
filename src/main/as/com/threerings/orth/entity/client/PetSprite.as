@@ -85,7 +85,7 @@ public class PetSprite extends ActorSprite
     // from ActorSprite
     override protected function createBackend () :EntityBackend
     {
-        return _injector.getInstance(PetBackend);
+        return new PetBackend();
     }
 
     // from OccupantSprite
