@@ -6,6 +6,7 @@ package com.threerings.orth.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+
 // GENERATED PREAMBLE END
 
 import com.threerings.util.ClassUtil;

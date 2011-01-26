@@ -7,14 +7,12 @@ package com.threerings.orth.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
-import com.threerings.util.Name;
-
 import com.threerings.presents.net.Credentials;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class OrthCredentials extends Credentials
+public class TokenCredentials extends Credentials
 {
 // GENERATED CLASSDECL END
 
@@ -25,29 +23,15 @@ public class OrthCredentials extends Credentials
     {
         super.readObject(ins);
         sessionToken = ins.readField(String);
-        _username = ins.readObject(Name);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
         out.writeField(sessionToken);
-        out.writeObject(_username);
     }
 
-    protected var _username :Name;
 // GENERATED STREAMING END
-
-    public function OrthCredentials (username :Name)
-    {
-        _username = username;
-    }
-
-    public function getUsername () :Name
-    {
-        return _username;
-    }
-
 
 // GENERATED CLASSFINISH START
 }

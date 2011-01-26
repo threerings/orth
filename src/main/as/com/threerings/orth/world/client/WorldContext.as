@@ -3,13 +3,14 @@
 
 package com.threerings.orth.world.client {
 
-import com.threerings.presents.util.PresentsContext;
+import com.threerings.crowd.util.CrowdContext;
 
 /**
- * The shared functionality that any location implementation in the Orth framework must support.
+ * The shared functionality, on top of CrowdContext, that any location implementation
+ * in the Orth framework must support.
  */
 public interface WorldContext
-    extends PresentsContext
+    extends CrowdContext
 {
     //  nothing yet
 }

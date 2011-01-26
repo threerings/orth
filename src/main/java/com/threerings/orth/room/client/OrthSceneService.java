@@ -23,6 +23,6 @@ public interface OrthSceneService extends InvocationService
      * @param portalId the id of the portal via which we are departing the current scene, or 0.
      * @param destLoc the location in the target scene where the client wishes to enter.
      */
-    public void moveTo (Client client, int sceneId, int version, int portalId,
+    public void moveTo (int sceneId, int version, int portalId,
         OrthLocation destLoc, SceneMoveListener listener);
 }

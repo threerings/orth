@@ -2,6 +2,7 @@
 // $Id$
 
 package com.threerings.orth.party.client {
+import flashx.funk.ioc.inject;
 
 import mx.core.ClassFactory;
 import mx.core.ScrollPolicy;
@@ -18,7 +19,6 @@ import com.threerings.flex.FlexUtil;
 import com.threerings.orth.ui.FloatingPanel;
 
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.data.OrthCodes;
 
 import com.threerings.orth.party.data.PartyCodes;
 
@@ -32,7 +32,6 @@ public class PartyBoardPanel extends FloatingPanel
         _mode = mode;
 
         var cf :ClassFactory = new ClassFactory(PartyBoardInfoRenderer);
-        cf.properties = { ctx: _ctx };
         _partyList = new List();
         _partyList.selectable = false;
         _partyList.itemRenderer = cf;
@@ -83,7 +82,7 @@ public class PartyBoardPanel extends FloatingPanel
 
         var btn :CommandButton = new CommandButton(Msgs.PARTY.get("b.create"));
         btn.setCallback(FloatingPanel.createPopper(function () :FloatingPanel {
-            return new CreatePartyPanel(_wctx);
+            return new CreatePartyPanel();
         }));
 
         addButtons(btn);
@@ -95,7 +94,7 @@ public class PartyBoardPanel extends FloatingPanel
 
     protected function getPartyBoard () :void
     {
-        _wctx.getPartyDirector().getPartyBoard(gotPartyBoard, _mode);
+        _partydir.getPartyBoard(gotPartyBoard, _mode);
     }
 
     /**
@@ -117,14 +116,14 @@ public class PartyBoardPanel extends FloatingPanel
         }
     }
 
-    protected var _wctx :RoomContext;
-
     protected var _mode :int;
 
     protected var _partyList :List;
 
     /** Contains either the loading Label or party List. */
     protected var _content :VBox;
+
+    protected const _partydir :PartyDirector = inject(PartyDirector);
 
     [Embed(source="../../../../../../../../rsrc/media/skins/party/board_header.png")]
     protected static const PARTY_HEADER :Class;

@@ -61,12 +61,6 @@ public class Msgs
         return _party;
     }
 
-    /** The npc message bundle. */
-    public static function get NPC () :MessageBundle
-    {
-        return _npc;
-    }
-
     /**
      * Initialize the bundles.
      */
@@ -84,7 +78,6 @@ public class Msgs
         _notify = msgMgr.getBundle(OrthCodes.NOTIFY_MSGS);
         _prefs = msgMgr.getBundle(OrthCodes.PREFS_MSGS);
         _party = msgMgr.getBundle(OrthCodes.PARTY_MSGS);
-        _npc = msgMgr.getBundle(OrthCodes.NPC_MSGS);
     }
 
     protected static var _general :MessageBundle;
@@ -95,6 +88,5 @@ public class Msgs
     protected static var _notify :MessageBundle;
     protected static var _prefs :MessageBundle;
     protected static var _party :MessageBundle;
-    protected static var _npc :MessageBundle;
 }
 }

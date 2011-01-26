@@ -4,14 +4,14 @@
 package com.threerings.orth.room.client {
 
 import flash.display.LoaderInfo;
-
 import flash.events.Event;
 import flash.events.IEventDispatcher;
 
 import mx.core.Application;
+import mx.core.FlexGlobals;
 import mx.core.ISWFBridgeProvider;
-
 import mx.events.SWFBridgeEvent;
+import mx.managers.IMarshalSystemManager;
 
 import com.threerings.util.Capabilities;
 
@@ -140,7 +140,10 @@ public class EntityMediaContainer extends MediaDescContainer
     protected function bridgeApp (event :Event) :void
     {
         _bridge = IEventDispatcher(event.currentTarget);
-        Application(Application.application).systemManager.addChildBridge(_bridge, this);
+        var app :Application = Application(FlexGlobals.topLevelApplication);
+        var msm :IMarshalSystemManager = IMarshalSystemManager(
+            app.systemManager.getImplementation("mx.managers::IMarshalSystemManager"));
+        msm.addChildBridge(_bridge, this);
     }
 
     protected var _suppressHitTestPoint :Boolean;

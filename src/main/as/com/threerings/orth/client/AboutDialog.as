@@ -2,8 +2,9 @@
 // $Id: AboutDialog.as 12951 2008-10-29 01:25:28Z ray $
 
 package com.threerings.orth.client {
-
 import flash.system.Capabilities;
+
+import flashx.funk.ioc.inject;
 
 import mx.controls.Text;
 
@@ -20,6 +21,7 @@ public class AboutDialog extends FloatingPanel
     public function AboutDialog ()
     {
         super(Msgs.GENERAL.get("t.about"));
+        _version = inject(OrthDeploymentConfig).version;
         showCloseButton = true;
         open(false);
     }
@@ -29,13 +31,13 @@ public class AboutDialog extends FloatingPanel
         super.createChildren();
 
         var textArea :Text = FlexUtil.createText(null, 300);
-        textArea.htmlText = Msgs.GENERAL.get("m.about", _depcon.getVersion(),
+        textArea.htmlText = Msgs.GENERAL.get("m.about", _version,
             Capabilities.version + (Capabilities.isDebugger ? " (debug)" : ""));
         addChild(textArea);
 
         addButtons(OK_BUTTON);
     }
 
-    [Inject] public var _depcon :OrthDeploymentConfig;
+    protected var _version :String;
 }
 }

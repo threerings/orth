@@ -7,13 +7,12 @@ import flash.utils.ByteArray;
 import flash.utils.Dictionary;
 import flash.utils.Endian;
 
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
-
 import com.threerings.whirled.client.persist.SceneRepository;
-
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.util.NoSuchSceneError;
+
+import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
 
 /**
  * A client-side scene repository that caches the last 20 scenes without

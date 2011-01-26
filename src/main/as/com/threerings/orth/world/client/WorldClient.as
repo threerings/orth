@@ -2,15 +2,16 @@
 // $Id: $
 package com.threerings.orth.world.client
 {
+import flashx.funk.ioc.inject;
+
+import com.threerings.crowd.client.CrowdClient;
+
 import com.threerings.util.Name;
 
 import com.threerings.presents.net.Credentials;
 
-import com.threerings.crowd.client.CrowdClient;
-
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
-
 import com.threerings.orth.world.data.WorldCredentials;
 
 /**
@@ -18,14 +19,14 @@ import com.threerings.orth.world.data.WorldCredentials;
  */
 public class WorldClient extends CrowdClient
 {
-    [PostConstruct]
-    public function initialize () :void
+    public function WorldClient ()
     {
+        const config :OrthDeploymentConfig = inject(OrthDeploymentConfig);
         // let the policy loader know about us
-        PolicyLoader.registerClient(this);
+        PolicyLoader.registerClient(this, config.policyPort);
 
         // configure our version
-        setVersion(_config.getVersion());
+        setVersion(config.version);
     }
 
     public function logonWithCredentials (
@@ -48,6 +49,5 @@ public class WorldClient extends CrowdClient
         return new WorldCredentials(username, sessionToken);
     }
 
-    [Inject] public var _config :OrthDeploymentConfig;
 }
 }

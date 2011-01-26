@@ -4,11 +4,14 @@
 
 package com.threerings.orth.aether.data {
 
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
-import com.threerings.presents.data.ClientObject;
 import org.osflash.signals.Signal;
+
+import com.threerings.io.ObjectInputStream;
+
+import com.threerings.presents.data.ClientObject;
+
 import com.threerings.orth.aether.data.VizPlayerName;
+
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
@@ -19,7 +22,7 @@ public class PlayerObject extends ClientObject
 // GENERATED STREAMING START
     public var playerName :VizPlayerName;
 
-    public var setPlayerName :Signal = new Signal(VizPlayerName, VizPlayerName);
+    public var playerNameChanged :Signal = new Signal(VizPlayerName, VizPlayerName);
 
     public static const PLAYER_NAME :String = "playerName";
 
@@ -43,13 +46,20 @@ public class PlayerObject extends ClientObject
 // GENERATED SIGNALLER START
 import org.osflash.signals.Signal;
 
-import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.AttributeChangeListener;
-import com.threerings.presents.dobj.ElementUpdatedEvent;
+import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.ElementUpdateListener;
+import com.threerings.presents.dobj.ElementUpdatedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
+import com.threerings.presents.dobj.MessageEvent;
+import com.threerings.presents.dobj.MessageListener;
+import com.threerings.presents.dobj.ObjectAddedEvent;
+import com.threerings.presents.dobj.ObjectDeathListener;
+import com.threerings.presents.dobj.ObjectDestroyedEvent;
+import com.threerings.presents.dobj.ObjectRemovedEvent;
+import com.threerings.presents.dobj.OidListListener;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.orth.aether.data.PlayerObject;
@@ -68,7 +78,7 @@ class Signaller
         var signal :Signal;
         switch (event.getName()) {
             case "playerName":
-                signal = _obj.setPlayerName;
+                signal = _obj.playerNameChanged;
                 break;
             default:
                 return;

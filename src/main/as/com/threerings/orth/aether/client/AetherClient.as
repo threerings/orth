@@ -2,6 +2,26 @@
 // $Id$
 
 package com.threerings.orth.aether.client {
+import flash.display.DisplayObject;
+import flash.display.Stage;
+import flash.events.ContextMenuEvent;
+import flash.geom.Point;
+import flash.system.Capabilities;
+import flash.ui.ContextMenu;
+import flash.utils.Dictionary;
+
+import flashx.funk.ioc.inject;
+
+import mx.core.Application;
+
+import com.threerings.ui.MenuUtil;
+
+import com.threerings.util.Log;
+
+import com.threerings.presents.client.Client;
+import com.threerings.presents.dobj.DObjectManager;
+import com.threerings.presents.net.BootstrapData;
+
 import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.orth.aether.data.PlayerObject;
@@ -11,52 +31,32 @@ import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.client.Prefs;
-import com.threerings.presents.client.Client;
-import com.threerings.presents.dobj.DObjectManager;
-import com.threerings.presents.net.BootstrapData;
-import com.threerings.ui.MenuUtil;
-import com.threerings.util.Log;
+import com.threerings.orth.data.AuthName;
 
-import flash.display.DisplayObject;
-import flash.display.Stage;
-import flash.events.ContextMenuEvent;
-import flash.geom.Point;
-import flash.system.Capabilities;
-import flash.ui.ContextMenu;
-import flash.utils.Dictionary;
-
-import mx.core.Application;
-
-import org.swiftsuspenders.Injector;
-
-[Inject(name='aetherHostname', name="aetherPorts")]
 public class AetherClient extends Client
 {
     // reference classes that would otherwise not be linked in
+    AuthName;
     PlayerObject;
 
-    public function AetherClient (host :String, ports :Array)
+    public function AetherClient ()
     {
-        super();
+        const depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 
         // configure our server and port info
-        setServer(host, ports);
+        setServer(depConf.host, depConf.ports);
 
         // then register with it, as any client would
-        PolicyLoader.registerClient(this);
-    }
-
-    [PostConstruct]
-    public function initialize () :void
-    {
+        PolicyLoader.registerClient(this, depConf.policyPort);
         // configure our version
-        setVersion(_depConf.getVersion());
+        setVersion(depConf.version);
 
+        // TODO - reenable without Application for non-flex clients
         // set up a context menu that blocks funnybiz on the stage
-        var menu :ContextMenu = new ContextMenu();
-        menu.hideBuiltInItems();
-        menu.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenuWillPopUp);
-        _app.contextMenu = menu;
+        //var menu :ContextMenu = new ContextMenu();
+        //menu.hideBuiltInItems();
+        //menu.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenuWillPopUp);
+        //inject(Application).contextMenu = menu;
     }
 
     public function logonWithCredentials (creds :AetherCredentials) :Boolean
@@ -82,7 +82,8 @@ public class AetherClient extends Client
             Prefs.setMachineIdent(rdata.ident);
         }
         if (rdata.sessionToken != null) {
-            _injector.mapValue(String, rdata.sessionToken, "sessionToken");
+            // TODO - scoped injection
+            //_injector.mapValue(String, rdata.sessionToken, "sessionToken");
         }
     }
 
@@ -131,10 +132,7 @@ public class AetherClient extends Client
         }
     }
 
-    [Inject] public var _injector :Injector;
-    [Inject] public var _stage :Stage;
-    [Inject] public var _app :Application;
-    [Inject] public var _depConf :OrthDeploymentConfig;
+    protected const _stage :Stage = inject(Stage);
 
     private static const log :Log = Log.getLog(AetherClient);
 }

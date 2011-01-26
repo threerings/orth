@@ -7,9 +7,10 @@ package com.threerings.orth.notify.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
-// GENERATED PREAMBLE END
 
 import com.threerings.util.Name;
+
+// GENERATED PREAMBLE END
 
 /**
  * Notification from the server to the client.  Notifications are sent as messages on the

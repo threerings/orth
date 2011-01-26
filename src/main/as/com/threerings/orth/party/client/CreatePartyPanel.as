@@ -2,11 +2,14 @@
 // $Id$
 
 package com.threerings.orth.party.client {
+
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.PlayerObject;
 import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.party.data.PartyCodes;
+
+import flashx.funk.ioc.inject;
 
 import mx.containers.Grid;
 
@@ -43,7 +46,7 @@ public class CreatePartyPanel extends FloatingPanel
     {
         super.createChildren();
 
-        var us :PlayerObject = _ctx.getPlayerObject();
+        var us :PlayerObject = inject(PlayerObject);
 
         _name = new TextInput();
         _name.maxChars = PartyCodes.MAX_NAME_LENGTH;
@@ -63,7 +66,7 @@ public class CreatePartyPanel extends FloatingPanel
 
     override protected function okButtonClicked () :void
     {
-        _partyDir.createParty(_name.text, _inviteAll.selected);
+        _partydir.createParty(_name.text, _inviteAll.selected);
         close();
     }
 
@@ -73,5 +76,7 @@ public class CreatePartyPanel extends FloatingPanel
     protected var _name :TextInput;
 
     protected var _inviteAll :CheckBox;
+
+    protected const _partydir :PartyDirector = inject(PartyDirector);
 }
 }

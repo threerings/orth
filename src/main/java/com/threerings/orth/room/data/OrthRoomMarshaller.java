@@ -1,12 +1,10 @@
 //
 // $Id$
-
 package com.threerings.orth.room.data;
 
 import javax.annotation.Generated;
 
 import com.threerings.orth.room.client.OrthRoomService;
-import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.whirled.spot.data.Location;
@@ -27,10 +25,10 @@ public class OrthRoomMarshaller extends InvocationMarshaller
     public static final int CHANGE_LOCATION = 1;
 
     // from interface OrthRoomService
-    public void changeLocation (Client arg1, EntityIdent arg2, Location arg3)
+    public void changeLocation (EntityIdent arg1, Location arg2)
     {
-        sendRequest(arg1, CHANGE_LOCATION, new Object[] {
-            arg2, arg3
+        sendRequest(CHANGE_LOCATION, new Object[] {
+            arg1, arg2
         });
     }
 
@@ -38,10 +36,10 @@ public class OrthRoomMarshaller extends InvocationMarshaller
     public static final int SEND_SPRITE_MESSAGE = 2;
 
     // from interface OrthRoomService
-    public void sendSpriteMessage (Client arg1, EntityIdent arg2, String arg3, byte[] arg4, boolean arg5)
+    public void sendSpriteMessage (EntityIdent arg1, String arg2, byte[] arg3, boolean arg4)
     {
-        sendRequest(arg1, SEND_SPRITE_MESSAGE, new Object[] {
-            arg2, arg3, arg4, Boolean.valueOf(arg5)
+        sendRequest(SEND_SPRITE_MESSAGE, new Object[] {
+            arg1, arg2, arg3, Boolean.valueOf(arg4)
         });
     }
 
@@ -49,10 +47,10 @@ public class OrthRoomMarshaller extends InvocationMarshaller
     public static final int SEND_SPRITE_SIGNAL = 3;
 
     // from interface OrthRoomService
-    public void sendSpriteSignal (Client arg1, String arg2, byte[] arg3)
+    public void sendSpriteSignal (String arg1, byte[] arg2)
     {
-        sendRequest(arg1, SEND_SPRITE_SIGNAL, new Object[] {
-            arg2, arg3
+        sendRequest(SEND_SPRITE_SIGNAL, new Object[] {
+            arg1, arg2
         });
     }
 
@@ -60,10 +58,10 @@ public class OrthRoomMarshaller extends InvocationMarshaller
     public static final int SET_ACTOR_STATE = 4;
 
     // from interface OrthRoomService
-    public void setActorState (Client arg1, EntityIdent arg2, int arg3, String arg4)
+    public void setActorState (EntityIdent arg1, int arg2, String arg3)
     {
-        sendRequest(arg1, SET_ACTOR_STATE, new Object[] {
-            arg2, Integer.valueOf(arg3), arg4
+        sendRequest(SET_ACTOR_STATE, new Object[] {
+            arg1, Integer.valueOf(arg2), arg3
         });
     }
 
@@ -71,12 +69,12 @@ public class OrthRoomMarshaller extends InvocationMarshaller
     public static final int UPDATE_MEMORY = 5;
 
     // from interface OrthRoomService
-    public void updateMemory (Client arg1, EntityIdent arg2, String arg3, byte[] arg4, InvocationService.ResultListener arg5)
+    public void updateMemory (EntityIdent arg1, String arg2, byte[] arg3, InvocationService.ResultListener arg4)
     {
-        InvocationMarshaller.ResultMarshaller listener5 = new InvocationMarshaller.ResultMarshaller();
-        listener5.listener = arg5;
-        sendRequest(arg1, UPDATE_MEMORY, new Object[] {
-            arg2, arg3, arg4, listener5
+        InvocationMarshaller.ResultMarshaller listener4 = new InvocationMarshaller.ResultMarshaller();
+        listener4.listener = arg4;
+        sendRequest(UPDATE_MEMORY, new Object[] {
+            arg1, arg2, arg3, listener4
         });
     }
 }

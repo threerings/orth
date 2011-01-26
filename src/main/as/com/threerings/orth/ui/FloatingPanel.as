@@ -3,30 +3,27 @@
 
 package com.threerings.orth.ui {
 import flash.display.DisplayObject;
-
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.events.TextEvent;
 
+import flashx.funk.ioc.inject;
+
 import mx.containers.TitleWindow;
 import mx.containers.VBox;
-
 import mx.controls.Button;
 import mx.controls.ButtonBar;
-
-import mx.core.mx_internal; // namespace
 import mx.core.UIComponent;
-
+import mx.core.mx_internal;
 import mx.events.CloseEvent;
-
 import mx.managers.PopUpManager;
+
+import com.threerings.flex.CommandButton;
+import com.threerings.flex.PopUpUtil;
 
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.Command;
 import com.threerings.util.CommandEvent;
-
-import com.threerings.flex.CommandButton;
-import com.threerings.flex.PopUpUtil;
 
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.TopPanel;
@@ -379,7 +376,7 @@ public class FloatingPanel extends TitleWindow
     }
 
     /** Our topmost display container. */
-    [Inject] public var _topPanel :TopPanel;
+    protected const _topPanel :TopPanel = inject(TopPanel);
 
     /** The button bar. */
     protected var _buttonBar :ButtonBar;
