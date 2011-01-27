@@ -63,7 +63,10 @@
       <fileset dir="${src.dir}" includes="**/*.properties"/>
       <fileset dir="${src.dir}" includes="**/*.tmpl"/>
     </copy>
-    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath"/>
+    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
+      <!-- we're punting on the server-side party code; large, complex, msoy-dependent -->
+      <exclude name="com/threerings/orth/party/**/*.java"/>
+    </ooojavac>
   </target>
 
   <target name="aslib" depends="mavendeps">
