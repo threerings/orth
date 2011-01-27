@@ -8,7 +8,7 @@ import com.threerings.presents.dobj.DSet;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class PlayerEntry
-    implements DSet.Entry
+    implements IsSerializable, DSet.Entry
 {
     /** The display name of the friend. */
     public VizOrthName name;
