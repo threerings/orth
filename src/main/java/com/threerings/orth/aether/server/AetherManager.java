@@ -9,6 +9,7 @@ import com.google.inject.Singleton;
 import com.threerings.presents.annotation.EventThread;
 import com.threerings.presents.server.InvocationManager;
 
+import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.data.OrthCodes;
 
 /**
@@ -21,6 +22,6 @@ public class AetherManager
     @Inject public AetherManager (InvocationManager invmgr)
     {
         // register our bootstrap invocation service
-        invmgr.registerDispatcher(new PlayerDispatcher(this), OrthCodes.AETHER_GROUP);
+        invmgr.registerProvider(this, PlayerMarshaller.class, OrthCodes.AETHER_GROUP);
     }
 }
