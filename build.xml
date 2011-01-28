@@ -142,6 +142,7 @@
     <!-- make sure the record class files are all compiled -->
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Record.java"/>
+      <exclude name="com/threerings/orth/party/**/*.java"/>
     </ooojavac>
     <!-- now update the source files -->
     <grecord classpathref="build.classpath">
@@ -154,6 +155,7 @@
     <!-- make sure the dobject class files are all compiled -->
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Object.java"/>
+      <exclude name="com/threerings/orth/party/**/*.java"/>
     </ooojavac>
     <!-- now generate the associated files -->
     <gendobj classpathref="build.classpath">
@@ -171,6 +173,7 @@
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Service.java"/>
       <exclude name="**/InvocationService.java"/>
+      <exclude name="com/threerings/orth/party/**/*.java"/>
     </ooojavac>
     <!-- now generate the associated files -->
     <genservice header="lib/SOURCE_HEADER" asroot="src/main/as" classpathref="build.classpath">
@@ -195,6 +198,7 @@
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Receiver.java"/>
       <exclude name="**/InvocationReceiver.java"/>
+      <exclude name="com/threerings/orth/party/**/*.java"/>
     </ooojavac>
     <!-- now generate the associated files -->
     <genreceiver header="lib/SOURCE_HEADER" classpathref="build.classpath">
@@ -207,6 +211,7 @@
       <!-- make sure the streamable class files are all compiled -->
       <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
         <include name="**/data/*.java"/>
+        <exclude name="com/threerings/orth/party/**/*.java"/>
       </ooojavac>
      <genascriptstreamable classpathref="build.classpath" header="lib/SOURCE_HEADER"
                            asroot="${asrc.dir}">
