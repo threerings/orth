@@ -2,55 +2,6 @@
 // $Id: RoomObjectController.as 19189 2010-05-26 19:37:09Z zell $
 
 package com.threerings.orth.room.client {
-import com.threerings.crowd.client.PlaceView;
-import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.crowd.data.PlaceConfig;
-import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.util.CrowdContext;
-import com.threerings.flex.CommandMenu;
-import com.threerings.orth.chat.client.ChatOverlay;
-import com.threerings.orth.client.ControlBar;
-import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.TopPanel;
-import com.threerings.orth.data.MediaDescSize;
-import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.data.OrthName;
-import com.threerings.orth.entity.client.ActorSprite;
-import com.threerings.orth.entity.data.Avatar;
-import com.threerings.orth.entity.data.Decor;
-import com.threerings.orth.entity.client.MemberSprite;
-import com.threerings.orth.entity.client.OccupantSprite;
-import com.threerings.orth.entity.client.PetSprite;
-import com.threerings.orth.room.client.updates.UpdateAction;
-import com.threerings.orth.room.client.updates.UpdateStack;
-import com.threerings.orth.room.data.ActorInfo;
-import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.orth.room.data.EntityMemories;
-import com.threerings.orth.room.data.FurniData;
-import com.threerings.orth.room.data.FurniUpdate_Add;
-import com.threerings.orth.room.data.FurniUpdate_Remove;
-import com.threerings.orth.room.data.OrthLocation;
-import com.threerings.orth.room.data.OrthRoomObject;
-import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.data.OrthSceneModel;
-import com.threerings.orth.room.data.PetInfo;
-import com.threerings.orth.room.data.PetName;
-import com.threerings.orth.room.data.SocializerInfo;
-import com.threerings.orth.room.data.SimpleEntityIdent;
-import com.threerings.orth.room.data.SocializerObject;
-import com.threerings.orth.ui.MediaWrapper;
-import com.threerings.orth.world.client.BootablePlaceController;
-import com.threerings.orth.world.client.WorldControlBar;
-import com.threerings.orth.world.client.WorldController;
-import com.threerings.orth.world.client.WorldDirector;
-import com.threerings.presents.dobj.AttributeChangeAdapter;
-import com.threerings.presents.dobj.AttributeChangedEvent;
-import com.threerings.util.ArrayUtil;
-import com.threerings.util.Name;
-import com.threerings.util.ObjectMarshaller;
-import com.threerings.util.Predicates;
-import com.threerings.util.ValueEvent;
-import com.threerings.whirled.data.SceneUpdate;
 
 import flash.events.Event;
 import flash.events.KeyboardEvent;
@@ -59,6 +10,59 @@ import flash.ui.Keyboard;
 import flash.utils.ByteArray;
 
 import flashx.funk.ioc.inject;
+
+import com.threerings.flex.CommandMenu;
+
+import com.threerings.util.ArrayUtil;
+import com.threerings.util.ObjectMarshaller;
+import com.threerings.util.ValueEvent;
+
+import com.threerings.presents.dobj.AttributeChangeAdapter;
+import com.threerings.presents.dobj.AttributeChangedEvent;
+
+import com.threerings.crowd.client.PlaceView;
+import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.crowd.data.PlaceObject;
+import com.threerings.crowd.util.CrowdContext;
+
+import com.threerings.whirled.data.SceneUpdate;
+
+import com.threerings.orth.ui.MediaWrapper;
+
+import com.threerings.orth.chat.client.ChatOverlay;
+
+import com.threerings.orth.client.ControlBar;
+import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.TopPanel;
+
+import com.threerings.orth.data.MediaDescSize;
+import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.OrthName;
+
+import com.threerings.orth.entity.client.ActorSprite;
+import com.threerings.orth.entity.data.Avatar;
+import com.threerings.orth.entity.client.MemberSprite;
+import com.threerings.orth.entity.client.PetSprite;
+
+import com.threerings.orth.room.client.updates.UpdateAction;
+import com.threerings.orth.room.client.updates.UpdateStack;
+
+import com.threerings.orth.room.data.ActorInfo;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.EntityMemories;
+import com.threerings.orth.room.data.FurniData;
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthRoomObject;
+import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.room.data.PetInfo;
+import com.threerings.orth.room.data.PetName;
+import com.threerings.orth.room.data.SocializerInfo;
+import com.threerings.orth.room.data.SocializerObject;
+
+import com.threerings.orth.world.client.BootablePlaceController;
+import com.threerings.orth.world.client.WorldControlBar;
+import com.threerings.orth.world.client.WorldController;
+import com.threerings.orth.world.client.WorldDirector;
 
 /**
  * Manages the various interactions that take place in a room scene.
