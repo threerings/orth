@@ -11,20 +11,13 @@ import flash.geom.Rectangle;
 
 import flashx.funk.ioc.inject;
 
-import mx.containers.Canvas;
-import mx.controls.Label;
-import mx.controls.scrollClasses.ScrollBar;
 import mx.core.Application;
 import mx.core.ScrollPolicy;
 
-import mx.core.UIComponent;
-
 import mx.containers.Canvas;
 
 import mx.controls.Label;
 import mx.controls.scrollClasses.ScrollBar;
-
-import com.threerings.orth.client.ControlBar;
 
 public class TopPanel extends Canvas
 {
@@ -112,7 +105,7 @@ public class TopPanel extends Canvas
     /**
      * Clear the specified place view, or null to clear any.
      */
-    public function clearPlaceView (view :DisplayObject == null) :void
+    public function clearPlaceView (view :DisplayObject = null) :void
     {
         if (_placeBox.clearMainView(view)) {
             setMainView(getBlankPlaceView());
