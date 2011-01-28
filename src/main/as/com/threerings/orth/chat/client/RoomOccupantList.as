@@ -19,7 +19,7 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.VizOrthName;
-import com.threerings.orth.room.data.PlayerInfo;
+import com.threerings.orth.room.data.SocializerInfo;
 import com.threerings.orth.ui.OrthNameLabelCreator;
 
 /**
@@ -93,7 +93,7 @@ public class RoomOccupantList extends PlayerList
      */
     protected function processOccupant (entry :DSet_Entry, fn :Function) :void
     {
-        if ((entry is PlayerInfo) && (PlayerInfo(entry).username is VizOrthName)) {
+        if ((entry is SocializerInfo) && (SocializerInfo(entry).username is VizOrthName)) {
             fn(new RoomOccupantRecord(entry as OccupantInfo));
         }
     }

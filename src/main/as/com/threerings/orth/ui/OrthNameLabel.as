@@ -12,7 +12,7 @@ import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 
-import com.threerings.orth.room.data.PlayerInfo;
+import com.threerings.orth.room.data.SocializerInfo;
 import com.threerings.text.TextFieldUtil;
 import com.threerings.util.Log;
 
@@ -42,7 +42,7 @@ public class OrthNameLabel extends Sprite
     public function update (info :OccupantInfo) :void
     {
         setName(info.username.toString());
-        setStatus(info.status, (info is PlayerInfo) && PlayerInfo(info).isAway(), false);
+        setStatus(info.status, (info is SocializerInfo) && SocializerInfo(info).isAway(), false);
     }
 
     /**

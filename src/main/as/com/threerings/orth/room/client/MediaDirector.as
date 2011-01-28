@@ -27,7 +27,7 @@ import com.threerings.orth.entity.data.Decor;
 
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.PetInfo;
-import com.threerings.orth.room.data.PlayerInfo;
+import com.threerings.orth.room.data.SocializerInfo;
 import com.threerings.orth.room.data.FurniData;
 
 /**
@@ -53,13 +53,13 @@ public class MediaDirector extends BasicDirector
      */
     public function getSprite (occInfo :OccupantInfo, extraInfo :Object) :OccupantSprite
     {
-        if (occInfo is PlayerInfo) {
+        if (occInfo is SocializerInfo) {
             var isOurs :Boolean = _octx.getMyName().equals(occInfo.username);
             if (isOurs && _ourAvatar != null) {
                 _ourAvatar.setOccupantInfo(occInfo, extraInfo);
                 return _ourAvatar;
             }
-            var mSprite :MemberSprite = new MemberSprite(occInfo as PlayerInfo, extraInfo);
+            var mSprite :MemberSprite = new MemberSprite(occInfo as SocializerInfo, extraInfo);
             if (isOurs) {
                 _ourAvatar = mSprite;
             }

@@ -20,7 +20,7 @@ import com.threerings.orth.room.data.FurniUpdate_Remove;
 import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthRoomObject;
-import com.threerings.orth.room.data.PlayerInfo;
+import com.threerings.orth.room.data.SocializerInfo;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldController;
 
@@ -159,7 +159,7 @@ public class RoomObjectView extends RoomView
     {
         var avatar :MemberSprite = getMyAvatar();
         if (avatar != null) {
-            var occInfo :PlayerInfo = (avatar.getOccupantInfo() as PlayerInfo);
+            var occInfo :SocializerInfo = (avatar.getOccupantInfo() as SocializerInfo);
             if (occInfo.getEntityIdent().equals(new SimpleEntityIdent(Item.AVATAR, avatarId))) {
                 occInfo.setScale(newScale);
                 avatar.setOccupantInfo(occInfo, _roomObj);
@@ -417,8 +417,8 @@ public class RoomObjectView extends RoomView
         // load the decor data we have, even if it's just default values.
         _bg.setLoadedCallback(backgroundFinishedLoading);
 
-        var localOccupant :PlayerInfo;
-        localOccupant = _roomObj.occupantInfo.get(_ctx.getClient().getClientOid()) as PlayerInfo;
+        var localOccupant :SocializerInfo;
+        localOccupant = _roomObj.occupantInfo.get(_ctx.getClient().getClientOid()) as SocializerInfo;
         if (localOccupant != null && localOccupant.isStatic()) {
             _ctx.displayInfo(OrthCodes.GENERAL_MSGS, "m.static_avatar");
         }
