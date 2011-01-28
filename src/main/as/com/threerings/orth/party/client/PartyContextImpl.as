@@ -39,7 +39,7 @@ public class PartyContextImpl implements PartyContext
         pcreds.sessionToken = OrthCredentials(inject(AetherClient).getCredentials()).sessionToken;
         pcreds.partyId = partyId;
 
-        PolicyLoader.registerClient(_client);
+        PolicyLoader.registerClient(_client, _depConf.policyPort);
 
         // configure our client and logon
         _client.addServiceGroup(OrthCodes.PARTY_GROUP);
