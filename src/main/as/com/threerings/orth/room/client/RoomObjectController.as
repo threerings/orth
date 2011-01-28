@@ -9,14 +9,12 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
 import com.threerings.flex.CommandMenu;
 import com.threerings.orth.chat.client.ChatOverlay;
+import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.Resources;
 import com.threerings.orth.client.TopPanel;
-import com.threerings.orth.client.UberClient;
 import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.data.PlayerObject;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.data.Avatar;
 import com.threerings.orth.entity.data.Decor;
@@ -39,10 +37,12 @@ import com.threerings.orth.room.data.PetInfo;
 import com.threerings.orth.room.data.PetName;
 import com.threerings.orth.room.data.SocializerInfo;
 import com.threerings.orth.room.data.SimpleEntityIdent;
+import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.ui.MediaWrapper;
 import com.threerings.orth.world.client.BootablePlaceController;
 import com.threerings.orth.world.client.WorldControlBar;
 import com.threerings.orth.world.client.WorldController;
+import com.threerings.orth.world.client.WorldDirector;
 import com.threerings.presents.dobj.AttributeChangeAdapter;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.util.ArrayUtil;
@@ -58,6 +58,8 @@ import flash.events.MouseEvent;
 import flash.ui.Keyboard;
 import flash.utils.ByteArray;
 
+import flashx.funk.ioc.inject;
+
 /**
  * Manages the various interactions that take place in a room scene.
  */
@@ -72,7 +74,7 @@ public class RoomObjectController extends RoomController
     // documentation inherited
     override protected function createPlaceView (ctx :CrowdContext) :PlaceView
     {
-        _roomObjectView = new RoomObjectView(_wdctx, this);
+        _roomObjectView = new RoomObjectView(_rctx, this);
         _roomView = _roomObjectView;
         return _roomObjectView;
     }
@@ -102,7 +104,7 @@ public class RoomObjectController extends RoomController
             return;
         }
 
-        const us :PlayerObject = _wdctx.getPlayerObject();
+        const us :SocializerObject = _rctx.getSocializerObject();
         const avatar :MemberSprite = _roomObjectView.getOccupant(occInfo.bodyOid) as MemberSprite;
         // avatar may be null if not yet loaded. We check below..
 
@@ -167,9 +169,9 @@ public class RoomObjectController extends RoomController
         }
 
         var handleResult :Function = function (result :Object) :void {
-            DoorTargetEditController.start(furniData, _wdctx);
+            DoorTargetEditController.start(furniData, _rctx);
         };
-        _roomObj.orthRoomService.editRoom(_wdctx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
+        _roomObj.orthRoomService.editRoom(_octx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
     }
 
     /**
@@ -199,7 +201,7 @@ public class RoomObjectController extends RoomController
         var handleResult :Function = function (result :Object) :void {
             beginRoomEditing();
         };
-        _roomObj.orthRoomService.editRoom(_wdctx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
+        _roomObj.orthRoomService.editRoom(_octx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
     }
 
     /**
@@ -207,7 +209,7 @@ public class RoomObjectController extends RoomController
      */
     public function handleRoomRate (rating :Number) :void
     {
-        _roomObj.orthRoomService.rateRoom(rating, _wdctx.listener());
+        _roomObj.orthRoomService.rateRoom(rating, _octx.listener());
     }
 
     /**
@@ -215,10 +217,10 @@ public class RoomObjectController extends RoomController
      */
     public function handlePublishRoom () :void
     {
-        _roomObj.orthRoomService.publishRoom(_wdctx.listener(OrthCodes.EDITING_MSGS));
+        _roomObj.orthRoomService.publishRoom(_octx.listener(OrthCodes.EDITING_MSGS));
 
         // TODO: remove this bubbley hint someday?
-        BubblePopup.showHelpBubble(_wdctx, _wdctx.getControlBar().shareBtn,
+        BubblePopup.showHelpBubble(_rctx, _controlBar.shareBtn,
             Msgs.WORLD.get("h.room_share"), -7);
     }
 
@@ -228,10 +230,10 @@ public class RoomObjectController extends RoomController
     override public function handleFurniClicked (furni :FurniData) :void
     {
         if (furni.actionType.isURL()) {
-            _wdctx.getWorldController().handleViewUrl(furni.splitActionData()[0] as String);
+            _worldCtrl.handleViewUrl(furni.splitActionData()[0] as String);
 
         } else if (furni.actionType.isPortal()) {
-            (_wdctx.getSceneDirector() as OrthSceneDirector).traversePortal(furni.id);
+            _sceneDir.traversePortal(furni.id);
 
         } else if (furni.actionType.isHelpPage()) {
             var actionData :Array = furni.splitActionData();
@@ -257,14 +259,14 @@ public class RoomObjectController extends RoomController
         }
 
         var menuItems :Array = [];
-        _wdctx.getWorldController().addMemberMenuItems(occInfo.username as OrthName, menuItems);
+        _worldCtrl.addMemberMenuItems(occInfo.username as OrthName, menuItems);
         popActorMenu(avatar, menuItems);
     }
 
     /**
      * Create the menu item that allows a user to change their own avatar.
      */
-    protected function createChangeAvatarMenu (us :PlayerObject, canControl :Boolean) :Object
+    protected function createChangeAvatarMenu (us :SocializerObject, canControl :Boolean) :Object
     {
         var avItems :Array = [];
         var avatars :Array = (us.avatarCache != null) ? us.avatarCache.toArray() : [];
@@ -279,14 +281,14 @@ public class RoomObjectController extends RoomController
             avItems.push({ label: av.name, enabled: !av.equals(us.avatar),
                 iconObject: MediaWrapper.createView(
                     av.getThumbnailMedia(), MediaDescSize.QUARTER_THUMBNAIL_SIZE),
-                callback: _wdctx.getWorldDirector().setAvatar, arg: av.itemId });
+                callback: _worldDir.setAvatar, arg: av.itemId });
         }
         // add defaults
         avItems.push({ label: Msgs.ITEM.get("m.default"), enabled: (us.avatar != null),
             iconObject: MediaWrapper.createView(
                 Item.getDefaultThumbnailMediaFor(Item.AVATAR),
                 MediaDescSize.QUARTER_THUMBNAIL_SIZE),
-            callback: _wdctx.getWorldDirector().setAvatar, arg: 0 });
+            callback: _worldDir.setAvatar, arg: 0 });
 
         // return a menu item for changing their avatar
         return { label: Msgs.GENERAL.get("b.change_avatar"), children: avItems,
@@ -304,13 +306,13 @@ public class RoomObjectController extends RoomController
             return;
         }
 
-        const memObj :PlayerObject = _wdctx.getPlayerObject();
+        const memObj :SocializerObject = _rctx.getSocializerObject();
         const isPetOwner :Boolean = (PetSprite(pet).getOwnerId() == memObj.getPlayerId());
-        const petId :int = occInfo.getEntityIdent().itemId;
+        const petId :int = occInfo.getEntityIdent().getItem();
 
         var menuItems :Array = [];
 
-        _wdctx.getWorldController().addPetMenuItems(PetName(occInfo.username), menuItems);
+        _worldCtrl.addPetMenuItems(PetName(occInfo.username), menuItems);
 
         if (isPetOwner) {
             CommandMenu.addSeparator(menuItems);
@@ -342,8 +344,8 @@ public class RoomObjectController extends RoomController
      */
     override public function handleOrderPet (petId :int, command :int) :void
     {
-        var svc :PetService = (_wdctx.getClient().requireService(PetService) as PetService);
-        svc.orderPet(petId, command, _wdctx.confirmListener("m.pet_ordered" + command));
+        var svc :PetService = (_rctx.getClient().requireService(PetService) as PetService);
+        svc.orderPet(petId, command, _rctx.confirmListener("m.pet_ordered" + command));
     }
 
     override public function getEnvironment () :String
@@ -373,7 +375,7 @@ public class RoomObjectController extends RoomController
     override public function canManageRoom (
         memberId :int = 0, allowSupport :Boolean = true) :Boolean
     {
-        var me :PlayerObject = _wdctx.getPlayerObject();
+        var me :SocializerObject = _rctx.getSocializerObject();
         if (memberId == 0 || (memberId == me.getPlayerId())) { // self
             return (_scene != null && _scene.canManage(me, allowSupport));
 
@@ -385,13 +387,13 @@ public class RoomObjectController extends RoomController
 
     override public function deleteItem (ident :EntityIdent) :void
     {
-        var svc :ItemService = _wdctx.getClient().requireService(ItemService) as ItemService;
-        svc.deleteItem(ident, _wdctx.confirmListener(OrthCodes.EDITING_MSGS));
+        var svc :ItemService = _rctx.getClient().requireService(ItemService) as ItemService;
+        svc.deleteItem(ident, _rctx.confirmListener(OrthCodes.EDITING_MSGS));
     }
 
     override public function rateRoom (rating :Number, onSuccess :Function) :void
     {
-        _roomObj.orthRoomService.rateRoom(rating, _wdctx.resultListener(onSuccess));
+        _roomObj.orthRoomService.rateRoom(rating, _octx.resultListener(onSuccess));
     }
 
     /**
@@ -433,15 +435,15 @@ public class RoomObjectController extends RoomController
         reportLocationOwner();
 
         // get a copy of the scene
-        _scene = (_wdctx.getSceneDirector().getScene() as OrthScene);
+        _scene = _sceneDir.getScene() as OrthScene;
 
-        _wdctx.getChatDirector().registerCommandHandler(
+        _rctx.getChatDirector().registerCommandHandler(
             Msgs.CHAT, "action", new AvatarChatHandler(false));
-        _wdctx.getChatDirector().registerCommandHandler(
+        _rctx.getChatDirector().registerCommandHandler(
             Msgs.CHAT, "state", new AvatarChatHandler(true));
 
         // deactivate any hot zoneiness
-        var bar :WorldControlBar = WorldControlBar(_wdctx.getControlBar());
+        var bar :WorldControlBar = WorldControlBar(_controlBar);
         if (bar.hotZoneBtn.selected) {
             bar.hotZoneBtn.activate();
         }
@@ -465,8 +467,8 @@ public class RoomObjectController extends RoomController
             cancelRoomEditing();
         }
 
-        _wdctx.getChatDirector().unregisterCommandHandler(Msgs.CHAT, "action");
-        _wdctx.getChatDirector().unregisterCommandHandler(Msgs.CHAT, "state");
+        _rctx.getChatDirector().unregisterCommandHandler(Msgs.CHAT, "action");
+        _rctx.getChatDirector().unregisterCommandHandler(Msgs.CHAT, "state");
 
         _roomView.removeEventListener(MouseEvent.CLICK, mouseClicked);
         _roomView.removeEventListener(Event.ENTER_FRAME, checkMouse);
@@ -500,7 +502,7 @@ public class RoomObjectController extends RoomController
             _editor = null;
         }
 
-        _editor = new RoomEditorController(_wdctx, _roomObjectView);
+        _editor = new RoomEditorController(_rctx, _roomObjectView);
         _editor.startEditing(wrapupFn);
         _editor.updateUndoStatus(_updates.length != 0);
     }
@@ -510,7 +512,7 @@ public class RoomObjectController extends RoomController
      */
     protected function updateRoom (update :SceneUpdate) :void
     {
-        _roomObj.orthRoomService.updateRoom(update, _wdctx.listener(OrthCodes.EDITING_MSGS));
+        _roomObj.orthRoomService.updateRoom(update, _octx.listener(OrthCodes.EDITING_MSGS));
     }
 
     override protected function checkMouse2 (
@@ -527,7 +529,7 @@ public class RoomObjectController extends RoomController
 
     override protected function requestAvatarMove (newLoc :OrthLocation) :void
     {
-        _wdctx.getSpotSceneDirector().changeLocation(newLoc, null);
+        _rctx.getSpotSceneDirector().changeLocation(newLoc, null);
     }
 
     // documentation inherited
@@ -554,9 +556,9 @@ public class RoomObjectController extends RoomController
     // documentation inherited
     override protected function sendPetChatMessage2 (msg :String, info :ActorInfo) :void
     {
-        var svc :PetService = (_wdctx.getClient().requireService(PetService) as PetService);
+        var svc :PetService = (_rctx.getClient().requireService(PetService) as PetService);
         throttle(info.getEntityIdent(), svc.sendChat,
-            info.bodyOid, _scene.getId(), msg, _wdctx.confirmListener());
+            info.bodyOid, _scene.getId(), msg, _octx.confirmListener());
     }
 
     // documentation inherited
@@ -575,14 +577,14 @@ public class RoomObjectController extends RoomController
 
         // ship the update request off to the server
         throttle(ident, _roomObj.orthRoomService.updateMemory,
-            ident, key, data, _wdctx.resultListener(resultHandler));
+            ident, key, data, _octx.resultListener(resultHandler));
     }
 
     // documentation inherited
     override protected function keyEvent (event :KeyboardEvent) :void
     {
         if (event.keyCode == Keyboard.F6) {
-            var overlay :ChatOverlay = _wdctx.getTopPanel().getChatOverlay();
+            var overlay :ChatOverlay = _topPanel.getChatOverlay();
             if (overlay != null) {
                 overlay.setClickableGlyphs(event.type == KeyboardEvent.KEY_DOWN);
             }
@@ -600,7 +602,7 @@ public class RoomObjectController extends RoomController
     {
         for each (var obj :Object in _roomObj.occupantInfo.toArray()) {
             var info :SocializerInfo = obj as SocializerInfo;
-            if (info != null && info.getId() == memberId) {
+            if (info != null && info.getPlayerId() == memberId) {
                 return info;
             }
         }
@@ -635,14 +637,12 @@ public class RoomObjectController extends RoomController
 
     protected function reportLocationName () :void
     {
-        _wdctx.getTopPanel().dispatchEvent(
-            new ValueEvent(TopPanel.LOCATION_NAME_CHANGED, _roomObj.name));
+        _topPanel.dispatchEvent(new ValueEvent(TopPanel.LOCATION_NAME_CHANGED, _roomObj.name));
     }
 
     protected function reportLocationOwner () :void
     {
-        _wdctx.getTopPanel().dispatchEvent(
-            new ValueEvent(TopPanel.LOCATION_OWNER_CHANGED, _roomObj.owner));
+        _topPanel.dispatchEvent(new ValueEvent(TopPanel.LOCATION_OWNER_CHANGED, _roomObj.owner));
     }
 
     protected function roomAttrChanged (event :AttributeChangedEvent) :void
@@ -653,6 +653,11 @@ public class RoomObjectController extends RoomController
             reportLocationOwner();
         }
     }
+
+    protected const _worldCtrl :WorldController = inject(WorldController);
+    protected const _controlBar :ControlBar = inject(ControlBar);
+    protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
+    protected const _worldDir :WorldDirector = inject(WorldDirector);
 
     /** A casted version of _roomView. */
     protected var _roomObjectView :RoomObjectView;
