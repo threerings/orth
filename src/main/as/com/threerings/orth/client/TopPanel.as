@@ -105,7 +105,7 @@ public class TopPanel extends Canvas
     /**
      * Clear the specified place view, or null to clear any.
      */
-    public function clearPlaceView (view :DisplayObject = null) :void
+    public function clearMainView (view :DisplayObject = null) :void
     {
         if (_placeBox.clearMainView(view)) {
             setMainView(getBlankPlaceView());
