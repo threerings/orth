@@ -50,6 +50,11 @@ public class SocializerObject extends ActorObject
     }
 // GENERATED STREAMING END
 
+    public function getPlayerId () :int
+    {
+        return name.getId();
+    }
+
 // GENERATED CLASSFINISH START
 }
 }
