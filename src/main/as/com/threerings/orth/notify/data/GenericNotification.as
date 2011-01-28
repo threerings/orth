@@ -6,11 +6,8 @@ package com.threerings.orth.notify.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-
-import com.threerings.util.Name;
-
 import com.threerings.orth.notify.data.Notification;
-
+import com.threerings.util.Name;
 // GENERATED PREAMBLE END
 
 /**

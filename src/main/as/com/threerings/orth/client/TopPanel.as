@@ -2,18 +2,22 @@
 // $Id: $
 
 package com.threerings.orth.client {
+
 import flash.display.DisplayObject;
 import flash.display.Stage;
+
 import flash.events.Event;
 import flash.geom.Rectangle;
 
 import flashx.funk.ioc.inject;
 
-import mx.containers.Canvas;
-import mx.controls.Label;
-import mx.controls.scrollClasses.ScrollBar;
 import mx.core.Application;
 import mx.core.ScrollPolicy;
+
+import mx.containers.Canvas;
+
+import mx.controls.Label;
+import mx.controls.scrollClasses.ScrollBar;
 
 public class TopPanel extends Canvas
 {
@@ -21,6 +25,7 @@ public class TopPanel extends Canvas
     {
         _width = inject(Stage).stageWidth;
         _height = inject(Stage).stageHeight;
+
         percentWidth = 100;
         percentHeight = 100;
         verticalScrollPolicy = ScrollPolicy.OFF;
@@ -31,17 +36,25 @@ public class TopPanel extends Canvas
         _placeBox.includeInLayout = false;
         addChild(_placeBox);
 
+        // set up the control bar
+        _controlBar.includeInLayout = false;
+        _controlBar.init(this);
+        _controlBar.setStyle("left", 0);
+        _controlBar.setStyle("right", 0);
+        addChild(_controlBar);
+
         // show a subtle build-stamp on dev builds
-        const devConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
-        if (devConf.development) {
+
+        var depConf: OrthDeploymentConfig = inject(OrthDeploymentConfig);
+        if (depConf.development) {
             var buildStamp :Label = new Label();
             buildStamp.includeInLayout = false;
             buildStamp.mouseEnabled = false;
             buildStamp.mouseChildren = false;
-            buildStamp.text = "Build: " + devConf.version;
+            buildStamp.text = "Build: " + depConf.version;
             buildStamp.setStyle("color", "#F7069A");
             buildStamp.setStyle("fontSize", 8);
-            buildStamp.setStyle("bottom", 0);
+            buildStamp.setStyle("bottom", getControlBarHeight());
             // The scrollbar isn't really this thick, but it's pretty close.
             buildStamp.setStyle("right", ScrollBar.THICKNESS);
             addChild(buildStamp);
@@ -53,6 +66,14 @@ public class TopPanel extends Canvas
         _app.stage.addEventListener(Event.RESIZE, stageResized);
 
         setMainView(getBlankPlaceView());
+    }
+
+    /**
+     * Gets the height of the area at the bottom of the screen that contains the control bar.
+     */
+    public function getControlBarHeight () :Number
+    {
+        return _controlBar.getBarHeight();
     }
 
     /**
@@ -84,7 +105,7 @@ public class TopPanel extends Canvas
     /**
      * Clear the specified place view, or null to clear any.
      */
-    public function clearPlaceView (view :DisplayObject) :void
+    public function clearMainView (view :DisplayObject = null) :void
     {
         if (_placeBox.clearMainView(view)) {
             setMainView(getBlankPlaceView());
@@ -125,6 +146,9 @@ public class TopPanel extends Canvas
         _app.width = _width;
         _app.height = _height;
 
+        // center control bar in the "footer". we shall put other things here soon
+        _controlBar.setStyle("bottom", 0);
+
         updatePlaceViewSize();
     }
 
@@ -134,12 +158,21 @@ public class TopPanel extends Canvas
             return; // nothing doing if we're not in control
         }
 
-        // w -= ScrollBar.THICKNESS;
-        _placeBox.setStyle("top", 0);
-        _placeBox.setStyle("bottom", 0);
-        _placeBox.setStyle("right", 0);
-        _placeBox.setStyle("left", 0); // + ScrollBar.THICKNESS);
-        _placeBox.setActualSize(_width, _height);
+        var top :int = 0;
+        var left :int = 0;
+        var right :int = 0;
+        var bottom :int = 0;
+        var w :int = _width;
+        var h :int = _height;
+
+        bottom += getControlBarHeight();
+        h -= getControlBarHeight();
+
+        _placeBox.setStyle("top", top);
+        _placeBox.setStyle("bottom", bottom);
+        _placeBox.setStyle("right", right);
+        _placeBox.setStyle("left", left);
+        _placeBox.setActualSize(w, h);
     }
 
     /**
@@ -154,6 +187,7 @@ public class TopPanel extends Canvas
 
     protected const _app :Application = inject(Application);
     protected const _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
+    protected const _controlBar :ControlBar = inject(ControlBar);
 
     protected var _width :Number
     protected var _height :Number;

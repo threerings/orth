@@ -63,12 +63,17 @@
       <fileset dir="${src.dir}" includes="**/*.properties"/>
       <fileset dir="${src.dir}" includes="**/*.tmpl"/>
     </copy>
-    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath"/>
+    <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
+      <!-- we're punting on the server-side party code; large, complex, msoy-dependent -->
+      <exclude name="com/threerings/orth/party/**/*.java"/>
+    </ooojavac>
   </target>
 
   <target name="aslib" depends="mavendeps">
       <compc4 srcdir="${asrc.dir}" libpath="${aslib.path}"
-          dest="${deploy.dir}/${ant.project.name}lib.swc"/>
+          dest="${deploy.dir}/${ant.project.name}lib.swc">
+        <arg value="-compiler.library-path+=lib/tweener.swc"/>
+      </compc4>
   </target>
 
   <target name="javadoc" depends="prepare">
@@ -139,6 +144,7 @@
     <!-- make sure the record class files are all compiled -->
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Record.java"/>
+      <exclude name="com/threerings/orth/party/**/*.java"/>
     </ooojavac>
     <!-- now update the source files -->
     <grecord classpathref="build.classpath">
@@ -151,14 +157,17 @@
     <!-- make sure the dobject class files are all compiled -->
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Object.java"/>
+      <exclude name="com/threerings/orth/party/**/*.java"/>
     </ooojavac>
     <!-- now generate the associated files -->
     <gendobj classpathref="build.classpath">
-      <fileset dir="${src.dir}" includes="**/*Object.java"/>
+      <fileset dir="${src.dir}" includes="**/*Object.java"
+               excludes="com/threerings/orth/party/**/*.java"/>
     </gendobj>
     <genascriptstreamable classpathref="build.classpath" header="lib/SOURCE_HEADER"
       asroot="${asrc.dir}">
-      <fileset dir="${src.dir}" includes="**/*Object.java"/>
+      <fileset dir="${src.dir}" includes="**/*Object.java"
+               excludes="com/threerings/orth/party/**/*.java"/>
     </genascriptstreamable>
   </target>
 
@@ -168,6 +177,7 @@
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Service.java"/>
       <exclude name="**/InvocationService.java"/>
+      <exclude name="com/threerings/orth/party/**/*.java"/>
     </ooojavac>
     <!-- now generate the associated files -->
     <genservice header="lib/SOURCE_HEADER" asroot="src/main/as" classpathref="build.classpath">
@@ -192,6 +202,7 @@
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Receiver.java"/>
       <exclude name="**/InvocationReceiver.java"/>
+      <exclude name="com/threerings/orth/party/**/*.java"/>
     </ooojavac>
     <!-- now generate the associated files -->
     <genreceiver header="lib/SOURCE_HEADER" classpathref="build.classpath">
@@ -204,6 +215,7 @@
       <!-- make sure the streamable class files are all compiled -->
       <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
         <include name="**/data/*.java"/>
+        <exclude name="com/threerings/orth/party/**/*.java"/>
       </ooojavac>
      <genascriptstreamable classpathref="build.classpath" header="lib/SOURCE_HEADER"
                            asroot="${asrc.dir}">
@@ -212,6 +224,7 @@
          <exclude name="com/threerings/orth/peer/**/*.java"/>
          <exclude name="**/*Object.java"/>
          <exclude name="**/*_CustomFieldSerializer.java"/>
+         <exclude name="com/threerings/orth/party/**/*.java"/>
        </fileset>
      </genascriptstreamable>
   </target>

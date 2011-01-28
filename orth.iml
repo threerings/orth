@@ -15,17 +15,19 @@
         <option name="OUTPUT_FILE_NAME" value="orthlib.swc" />
         <option name="USE_FACET_COMPILE_OUTPUT_PATH" value="true" />
         <option name="FACET_COMPILE_OUTPUT_PATH" value="$MODULE_DIR$/../who/target/idea" />
+        <option name="FACET_COMPILE_OUTPUT_PATH_FOR_TESTS" value="" />
         <option name="INCLUDE_RESOURCE_FILES_IN_SWC" value="false" />
         <option name="TARGET_PLAYER_VERSION" value="10" />
         <option name="STATIC_LINK_RUNTIME_SHARED_LIBRARIES" value="true" />
         <option name="USE_LOCALE_SETTINGS" value="false" />
         <option name="LOCALE" value="en_US" />
         <option name="ADDITIONAL_COMPILER_OPTIONS" value="" />
-        <option name="VERSION" value="3" />
         <option name="PATH_TO_SERVICES_CONFIG_XML" value="" />
         <option name="CONTEXT_ROOT" value="" />
+        <option name="VERSION" value="3" />
         <NAMESPACE_AND_MANIFEST_FILE_INFO_LIST />
         <CONDITIONAL_COMPILATION_DEFINITION_LIST />
+        <CSS_FILES_LIST />
       </configuration>
     </facet>
   </component>
@@ -35,6 +37,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/as" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/as/com/threerings/orth/party" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/com/threerings/orth/party" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
@@ -45,7 +49,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/com/adobe/as3corelib/0.93/as3corelib-0.93.swc!/" />
+          <root url="jar://$M2_REPO$/com/adobe/as3corelib/0.93/as3corelib-0.93.swc!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -54,7 +58,7 @@
     <orderEntry type="module-library">
       <library name="commons-codec.jar">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.4/commons-codec-1.4.jar!/" />
+          <root url="jar://$M2_REPO$/commons-codec/commons-codec/1.4/commons-codec-1.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -64,7 +68,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/r07/guava-r07.jar!/" />
+          <root url="jar://$M2_REPO$/com/google/guava/guava/r07/guava-r07.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -73,7 +77,16 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/com/google/inject/guice/2.0/guice-2.0.jar!/" />
+          <root url="jar://$M2_REPO$/com/google/inject/guice/2.0/guice-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="gwt-user.jar">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/com/google/gwt/gwt-user/2.1.0/gwt-user-2.1.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -114,6 +127,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/tweener.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$M2_REPO$/flashx/funkinjection/0.2/funkinjection-0.2.swc!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

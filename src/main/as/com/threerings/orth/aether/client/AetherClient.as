@@ -2,6 +2,8 @@
 // $Id$
 
 package com.threerings.orth.aether.client {
+import com.threerings.presents.data.ClientObject;
+
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.events.ContextMenuEvent;
@@ -11,8 +13,6 @@ import flash.ui.ContextMenu;
 import flash.utils.Dictionary;
 
 import flashx.funk.ioc.inject;
-
-import mx.core.Application;
 
 import com.threerings.ui.MenuUtil;
 
@@ -59,6 +59,11 @@ public class AetherClient extends Client
         //inject(Application).contextMenu = menu;
     }
 
+    public function getPlayerObject () :PlayerObject
+    {
+        return _plobj;
+    }
+
     public function logonWithCredentials (creds :AetherCredentials) :Boolean
     {
         if (isLoggedOn()) {
@@ -85,6 +90,13 @@ public class AetherClient extends Client
             // TODO - scoped injection
             //_injector.mapValue(String, rdata.sessionToken, "sessionToken");
         }
+    }
+
+    override public function gotClientObject (clobj :ClientObject):void
+    {
+        super.gotClientObject(clobj);
+
+        _plobj = PlayerObject(clobj);
     }
 
     /**
@@ -131,6 +143,8 @@ public class AetherClient extends Client
             log.warning("Error populating context menu", e);
         }
     }
+
+    protected var _plobj :PlayerObject;
 
     protected const _stage :Stage = inject(Stage);
 

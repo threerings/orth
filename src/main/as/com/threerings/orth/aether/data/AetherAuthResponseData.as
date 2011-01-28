@@ -4,12 +4,10 @@
 
 package com.threerings.orth.aether.data {
 
-import org.osflash.signals.Signal;
-
 import com.threerings.io.ObjectInputStream;
-
+import com.threerings.io.ObjectOutputStream;
 import com.threerings.presents.net.AuthResponseData;
-
+import org.osflash.signals.Signal;
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START

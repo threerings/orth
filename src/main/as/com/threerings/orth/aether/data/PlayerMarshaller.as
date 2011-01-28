@@ -2,9 +2,9 @@
 // $Id$
 package com.threerings.orth.aether.data {
 
-import com.threerings.presents.data.InvocationMarshaller;
-
 import com.threerings.orth.aether.client.PlayerService;
+import com.threerings.presents.client.Client;
+import com.threerings.presents.data.InvocationMarshaller;
 
 /**
  * Provides the implementation of the <code>PlayerService</code> interface
