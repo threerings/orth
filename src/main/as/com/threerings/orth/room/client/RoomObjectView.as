@@ -148,23 +148,7 @@ public class RoomObjectView extends RoomView
 
         // let the place box know that the frame background color may have changed (if using the
         // room background as frame background)
-        _ctx.getTopPanel().getPlaceContainer().updateFrameBackgroundColor();
-    }
-
-    /**
-     * Update the 'my' user's specified avatar's scale, non-permanently.  This is called via the
-     * avatar viewer, so that scale changes they make are instantly viewable in the world.
-     */
-    public function updateAvatarScale (avatarId :int, newScale :Number) :void
-    {
-        var avatar :MemberSprite = getMyAvatar();
-        if (avatar != null) {
-            var occInfo :SocializerInfo = (avatar.getOccupantInfo() as SocializerInfo);
-            if (occInfo.getEntityIdent().equals(new SimpleEntityIdent(Item.AVATAR, avatarId))) {
-                occInfo.setScale(newScale);
-                avatar.setOccupantInfo(occInfo, _roomObj);
-            }
-        }
+        _topPanel.getPlaceContainer().updateFrameBackgroundColor();
     }
 
     /**
@@ -404,7 +388,7 @@ public class RoomObjectView extends RoomView
         _ctx.getUIState().setInRoom(true);
 
         // let the chat overlay know about us so we can be queried for chatter locations
-        var comicOverlay :ComicOverlay = _ctx.getTopPanel().getPlaceChatOverlay();
+        var comicOverlay :ComicOverlay = _topPanel.getPlaceChatOverlay();
         if (comicOverlay != null) {
             comicOverlay.willEnterPlace(this);
         }
@@ -436,7 +420,7 @@ public class RoomObjectView extends RoomView
         _ctx.getChatDirector().removeChatSnooper(this);
 
         // tell the comic overlay to forget about us
-        var comicOverlay :ComicOverlay = _ctx.getTopPanel().getPlaceChatOverlay();
+        var comicOverlay :ComicOverlay = _topPanel.getPlaceChatOverlay();
         if (comicOverlay != null) {
             comicOverlay.didLeavePlace(this);
         }
@@ -458,28 +442,10 @@ public class RoomObjectView extends RoomView
     override public function set scrollRect (r :Rectangle) :void
     {
         super.scrollRect = r;
-        var overlay :ComicOverlay = _ctx.getTopPanel().getPlaceChatOverlay();
+        var overlay :ComicOverlay = _topPanel.getPlaceChatOverlay();
         if (overlay != null) {
             overlay.setScrollRect(r);
         }
-    }
-
-    // documentation inherited
-    override protected function populateSpriteContextMenu (
-        sprite :EntitySprite, menuItems :Array) :void
-    {
-        var ident :EntityIdent = sprite.getEntityIdent();
-        if (ident != null) {
-            var kind :String = Msgs.GENERAL.get(sprite.getDesc());
-            if (ident.type > Item.NOT_A_TYPE) { // -1 is used for the default avatar, etc.
-                menuItems.push(MenuUtil.createCommandContextMenuItem(
-                    Msgs.GENERAL.get("b.view_item", kind), WorldController.VIEW_ITEM, ident));
-                menuItems.push(MenuUtil.createCommandContextMenuItem(
-                    Msgs.GENERAL.get("b.flag_item", kind), WorldController.FLAG_ITEM, ident));
-            }
-        }
-
-        super.populateSpriteContextMenu(sprite, menuItems);
     }
 
     /**
@@ -522,12 +488,12 @@ public class RoomObjectView extends RoomView
         var occupant :OccupantSprite = (_pendingRemovals.remove(bodyOid) as OccupantSprite);
 
         if (occupant == null) {
-            occupant = _ctx.getMediaDirector().getSprite(occInfo, _roomObj);
+            occupant = _mediaDir.getSprite(occInfo, _roomObj);
             if (occupant == null) {
                 return; // we have no visualization for this kind of occupant, no problem
             }
 
-            var overlay :ComicOverlay = _ctx.getTopPanel().getPlaceChatOverlay();
+            var overlay :ComicOverlay = _topPanel.getPlaceChatOverlay();
             if (overlay != null) {
                 occupant.setChatOverlay(overlay as ComicOverlay);
             }
@@ -551,7 +517,7 @@ public class RoomObjectView extends RoomView
 
             // place the sprite back into the set of active sprites
             _occupants.put(bodyOid, occupant);
-            overlay = _ctx.getTopPanel().getPlaceChatOverlay();
+            overlay = _topPanel.getPlaceChatOverlay();
             if (overlay != null) {
                 occupant.setChatOverlay(overlay);
             }
