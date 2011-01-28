@@ -12,16 +12,22 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.util.Name;
 
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.party.data.PartySummary;
 import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthSceneModel;
+import com.threerings.orth.room.data.SocializerInfo;
 
 /**
  * Represents an Orth player's in-room incarnation.
  */
 public class SocializerObject extends ActorObject
 {
+    /** The display name of this socializer. While this name is not the same as that in
+        PlayerObject.playerName, their numerical ID's will always be the same. */
+    public OrthName name;
+
     /** The avatar that the user has chosen, or null for guests. */
     public EntityIdent avatar;
 
@@ -47,13 +53,14 @@ public class SocializerObject extends ActorObject
         int sceneId, int ownerId, byte ownerType, byte accessControl, Set<Integer> friendIds)
     {
         boolean hasRights = false;
+        int playerId = name.getId();
 
         if (ownerType == OrthSceneModel.OWNER_TYPE_MEMBER) {
             switch (accessControl) {
             case OrthSceneModel.ACCESS_EVERYONE: hasRights = true; break;
-            case OrthSceneModel.ACCESS_OWNER_ONLY: hasRights = (getPlayerId() == ownerId); break;
+            case OrthSceneModel.ACCESS_OWNER_ONLY: hasRights = (playerId == ownerId); break;
             case OrthSceneModel.ACCESS_OWNER_AND_FRIENDS:
-                hasRights = (getPlayerId() == ownerId) ||
+                hasRights = (playerId == ownerId) ||
                    ((friendIds != null) && friendIds.contains(ownerId));
                 break;
             }
@@ -65,19 +72,19 @@ public class SocializerObject extends ActorObject
     @Override // from BodyObject
     public OccupantInfo createOccupantInfo (PlaceObject plobj)
     {
-        return new PlayerInfo(this);
+        return new SocializerInfo(this);
     }
 
     @Override // from BodyObject
     public Name getVisibleName ()
     {
-        return playerName;
+        return name;
     }
 
     @Override // from BodyObject
     protected void addWhoData (StringBuilder buf)
     {
-        buf.append("mid=").append(playerName.getId()).append(" oid=");
+        buf.append("mid=").append(name.getId()).append(" oid=");
         super.addWhoData(buf);
     }
 }
