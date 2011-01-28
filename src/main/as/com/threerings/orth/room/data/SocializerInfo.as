@@ -13,7 +13,7 @@ import com.threerings.util.Joiner;
 /**
  * Contains published information about a player in a scene.
  */
-public class PlayerInfo extends ActorInfo
+public class SocializerInfo extends ActorInfo
     implements PartyOccupantInfo
 {
     /**
@@ -58,7 +58,7 @@ public class PlayerInfo extends ActorInfo
     // from ActorInfo
     override public function clone () :Object
     {
-        var that :PlayerInfo = super.clone() as PlayerInfo;
+        var that :SocializerInfo = super.clone() as SocializerInfo;
         that._scale = this._scale;
         that._partyId = this._partyId;
         that._away = this._away;
