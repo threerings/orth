@@ -88,45 +88,14 @@ public class PlayerInfo extends ActorInfo
         return false;
     }
 
-    @Override // from ActorInfo
-    protected void useStaticMedia ()
+    public void updateMedia (ActorObject body)
     {
-        _media = Avatar.getStaticImageAvatarMedia();
-        _ident = new ItemIdent(MsoyItemType.OCCUPANT, getBodyOid());
-        _scale = 1f;
-    }
+        PlayerObject plobj = (PlayerObject) body;
 
-    @Override // from ActorInfo
-    protected void useDynamicMedia (MsoyBodyObject body)
-    {
-        PlayerObject plobj = (PlayerObject)body;
-        configureAvatar(plobj.avatar, (plobj.isViewer() || plobj.isPermaguest()));
-        if (plobj.avatar != null) {
-            _media = plobj.avatar.avatarMedia;
-            _ident = plobj.avatar.getIdent();
-            _scale = plobj.avatar.scale;
-        } else {
-            _media = (plobj.isViewer() || plobj.isPermaguest()) ?
-                Avatar.getDefaultGuestAvatarMedia() : Avatar.getDefaultPlayerAvatarMedia();
-            _ident = new ItemIdent(MsoyItemType.OCCUPANT, getBodyOid());
-            _scale = 1f;
-        }
+        _media = plobj.avatar.avatarMedia;
+        _ident = plobj.avatar.getIdent();
+        _scale = plobj.avatar.scale;
         _state = plobj.getActorState();
-    }
-
-    // TODO: presently exposed to allow for puppets
-    public void configureAvatar (Avatar avatar, boolean guestDefault)
-    {
-        if (avatar != null) {
-            _media = avatar.avatarMedia;
-            _ident = avatar.getIdent();
-            _scale = avatar.scale;
-        } else {
-            _media = guestDefault ?
-                Avatar.getDefaultGuestAvatarMedia() : Avatar.getDefaultPlayerAvatarMedia();
-            _ident = new ItemIdent(MsoyItemType.OCCUPANT, getBodyOid());
-            _scale = 1f;
-        }
     }
 
     @Override // from SimpleStreamableObject

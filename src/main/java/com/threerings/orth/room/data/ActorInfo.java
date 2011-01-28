@@ -45,11 +45,9 @@ public abstract class ActorInfo extends OccupantInfo
     }
 
     /**
-     * Updates the media for this actor, potentially selecting static media.
+     * Updates the media for this actor.
      */
-    public void updateMedia (ActorObject body)
-    {
-    }
+    public abstract void updateMedia (ActorObject body);
 
     protected ActorInfo (ActorObject body)
     {
