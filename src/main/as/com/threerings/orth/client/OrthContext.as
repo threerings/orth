@@ -2,6 +2,7 @@
 // $Id$
 
 package com.threerings.orth.client {
+import com.threerings.orth.aether.data.PlayerObject;
 
 import mx.core.UIComponent;
 
@@ -71,6 +72,14 @@ public class OrthContext
     public function get wctx () :WorldContext
     {
         return _wctx;
+    }
+
+    /**
+     * Returns our connected {@link PlayerObject}, or null if we are not logged on.
+     */
+    public function getPlayerObject () :PlayerObject
+    {
+        return (_client != null) ? _client.getPlayerObject() : null;
     }
 
     // from OrthContext
