@@ -27,8 +27,6 @@ public class AetherAuthResponseData extends AuthResponseData
     public var sessionTokenChanged :Signal = new Signal(String, String);
     public var identChanged :Signal = new Signal(String, String);
     public var warningChanged :Signal = new Signal(String, String);
-    public var messageReceived :Signal = new Signal(String, Array);
-    public var destroyed :Signal = new Signal();
 
     public static const SESSION_TOKEN :String = "sessionToken";
 
@@ -65,11 +63,7 @@ import com.threerings.presents.dobj.ElementUpdatedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
-import com.threerings.presents.dobj.MessageEvent;
-import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.dobj.ObjectAddedEvent;
-import com.threerings.presents.dobj.ObjectDeathListener;
-import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.dobj.ObjectRemovedEvent;
 import com.threerings.presents.dobj.OidListListener;
 import com.threerings.presents.dobj.SetListener;
@@ -77,8 +71,7 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.orth.aether.data.AetherAuthResponseData;
 
 class Signaller
-    implements AttributeChangeListener, SetListener, ElementUpdateListener, MessageListener,
-        ObjectDeathListener, OidListListener
+    implements AttributeChangeListener, SetListener, ElementUpdateListener, OidListListener
 {
     public function Signaller (obj :AetherAuthResponseData)
     {
@@ -143,16 +136,6 @@ class Signaller
                 return;
         }
         signal.dispatch(event.getIndex(), event.getValue(), event.getOldValue());
-    }
-
-    public function messageReceived (event :MessageEvent) :void
-    {
-        _obj.messageReceived.dispatch(event.getName(), event.getArgs());
-    }
-
-    public function objectDestroyed (event :ObjectDestroyedEvent) :void
-    {
-        _obj.destroyed.dispatch();
     }
 
     public function objectAdded (event:ObjectAddedEvent) :void

@@ -53,11 +53,7 @@ import com.threerings.presents.dobj.ElementUpdatedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
-import com.threerings.presents.dobj.MessageEvent;
-import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.dobj.ObjectAddedEvent;
-import com.threerings.presents.dobj.ObjectDeathListener;
-import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.dobj.ObjectRemovedEvent;
 import com.threerings.presents.dobj.OidListListener;
 import com.threerings.presents.dobj.SetListener;
@@ -65,7 +61,7 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.orth.aether.data.PlayerObject;
 
 class Signaller
-    implements AttributeChangeListener, SetListener, ElementUpdateListener
+    implements AttributeChangeListener, SetListener, ElementUpdateListener, OidListListener
 {
     public function Signaller (obj :PlayerObject)
     {
@@ -124,6 +120,26 @@ class Signaller
                 return;
         }
         signal.dispatch(event.getIndex(), event.getValue(), event.getOldValue());
+    }
+
+    public function objectAdded (event:ObjectAddedEvent) :void
+    {
+        var signal :Signal;
+        switch (event.getName()) {
+            default:
+                return;
+        }
+        signal.dispatch(event.getOid());
+    }
+
+    public function objectRemoved (event :ObjectRemovedEvent) :void
+    {
+        var signal :Signal;
+        switch (event.getName()) {
+            default:
+                return;
+        }
+        signal.dispatch(event.getOid());
     }
 
     protected var _obj :PlayerObject;
