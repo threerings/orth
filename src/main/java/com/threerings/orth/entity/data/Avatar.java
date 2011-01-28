@@ -19,5 +19,5 @@ public interface Avatar
     /**
      * Return the scaling to apply to the avatar media.
      */
-    Number getScale ();
+    float getScale ();
 }
