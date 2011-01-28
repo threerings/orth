@@ -280,7 +280,7 @@ public class WorldController extends Controller
                 _wctx.getClient(), _logoffMessage, reconnectClient));
             _logoffMessage = null;
         } else {
-            _topPanel.setPlaceView(new BlankPlaceView(_wctx));
+            _topPanel.clearPlaceView();
         }
     }
 

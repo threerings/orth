@@ -5,8 +5,8 @@ package com.threerings.orth.room.client {
 import com.threerings.orth.chat.client.ChatInfoProvider;
 import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.data.OrthChatChannel;
+import com.threerings.orth.client.LoadingWatcher;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.PlaceLoadingDisplay;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.entity.client.FurniSprite;
@@ -384,7 +384,8 @@ public class RoomObjectView extends RoomView
     {
         // set load-all to false, as we're going to just load the decor item first.
         _loadAllMedia = false;
-        _loadingWatcher = new PlaceLoadingDisplay();
+
+        _loadingWatcher = getLoadingWatcher();
         FurniSprite.setLoadingWatcher(_loadingWatcher);
 
         // save our scene object
@@ -497,6 +498,12 @@ public class RoomObjectView extends RoomView
         super.backgroundFinishedLoading();
 
         _octrl.backgroundFinishedLoading();
+    }
+
+    protected function getLoadingWatcher () :LoadingWatcher
+    {
+        // subclasses can return something more exciting here
+        return null;
     }
 
     protected function addBody (occInfo :OccupantInfo) :void
@@ -612,7 +619,7 @@ public class RoomObjectView extends RoomView
     protected var _roomObj :OrthRoomObject;
 
     /** Monitors and displays loading progress for furni/decor. */
-    protected var _loadingWatcher :PlaceLoadingDisplay;
+    protected var _loadingWatcher :LoadingWatcher;
 
     /** The id of the current music being played from the room's playlist. */
     protected var _musicPlayCount :int = -1; // -1 means nothing is playing

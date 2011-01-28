@@ -20,5 +20,10 @@ public interface LoadingWatcher
      */
     function watchLoader (
         info :LoaderInfo, unloadie :IEventDispatcher, isPrimary :Boolean = false) :void;
+
+    /**
+     * Called to see if everything has finished loading.
+     */
+    function isFinished () :Boolean;
 }
 }

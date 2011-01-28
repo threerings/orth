@@ -213,7 +213,6 @@ public class FurniSprite extends EntitySprite
         var info :LoaderInfo = (event.value as LoaderInfo);
 
         if (_loadingWatcher != null) {
-            log.info("Setting up ")
             _loadingWatcher.watchLoader(info, _sprite, (_sprite is DecorSprite));
         }
     }
