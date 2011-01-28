@@ -9,6 +9,7 @@ import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.room.data.SocializerInfo;
 import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.presents.client.Client;
@@ -101,6 +102,12 @@ public class RoomContext
         var body :BodyObject = getBodyObject();
 
         return (body != null) ? SocializerObject(body).name : null;
+    }
+
+    /** Return a fully casted socializer object, or null if we're not logged on. */
+    public function getSocializerObject () :SocializerObject
+    {
+        return _client.getClientObject() as SocializerObject;
     }
 
     protected var _client :WorldClient;
