@@ -13,6 +13,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.util.Name;
 
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.entity.data.Avatar;
 import com.threerings.orth.party.data.PartySummary;
 import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.EntityIdent;
@@ -29,7 +30,7 @@ public class SocializerObject extends ActorObject
     public OrthName name;
 
     /** The avatar that the user has chosen, or null for guests. */
-    public EntityIdent avatar;
+    public Avatar avatar;
 
     /** If this member is currently walking a pet, the id of the pet being walked, else 0. */
     public int walkingId;
@@ -45,7 +46,7 @@ public class SocializerObject extends ActorObject
     // from ActorObject
     @Override public EntityIdent getEntityIdent ()
     {
-        return avatar;
+        return avatar.getIdent();
     }
 
     // from ActorObject

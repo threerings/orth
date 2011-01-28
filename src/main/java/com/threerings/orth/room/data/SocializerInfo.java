@@ -90,10 +90,10 @@ public class SocializerInfo extends ActorInfo
     {
         SocializerObject sobj = (SocializerObject) body;
 
-        _media = sobj.avatar.avatarMedia;
+        _media = sobj.avatar.getAvatarMedia();
         _ident = sobj.avatar.getIdent();
-        _scale = sobj.avatar.scale;
-        _state = sobj.getActorState();
+        _scale = sobj.avatar.getScale();
+        _state = sobj.actorState;
     }
 
     @Override // from SimpleStreamableObject
