@@ -18,7 +18,7 @@ public class PetSprite extends ActorSprite
 {
     public function PetSprite (occInfo :PetInfo, extraInfo :Object)
     {
-        super.initActorSprite();
+        super(occInfo, extraInfo);
     }
 
     /**

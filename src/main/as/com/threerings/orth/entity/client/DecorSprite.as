@@ -23,7 +23,7 @@ public class DecorSprite extends FurniSprite
     public function DecorSprite (decor :Decor)
     {
         var furniData :FurniData = makeFurniData(decor);
-        super.initFurniSprite(furniData);
+        super(furniData);
         setLocation(furniData.loc);
 
         _sprite.setSuppressHitTestPoint(true);

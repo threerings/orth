@@ -7,6 +7,8 @@ import flash.utils.Dictionary;
 
 import mx.core.UIComponent;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.util.DelayUtil;
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;

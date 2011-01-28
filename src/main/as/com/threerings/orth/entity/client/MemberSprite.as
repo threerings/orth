@@ -25,7 +25,7 @@ public class MemberSprite extends ActorSprite
      */
     public function MemberSprite (occInfo :SocializerInfo, extraInfo :Object)
     {
-        super.initActorSprite(occInfo, extraInfo);
+        super(occInfo, extraInfo);
     }
 
     /**

@@ -9,6 +9,7 @@ import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 
+import mx.core.Application;
 import mx.managers.PopUpManager;
 
 import flashx.funk.ioc.inject;
