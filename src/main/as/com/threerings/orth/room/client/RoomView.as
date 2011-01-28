@@ -2,6 +2,8 @@
 // $Id: RoomView.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.client.OrthPlaceBox;
+import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.client.OrthPlaceView;
@@ -52,11 +54,12 @@ import com.threerings.orth.room.data.OrthLocation;
 
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.PlaceBox;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.Snapshottable;
 import com.threerings.orth.client.SnapshotUtil;
 import com.threerings.orth.client.Zoomable;
+
+import flashx.funk.ioc.inject;
 
 /**
  * The base room view. Should not contain any RoomObject or other network-specific crap.
@@ -147,7 +150,7 @@ public class RoomView extends Sprite
 
     public function getBackgroundColor () :uint
     {
-        return _ctx.getTopPanel().getPlaceContainer().getPlaceBackgroundColor();
+        return _topPanel.getPlaceContainer().getPlaceBackgroundColor();
     }
 
     // from OrthPlaceView
@@ -233,7 +236,7 @@ public class RoomView extends Sprite
     }
 
     // from ContextMenuProvider
-    public function populateContextMenu (ctx :RoomContext, menuItems :Array) :void
+    public function populateContextMenu (menuItems :Array) :void
     {
         var hit :* = _ctrl.getHitSprite(stage.mouseX, stage.mouseY, true);
         if (hit === undefined) {
@@ -408,7 +411,7 @@ public class RoomView extends Sprite
         var bottomRight :Point = new Point(farX, farY);
 
         // finally convert from decor to placebox coordinates
-        var placeBox :PlaceBox = _ctx.getTopPanel().getPlaceContainer();
+        var placeBox :OrthPlaceBox = _topPanel.getPlaceContainer();
         topLeft = placeBox.globalToLocal(localToGlobal(topLeft));
         bottomRight = placeBox.globalToLocal(localToGlobal(bottomRight));
 
@@ -502,7 +505,7 @@ public class RoomView extends Sprite
             _bg = null;
         }
         if (decor != null) {
-            _bg = _ctx.getMediaDirector().getDecor(decor);
+            _bg = _mediaDir.getDecor(decor);
             addSprite(_bg);
             _bg.setEditing(_editing);
         }
@@ -957,7 +960,7 @@ public class RoomView extends Sprite
 
     protected function addFurni (furni :FurniData) :FurniSprite
     {
-        var sprite :FurniSprite = _ctx.getMediaDirector().getFurni(furni);
+        var sprite :FurniSprite = _mediaDir.getFurni(furni);
         addSprite(sprite);
         sprite.setLocation(furni.loc);
         sprite.roomScaleUpdated();
@@ -1035,7 +1038,7 @@ public class RoomView extends Sprite
         _ctrl.setSpriteHovered(sprite, false);
         removeFromEntityMap(sprite);
         removeChild(sprite.viz);
-        _ctx.getMediaDirector().returnSprite(sprite);
+        _mediaDir.returnSprite(sprite);
 
         // clear any popup associated with it
         _ctrl.clearEntityPopup(sprite);
@@ -1091,6 +1094,9 @@ public class RoomView extends Sprite
 
     /** Our controller. */
     protected var _ctrl :RoomController;
+
+    protected const _mediaDir :MediaDirector = inject(MediaDirector);
+    protected const _topPanel :TopPanel = inject(TopPanel);
 
     /** When we first enter the room, we only load the background (if any). */
     protected var _loadAllMedia :Boolean = false;
