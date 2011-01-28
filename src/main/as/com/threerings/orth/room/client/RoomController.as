@@ -9,8 +9,11 @@ import com.threerings.crowd.util.CrowdContext;
 import com.threerings.flex.CommandMenu;
 import com.threerings.flex.PopUpUtil;
 import com.threerings.orth.chat.client.ChatOverlay;
+import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.PlaceBox;
+import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.OrthPlaceBox;
+import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
@@ -22,7 +25,6 @@ import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.SimpleEntityIdent;
-import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldControlBar;
 import com.threerings.util.Log;
 import com.threerings.util.Map;
@@ -42,6 +44,8 @@ import flash.utils.Dictionary;
 import flash.utils.Timer;
 import flash.utils.getTimer;
 
+import flashx.funk.ioc.inject;
+
 import mx.core.Application;
 import mx.core.IToolTip;
 import mx.core.UIComponent;
@@ -49,7 +53,6 @@ import mx.events.MenuEvent;
 import mx.managers.ISystemManager;
 import mx.managers.ToolTipManager;
 
-// function
 /**
  * Manages the various interactions that take place in a room scene.
  */
@@ -70,9 +73,9 @@ public class RoomController extends SceneController
     // documentation inherited
     override public function init (ctx :CrowdContext, config :PlaceConfig) :void
     {
-        _wdctx = (ctx as RoomContext);
-        _throttleChecker.addEventListener(TimerEvent.TIMER, handleCheckThrottles);
         super.init(ctx, config);
+
+        _throttleChecker.addEventListener(TimerEvent.TIMER, handleCheckThrottles);
     }
 
     // documentation inherited
@@ -99,7 +102,7 @@ public class RoomController extends SceneController
     // documentation inherited
     override protected function createPlaceView (ctx :CrowdContext) :PlaceView
     {
-        _roomView = new RoomView(_wdctx, this);
+        _roomView = new RoomView(_rctx, this);
         return _roomView;
     }
 
@@ -109,8 +112,8 @@ public class RoomController extends SceneController
      */
     public function getEntityInstanceId () :int
     {
-        // we use the memberId, which is valid (but negative) even if you're a guest
-        return _wdctx.getMyId();
+        var name :OrthName = _rctx.getMyName();
+        return (name != null) ? name.getId() : 0;
     }
 
     /**
@@ -118,7 +121,7 @@ public class RoomController extends SceneController
      */
     public function getViewerName (instanceId :int = 0) :String
     {
-        var name :OrthName = _wdctx.getMyName();
+        var name :OrthName = _rctx.getMyName();
         if (instanceId == 0 || instanceId == name.getId()) {
             return name.toString();
         }
@@ -398,12 +401,12 @@ public class RoomController extends SceneController
         // pop up the menu where the mouse is
         if (menuItems.length > 0) {
             var menu :CommandMenu = CommandMenu.createMenu(menuItems, _roomView);
-            menu.setBounds(_wdctx.getTopPanel().getPlaceViewBounds());
+            menu.setBounds(_topPanel.getPlaceViewBounds());
             menu.popUpAtMouse();
             menu.addEventListener(MenuEvent.MENU_HIDE, function (event :MenuEvent) :void {
                 if (event.menu == menu) {
                     _clickSuppress = sprite;
-                    _wdctx.getTopPanel().systemManager.topLevelSystemManager.getSandboxRoot().
+                    _topPanel.systemManager.topLevelSystemManager.getSandboxRoot().
                         addEventListener(MouseEvent.MOUSE_DOWN, clearClickSuppress, false, 0, true);
                 }
             });
@@ -446,7 +449,7 @@ public class RoomController extends SceneController
     public function getHitSprite (stageX :Number, stageY :Number, all :Boolean = false) :*
     {
         // check to make sure we're within the bounds of the place container
-        var container :PlaceBox = _wdctx.getTopPanel().getPlaceContainer();
+        var container :OrthPlaceBox = _topPanel.getPlaceContainer();
         var containerP :Point = container.localToGlobal(new Point());
         if (stageX < containerP.x || stageX > containerP.x + container.width ||
             stageY < containerP.y || stageY > containerP.y + container.height) {
@@ -454,7 +457,7 @@ public class RoomController extends SceneController
         }
 
         // first, avoid any popups
-        var smgr :ISystemManager = _wdctx.getApplication().systemManager;
+        var smgr :ISystemManager = _app.systemManager;
         var ii :int;
         var disp :DisplayObject;
         for (ii = smgr.numChildren - 1; ii >= 0; ii--) {
@@ -467,13 +470,13 @@ public class RoomController extends SceneController
             }
         }
 
-        // then check with the PlaceBox
+        // then check with the OrthPlaceBox
         if (container.overlaysMousePoint(stageX, stageY)) {
             return undefined;
         }
 
         // then avoid any chat glyphs that are clickable
-        var overlay :ChatOverlay = _wdctx.getTopPanel().getChatOverlay();
+        var overlay :ChatOverlay = _topPanel.getChatOverlay();
         if (overlay != null && overlay.hasClickableGlyphsAtPoint(stageX, stageY)) {
             return undefined;
         }
@@ -587,7 +590,7 @@ public class RoomController extends SceneController
     protected function setHoverSprite (
         sprite :EntitySprite, stageX :Number = NaN, stageY :Number = NaN) :void
     {
-        if (sprite is FurniSprite && WorldControlBar(_wdctx.getControlBar()).hotZoneBtn.selected) {
+        if (sprite is FurniSprite && WorldControlBar(_controlBar).hotZoneBtn.selected) {
             return; // not right now, they're all hovered
         }
 
@@ -650,7 +653,7 @@ public class RoomController extends SceneController
         tipComp.styleName = "roomToolTip";
         tipComp.x -= tipComp.width/2;
         tipComp.y -= tipComp.height/2;
-        PopUpUtil.fitInRect(tipComp, _wdctx.getTopPanel().getPlaceViewBounds());
+        PopUpUtil.fitInRect(tipComp, _topPanel.getPlaceViewBounds());
         var hoverColor :uint = sprite.getHoverColor();
         tipComp.setStyle("color", hoverColor);
         if (hoverColor == 0) {
@@ -714,7 +717,7 @@ public class RoomController extends SceneController
     protected function clearClickSuppress (event :MouseEvent) :void
     {
         _clickSuppress = null;
-        _wdctx.getTopPanel().systemManager.topLevelSystemManager.getSandboxRoot().
+        _topPanel.systemManager.topLevelSystemManager.getSandboxRoot().
             removeEventListener(MouseEvent.MOUSE_DOWN, clearClickSuppress);
     }
 
@@ -914,8 +917,12 @@ public class RoomController extends SceneController
     /** The amount we alter the y coordinate of tooltips generated under the mouse. */
     protected static const MOUSE_TOOLTIP_Y_OFFSET :int = 50;
 
-    /** The life-force of the client. */
-    protected var _wdctx :RoomContext;
+    protected const _controlBar :ControlBar = inject(ControlBar);
+    protected const _topPanel :TopPanel = inject(TopPanel);
+    protected const _app :Application = inject(Application);
+
+    /** The world-flavoured life-force of the client. */
+    protected var _rctx :RoomContext = inject(RoomContext);
 
     /** The room view that we're controlling. */
     protected var _roomView :RoomView;
