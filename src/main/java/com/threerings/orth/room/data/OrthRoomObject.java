@@ -23,9 +23,9 @@ public class OrthRoomObject extends SpotSceneObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String ACCESS_CONTROL = "accessControl";
 
-    /** The field name of the <code>orthSceneService</code> field. */
+    /** The field name of the <code>orthRoomService</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String ORTH_SCENE_SERVICE = "orthSceneService";
+    public static final String ORTH_ROOM_SERVICE = "orthRoomService";
 
     /** The field name of the <code>memories</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -105,7 +105,7 @@ public class OrthRoomObject extends SpotSceneObject
     }
 
     /**
-     * Requests that the <code>orthSceneService</code> field be set to the
+     * Requests that the <code>orthRoomService</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
@@ -117,7 +117,7 @@ public class OrthRoomObject extends SpotSceneObject
     {
         OrthRoomMarshaller ovalue = this.orthRoomService;
         requestAttributeChange(
-            ORTH_SCENE_SERVICE, value, ovalue);
+            ORTH_ROOM_SERVICE, value, ovalue);
         this.orthRoomService = value;
     }
 

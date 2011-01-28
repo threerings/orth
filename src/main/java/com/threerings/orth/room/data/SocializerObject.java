@@ -25,6 +25,20 @@ import com.threerings.orth.room.data.SocializerInfo;
  */
 public class SocializerObject extends ActorObject
 {
+    // AUTO-GENERATED: FIELDS START
+    /** The field name of the <code>name</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String NAME = "name";
+
+    /** The field name of the <code>avatar</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String AVATAR = "avatar";
+
+    /** The field name of the <code>walkingId</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String WALKING_ID = "walkingId";
+    // AUTO-GENERATED: FIELDS END
+
     /** The display name of this socializer. While this name is not the same as that in
         PlayerObject.playerName, their numerical ID's will always be the same. */
     public OrthName name;
@@ -88,4 +102,57 @@ public class SocializerObject extends ActorObject
         buf.append("mid=").append(name.getId()).append(" oid=");
         super.addWhoData(buf);
     }
+
+    // AUTO-GENERATED: METHODS START
+    /**
+     * Requests that the <code>name</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setName (OrthName value)
+    {
+        OrthName ovalue = this.name;
+        requestAttributeChange(
+            NAME, value, ovalue);
+        this.name = value;
+    }
+
+    /**
+     * Requests that the <code>avatar</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setAvatar (Avatar value)
+    {
+        Avatar ovalue = this.avatar;
+        requestAttributeChange(
+            AVATAR, value, ovalue);
+        this.avatar = value;
+    }
+
+    /**
+     * Requests that the <code>walkingId</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setWalkingId (int value)
+    {
+        int ovalue = this.walkingId;
+        requestAttributeChange(
+            WALKING_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.walkingId = value;
+    }
+    // AUTO-GENERATED: METHODS END
 }

@@ -4,14 +4,14 @@
 
 package com.threerings.orth.aether.data {
 
-import org.osflash.signals.Signal;
-
 import com.threerings.io.ObjectInputStream;
-
+import com.threerings.io.ObjectOutputStream;
 import com.threerings.presents.data.ClientObject;
-
+import org.osflash.signals.Signal;
 import com.threerings.orth.aether.data.VizPlayerName;
-
+import com.threerings.orth.data.OrthName;
+import com.threerings.presents.dobj.DSet;
+import com.threerings.presents.dobj.DSet_Entry;
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
@@ -22,14 +22,46 @@ public class PlayerObject extends ClientObject
 // GENERATED STREAMING START
     public var playerName :VizPlayerName;
 
+    public var following :OrthName;
+
+    public var followers :DSet;
+
+    public var friends :DSet;
+
+    public var partyId :int;
+
     public var playerNameChanged :Signal = new Signal(VizPlayerName, VizPlayerName);
+    public var followingChanged :Signal = new Signal(OrthName, OrthName);
+    public var followersChanged :Signal = new Signal(DSet, DSet);
+    public var followersEntryAdded :Signal = new Signal(DSet_Entry);
+    public var followersEntryRemoved :Signal = new Signal(DSet_Entry);
+    public var followersEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
+    public var friendsChanged :Signal = new Signal(DSet, DSet);
+    public var friendsEntryAdded :Signal = new Signal(DSet_Entry);
+    public var friendsEntryRemoved :Signal = new Signal(DSet_Entry);
+    public var friendsEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
+    public var partyIdChanged :Signal = new Signal(int, int);
+    public var messageReceived :Signal = new Signal(String, Array);
+    public var destroyed :Signal = new Signal();
 
     public static const PLAYER_NAME :String = "playerName";
+
+    public static const FOLLOWING :String = "following";
+
+    public static const FOLLOWERS :String = "followers";
+
+    public static const FRIENDS :String = "friends";
+
+    public static const PARTY_ID :String = "partyId";
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         playerName = ins.readObject(VizPlayerName);
+        following = ins.readObject(OrthName);
+        followers = ins.readObject(DSet);
+        friends = ins.readObject(DSet);
+        partyId = ins.readInt();
     }
 
     public function PlayerObject ()
@@ -65,7 +97,8 @@ import com.threerings.presents.dobj.SetListener;
 import com.threerings.orth.aether.data.PlayerObject;
 
 class Signaller
-    implements AttributeChangeListener, SetListener, ElementUpdateListener
+    implements AttributeChangeListener, SetListener, ElementUpdateListener, MessageListener,
+        ObjectDeathListener, OidListListener
 {
     public function Signaller (obj :PlayerObject)
     {
@@ -80,6 +113,18 @@ class Signaller
             case "playerName":
                 signal = _obj.playerNameChanged;
                 break;
+            case "following":
+                signal = _obj.followingChanged;
+                break;
+            case "followers":
+                signal = _obj.followersChanged;
+                break;
+            case "friends":
+                signal = _obj.friendsChanged;
+                break;
+            case "partyId":
+                signal = _obj.partyIdChanged;
+                break;
             default:
                 return;
         }
@@ -90,6 +135,12 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
+            case "followers":
+                signal = _obj.followersEntryAdded;
+                break;
+            case "friends":
+                signal = _obj.friendsEntryAdded;
+                break;
             default:
                 return;
         }
@@ -100,6 +151,12 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
+            case "followers":
+                signal = _obj.followersEntryRemoved;
+                break;
+            case "friends":
+                signal = _obj.friendsEntryRemoved;
+                break;
             default:
                 return;
         }
@@ -110,6 +167,12 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
+            case "followers":
+                signal = _obj.followersEntryUpdated;
+                break;
+            case "friends":
+                signal = _obj.friendsEntryUpdated;
+                break;
             default:
                 return;
         }
@@ -124,6 +187,36 @@ class Signaller
                 return;
         }
         signal.dispatch(event.getIndex(), event.getValue(), event.getOldValue());
+    }
+
+    public function messageReceived (event :MessageEvent) :void
+    {
+        _obj.messageReceived.dispatch(event.getName(), event.getArgs());
+    }
+
+    public function objectDestroyed (event :ObjectDestroyedEvent) :void
+    {
+        _obj.destroyed.dispatch();
+    }
+
+    public function objectAdded (event:ObjectAddedEvent) :void
+    {
+        var signal :Signal;
+        switch (event.getName()) {
+            default:
+                return;
+        }
+        signal.dispatch(event.getOid());
+    }
+
+    public function objectRemoved (event :ObjectRemovedEvent) :void
+    {
+        var signal :Signal;
+        switch (event.getName()) {
+            default:
+                return;
+        }
+        signal.dispatch(event.getOid());
     }
 
     protected var _obj :PlayerObject;
