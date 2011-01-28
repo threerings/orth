@@ -4,46 +4,44 @@
 package com.threerings.orth.room.data;
 
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.data.PlayerObject;
-import com.threerings.orth.party.data.PartyOccupantInfo;
 
 /**
- * Contains published information about a member in a scene.
+ * Contains published information about a player in a room.
  */
-public class PlayerInfo extends ActorInfo
-    implements PartyOccupantInfo
+public class SocializerInfo extends ActorInfo
+    /* implements PartyOccupantInfo */
 {
     /** Used to update our avatar info when that changes. */
-    public static class AvatarUpdater implements Updater<PlayerInfo>
+    public static class AvatarUpdater implements Updater<SocializerInfo>
     {
-        public AvatarUpdater (PlayerObject mobj) {
+        public AvatarUpdater (SocializerObject mobj) {
             _mobj = mobj;
         }
-        public boolean update (PlayerInfo info) {
+        public boolean update (SocializerInfo info) {
             info.updateMedia(_mobj);
             return true;
         }
-        protected PlayerObject _mobj;
+        protected SocializerObject _mobj;
     }
 
-    public PlayerInfo (PlayerObject plobj)
+    public SocializerInfo (SocializerObject sobj)
     {
-        super(plobj); // we'll fill these in later
+        super(sobj); // we'll fill these in later
 
         // configure our various bits
-        updatePartyId(plobj.partyId);
-        updateIsAway(plobj);
+        updatePartyId(sobj.partyId);
+        updateIsAway(sobj);
     }
 
     /** Used for unserialization. */
-    public PlayerInfo ()
+    public SocializerInfo ()
     {
     }
 
     /**
      * Get the player id for this user, or 0 if they're a guest.
      */
-    public int getPlayerId ()
+    public int getSocializerId ()
     {
         return ((OrthName) username).getId();
     }
@@ -65,9 +63,9 @@ public class PlayerInfo extends ActorInfo
     /**
      * Updates our away status.
      */
-    public void updateIsAway (PlayerObject plobj)
+    public void updateIsAway (SocializerObject sobj)
     {
-        _away = plobj.isAway();
+        _away = sobj.isAway();
     }
 
     /**
@@ -90,12 +88,12 @@ public class PlayerInfo extends ActorInfo
 
     public void updateMedia (ActorObject body)
     {
-        PlayerObject plobj = (PlayerObject) body;
+        SocializerObject sobj = (SocializerObject) body;
 
-        _media = plobj.avatar.avatarMedia;
-        _ident = plobj.avatar.getIdent();
-        _scale = plobj.avatar.scale;
-        _state = plobj.getActorState();
+        _media = sobj.avatar.avatarMedia;
+        _ident = sobj.avatar.getIdent();
+        _scale = sobj.avatar.scale;
+        _state = sobj.getActorState();
     }
 
     @Override // from SimpleStreamableObject
