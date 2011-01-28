@@ -29,7 +29,7 @@ public class SocializerInfo extends ActorInfo
         super(sobj); // we'll fill these in later
 
         // configure our various bits
-        updatePartyId(sobj.partyId);
+//        updatePartyId(sobj.partyId);
         updateIsAway(sobj);
     }
 
