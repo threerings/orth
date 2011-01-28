@@ -7,6 +7,9 @@ import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
+import com.threerings.crowd.data.BodyObject;
+import com.threerings.orth.data.OrthName;
+import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
@@ -84,6 +87,20 @@ public class RoomContext
     public function clearPlaceView (view :PlaceView) :void
     {
         _topPanel.clearMainView(DisplayObject(view));
+    }
+
+    // from WorldContext
+    public function getBodyObject () :BodyObject
+    {
+        return _client.getClientObject() as BodyObject;
+    }
+
+    // from WorldContext
+    public function getMyName () :OrthName
+    {
+        var body :BodyObject = getBodyObject();
+
+        return (body != null) ? SocializerObject(body).name : null;
     }
 
     protected var _client :WorldClient;
