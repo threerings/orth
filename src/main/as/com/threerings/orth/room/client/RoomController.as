@@ -921,7 +921,10 @@ public class RoomController extends SceneController
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _app :Application = inject(Application);
 
-    /** The world-flavoured life-force of the client. */
+    /** The central life force of the client. */
+    protected var _octx :OrthContext = inject(OrthContext);
+
+    /** The extra-special-flavoured life force of the room portion of the client. */
     protected var _rctx :RoomContext = inject(RoomContext);
 
     /** The room view that we're controlling. */
