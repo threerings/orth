@@ -2,6 +2,7 @@
 // $Id: ChatTabBar.as 19627 2010-11-24 16:02:41Z zell $
 
 package com.threerings.orth.chat.client {
+import com.threerings.orth.aether.data.PlayerObject;
 
 import flash.display.MovieClip;
 
@@ -42,7 +43,6 @@ import com.threerings.orth.client.OrthContext;
 
 import com.threerings.orth.chat.data.OrthChatChannel;
 
-import com.threerings.orth.data.PlayerObject;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.data.RoomName;

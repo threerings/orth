@@ -72,6 +72,7 @@ public class WorldDirector extends BasicDirector
 }
 }
 
+import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthName;
 import com.threerings.util.MessageBundle;
 
@@ -85,7 +86,6 @@ import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.data.PlayerObject;
 
 class FollowingNotifier
     implements AttributeChangeListener, SetListener
