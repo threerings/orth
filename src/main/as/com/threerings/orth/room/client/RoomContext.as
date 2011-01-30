@@ -17,8 +17,6 @@ import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.util.WhirledContext;
 
-import com.threerings.orth.chat.client.OrthChatDirector;
-
 import com.threerings.orth.client.TopPanel;
 
 import com.threerings.orth.world.client.WorldContext;
@@ -78,7 +76,10 @@ public class RoomContext
     // from CrowdContext
     public function getChatDirector () :ChatDirector
     {
-        return _chatDir;
+        return null;
+
+        // ORTH TODO
+        // return _chatDir;
     }
 
     // from CrowdContext
@@ -121,7 +122,7 @@ public class RoomContext
 
     // ORTH TODO: This is highly dubious and will change dramatically, as most chatting will be sent
     // TODO: over the Aether wire and our chat system needs to be multi-connection at any rate.
-    protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
+    // protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
 
     // ORTH TODO
     // protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
