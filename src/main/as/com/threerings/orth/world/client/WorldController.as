@@ -4,6 +4,7 @@
 package com.threerings.orth.world.client {
 
 import com.threerings.crowd.chat.client.ChatCantStealFocus;
+import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.client.BodyService;
 import com.threerings.crowd.data.CrowdCodes;
@@ -12,6 +13,7 @@ import com.threerings.flex.CommandButton;
 import com.threerings.orth.client.AboutDialog;
 import com.threerings.orth.client.ChatPrefsDialog;
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.TopPanel;
@@ -20,7 +22,6 @@ import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.data.PlayerObject;
 import com.threerings.orth.room.client.DisconnectedPanel;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.RoomObjectController;
@@ -31,6 +32,7 @@ import com.threerings.orth.room.data.OrthPlaceInfo;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
 import com.threerings.orth.room.data.PetName;
+import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.ui.MediaWrapper;
 import com.threerings.orth.world.data.WorldCredentials;
 import com.threerings.presents.client.Client;
@@ -78,6 +80,7 @@ import com.threerings.presents.client.ClientObserver;
 import com.threerings.presents.net.Credentials;
 
 import com.threerings.crowd.client.LocationAdapter;
+import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.PlaceView;
 
 import com.threerings.crowd.data.PlaceObject;
@@ -88,6 +91,7 @@ import com.threerings.media.Mp3AudioPlayer;
 
 import com.threerings.flex.CommandMenu;
 
+import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.data.Scene;
 
 import com.threerings.orth.world.client.BootablePlaceController;
@@ -99,24 +103,14 @@ import com.threerings.orth.world.client.BootablePlaceController;
 public class WorldController extends Controller
     implements ClientObserver
 {
-    /** Command to show the 'about' dialog. */
-    public static const ABOUT :String = "About";
-
     /** Command to move back to the previous location. */
     public static const MOVE_BACK :String = "MoveBack";
-
-    /** Command to view change the full screen mode. Args: null or none to toggle, else
-     * the StageDisplayState constant. */
-    public static const SET_DISPLAY_STATE :String = "SetDisplayState";
 
     /** Command to issue to toggle the chat display. */
     public static const TOGGLE_CHAT_HIDE :String = "ToggleChatHide";
 
     /** Command to toggle the channel occupant list display */
     public static const TOGGLE_OCC_LIST :String = "ToggleOccList";
-
-    /** Command to log us on. */
-    public static const LOGON :String = "Logon";
 
     /** Command to edit preferences. */
     public static const CHAT_PREFS :String = "ChatPrefs";
@@ -139,9 +133,6 @@ public class WorldController extends Controller
 
     /** Opens up a new toolbar and a new room editor. */
     public static const ROOM_EDIT :String = "RoomEdit";
-
-    /** Command to rate the current scene. */
-    public static const ROOM_RATE :String = "RoomRate";
 
     /** Command to go to a particular place (by Oid). */
     public static const GO_LOCATION :String = "GoLocation";
@@ -173,27 +164,22 @@ public class WorldController extends Controller
     /** Command to request detailed info on a party. */
     public static const GET_PARTY_DETAIL :String = "GetPartyDetail";
 
-    public function WorldController (ctx :RoomContext, topPanel :TopPanel)
+    public function WorldController ()
     {
-        _wctx = ctx;
-
-        _wctx.getClient().addServiceGroup(CrowdCodes.CROWD_GROUP);
-        _wctx.getClient().addClientObserver(this);
-        _topPanel = topPanel;
+        _client.addServiceGroup(CrowdCodes.CROWD_GROUP);
+        _client.addClientObserver(this);
 
         // create a timer to poll mouse position and track timing
         _idleTimer = new Timer(1000);
         _idleTimer.addEventListener(TimerEvent.TIMER, handlePollIdleMouse);
 
         // listen for location changes
-        _wctx.getLocationDirector().addLocationObserver(
+        _rctx.getLocationDirector().addLocationObserver(
             new LocationAdapter(null, this.locationDidChange, null));
 
-        var stage :Stage = _wctx.getStage();
-        setControlledPanel(topPanel.systemManager);
-//        stage.addEventListener(FocusEvent.FOCUS_OUT, handleUnfocus);
-        stage.addEventListener(KeyboardEvent.KEY_DOWN, handleStageKeyDown, false, int.MAX_VALUE);
-        stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown, false, int.MAX_VALUE);
+        setControlledPanel(_topPanel.systemManager);
+        _stage.addEventListener(KeyboardEvent.KEY_DOWN, handleStageKeyDown, false, int.MAX_VALUE);
+        _stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown, false, int.MAX_VALUE);
     }
 
     /**
@@ -201,10 +187,9 @@ public class WorldController extends Controller
      */
     public function getPlaceInfo () :OrthPlaceInfo
     {
-
         var plinfo :OrthPlaceInfo = new OrthPlaceInfo();
 
-        var scene :Scene = _wctx.getSceneDirector().getScene();
+        var scene :Scene = _sceneDir.getScene();
         plinfo.sceneId = (scene == null) ? 0 : scene.getId();
         plinfo.sceneName = (scene == null) ? null : scene.getName();
 
@@ -244,7 +229,7 @@ public class WorldController extends Controller
      */
     public function reconnectClient () :void
     {
-        _wctx.getClient().logon();
+        _client.logon();
     }
 
     // from ClientObserver
@@ -256,7 +241,7 @@ public class WorldController extends Controller
     // from ClientObserver
     public function clientDidLogon (event :ClientEvent) :void
     {
-        var name :Name = (_wctx.getClient().getCredentials() as WorldCredentials).getUsername();
+        var name :Name = (_client.getCredentials() as WorldCredentials).getUsername();
         if (name != null) {
             Prefs.setUsername(name.toString());
         }
@@ -272,19 +257,18 @@ public class WorldController extends Controller
     public function clientDidLogoff (event :ClientEvent) :void
     {
         if (_logoffMessage != null) {
-            _topPanel.setPlaceView(new DisconnectedPanel(
-                _wctx.getClient(), _logoffMessage, reconnectClient));
+            _topPanel.setMainView(new DisconnectedPanel(_client, _logoffMessage, reconnectClient));
             _logoffMessage = null;
         } else {
-            _topPanel.clearPlaceView();
+            _topPanel.clearMainView();
         }
     }
 
     // from ClientObserver
     public function clientFailedToLogon (event :ClientEvent) :void
     {
-        _topPanel.setPlaceView(new DisconnectedPanel(
-            _wctx.getClient(), event.getCause().message, reconnectClient));
+        _topPanel.setMainView(new DisconnectedPanel(
+                _client, event.getCause().message, reconnectClient));
     }
 
     // from ClientObserver
@@ -367,15 +351,7 @@ public class WorldController extends Controller
         // reconstitute the playerName from args
         var memName :OrthName = new OrthName(name, memberId);
         addMemberMenuItems(memName, menuItems);
-        CommandMenu.createMenu(menuItems, _wctx.getTopPanel()).popUpAtMouse();
-    }
-
-    /**
-     * Handles the ABOUT command.
-     */
-    public function handleAbout () :void
-    {
-        new AboutDialog(_wctx);
+        CommandMenu.createMenu(menuItems, _topPanel).popUpAtMouse();
     }
 
     /**
@@ -400,7 +376,7 @@ public class WorldController extends Controller
     {
         // you can only NOT move back if you are there are no other scenes in your history
         const curSceneId :int = getCurrentSceneId();
-        var memObj :PlayerObject = _wctx.getPlayerObject();
+        var memObj :SocializerObject = _rctx.getSocializerObject();
         if (memObj == null) {
             return false;
         }
@@ -411,28 +387,6 @@ public class WorldController extends Controller
         }
         return false;
 
-    }
-
-    /**
-     * Handles the SET_DISPLAY_STATE command.
-     */
-    public function handleSetDisplayState (state :String = null) :void
-    {
-        const stage :Stage = _wctx.getStage();
-        const curState :String = stage.displayState;
-        if (state == curState) {
-            return;
-        }
-        if (state == null) {
-            state = (curState == StageDisplayState.NORMAL) ? StageDisplayState.FULL_SCREEN
-                                                           : StageDisplayState.NORMAL;
-        }
-        try {
-            stage.displayState = state;
-        } catch (se :SecurityError) {
-            // it didn't work! Disable the full-screen button
-            _wctx.getControlBar().fullBtn.enabled = false;
-        }
     }
 
     /**
@@ -452,31 +406,12 @@ public class WorldController extends Controller
     }
 
     /**
-     * Handles the LOGON command.
-     */
-    public function handleLogon (creds :Credentials) :void
-    {
-        // if we're currently logged on, save our current scene so that we can go back there once
-        // we're relogged on as a non-guest; otherwise go to Brave New Whirled
-        const currentSceneId :int = getCurrentSceneId();
-        _postLogonScene = (currentSceneId == 0) ? 1 : currentSceneId;
-        _wctx.getClient().logoff(false);
-
-        // give the client a chance to log off, then log back on
-        _topPanel.callLater(function () :void {
-            var client :Client = _wctx.getClient();
-            log.info("Logging on", "creds", creds, "version", _wctx.getVersion());
-            client.setCredentials(creds);
-            client.logon();
-        });
-    }
-
-    /**
      * Handles CHAT_PREFS.
      */
     public function handleChatPrefs () :void
     {
-        new ChatPrefsDialog(_wctx);
+        // ORTH TODO: Punted
+        // new ChatPrefsDialog(_wctx);
     }
 
     /**
@@ -484,7 +419,8 @@ public class WorldController extends Controller
      */
     public function handleOpenChannel (name :Name) :void
     {
-        _wctx.getOrthChatDirector().openChannel(name);
+        // ORTH TODO
+        // _chatDir.openChannel(name);
     }
 
     /**
@@ -500,8 +436,10 @@ public class WorldController extends Controller
 
         var menuData :Array = [];
         menuData.push({ label: Msgs.GENERAL.get("b.chatPrefs"), command: CHAT_PREFS });
-        menuData.push({ label: Msgs.GENERAL.get("b.clearChat"),
-            callback: _wctx.getOrthChatDirector().clearAllDisplays });
+
+        // ORTH TODO
+//        menuData.push({ label: Msgs.GENERAL.get("b.clearChat"), 
+//            callback: _chatDir.clearAllDisplays });
         CommandMenu.addSeparator(menuData);
 
         const place :PlaceView = _wctx.getPlaceView();
@@ -542,8 +480,6 @@ public class WorldController extends Controller
         menuData.push({ label: Msgs.GENERAL.get("b.editScene"), icon: _rsrc.roomEditIcon,
             command: ROOM_EDIT, enabled: roomView.getRoomController().canManageRoom() });
 
-        menuData.push({ label: Msgs.GENERAL.get("b.viewItems"),
-            callback: roomView.viewRoomItems });
         menuData.push({ label: Msgs.GENERAL.get("b.snapshot"), icon: _rsrc.snapshotIcon,
             command: doSnapshot });
 
@@ -571,7 +507,7 @@ public class WorldController extends Controller
      */
     public function handleGoScene (sceneId :int) :void
     {
-        _wctx.getSceneDirector().moveTo(sceneId);
+        _sceneDir.moveTo(sceneId);
     }
 
     /**
@@ -579,7 +515,8 @@ public class WorldController extends Controller
      */
     public function handleJoinParty (partyId :int) :void
     {
-        _wctx.getPartyDirector().joinParty(partyId);
+        // ORTH TODO
+        // _partyDir.joinParty(partyId);
     }
 
     /**
@@ -587,7 +524,8 @@ public class WorldController extends Controller
      */
     public function handleGetPartyDetail (partyId :int) :void
     {
-        _wctx.getPartyDirector().getPartyDetail(partyId);
+        // ORTH TODO
+        //         _partyDir.getPartyDetail(partyId);
     }
 
     /**
@@ -595,7 +533,7 @@ public class WorldController extends Controller
      */
     public function handleGoLocation (placeOid :int) :void
     {
-        _wctx.getLocationDirector().moveTo(placeOid);
+        _locDir.moveTo(placeOid);
     }
 
     /**
@@ -612,8 +550,8 @@ public class WorldController extends Controller
      */
     public function handleRespondFollow (memberId :int) :void
     {
-        WorldService(_wctx.getClient().requireService(WorldService)).
-            followMember(memberId, _wctx.listener());
+        WorldService(_client.requireService(WorldService)).
+            followMember(memberId, _octx.listener());
     }
 
     /**
@@ -622,15 +560,6 @@ public class WorldController extends Controller
     public function handleRoomEdit () :void
     {
         (_topPanel.getPlaceView() as RoomObjectView).getRoomObjectController().handleRoomEdit();
-    }
-
-    /**
-     * Handle the ROOM_RATE command.
-     */
-    public function handleRoomRate (rating :Number) :void
-    {
-        (_topPanel.getPlaceView() as RoomObjectView).getRoomObjectController().
-                handleRoomRate(rating);
     }
 
     /**
@@ -654,7 +583,8 @@ public class WorldController extends Controller
      */
     public function handleInviteToParty (memberId :int) :void
     {
-        _wctx.getPartyDirector().inviteMember(memberId);
+        // ORTH TODO
+        //         _partyDir.inviteMember(memberId);
     }
 
     /**
@@ -664,7 +594,7 @@ public class WorldController extends Controller
     {
         var menuItems :Array = [];
         addPetMenuItems(new PetName(name, petId, ownerId), menuItems);
-        CommandMenu.createMenu(menuItems, _wctx.getTopPanel()).popUpAtMouse();
+        CommandMenu.createMenu(menuItems, _topPanel).popUpAtMouse();
     }
 
     /**
@@ -672,7 +602,7 @@ public class WorldController extends Controller
      */
     public function getCurrentSceneId () :int
     {
-        const scene :Scene = _wctx.getSceneDirector().getScene();
+        const scene :Scene = _sceneDir.getScene();
         return (scene == null) ? 0 : scene.getId();
     }
 
@@ -682,10 +612,10 @@ public class WorldController extends Controller
         const memId :int = name.getId();
         const us :PlayerObject = _wctx.getPlayerObject();
         const isUs :Boolean = (memId == us.getPlayerId());
-        const isMuted :Boolean = !isUs && _wctx.getMuteDirector().isMuted(name);
+        const isMuted :Boolean = !isUs && _muteDir.isMuted(name);
         var placeCtrl :Object = null;
         if (addWorldItems) {
-            placeCtrl = _wctx.getLocationDirector().getPlaceController();
+            placeCtrl = _locDir.getPlaceController();
         }
 
         var followItem :Object = null;
@@ -768,18 +698,19 @@ public class WorldController extends Controller
                 menuItems.push(followItem);
             }
             // partying
-            if (_wctx.getPartyDirector().canInviteToParty()) {
-                menuItems.push({ label: Msgs.PARTY.get("b.invite_member"),
-                    command: INVITE_TO_PARTY, arg: memId,
-                    enabled: !muted && !_wctx.getPartyDirector().partyContainsPlayer(memId) });
-            }
+            // ORTH TODO
+            // if (_partyDir.canInviteToParty()) {
+            //     menuItems.push({ label: Msgs.PARTY.get("b.invite_member"),
+            //         command: INVITE_TO_PARTY, arg: memId,
+            //         enabled: !muted && !_partyDir.partyContainsPlayer(memId) });
+            // }
 
             CommandMenu.addSeparator(menuItems);
             // muting
-            var muted :Boolean = _wctx.getMuteDirector().isMuted(name);
+            var muted :Boolean = _muteDir.isMuted(name);
             menuItems.push({ label: Msgs.GENERAL.get(muted ? "b.unmute" : "b.mute"),
                 icon: _rsrc.blockIcon,
-                callback: _wctx.getMuteDirector().setMuted, arg: [ name, !muted ] });
+                callback: _muteDir.setMuted, arg: [ name, !muted ] });
             // booting
             if (addWorldItems && isInOurRoom &&
                     (placeCtrl is BootablePlaceController) &&
@@ -811,16 +742,16 @@ public class WorldController extends Controller
      */
     public function addPetMenuItems (petName :PetName, menuItems :Array) :void
     {
-        const ownerMuted :Boolean = _wctx.getMuteDirector().isOwnerMuted(petName);
+        const ownerMuted :Boolean = _muteDir.isOwnerMuted(petName);
         if (ownerMuted) {
             menuItems.push({ label: Msgs.GENERAL.get("b.unmute_owner"), icon: _rsrc.blockIcon,
-                callback: _wctx.getMuteDirector().setMuted,
+                callback: _muteDir.setMuted,
                 arg: [ new OrthName("", petName.getOwnerId()), false ] });
         } else {
-            const isMuted :Boolean = _wctx.getMuteDirector().isMuted(petName);
+            const isMuted :Boolean = _muteDir.isMuted(petName);
             menuItems.push({ label: Msgs.GENERAL.get(isMuted ? "b.unmute_pet" : "b.mute_pet"),
                 icon: _rsrc.blockIcon,
-                callback: _wctx.getMuteDirector().setMuted, arg: [ petName, !isMuted ] });
+                callback: _muteDir.setMuted, arg: [ petName, !isMuted ] });
         }
     }
 
@@ -859,11 +790,11 @@ public class WorldController extends Controller
     protected function popControlBarMenu (menuData :Array, trigger :Button) :void
     {
         var menu :CommandMenu = CommandMenu.createMenu(menuData, _topPanel);
-        menu.setBounds(_wctx.getTopPanel().getMainAreaBounds());
+        menu.setBounds(_topPanel.getMainAreaBounds());
         menu.setTriggerButton(trigger);
         var r :Rectangle = trigger.getBounds(trigger.stage);
         var y :int;
-        y = Math.min(r.top, _wctx.getControlBar().localToGlobal(new Point()).y);
+        y = Math.min(r.top, _controlBar.localToGlobal(new Point()).y);
 
         menu.addEventListener(MenuEvent.MENU_SHOW, handleShowMenu);
         menu.addEventListener(MenuEvent.MENU_HIDE, handleHideMenu);
@@ -953,7 +884,7 @@ public class WorldController extends Controller
     {
         updateLocationDisplay();
         // if we moved to a scene, set things up thusly
-        var scene :Scene = _wctx.getSceneDirector().getScene();
+        var scene :Scene = _sceneDir.getScene();
         if (scene != null) {
             addRecentScene(scene);
         }
@@ -982,8 +913,7 @@ public class WorldController extends Controller
     {
         if (nowIdle != _idle) {
             _idle = nowIdle;
-            var bsvc :BodyService = _wctx.getClient().getService(BodyService) as BodyService;
-            bsvc.setIdle(nowIdle);
+            BodyService(_client.getService(BodyService)).setIdle(nowIdle);
         }
     }
 
@@ -1018,7 +948,7 @@ public class WorldController extends Controller
     protected function checkChatFocus (... ignored) :void
     {
         try {
-            var focus :Object = _wctx.getStage().focus;
+            var focus :Object = _stage.focus;
             if (!(focus is TextField) && !(focus is ChatCantStealFocus)) {
                 ChatControl.grabFocus();
             }
@@ -1082,8 +1012,7 @@ public class WorldController extends Controller
      */
     protected function inviteFollow (memId :int) :void
     {
-        WorldService(_wctx.getClient().requireService(WorldService)).
-            inviteToFollow(memId, _wctx.listener());
+        WorldService(_client.requireService(WorldService)).inviteToFollow(memId, _octx.listener());
     }
 
     /**
@@ -1092,35 +1021,43 @@ public class WorldController extends Controller
      */
     protected function ditchFollower (memId :int = 0) :void
     {
-        WorldService(_wctx.getClient().requireService(WorldService)).
-            ditchFollower(memId, _wctx.listener());
+        WorldService(_client.requireService(WorldService)).ditchFollower(memId, _octx.listener());
     }
 
     protected function doSnapshot () :void
     {
-        if (_snapPanel == null) {
-            _snapPanel = new SnapshotPanel(_wctx);
-            _snapPanel.addCloseCallback(function () :void {
-                _snapPanel = null;
-            });
-        }
+    // ORTH TODO
+    //     if (_snapPanel == null) {
+    //         _snapPanel = new SnapshotPanel();
+    //         _snapPanel.addCloseCallback(function () :void {
+    //             _snapPanel = null;
+    //         });
+    //     }
     }
 
-    /** Giver of life, context. */
-    protected var _wctx :RoomContext;
+    protected const _octx :OrthContext = inject(OrthContext);
+    protected const _rctx :RoomContext = inject(RoomContext);
+    protected const _client :WorldClient = inject(WorldClient);
+
+    protected const _stage :Stage = inject(Stage);
+    protected const _topPanel :TopPanel = inject(TopPanel);
 
     protected const _rsrc :OrthResourceFactory = inject(OrthResourceFactory);
 
-    protected var _snapPanel :SnapshotPanel;
+    protected const _muteDir :MuteDirector = inject(MuteDirector);    
+    protected const _locDir :LocationDirector = inject(LocationDirector);
+    protected const _sceneDir :SceneDirector = inject(SceneDirector);
+
+    // ORTH TODO
+    // protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
+    // protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
+    // protected const _partyDir :OrthPartyDirector = inject(OrthPartyDirector);
 
     /** A scene to which to go after we logon. */
     protected var _postLogonScene :int;
 
     /** Recently visited scenes, ordered from most-recent to least-recent */
     protected var _recentScenes :Array = [];
-
-    /** The topmost panel in the orth client. */
-    protected var _topPanel :TopPanel;
 
     /** A special logoff message to use when we disconnect. */
     protected var _logoffMessage :String;

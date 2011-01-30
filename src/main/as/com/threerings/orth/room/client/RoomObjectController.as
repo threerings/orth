@@ -208,26 +208,6 @@ public class RoomObjectController extends RoomController
     }
 
     /**
-     * Handle the ROOM_RATE command.
-     */
-    public function handleRoomRate (rating :Number) :void
-    {
-        _roomObj.orthRoomService.rateRoom(rating, _octx.listener());
-    }
-
-    /**
-     * Handles PUBLISH_ROOM.
-     */
-    public function handlePublishRoom () :void
-    {
-        _roomObj.orthRoomService.publishRoom(_octx.listener(OrthCodes.EDITING_MSGS));
-
-        // TODO: remove this bubbley hint someday?
-        BubblePopup.showHelpBubble(_rctx, _controlBar.shareBtn,
-            Msgs.WORLD.get("h.room_share"), -7);
-    }
-
-    /**
      * Handles FURNI_CLICKED.
      */
     override public function handleFurniClicked (furni :FurniData) :void
