@@ -11,8 +11,8 @@ public interface OrthResourceFactory
 {
     function newIdleIcon () :DisplayObject;
 
-    function newWalkTarget () :IFlexDisplayObject;
-    function newFlyTarget () :IFlexDisplayObject;
+    function newWalkTarget () :DisplayObject;
+    function newFlyTarget () :DisplayObject;
 
     function get roomEditIcon () :Class;
     function get snapshotIcon () :Class;
