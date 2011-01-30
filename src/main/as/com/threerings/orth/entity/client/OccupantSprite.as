@@ -31,8 +31,6 @@ import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.ui.OrthNameLabel;
 
-import OccupantChatOverlay;
-
 /**
  * Displays a visualization of an occupant in a scene (could be a member, a pet, a MOB, all sorts
  * of kraaaazy stuff).
