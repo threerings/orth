@@ -981,11 +981,6 @@ public class RoomView extends Sprite
         addChildAt(sprite.viz, index);
         addToEntityMap(sprite);
     }
-//  This belongs with the above... somehow: but layout timing booches it
-//        if (sprite is FurniSprite &&
-//                (WorldControlBar(_ctx.getControlBar()).hotZonBtn.selected)) {
-//            doGlobalHover(FurniSprite(sprite), true);
-//        }
 
     /**
      * Remove the specified sprite from the view.

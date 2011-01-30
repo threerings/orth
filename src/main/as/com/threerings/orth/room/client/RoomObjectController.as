@@ -60,7 +60,6 @@ import com.threerings.orth.room.data.SocializerInfo;
 import com.threerings.orth.room.data.SocializerObject;
 
 import com.threerings.orth.world.client.BootablePlaceController;
-import com.threerings.orth.world.client.WorldControlBar;
 import com.threerings.orth.world.client.WorldController;
 import com.threerings.orth.world.client.WorldDirector;
 
@@ -445,12 +444,6 @@ public class RoomObjectController extends RoomController
             Msgs.CHAT, "action", new AvatarChatHandler(false));
         _rctx.getChatDirector().registerCommandHandler(
             Msgs.CHAT, "state", new AvatarChatHandler(true));
-
-        // deactivate any hot zoneiness
-        var bar :WorldControlBar = WorldControlBar(_controlBar);
-        if (bar.hotZoneBtn.selected) {
-            bar.hotZoneBtn.activate();
-        }
 
         _walkTarget.visible = false;
         _flyTarget.visible = false;

@@ -60,8 +60,6 @@ import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.SimpleEntityIdent;
 
-import com.threerings.orth.world.client.WorldControlBar;
-
 /**
  * Manages the various interactions that take place in a room scene.
  */
@@ -599,10 +597,6 @@ public class RoomController extends SceneController
     protected function setHoverSprite (
         sprite :EntitySprite, stageX :Number = NaN, stageY :Number = NaN) :void
     {
-        if (sprite is FurniSprite && WorldControlBar(_controlBar).hotZoneBtn.selected) {
-            return; // not right now, they're all hovered
-        }
-
         // iff the sprite has changed..
         if (_hoverSprite != sprite) {
             // unglow the old sprite (and remove any tooltip)
