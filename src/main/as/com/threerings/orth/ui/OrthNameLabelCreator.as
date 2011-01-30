@@ -9,31 +9,26 @@ import com.threerings.util.Name;
 import com.whirled.ui.NameLabel;
 import com.whirled.ui.NameLabelCreator;
 
-import com.threerings.orth.client.OrthContext;
-
 import com.threerings.orth.data.VizOrthName;
 
 public class OrthNameLabelCreator
     implements NameLabelCreator
 {
-    public function OrthNameLabelCreator (mctx :OrthContext, forRoom :Boolean = false)
+    public function OrthNameLabelCreator (forRoom :Boolean = false)
     {
-        _mctx = mctx;
         _forRoom = forRoom;
     }
 
     // from NameLabelCreator
-    public function createLabel (name :Name) :NameLabel
+    public function createLabel (name :Name, extrainfo: Object) :NameLabel
     {
         if (!(name is VizOrthName)) {
             Log.getLog(this).warning("OrthNameLabelCreator only supports VizOrthName");
             return null;
         }
 
-        return new LabelBox(_mctx, name as VizOrthName, _forRoom);
+        return new LabelBox(name as VizOrthName, _forRoom);
     }
-
-    protected var _mctx :OrthContext;
 
     protected var _forRoom :Boolean;
 }
@@ -47,6 +42,8 @@ import mx.containers.HBox;
 
 import mx.core.ScrollPolicy;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.util.Log;
 
 import com.whirled.ui.NameLabel;
@@ -57,21 +54,22 @@ import com.threerings.flex.FlexWrapper;
 
 import com.threerings.crowd.data.OccupantInfo;
 
-import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.data.VizOrthName;
 import com.threerings.orth.ui.MediaWrapper;
 import com.threerings.orth.ui.OrthNameLabel;
 
+import com.threerings.orth.world.client.WorldController;
+
 import com.threerings.orth.room.client.RoomObjectView;
+import com.threerings.orth.room.client.RoomObjectController;
 
 class LabelBox extends HBox
     implements NameLabel
 {
-    public function LabelBox (
-        mctx :OrthContext, name :VizOrthName, forRoom :Boolean)
+    public function LabelBox (name :VizOrthName, forRoom :Boolean)
     {
-        _mctx = mctx;
         _name = name;
         _forRoom = forRoom;
 
@@ -96,7 +94,7 @@ class LabelBox extends HBox
         switch (status) {
         default:
             Log.dumpStack();
-            // but fall through to STATUS_NORMAL
+            // but fall through to STATUS_vNORMAL
 
         case PlayerList.STATUS_NORMAL:
         case PlayerList.STATUS_UNINITIALIZED:
@@ -132,20 +130,22 @@ class LabelBox extends HBox
     protected function handleClick (event :MouseEvent) :void
     {
         var menuItems :Array = [];
-        _mctx.getOrthController().addMemberMenuItems(_name, menuItems, _forRoom);
-        CommandMenu.createMenu(menuItems, _mctx.getTopPanel()).popUpAtMouse();
+        var ctrl :WorldController = inject(WorldController);
+        var panel :TopPanel = inject(TopPanel);
+
+        ctrl.addMemberMenuItems(_name, menuItems, _forRoom);
+        CommandMenu.createMenu(menuItems, panel).popUpAtMouse();
     }
 
     protected function handleRoll (event :MouseEvent) :void
     {
-        var view :Object = _mctx.getPlaceView();
-        if (view is RoomObjectView) {
-            (view as RoomObjectView).getRoomObjectController().setHoverName(
-                _name, (event.type == MouseEvent.ROLL_OVER));
+        var ctrl :RoomObjectController = inject(RoomObjectController);
+        // ORTH TODO: make sure inject() can create nulls
+        if (ctrl != null) {
+            ctrl.setHoverName(_name, (event.type == MouseEvent.ROLL_OVER));
         }
     }
 
-    protected var _mctx :OrthContext;
     protected var _name :VizOrthName;
     protected var _forRoom :Boolean;
     protected var _label :OrthNameLabel;
