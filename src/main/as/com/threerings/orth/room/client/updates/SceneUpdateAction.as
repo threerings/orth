@@ -62,8 +62,7 @@ public class SceneUpdateAction
 
     /** Names of scene attributes that will be updated during an update. */
     protected static const ATTRS_TO_COPY :Array =
-        [ "name", "accessControl", "playlistControl", "decor", "entrance", "backgroundColor",
-          "noPuppet" ];
+        [ "name", "accessControl", "playlistControl", "decor", "entrance", "noPuppet" ];
 
     protected var _oldSceneData :Object;
     protected var _newSceneData :Object;

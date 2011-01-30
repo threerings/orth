@@ -148,11 +148,6 @@ public class RoomView extends Sprite
         return new Point(metrics.sceneWidth * scaleX, metrics.sceneHeight * scaleY);
     }
 
-    public function getBackgroundColor () :uint
-    {
-        return _topPanel.getPlaceContainer().getPlaceBackgroundColor();
-    }
-
     // from OrthPlaceView
     public function asZoomable () :Zoomable
     {
@@ -785,11 +780,6 @@ public class RoomView extends Sprite
         scaleX = scale;
 
         configureScrollRect();
-
-        // fill in the entire scene area with the background color so it underlays the decor
-        graphics.beginFill(getBackgroundColor());
-        graphics.drawRect(0, 0, _layout.metrics.sceneWidth, _layout.metrics.sceneHeight);
-        graphics.endFill();
 
         relayoutSprites(_furni.values());
         relayoutSprites(_otherSprites);

@@ -100,15 +100,6 @@ public class RoomObjectView extends RoomView
         updateEditingOverlay();
     }
 
-    // from MsoyPlaceView, via RoomView
-    override public function getBackgroundColor () :uint
-    {
-        if (_scene != null) {
-            return _scene.getBackgroundColor();
-        }
-        return super.getBackgroundColor();
-    }
-
     // from Zoomable, via RoomView
     override public function getZoom () :String
     {
@@ -145,10 +136,6 @@ public class RoomObjectView extends RoomView
     {
         super.setScene(scene);
         updateEditingOverlay();
-
-        // let the place box know that the frame background color may have changed (if using the
-        // room background as frame background)
-        _topPanel.getPlaceContainer().updateFrameBackgroundColor();
     }
 
     /**

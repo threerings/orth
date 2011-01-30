@@ -29,9 +29,6 @@ public class SceneAttrsUpdate extends SceneUpdate
     /** The new entrance location. */
     public var entrance :OrthLocation;
 
-    /** The new background color. */
-    public var backgroundColor :uint;
-
     override public function apply (model :SceneModel) :void
     {
         super.apply(model);
@@ -51,7 +48,6 @@ public class SceneAttrsUpdate extends SceneUpdate
         out.writeByte(accessControl);
         out.writeObject(decor);
         out.writeObject(entrance);
-        out.writeInt(backgroundColor);
     }
 
     override public function readObject (ins :ObjectInputStream) :void
@@ -62,7 +58,6 @@ public class SceneAttrsUpdate extends SceneUpdate
         accessControl = ins.readByte();
         decor = Decor(ins.readObject());
         entrance = OrthLocation(ins.readObject());
-        backgroundColor = ins.readInt();
     }
 }
 }
