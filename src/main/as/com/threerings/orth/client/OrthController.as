@@ -40,9 +40,6 @@ public class OrthController extends Controller
     /** Command to open the chat interface for a particular chat channel. */
     public static const OPEN_CHANNEL :String = "OpenChannel";
 
-    /** Command to respond to a request to follow another player. */
-    public static const RESPOND_FOLLOW :String = "RespondFollow";
-
     /** Command to join a party. */
     public static const JOIN_PARTY :String = "JoinParty";
 
@@ -116,16 +113,6 @@ public class OrthController extends Controller
     public function handleInviteFriend (memberId :int) :void
     {
         log.warning("INVITE_FRIEND not implemented.");
-    }
-
-    /**
-     * Handles RESPOND_FOLLOW.
-     * Arg can be 0 to stop us from following anyone
-     */
-    public function handleRespondFollow (memberId :int) :void
-    {
-        WorldService(_client.requireService(WorldService)).
-            followMember(memberId, _octx.listener());
     }
 
     /**

@@ -98,7 +98,9 @@ import com.threerings.whirled.data.Scene;
 import com.threerings.orth.world.client.BootablePlaceController;
 
 /**
- * Extends the WorldController with World specific bits.
+ * A persistent controller for the top UI element; this is not torn down and reconstructed
+ * as we move about the world. It is a companion to OrthController that handles the directly
+ * world-related activities.
  */
 public class WorldController extends Controller
     implements ClientObserver
@@ -136,6 +138,9 @@ public class WorldController extends Controller
 
     /** Command to view a "stuff" page. Arg: [ itemType ] */
     public static const VIEW_STUFF :String = "ViewStuff";
+
+    /** Command to respond to a request to follow another player. */
+    public static const RESPOND_FOLLOW :String = "RespondFollow";
 
     public function WorldController ()
     {
@@ -411,8 +416,6 @@ public class WorldController extends Controller
 //            callback: _chatDir.clearAllDisplays });
         CommandMenu.addSeparator(menuData);
 
-        const place :PlaceView = _wctx.getPlaceView();
-
         menuData.push({ command: TOGGLE_CHAT_HIDE, label: Msgs.GENERAL.get(
                     Prefs.getShowingChatHistory() ? "b.hide_chat" : "b.show_chat") });
 
@@ -464,6 +467,16 @@ public class WorldController extends Controller
     public function handleGoLocation (placeOid :int) :void
     {
         _locDir.moveTo(placeOid);
+    }
+
+    /**
+     * Handles RESPOND_FOLLOW.
+     * Arg can be 0 to stop us from following anyone
+     */
+    public function handleRespondFollow (memberId :int) :void
+    {
+        WorldService(_client.requireService(WorldService)).
+            followMember(memberId, _octx.listener());
     }
 
     /**

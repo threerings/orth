@@ -87,9 +87,9 @@ public class PlayerObject extends ClientObject
     }
 
     /**
-     * Get a sorted list of friends.
+     * Get our unique integer reference.
      */
-    public function getPlayerId () :Array
+    public function getPlayerId () :int
     {
         return playerName.getId();
     }

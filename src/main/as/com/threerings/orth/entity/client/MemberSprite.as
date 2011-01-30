@@ -11,7 +11,6 @@ import com.threerings.util.CommandEvent;
 import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.orth.client.OrthContext;
-import com.threerings.orth.client.OrthController;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.SocializerInfo;
 
@@ -236,6 +235,7 @@ public class MemberSprite extends ActorSprite
 }
 }
 
+import com.threerings.orth.client.OrthController;
 import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.MemberSprite;
@@ -243,7 +243,6 @@ import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.party.data.PartySummary;
 import com.threerings.orth.ui.GlowSprite;
 import com.threerings.orth.ui.ScalingMediaDescContainer;
-import com.threerings.orth.world.client.WorldController;
 
 import com.threerings.util.Log;
 
