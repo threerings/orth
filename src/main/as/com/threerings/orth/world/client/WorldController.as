@@ -10,6 +10,7 @@ import com.threerings.crowd.client.BodyService;
 import com.threerings.crowd.data.CrowdCodes;
 import com.threerings.flex.ChatControl;
 import com.threerings.flex.CommandButton;
+import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.AboutDialog;
 import com.threerings.orth.client.ChatPrefsDialog;
 import com.threerings.orth.client.Msgs;
@@ -96,7 +97,6 @@ import com.threerings.whirled.data.Scene;
 
 import com.threerings.orth.world.client.BootablePlaceController;
 
-
 /**
  * Extends the WorldController with World specific bits.
  */
@@ -127,9 +127,6 @@ public class WorldController extends Controller
 
     /** Command to display the chat channel menu. */
     public static const POP_CHANNEL_MENU :String = "PopChannelMenu";
-
-    /** Command to display the room menu. */
-    public static const POP_ROOM_MENU :String = "PopRoomMenu";
 
     /** Opens up a new toolbar and a new room editor. */
     public static const ROOM_EDIT :String = "RoomEdit";
@@ -428,11 +425,7 @@ public class WorldController extends Controller
      */
     public function handlePopChannelMenu (trigger :Button) :void
     {
-        // if we don't yet have a member object, it's too early to pop!
-        const me :PlayerObject = _wctx.getPlayerObject();
-        if (me == null) {
-            return;
-        }
+        const me :PlayerObject = _octx.getPlayerObject();
 
         var menuData :Array = [];
         menuData.push({ label: Msgs.GENERAL.get("b.chatPrefs"), command: CHAT_PREFS });
@@ -463,27 +456,6 @@ public class WorldController extends Controller
         menuData.push({ label: Msgs.GENERAL.get("l.friends"), children: friends });
 
         popControlBarMenu(menuData.reverse(), trigger);
-    }
-
-    /**
-     * Handles the POP_ROOM_MENU command.
-     */
-    public function handlePopRoomMenu (trigger :Button) :void
-    {
-        var menuData :Array = [];
-
-        var roomView :RoomView = _wctx.getPlaceView() as RoomView;
-
-        CommandMenu.addTitle(menuData, roomView.getPlaceName());
-
-        CommandMenu.addSeparator(menuData);
-        menuData.push({ label: Msgs.GENERAL.get("b.editScene"), icon: _rsrc.roomEditIcon,
-            command: ROOM_EDIT, enabled: roomView.getRoomController().canManageRoom() });
-
-        menuData.push({ label: Msgs.GENERAL.get("b.snapshot"), icon: _rsrc.snapshotIcon,
-            command: doSnapshot });
-
-        popControlBarMenu(menuData, trigger);
     }
 
     /**

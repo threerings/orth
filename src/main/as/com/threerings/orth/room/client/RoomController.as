@@ -75,6 +75,9 @@ public class RoomController extends SceneController
 
     public static const ORDER_PET :String = "OrderPet";
 
+    /** Command to display the room menu. */
+    public static const POP_ROOM_MENU :String = "PopRoomMenu";
+
     public static const MAX_ENCODED_MESSAGE_LENGTH :int = 1024;
 
     // documentation inherited
@@ -346,6 +349,27 @@ public class RoomController extends SceneController
         if (_entityPopup != null && _entityPopup.getOwningEntity() == sprite) {
             _entityPopup.close(); // will trigger callback that clears _entityPopup
         }
+    }
+
+    /**
+     * Handles the POP_ROOM_MENU command.
+     */
+    public function handlePopRoomMenu (trigger :Button) :void
+    {
+        var menuData :Array = [];
+
+        var roomView :RoomView = _topPanel.getMainView() as RoomView;
+
+        CommandMenu.addTitle(menuData, roomView.getPlaceName());
+
+        CommandMenu.addSeparator(menuData);
+        menuData.push({ label: Msgs.GENERAL.get("b.editScene"), icon: _rsrc.roomEditIcon,
+            command: ROOM_EDIT, enabled: roomView.getRoomController().canManageRoom() });
+
+        menuData.push({ label: Msgs.GENERAL.get("b.snapshot"), icon: _rsrc.snapshotIcon,
+            command: doSnapshot });
+
+        popControlBarMenu(menuData, trigger);
     }
 
     /**
