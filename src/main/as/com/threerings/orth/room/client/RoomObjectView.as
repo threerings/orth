@@ -2,6 +2,7 @@
 // $Id: RoomObjectView.as 18642 2009-11-10 22:55:00Z jamie $
 
 package com.threerings.orth.room.client {
+
 import com.threerings.orth.chat.client.ChatInfoProvider;
 import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.data.OrthChatChannel;
@@ -432,9 +433,10 @@ public class RoomObjectView extends RoomView
      */
     protected function getSpeaker (msg :ChatMessage) :OccupantSprite
     {
-        if (msg is UserMessage && OrthChatChannel.typeIsForRoom(msg.localtype, _scene.getId())) {
-            return getOccupantByName(UserMessage(msg).getSpeakerDisplayName());
-        }
+        // ORTH TODO: reintroduce
+//        if (msg is UserMessage && OrthChatChannel.typeIsForRoom(msg.localtype, _scene.getId())) {
+//            return getOccupantByName(UserMessage(msg).getSpeakerDisplayName());
+//        }
         return null;
     }
 
@@ -474,7 +476,7 @@ public class RoomObjectView extends RoomView
 
             var overlay :ComicOverlay = _topPanel.getPlaceChatOverlay();
             if (overlay != null) {
-                occupant.setChatOverlay(overlay as ComicOverlay);
+                occupant.setChatOverlay(overlay);
             }
             _occupants.put(bodyOid, occupant);
             addSprite(occupant);
