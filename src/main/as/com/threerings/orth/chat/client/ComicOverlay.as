@@ -9,7 +9,7 @@ import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.orth.chat.client.ChatInfoProvider;
 
 public interface ComicOverlay
-    extends ChatOverlay
+    extends ChatOverlay, OccupantChatOverlay
 {
     function willEnterPlace (provider :ChatInfoProvider) :void;
     function didLeavePlace (provider :ChatInfoProvider) :void;
