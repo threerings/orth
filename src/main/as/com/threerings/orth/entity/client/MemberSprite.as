@@ -11,6 +11,7 @@ import com.threerings.util.CommandEvent;
 import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.OrthController;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.SocializerInfo;
 
@@ -269,7 +270,7 @@ class PartyIcon extends GlowSprite
         _icon.x = _icon.maxW / -2; // position with 0 at center
         addChild(_icon);
 
-        init(EntitySprite.OTHER_HOVER, WorldController.GET_PARTY_DETAIL, summ.id);
+        init(EntitySprite.OTHER_HOVER, OrthController.GET_PARTY_DETAIL, summ.id);
 
         var width :int = _icon.maxW;
         var height :int = _icon.maxH
