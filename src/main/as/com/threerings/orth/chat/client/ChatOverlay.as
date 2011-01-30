@@ -118,15 +118,6 @@ public class ChatOverlay
         return _ctx;
     }
 
-    /**
-     * Sets whether or not we're suppressing the any normal desire to jump to sidebar mode.
-     */
-    public function setSuppressSidebar (suppress :Boolean) :void
-    {
-        _suppressSidebar = suppress;
-        putInSidebar(shouldUseSidebar());
-    }
-
     // from ChatDisplay
     public function clear () :void
     {
@@ -162,10 +153,6 @@ public class ChatOverlay
             return;
         }
 
-        // reset the sidebar state so that the below "if (display)" block will work
-        // TODO: use the full side bar state - this will require careful analysis of all the other
-        // spaghetti in and around the chat code
-        putInSidebar(false);
         setOccupantListShowing(false);
 
         if (display) {
@@ -176,7 +163,6 @@ public class ChatOverlay
                 _target.addChild(_historyBar);
             }
 
-            putInSidebar(shouldUseSidebar());
             setOccupantListShowing(Prefs.getShowingOccupantList());
 
         } else {
@@ -236,8 +222,6 @@ public class ChatOverlay
         if (occListShowing) {
             if (_target.containsOverlay(_occupantList)) {
                 _target.removeOverlay(_occupantList);
-            } else if (_chatContainer != null) {
-                _chatContainer.clearOccupantList();
             }
         }
         occListShowing = (_occupantList != null) ? occListShowing : Prefs.getShowingOccupantList();
@@ -336,14 +320,6 @@ public class ChatOverlay
         return PAD;
     }
 
-    /**
-     * Should we put the chat in a sidebar?
-     */
-    protected function shouldUseSidebar () :Boolean
-    {
-        return !_suppressSidebar && Prefs.getSidebarChat();
-    }
-
     protected function createFilteredMessages () :void
     {
         var history :HistoryList = _ctx.getOrthChatDirector().getHistoryList();
@@ -373,11 +349,10 @@ public class ChatOverlay
             }
 
             glyph.x = _targetBounds.x + PAD +
-                (_scrollBarSide == SCROLL_BAR_LEFT || _chatContainer != null ?
-                ScrollBar.THICKNESS : 0);
+                (_scrollBarSide == SCROLL_BAR_LEFT ? ScrollBar.THICKNESS : 0);
             glyph.y = ypos;
             ypos -= 1;
-            glyph.setTransparent(_chatContainer == null && _target is OrthPlaceBox);
+            glyph.setTransparent(_target is OrthPlaceBox);
             glyph.setClickable(_glyphsClickableAlways);
         }
 
@@ -458,11 +433,7 @@ public class ChatOverlay
     {
         switch (event.name) {
         case Prefs.CHAT_HISTORY:
-            setHistoryEnabled(Boolean(event.value) || shouldUseSidebar());
-            break;
-
-        case Prefs.CHAT_SIDEBAR:
-            putInSidebar(shouldUseSidebar());
+            setHistoryEnabled(Boolean(event.value));
             break;
 
         case Prefs.OCCUPANT_LIST:
@@ -501,50 +472,6 @@ public class ChatOverlay
         }
     }
 
-    protected function putInSidebar (sidebar :Boolean) :void
-    {
-        if (!(_target is OrthPlaceBox)) {
-            return; // never slide on a non-PlaceBox
-        }
-
-        if (sidebar == (_chatContainer != null)) {
-            return; // no change
-        }
-
-        // ensure the history bar has been set
-        layout(false);
-
-        if (sidebar) {
-            _target.removeOverlay(_historyOverlay);
-            _target.removeChild(_historyBar);
-            _ctx.getTopPanel().setLeftPanel(
-                _chatContainer = new ChatContainer(_historyBar, _historyOverlay));
-            if (_occupantList != null && _target.containsOverlay(_occupantList)) {
-                _target.removeOverlay(_occupantList);
-                _chatContainer.displayOccupantList(_occupantList);
-            }
-            setHistoryEnabled(true, true);
-            setClickable(_showingHistory, true);
-
-        } else {
-            setClickable(_showingHistory, false);
-            _ctx.getTopPanel().clearLeftPanel(_chatContainer);
-            if (_chatContainer.containsOccupantList()) {
-                _target.addOverlay(_occupantList, OrthPlaceBox.LAYER_CHAT_LIST);
-            }
-            _chatContainer = null;
-            _target.addOverlay(_historyOverlay, OrthPlaceBox.LAYER_CHAT_HISTORY);
-            if (!_target.containsOverlay(_historyOverlay)) {
-                _target.addOverlay(_historyOverlay, OrthPlaceBox.LAYER_CHAT_HISTORY);
-            }
-            var showingHistory :Boolean = Prefs.getShowingChatHistory() || (!(_target is OrthPlaceBox));
-            if (showingHistory) {
-                _target.addChild(_historyBar);
-            }
-            setHistoryEnabled(showingHistory, true);
-        }
-    }
-
     protected function setOccupantListShowing (showing :Boolean) :void
     {
         // if we were not configured to have an occ list, just ignore
@@ -565,18 +492,10 @@ public class ChatOverlay
         _occupantList.scrollBarOnLeft = true;
 
         if (showing) {
-            if (_chatContainer != null) {
-                _chatContainer.displayOccupantList(_occupantList);
-            } else {
-                _target.addOverlay(_occupantList, OrthPlaceBox.LAYER_CHAT_LIST);
-            }
+            _target.addOverlay(_occupantList, OrthPlaceBox.LAYER_CHAT_LIST);
 
         } else {
-            if (_chatContainer != null) {
-                _chatContainer.clearOccupantList();
-            } else if (_target.containsOverlay(_occupantList)) {
-                _target.removeOverlay(_occupantList);
-            }
+            _target.removeOverlay(_occupantList);
         }
 
         layout(true);
@@ -589,9 +508,7 @@ public class ChatOverlay
 
     protected function occupantListShowing () :Boolean
     {
-        return _occupantList != null &&
-            (_target.containsOverlay(_occupantList) ||
-            (_chatContainer != null && _chatContainer.containsOccupantList()));
+        return _occupantList != null && _target.containsOverlay(_occupantList);
     }
 
     protected function setClickable (glyphs :Array, clickable :Boolean) :void
@@ -614,7 +531,7 @@ public class ChatOverlay
 
         _historyExtent = (_targetBounds.height - PAD) / SUBTITLE_HEIGHT_GUESS;
 
-        if (Prefs.getShowingChatHistory() || shouldUseSidebar() || !(_target is OrthPlaceBox)) {
+        if (Prefs.getShowingChatHistory() || !(_target is OrthPlaceBox)) {
             if (_historyBar == null) {
                 _historyBar = new VScrollBar();
                 _historyBar.addEventListener(FlexEvent.UPDATE_COMPLETE, configureHistoryBarSize);
@@ -626,12 +543,7 @@ public class ChatOverlay
             resetHistoryOffset();
             updateHistoryBar();
 
-            if (_chatContainer != null) {
-                _target.removeEventListener(MouseEvent.MOUSE_WHEEL, handleHistoryWheel);
-                _chatContainer.addEventListener(MouseEvent.MOUSE_WHEEL, handleHistoryWheel);
-            } else {
-                _target.addEventListener(MouseEvent.MOUSE_WHEEL, handleHistoryWheel);
-            }
+            _target.addEventListener(MouseEvent.MOUSE_WHEEL, handleHistoryWheel);
 
         } else {
             if (_historyBar != null && _target.contains(_historyBar)) {
@@ -1085,7 +997,7 @@ public class ChatOverlay
         _historyBar.height = _targetBounds.height -
             ((_occupantList != null && _includeOccList && Prefs.getShowingOccupantList()) ?
             _occupantList.height + _occupantList.y : 0);
-        if (_scrollBarSide == SCROLL_BAR_LEFT || _chatContainer != null) {
+        if (_scrollBarSide == SCROLL_BAR_LEFT) {
             _historyBar.move(_targetBounds.x + (ScrollBar.THICKNESS / 2), getMinHistY());
         } else {
             _historyBar.move(
@@ -1248,18 +1160,12 @@ public class ChatOverlay
 
     protected var _ctx :RoomContext;
 
-    /** Contains chat when we're in sidebar mode. */
-    protected var _chatContainer :ChatContainer;
-
     protected var _includeOccList :Boolean;
     protected var _localtype :String;
     protected var _filteredMessages :Array = [];
 
     /** Maps localtype to the time we last hid the tab for that localtype. */
     protected var _lastHidden :Map = Maps.newMapOf(String);
-
-    /** If true, the sidebar is being suppressed and we shouldn't show it. */
-    protected var _suppressSidebar :Boolean;
 
     /** The overlay we place on top of our target that contains all the history subtitle chat
      * glyphs. */
@@ -1309,63 +1215,4 @@ public class ChatOverlay
     protected var _glyphsClickableAlways :Boolean = false;
 
 }
-}
-
-import flash.display.Sprite;
-
-import mx.controls.scrollClasses.ScrollBar;
-
-import mx.core.Container;
-import mx.core.ScrollPolicy;
-import mx.core.UIComponent;
-
-import com.threerings.flex.FlexWrapper;
-
-import com.whirled.ui.PlayerList;
-
-import com.threerings.util.Log;
-
-import com.threerings.orth.client.TopPanel;
-
-
-/**
- * Used when we put chat into sidebar mode.
- */
-class ChatContainer extends Container
-{
-    public function ChatContainer (scrollBar :ScrollBar, chat :Sprite)
-    {
-        styleName = "chatContainer";
-        autoLayout = false;
-        width = TopPanel.RIGHT_SIDEBAR_WIDTH;
-        horizontalScrollPolicy = ScrollPolicy.OFF
-        addChild(scrollBar);
-        addChild(new FlexWrapper(chat));
-    }
-
-    public function containsOccupantList () :Boolean
-    {
-        return _occList != null;
-    }
-
-    public function displayOccupantList (occList :PlayerList) :void
-    {
-        if (_occList != null && _occList != occList) {
-            removeChild(_occList);
-        }
-
-        addChild(_occList = occList);
-    }
-
-    public function clearOccupantList () :void
-    {
-        if (_occList != null && _occList.parent == this) {
-            removeChild(_occList);
-        }
-        _occList = null;
-    }
-
-    private static const log :Log = Log.getLog(ChatContainer);
-
-    protected var _occList :PlayerList;
 }

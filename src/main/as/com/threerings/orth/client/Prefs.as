@@ -39,7 +39,6 @@ public class Prefs
     public static const CHAT_DECAY :String = "chatDecay";
     public static const CHAT_FILTER :String = "chatFilter";
     public static const CHAT_HISTORY :String = "chatHistory";
-    public static const CHAT_SIDEBAR :String = "chatSliding"; // legacy name
     public static const OCCUPANT_LIST :String = "occupantList";
     public static const LOG_TO_CHAT :String = "logToChat";
     public static const PARTY_GROUP :String = "partyGroup";
@@ -52,7 +51,7 @@ public class Prefs
 
     /** List of cookies (that the user may see and clear). */
     public static const ALL_KEYS :Array = [
-        VOLUME, CHAT_FONT_SIZE, CHAT_DECAY, CHAT_FILTER, CHAT_HISTORY, CHAT_SIDEBAR, OCCUPANT_LIST,
+        VOLUME, CHAT_FONT_SIZE, CHAT_DECAY, CHAT_FILTER, CHAT_HISTORY, OCCUPANT_LIST,
         LOG_TO_CHAT, PARTY_GROUP,ROOM_ZOOM, IGNORED_TUTORIAL_IDS, TUTORIAL_PROGRESS_PREFIX,
         AUTOSHOW_PREFIX ];
 
@@ -195,19 +194,6 @@ public class Prefs
     public static function setShowingChatHistory (showing :Boolean) :void
     {
         _config.setValue(CHAT_HISTORY, showing);
-    }
-
-    /**
-     * Returns whether chat is in sidebar mode.
-     */
-    public static function getSidebarChat () :Boolean
-    {
-        return (_config.getValue(CHAT_SIDEBAR, false) as Boolean);
-    }
-
-    public static function setSidebarChat (sidebar :Boolean) :void
-    {
-        _config.setValue(CHAT_SIDEBAR, sidebar);
     }
 
     /**

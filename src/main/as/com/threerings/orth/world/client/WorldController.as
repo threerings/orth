@@ -110,9 +110,6 @@ public class WorldController extends Controller
     /** Command to issue to toggle the chat display. */
     public static const TOGGLE_CHAT_HIDE :String = "ToggleChatHide";
 
-    /** Command to issue to toggle the chat being in a sidebar. */
-    public static const TOGGLE_CHAT_SIDEBAR :String = "ToggleChatSidebar";
-
     /** Command to toggle the channel occupant list display */
     public static const TOGGLE_OCC_LIST :String = "ToggleOccList";
 
@@ -445,14 +442,6 @@ public class WorldController extends Controller
     }
 
     /**
-     * Handles the TOGGLE_CHAT_SIDEBAR command.
-     */
-    public function handleToggleChatSidebar () :void
-    {
-        Prefs.setSidebarChat(!Prefs.getSidebarChat());
-    }
-
-    /**
      * Handles the TOGGLE_OCC_LIST command.
      */
     public function handleToggleOccList () :void
@@ -518,8 +507,6 @@ public class WorldController extends Controller
         menuData.push({ command: TOGGLE_CHAT_HIDE, label: Msgs.GENERAL.get(
                     Prefs.getShowingChatHistory() ? "b.hide_chat" : "b.show_chat") });
 
-        menuData.push({ command: TOGGLE_CHAT_SIDEBAR, label: Msgs.GENERAL.get(
-            Prefs.getSidebarChat() ? "b.overlay_chat" : "b.sidebar_chat") });
         menuData.push({ command: TOGGLE_OCC_LIST, label: Msgs.GENERAL.get(
             Prefs.getShowingOccupantList() ? "b.hide_occ_list" : "b.show_occ_list") });
 
