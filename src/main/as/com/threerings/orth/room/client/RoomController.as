@@ -17,6 +17,7 @@ import flash.utils.getTimer;
 
 import flashx.funk.ioc.inject;
 
+import mx.controls.Button;
 import mx.core.Application;
 import mx.core.IToolTip;
 import mx.core.UIComponent;
