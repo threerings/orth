@@ -2,6 +2,7 @@
 // $Id$
 
 package com.threerings.orth.client {
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 
 import mx.core.UIComponent;
@@ -80,6 +81,13 @@ public class OrthContext
     public function getPlayerObject () :PlayerObject
     {
         return (_client != null) ? _client.getPlayerObject() : null;
+    }
+
+    /** For convenience, return our current display name. */
+    function getMyName () :PlayerName
+    {
+        var player :PlayerObject = getPlayerObject();
+        return (player != null) ? player.playerName : null;
     }
 
     // from OrthContext
