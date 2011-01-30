@@ -13,6 +13,7 @@ import com.threerings.util.NetUtil;
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.TopPanel;
 
@@ -74,11 +75,12 @@ public class OrthController extends Controller
             return true;
         }
 
-        displayFeedback(OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
+        _ctx.displayFeedback(OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
 
         return false;
     }
 
+    protected const _ctx :OrthContext = inject(OrthContext);
     protected const _mod :IModule = inject(IModule);
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _client :AetherClient = inject(AetherClient);
