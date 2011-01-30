@@ -128,38 +128,14 @@ public class WorldController extends Controller
     /** Command to display the chat channel menu. */
     public static const POP_CHANNEL_MENU :String = "PopChannelMenu";
 
-    /** Opens up a new toolbar and a new room editor. */
-    public static const ROOM_EDIT :String = "RoomEdit";
-
     /** Command to go to a particular place (by Oid). */
     public static const GO_LOCATION :String = "GoLocation";
 
     /** Command to go to a particular scene. */
     public static const GO_SCENE :String = "GoScene";
 
-    /** Command to invite someone to be a friend. */
-    public static const INVITE_FRIEND :String = "InviteFriend";
-
-    /** Command to open the chat interface for a particular chat channel. */
-    public static const OPEN_CHANNEL :String = "OpenChannel";
-
     /** Command to view a "stuff" page. Arg: [ itemType ] */
     public static const VIEW_STUFF :String = "ViewStuff";
-
-    /** Command to respond to a request to follow another player. */
-    public static const RESPOND_FOLLOW :String = "RespondFollow";
-
-    /** Command to complain about a member. */
-    public static const COMPLAIN_MEMBER :String = "ComplainMember";
-
-    /** Command to join a party. */
-    public static const JOIN_PARTY :String = "JoinParty";
-
-    /** Command to invite a member to the current party. */
-    public static const INVITE_TO_PARTY :String = "InviteToParty";
-
-    /** Command to request detailed info on a party. */
-    public static const GET_PARTY_DETAIL :String = "GetPartyDetail";
 
     public function WorldController ()
     {
@@ -483,24 +459,6 @@ public class WorldController extends Controller
     }
 
     /**
-     * Handles the JOIN_PARTY command.
-     */
-    public function handleJoinParty (partyId :int) :void
-    {
-        // ORTH TODO
-        // _partyDir.joinParty(partyId);
-    }
-
-    /**
-     * Handles the GET_PARTY_DETAIL command.
-     */
-    public function handleGetPartyDetail (partyId :int) :void
-    {
-        // ORTH TODO
-        //         _partyDir.getPartyDetail(partyId);
-    }
-
-    /**
      * Handles the GO_LOCATION command to go to a placeobject.
      */
     public function handleGoLocation (placeOid :int) :void
@@ -509,54 +467,11 @@ public class WorldController extends Controller
     }
 
     /**
-     * Handles INVITE_FRIEND.
-     */
-    public function handleInviteFriend (memberId :int) :void
-    {
-        log.warning("INVITE_FRIEND not implemented.");
-    }
-
-    /**
-     * Handles RESPOND_FOLLOW.
-     * Arg can be 0 to stop us from following anyone
-     */
-    public function handleRespondFollow (memberId :int) :void
-    {
-        WorldService(_client.requireService(WorldService)).
-            followMember(memberId, _octx.listener());
-    }
-
-    /**
-     * Handle the ROOM_EDIT command.
-     */
-    public function handleRoomEdit () :void
-    {
-        (_topPanel.getPlaceView() as RoomObjectView).getRoomObjectController().handleRoomEdit();
-    }
-
-    /**
-     * Handles the COMPLAIN_MEMBER command.
-     */
-    public function handleComplainMember (memberId :int, username :String) :void
-    {
-        log.warning("COMPLAIN_MEMBER not implemented.");
-    }
-
-    /**
      * Handles booting a user.
      */
     public function handleBootFromPlace (memberId :int) :void
     {
         log.warning("BOOT_FROM_PLACE not implemented.");
-    }
-
-    /**
-     * Handles INVITE_TO_PARTY.
-     */
-    public function handleInviteToParty (memberId :int) :void
-    {
-        // ORTH TODO
-        //         _partyDir.inviteMember(memberId);
     }
 
     /**

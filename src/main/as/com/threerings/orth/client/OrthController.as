@@ -31,6 +31,28 @@ public class OrthController extends Controller
     /** Command to show an (external) URL. */
     public static const VIEW_URL :String = "ViewUrl";
 
+    /** Command to complain about a member. */
+    public static const COMPLAIN_MEMBER :String = "ComplainMember";
+
+    /** Command to invite someone to be a friend. */
+    public static const INVITE_FRIEND :String = "InviteFriend";
+
+    /** Command to open the chat interface for a particular chat channel. */
+    public static const OPEN_CHANNEL :String = "OpenChannel";
+
+    /** Command to respond to a request to follow another player. */
+    public static const RESPOND_FOLLOW :String = "RespondFollow";
+
+    /** Command to join a party. */
+    public static const JOIN_PARTY :String = "JoinParty";
+
+    /** Command to invite a member to the current party. */
+    public static const INVITE_TO_PARTY :String = "InviteToParty";
+
+    /** Command to request detailed info on a party. */
+    public static const GET_PARTY_DETAIL :String = "GetPartyDetail";
+
+
     public function OrthController ()
     {
         setControlledPanel(_topPanel);
@@ -79,6 +101,60 @@ public class OrthController extends Controller
 
         return false;
     }
+
+    /**
+     * Handles the COMPLAIN_MEMBER command.
+     */
+    public function handleComplainMember (memberId :int, username :String) :void
+    {
+        log.warning("COMPLAIN_MEMBER not implemented.");
+    }
+
+    /**
+     * Handles INVITE_FRIEND.
+     */
+    public function handleInviteFriend (memberId :int) :void
+    {
+        log.warning("INVITE_FRIEND not implemented.");
+    }
+
+    /**
+     * Handles RESPOND_FOLLOW.
+     * Arg can be 0 to stop us from following anyone
+     */
+    public function handleRespondFollow (memberId :int) :void
+    {
+        WorldService(_client.requireService(WorldService)).
+            followMember(memberId, _octx.listener());
+    }
+
+    /**
+     * Handles INVITE_TO_PARTY.
+     */
+    public function handleInviteToParty (memberId :int) :void
+    {
+        // ORTH TODO
+        //         _partyDir.inviteMember(memberId);
+    }
+    /**
+     * Handles the JOIN_PARTY command.
+     */
+    public function handleJoinParty (partyId :int) :void
+    {
+        // ORTH TODO
+        // _partyDir.joinParty(partyId);
+    }
+
+    /**
+     * Handles the GET_PARTY_DETAIL command.
+     */
+    public function handleGetPartyDetail (partyId :int) :void
+    {
+        // ORTH TODO
+        //         _partyDir.getPartyDetail(partyId);
+    }
+
+
 
     protected const _ctx :OrthContext = inject(OrthContext);
     protected const _mod :IModule = inject(IModule);
