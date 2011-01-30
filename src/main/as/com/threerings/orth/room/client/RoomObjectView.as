@@ -5,7 +5,6 @@ package com.threerings.orth.room.client {
 
 import com.threerings.orth.chat.client.ChatInfoProvider;
 import com.threerings.orth.chat.client.ComicOverlay;
-import com.threerings.orth.chat.data.OrthChatChannel;
 import com.threerings.orth.client.LoadingWatcher;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.Prefs;
