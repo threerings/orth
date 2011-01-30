@@ -44,6 +44,7 @@ import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthPlaceBox;
+import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.client.TopPanel;
 
 import com.threerings.orth.data.OrthName;
@@ -967,20 +968,24 @@ public class RoomController extends SceneController
 }
 }
 
-import com.threerings.orth.client.Resources;
-import com.threerings.orth.room.client.RoomElementSprite;
-import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.orth.room.data.OrthRoomCodes;
+import flash.display.DisplayObject;
+
 import com.threerings.util.Log;
 import com.threerings.util.Throttle;
 
-import flash.display.DisplayObject;
+import com.threerings.orth.client.OrthResourceFactory;
+
+import com.threerings.orth.room.client.RoomElementSprite;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.OrthRoomCodes;
 
 class WalkTarget extends RoomElementSprite
 {
     public function WalkTarget (fly :Boolean = false)
     {
-        var targ :DisplayObject = (fly ? new Resources.FLYTARGET() : new Resources.WALKTARGET()) as DisplayObject;
+        const _rsrc :OrthResourceFactory = inject(OrthResourceFactory);
+
+        var targ :DisplayObject = (fly ? rsrc.newFlyTarget() : rsrc.newWalkTarget());
         targ.x = -targ.width/2;
         targ.y = -targ.height/2;
         addChild(targ);

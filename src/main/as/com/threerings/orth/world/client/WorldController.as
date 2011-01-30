@@ -12,6 +12,7 @@ import com.threerings.flex.CommandButton;
 import com.threerings.orth.client.AboutDialog;
 import com.threerings.orth.client.ChatPrefsDialog;
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.FriendEntry;
@@ -61,6 +62,8 @@ import mx.core.IUITextField;
 import mx.events.MenuEvent;
 import mx.styles.StyleManager;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.util.DelayUtil;
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
@@ -87,7 +90,6 @@ import com.threerings.flex.CommandMenu;
 
 import com.threerings.whirled.data.Scene;
 
-import com.threerings.orth.client.Resources;
 import com.threerings.orth.world.client.BootablePlaceController;
 
 
@@ -537,12 +539,12 @@ public class WorldController extends Controller
         CommandMenu.addTitle(menuData, roomView.getPlaceName());
 
         CommandMenu.addSeparator(menuData);
-        menuData.push({ label: Msgs.GENERAL.get("b.editScene"), icon: Resources.ROOM_EDIT_ICON,
+        menuData.push({ label: Msgs.GENERAL.get("b.editScene"), icon: _rsrc.roomEditIcon,
             command: ROOM_EDIT, enabled: roomView.getRoomController().canManageRoom() });
 
         menuData.push({ label: Msgs.GENERAL.get("b.viewItems"),
             callback: roomView.viewRoomItems });
-        menuData.push({ label: Msgs.GENERAL.get("b.snapshot"), icon: SNAPSHOT_ICON,
+        menuData.push({ label: Msgs.GENERAL.get("b.snapshot"), icon: _rsrc.snapshotIcon,
             command: doSnapshot });
 
         popControlBarMenu(menuData, trigger);
@@ -743,19 +745,19 @@ public class WorldController extends Controller
                 RoomObjectController(placeCtrl).containsPlayer(name);
             // whisper
             menuItems.push({ label: Msgs.GENERAL.get("b.open_channel"),
-                        icon: Resources.WHISPER_ICON,
+                        icon: _rsrc.whisperIcon,
                         command: OPEN_CHANNEL, arg: name, enabled: !muted });
             // add as friend
             if (!onlineFriend) {
                 menuItems.push({ label: Msgs.GENERAL.get("l.add_as_friend"),
-                            icon: Resources.ADDFRIEND_ICON,
+                            icon: _rsrc.addFriendIcon,
                             command: INVITE_FRIEND, arg: memId, enabled: !muted });
             }
             // visit
             if (onlineFriend) {
                 var label :String = onlineFriend ?
                     Msgs.GENERAL.get("b.visit_friend") : "Visit (as agent)";
-                menuItems.push({ label: label, icon: Resources.VISIT_ICON,
+                menuItems.push({ label: label, icon: _rsrc.visitIcon,
                     command: VISIT_MEMBER, arg: memId, enabled: !isInOurRoom });
             }
             // profile
@@ -776,7 +778,7 @@ public class WorldController extends Controller
             // muting
             var muted :Boolean = _wctx.getMuteDirector().isMuted(name);
             menuItems.push({ label: Msgs.GENERAL.get(muted ? "b.unmute" : "b.mute"),
-                icon: Resources.BLOCK_ICON,
+                icon: _rsrc.blockIcon,
                 callback: _wctx.getMuteDirector().setMuted, arg: [ name, !muted ] });
             // booting
             if (addWorldItems && isInOurRoom &&
@@ -786,7 +788,7 @@ public class WorldController extends Controller
                     callback: handleBootFromPlace, arg: memId });
             }
             // reporting
-            menuItems.push({ label: Msgs.GENERAL.get("b.complain"), icon: Resources.REPORT_ICON,
+            menuItems.push({ label: Msgs.GENERAL.get("b.complain"), icon: _rsrc.reportIcon,
                 command: COMPLAIN_MEMBER, arg: [ memId, name ] });
         }
 
@@ -811,13 +813,13 @@ public class WorldController extends Controller
     {
         const ownerMuted :Boolean = _wctx.getMuteDirector().isOwnerMuted(petName);
         if (ownerMuted) {
-            menuItems.push({ label: Msgs.GENERAL.get("b.unmute_owner"), icon: BLOCK_ICON,
+            menuItems.push({ label: Msgs.GENERAL.get("b.unmute_owner"), icon: _rsrc.blockIcon,
                 callback: _wctx.getMuteDirector().setMuted,
                 arg: [ new OrthName("", petName.getOwnerId()), false ] });
         } else {
             const isMuted :Boolean = _wctx.getMuteDirector().isMuted(petName);
             menuItems.push({ label: Msgs.GENERAL.get(isMuted ? "b.unmute_pet" : "b.mute_pet"),
-                icon: BLOCK_ICON,
+                icon: _rsrc.blockIcon,
                 callback: _wctx.getMuteDirector().setMuted, arg: [ petName, !isMuted ] });
         }
     }
@@ -1106,6 +1108,8 @@ public class WorldController extends Controller
 
     /** Giver of life, context. */
     protected var _wctx :RoomContext;
+
+    protected const _rsrc :OrthResourceFactory = inject(OrthResourceFactory);
 
     protected var _snapPanel :SnapshotPanel;
 

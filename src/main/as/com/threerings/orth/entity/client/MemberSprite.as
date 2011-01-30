@@ -11,7 +11,6 @@ import com.threerings.util.CommandEvent;
 import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.orth.client.OrthContext;
-import com.threerings.orth.client.Resources;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.SocializerInfo;
 
@@ -155,7 +154,7 @@ public class MemberSprite extends ActorSprite
         // check whether our idle status has changed
         if (isVisiblyIdle(newInfo as SocializerInfo) == (_idleIcon == null)) {
             if (_idleIcon == null) {
-                _idleIcon = (new Resources.IDLE_ICON() as DisplayObject);
+                _idleIcon = _rsrc.newIdleIcon();
                 addDecoration(_idleIcon, {
                     weight: OccupantSprite.DEC_WEIGHT_IDLE,
                     bounds: new Rectangle(0, 0, 50, 45)
