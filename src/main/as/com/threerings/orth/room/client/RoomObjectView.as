@@ -388,12 +388,6 @@ public class RoomObjectView extends RoomView
         setBackground(_scene.getDecor());
         // load the decor data we have, even if it's just default values.
         _bg.setLoadedCallback(backgroundFinishedLoading);
-
-        var localOccupant :SocializerInfo;
-        localOccupant = _roomObj.occupantInfo.get(_ctx.getClient().getClientOid()) as SocializerInfo;
-        if (localOccupant != null && localOccupant.isStatic()) {
-            _ctx.displayInfo(OrthCodes.GENERAL_MSGS, "m.static_avatar");
-        }
     }
 
     // from RoomView
