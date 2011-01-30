@@ -25,6 +25,7 @@ import com.threerings.util.ValueEvent;
 
 import com.threerings.display.FilterUtil;
 
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.room.client.EntityMediaContainer;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomElement;
@@ -935,6 +936,8 @@ public class EntitySprite
     {
         return (_backend != null) && _backend.hasUserCode(name);
     }
+
+    protected const _ctx :OrthContext = inject(OrthContext);
 
     /** The visual representation of us. */
     protected var _sprite :EntityMediaContainer;
