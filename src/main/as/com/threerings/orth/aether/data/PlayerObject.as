@@ -14,6 +14,8 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 // GENERATED PREAMBLE END
 
+import com.threerings.orth.data.PlayerEntry;
+
 // GENERATED CLASSDECL START
 public class PlayerObject extends ClientObject
 {
@@ -67,6 +69,30 @@ public class PlayerObject extends ClientObject
         new Signaller(this);
     }
 // GENERATED STREAMING END
+
+    /**
+     * Get a sorted list of friends.
+     */
+    public function getSortedFriends () :Array
+    {
+        return friends.toArray().sort(PlayerEntry.sortByName);
+    }
+
+    /**
+     * Convenience.
+     */
+    public function isOnlineFriend (memberId :int) :Boolean
+    {
+        return friends.containsKey(memberId);
+    }
+
+    /**
+     * Get a sorted list of friends.
+     */
+    public function getPlayerId () :Array
+    {
+        return playerName.getId();
+    }
 
 // GENERATED CLASSFINISH START
 }
