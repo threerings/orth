@@ -1,5 +1,5 @@
-package com.threerings.orth.client
-{
+package com.threerings.orth.chat.client {
+
 import com.threerings.util.Name;
 
 import flash.geom.Point;

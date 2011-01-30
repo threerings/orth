@@ -22,7 +22,7 @@ import com.threerings.media.MediaContainer;
 
 import com.threerings.crowd.data.OccupantInfo;
 
-import com.threerings.orth.chat.client.ComicOverlay;
+import com.threerings.orth.chat.client.OccupantChatOverlay;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.WalkAnimation;
@@ -30,6 +30,8 @@ import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.ui.OrthNameLabel;
+
+import OccupantChatOverlay;
 
 /**
  * Displays a visualization of an occupant in a scene (could be a member, a pet, a MOB, all sorts
@@ -228,7 +230,7 @@ public class OccupantSprite extends EntitySprite
     /**
      * Configures the overlay used to display this occupant's chat.
      */
-    public function setChatOverlay (chatOverlay :ComicOverlay) :void
+    public function setChatOverlay (chatOverlay :OccupantChatOverlay) :void
     {
         _chatOverlay = chatOverlay;
     }
@@ -672,7 +674,7 @@ public class OccupantSprite extends EntitySprite
     protected var _moveSpeed :Number = DEFAULT_MOVE_SPEED;
 
     /** The chat overlay that we notify when we change position. */
-    protected var _chatOverlay :ComicOverlay;
+    protected var _chatOverlay :OccupantChatOverlay;
 
     /** Display objects to be shown above the name for this actor,
      * configured by external callers. */
