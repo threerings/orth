@@ -659,7 +659,6 @@ public class RoomObjectController extends RoomController
     }
 
     protected const _worldCtrl :WorldController = inject(WorldController);
-    protected const _controlBar :ControlBar = inject(ControlBar);
     protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
     protected const _worldDir :WorldDirector = inject(WorldDirector);
 
