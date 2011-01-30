@@ -2,6 +2,7 @@
 // $Id: ChatOverlay.as 19627 2010-11-24 16:02:41Z zell $
 
 package com.threerings.orth.chat.client {
+import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.chat.data.OrthChatChannel;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.client.LayeredContainer;
@@ -30,6 +31,8 @@ import flash.geom.Rectangle;
 import flash.text.TextFormat;
 
 import flash.utils.getTimer; // function import
+
+import flashx.funk.ioc.inject;
 
 import mx.events.FlexEvent;
 import mx.events.ScrollEvent;
@@ -94,10 +97,9 @@ public class ChatOverlay
     }
 
     public function ChatOverlay (
-        ctx :RoomContext, target :LayeredContainer, scrollBarSide :int = SCROLL_BAR_LEFT,
+        target :LayeredContainer, scrollBarSide :int = SCROLL_BAR_LEFT,
         includeOccupantList :Boolean = true)
     {
-        _ctx = ctx;
         _includeOccList = includeOccupantList;
         _scrollBarSide = scrollBarSide;
         _target = target;
@@ -111,11 +113,6 @@ public class ChatOverlay
 
         layout();
         displayChat(true);
-    }
-
-    public function getContext () :RoomContext
-    {
-        return _ctx;
     }
 
     // from ChatDisplay
@@ -148,11 +145,6 @@ public class ChatOverlay
 
     public function displayChat (display :Boolean) :void
     {
-        if (_ctx.getTopPanel() == null) {
-            // we're not really ready yet...
-            return;
-        }
-
         setOccupantListShowing(false);
 
         if (display) {
@@ -225,7 +217,7 @@ public class ChatOverlay
             }
         }
         occListShowing = (_occupantList != null) ? occListShowing : Prefs.getShowingOccupantList();
-        _occupantList = _ctx.getOrthChatDirector().getPlayerList(localtype);
+        _occupantList = _chatDir.getPlayerList(localtype);
         setOccupantListShowing(occListShowing);
 
         if (isHistoryMode()) {
@@ -322,7 +314,7 @@ public class ChatOverlay
 
     protected function createFilteredMessages () :void
     {
-        var history :HistoryList = _ctx.getOrthChatDirector().getHistoryList();
+        var history :HistoryList = _chatDir.getHistoryList();
         _filteredMessages = [];
         for (var ii :int = 0; ii < history.size(); ii++) {
             var msg :ChatMessage = history.get(ii);
@@ -387,7 +379,7 @@ public class ChatOverlay
         // go through the history from most recent to oldest message and figure out which messages
         // should be displayed based on their unmodified expiration time and the time the user was
         // last viewing messages in this tab
-        var history :HistoryList = _ctx.getOrthChatDirector().getHistoryList();
+        var history :HistoryList = _chatDir.getHistoryList();
         for (var ii :int = history.size() - 1; ii >= 0; ii--) {
             var msg :ChatMessage = history.get(ii) as ChatMessage;
             if (shouldDisplayMessage(msg)) {
@@ -591,20 +583,21 @@ public class ChatOverlay
         if (type == BROADCAST || type == PAID_BROADCAST ||
             (msg is SystemMessage && msg.localtype == ChatCodes.PLACE_CHAT_TYPE)) {
             // in RoomContext we pull out the scene and check the id against the current localtype
-            if (_ctx is RoomContext) {
-                var currentScene :OrthScene =
-                    (_ctx as RoomContext).getSceneDirector().getScene() as OrthScene;
-                if (currentScene != null &&
-                    OrthChatChannel.typeIsForRoom(_localtype, currentScene.getId())) {
-                    return true;
-                }
+            // TODO: This needs to be entirely redone for Orth
+            // if (_ctx_wct is RoomContext) {
+            //     var currentScene :OrthScene =
+            //         (_ctx as RoomContext).getSceneDirector().getScene() as OrthScene;
+            //     if (currentScene != null &&
+            //         OrthChatChannel.typeIsForRoom(_localtype, currentScene.getId())) {
+            //         return true;
+            //     }
 
             // in non-RoomContext we just watch for PLACE_CHAT_TYPE
-            } else {
+//            } else {
                 if (_localtype == ChatCodes.PLACE_CHAT_TYPE) {
                     return true;
                 }
-            }
+//            }
         }
 
         return false;
@@ -1158,7 +1151,7 @@ public class ChatOverlay
     /** The font for all chat. */
     protected static const FONT :String = "Arial";
 
-    protected var _ctx :RoomContext;
+
 
     protected var _includeOccList :Boolean;
     protected var _localtype :String;
@@ -1214,5 +1207,6 @@ public class ChatOverlay
     /** Whether we should always allow the chat glyphs to capture the mouse (for text selection) */
     protected var _glyphsClickableAlways :Boolean = false;
 
+    protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
 }
 }

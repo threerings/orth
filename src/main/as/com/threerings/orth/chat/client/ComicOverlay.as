@@ -4,7 +4,7 @@
 package com.threerings.orth.chat.client {
 import com.threerings.orth.chat.data.OrthChatChannel;
 import com.threerings.orth.client.LayeredContainer;
-import com.threerings.orth.client.PlaceBox;
+import com.threerings.orth.client.OrthPlaceBox;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.client.RoomContext;
 
@@ -39,9 +39,9 @@ public class ComicOverlay extends ChatOverlay
     /**
      * Construct a comic chat overlay.
      */
-    public function ComicOverlay (ctx :RoomContext, target :LayeredContainer)
+    public function ComicOverlay (target :LayeredContainer)
     {
-        super(ctx, target);
+        super(target);
 
         // overlay for chat that stays in a given place in the scene, and is therefore scrolled
         // with it.
@@ -66,7 +66,7 @@ public class ComicOverlay extends ChatOverlay
         _allBubbles = [];
 
         var overlays :Array = [ _scrollOverlay /*, _staticOverlay*/ ];
-        var layers :Array = [ PlaceBox.LAYER_CHAT_SCROLL, PlaceBox.LAYER_CHAT_STATIC ];
+        var layers :Array = [ OrthPlaceBox.LAYER_CHAT_SCROLL, OrthPlaceBox.LAYER_CHAT_STATIC ];
         for (var ii :int = 0; ii < overlays.length; ii++) {
             var contains :Boolean = _target.containsOverlay(overlays[ii]);
             if (display && !contains) {
@@ -100,14 +100,16 @@ public class ComicOverlay extends ChatOverlay
             // We simply do not want to display system-type messages in bubbles
             // 2009-02-24  Ray
             //displayBubble(msg, type);
-        } else if (_ctx is RoomContext) {
-            var scene :OrthScene =
-                (_ctx as RoomContext).getSceneDirector().getScene() as OrthScene;
-            if (scene != null && OrthChatChannel.typeIsForRoom(msg.localtype, scene.getId())) {
-                if (type != IGNORECHAT) {
-                    displayBubble(msg, type);
-                }
-            }
+
+            // ORTHTODO: Redo this.
+        // } else if (_ctx is RoomContext) {
+        //     var scene :OrthScene =
+        //         (_ctx as RoomContext).getSceneDirector().getScene() as OrthScene;
+        //     if (scene != null && OrthChatChannel.typeIsForRoom(msg.localtype, scene.getId())) {
+        //         if (type != IGNORECHAT) {
+        //             displayBubble(msg, type);
+        //         }
+        //     }
         }
 
         super.displayMessage(msg);
