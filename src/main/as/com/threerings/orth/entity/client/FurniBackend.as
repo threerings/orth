@@ -16,10 +16,9 @@ public class FurniBackend extends EntityBackend
         o["showPage_v1"] = showPage_v1;
     }
 
-    protected function showPage_v1 (token :String) :Boolean
+    protected function showPage_v1 (url :String) :Boolean
     {
-        // handleViewUrl will do the "right thing"
-        _orthCtrl.handleViewUrl(DeploymentConfig.serverURL + "#" + token);
+        _orthCtrl.handleViewUrl(url);
         return true;
     }
 
