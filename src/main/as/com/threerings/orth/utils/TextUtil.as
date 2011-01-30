@@ -2,7 +2,6 @@
 // $Id: TextUtil.as 16580 2009-05-13 02:06:45Z ray $
 
 package com.threerings.orth.utils {
-import com.threerings.orth.chat.client.ChatOverlay;
 
 import flash.text.TextFormat;
 import flash.text.TextField;
@@ -19,19 +18,16 @@ public class TextUtil
     * that format.
     *
     * @param text The text to parse
-    * @param defaultFormat The format to use for normal text.  If left null,
-    *        ChatOverlay.createChatFormat() is used.
+    * @param defaultFormat The format to use for normal text.
     * @param parseSpecial If true, parsing will look for special links, such as those we use in
     *                     translation messages.
     * @param useDefaultColor If true, the color from the defaultFormat will be used for links,
     *                        otherwise links will be displayed in blue.
     */
     public static function parseLinks (
-        text :String, defaultFormat :TextFormat = null, parseSpecial :Boolean = true,
+        text :String, defaultFormat :TextFormat, parseSpecial :Boolean = true,
         useDefaultColor :Boolean = false) :Array
     {
-        defaultFormat = defaultFormat || ChatOverlay.createChatFormat();
-
         var bits :Array = parseSpecial
             ?  parseSpecialLinks(text, defaultFormat, useDefaultColor)
             : [ defaultFormat, text ];
@@ -59,13 +55,10 @@ public class TextUtil
      * @param txt The text field to format the text onto.
      * @param texts A mixed array of String and TextFormat objects, with each String being rendered
      *        in the TextFormat preceding it, or the default format if not preceded by a TextFormat
-     * @param defaultFmt The format to use when none is provided for a String field.  If left null,
-     *        ChatOverlay.createChatFormat() will be used.
+     * @param defaultFmt The format to use when none is provided for a String field.
      */
-    public static function setText (
-        txt :TextField, texts :Array, defaultFmt :TextFormat = null) :void
+    public static function setText (txt :TextField, texts :Array, defaultFmt :TextFormat) :void
     {
-        defaultFmt = defaultFmt || ChatOverlay.createChatFormat();
         var fmt :TextFormat = null;
         var length :int = 0;
         for each (var o :Object in texts) {
