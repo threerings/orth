@@ -30,6 +30,12 @@ public class VizPlayerName extends PlayerName
 
     protected var _photo :MediaDesc;
 // GENERATED STREAMING END
+
+    public function getPhoto () :MediaDesc
+    {
+        return _photo;
+    }
+
 // GENERATED CLASSFINISH START
 }
 }
