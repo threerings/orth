@@ -84,7 +84,7 @@ public class OrthContext
     }
 
     /** For convenience, return our current display name. */
-    function getMyName () :PlayerName
+    public function getMyName () :PlayerName
     {
         var player :PlayerObject = getPlayerObject();
         return (player != null) ? player.playerName : null;
