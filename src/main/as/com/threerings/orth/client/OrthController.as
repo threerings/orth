@@ -1,14 +1,18 @@
 //
 // $Id: $
 package com.threerings.orth.client {
+
 import flashx.funk.ioc.IModule;
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Controller;
 import com.threerings.util.Log;
+import com.threerings.util.MessageBundle;
+import com.threerings.util.NetUtil;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherCredentials;
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.TopPanel;
 
@@ -70,13 +74,8 @@ public class OrthController extends Controller
             return true;
         }
 
-        _wctx.displayFeedback(
-            OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
+        displayFeedback(OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
 
-        // TODO
-        // experimental: display a popup with the URL (this could be moved to handleLink()
-        // if this method is altered to return a success Boolean
-        new MissedURLDialog(_wctx, url);
         return false;
     }
 
