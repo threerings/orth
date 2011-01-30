@@ -129,9 +129,6 @@ public class WorldController extends Controller
     // nada here. Pets only exist in world, but we handle them generically
     public static const POP_PET_MENU :String = "PopPetMenu";
 
-    /** Command to show an (external) URL. */
-    public static const VIEW_URL :String = "ViewUrl";
-
     /** Command to view a member's profile, arg is [ memberId ] */
     public static const VIEW_MEMBER :String = "ViewMember";
 
@@ -345,35 +342,6 @@ public class WorldController extends Controller
             return null;
         }
         return _currentMenus[_currentMenus.length - 1];
-    }
-
-    /**
-     * Convenience method for opening an external window and showing the specified url. This is
-     * done when we want to show the user something without unloading the msoy world.
-     *
-     * Also, handles VIEW_URL.
-     *
-     * @param url The url to show
-     * @param windowOrTab the identifier of the tab to use, like _top or _blank, or null to
-     * use the default, which is the same as _blank, I think. :)
-     *
-     * @return true on success
-     */
-    public function handleViewUrl (url :String, windowOrTab :String = null) :Boolean
-    {
-        // if our page refers to a Whirled page...
-        if (NetUtil.navigateToURL(url, windowOrTab)) {
-            return true;
-        }
-
-        _wctx.displayFeedback(
-            OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
-
-        // TODO
-        // experimental: display a popup with the URL (this could be moved to handleLink()
-        // if this method is altered to return a success Boolean
-        new MissedURLDialog(_wctx, url);
-        return false;
     }
 
     /**

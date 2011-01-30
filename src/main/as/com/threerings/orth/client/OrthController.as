@@ -23,6 +23,9 @@ public class OrthController extends Controller
     /** Command to display sign-up info for guests (TODO: not implemented). */
     public static const SHOW_SIGN_UP :String = "ShowSignUp";
 
+    /** Command to show an (external) URL. */
+    public static const VIEW_URL :String = "ViewUrl";
+
     public function OrthController ()
     {
         setControlledPanel(_topPanel);
@@ -46,6 +49,35 @@ public class OrthController extends Controller
             log.info("Logging on", "creds", creds, "version", _depCon.version);
             _client.logonWithCredentials(creds);
         });
+    }
+
+    /**
+     * Convenience method for opening an external window and showing the specified url. This is
+     * done when we want to show the user something without unloading the client.
+     *
+     * Also, handles VIEW_URL.
+     *
+     * @param url The url to show
+     * @param windowOrTab the identifier of the tab to use, like _top or _blank, or null to
+     * use the default, which is the same as _blank, I think. :)
+     *
+     * @return true on success
+     */
+    public function handleViewUrl (url :String, windowOrTab :String = null) :Boolean
+    {
+        // if our page refers to a Whirled page...
+        if (NetUtil.navigateToURL(url, windowOrTab)) {
+            return true;
+        }
+
+        _wctx.displayFeedback(
+            OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
+
+        // TODO
+        // experimental: display a popup with the URL (this could be moved to handleLink()
+        // if this method is altered to return a success Boolean
+        new MissedURLDialog(_wctx, url);
+        return false;
     }
 
     protected const _mod :IModule = inject(IModule);
