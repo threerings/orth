@@ -57,7 +57,10 @@ public class RoomContext
     // from WhirledContext
     public function getSceneDirector () :SceneDirector
     {
-        return _sceneDir;
+        return null;
+
+        // ORTH TODO
+        // return _sceneDir;
     }
 
     // from CrowdContext
@@ -112,13 +115,15 @@ public class RoomContext
 
     protected var _client :WorldClient;
 
-    protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
     protected const _locDir :LocationDirector = inject(LocationDirector);
     protected const _occDir :OccupantDirector = inject(OccupantDirector);
     protected const _topPanel :TopPanel = inject(TopPanel);
 
-    // TODO: This is highly dubious and will change dramatically, as most chatting will be sent
+    // ORTH TODO: This is highly dubious and will change dramatically, as most chatting will be sent
     // TODO: over the Aether wire and our chat system needs to be multi-connection at any rate.
     protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
+
+    // ORTH TODO
+    // protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
 }
 }

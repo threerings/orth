@@ -236,7 +236,8 @@ public class RoomObjectController extends RoomController
             _worldCtrl.handleViewUrl(furni.splitActionData()[0] as String);
 
         } else if (furni.actionType.isPortal()) {
-            _sceneDir.traversePortal(furni.id);
+            // ORTH TODO: Replace with equivalent functionality
+            // _sceneDir.traversePortal(furni.id);
 
         } else if (furni.actionType.isHelpPage()) {
             var actionData :Array = furni.splitActionData();
@@ -438,7 +439,8 @@ public class RoomObjectController extends RoomController
         reportLocationOwner();
 
         // get a copy of the scene
-        _scene = _sceneDir.getScene() as OrthScene;
+        // ORTH TODO: Replace with equivalent functionality!
+        // _scene = _sceneDir.getScene() as OrthScene;
 
         _rctx.getChatDirector().registerCommandHandler(
             Msgs.CHAT, "action", new AvatarChatHandler(false));
@@ -526,6 +528,7 @@ public class RoomObjectController extends RoomController
 
     override protected function requestAvatarMove (newLoc :OrthLocation) :void
     {
+        // ORTH TODO: Replace with equivalent functionality
         _rctx.getSpotSceneDirector().changeLocation(newLoc, null);
     }
 
@@ -652,7 +655,6 @@ public class RoomObjectController extends RoomController
     }
 
     protected const _worldCtrl :WorldController = inject(WorldController);
-    protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
     protected const _worldDir :WorldDirector = inject(WorldDirector);
 
     /** A casted version of _roomView. */
