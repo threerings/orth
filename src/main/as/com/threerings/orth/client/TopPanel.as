@@ -19,6 +19,8 @@ import mx.containers.Canvas;
 import mx.controls.Label;
 import mx.controls.scrollClasses.ScrollBar;
 
+import com.threerings.orth.chat.client.ComicOverlay;
+
 public class TopPanel extends Canvas
 {
     public function TopPanel ()
@@ -60,6 +62,9 @@ public class TopPanel extends Canvas
             addChild(buildStamp);
         }
 
+        // ORTH TODO: something like this here?
+        // _chatDir.addChatDisplay(_comicOverlay);
+
         // clear out the application and install ourselves as the only child
         _app.removeAllChildren();
         _app.addChild(this);
@@ -100,6 +105,9 @@ public class TopPanel extends Canvas
     {
         _placeBox.setMainView(view);
         layoutPanels();
+
+        // ORTH TODO: Something like this?
+        // _comicOverlay.displayChat();
     }
 
     /**
@@ -168,6 +176,9 @@ public class TopPanel extends Canvas
         bottom += getControlBarHeight();
         h -= getControlBarHeight();
 
+        // ORTH TODO: Somethign like this?
+        // _comicOverlay.setTargetBounds(new Rectangle(0, 0, ChatOverlay.DEFAULT_WIDTH, h));
+
         _placeBox.setStyle("top", top);
         _placeBox.setStyle("bottom", bottom);
         _placeBox.setStyle("right", right);
@@ -188,6 +199,7 @@ public class TopPanel extends Canvas
     protected const _app :Application = inject(Application);
     protected const _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
     protected const _controlBar :ControlBar = inject(ControlBar);
+    protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);
 
     protected var _width :Number
     protected var _height :Number;

@@ -375,10 +375,7 @@ public class RoomObjectView extends RoomView
         _ctx.getChatDirector().addChatDisplay(this);
 
         // let the chat overlay know about us so we can be queried for chatter locations
-        var comicOverlay :ComicOverlay = _topPanel.getPlaceChatOverlay();
-        if (comicOverlay != null) {
-            comicOverlay.willEnterPlace(this);
-        }
+        _comicOverlay.willEnterPlace(this);
 
         // and animate ourselves entering the room (everyone already in the (room will also have
         // seen it)
@@ -400,10 +397,7 @@ public class RoomObjectView extends RoomView
         _ctx.getChatDirector().removeChatSnooper(this);
 
         // tell the comic overlay to forget about us
-        var comicOverlay :ComicOverlay = _topPanel.getPlaceChatOverlay();
-        if (comicOverlay != null) {
-            comicOverlay.didLeavePlace(this);
-        }
+        _comicOverlay.didLeavePlace(this);
 
         removeAllOccupants();
 
@@ -422,10 +416,7 @@ public class RoomObjectView extends RoomView
     override public function set scrollRect (r :Rectangle) :void
     {
         super.scrollRect = r;
-        var overlay :ComicOverlay = _topPanel.getPlaceChatOverlay();
-        if (overlay != null) {
-            overlay.setScrollRect(r);
-        }
+        _comicOverlay.setScrollRect(r);
     }
 
     /**
@@ -474,10 +465,8 @@ public class RoomObjectView extends RoomView
                 return; // we have no visualization for this kind of occupant, no problem
             }
 
-            var overlay :ComicOverlay = _topPanel.getPlaceChatOverlay();
-            if (overlay != null) {
-                occupant.setChatOverlay(overlay);
-            }
+            occupant.setChatOverlay(_comicOverlay);
+
             _occupants.put(bodyOid, occupant);
             addSprite(occupant);
             dispatchEntityEntered(occupant.getEntityIdent());
@@ -498,10 +487,7 @@ public class RoomObjectView extends RoomView
 
             // place the sprite back into the set of active sprites
             _occupants.put(bodyOid, occupant);
-            overlay = _topPanel.getPlaceChatOverlay();
-            if (overlay != null) {
-                occupant.setChatOverlay(overlay);
-            }
+            occupant.setChatOverlay(_comicOverlay);
             occupant.moveTo(loc, _scene);
         }
     }

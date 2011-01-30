@@ -2,6 +2,7 @@
 // $Id: RoomView.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.client.OrthPlaceBox;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.entity.data.Decor;
@@ -1057,8 +1058,9 @@ public class RoomView extends Sprite
     /** Our controller. */
     protected var _ctrl :RoomController;
 
-    protected const _mediaDir :MediaDirector = inject(MediaDirector);
     protected const _topPanel :TopPanel = inject(TopPanel);
+    protected const _mediaDir :MediaDirector = inject(MediaDirector);
+    protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);
 
     /** When we first enter the room, we only load the background (if any). */
     protected var _loadAllMedia :Boolean = false;

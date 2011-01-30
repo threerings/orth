@@ -29,7 +29,7 @@ import com.threerings.whirled.data.SceneUpdate;
 
 import com.threerings.orth.ui.MediaWrapper;
 
-import com.threerings.orth.chat.client.ChatOverlay;
+import com.threerings.orth.chat.client.ComicOverlay;
 
 import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.Msgs;
@@ -584,10 +584,7 @@ public class RoomObjectController extends RoomController
     override protected function keyEvent (event :KeyboardEvent) :void
     {
         if (event.keyCode == Keyboard.F6) {
-            var overlay :ChatOverlay = _topPanel.getChatOverlay();
-            if (overlay != null) {
-                overlay.setClickableGlyphs(event.type == KeyboardEvent.KEY_DOWN);
-            }
+            _comicOverlay.setClickableGlyphs(event.type == KeyboardEvent.KEY_DOWN);
             event.updateAfterEvent();
             return;
         }

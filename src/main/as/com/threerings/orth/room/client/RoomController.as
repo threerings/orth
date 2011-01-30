@@ -38,9 +38,8 @@ import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
 
-import com.threerings.orth.chat.client.ChatOverlay;
-
 import com.threerings.orth.client.ControlBar;
+import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthPlaceBox;
@@ -484,8 +483,7 @@ public class RoomController extends SceneController
         }
 
         // then avoid any chat glyphs that are clickable
-        var overlay :ChatOverlay = _topPanel.getChatOverlay();
-        if (overlay != null && overlay.hasClickableGlyphsAtPoint(stageX, stageY)) {
+        if (_comicOverlay.hasClickableGlyphsAtPoint(stageX, stageY)) {
             return undefined;
         }
 
@@ -921,15 +919,13 @@ public class RoomController extends SceneController
     /** The amount we alter the y coordinate of tooltips generated under the mouse. */
     protected static const MOUSE_TOOLTIP_Y_OFFSET :int = 50;
 
-    protected const _controlBar :ControlBar = inject(ControlBar);
-    protected const _topPanel :TopPanel = inject(TopPanel);
+    protected const _octx :OrthContext = inject(OrthContext);
+    protected const _rctx :RoomContext = inject(RoomContext);
     protected const _app :Application = inject(Application);
+    protected const _topPanel :TopPanel = inject(TopPanel);
+    protected const _controlBar :ControlBar = inject(ControlBar);
+    protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);
 
-    /** The central life force of the client. */
-    protected var _octx :OrthContext = inject(OrthContext);
-
-    /** The extra-special-flavoured life force of the room portion of the client. */
-    protected var _rctx :RoomContext = inject(RoomContext);
 
     /** The room view that we're controlling. */
     protected var _roomView :RoomView;
@@ -970,6 +966,8 @@ public class RoomController extends SceneController
 
 import flash.display.DisplayObject;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.util.Log;
 import com.threerings.util.Throttle;
 
@@ -983,7 +981,7 @@ class WalkTarget extends RoomElementSprite
 {
     public function WalkTarget (fly :Boolean = false)
     {
-        const _rsrc :OrthResourceFactory = inject(OrthResourceFactory);
+        const rsrc :OrthResourceFactory = inject(OrthResourceFactory);
 
         var targ :DisplayObject = (fly ? rsrc.newFlyTarget() : rsrc.newWalkTarget());
         targ.x = -targ.width/2;
