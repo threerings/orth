@@ -2,6 +2,7 @@
 // $Id: RoomObjectController.as 19189 2010-05-26 19:37:09Z zell $
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.entity.data.PetOrders;
 
 import flash.events.Event;
@@ -356,13 +357,12 @@ public class RoomObjectController extends RoomController
     override public function canManageRoom (
         memberId :int = 0, allowSupport :Boolean = true) :Boolean
     {
-        var me :SocializerObject = _rctx.getSocializerObject();
+        var me :PlayerObject = _octx.getPlayerObject();
         if (memberId == 0 || (memberId == me.getPlayerId())) { // self
             return (_scene != null && _scene.canManage(me, allowSupport));
 
         } else { // others
-            var info :SocializerInfo = findOccupantById(memberId);
-            return (info != null) && info.isManager();
+            return false;
         }
     }
 

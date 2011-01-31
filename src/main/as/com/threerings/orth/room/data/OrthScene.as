@@ -2,6 +2,7 @@
 // $Id: OrthScene.as 18599 2009-11-05 21:48:58Z jamie $
 
 package com.threerings.orth.room.data {
+import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.entity.data.Decor;
 
 import flash.errors.IllegalOperationError;
@@ -23,6 +24,25 @@ public class OrthScene extends SceneImpl
     {
         super(model, config);
         _orthModel = model;
+    }
+
+    /**
+     * Does the specified member have management rights in this room?
+     */
+    public function canManage (member :PlayerObject, allowSupport :Boolean = true) :Boolean
+    {
+        var hasRights :Boolean;
+        switch (_orthModel.ownerType) {
+        case OrthSceneModel.OWNER_TYPE_MEMBER:
+            hasRights = (_orthModel.ownerId == member.getPlayerId());
+            break;
+
+        default:
+            hasRights = false;
+            break;
+        }
+
+        return hasRights;
     }
 
     /**
