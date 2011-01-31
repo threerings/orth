@@ -34,6 +34,10 @@ public class SocializerObject extends ActorObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String AVATAR = "avatar";
 
+    /** The field name of the <code>avatarCache</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String AVATAR_CACHE = "avatarCache";
+
     /** The field name of the <code>walkingId</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String WALKING_ID = "walkingId";
@@ -45,6 +49,9 @@ public class SocializerObject extends ActorObject
 
     /** The avatar that the user has chosen, or null for guests. */
     public Avatar avatar;
+
+    /** A cache of the user's 5 most recently touched avatars. */
+    public DSet<Avatar> avatarCache;
 
     /** If this member is currently walking a pet, the id of the pet being walked, else 0. */
     public int walkingId;
@@ -136,6 +143,57 @@ public class SocializerObject extends ActorObject
         requestAttributeChange(
             AVATAR, value, ovalue);
         this.avatar = value;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>avatarCache</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void addToAvatarCache (Avatar elem)
+    {
+        requestEntryAdd(AVATAR_CACHE, avatarCache, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>avatarCache</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void removeFromAvatarCache (Comparable<?> key)
+    {
+        requestEntryRemove(AVATAR_CACHE, avatarCache, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>avatarCache</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void updateAvatarCache (Avatar elem)
+    {
+        requestEntryUpdate(AVATAR_CACHE, avatarCache, elem);
+    }
+
+    /**
+     * Requests that the <code>avatarCache</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setAvatarCache (DSet<Avatar> value)
+    {
+        requestAttributeChange(AVATAR_CACHE, value, this.avatarCache);
+        DSet<Avatar> clone = (value == null) ? null : value.clone();
+        this.avatarCache = clone;
     }
 
     /**

@@ -10,6 +10,8 @@ import com.threerings.orth.room.data.ActorObject;
 import org.osflash.signals.Signal;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.entity.data.Avatar;
+import com.threerings.presents.dobj.DSet;
+import com.threerings.presents.dobj.DSet_Entry;
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
@@ -22,15 +24,23 @@ public class SocializerObject extends ActorObject
 
     public var avatar :Avatar;
 
+    public var avatarCache :DSet;
+
     public var walkingId :int;
 
     public var nameChanged :Signal = new Signal(OrthName, OrthName);
     public var avatarChanged :Signal = new Signal(Avatar, Avatar);
+    public var avatarCacheChanged :Signal = new Signal(DSet, DSet);
+    public var avatarCacheEntryAdded :Signal = new Signal(DSet_Entry);
+    public var avatarCacheEntryRemoved :Signal = new Signal(DSet_Entry);
+    public var avatarCacheEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
     public var walkingIdChanged :Signal = new Signal(int, int);
 
     public static const NAME :String = "name";
 
     public static const AVATAR :String = "avatar";
+
+    public static const AVATAR_CACHE :String = "avatarCache";
 
     public static const WALKING_ID :String = "walkingId";
 
@@ -39,6 +49,7 @@ public class SocializerObject extends ActorObject
         super.readObject(ins);
         name = ins.readObject(OrthName);
         avatar = ins.readObject(Avatar);
+        avatarCache = ins.readObject(DSet);
         walkingId = ins.readInt();
     }
 
@@ -98,6 +109,9 @@ class Signaller
             case "avatar":
                 signal = _obj.avatarChanged;
                 break;
+            case "avatarCache":
+                signal = _obj.avatarCacheChanged;
+                break;
             case "walkingId":
                 signal = _obj.walkingIdChanged;
                 break;
@@ -111,6 +125,9 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
+            case "avatarCache":
+                signal = _obj.avatarCacheEntryAdded;
+                break;
             default:
                 return;
         }
@@ -121,6 +138,9 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
+            case "avatarCache":
+                signal = _obj.avatarCacheEntryRemoved;
+                break;
             default:
                 return;
         }
@@ -131,6 +151,9 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
+            case "avatarCache":
+                signal = _obj.avatarCacheEntryUpdated;
+                break;
             default:
                 return;
         }
