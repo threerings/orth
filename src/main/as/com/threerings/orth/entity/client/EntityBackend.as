@@ -85,7 +85,7 @@ public class EntityBackend extends ControlBackend
     protected function selfDestruct_v1 () :void
     {
         if (_sprite != null) {
-            _sprite.selfDestruct();
+            throw new Error("selfDestruct not implemented");
         }
     }
 

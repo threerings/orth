@@ -331,7 +331,7 @@ public class RoomObjectController extends RoomController
     override public function handleOrderPet (petId :int, command :int) :void
     {
         var svc :PetService = (_rctx.getClient().requireService(PetService) as PetService);
-        svc.orderPet(petId, command, _rctx.confirmListener("m.pet_ordered" + command));
+        svc.orderPet(petId, command, _octx.confirmListener("m.pet_ordered" + command));
     }
 
     override public function getEnvironment () :String
@@ -369,17 +369,6 @@ public class RoomObjectController extends RoomController
             var info :SocializerInfo = findOccupantById(memberId);
             return (info != null) && info.isManager();
         }
-    }
-
-    override public function deleteItem (ident :EntityIdent) :void
-    {
-        var svc :ItemService = _rctx.getClient().requireService(ItemService) as ItemService;
-        svc.deleteItem(ident, _rctx.confirmListener(OrthCodes.EDITING_MSGS));
-    }
-
-    override public function rateRoom (rating :Number, onSuccess :Function) :void
-    {
-        _roomObj.orthRoomService.rateRoom(rating, _octx.resultListener(onSuccess));
     }
 
     /**
@@ -515,7 +504,7 @@ public class RoomObjectController extends RoomController
     override protected function requestAvatarMove (newLoc :OrthLocation) :void
     {
         // ORTH TODO: Replace with equivalent functionality
-        _rctx.getSpotSceneDirector().changeLocation(newLoc, null);
+        // _sceneDir.changeLocation(newLoc, null);
     }
 
     // documentation inherited
