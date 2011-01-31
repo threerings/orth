@@ -409,10 +409,10 @@ public class RoomObjectController extends RoomController
         // ORTH TODO: Replace with equivalent functionality!
         // _scene = _sceneDir.getScene() as OrthScene;
 
-        _rctx.getChatDirector().registerCommandHandler(
-            Msgs.CHAT, "action", new AvatarChatHandler(false));
-        _rctx.getChatDirector().registerCommandHandler(
-            Msgs.CHAT, "state", new AvatarChatHandler(true));
+//        _rctx.getChatDirector().registerCommandHandler(
+//            Msgs.CHAT, "action", new AvatarChatHandler(false));
+//        _rctx.getChatDirector().registerCommandHandler(
+//            Msgs.CHAT, "state", new AvatarChatHandler(true));
 
         _walkTarget.visible = false;
         _flyTarget.visible = false;
