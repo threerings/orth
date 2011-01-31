@@ -2,6 +2,7 @@
 // $Id: RoomObjectController.as 19189 2010-05-26 19:37:09Z zell $
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.entity.data.PetOrders;
 
 import flash.events.Event;
 import flash.events.KeyboardEvent;
@@ -299,17 +300,17 @@ public class RoomObjectController extends RoomController
             var isWalking :Boolean = (memObj.walkingId != 0);
             menuItems.push(
             { label: Msgs.GENERAL.get("b.order_pet_stay"),
-              command: ORDER_PET, arg: [ petId, Pet.ORDER_STAY ], enabled: canManageRoom() },
+              command: ORDER_PET, arg: [ petId, PetOrders.ORDER_STAY ], enabled: canManageRoom() },
             { label: Msgs.GENERAL.get("b.order_pet_follow"),
-              command: ORDER_PET, arg: [ petId, Pet.ORDER_FOLLOW ], enabled: !isWalking },
+              command: ORDER_PET, arg: [ petId, PetOrders.ORDER_FOLLOW ], enabled: !isWalking },
             { label: Msgs.GENERAL.get("b.order_pet_go_home"),
-              command: ORDER_PET, arg: [ petId, Pet.ORDER_GO_HOME ] });
+              command: ORDER_PET, arg: [ petId, PetOrders.ORDER_GO_HOME ] });
         }
         if (isPetOwner || canManageRoom()) {
             CommandMenu.addSeparator(menuItems);
             // and any old room manager can put the pet to sleep
             menuItems.push({ label: Msgs.GENERAL.get("b.order_pet_sleep"),
-                command: ORDER_PET, arg: [ petId, Pet.ORDER_SLEEP ] });
+                command: ORDER_PET, arg: [ petId, PetOrders.ORDER_SLEEP ] });
         }
         if (isPetOwner && pet.hasCustomConfigPanel()) {
             menuItems.push({ label: Msgs.GENERAL.get("b.config_item", "pet"),
