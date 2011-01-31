@@ -267,14 +267,8 @@ public class RoomObjectController extends RoomController
             avItems.push({ label: av.name, enabled: !av.equals(us.avatar),
                 iconObject: MediaWrapper.createView(
                     av.getThumbnailMedia(), MediaDescSize.QUARTER_THUMBNAIL_SIZE),
-                callback: _worldDir.setAvatar, arg: av.itemId });
+                callback: _worldDir.setAvatar, arg: av.getIdent().getItem() });
         }
-        // add defaults
-        avItems.push({ label: Msgs.ITEM.get("m.default"), enabled: (us.avatar != null),
-            iconObject: MediaWrapper.createView(
-                Item.getDefaultThumbnailMediaFor(Item.AVATAR),
-                MediaDescSize.QUARTER_THUMBNAIL_SIZE),
-            callback: _worldDir.setAvatar, arg: 0 });
 
         // return a menu item for changing their avatar
         return { label: Msgs.GENERAL.get("b.change_avatar"), children: avItems,
