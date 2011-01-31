@@ -12,9 +12,10 @@ import com.threerings.flex.ChatControl;
 import com.threerings.flex.CommandButton;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.AboutDialog;
-import com.threerings.orth.client.ChatPrefsDialog;
+import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.TopPanel;
@@ -25,6 +26,7 @@ import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.client.DisconnectedPanel;
 import com.threerings.orth.room.client.RoomContext;
+import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomObjectController;
 import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.RoomView;
@@ -129,6 +131,9 @@ public class WorldController extends Controller
 
     /** Command to display the chat channel menu. */
     public static const POP_CHANNEL_MENU :String = "PopChannelMenu";
+
+    /** Command to display the room menu. */
+    public static const POP_ROOM_MENU :String = "PopRoomMenu";
 
     /** Command to go to a particular place (by Oid). */
     public static const GO_LOCATION :String = "GoLocation";
@@ -393,15 +398,6 @@ public class WorldController extends Controller
     }
 
     /**
-     * Handles the OPEN_CHANNEL command.
-     */
-    public function handleOpenChannel (name :Name) :void
-    {
-        // ORTH TODO
-        // _chatDir.openChannel(name);
-    }
-
-    /**
      * Handles the POP_CHANNEL_MENU command.
      */
     public function handlePopChannelMenu (trigger :Button) :void
@@ -427,7 +423,8 @@ public class WorldController extends Controller
         // slap your friends in a menu
         var friends :Array = [];
         for each (var fe :FriendEntry in me.getSortedFriends()) {
-            friends.push({ label: fe.name.toString(), command: OPEN_CHANNEL, arg: fe.name });
+            friends.push(
+                { label: fe.name.toString(), command: OrthController.OPEN_CHANNEL, arg: fe.name });
         }
         if (friends.length == 0) {
             friends.push({ label: Msgs.GENERAL.get("m.no_friends"), enabled: false });
@@ -498,6 +495,28 @@ public class WorldController extends Controller
     }
 
     /**
+     * Handles the POP_ROOM_MENU command.
+     */
+    public function handlePopRoomMenu (trigger :Button) :void
+    {
+        var menuData :Array = [];
+
+        var roomView :RoomView = _topPanel.getMainView() as RoomView;
+
+        CommandMenu.addTitle(menuData, roomView.getPlaceName());
+
+        CommandMenu.addSeparator(menuData);
+        menuData.push({label: Msgs.GENERAL.get("b.editScene"), icon: _rsrc.roomEditIcon,
+            command: RoomController.ROOM_EDIT,
+            enabled: roomView.getRoomController().canManageRoom() });
+
+        menuData.push({ label: Msgs.GENERAL.get("b.snapshot"), icon: _rsrc.snapshotIcon,
+            command: doSnapshot });
+
+        popControlBarMenu(menuData, trigger);
+    }
+
+    /**
      * Returns the current sceneId, or 0 if none.
      */
     public function getCurrentSceneId () :int
@@ -510,7 +529,7 @@ public class WorldController extends Controller
         name :OrthName, menuItems :Array, addWorldItems :Boolean = true) :void
     {
         const memId :int = name.getId();
-        const us :PlayerObject = _wctx.getPlayerObject();
+        const us :PlayerObject = _octx.getPlayerObject();
         const isUs :Boolean = (memId == us.getPlayerId());
         const isMuted :Boolean = !isUs && _muteDir.isMuted(name);
         var placeCtrl :Object = null;
@@ -574,21 +593,22 @@ public class WorldController extends Controller
             const isInOurRoom :Boolean = (placeCtrl is RoomObjectController) &&
                 RoomObjectController(placeCtrl).containsPlayer(name);
             // whisper
-            menuItems.push({ label: Msgs.GENERAL.get("b.open_channel"),
-                        icon: _rsrc.whisperIcon,
-                        command: OPEN_CHANNEL, arg: name, enabled: !muted });
+            menuItems.push({
+                label: Msgs.GENERAL.get("b.open_channel"), icon: _rsrc.whisperIcon,
+                command: OrthController.OPEN_CHANNEL, arg: name, enabled: !muted });
             // add as friend
             if (!onlineFriend) {
-                menuItems.push({ label: Msgs.GENERAL.get("l.add_as_friend"),
-                            icon: _rsrc.addFriendIcon,
-                            command: INVITE_FRIEND, arg: memId, enabled: !muted });
+                menuItems.push({
+                    label: Msgs.GENERAL.get("l.add_as_friend"), icon: _rsrc.addFriendIcon,
+                    command: OrthController.INVITE_FRIEND, arg: memId, enabled: !muted });
             }
             // visit
             if (onlineFriend) {
                 var label :String = onlineFriend ?
                     Msgs.GENERAL.get("b.visit_friend") : "Visit (as agent)";
-                menuItems.push({ label: label, icon: _rsrc.visitIcon,
-                    command: VISIT_MEMBER, arg: memId, enabled: !isInOurRoom });
+                menuItems.push({
+                    label: label, icon: _rsrc.visitIcon, command: OrthController.VISIT_MEMBER,
+                    arg: memId, enabled: !isInOurRoom });
             }
             // profile
             menuItems.push({ label: Msgs.GENERAL.get("b.view_member"),
@@ -620,7 +640,7 @@ public class WorldController extends Controller
             }
             // reporting
             menuItems.push({ label: Msgs.GENERAL.get("b.complain"), icon: _rsrc.reportIcon,
-                command: COMPLAIN_MEMBER, arg: [ memId, name ] });
+                command: OrthController.COMPLAIN_MEMBER, arg: [ memId, name ] });
         }
 
         // now the items specific to the avatar
@@ -628,12 +648,11 @@ public class WorldController extends Controller
             RoomObjectController(placeCtrl).addAvatarMenuItems(name, menuItems);
         }
 
-        // login/logout
         if (isUs) {
-            var creds :WorldCredentials = new WorldCredentials(null, null);
-            creds.ident = "";
-            menuItems.push({ label: Msgs.GENERAL.get("b.logout"),
-                command: WorldController.LOGON, arg: creds });
+            // ORTH TODO: This needs to be redesigned entirely
+            // var creds :WorldCredentials = new WorldCredentials(null, null);
+            // menuItems.push({ label: Msgs.GENERAL.get("b.logout"),
+            //     command: OrthController.LOGON, arg: creds });
         }
     }
 
@@ -642,7 +661,9 @@ public class WorldController extends Controller
      */
     public function addPetMenuItems (petName :PetName, menuItems :Array) :void
     {
-        const ownerMuted :Boolean = _muteDir.isOwnerMuted(petName);
+        // ORTH TODO
+        // const ownerMuted :Boolean = _muteDir.isOwnerMuted(petName);
+        const ownerMuted :Boolean = false;
         if (ownerMuted) {
             menuItems.push({ label: Msgs.GENERAL.get("b.unmute_owner"), icon: _rsrc.blockIcon,
                 callback: _muteDir.setMuted,
@@ -670,15 +691,9 @@ public class WorldController extends Controller
 
     override protected function setControlledPanel (panel :IEventDispatcher) :void
     {
-        // in addition to listening for command events, let's listen
-        // for LINK events and handle them all here.
-        if (_controlledPanel != null) {
-            _controlledPanel.removeEventListener(TextEvent.LINK, handleLink);
-        }
         _idleTimer.reset();
         super.setControlledPanel(panel);
         if (_controlledPanel != null) {
-            _controlledPanel.addEventListener(TextEvent.LINK, handleLink);
             _idleTimer.start();
             resetIdleTracking();
         }
@@ -723,38 +738,6 @@ public class WorldController extends Controller
     }
 
     /**
-     * Handles a TextEvent.LINK event.
-     */
-    protected function handleLink (evt :TextEvent) :void
-    {
-        var url :String = evt.text;
-        if (StringUtil.startsWith(url, COMMAND_URL)) {
-            var cmd :String = url.substring(COMMAND_URL.length);
-            var sep :String = "/";
-            // Sometimes we need to parse cmd args that have "/" in them, but we like using "/"
-            // as our normal separator. So if the first character of the command is \uFFFC, then
-            // chop that out and use \uFFFC as our separator.
-            if (cmd.charAt(0) == "\uFFFC") {
-                sep = "\uFFFC";
-                cmd = cmd.substr(1);
-            }
-            var argStr :String = null;
-            var slash :int = cmd.indexOf(sep);
-            if (slash != -1) {
-                argStr = cmd.substring(slash + 1);
-                cmd = cmd.substring(0, slash);
-            }
-            var arg :Object = (argStr == null || argStr.indexOf(sep) == -1)
-                ? argStr : argStr.split(sep);
-            CommandEvent.dispatch(evt.target as IEventDispatcher, cmd, arg);
-
-        } else {
-            // A regular URL
-            handleViewUrl(url);
-        }
-    }
-
-    /**
      * Handles global key events.
      */
     protected function handleKeyDown (event :KeyboardEvent) :void
@@ -782,7 +765,6 @@ public class WorldController extends Controller
      */
     protected function locationDidChange (place :PlaceObject) :void
     {
-        updateLocationDisplay();
         // if we moved to a scene, set things up thusly
         var scene :Scene = _sceneDir.getScene();
         if (scene != null) {
@@ -862,14 +844,14 @@ public class WorldController extends Controller
      */
     protected function populateGoMenu (menuData :Array) :void
     {
-        const me :PlayerObject = _wctx.getPlayerObject();
+        const me :PlayerObject = _octx.getPlayerObject();
         const curSceneId :int = getCurrentSceneId();
 
         // our friends
         var friends :Array = [];
         for each (var fe :FriendEntry in me.getSortedFriends()) {
-            friends.push({ label: fe.name.toString(),
-                command: VISIT_MEMBER, arg: fe.name.getId() });
+            friends.push({ label: fe.name.toString(), command: OrthController.VISIT_MEMBER,
+                arg: fe.name.getId() });
         }
         if (friends.length == 0) {
             friends.push({ label: Msgs.GENERAL.get("m.no_friends"), enabled: false });
@@ -941,6 +923,7 @@ public class WorldController extends Controller
 
     protected const _stage :Stage = inject(Stage);
     protected const _topPanel :TopPanel = inject(TopPanel);
+    protected const _controlBar :ControlBar = inject(ControlBar);
 
     protected const _rsrc :OrthResourceFactory = inject(OrthResourceFactory);
 
@@ -978,9 +961,6 @@ public class WorldController extends Controller
 
     /** The menus that we are currently showing. */
     protected var _currentMenus :Array = [];
-
-    /** The URL prefix for 'command' URLs, that post CommendEvents. */
-    protected static const COMMAND_URL :String = "command://";
 
     /** The duration after which we log off idle guests. */
     protected static const MAX_GUEST_IDLE_TIME :int = 60*60*1000;

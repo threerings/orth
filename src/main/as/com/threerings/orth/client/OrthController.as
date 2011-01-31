@@ -2,13 +2,18 @@
 // $Id: $
 package com.threerings.orth.client {
 
+import flash.events.IEventDispatcher;
+import flash.events.TextEvent;
 import flashx.funk.ioc.IModule;
 import flashx.funk.ioc.inject;
 
+import com.threerings.util.CommandEvent;
 import com.threerings.util.Controller;
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
+import com.threerings.util.Name;
 import com.threerings.util.NetUtil;
+import com.threerings.util.StringUtil;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherCredentials;
@@ -33,6 +38,10 @@ public class OrthController extends Controller
 
     /** Command to complain about a member. */
     public static const COMPLAIN_MEMBER :String = "ComplainMember";
+
+    /** Command to visit a member's current location */
+    // ORTH TODO: NOT IMPLEMENTED
+    public static const VISIT_MEMBER :String = "VisitMember";
 
     /** Command to invite someone to be a friend. */
     public static const INVITE_FRIEND :String = "InviteFriend";
@@ -141,13 +150,68 @@ public class OrthController extends Controller
         //         _partyDir.getPartyDetail(partyId);
     }
 
+    /**
+     * Handles the OPEN_CHANNEL command.
+     */
+    public function handleOpenChannel (name :Name) :void
+    {
+        // ORTH TODO
+        // _chatDir.openChannel(name);
+    }
 
+    override protected function setControlledPanel (panel :IEventDispatcher) :void
+    {
+        // in addition to listening for command events, let's listen
+        // for LINK events and handle them all here.
+        if (_controlledPanel != null) {
+            _controlledPanel.removeEventListener(TextEvent.LINK, handleLink);
+        }
+        super.setControlledPanel(panel);
+        if (_controlledPanel != null) {
+            _controlledPanel.addEventListener(TextEvent.LINK, handleLink);
+        }
+    }
+
+    /**
+     * Handles a TextEvent.LINK event.
+     */
+    protected function handleLink (evt :TextEvent) :void
+    {
+        var url :String = evt.text;
+        if (StringUtil.startsWith(url, COMMAND_URL)) {
+            var cmd :String = url.substring(COMMAND_URL.length);
+            var sep :String = "/";
+            // Sometimes we need to parse cmd args that have "/" in them, but we like using "/"
+            // as our normal separator. So if the first character of the command is \uFFFC, then
+            // chop that out and use \uFFFC as our separator.
+            if (cmd.charAt(0) == "\uFFFC") {
+                sep = "\uFFFC";
+                cmd = cmd.substr(1);
+            }
+            var argStr :String = null;
+            var slash :int = cmd.indexOf(sep);
+            if (slash != -1) {
+                argStr = cmd.substring(slash + 1);
+                cmd = cmd.substring(0, slash);
+            }
+            var arg :Object = (argStr == null || argStr.indexOf(sep) == -1)
+                ? argStr : argStr.split(sep);
+            CommandEvent.dispatch(evt.target as IEventDispatcher, cmd, arg);
+
+        } else {
+            // A regular URL
+            handleViewUrl(url);
+        }
+    }
 
     protected const _ctx :OrthContext = inject(OrthContext);
     protected const _mod :IModule = inject(IModule);
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _client :AetherClient = inject(AetherClient);
     protected const _depCon :OrthDeploymentConfig = inject(OrthDeploymentConfig);
+
+    /** The URL prefix for 'command' URLs, that post CommendEvents. */
+    protected static const COMMAND_URL :String = "command://";
 
     protected static var log :Log = Log.getLog(OrthController);
 }
