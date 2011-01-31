@@ -141,9 +141,6 @@ public class WorldController extends Controller
     /** Command to go to a particular scene. */
     public static const GO_SCENE :String = "GoScene";
 
-    /** Command to view a "stuff" page. Arg: [ itemType ] */
-    public static const VIEW_STUFF :String = "ViewStuff";
-
     /** Command to respond to a request to follow another player. */
     public static const RESPOND_FOLLOW :String = "RespondFollow";
 
@@ -440,14 +437,6 @@ public class WorldController extends Controller
     public function handleViewMember (memberId :int) :void
     {
         log.warning("VIEW_MEMBER not implemented.");
-    }
-
-    /**
-     * Handles the VIEW_STUFF command.
-     */
-    public function handleViewStuff (itemType :int) :void
-    {
-        log.info("VIEW_STUFF not implemented.");
     }
 
     /**

@@ -262,10 +262,6 @@ public class RoomObjectController extends RoomController
         var avatars :Array = (us.avatarCache != null) ? us.avatarCache.toArray() : [];
         ArrayUtil.sort(avatars);
 
-        avItems.push({ label: Msgs.GENERAL.get("b.avatars_full"),
-            command: WorldController.VIEW_STUFF, arg: Item.AVATAR });
-        CommandMenu.addSeparator(avItems);
-
         for (var ii :int = 0; ii < avatars.length; ii++) {
             var av :Avatar = avatars[ii] as Avatar;
             avItems.push({ label: av.name, enabled: !av.equals(us.avatar),
