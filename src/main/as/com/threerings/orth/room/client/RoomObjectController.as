@@ -33,6 +33,7 @@ import com.threerings.orth.chat.client.ComicOverlay;
 
 import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.TopPanel;
 
 import com.threerings.orth.data.MediaDescSize;
@@ -159,7 +160,9 @@ public class RoomObjectController extends RoomController
      */
     public function isRoomEditing () :Boolean
     {
-        return (_editor != null) && _editor.isEditing();
+        // ORTH TODO
+        // return (_editor != null) && _editor.isEditing();
+        return false;
     }
 
     /**
@@ -171,10 +174,11 @@ public class RoomObjectController extends RoomController
             cancelRoomEditing();
         }
 
-        var handleResult :Function = function (result :Object) :void {
-            DoorTargetEditController.start(furniData, _rctx);
-        };
-        _roomObj.orthRoomService.editRoom(_octx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
+        // ORTH TODO
+        // var handleResult :Function = function (result :Object) :void {
+        //     DoorTargetEditController.start(furniData, _rctx);
+        // };
+        // _roomObj.orthRoomService.editRoom(_octx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
     }
 
     /**
@@ -183,7 +187,8 @@ public class RoomObjectController extends RoomController
      */
     public function backgroundFinishedLoading () :void
     {
-        DoorTargetEditController.updateLocation();
+        // ORTH TODO
+//        DoorTargetEditController.updateLocation();
     }
 
     /**
@@ -204,7 +209,8 @@ public class RoomObjectController extends RoomController
         var handleResult :Function = function (result :Object) :void {
             beginRoomEditing();
         };
-        _roomObj.orthRoomService.editRoom(_octx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
+        // ORTH TODO
+//        _roomObj.orthRoomService.editRoom(_octx.resultListener(handleResult, OrthCodes.EDITING_MSGS));
     }
 
     /**
@@ -213,7 +219,7 @@ public class RoomObjectController extends RoomController
     override public function handleFurniClicked (furni :FurniData) :void
     {
         if (furni.actionType.isURL()) {
-            _worldCtrl.handleViewUrl(furni.splitActionData()[0] as String);
+            _orthCtrl.handleViewUrl(furni.splitActionData()[0] as String);
 
         } else if (furni.actionType.isPortal()) {
             // ORTH TODO: Replace with equivalent functionality
@@ -385,7 +391,8 @@ public class RoomObjectController extends RoomController
      */
     public function cancelRoomEditing () :void
     {
-        _editor.endEditing();
+        // ORTH TODO
+//        _editor.endEditing();
     }
 
     /**
@@ -477,13 +484,14 @@ public class RoomObjectController extends RoomController
         _flyTarget.visible = false;
 
         // this function will be called when the edit panel is closing
-        var wrapupFn :Function = function () :void {
-            _editor = null;
-        }
+        // ORTH TODO
+        // var wrapupFn :Function = function () :void {
+        //     _editor = null;
+        // }
 
-        _editor = new RoomEditorController(_rctx, _roomObjectView);
-        _editor.startEditing(wrapupFn);
-        _editor.updateUndoStatus(_updates.length != 0);
+        // _editor = new RoomEditorController(_rctx, _roomObjectView);
+        // _editor.startEditing(wrapupFn);
+        // _editor.updateUndoStatus(_updates.length != 0);
     }
 
     /**
@@ -491,7 +499,8 @@ public class RoomObjectController extends RoomController
      */
     protected function updateRoom (update :SceneUpdate) :void
     {
-        _roomObj.orthRoomService.updateRoom(update, _octx.listener(OrthCodes.EDITING_MSGS));
+        // ORTH TODO
+//        _roomObj.orthRoomService.updateRoom(update, _octx.listener(OrthCodes.EDITING_MSGS));
     }
 
     override protected function checkMouse2 (
@@ -499,8 +508,9 @@ public class RoomObjectController extends RoomController
     {
         grabAll = isRoomEditing();
         if (grabAll) {
-            allowMovement = _editor.isMovementEnabled();
-            setHitter = _editor.mouseOverSprite;
+        // ORTH TODO
+            // allowMovement = _editor.isMovementEnabled();
+            // setHitter = _editor.mouseOverSprite;
         }
 
         super.checkMouse2(grabAll, allowMovement, setHitter);
@@ -607,9 +617,10 @@ public class RoomObjectController extends RoomController
         super.sceneUpdated(update);
 
         _roomObjectView.processUpdate(update);
-        if (_editor != null) {
-            _editor.processUpdate(update);
-        }
+        // ORTH TODO
+        // if (_editor != null) {
+        //     _editor.processUpdate(update);
+        // }
     }
 
     protected function reportLocationName () :void
@@ -631,6 +642,7 @@ public class RoomObjectController extends RoomController
         }
     }
 
+    protected const _orthCtrl :OrthController = inject(OrthController);
     protected const _worldCtrl :WorldController = inject(WorldController);
     protected const _worldDir :WorldDirector = inject(WorldDirector);
 
@@ -644,7 +656,8 @@ public class RoomObjectController extends RoomController
     protected var _scene :OrthScene;
 
     /** Controller for in-room furni editing. */
-    protected var _editor :RoomEditorController;
+    // ORTH TODO
+//    protected var _editor :RoomEditorController;
 
     /** Stack that stores the sequence of room updates. */
     protected var _updates :UpdateStack = new UpdateStack(updateRoom);
