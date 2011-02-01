@@ -78,3 +78,4 @@ public class MemoryChangedEvent extends NamedEvent
 // GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END
