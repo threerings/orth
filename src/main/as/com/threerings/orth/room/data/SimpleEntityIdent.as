@@ -21,23 +21,24 @@ public class SimpleEntityIdent implements EntityIdent
         return id.getType().toByte() + ":" + id.getItem();
     }
 
-    public static function fromString (str :String):EntityIdent
+    public static function fromString (str :String) :EntityIdent
     {
         var tokens :Array = str.split(":");
-        var entityType :EntityType = EntityType(ByteEnum.fromByte(EntityType, tokens[0]));
+        var entityType :EntityIdent_EntityType =
+            EntityIdent_EntityType(ByteEnum.fromByte(EntityIdent_EntityType, tokens[0]));
         var entityId :* = tokens[1];
 
         return new SimpleEntityIdent(entityType, entityId);
     }
 
-    public function SimpleEntityIdent (type :EntityType, id :int)
+    public function SimpleEntityIdent (type :EntityIdent_EntityType, id :int)
     {
         _type = type;
         _id = id;
     }
 
     // from interface EntityIdent
-    public function getType () :EntityType
+    public function getType () :EntityIdent_EntityType
     {
         return _type;
     }
