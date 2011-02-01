@@ -142,7 +142,6 @@ public class RoomController extends SceneController
 
     /**
      * Return the environment in which the entities are running.
-     * See EntityControl's ENV_VIEWER, ENV_SHOP, and ENV_ROOM.
      */
     public function getEnvironment () :String
     {

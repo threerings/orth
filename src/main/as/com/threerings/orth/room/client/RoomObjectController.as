@@ -332,7 +332,7 @@ public class RoomObjectController extends RoomController
 
     override public function getEnvironment () :String
     {
-        return "room"; // EntityControl.ENV_ROOM
+        return "room";
     }
 
     override public function getMemories (ident :EntityIdent) :Object

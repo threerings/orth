@@ -135,24 +135,12 @@ public class EntityBackend extends ControlBackend
     }
 
     /**
-     * Original signature: updateMemory(key, value) :Boolean
-     * New signature: updateMemory(key, value, callback = null) :void
-     *
-     * So: callback needs to be optional in case older EntityControl code calls this, and for
-     * the same reason we should still return a boolean, it will be safely ignored by newer
-     * EntityControls.
      */
-    protected function updateMemory_v1 (
-        key :String, value :Object, callback :Function = null) :Boolean
+    protected function updateMemory_v1 (key :String, value :Object, callback :Function) :void
     {
         if (_sprite != null) {
             _sprite.updateMemory(key, value, callback);
-            return true; // uh, yeah, sure it updated (ignored by newer impls of EntityControl)
         }
-        // else: if callback is non-null, we don't call back, because this sprite
-        // is now unloaded and usercode should be ignored. We do return false, for compatibility
-        // with the original signature
-        return false;
     }
 
     protected function setHotSpot_v1 (x :Number, y :Number, height :Number = NaN) :void
