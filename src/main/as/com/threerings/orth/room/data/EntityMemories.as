@@ -1,27 +1,46 @@
+// GENERATED PREAMBLE START
 //
 // $Id$
 
 package com.threerings.orth.room.data {
 
-import flash.utils.ByteArray;
-
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-
+import flash.utils.ByteArray;
 import com.threerings.presents.dobj.DSet_Entry;
-
 import com.threerings.util.StreamableHashMap;
-
-public class EntityMemories
-    implements DSet_Entry
+import com.threerings.util.Cloneable;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.io.streamers.MapStreamer;
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
+public class EntityMemories implements DSet_Entry, Cloneable
 {
+// GENERATED CLASSDECL END
     public static const MAX_ENCODED_MEMORY_LENGTH :int = 4096;
 
-    /** The item with which these memories are associated. */
+// GENERATED STREAMING START
     public var ident :EntityIdent;
 
-    /** The memory key/values. */
-    public var memories :StreamableHashMap; // of String
+    public var memories :StreamableHashMap;
+
+    public var modified :Boolean;
+
+    public function readObject (ins :ObjectInputStream) :void
+    {
+        ident = ins.readObject(EntityIdent);
+        memories = ins.readObject(StreamableHashMap);
+        modified = ins.readBoolean();
+    }
+
+    public function writeObject (out :ObjectOutputStream) :void
+    {
+        out.writeObject(ident);
+        out.writeObject(memories);
+        out.writeBoolean(modified);
+    }
+
+// GENERATED STREAMING END
 
     // from interface DSet_Entry
     public function getKey () :Object
@@ -29,24 +48,18 @@ public class EntityMemories
         return ident;
     }
 
-    // inherited hah
+    public function clone () :Object
+    {
+        var clone :EntityMemories = new EntityMemories();
+        clone.ident = this.ident;
+        clone.memories = this.memories;
+        clone.modified = this.modified;
+        return clone;
+    }
+
     public function toString () :String
     {
         return "[ident=" + ident + "]";
-    }
-
-    // from interface Streamable
-    public function readObject (ins :ObjectInputStream) :void
-    {
-        ident = EntityIdent(ins.readObject());
-        memories = StreamableHashMap(ins.readObject());
-        /* modified = */ ins.readBoolean(); // modified not needed on client, but can't be transient
-    }
-
-    // from interface Streamable
-    public function writeObject (out :ObjectOutputStream) :void
-    {
-        throw new Error();
     }
 
     /**
@@ -60,5 +73,7 @@ public class EntityMemories
             memories.put(key, newValue);
         }
     }
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END

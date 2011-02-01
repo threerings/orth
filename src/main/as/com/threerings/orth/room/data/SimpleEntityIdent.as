@@ -1,15 +1,22 @@
+// GENERATED PREAMBLE START
 //
-// $Id: $
+// $Id$
 
 package com.threerings.orth.room.data {
 
-import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
 import com.threerings.util.ByteEnum;
 import com.threerings.util.ComparisonChain;
-
-public class SimpleEntityIdent implements EntityIdent
+import com.threerings.orth.room.data.EntityIdent;
+import com.google.gwt.user.client.rpc.IsSerializable;
+import com.threerings.orth.room.data.EntityIdent_EntityType;
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
+public class SimpleEntityIdent implements EntityIdent, IsSerializable
 {
+// GENERATED CLASSDECL END
+
     public static function toString (id :EntityIdent) :String
     {
         return id.getType().toByte() + ":" + id.getItem();
@@ -56,20 +63,6 @@ public class SimpleEntityIdent implements EntityIdent
         return (_type.toByte() * 37) | _id;
     }
 
-    // from interface Streamable
-    public function readObject (ins :ObjectInputStream) :void
-    {
-        _type = EntityType(ins.readObject(EntityType));
-        _id = ins.readInt();
-    }
-
-    // from interface Streamable
-    public function writeObject (out :ObjectOutputStream) :void
-    {
-        out.writeObject(_type);
-        out.writeInt(_id);
-    }
-
     // from Comparable
     public function compareTo (other :Object) :int
     {
@@ -87,7 +80,23 @@ public class SimpleEntityIdent implements EntityIdent
         return _type + ":" + _id;
     }
 
-    protected var _type :EntityType;
+
+// GENERATED STREAMING START
+    public function readObject (ins :ObjectInputStream) :void
+    {
+        _type = ins.readObject(EntityIdent_EntityType);
+        _id = ins.readInt();
+    }
+
+    public function writeObject (out :ObjectOutputStream) :void
+    {
+        out.writeObject(_type);
+        out.writeInt(_id);
+    }
+
+    protected var _type :EntityIdent_EntityType;
     protected var _id :int;
+// GENERATED STREAMING END
+// GENERATED CLASSFINISH START
 }
 }

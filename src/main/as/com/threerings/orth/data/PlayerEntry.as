@@ -1,25 +1,21 @@
+// GENERATED PREAMBLE START
 //
-// $Id: PlayerEntry.as 19627 2010-11-24 16:02:41Z zell $
+// $Id$
 
 package com.threerings.orth.data {
 
-import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.ObjectInputStream;
-
+import com.threerings.io.ObjectOutputStream;
 import com.threerings.util.Hashable;
-
 import com.threerings.orth.data.OrthName;
-
 import com.threerings.presents.dobj.DSet_Entry;
-
-/**
- * Represents a friend connection.
- */
-public class PlayerEntry
-    implements Hashable, DSet_Entry
+import com.google.gwt.user.client.rpc.IsSerializable;
+import com.threerings.orth.data.VizOrthName;
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
+public class PlayerEntry implements IsSerializable, DSet_Entry
 {
-    /** The display name of the friend. */
-    public var name :VizOrthName;
+// GENERATED CLASSDECL END
 
     /**
      * A sort function that may be used for PlayerEntrys
@@ -28,6 +24,22 @@ public class PlayerEntry
     {
         return OrthName.BY_DISPLAY_NAME(lhs.name, rhs.name);
     }
+
+
+// GENERATED STREAMING START
+    public var name :VizOrthName;
+
+    public function readObject (ins :ObjectInputStream) :void
+    {
+        name = ins.readObject(VizOrthName);
+    }
+
+    public function writeObject (out :ObjectOutputStream) :void
+    {
+        out.writeObject(name);
+    }
+
+// GENERATED STREAMING END
 
     // from Hashable
     public function hashCode () :int
@@ -53,16 +65,7 @@ public class PlayerEntry
         return this.name.getKey();
     }
 
-    // from interface Streamable
-    public function readObject (ins :ObjectInputStream) :void
-    {
-        name = VizOrthName(ins.readObject());
-    }
-
-    // from interface Streamable
-    public function writeObject (out :ObjectOutputStream) :void
-    {
-        out.writeObject(name);
-    }
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END

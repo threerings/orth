@@ -1,20 +1,20 @@
+// GENERATED PREAMBLE START
 //
-// $Id: ActorInfo.as 18101 2009-09-16 21:22:48Z ray $
+// $Id$
 
 package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
-import com.threerings.orth.data.MediaDesc;
-
-import com.threerings.util.Joiner;
-
+import com.threerings.io.ObjectOutputStream;
 import com.threerings.crowd.data.OccupantInfo;
-
-/**
- * Contains published information about an actor in a scene (members and pets).
- */
+import com.threerings.orth.data.MediaDesc;
+import com.threerings.util.Joiner;
+import com.threerings.orth.room.data.EntityIdent;
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
 public class ActorInfo extends OccupantInfo
 {
+// GENERATED CLASSDECL END
     /**
      * Returns the media that is used to display this actor.
      */
@@ -56,15 +56,6 @@ public class ActorInfo extends OccupantInfo
         return that;
     }
 
-    // from OccupantInfo
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-        _media = MediaDesc(ins.readObject());
-        _ident = EntityIdent(ins.readObject());
-        _state = (ins.readField(String) as String);
-    }
-
     /** @inheritDoc */
     // from SimpleStreamableObject
     override protected function toStringJoiner (j :Joiner): void
@@ -73,8 +64,28 @@ public class ActorInfo extends OccupantInfo
         j.add("media", _media, "ident", _ident, "state", _state);
     }
 
+// GENERATED STREAMING START
+    override public function readObject (ins :ObjectInputStream) :void
+    {
+        super.readObject(ins);
+        _media = ins.readObject(MediaDesc);
+        _ident = ins.readObject(EntityIdent);
+        _state = ins.readField(String);
+    }
+
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+        out.writeObject(_media);
+        out.writeObject(_ident);
+        out.writeField(_state);
+    }
+
     protected var _media :MediaDesc;
     protected var _ident :EntityIdent;
     protected var _state :String;
+// GENERATED STREAMING END
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END

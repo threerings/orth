@@ -1,7 +1,12 @@
+// GENERATED PREAMBLE START
 //
-// $Id: OrthSceneModel.as 18842 2009-12-11 20:38:56Z zell $
+// $Id$
 
 package com.threerings.orth.room.data {
+
+import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
+import com.threerings.whirled.data.SceneModel;
 import com.threerings.orth.entity.data.Decor;
 import com.threerings.util.ArrayIterator;
 import com.threerings.util.ArrayUtil;
@@ -10,17 +15,15 @@ import com.threerings.util.Map;
 import com.threerings.util.Maps;
 import com.threerings.util.Name;
 import com.threerings.util.Short;
-
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.TypedArray;
-
-import com.threerings.whirled.data.SceneModel;
-
 import com.threerings.whirled.spot.data.Portal;
-
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.EntityIdent;
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
 public class OrthSceneModel extends SceneModel
 {
+// GENERATED CLASSDECL END
     /** Constant for Member room owners **/
     public static const OWNER_TYPE_MEMBER :int = 1;
 
@@ -41,26 +44,51 @@ public class OrthSceneModel extends SceneModel
     /** The maximum length of a room name. */
     public static const MAX_NAME_LENGTH :int = 80;
 
-    /** Access control, as one of the ACCESS constants. Limits who can enter the scene. */
+// GENERATED STREAMING START
     public var accessControl :int;
 
-    /** The type of owner that owns this scene. */
     public var ownerType :int;
 
-    /** The id of the owner of this scene, interpreted using ownerType. */
     public var ownerId :int;
 
-    /** The name of the owner, either a OrthName or the group's name. */
     public var ownerName :Name;
 
-    /** The furniture in the scene. */
-    public var furnis :TypedArray /* of FurniData */;
+    public var furnis :TypedArray;
 
-    /** The entrance location. */
     public var entrance :OrthLocation;
 
-    /** Decor item geometry. */
+    public var decorIdent :EntityIdent;
+
     public var decor :Decor;
+
+    override public function readObject (ins :ObjectInputStream) :void
+    {
+        super.readObject(ins);
+        accessControl = ins.readByte();
+        ownerType = ins.readByte();
+        ownerId = ins.readInt();
+        ownerName = ins.readObject(Name);
+        furnis = ins.readObject(TypedArray);
+        entrance = ins.readObject(OrthLocation);
+        decorIdent = ins.readObject(EntityIdent);
+        decor = ins.readObject(Decor);
+    }
+
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+        out.writeByte(accessControl);
+        out.writeByte(ownerType);
+        out.writeInt(ownerId);
+        out.writeObject(ownerName);
+        out.writeObject(furnis);
+        out.writeObject(entrance);
+        out.writeObject(decorIdent);
+        out.writeObject(decor);
+    }
+
+// GENERATED STREAMING END
+
 
     /** Constructor. */
     public function OrthSceneModel ()
@@ -200,35 +228,11 @@ public class OrthSceneModel extends SceneModel
         return model;
     }
 
-    // documentation inherited
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        super.writeObject(out);
-
-        out.writeByte(accessControl);
-        out.writeByte(ownerType);
-        out.writeInt(ownerId);
-        out.writeObject(ownerName);
-        out.writeObject(furnis);
-        out.writeObject(entrance);
-        out.writeObject(decor);
-    }
-
-    // documentation inherited
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-
-        accessControl = ins.readByte();
-        ownerType = ins.readByte();
-        ownerId = ins.readInt();
-        ownerName = Name(ins.readObject());
-        furnis = TypedArray(ins.readObject());
-        entrance = OrthLocation(ins.readObject());
-        decor = Decor(ins.readObject());
-    }
-
     /** Cached portal info. Not streamed. */
     protected var _portalInfo :Map;
+// GENERATED CLASSFINISH START
 }
 }
+
+
+

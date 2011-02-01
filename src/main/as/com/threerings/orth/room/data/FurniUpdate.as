@@ -1,21 +1,35 @@
+// GENERATED PREAMBLE START
 //
-// $Id: FurniUpdate.as 12486 2008-10-13 18:19:39Z jamie $
+// $Id$
 
 package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-
-import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.data.SceneUpdate;
-
-/**
- * The base for all furni updates.
- */
-public /*abstract*/ class FurniUpdate extends SceneUpdate
+import com.threerings.whirled.data.SceneModel;
+import com.threerings.orth.room.data.FurniData;
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
+public class FurniUpdate extends SceneUpdate
 {
-    /** The furni being operated on by this update. */
+// GENERATED CLASSDECL END
+// GENERATED STREAMING START
     public var data :FurniData;
+
+    override public function readObject (ins :ObjectInputStream) :void
+    {
+        super.readObject(ins);
+        data = ins.readObject(FurniData);
+    }
+
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+        out.writeObject(data);
+    }
+
+// GENERATED STREAMING END
 
     // from SceneUpdate
     override public function apply (model :SceneModel) :void
@@ -24,23 +38,12 @@ public /*abstract*/ class FurniUpdate extends SceneUpdate
         doUpdate((model as OrthSceneModel));
     }
 
-    // documentation inherited
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        super.writeObject(out);
-        out.writeObject(data);
-    }
-
-    // documentation inherited
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-        data = FurniData(ins.readObject());
-    }
-
     protected /*abstract*/ function doUpdate (model :OrthSceneModel) :void
     {
         throw new Error("abstract");
     }
+
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END

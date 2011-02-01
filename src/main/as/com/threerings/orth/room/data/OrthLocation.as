@@ -1,33 +1,45 @@
+// GENERATED PREAMBLE START
 //
-// $Id: OrthLocation.as 15889 2009-04-07 21:37:33Z mdb $
+// $Id$
 
 package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.Streamable;
-
 import com.threerings.whirled.spot.data.Location;
-
-/**
- * Body location and orientation (left hand coordinates, with origin at left, bottom, near walls).
- * This class is equivalent to its Java class except that the Java superclass has been
- * incorporated.
- */
-public class OrthLocation
-    implements Location // Location extends Cloneable, Streamable, Hashable
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
+public class OrthLocation implements Location
 {
-    /** The body's x position (interpreted by the display system). */
+// GENERATED CLASSDECL END
+// GENERATED STREAMING START
     public var x :Number;
 
-    /** The body's y position (interpreted by the display system). */
     public var y :Number;
 
-    /** The body's z position (interpreted by the display system). */
     public var z :Number;
 
-    /** The body's orientation (interpreted by the display system). */
     public var orient :int;
+
+    public function readObject (ins :ObjectInputStream) :void
+    {
+        x = ins.readFloat();
+        y = ins.readFloat();
+        z = ins.readFloat();
+        orient = ins.readShort();
+    }
+
+    public function writeObject (out :ObjectOutputStream) :void
+    {
+        out.writeFloat(x);
+        out.writeFloat(y);
+        out.writeFloat(z);
+        out.writeShort(orient);
+    }
+
+// GENERATED STREAMING END
+
 
     public function OrthLocation (x :Number = 0, y :Number = 0, z :Number = 0, orient :int = 0)
     {
@@ -90,24 +102,6 @@ public class OrthLocation
         return l;
     }
 
-    // from interface Streamable
-    public function writeObject (out :ObjectOutputStream) :void
-    {
-        out.writeFloat(x);
-        out.writeFloat(y);
-        out.writeFloat(z);
-        out.writeShort(orient);
-    }
-
-    // from interface Streamable
-    public function readObject (ins :ObjectInputStream) :void
-    {
-        x = ins.readFloat();
-        y = ins.readFloat();
-        z = ins.readFloat();
-        orient = ins.readShort();
-    }
-
     // from interface Hashable
     public function equals (other :Object) :Boolean
     {
@@ -136,5 +130,8 @@ public class OrthLocation
     {
         return "[OrthLocation(" + x + ", " + y + ", " + z + ") at " + orient + " degrees]";
     }
+
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END

@@ -1,21 +1,21 @@
+// GENERATED PREAMBLE START
 //
-// $Id: PlayerInfo.as 19627 2010-11-24 16:02:41Z zell $
+// $Id$
 
 package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
+import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.party.data.PartyOccupantInfo;
-import com.threerings.orth.room.data.ActorInfo;
-
 import com.threerings.util.Joiner;
-
-/**
- * Contains published information about a player in a scene.
- */
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
 public class SocializerInfo extends ActorInfo
-    implements PartyOccupantInfo
 {
+// GENERATED CLASSDECL END
+
     /**
      * Get the player id for this user, or 0 if they're a guest.
      */
@@ -65,15 +65,6 @@ public class SocializerInfo extends ActorInfo
         return that;
     }
 
-    // from ActorInfo
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-        _scale = ins.readFloat();
-        _partyId = ins.readInt();
-        _away = ins.readBoolean();
-    }
-
     /** @inheritDoc */
     // from SimpleStreamableObject
     override protected function toStringJoiner (j :Joiner): void
@@ -82,8 +73,28 @@ public class SocializerInfo extends ActorInfo
         j.add("scale", _scale, "partyId", _partyId, "away", _away);
     }
 
+// GENERATED STREAMING START
+    override public function readObject (ins :ObjectInputStream) :void
+    {
+        super.readObject(ins);
+        _scale = ins.readFloat();
+        _partyId = ins.readInt();
+        _away = ins.readBoolean();
+    }
+
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+        out.writeFloat(_scale);
+        out.writeInt(_partyId);
+        out.writeBoolean(_away);
+    }
+
     protected var _scale :Number;
     protected var _partyId :int;
     protected var _away :Boolean;
+// GENERATED STREAMING END
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END

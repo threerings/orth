@@ -1,20 +1,23 @@
+// GENERATED PREAMBLE START
 //
 // $Id$
 
 package com.threerings.orth.room.data {
 
-import flash.utils.ByteArray;
-
 import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
+import com.threerings.presents.dobj.NamedEvent;
+import flash.utils.ByteArray;
 import com.threerings.util.Joiner;
 import com.threerings.util.Log;
-
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.dobj.NamedEvent;
-
+import com.threerings.orth.room.data.EntityIdent;
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
 public class MemoryChangedEvent extends NamedEvent
 {
+// GENERATED CLASSDECL END
     /** Suitable for unserialization. */
     public function MemoryChangedEvent ()
     {
@@ -51,21 +54,27 @@ public class MemoryChangedEvent extends NamedEvent
         j.add("ident", _ident, "key", _key, "value", _value);
     }
 
+// GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        _ident = EntityIdent(ins.readObject());
-        _key = (ins.readField(String) as String);
-        _value = (ins.readField(ByteArray) as ByteArray);
+        _ident = ins.readObject(EntityIdent);
+        _key = ins.readField(String);
+        _value = ins.readField(ByteArray);
     }
 
-    /** The item to which this change applies. */
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+        out.writeObject(_ident);
+        out.writeField(_key);
+        out.writeField(_value);
+    }
+
     protected var _ident :EntityIdent;
-
-    /** The key that we're changing. */
     protected var _key :String;
-
-    /** The new value, or null to indicate removal. */
     protected var _value :ByteArray;
+// GENERATED STREAMING END
+// GENERATED CLASSFINISH START
 }
 }

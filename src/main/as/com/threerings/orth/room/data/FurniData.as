@@ -1,57 +1,86 @@
+// GENERATED PREAMBLE START
 //
-// $Id: ActorInfo.java 16914 2009-05-27 05:54:19Z mdb $
+// $Id$
 
 package com.threerings.orth.room.data {
+
+import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
+import com.threerings.io.SimpleStreamableObject;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.util.ClassUtil;
 import com.threerings.util.Cloneable;
 import com.threerings.util.Hashable;
 import com.threerings.util.Util;
-
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
-import com.threerings.io.SimpleStreamableObject;
-
 import com.threerings.presents.dobj.DSet_Entry;
-
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.FurniAction;
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
 public class FurniData extends SimpleStreamableObject
-    implements Cloneable, Hashable, DSet_Entry
 {
-    /** The id of this piece of furni. */
+// GENERATED CLASSDECL END
+// GENERATED STREAMING START
     public var id :int;
 
-    /** Identifies the item that was used to create this. */
     public var item :EntityIdent;
 
-    /** Info about the media that represents this piece of furni. */
     public var media :MediaDesc;
 
-    /** The location in the scene. */
     public var loc :OrthLocation;
 
-    /** Layout information, used for perspectivization, etc. */
     public var layoutInfo :int;
 
-    /** A scale factor in the X direction. */
-    public var scaleX :Number = 1.0;
+    public var scaleX :Number;
 
-    /** A scale factor in the Y direction. */
-    public var scaleY :Number = 1.0;
+    public var scaleY :Number;
 
-    /** Rotation angle in degrees. */
-    public var rotation :Number = 0.0;
+    public var rotation :Number;
 
-    /** The x location of this furniture's hot spot. */
     public var hotSpotX :int;
 
-    /** The y location of this furniture's hot spot. */
     public var hotSpotY :int;
 
-    /** The type of action, determines how to use actionData. */
     public var actionType :FurniAction;
 
-    /** The action, interpreted using actionType. */
     public var actionData :String;
+
+    override public function readObject (ins :ObjectInputStream) :void
+    {
+        super.readObject(ins);
+        id = ins.readShort();
+        item = ins.readObject(EntityIdent);
+        media = ins.readObject(MediaDesc);
+        loc = ins.readObject(OrthLocation);
+        layoutInfo = ins.readByte();
+        scaleX = ins.readFloat();
+        scaleY = ins.readFloat();
+        rotation = ins.readFloat();
+        hotSpotX = ins.readShort();
+        hotSpotY = ins.readShort();
+        actionType = ins.readObject(FurniAction);
+        actionData = ins.readField(String);
+    }
+
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+        out.writeShort(id);
+        out.writeObject(item);
+        out.writeObject(media);
+        out.writeObject(loc);
+        out.writeByte(layoutInfo);
+        out.writeFloat(scaleX);
+        out.writeFloat(scaleY);
+        out.writeFloat(rotation);
+        out.writeShort(hotSpotX);
+        out.writeShort(hotSpotY);
+        out.writeObject(actionType);
+        out.writeField(actionData);
+    }
+
+// GENERATED STREAMING END
 
     /**
      * Set whether or not this furni doesn't scale.
@@ -165,42 +194,6 @@ public class FurniData extends SimpleStreamableObject
             Util.equals(this.actionData, that.actionData);
     }
 
-    // from interface Streamable
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-        id = ins.readShort();
-        item = ins.readObject(EntityIdent);
-        media = ins.readObject(MediaDesc);
-        loc = ins.readObject(OrthLocation);
-        layoutInfo = ins.readByte();
-        scaleX = ins.readFloat();
-        scaleY = ins.readFloat();
-        rotation = ins.readFloat();
-        hotSpotX = ins.readShort();
-        hotSpotY = ins.readShort();
-        actionType = ins.readObject(FurniAction);
-        actionData = ins.readField(String);
-    }
-
-    // from interface Streamable
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        super.writeObject(out);
-        out.writeShort(id);
-        out.writeObject(item);
-        out.writeObject(media);
-        out.writeObject(loc);
-        out.writeByte(layoutInfo);
-        out.writeFloat(scaleX);
-        out.writeFloat(scaleY);
-        out.writeFloat(rotation);
-        out.writeShort(hotSpotX);
-        out.writeShort(hotSpotY);
-        out.writeObject(actionType);
-        out.writeField(actionData);
-    }
-
     /**
      * Set a layoutInfo flag on or off.
      */
@@ -223,5 +216,8 @@ public class FurniData extends SimpleStreamableObject
 
     /** layoutInfo bitmask flag constant. Indicates if the furni is non-scaling. */
     protected static const NOSCALE_FLAG :int = (1 << 0);
+
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END

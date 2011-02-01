@@ -1,22 +1,35 @@
+// GENERATED PREAMBLE START
 //
-// $Id: MsoyPortal.as 12486 2008-10-13 18:19:39Z jamie $
+// $Id$
 
 package com.threerings.orth.room.data {
 
-import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.ObjectInputStream;
-
+import com.threerings.io.ObjectOutputStream;
 import com.threerings.whirled.spot.data.Portal;
-
-/**
- * In Whirled, portals include the location in the destination scene at which to arrive rather than
- * requiring that portals be bound to another portal in the target room.
- */
+import com.threerings.orth.room.data.OrthLocation;
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
 public class OrthPortal extends Portal
 {
-    /** The location at which to arrive in the target scene. May be null in which case the body is
-     * placed at the scene's default entrance. */
+// GENERATED CLASSDECL END
+// GENERATED STREAMING START
     public var dest :OrthLocation;
+
+    override public function readObject (ins :ObjectInputStream) :void
+    {
+        super.readObject(ins);
+        dest = ins.readObject(OrthLocation);
+    }
+
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+        out.writeObject(dest);
+    }
+
+// GENERATED STREAMING END
+
 
     /**
      * Constructs a portal from the supplied furni data record.
@@ -56,18 +69,8 @@ public class OrthPortal extends Portal
         return p;
     }
 
-    // from interface Streamable
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-        dest = OrthLocation(ins.readObject());
-    }
 
-    // from interface Streamable
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        super.writeObject(out);
-        out.writeObject(dest);
-    }
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END
