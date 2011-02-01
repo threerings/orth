@@ -233,6 +233,4 @@ public class OrthSceneModel extends SceneModel
 // GENERATED CLASSFINISH START
 }
 }
-
-
-
+// GENERATED CLASSFINISH END
