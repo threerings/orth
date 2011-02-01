@@ -11,7 +11,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * A fully qualified item identifier (type and integer id).
  */
 public class SimpleEntityIdent
-    implements EntityIdent, IsSerializable
+    implements EntityIdent /*, IsSerializable */
 {
     public SimpleEntityIdent ()
     {

@@ -9,11 +9,10 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.util.ByteEnum;
 import com.threerings.util.ComparisonChain;
 import com.threerings.orth.room.data.EntityIdent;
-import com.google.gwt.user.client.rpc.IsSerializable;
 import com.threerings.orth.room.data.EntityIdent_EntityType;
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
-public class SimpleEntityIdent implements EntityIdent, IsSerializable
+public class SimpleEntityIdent implements EntityIdent
 {
 // GENERATED CLASSDECL END
 

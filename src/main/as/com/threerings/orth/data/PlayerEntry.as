@@ -9,11 +9,10 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.util.Hashable;
 import com.threerings.orth.data.OrthName;
 import com.threerings.presents.dobj.DSet_Entry;
-import com.google.gwt.user.client.rpc.IsSerializable;
 import com.threerings.orth.data.VizOrthName;
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
-public class PlayerEntry implements IsSerializable, DSet_Entry
+public class PlayerEntry implements DSet_Entry
 {
 // GENERATED CLASSDECL END
 
