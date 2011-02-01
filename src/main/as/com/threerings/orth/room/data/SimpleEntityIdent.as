@@ -100,3 +100,4 @@ public class SimpleEntityIdent implements EntityIdent, IsSerializable
 // GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END
