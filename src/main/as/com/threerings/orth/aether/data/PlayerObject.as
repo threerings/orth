@@ -12,9 +12,8 @@ import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.data.OrthName;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
-// GENERATED PREAMBLE END
-
 import com.threerings.orth.data.PlayerEntry;
+// GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
 public class PlayerObject extends ClientObject
