@@ -21,7 +21,7 @@ import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.notify.server.NotificationManager;
 
-import com.threerings.orth.party.server.PartyRegistry;
+// import com.threerings.orth.party.server.PartyRegistry;
 
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
