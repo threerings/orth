@@ -4,14 +4,18 @@
 package com.threerings.orth.party.data;
 
 import javax.annotation.Generated;
-import com.threerings.orth.data.OrthName;
+
+import com.threerings.util.ActionScript;
 import com.threerings.util.Name;
 
 import com.threerings.crowd.data.BodyObject;
 
+import com.threerings.orth.data.OrthName;
+
 /**
  * Contains information on a party member logged into the server.
  */
+@ActionScript(omit=true)
 public class PartierObject extends BodyObject
 {
     // AUTO-GENERATED: FIELDS START

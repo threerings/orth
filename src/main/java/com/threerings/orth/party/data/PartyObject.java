@@ -4,12 +4,16 @@
 package com.threerings.orth.party.data;
 
 import javax.annotation.Generated;
+
+import com.threerings.util.ActionScript;
+
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthName;
 
+@ActionScript(omit=true)
 public class PartyObject extends DObject
     implements /*SpeakObject,*/ Cloneable
 {
@@ -37,18 +41,6 @@ public class PartyObject extends DObject
     /** The field name of the <code>sceneId</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String SCENE_ID = "sceneId";
-
-    /** The field name of the <code>gameId</code> field. */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String GAME_ID = "gameId";
-
-    /** The field name of the <code>gameState</code> field. */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String GAME_STATE = "gameState";
-
-    /** The field name of the <code>gameOid</code> field. */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String GAME_OID = "gameOid";
 
     /** The field name of the <code>status</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
