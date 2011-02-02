@@ -40,7 +40,7 @@ public class OrthPeerNode extends PeerNode
                 MemberParty memParty = (MemberParty) event.getEntry();
 // ORTH TODO
 //                _partyReg.updateUserParty(
-                    memParty.memberId, memParty.partyId, (OrthNodeObject)nodeobj);
+//                    memParty.memberId, memParty.partyId, (OrthNodeObject)nodeobj);
             }
         }
 
