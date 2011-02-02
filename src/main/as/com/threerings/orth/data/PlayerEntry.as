@@ -7,9 +7,10 @@ package com.threerings.orth.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.util.Hashable;
+import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.data.OrthName;
 import com.threerings.presents.dobj.DSet_Entry;
-import com.threerings.orth.data.VizOrthName;
+
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
 public class PlayerEntry implements DSet_Entry
@@ -26,11 +27,11 @@ public class PlayerEntry implements DSet_Entry
 
 
 // GENERATED STREAMING START
-    public var name :VizOrthName;
+    public var name :VizPlayerName;
 
     public function readObject (ins :ObjectInputStream) :void
     {
-        name = ins.readObject(VizOrthName);
+        name = ins.readObject(VizPlayerName);
     }
 
     public function writeObject (out :ObjectOutputStream) :void

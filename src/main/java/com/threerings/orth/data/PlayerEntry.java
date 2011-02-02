@@ -7,18 +7,20 @@ import com.threerings.presents.dobj.DSet;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
+import com.threerings.orth.aether.data.VizPlayerName;
+
 public class PlayerEntry
     implements /* IsSerializable, */ DSet.Entry
 {
     /** The display name of the friend. */
-    public VizOrthName name;
+    public VizPlayerName name;
 
     /** Suitable for deserialization. */
     public PlayerEntry ()
     {
     }
 
-    public PlayerEntry (VizOrthName name)
+    public PlayerEntry (VizPlayerName name)
     {
         this.name = name;
     }

@@ -9,7 +9,7 @@ import com.threerings.util.Name;
 import com.whirled.ui.NameLabel;
 import com.whirled.ui.NameLabelCreator;
 
-import com.threerings.orth.data.VizOrthName;
+import com.threerings.orth.aether.data.VizPlayerName;
 
 public class OrthNameLabelCreator
     implements NameLabelCreator
@@ -22,12 +22,12 @@ public class OrthNameLabelCreator
     // from NameLabelCreator
     public function createLabel (name :Name, extrainfo: Object) :NameLabel
     {
-        if (!(name is VizOrthName)) {
-            Log.getLog(this).warning("OrthNameLabelCreator only supports VizOrthName");
+        if (!(name is VizPlayerName)) {
+            Log.getLog(this).warning("OrthNameLabelCreator only supports VizPlayerName");
             return null;
         }
 
-        return new LabelBox(name as VizOrthName, _forRoom);
+        return new LabelBox(name as VizPlayerName, _forRoom);
     }
 
     protected var _forRoom :Boolean;
@@ -54,9 +54,9 @@ import com.threerings.flex.FlexWrapper;
 
 import com.threerings.crowd.data.OccupantInfo;
 
+import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.MediaDescSize;
-import com.threerings.orth.data.VizOrthName;
 import com.threerings.orth.ui.MediaWrapper;
 import com.threerings.orth.ui.OrthNameLabel;
 
@@ -68,7 +68,7 @@ import com.threerings.orth.room.client.RoomObjectController;
 class LabelBox extends HBox
     implements NameLabel
 {
-    public function LabelBox (name :VizOrthName, forRoom :Boolean)
+    public function LabelBox (name :VizPlayerName, forRoom :Boolean)
     {
         _name = name;
         _forRoom = forRoom;
@@ -146,7 +146,7 @@ class LabelBox extends HBox
         }
     }
 
-    protected var _name :VizOrthName;
+    protected var _name :VizPlayerName;
     protected var _forRoom :Boolean;
     protected var _label :OrthNameLabel;
 }

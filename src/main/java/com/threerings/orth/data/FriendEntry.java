@@ -3,6 +3,8 @@
 
 package com.threerings.orth.data;
 
+import com.threerings.orth.aether.data.VizPlayerName;
+
 /**
  * Represents a friend connection.
  */
@@ -16,8 +18,8 @@ public class FriendEntry extends PlayerEntry
     {
     }
 
-    /** Mr. Constructor. */
-    public FriendEntry (VizOrthName name, String status)
+     /** Mr. Constructor. */
+    public FriendEntry (VizPlayerName name, String status)
     {
     	super(name);
         this.status = status;
