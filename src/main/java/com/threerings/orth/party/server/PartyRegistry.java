@@ -41,10 +41,9 @@ import com.threerings.crowd.server.PlaceManager;
 import com.threerings.crowd.server.PlaceRegistry;
 import com.threerings.whirled.data.ScenePlace;
 
-import com.threerings.orth.data.PlayerObject;
+import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.data.OrthUserObject;
 import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.server.MemberLocator;
 import com.threerings.orth.server.ServerConfig;
@@ -54,11 +53,6 @@ import com.threerings.orth.notify.data.PartyInviteNotification;
 
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
-
-import com.threerings.orth.admin.data.CostsConfigObject;
-import com.threerings.orth.admin.server.RuntimeConfig;
-
-import com.threerings.orth.game.server.PlayerLocator;
 
 import com.threerings.orth.party.client.PartyBoardService;
 import com.threerings.orth.party.data.PartyAuthName;
@@ -106,7 +100,7 @@ public class PartyRegistry
     /**
      * Return the size of the specified user's party, or 0 if they're not in a party.
      */
-    public int lookupPartyPopulation (OrthUserObject user)
+    public int lookupPartyPopulation (PlayerObject user)
     {
         PartySummary party = user.getParty();
         return (party == null) ? 0 : lookupPartyPopulation(party.id);
@@ -141,7 +135,7 @@ public class PartyRegistry
     /**
      * Called by a PartyPlaceManager when a user enters.
      */
-    public void userEnteringPlace (OrthUserObject userObj, PartyPlaceObject placeObj)
+    public void userEnteringPlace (PlayerObject userObj, PartyPlaceObject placeObj)
     {
         PartySummary summary = userObj.getParty();
         if ((summary != null) && !placeObj.getParties().containsKey(summary.id)) {
@@ -155,7 +149,7 @@ public class PartyRegistry
     /**
      * Called by a PartyPlaceManager when a user enters.
      */
-    public void userLeavingPlace (OrthUserObject userObj, PartyPlaceObject placeObj)
+    public void userLeavingPlace (PlayerObject userObj, PartyPlaceObject placeObj)
     {
         maybeRemovePartyFromPlace(userObj.getParty(), placeObj);
     }
@@ -167,8 +161,7 @@ public class PartyRegistry
      */
     public void updateUserParty (int memberId, int partyId, OrthNodeObject nodeObj)
     {
-        OrthUserObject memberObj = _memberLocator.lookupMember(memberId);
-        OrthUserObject playerObj = _playerLocator.lookupPlayer(memberId);
+        PlayerObject memberObj = _memberLocator.lookupMember(memberId);
         if (memberObj == null && playerObj == null) {
             return; // this node officially doesn't care
         }
@@ -207,14 +200,14 @@ public class PartyRegistry
      *
      * @throws InvocationException if the party cannot be joined for some reason.
      */
-    public void preJoinParty (OrthName name, int partyId, Rank rank)
+    public void preJoinParty (OrthName name, int partyId)
         throws InvocationException
     {
         PartyManager mgr = _parties.get(partyId);
         if (mgr == null) {
             throw new InvocationException(PartyCodes.E_NO_SUCH_PARTY);
         }
-        mgr.addPlayer(name, rank);
+        mgr.addPlayer(name);
     }
 
     // from PartyBoardProvider
@@ -381,7 +374,7 @@ public class PartyRegistry
     /**
      * Called when the member represented by the specified user object has joined or left a party.
      */
-    protected void updateUserParty (OrthUserObject userObj, PartySummary party)
+    protected void updateUserParty (PlayerObject userObj, PartySummary party)
     {
         // first update the user
         PartySummary oldSummary = userObj.getParty();
@@ -454,11 +447,6 @@ public class PartyRegistry
         _partyPlaces.remove(summary.id, placeObj);
     }
 
-    protected int getPartyCoinCost ()
-    {
-        return _runtime.getCoinCost(CostsConfigObject.START_PARTY);
-    }
-
     protected Map<Integer, PartyManager> _parties = Maps.newHashMap();
 
     protected Multimap<Integer,PartyPlaceObject> _partyPlaces = HashMultimap.create();
@@ -476,7 +464,5 @@ public class PartyRegistry
     @Inject protected OrthPeerManager _peerMgr;
     @Inject protected NotificationManager _notifyMan;
     @Inject protected PlaceRegistry _placeReg;
-    @Inject protected PlayerLocator _playerLocator;
     @Inject protected RootDObjectManager _omgr;
-    @Inject protected RuntimeConfig _runtime;
 }

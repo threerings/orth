@@ -3,9 +3,9 @@
 
 package com.threerings.orth.party.data;
 
-import com.threerings.orth.data.all.PlayerEntry;
+import com.threerings.orth.data.PlayerEntry;
+import com.threerings.orth.data.VizOrthName;
 
-import com.threerings.orth.data.OrthName;
 /**
  * Represents a fellow party-goer connection.
  */
@@ -23,7 +23,7 @@ public class PartyPeep extends PlayerEntry
     }
 
     /** Mr. Constructor. */
-    public PartyPeep (OrthName name, int joinOrder)
+    public PartyPeep (VizOrthName name, int joinOrder)
     {
     	super(name);
         this.joinOrder = joinOrder;

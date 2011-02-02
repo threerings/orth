@@ -7,7 +7,7 @@ import com.samskivert.util.RandomUtil;
 
 import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.orth.data.PlayerObject;
+import com.threerings.orth.aether.data.PlayerObject;
 
 /**
  * Contains general info about a party for the party board.
