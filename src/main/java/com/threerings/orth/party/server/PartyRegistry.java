@@ -322,7 +322,7 @@ public class PartyRegistry
         try {
             // set up the new PartyObject
             pobj = _omgr.registerObject(new PartyObject());
-            pobj.id = _peerMgr.getNextPartyId();
+            pobj.id = getNextPartyId();
             pobj.name = StringUtil.truncate(name, PartyCodes.MAX_NAME_LENGTH);
 
             // TODO: Hackily use the static default group icon until we figure out how best
@@ -447,11 +447,27 @@ public class PartyRegistry
         _partyPlaces.remove(summary.id, placeObj);
     }
 
+    /**
+     * Returns the next party id that may be assigned by this server.
+     * Only called from the PartyRegistry, does not need synchronization.
+     */
+    protected int getNextPartyId ()
+    {
+        if (_partyIdCounter >= Integer.MAX_VALUE / OrthPeerManager.MAX_NODES) {
+            log.warning("ZOMG! We plumb run out of id space", "partyId", _partyIdCounter);
+            _partyIdCounter = 0;
+        }
+        return (_peerMgr.getNodeId() + OrthPeerManager.MAX_NODES * ++_partyIdCounter);
+    }
+
     protected Map<Integer, PartyManager> _parties = Maps.newHashMap();
 
     protected Multimap<Integer,PartyPlaceObject> _partyPlaces = HashMultimap.create();
 
     protected static final int PARTIES_PER_BOARD = 10;
+
+    /** A counter used to assign party ids on this server. */
+    protected static int _partyIdCounter;
 
     /** Just a unique key. */
     protected static final Object PARTY_PURCHASE_KEY = new Object();
