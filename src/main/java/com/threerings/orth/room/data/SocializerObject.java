@@ -13,16 +13,19 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.util.Name;
 
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.world.data.OrthPlayerBody;
 import com.threerings.orth.entity.data.Avatar;
 import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthSceneModel;
+import com.threerings.orth.room.data.RoomPlace;
 import com.threerings.orth.room.data.SocializerInfo;
 
 /**
  * Represents an Orth player's in-room incarnation.
  */
 public class SocializerObject extends ActorObject
+    implements OrthPlayerBody<SocializerObject>
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>name</code> field. */
@@ -88,6 +91,18 @@ public class SocializerObject extends ActorObject
         }
 
         return hasRights;
+    }
+
+    // from OrthPlayerBody
+    public SocializerObject self ()
+    {
+        return this;
+    }
+
+    // from OrthPlayerBody
+    public RoomPlace getPlace ()
+    {
+        return (RoomPlace) location;
     }
 
     @Override // from BodyObject

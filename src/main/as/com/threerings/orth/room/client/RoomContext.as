@@ -20,6 +20,7 @@ import com.threerings.whirled.util.WhirledContext;
 import com.threerings.orth.client.TopPanel;
 
 import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.world.data.OrthPlayerBody;
 
 import flash.display.DisplayObject;
 
@@ -95,15 +96,15 @@ public class RoomContext
     }
 
     // from WorldContext
-    public function getBodyObject () :BodyObject
+    public function getPlayerBody () :OrthPlayerBody
     {
-        return _client.getClientObject() as BodyObject;
+        return _client.getClientObject() as SocializerObject;
     }
 
     // from WorldContext
     public function getMyName () :OrthName
     {
-        var body :BodyObject = getBodyObject();
+        var body :OrthPlayerBody = getPlayerBody();
 
         return (body != null) ? SocializerObject(body).name : null;
     }

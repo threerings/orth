@@ -10,12 +10,16 @@ import com.threerings.orth.room.data.ActorObject;
 import org.osflash.signals.Signal;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.entity.data.Avatar;
+import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
+import com.threerings.orth.world.data.OrthPlace;
+import com.threerings.orth.world.data.OrthPlayerBody;
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
 public class SocializerObject extends ActorObject
+    implements OrthPlayerBody
 {
 // GENERATED CLASSDECL END
 
@@ -58,6 +62,18 @@ public class SocializerObject extends ActorObject
         new Signaller(this);
     }
 // GENERATED STREAMING END
+
+    // from OrthPlayerBody
+    public function self () :DObject
+    {
+        return this;
+    }
+
+    // from OrthPlayerBody
+    public function getPlace () :OrthPlace
+    {
+        return RoomPlace(location);
+    }
 
     public function getPlayerId () :int
     {
