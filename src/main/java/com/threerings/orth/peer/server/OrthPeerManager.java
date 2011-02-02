@@ -27,6 +27,9 @@ import com.threerings.orth.peer.data.OrthNodeObject;
  */
 public abstract class OrthPeerManager extends CrowdPeerManager
 {
+    /** The maximum number of nodes we can start up after a global reboot. */
+    public static final int MAX_NODES = 100;
+
     /** Our {@link PeerObserver}s. */
     public final ObserverList<PeerObserver> peerObs = ObserverList.newFastUnsafe();
 
@@ -45,12 +48,16 @@ public abstract class OrthPeerManager extends CrowdPeerManager
         super(cycle);
     }
 
+    /**
+     * Return a uniquely assigned integer for this node, smaller than {@link MAX_NODES}.
+     */
+    public abstract int getNodeId ();
+
     @Override // from CrowdPeerManager
     protected NodeObject createNodeObject ()
     {
         return (_onobj = new OrthNodeObject());
     }
-
 
     @Override // from CrowdPeerManager
     protected ClientInfo createClientInfo ()
@@ -64,6 +71,12 @@ public abstract class OrthPeerManager extends CrowdPeerManager
         super.initClientInfo(client, info);
 
         loggedOn((OrthClientInfo) info);
+    }
+
+    @Override // from PeerManager
+    protected Class<? extends PeerNode> getPeerNodeClass ()
+    {
+        return OrthPeerNode.class;
     }
 
     @Override // from PeerManager
