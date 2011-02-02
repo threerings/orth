@@ -28,6 +28,15 @@ public class VizPlayerName extends PlayerName
     }
 
     /**
+     * Returns a guaranteed plain {@link PlayerName} variant of this name.
+     */
+    @Override
+    public PlayerName toPlayerName ()
+    {
+        return new PlayerName(_name, _id);
+    }
+
+    /**
      * Returns this player's photo.
      */
     public MediaDesc getPhoto ()

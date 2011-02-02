@@ -19,4 +19,13 @@ public class PlayerName extends OrthName
     {
         super(displayName, playerId);
     }
+
+    /**
+     * Returns a guaranteed plain {@link PlayerName} variant of this name.
+     */
+    public PlayerName toPlayerName ()
+    {
+        return this;
+    }
+
 }
