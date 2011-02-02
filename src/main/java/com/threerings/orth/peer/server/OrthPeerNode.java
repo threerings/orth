@@ -38,7 +38,8 @@ public class OrthPeerNode extends PeerNode
 
             if (OrthNodeObject.MEMBER_PARTIES.equals(name)) {
                 MemberParty memParty = (MemberParty) event.getEntry();
-                _partyReg.updateUserParty(
+// ORTH TODO
+//                _partyReg.updateUserParty(
                     memParty.memberId, memParty.partyId, (OrthNodeObject)nodeobj);
             }
         }
@@ -49,12 +50,14 @@ public class OrthPeerNode extends PeerNode
 
             if (OrthNodeObject.MEMBER_PARTIES.equals(name)) {
                 MemberParty memParty = (MemberParty) event.getEntry();
-                _partyReg.updateUserParty(
-                    memParty.memberId, memParty.partyId, (OrthNodeObject)nodeobj);
+// ORTH TODO
+//                _partyReg.updateUserParty(
+//                    memParty.memberId, memParty.partyId, (OrthNodeObject)nodeobj);
 
             } else if (OrthNodeObject.PARTY_INFOS.equals(name)) {
-                _partyReg.partyInfoChanged(
-                    (PartyInfo)event.getOldEntry(), (PartyInfo)event.getEntry());
+// ORTH TODO
+//                _partyReg.partyInfoChanged(
+//                    (PartyInfo)event.getOldEntry(), (PartyInfo)event.getEntry());
             }
         }
 
@@ -63,11 +66,12 @@ public class OrthPeerNode extends PeerNode
             String name = event.getName();
 
             if (OrthNodeObject.MEMBER_PARTIES.equals(name)) {
-                _partyReg.updateUserParty((Integer)event.getKey(), 0, (OrthNodeObject)nodeobj);
+// ORTH TODO
+//                _partyReg.updateUserParty((Integer)event.getKey(), 0, (OrthNodeObject)nodeobj);
             }
         }
     } // END: class OrthNodeObjectListener
 
     // our dependencies
-    @Inject protected PartyRegistry _partyReg;
+//    @Inject protected PartyRegistry _partyReg;
 }
