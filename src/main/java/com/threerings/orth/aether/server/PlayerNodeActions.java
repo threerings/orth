@@ -1,13 +1,13 @@
 //
 // $Id: $
 
-package com.threerings.orth.server;
+package com.threerings.orth.aether.server;
 
 import com.google.inject.Inject;
 
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerManager;
-import com.threerings.world.data.WorldCodes;
+import com.threerings.orth.world.data.WorldCodes;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
