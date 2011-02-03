@@ -4,6 +4,7 @@
 package com.threerings.orth.world.client {
 
 import com.threerings.crowd.util.CrowdContext;
+
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.world.data.OrthPlayerBody;
 

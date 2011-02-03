@@ -3,8 +3,10 @@
 package com.threerings.orth.world.data {
 
 import com.threerings.io.TypedArray;
-import com.threerings.orth.world.client.WorldService_WorldMoveListener;
+
 import com.threerings.presents.data.InvocationMarshaller_ListenerMarshaller;
+
+import com.threerings.orth.world.client.WorldService_WorldMoveListener;
 
 /**
  * Marshalls instances of the WorldService_WorldMoveMarshaller interface.

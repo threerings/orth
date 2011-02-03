@@ -4,6 +4,7 @@
 package com.threerings.orth.world.client {
 
 import com.threerings.io.TypedArray;
+
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.BasicDirector;
@@ -11,10 +12,9 @@ import com.threerings.presents.client.Client;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.world.data.OrthPlace;
-
 import com.threerings.orth.room.data.OrthRoomConfig;
 import com.threerings.orth.room.data.PetMarshaller;
+import com.threerings.orth.world.data.OrthPlace;
 
 /**
  * Handles moving around in the virtual world.

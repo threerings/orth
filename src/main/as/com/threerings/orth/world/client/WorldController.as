@@ -5,75 +5,52 @@ package com.threerings.orth.world.client {
 
 import flash.display.DisplayObject;
 import flash.display.Stage;
-import flash.display.StageDisplayState;
 import flash.events.Event;
 import flash.events.IEventDispatcher;
 import flash.events.KeyboardEvent;
-import flash.events.TextEvent;
 import flash.events.TimerEvent;
-import flash.geom.Point;
-
 import flash.external.ExternalInterface;
+import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.ui.Keyboard;
 import flash.utils.Timer;
 import flash.utils.getTimer;
 
+import flashx.funk.ioc.inject;
+
 import mx.controls.Button;
 import mx.controls.Menu;
 import mx.core.IUITextField;
 import mx.events.MenuEvent;
-import mx.styles.StyleManager;
-
-import flashx.funk.ioc.inject;
-
-import com.threerings.util.ArrayUtil;
-import com.threerings.util.CommandEvent;
-import com.threerings.util.Controller;
-import com.threerings.util.DelayUtil;
-import com.threerings.util.Log;
-import com.threerings.util.MessageBundle;
-import com.threerings.util.Name;
-import com.threerings.util.NamedValueEvent;
-import com.threerings.util.NetUtil;
-import com.threerings.util.StringUtil;
-import com.threerings.util.ValueEvent;
-import com.threerings.util.Util;
-
-import com.threerings.presents.client.Client;
-import com.threerings.presents.client.ClientEvent;
-import com.threerings.presents.client.ClientObserver;
-
-import com.threerings.presents.net.Credentials;
-
-import com.threerings.crowd.client.LocationAdapter;
-import com.threerings.crowd.client.LocationDirector;
-import com.threerings.crowd.client.PlaceView;
-
-import com.threerings.crowd.data.PlaceObject;
-
-import com.threerings.media.AudioPlayer;
-import com.threerings.media.MediaPlayerCodes;
-import com.threerings.media.Mp3AudioPlayer;
-
-import com.threerings.flex.CommandMenu;
-
-import com.threerings.whirled.client.SceneDirector;
-import com.threerings.whirled.data.Scene;
-
-import com.threerings.flex.ChatControl;
-import com.threerings.flex.CommandButton;
 
 import com.threerings.crowd.chat.client.ChatCantStealFocus;
 import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.client.BodyService;
+import com.threerings.crowd.client.LocationAdapter;
+import com.threerings.crowd.client.LocationDirector;
+import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.CrowdCodes;
+import com.threerings.crowd.data.PlaceObject;
+import com.threerings.flex.ChatControl;
+import com.threerings.flex.CommandButton;
+import com.threerings.flex.CommandMenu;
+import com.threerings.whirled.client.SceneDirector;
+import com.threerings.whirled.data.Scene;
+
+import com.threerings.util.ArrayUtil;
+import com.threerings.util.Controller;
+import com.threerings.util.Log;
+import com.threerings.util.Name;
+import com.threerings.util.Util;
+
+import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ClientEvent;
+import com.threerings.presents.client.ClientObserver;
+import com.threerings.presents.net.Credentials;
 
 import com.threerings.orth.aether.data.PlayerObject;
-
-import com.threerings.orth.client.AboutDialog;
 import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
@@ -81,28 +58,17 @@ import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.TopPanel;
-
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.MediaDescSize;
-import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
-
 import com.threerings.orth.room.client.DisconnectedPanel;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomObjectController;
-import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.RoomView;
-
-import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.data.OrthSceneModel;
 import com.threerings.orth.room.data.PetName;
-import com.threerings.orth.room.data.SocializerObject;
-
 import com.threerings.orth.ui.MediaWrapper;
-
 import com.threerings.orth.world.client.BootablePlaceController;
 import com.threerings.orth.world.data.WorldCredentials;
 

@@ -7,6 +7,7 @@ package com.threerings.orth.world.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
+
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START

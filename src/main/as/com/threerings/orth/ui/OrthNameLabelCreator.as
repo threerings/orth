@@ -3,11 +3,11 @@
 
 package com.threerings.orth.ui {
 
-import com.threerings.util.Log;
-import com.threerings.util.Name;
-
 import com.whirled.ui.NameLabel;
 import com.whirled.ui.NameLabelCreator;
+
+import com.threerings.util.Log;
+import com.threerings.util.Name;
 
 import com.threerings.orth.aether.data.VizPlayerName;
 
@@ -36,34 +36,27 @@ public class OrthNameLabelCreator
 
 import flash.events.MouseEvent;
 
-import flash.text.TextFieldAutoSize;
-
-import mx.containers.HBox;
-
-import mx.core.ScrollPolicy;
-
 import flashx.funk.ioc.inject;
-
-import com.threerings.util.Log;
 
 import com.whirled.ui.NameLabel;
 import com.whirled.ui.PlayerList;
 
+import mx.containers.HBox;
+import mx.core.ScrollPolicy;
+
+import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.flex.CommandMenu;
 import com.threerings.flex.FlexWrapper;
 
-import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.util.Log;
 
 import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.MediaDescSize;
+import com.threerings.orth.room.client.RoomObjectController;
 import com.threerings.orth.ui.MediaWrapper;
 import com.threerings.orth.ui.OrthNameLabel;
-
 import com.threerings.orth.world.client.WorldController;
-
-import com.threerings.orth.room.client.RoomObjectView;
-import com.threerings.orth.room.client.RoomObjectController;
 
 class LabelBox extends HBox
     implements NameLabel

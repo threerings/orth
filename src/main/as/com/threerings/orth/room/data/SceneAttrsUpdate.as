@@ -3,11 +3,13 @@
 
 package com.threerings.orth.room.data {
 
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
-import com.threerings.orth.entity.data.Decor;
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.data.SceneUpdate;
+
+import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
+
+import com.threerings.orth.entity.data.Decor;
 
 /**
  * Encodes a scene update that updates the attributes in the MsoySceneModel.

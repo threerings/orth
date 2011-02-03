@@ -6,10 +6,13 @@ package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.orth.room.data.ActorInfo;
+
+import com.threerings.util.Joiner;
+
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.party.data.PartyOccupantInfo;
-import com.threerings.util.Joiner;
+import com.threerings.orth.room.data.ActorInfo;
+
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
 public class SocializerInfo extends ActorInfo

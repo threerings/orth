@@ -2,10 +2,10 @@
 // $Id$
 package com.threerings.orth.world.data {
 
+import com.threerings.presents.data.InvocationMarshaller;
+
 import com.threerings.orth.world.client.WorldService;
 import com.threerings.orth.world.client.WorldService_WorldMoveListener;
-import com.threerings.presents.client.Client;
-import com.threerings.presents.data.InvocationMarshaller;
 
 /**
  * Provides the implementation of the <code>WorldService</code> interface

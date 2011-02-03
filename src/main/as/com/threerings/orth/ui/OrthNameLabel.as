@@ -3,20 +3,15 @@
 
 package com.threerings.orth.ui {
 
-import flash.display.DisplayObject;
 import flash.display.Sprite;
-
-import flash.filters.GlowFilter;
-
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 
-import com.threerings.orth.room.data.SocializerInfo;
-import com.threerings.text.TextFieldUtil;
-import com.threerings.util.Log;
-
 import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.text.TextFieldUtil;
+
+import com.threerings.orth.room.data.SocializerInfo;
 
 public class OrthNameLabel extends Sprite
 {
