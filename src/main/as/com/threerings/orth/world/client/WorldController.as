@@ -114,9 +114,6 @@ import com.threerings.orth.world.data.WorldCredentials;
 public class WorldController extends Controller
     implements ClientObserver
 {
-    /** Command to move back to the previous location. */
-    public static const MOVE_BACK :String = "MoveBack";
-
     /** Command to issue to toggle the chat display. */
     public static const TOGGLE_CHAT_HIDE :String = "ToggleChatHide";
 
@@ -308,9 +305,6 @@ public class WorldController extends Controller
         var menuData :Array = [];
         // add standard items
         populateGoMenu(menuData);
-        // on the header, add the back link
-        menuData.push({ label: Msgs.GENERAL.get("b.back"), callback: handleMoveBack,
-            enabled: canMoveBack() });
 
         popControlBarMenu(menuData, trigger);
     }
@@ -325,41 +319,6 @@ public class WorldController extends Controller
         var memName :OrthName = new OrthName(name, memberId);
         addMemberMenuItems(memName, menuItems);
         CommandMenu.createMenu(menuItems, _topPanel).popUpAtMouse();
-    }
-
-    /**
-     * Handles the MOVE_BACK command.
-     */
-    public function handleMoveBack (closeInsteadOfHome :Boolean = false) :void
-    {
-        // go to the first recent scene that's not the one we're in
-        const curSceneId :int = getCurrentSceneId();
-        for each (var entry :Object in _recentScenes) {
-            if (entry.id != curSceneId) {
-                handleGoScene(entry.id);
-                return;
-            }
-        }
-    }
-
-    /**
-     * Can we move back?
-     */
-    public function canMoveBack () :Boolean
-    {
-        // you can only NOT move back if you are there are no other scenes in your history
-        const curSceneId :int = getCurrentSceneId();
-        var memObj :SocializerObject = _rctx.getSocializerObject();
-        if (memObj == null) {
-            return false;
-        }
-        for each (var entry :Object in _recentScenes) {
-            if (entry.id != curSceneId) {
-                return true;
-            }
-        }
-        return false;
-
     }
 
     /**
@@ -747,11 +706,6 @@ public class WorldController extends Controller
      */
     protected function locationDidChange (place :PlaceObject) :void
     {
-        // if we moved to a scene, set things up thusly
-        var scene :Scene = _sceneDir.getScene();
-        if (scene != null) {
-            addRecentScene(scene);
-        }
     }
 
     protected function handlePollIdleMouse (event :TimerEvent) :void
@@ -839,36 +793,6 @@ public class WorldController extends Controller
             friends.push({ label: Msgs.GENERAL.get("m.no_friends"), enabled: false });
         }
         menuData.push({ label: Msgs.GENERAL.get("l.visit_friends"), children: friends });
-
-        // recent scenes
-        var sceneSubmenu :Array = [];
-        for each (var entry :Object in _recentScenes) {
-            sceneSubmenu.unshift({ label: StringUtil.truncate(entry.name, 50, "..."),
-                command: GO_SCENE, arg: entry.id, enabled: (entry.id != curSceneId) });
-        }
-        if (sceneSubmenu.length == 0) {
-            sceneSubmenu.push({ label: Msgs.GENERAL.get("m.none"), enabled: false });
-        }
-        menuData.push({ label: Msgs.WORLD.get("l.recent_scenes"), children: sceneSubmenu });
-    }
-
-    protected function addRecentScene (scene :Scene) :void
-    {
-        const id :int = scene.getId();
-
-        // first, see if it's already in the list of recent scenes, and remove it if so
-        for (var ii :int = _recentScenes.length - 1; ii >= 0; ii--) {
-            if (_recentScenes[ii].id == id) {
-                _recentScenes.splice(ii, 1);
-                break;
-            }
-        }
-
-        // now add it to the beginning of the list
-        _recentScenes.unshift({ name: scene.getName(), id: id });
-
-        // and make sure we're not tracking too many
-        _recentScenes.length = Math.min(_recentScenes.length, MAX_RECENT_SCENES);
     }
 
     /**
@@ -920,9 +844,6 @@ public class WorldController extends Controller
     /** A scene to which to go after we logon. */
     protected var _postLogonScene :int;
 
-    /** Recently visited scenes, ordered from most-recent to least-recent */
-    protected var _recentScenes :Array = [];
-
     /** A special logoff message to use when we disconnect. */
     protected var _logoffMessage :String;
 
@@ -945,9 +866,6 @@ public class WorldController extends Controller
 
     /** The duration after which we log off idle guests. */
     protected static const MAX_GUEST_IDLE_TIME :int = 60*60*1000;
-
-    /** The maximum number of recent scenes we track. */
-    protected static const MAX_RECENT_SCENES :int = 11;
 
     private static const log :Log = Log.getLog(WorldController);
 }
