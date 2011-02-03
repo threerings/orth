@@ -13,6 +13,7 @@ import com.threerings.orth.data.OrthName;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 import com.threerings.orth.data.PlayerEntry;
+import com.threerings.orth.world.data.OrthPlace;
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
@@ -23,6 +24,8 @@ public class PlayerObject extends ClientObject
 // GENERATED STREAMING START
     public var playerName :VizPlayerName;
 
+    public var location :OrthPlace;
+
     public var following :OrthName;
 
     public var followers :DSet;
@@ -32,6 +35,7 @@ public class PlayerObject extends ClientObject
     public var partyId :int;
 
     public var playerNameChanged :Signal = new Signal(VizPlayerName, VizPlayerName);
+    public var locationChanged :Signal = new Signal(OrthPlace, OrthPlace);
     public var followingChanged :Signal = new Signal(OrthName, OrthName);
     public var followersChanged :Signal = new Signal(DSet, DSet);
     public var followersEntryAdded :Signal = new Signal(DSet_Entry);
@@ -45,6 +49,8 @@ public class PlayerObject extends ClientObject
 
     public static const PLAYER_NAME :String = "playerName";
 
+    public static const LOCATION :String = "location";
+
     public static const FOLLOWING :String = "following";
 
     public static const FOLLOWERS :String = "followers";
@@ -57,6 +63,7 @@ public class PlayerObject extends ClientObject
     {
         super.readObject(ins);
         playerName = ins.readObject(VizPlayerName);
+        location = ins.readObject(OrthPlace);
         following = ins.readObject(OrthName);
         followers = ins.readObject(DSet);
         friends = ins.readObject(DSet);
@@ -134,6 +141,9 @@ class Signaller
         switch (event.getName()) {
             case "playerName":
                 signal = _obj.playerNameChanged;
+                break;
+            case "location":
+                signal = _obj.locationChanged;
                 break;
             case "following":
                 signal = _obj.followingChanged;
