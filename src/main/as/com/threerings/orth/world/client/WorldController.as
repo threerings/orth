@@ -96,7 +96,6 @@ import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.RoomView;
 
 import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.orth.room.data.OrthPlaceInfo;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
 import com.threerings.orth.room.data.PetName;
@@ -168,20 +167,6 @@ public class WorldController extends Controller
         setControlledPanel(_topPanel.systemManager);
         _stage.addEventListener(KeyboardEvent.KEY_DOWN, handleStageKeyDown, false, int.MAX_VALUE);
         _stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown, false, int.MAX_VALUE);
-    }
-
-    /**
-     * Returns information about the place or places the user is currently in.
-     */
-    public function getPlaceInfo () :OrthPlaceInfo
-    {
-        var plinfo :OrthPlaceInfo = new OrthPlaceInfo();
-
-        var scene :Scene = _sceneDir.getScene();
-        plinfo.sceneId = (scene == null) ? 0 : scene.getId();
-        plinfo.sceneName = (scene == null) ? null : scene.getName();
-
-        return plinfo;
     }
 
     /**
@@ -929,7 +914,6 @@ public class WorldController extends Controller
     protected const _sceneDir :SceneDirector = inject(SceneDirector);
 
     // ORTH TODO
-    // protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
     // protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
     // protected const _partyDir :OrthPartyDirector = inject(OrthPartyDirector);
 
