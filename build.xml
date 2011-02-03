@@ -185,6 +185,7 @@
         <exclude name="**/InvocationService.java"/>
         <exclude name="**/peer/**"/>
         <exclude name="**/admin/**"/>
+        <exclude name="**/party/**"/>
       </fileset>
       <providerless service="ChatService"/>
       <providerless service="SimulatorService"/>
