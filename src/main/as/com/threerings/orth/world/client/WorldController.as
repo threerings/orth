@@ -457,15 +457,6 @@ public class WorldController extends Controller
         popControlBarMenu(menuData, trigger);
     }
 
-    /**
-     * Returns the current sceneId, or 0 if none.
-     */
-    public function getCurrentSceneId () :int
-    {
-        const scene :Scene = _sceneDir.getScene();
-        return (scene == null) ? 0 : scene.getId();
-    }
-
     public function addMemberMenuItems (
         name :OrthName, menuItems :Array, addWorldItems :Boolean = true) :void
     {
@@ -781,7 +772,6 @@ public class WorldController extends Controller
     protected function populateGoMenu (menuData :Array) :void
     {
         const me :PlayerObject = _octx.getPlayerObject();
-        const curSceneId :int = getCurrentSceneId();
 
         // our friends
         var friends :Array = [];
