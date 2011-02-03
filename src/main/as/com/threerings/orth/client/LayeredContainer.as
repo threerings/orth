@@ -5,9 +5,7 @@ package com.threerings.orth.client {
 
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
-
 import flash.geom.Matrix;
-
 import flash.utils.Dictionary;
 
 import mx.core.Container;

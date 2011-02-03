@@ -6,10 +6,13 @@ package com.threerings.orth.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.util.Name;
+
 import com.threerings.util.Comparators;
 import com.threerings.util.Integer;
+import com.threerings.util.Name;
+
 import com.threerings.presents.dobj.DSet_Entry;
+
 // GENERATED PREAMBLE END
 
 /**

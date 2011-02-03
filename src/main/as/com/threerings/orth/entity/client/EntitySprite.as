@@ -17,13 +17,12 @@ import flash.geom.Rectangle;
 
 import flashx.funk.ioc.inject;
 
+import com.threerings.display.FilterUtil;
 import com.threerings.media.MediaContainer;
 
 import com.threerings.util.Log;
 import com.threerings.util.StringUtil;
 import com.threerings.util.ValueEvent;
-
-import com.threerings.display.FilterUtil;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthResourceFactory;

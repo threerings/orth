@@ -2,12 +2,13 @@
 // $Id: SceneUpdateAction.as 18597 2009-11-05 21:10:56Z ray $
 
 package com.threerings.orth.room.client.updates {
-import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.data.SceneAttrsUpdate;
-import com.threerings.orth.room.client.RoomContext;
+import com.threerings.whirled.data.SceneUpdate;
+
 import com.threerings.util.Log;
 
-import com.threerings.whirled.data.SceneUpdate;
+import com.threerings.orth.room.client.RoomContext;
+import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.room.data.SceneAttrsUpdate;
 
 /**
  * Generates a command to update scene attributes.

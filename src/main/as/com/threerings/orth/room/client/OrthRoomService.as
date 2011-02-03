@@ -2,12 +2,14 @@
 // $Id$
 package com.threerings.orth.room.client {
 
-import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.presents.client.Client;
+import flash.utils.ByteArray;
+
+import com.threerings.whirled.spot.data.Location;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService_ResultListener;
-import com.threerings.whirled.spot.data.Location;
-import flash.utils.ByteArray;
+
+import com.threerings.orth.room.data.EntityIdent;
 
 /**
  * An ActionScript version of the Java OrthRoomService interface.

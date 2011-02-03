@@ -2,20 +2,18 @@
 // $Id: OrthScene.as 18599 2009-11-05 21:48:58Z jamie $
 
 package com.threerings.orth.room.data {
-import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.entity.data.Decor;
-
 import flash.errors.IllegalOperationError;
 
-import com.threerings.util.Iterator;
-import com.threerings.util.Cloneable;
-
 import com.threerings.crowd.data.PlaceConfig;
-
 import com.threerings.whirled.data.SceneImpl;
-
 import com.threerings.whirled.spot.data.Portal;
 import com.threerings.whirled.spot.data.SpotScene;
+
+import com.threerings.util.Cloneable;
+import com.threerings.util.Iterator;
+
+import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.entity.data.Decor;
 
 public class OrthScene extends SceneImpl
     implements SpotScene, Cloneable

@@ -4,15 +4,20 @@
 
 package com.threerings.orth.room.data {
 
+import flash.utils.ByteArray;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.presents.dobj.NamedEvent;
-import flash.utils.ByteArray;
+
 import com.threerings.util.Joiner;
 import com.threerings.util.Log;
+
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
+import com.threerings.presents.dobj.NamedEvent;
+
 import com.threerings.orth.room.data.EntityIdent;
+
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
 public class MemoryChangedEvent extends NamedEvent

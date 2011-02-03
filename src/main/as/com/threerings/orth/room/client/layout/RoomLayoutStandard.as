@@ -2,25 +2,24 @@
 // $Id: RoomLayoutStandard.as 17626 2009-07-21 21:43:56Z mdb $
 
 package com.threerings.orth.room.client.layout {
+import flash.display.DisplayObject;
+import flash.geom.Point;
+import flash.geom.Rectangle;
+
+import com.threerings.geom.Vector3;
+
+import com.threerings.util.Log;
+
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.data.Decor;
-import com.threerings.orth.room.data.OrthRoomCodes;
-
-import flash.display.DisplayObject;
-
-import flash.geom.Point;
-import flash.geom.Rectangle;
-
-import com.threerings.util.Log;
-
-import com.threerings.geom.Vector3;
 import com.threerings.orth.room.client.ClickLocation;
 import com.threerings.orth.room.client.RoomElement;
 import com.threerings.orth.room.client.RoomMetrics;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthRoomCodes;
 
 /**
  * This class factors out room layout math that converts between 3D room coordinate space

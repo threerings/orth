@@ -13,18 +13,15 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.display.FilterUtil;
+import com.threerings.media.MediaContainer;
+
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.Comparators;
 import com.threerings.util.ValueEvent;
 
-import com.threerings.display.FilterUtil;
-import com.threerings.media.MediaContainer;
-
-import com.threerings.crowd.data.OccupantInfo;
-
 import com.threerings.orth.chat.client.OccupantChatOverlay;
-import com.threerings.orth.client.OrthContext;
-import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.WalkAnimation;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.OrthLocation;

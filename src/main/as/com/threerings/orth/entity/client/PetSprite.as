@@ -5,10 +5,9 @@ package com.threerings.orth.entity.client {
 
 import com.threerings.util.CommandEvent;
 
-import com.threerings.orth.client.OrthContext;
-import com.threerings.orth.room.data.PetName;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.PetInfo;
+import com.threerings.orth.room.data.PetName;
 import com.threerings.orth.ui.OrthNameLabel;
 
 /**

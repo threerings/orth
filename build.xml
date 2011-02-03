@@ -14,7 +14,7 @@
   <property name="gwtjar.dir"   location="${deploy.dir}/gwt-jar"/>
 
   <!-- bring in our standard build support -->
-  <property name="ooo-build.vers" value="1.16"/>
+  <property name="ooo-build.vers" value="1.18"/>
   <ant antfile="bootstrap.xml"/>
   <import file="${user.home}/.m2/ant-support/${ooo-build.vers}/build-support.xml"/>
 
@@ -70,6 +70,7 @@
   </target>
 
   <target name="aslib" depends="mavendeps">
+      <asimports/>
       <compc4 srcdir="${asrc.dir}" libpath="${aslib.path}"
           dest="${deploy.dir}/${ant.project.name}lib.swc">
         <arg value="-compiler.library-path+=lib/tweener.swc"/>
@@ -169,6 +170,7 @@
       <fileset dir="${src.dir}" includes="**/*Object.java"
                excludes="com/threerings/orth/party/**/*.java"/>
     </genascriptstreamable>
+    <asimports/>
   </target>
 
   <!-- generates marshaller and dispatcher classes for all invocation service declarations -->
@@ -195,6 +197,7 @@
       <fileset dir="${src.dir}" includes="**/peer/**/*Service.java"/>
       <fileset dir="${src.dir}" includes="**/admin/**/*Service.java"/>
     </genservice>
+    <asimports/>
   </target>
 
   <!-- generates sender and decoder classes for all invocation receiver declarations -->
@@ -210,6 +213,7 @@
       <fileset dir="${src.dir}" includes="**/*Receiver.java"
         excludes="**/InvocationReceiver.java"/>
     </genreceiver>
+    <asimports/>
   </target>
 
   <target name="genstreamable" depends="preptools">
@@ -228,6 +232,7 @@
          <exclude name="com/threerings/orth/party/**/*.java"/>
        </fileset>
      </genascriptstreamable>
+     <asimports/>
   </target>
 
   <!-- adds readField and writeField methods to Stremable classes -->

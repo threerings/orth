@@ -2,16 +2,16 @@
 // $Id: DisconnectedPanel.as 19657 2010-11-29 04:46:27Z zell $
 
 package com.threerings.orth.room.client {
-import com.threerings.orth.client.Msgs;
-
 import flash.display.DisplayObjectContainer;
 import flash.filters.GlowFilter;
 
 import mx.containers.VBox;
-
 import mx.controls.Text;
 
+import com.threerings.crowd.client.PlaceView;
+import com.threerings.crowd.data.PlaceObject;
 import com.threerings.flex.CommandButton;
+
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.client.Client;
@@ -19,8 +19,7 @@ import com.threerings.presents.client.ClientAdapter;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.client.LogonError;
 
-import com.threerings.crowd.client.PlaceView;
-import com.threerings.crowd.data.PlaceObject;
+import com.threerings.orth.client.Msgs;
 
 /**
  * Shown to users when we're disconnected.

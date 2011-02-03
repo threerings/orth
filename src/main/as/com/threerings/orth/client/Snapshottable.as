@@ -4,7 +4,6 @@
 package com.threerings.orth.client {
 
 import flash.display.BitmapData;
-
 import flash.geom.Matrix;
 
 /**

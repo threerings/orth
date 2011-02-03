@@ -5,28 +5,24 @@ package com.threerings.orth.client {
 
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
-
 import flash.events.Event;
-
 import flash.geom.Point;
-
-import mx.core.Application;
-import mx.core.UIComponent;
-
-import mx.containers.Canvas;
-import mx.containers.Tile;
-import mx.containers.ViewStack;
-
-import mx.events.IndexChangedEvent;
 
 import flashx.funk.ioc.inject;
 
 import caurina.transitions.Tweener;
 
-import com.threerings.util.CommandEvent;
+import mx.containers.Canvas;
+import mx.containers.Tile;
+import mx.containers.ViewStack;
+import mx.core.Application;
+import mx.core.UIComponent;
+import mx.events.IndexChangedEvent;
 
 import com.threerings.flex.CommandCheckBox;
 import com.threerings.flex.FlexUtil;
+
+import com.threerings.util.CommandEvent;
 
 public class ButtonPalette extends Canvas
 {

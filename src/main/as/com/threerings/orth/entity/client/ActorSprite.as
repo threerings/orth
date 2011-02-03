@@ -3,20 +3,18 @@
 
 package com.threerings.orth.entity.client {
 
+import com.threerings.crowd.data.OccupantInfo;
+
 import com.threerings.util.DelayUtil;
 import com.threerings.util.Log;
 import com.threerings.util.Util;
 
-import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.MediaDesc;
-
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthLocation;
-
-import com.threerings.crowd.data.OccupantInfo;
 
 /**
  * Handles sprites for actors (members and pets).

@@ -4,7 +4,6 @@
 package com.threerings.orth.room.client {
 
 import com.threerings.crowd.data.PlaceConfig;
-
 import com.threerings.whirled.data.Scene;
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.util.SceneFactory;

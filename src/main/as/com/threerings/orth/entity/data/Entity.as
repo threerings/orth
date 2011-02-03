@@ -3,10 +3,10 @@
 
 package com.threerings.orth.entity.data {
 
-import com.threerings.presents.dobj.DSet_Entry;
-
-import com.threerings.util.Hashable;
 import com.threerings.util.Comparable;
+import com.threerings.util.Hashable;
+
+import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.room.data.EntityIdent;

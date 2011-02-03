@@ -7,15 +7,17 @@ package com.threerings.orth.room.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
-import com.threerings.orth.data.MediaDesc;
+
 import com.threerings.util.ClassUtil;
-import com.threerings.util.Cloneable;
-import com.threerings.util.Hashable;
 import com.threerings.util.Util;
+
 import com.threerings.presents.dobj.DSet_Entry;
+
+import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.FurniAction;
+import com.threerings.orth.room.data.OrthLocation;
+
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
 public class FurniData extends SimpleStreamableObject

@@ -5,8 +5,6 @@ package com.threerings.orth.client {
 
 import flash.display.DisplayObject;
 
-import mx.core.IFlexDisplayObject;
-
 public interface OrthResourceFactory
 {
     function newIdleIcon () :DisplayObject;

@@ -2,14 +2,13 @@
 // $Id$
 
 package com.threerings.orth.room.client {
-import com.threerings.orth.room.data.OrthLocation;
-import com.threerings.orth.room.data.OrthRoomCodes;
-
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.Sprite;
-
 import flash.geom.Matrix;
+
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthRoomCodes;
 
 /**
  * A Sprite that implements RoomElement. For subclassing or using to draw effects or

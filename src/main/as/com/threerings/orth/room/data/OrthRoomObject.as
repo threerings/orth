@@ -4,14 +4,19 @@
 
 package com.threerings.orth.room.data {
 
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
-import com.threerings.whirled.spot.data.SpotSceneObject;
-import com.threerings.presents.dobj.DSet;
-import com.threerings.util.Name;
 import org.osflash.signals.Signal;
-import com.threerings.orth.room.data.OrthRoomMarshaller;
+
+import com.threerings.whirled.spot.data.SpotSceneObject;
+
+import com.threerings.io.ObjectInputStream;
+
+import com.threerings.util.Name;
+
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
+
+import com.threerings.orth.room.data.OrthRoomMarshaller;
+
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
 public class OrthRoomObject extends SpotSceneObject
@@ -79,11 +84,7 @@ import com.threerings.presents.dobj.ElementUpdatedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
-import com.threerings.presents.dobj.MessageEvent;
-import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.dobj.ObjectAddedEvent;
-import com.threerings.presents.dobj.ObjectDeathListener;
-import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.dobj.ObjectRemovedEvent;
 import com.threerings.presents.dobj.OidListListener;
 import com.threerings.presents.dobj.SetListener;

@@ -2,17 +2,15 @@
 // $Id: PlayerRenderer.as 18861 2009-12-17 19:49:18Z zell $
 
 package com.threerings.orth.client {
+import flashx.funk.ioc.inject;
+
 import mx.containers.HBox;
 import mx.containers.VBox;
-
 import mx.core.ScrollPolicy;
-
-import flashx.funk.ioc.inject;
 
 import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.ui.MediaWrapper;
-import com.threerings.orth.room.client.RoomContext;
 
 public class PlayerRenderer extends HBox
 {

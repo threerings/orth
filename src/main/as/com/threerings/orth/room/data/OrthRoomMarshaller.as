@@ -2,15 +2,18 @@
 // $Id$
 package com.threerings.orth.room.data {
 
-import com.threerings.orth.room.client.OrthRoomService;
-import com.threerings.presents.client.Client;
+import flash.utils.ByteArray;
+
+import com.threerings.whirled.spot.data.Location;
+
+import com.threerings.util.Integer;
+import com.threerings.util.langBoolean;
+
 import com.threerings.presents.client.InvocationService_ResultListener;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.data.InvocationMarshaller_ResultMarshaller;
-import com.threerings.util.Integer;
-import com.threerings.util.langBoolean;
-import com.threerings.whirled.spot.data.Location;
-import flash.utils.ByteArray;
+
+import com.threerings.orth.room.client.OrthRoomService;
 
 /**
  * Provides the implementation of the <code>OrthRoomService</code> interface

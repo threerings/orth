@@ -2,12 +2,14 @@
 // $Id$
 package com.threerings.orth.room.data {
 
-import com.threerings.orth.room.client.OrthSceneService;
-import com.threerings.presents.client.Client;
-import com.threerings.presents.data.InvocationMarshaller;
-import com.threerings.util.Integer;
 import com.threerings.whirled.client.SceneService_SceneMoveListener;
 import com.threerings.whirled.data.SceneMarshaller_SceneMoveMarshaller;
+
+import com.threerings.util.Integer;
+
+import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.orth.room.client.OrthSceneService;
 
 /**
  * Provides the implementation of the <code>OrthSceneService</code> interface

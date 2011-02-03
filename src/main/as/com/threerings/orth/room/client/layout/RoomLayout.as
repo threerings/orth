@@ -2,14 +2,14 @@
 // $Id: RoomLayout.as 17626 2009-07-21 21:43:56Z mdb $
 
 package com.threerings.orth.room.client.layout {
-import com.threerings.orth.room.client.RoomMetrics;
-import com.threerings.orth.entity.data.Decor;
-
 import flash.geom.Point;
 
 import com.threerings.geom.Vector3;
+
+import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.client.ClickLocation;
 import com.threerings.orth.room.client.RoomElement;
+import com.threerings.orth.room.client.RoomMetrics;
 import com.threerings.orth.room.data.OrthLocation;
 
 /**

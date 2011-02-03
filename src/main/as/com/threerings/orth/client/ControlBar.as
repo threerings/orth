@@ -4,24 +4,20 @@
 package com.threerings.orth.client {
 
 import flash.events.Event;
-
 import flash.utils.Dictionary;
-
-import mx.core.ScrollPolicy;
-import mx.core.UIComponent;
-
-import mx.containers.HBox;
 
 import flashx.funk.ioc.inject;
 
-import com.threerings.util.Integer;
-import com.threerings.util.NamedValueEvent;
+import mx.containers.HBox;
+import mx.core.ScrollPolicy;
+import mx.core.UIComponent;
 
 import com.threerings.display.DisplayUtil;
-
-import com.threerings.flex.ChatControl;
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.FlexUtil;
+
+import com.threerings.util.Integer;
+import com.threerings.util.NamedValueEvent;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.notify.client.NotificationDisplay;

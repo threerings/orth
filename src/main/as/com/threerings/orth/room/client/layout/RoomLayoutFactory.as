@@ -2,10 +2,9 @@
 // $Id: RoomLayoutFactory.as 14311 2009-01-09 19:46:49Z ray $
 
 package com.threerings.orth.room.client.layout {
-import com.threerings.orth.room.data.DecorCodes;
 import com.threerings.orth.entity.data.Decor;
-
 import com.threerings.orth.room.client.RoomView;
+import com.threerings.orth.room.data.DecorCodes;
 
 /**
  * Collection of static classes for testing and creating layout instances.

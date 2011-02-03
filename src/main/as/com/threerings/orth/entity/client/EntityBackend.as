@@ -2,16 +2,15 @@
 // $Id: EntityBackend.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.entity.client {
-import com.threerings.orth.client.ControlBackend;
-import com.threerings.orth.room.client.RoomView;
-import com.threerings.orth.room.data.OrthLocation;
-
 import flash.display.DisplayObject;
-
 import flash.media.Camera;
 import flash.media.Microphone;
 
 import com.threerings.util.Log;
+
+import com.threerings.orth.client.ControlBackend;
+import com.threerings.orth.room.client.RoomView;
+import com.threerings.orth.room.data.OrthLocation;
 
 public class EntityBackend extends ControlBackend
 {

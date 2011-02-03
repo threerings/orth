@@ -7,10 +7,7 @@ import flash.events.Event;
 
 import com.threerings.util.Log;
 
-import com.threerings.orth.client.OrthContext;
-
 import com.threerings.orth.entity.data.Decor;
-
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomCodes;

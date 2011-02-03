@@ -6,10 +6,13 @@ package com.threerings.orth.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+
 import com.threerings.util.Hashable;
+
+import com.threerings.presents.dobj.DSet_Entry;
+
 import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.data.OrthName;
-import com.threerings.presents.dobj.DSet_Entry;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START

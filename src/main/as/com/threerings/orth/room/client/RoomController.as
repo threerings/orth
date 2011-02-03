@@ -17,7 +17,6 @@ import flash.utils.getTimer;
 
 import flashx.funk.ioc.inject;
 
-import mx.controls.Button;
 import mx.core.Application;
 import mx.core.IToolTip;
 import mx.core.UIComponent;
@@ -25,44 +24,38 @@ import mx.events.MenuEvent;
 import mx.managers.ISystemManager;
 import mx.managers.ToolTipManager;
 
+import com.threerings.crowd.client.PlaceView;
+import com.threerings.crowd.data.PlaceConfig;
+import com.threerings.crowd.data.PlaceObject;
+import com.threerings.crowd.util.CrowdContext;
 import com.threerings.flex.CommandMenu;
 import com.threerings.flex.PopUpUtil;
+import com.threerings.whirled.client.SceneController;
 
 import com.threerings.util.Log;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
 import com.threerings.util.ObjectMarshaller;
-import com.threerings.whirled.client.SceneController;
-
-import com.threerings.crowd.client.PlaceView;
-import com.threerings.crowd.data.PlaceConfig;
-import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.util.CrowdContext;
 
 import com.threerings.orth.aether.client.PlayerDirector;
-import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.chat.client.ComicOverlay;
+import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.OrthPlaceBox;
-import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.client.TopPanel;
-
 import com.threerings.orth.data.OrthName;
-
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
-
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.SimpleEntityIdent;
-
 import com.threerings.orth.world.client.WorldController;
 import com.threerings.orth.world.client.WorldDirector;
 
@@ -987,7 +980,6 @@ import com.threerings.util.Log;
 import com.threerings.util.Throttle;
 
 import com.threerings.orth.client.OrthResourceFactory;
-
 import com.threerings.orth.room.client.RoomElementSprite;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthRoomCodes;

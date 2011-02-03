@@ -3,17 +3,14 @@
 
 package com.threerings.orth.room.client {
 
-import com.threerings.orth.entity.client.EntitySprite;
-
-import com.threerings.orth.ui.FloatingPanel;
-import com.threerings.orth.room.client.RoomContext;
-
 import flash.display.DisplayObject;
 import flash.display.Shape;
 
 import mx.containers.Canvas;
 
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.entity.client.EntitySprite;
+import com.threerings.orth.ui.FloatingPanel;
 
 /**
  * A pop-up containing a user-code display object of some sort, to display

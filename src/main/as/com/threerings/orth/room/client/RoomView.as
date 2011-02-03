@@ -2,38 +2,21 @@
 // $Id: RoomView.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.room.client {
-import com.threerings.orth.chat.client.ComicOverlay;
-import com.threerings.orth.client.OrthPlaceBox;
-import com.threerings.orth.client.TopPanel;
-import com.threerings.orth.entity.data.Decor;
-import com.threerings.orth.room.client.RoomContext;
-import com.threerings.orth.client.OrthPlaceView;
-import com.threerings.orth.data.MediaDesc;
-import com.threerings.orth.entity.client.DecorSprite;
-import com.threerings.orth.entity.client.FurniSprite;
-import com.threerings.orth.entity.client.MemberSprite;
-import com.threerings.orth.entity.client.EntitySprite;
-import com.threerings.orth.entity.client.OccupantSprite;
-import com.threerings.orth.room.client.layout.RoomLayout;
-import com.threerings.orth.room.client.layout.RoomLayoutFactory;
-import com.threerings.orth.room.data.DecorCodes;
-import com.threerings.orth.entity.data.Decor;
-import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.client.RoomContext;
-
 import flash.display.BitmapData;
 import flash.display.Sprite;
-
 import flash.events.Event;
-
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
-
 import flash.ui.Mouse;
-
 import flash.utils.ByteArray;
+
+import flashx.funk.ioc.inject;
+
+import com.threerings.crowd.data.PlaceObject;
+import com.threerings.ui.MenuUtil;
+import com.threerings.whirled.spot.data.Location;
+import com.threerings.whirled.spot.data.Portal;
 
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.Iterator;
@@ -43,24 +26,31 @@ import com.threerings.util.Maps;
 import com.threerings.util.NamedValueEvent;
 import com.threerings.util.ObjectMarshaller;
 
-import com.threerings.crowd.data.PlaceObject;
-
-import com.threerings.ui.MenuUtil;
-
-import com.threerings.whirled.spot.data.Location;
-import com.threerings.whirled.spot.data.Portal;
-
-import com.threerings.orth.room.data.FurniData;
-import com.threerings.orth.room.data.OrthLocation;
-
+import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthPlaceBox;
+import com.threerings.orth.client.OrthPlaceView;
 import com.threerings.orth.client.Prefs;
-import com.threerings.orth.client.Snapshottable;
 import com.threerings.orth.client.SnapshotUtil;
+import com.threerings.orth.client.Snapshottable;
+import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.client.Zoomable;
-
-import flashx.funk.ioc.inject;
+import com.threerings.orth.data.MediaDesc;
+import com.threerings.orth.entity.client.DecorSprite;
+import com.threerings.orth.entity.client.EntitySprite;
+import com.threerings.orth.entity.client.FurniSprite;
+import com.threerings.orth.entity.client.MemberSprite;
+import com.threerings.orth.entity.client.OccupantSprite;
+import com.threerings.orth.entity.data.Decor;
+import com.threerings.orth.room.client.RoomContext;
+import com.threerings.orth.room.client.layout.RoomLayout;
+import com.threerings.orth.room.client.layout.RoomLayoutFactory;
+import com.threerings.orth.room.data.DecorCodes;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.FurniData;
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthScene;
 
 /**
  * The base room view. Should not contain any RoomObject or other network-specific crap.

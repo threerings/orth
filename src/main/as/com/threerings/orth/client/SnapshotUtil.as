@@ -2,15 +2,14 @@
 // $Id$
 
 package com.threerings.orth.client {
-import com.threerings.orth.client.Snapshottable;
-
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
-
 import flash.geom.Matrix;
 
 import com.threerings.util.Log;
+
+import com.threerings.orth.client.Snapshottable;
 
 public class SnapshotUtil
 {

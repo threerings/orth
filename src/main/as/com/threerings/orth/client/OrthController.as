@@ -4,10 +4,12 @@ package com.threerings.orth.client {
 
 import flash.events.IEventDispatcher;
 import flash.events.TextEvent;
+
 import flashx.funk.ioc.IModule;
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.chat.client.MuteDirector;
+
 import com.threerings.util.CommandEvent;
 import com.threerings.util.Controller;
 import com.threerings.util.Log;
@@ -19,12 +21,10 @@ import com.threerings.util.StringUtil;
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.PlayerService;
 import com.threerings.orth.aether.data.AetherCredentials;
-import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.world.client.WorldContext;
-import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.TopPanel;
+import com.threerings.orth.data.OrthCodes;
 
 public class OrthController extends Controller
 {

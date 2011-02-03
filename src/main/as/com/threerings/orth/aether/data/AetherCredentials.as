@@ -6,9 +6,12 @@ package com.threerings.orth.aether.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.presents.net.UsernamePasswordCreds;
+
 import com.threerings.util.Joiner;
 import com.threerings.util.Name;
+
+import com.threerings.presents.net.UsernamePasswordCreds;
+
 // GENERATED PREAMBLE END
 
 /**

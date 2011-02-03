@@ -4,20 +4,16 @@
 package com.threerings.orth.entity.client {
 
 import flash.display.LoaderInfo;
-
 import flash.events.MouseEvent;
-
 import flash.geom.Point;
+
+import com.threerings.media.MediaContainer;
 
 import com.threerings.util.CommandEvent;
 import com.threerings.util.ValueEvent;
 
-import com.threerings.media.MediaContainer;
-
 import com.threerings.orth.client.LoadingWatcher;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.OrthContext;
-
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.FurniAction;
 import com.threerings.orth.room.data.FurniData;

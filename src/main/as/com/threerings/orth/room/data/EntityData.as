@@ -1,6 +1,7 @@
 package com.threerings.orth.room.data {
 
 import com.threerings.orth.data.MediaDesc;
+
 public interface EntityData
 {
     function getEntityIdent () :EntityIdent;

@@ -5,30 +5,28 @@ package com.threerings.orth.room.client {
 
 import flashx.funk.ioc.inject;
 
-import com.threerings.util.Log;
-
-import com.threerings.presents.client.BasicDirector;
-import com.threerings.presents.client.ClientEvent;
-
 import com.threerings.crowd.client.LocationAdapter;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.orth.client.OrthContext;
+import com.threerings.util.Log;
 
-import com.threerings.orth.entity.client.MemberSprite;
-import com.threerings.orth.entity.client.PetSprite;
+import com.threerings.presents.client.BasicDirector;
+import com.threerings.presents.client.ClientEvent;
+
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
+import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
+import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.entity.data.Decor;
-
+import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.PetInfo;
 import com.threerings.orth.room.data.SocializerInfo;
-import com.threerings.orth.room.data.FurniData;
 
 /**
  * Handles the loading of various media.

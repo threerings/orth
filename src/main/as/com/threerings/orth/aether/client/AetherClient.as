@@ -2,8 +2,6 @@
 // $Id$
 
 package com.threerings.orth.aether.client {
-import com.threerings.presents.data.ClientObject;
-
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.events.ContextMenuEvent;
@@ -19,6 +17,7 @@ import com.threerings.ui.MenuUtil;
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.Client;
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.net.BootstrapData;
 

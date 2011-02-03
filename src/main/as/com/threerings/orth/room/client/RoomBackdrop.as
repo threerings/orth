@@ -2,13 +2,11 @@
 // $Id: RoomBackdrop.as 14149 2008-12-31 18:13:55Z mdb $
 
 package com.threerings.orth.room.client {
-import com.threerings.orth.room.data.DecorCodes;
-
 import flash.display.Graphics;
-
 import flash.geom.Point;
 
 import com.threerings.orth.entity.data.Decor;
+import com.threerings.orth.room.data.DecorCodes;
 
 /**
  * Helper class that draws a room backdrop with four walls, floor, and ceiling.

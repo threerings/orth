@@ -3,28 +3,26 @@
 
 package com.threerings.orth.room.client {
 
+import flash.display.DisplayObject;
+
+import flashx.funk.ioc.inject;
+
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
-import com.threerings.crowd.data.BodyObject;
-import com.threerings.orth.data.OrthName;
-import com.threerings.orth.room.data.SocializerInfo;
-import com.threerings.orth.room.data.SocializerObject;
-import com.threerings.orth.world.client.WorldClient;
-import com.threerings.presents.client.Client;
-import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.util.WhirledContext;
 
-import com.threerings.orth.client.TopPanel;
+import com.threerings.presents.client.Client;
+import com.threerings.presents.dobj.DObjectManager;
 
+import com.threerings.orth.client.TopPanel;
+import com.threerings.orth.data.OrthName;
+import com.threerings.orth.room.data.SocializerObject;
+import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.data.OrthPlayerBody;
-
-import flash.display.DisplayObject;
-
-import flashx.funk.ioc.inject;
 
 /**
  * Defines services for the Room client.

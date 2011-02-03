@@ -4,7 +4,6 @@
 package com.threerings.orth.room.client {
 
 import com.threerings.orth.client.Snapshottable;
-
 import com.threerings.orth.room.data.OrthLocation;
 
 /**

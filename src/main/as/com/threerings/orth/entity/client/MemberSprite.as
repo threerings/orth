@@ -6,11 +6,10 @@ package com.threerings.orth.entity.client {
 import flash.display.DisplayObject;
 import flash.geom.Rectangle;
 
-import com.threerings.util.CommandEvent;
-
 import com.threerings.crowd.data.OccupantInfo;
 
-import com.threerings.orth.client.OrthContext;
+import com.threerings.util.CommandEvent;
+
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.SocializerInfo;
 
@@ -235,6 +234,10 @@ public class MemberSprite extends ActorSprite
 }
 }
 
+import flash.geom.Rectangle;
+
+import com.threerings.util.Log;
+
 import com.threerings.orth.client.OrthController;
 import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.entity.client.EntitySprite;
@@ -243,10 +246,6 @@ import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.party.data.PartySummary;
 import com.threerings.orth.ui.GlowSprite;
 import com.threerings.orth.ui.ScalingMediaDescContainer;
-
-import com.threerings.util.Log;
-
-import flash.geom.Rectangle;
 
 class PartyIcon extends GlowSprite
 {

@@ -4,10 +4,11 @@
 
 package com.threerings.orth.room.data {
 
+import com.threerings.whirled.spot.data.Location;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.io.Streamable;
-import com.threerings.whirled.spot.data.Location;
+
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
 public class OrthLocation implements Location

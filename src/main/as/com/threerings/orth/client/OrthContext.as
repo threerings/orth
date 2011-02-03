@@ -2,16 +2,13 @@
 // $Id$
 
 package com.threerings.orth.client {
-import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.aether.data.PlayerObject;
+import flashx.funk.ioc.inject;
 
 import mx.core.UIComponent;
 
-import flashx.funk.ioc.inject;
-
 import com.threerings.util.Log;
-import com.threerings.util.MessageManager;
 import com.threerings.util.MessageBundle;
+import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
 
 import com.threerings.presents.client.Client;
@@ -24,11 +21,11 @@ import com.threerings.presents.client.ResultAdapter;
 import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.util.PresentsContext;
 
-import com.threerings.orth.data.OrthCodes;
-
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherCredentials;
-import com.threerings.orth.client.OrthDeploymentConfig;
+import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.world.client.WorldContext;
 
 /**

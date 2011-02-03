@@ -2,10 +2,11 @@
 // $Id$
 package com.threerings.orth.room.client {
 
-import com.threerings.orth.room.data.OrthLocation;
-import com.threerings.presents.client.Client;
-import com.threerings.presents.client.InvocationService;
 import com.threerings.whirled.client.SceneService_SceneMoveListener;
+
+import com.threerings.presents.client.InvocationService;
+
+import com.threerings.orth.room.data.OrthLocation;
 
 /**
  * An ActionScript version of the Java OrthSceneService interface.

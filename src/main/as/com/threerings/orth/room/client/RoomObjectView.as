@@ -3,33 +3,20 @@
 
 package com.threerings.orth.room.client {
 
-import com.threerings.orth.chat.client.ChatInfoProvider;
-import com.threerings.orth.chat.client.ComicOverlay;
-import com.threerings.orth.client.LoadingWatcher;
-import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.Prefs;
-import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.entity.client.FurniSprite;
-import com.threerings.orth.entity.client.MemberSprite;
-import com.threerings.orth.entity.client.EntitySprite;
-import com.threerings.orth.entity.client.OccupantSprite;
-import com.threerings.orth.entity.client.PetSprite;
-import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.orth.room.data.EntityMemories;
-import com.threerings.orth.room.data.FurniUpdate_Remove;
-import com.threerings.orth.room.data.OrthRoomCodes;
-import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.data.OrthRoomObject;
-import com.threerings.orth.room.data.SocializerInfo;
-import com.threerings.orth.room.client.RoomContext;
-import com.threerings.orth.world.client.WorldController;
-
 import flash.events.Event;
-
 import flash.geom.Point;
 import flash.geom.Rectangle;
-
 import flash.utils.ByteArray;
+
+import com.threerings.crowd.chat.client.ChatDisplay;
+import com.threerings.crowd.chat.client.ChatSnooper;
+import com.threerings.crowd.chat.data.ChatMessage;
+import com.threerings.crowd.chat.data.UserMessage;
+import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.crowd.data.PlaceObject;
+import com.threerings.whirled.data.SceneUpdate;
+import com.threerings.whirled.spot.data.SceneLocation;
+import com.threerings.whirled.spot.data.SpotSceneObject;
 
 import com.threerings.util.Map;
 import com.threerings.util.Name;
@@ -42,26 +29,25 @@ import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.dobj.SetListener;
 
-import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.crowd.data.PlaceObject;
-
-import com.threerings.crowd.chat.client.ChatDisplay;
-import com.threerings.crowd.chat.client.ChatSnooper;
-import com.threerings.crowd.chat.data.ChatMessage;
-import com.threerings.crowd.chat.data.UserMessage;
-
-import com.threerings.ui.MenuUtil;
-
-import com.threerings.whirled.data.SceneUpdate;
-
-import com.threerings.whirled.spot.data.SpotSceneObject;
-import com.threerings.whirled.spot.data.SceneLocation;
-
+import com.threerings.orth.chat.client.ChatInfoProvider;
+import com.threerings.orth.client.LoadingWatcher;
+import com.threerings.orth.client.Prefs;
+import com.threerings.orth.entity.client.EntitySprite;
+import com.threerings.orth.entity.client.FurniSprite;
+import com.threerings.orth.entity.client.MemberSprite;
+import com.threerings.orth.entity.client.OccupantSprite;
+import com.threerings.orth.entity.client.PetSprite;
+import com.threerings.orth.room.client.RoomContext;
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.EntityMemories;
+import com.threerings.orth.room.data.FurniUpdate_Remove;
 import com.threerings.orth.room.data.MemoryChangedListener;
 import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthRoomCodes;
+import com.threerings.orth.room.data.OrthRoomObject;
+import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.SceneAttrsUpdate;
 import com.threerings.orth.room.data.SceneOwnershipUpdate;
-
 
 /**
  * Extends the base roomview with the ability to view a RoomObject, view chat, and edit.

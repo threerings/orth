@@ -5,12 +5,12 @@ package com.threerings.orth.room.client.updates {
 
 import com.threerings.whirled.data.SceneUpdate;
 
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.FurniUpdate;
 import com.threerings.orth.room.data.FurniUpdate_Add;
 import com.threerings.orth.room.data.FurniUpdate_Change;
 import com.threerings.orth.room.data.FurniUpdate_Remove;
-import com.threerings.orth.room.client.RoomContext;
 
 /**
  * Generates a command to update a single piece of furni.
