@@ -4,6 +4,7 @@
 package com.threerings.orth.room.client {
 
 import com.threerings.crowd.chat.client.ChatDirector;
+import com.threerings.crowd.util.CrowdContext;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
@@ -14,8 +15,6 @@ import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
-import com.threerings.whirled.client.SceneDirector;
-import com.threerings.whirled.util.WhirledContext;
 
 import com.threerings.orth.client.TopPanel;
 
@@ -30,7 +29,7 @@ import flashx.funk.ioc.inject;
  * Defines services for the Room client.
  */
 public class RoomContext
-    implements WhirledContext, WorldContext
+    implements CrowdContext, WorldContext
 {
     public function RoomContext ()
     {
@@ -51,15 +50,6 @@ public class RoomContext
     public function getDObjectManager () :DObjectManager
     {
         return _client.getDObjectManager();
-    }
-
-    // from WhirledContext
-    public function getSceneDirector () :SceneDirector
-    {
-        return null;
-
-        // ORTH TODO
-        // return _sceneDir;
     }
 
     // from CrowdContext
@@ -124,8 +114,5 @@ public class RoomContext
     // ORTH TODO: This is highly dubious and will change dramatically, as most chatting will be sent
     // TODO: over the Aether wire and our chat system needs to be multi-connection at any rate.
     // protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
-
-    // ORTH TODO
-    // protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
 }
 }
