@@ -7,6 +7,7 @@ import flash.events.TextEvent;
 import flashx.funk.ioc.IModule;
 import flashx.funk.ioc.inject;
 
+import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.util.CommandEvent;
 import com.threerings.util.Controller;
 import com.threerings.util.Log;
@@ -16,7 +17,10 @@ import com.threerings.util.NetUtil;
 import com.threerings.util.StringUtil;
 
 import com.threerings.orth.aether.client.AetherClient;
+import com.threerings.orth.aether.client.PlayerService;
 import com.threerings.orth.aether.data.AetherCredentials;
+import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
@@ -57,6 +61,9 @@ public class OrthController extends Controller
 
     /** Command to request detailed info on a party. */
     public static const GET_PARTY_DETAIL :String = "GetPartyDetail";
+
+    /** Command to respond to a request to follow another player. */
+    public static const RESPOND_FOLLOW :String = "RespondFollow";
 
 
     public function OrthController ()
@@ -103,7 +110,7 @@ public class OrthController extends Controller
             return true;
         }
 
-        _ctx.displayFeedback(OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
+        _octx.displayFeedback(OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
 
         return false;
     }
@@ -111,7 +118,7 @@ public class OrthController extends Controller
     /**
      * Handles the COMPLAIN_MEMBER command.
      */
-    public function handleComplainMember (memberId :int, username :String) :void
+    public function handleComplainMember (playerId :int, username :String) :void
     {
         log.warning("COMPLAIN_MEMBER not implemented.");
     }
@@ -119,7 +126,7 @@ public class OrthController extends Controller
     /**
      * Handles INVITE_FRIEND.
      */
-    public function handleInviteFriend (memberId :int) :void
+    public function handleInviteFriend (playerId :int) :void
     {
         log.warning("INVITE_FRIEND not implemented.");
     }
@@ -127,10 +134,10 @@ public class OrthController extends Controller
     /**
      * Handles INVITE_TO_PARTY.
      */
-    public function handleInviteToParty (memberId :int) :void
+    public function handleInviteToParty (playerId :int) :void
     {
         // ORTH TODO
-        //         _partyDir.inviteMember(memberId);
+        //         _partyDir.inviteMember(playerId);
     }
     /**
      * Handles the JOIN_PARTY command.
@@ -151,12 +158,41 @@ public class OrthController extends Controller
     }
 
     /**
+     * Handles RESPOND_FOLLOW.
+     * Arg can be 0 to stop us from following anyone
+     */
+    public function handleRespondFollow (playerId :int) :void
+    {
+        PlayerService(_client.requireService(PlayerService)).
+            followPlayer(playerId, _octx.listener());
+    }
+
+    /**
      * Handles the OPEN_CHANNEL command.
      */
     public function handleOpenChannel (name :Name) :void
     {
         // ORTH TODO
         // _chatDir.openChannel(name);
+    }
+
+    /**
+     * Sends an invitation to the specified member to follow us.
+     */
+    public function inviteFollow (memId :int) :void
+    {
+        PlayerService(_client.requireService(PlayerService)).
+            inviteToFollow(memId, _octx.listener());
+    }
+
+    /**
+     * Tells the server we no longer want someone following us. If target playerId is 0, all
+     * our followers are ditched.
+     */
+    public function ditchFollower (memId :int = 0) :void
+    {
+        PlayerService(_client.requireService(PlayerService)).
+            ditchFollower(memId, _octx.listener());
     }
 
     override protected function setControlledPanel (panel :IEventDispatcher) :void
@@ -204,11 +240,12 @@ public class OrthController extends Controller
         }
     }
 
-    protected const _ctx :OrthContext = inject(OrthContext);
+    protected const _octx :OrthContext = inject(OrthContext);
     protected const _mod :IModule = inject(IModule);
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _client :AetherClient = inject(AetherClient);
     protected const _depCon :OrthDeploymentConfig = inject(OrthDeploymentConfig);
+    protected const _muteDir :MuteDirector = inject(MuteDirector);    
 
     /** The URL prefix for 'command' URLs, that post CommendEvents. */
     protected static const COMMAND_URL :String = "command://";

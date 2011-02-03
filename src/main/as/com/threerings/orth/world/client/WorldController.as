@@ -145,9 +145,6 @@ public class WorldController extends Controller
     /** Command to go to a particular scene. */
     public static const GO_SCENE :String = "GoScene";
 
-    /** Command to respond to a request to follow another player. */
-    public static const RESPOND_FOLLOW :String = "RespondFollow";
-
     public function WorldController ()
     {
         _client.addServiceGroup(CrowdCodes.CROWD_GROUP);
@@ -408,16 +405,6 @@ public class WorldController extends Controller
     }
 
     /**
-     * Handles RESPOND_FOLLOW.
-     * Arg can be 0 to stop us from following anyone
-     */
-    public function handleRespondFollow (memberId :int) :void
-    {
-        WorldService(_client.requireService(WorldService)).
-            followMember(memberId, _octx.listener());
-    }
-
-    /**
      * Handles booting a user.
      */
     public function handleBootFromPlace (memberId :int) :void
@@ -476,29 +463,29 @@ public class WorldController extends Controller
                 // if we have followers, add a menu item for clearing them
                 if (us.followers.size() > 0) {
                     followItems.push({ label: Msgs.GENERAL.get("b.clear_followers"),
-                        callback: ditchFollower });
+                        callback: _orthCtrl.ditchFollower });
                 }
                 // if we're following someone, add a menu item for stopping
                 if (us.following != null) {
                     followItems.push({ label: Msgs.GENERAL.get("b.stop_following"),
-                        callback: handleRespondFollow, arg: 0 });
+                        callback: _orthCtrl.handleRespondFollow, arg: 0 });
                 }
             } else {
                 // we could be following them...
                 if (name.equals(us.following)) {
                     followItems.push({ label: Msgs.GENERAL.get("b.stop_following"),
-                        callback: handleRespondFollow, arg: 0 });
+                        callback: _orthCtrl.handleRespondFollow, arg: 0 });
                 } else {
                     followItems.push({ label: Msgs.GENERAL.get("b.follow_other"),
-                        callback: handleRespondFollow, arg: memId, enabled: !isMuted });
+                        callback: _orthCtrl.handleRespondFollow, arg: memId, enabled: !isMuted });
                 }
                 // and/or they could be following us...
                 if (us.followers.containsKey(memId)) {
                     followItems.push({ label: Msgs.GENERAL.get("b.ditch_follower"),
-                        callback: ditchFollower, arg: memId });
+                        callback: _orthCtrl.ditchFollower, arg: memId });
                 } else {
                     followItems.push({ label: Msgs.GENERAL.get("b.invite_follow"),
-                        callback: inviteFollow, arg: memId, enabled: !isMuted });
+                        callback: _orthCtrl.inviteFollow, arg: memId, enabled: !isMuted });
                 }
             }
             if (followItems.length > 0) {
@@ -785,23 +772,6 @@ public class WorldController extends Controller
         menuData.push({ label: Msgs.GENERAL.get("l.visit_friends"), children: friends });
     }
 
-    /**
-     * Sends an invitation to the specified member to follow us.
-     */
-    protected function inviteFollow (memId :int) :void
-    {
-        WorldService(_client.requireService(WorldService)).inviteToFollow(memId, _octx.listener());
-    }
-
-    /**
-     * Tells the server we no longer want someone following us. If target memberId is 0, all
-     * our followers are ditched.
-     */
-    protected function ditchFollower (memId :int = 0) :void
-    {
-        WorldService(_client.requireService(WorldService)).ditchFollower(memId, _octx.listener());
-    }
-
     protected function doSnapshot () :void
     {
     // ORTH TODO
@@ -817,15 +787,17 @@ public class WorldController extends Controller
     protected const _rctx :RoomContext = inject(RoomContext);
     protected const _client :WorldClient = inject(WorldClient);
 
+    protected const _orthCtrl :OrthController = inject(OrthController);
+
+    protected const _muteDir :MuteDirector = inject(MuteDirector);    
+    protected const _locDir :LocationDirector = inject(LocationDirector);
+    protected const _sceneDir :SceneDirector = inject(SceneDirector);
+
     protected const _stage :Stage = inject(Stage);
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _controlBar :ControlBar = inject(ControlBar);
 
     protected const _rsrc :OrthResourceFactory = inject(OrthResourceFactory);
-
-    protected const _muteDir :MuteDirector = inject(MuteDirector);    
-    protected const _locDir :LocationDirector = inject(LocationDirector);
-    protected const _sceneDir :SceneDirector = inject(SceneDirector);
 
     // ORTH TODO
     // protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);

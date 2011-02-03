@@ -39,10 +39,12 @@ import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
 
+import com.threerings.orth.aether.client.PlayerDirector;
 import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.OrthPlaceBox;
 import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.client.TopPanel;
@@ -60,6 +62,9 @@ import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.SimpleEntityIdent;
+
+import com.threerings.orth.world.client.WorldController;
+import com.threerings.orth.world.client.WorldDirector;
 
 /**
  * Manages the various interactions that take place in a room scene.
@@ -924,6 +929,13 @@ public class RoomController extends SceneController
 
     protected const _octx :OrthContext = inject(OrthContext);
     protected const _rctx :RoomContext = inject(RoomContext);
+
+    protected const _orthCtrl :OrthController = inject(OrthController);
+    protected const _worldCtrl :WorldController = inject(WorldController);
+
+    protected const _playerDir :PlayerDirector = inject(PlayerDirector);
+    protected const _worldDir :WorldDirector = inject(WorldDirector);
+
     protected const _app :Application = inject(Application);
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _controlBar :ControlBar = inject(ControlBar);

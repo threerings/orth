@@ -10,6 +10,9 @@ import com.google.common.collect.ImmutableList;
 
 import com.threerings.presents.dobj.DObject;
 
+import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.notify.data.FollowInviteNotification;
 import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.notify.data.NotificationLocal;
 
@@ -72,6 +75,14 @@ public abstract class NotificationManager
             List<Notification> notes = local.getAndClearDeferredNotifications();
             notify(target, notes);
         }
+    }
+
+    /**
+     * Notifies the target player that they've been invited to follow someone.
+     */
+    public void notifyFollowInvite (PlayerObject target, PlayerName inviter)
+    {
+        notify(target, new FollowInviteNotification(inviter));
     }
 
     protected abstract NotificationLocal getLocal (DObject target);

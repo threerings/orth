@@ -269,7 +269,7 @@ public class RoomObjectController extends RoomController
             avItems.push({ label: av.name, enabled: !av.equals(us.avatar),
                 iconObject: MediaWrapper.createView(
                     av.getThumbnailMedia(), MediaDescSize.QUARTER_THUMBNAIL_SIZE),
-                callback: _worldDir.setAvatar, arg: av.getIdent().getItem() });
+                callback: _playerDir.setAvatar, arg: av.getIdent().getItem() });
         }
 
         // return a menu item for changing their avatar
@@ -621,10 +621,6 @@ public class RoomObjectController extends RoomController
             reportLocationOwner();
         }
     }
-
-    protected const _orthCtrl :OrthController = inject(OrthController);
-    protected const _worldCtrl :WorldController = inject(WorldController);
-    protected const _worldDir :WorldDirector = inject(WorldDirector);
 
     /** A casted version of _roomView. */
     protected var _roomObjectView :RoomObjectView;
