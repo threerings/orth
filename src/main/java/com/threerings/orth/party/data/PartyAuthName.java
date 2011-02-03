@@ -13,15 +13,15 @@ public class PartyAuthName extends AuthName
     /**
      * Creates an instance that can be used as a DSet key.
      */
-    public static PartyAuthName makeKey (int memberId)
+    public static PartyAuthName makeKey (int playerId)
     {
-        return new PartyAuthName("", memberId);
+        return new PartyAuthName("", playerId);
     }
 
-    /** Creates a name for the member with the supplied account name and member id. */
-    public PartyAuthName (String accountName, int memberId)
+    /** Creates a name for the player with the supplied account name and player id. */
+    public PartyAuthName (String accountName, int playerId)
     {
-        super(accountName, memberId);
+        super(accountName, playerId);
     }
 
     /** Used for unserializing. */

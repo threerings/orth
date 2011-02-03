@@ -4,7 +4,7 @@
 package com.threerings.orth.party.data;
 
 /**
- * A more detailed representation of a party that a member may request prior to joining.
+ * A more detailed representation of a party that a player may request prior to joining.
  */
 public class PartyDetail extends PartyBoardInfo
 {

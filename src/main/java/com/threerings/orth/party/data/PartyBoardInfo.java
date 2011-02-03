@@ -35,12 +35,12 @@ public class PartyBoardInfo extends SimpleStreamableObject
     /**
      * Compute the score for this party (server only).
      */
-    public void computeScore (PlayerObject member)
+    public void computeScore (PlayerObject player)
     {
         // start by giving every party a random score between 0 and 1
         float score = RandomUtil.rand.nextFloat();
         // add 3 if their friend is leading the party
-        if (member.isOnlineFriend(info.leaderId)) {
+        if (player.isOnlineFriend(info.leaderId)) {
             score += 3;
         }
         // now, each party is in a "band" determined by friend, and then has a random

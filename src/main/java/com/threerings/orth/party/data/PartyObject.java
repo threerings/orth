@@ -10,8 +10,8 @@ import com.threerings.util.ActionScript;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.MediaDesc;
-import com.threerings.orth.data.OrthName;
 
 @ActionScript(omit=true)
 public class PartyObject extends DObject
@@ -79,7 +79,7 @@ public class PartyObject extends DObject
     /** The list of people in this party. */
     public DSet<PartyPeep> peeps = DSet.newDSet();
 
-    /** The member ID of the current leader. */
+    /** The player ID of the current leader. */
     public int leaderId;
 
     /** The current location of the party. */
@@ -340,7 +340,7 @@ public class PartyObject extends DObject
      *
      * @return the reason for failure, or null if joinage may proceed.
      */
-    public String mayJoin (OrthName member, boolean hasLeaderInvite)
+    public String mayJoin (PlayerName player, boolean hasLeaderInvite)
     {
         if (peeps.size() >= PartyCodes.MAX_PARTY_SIZE) {
             return PartyCodes.E_PARTY_FULL;

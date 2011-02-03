@@ -15,7 +15,7 @@ public class PartyLeader extends SimpleStreamableObject
     /** The id of the party. */
     public int partyId;
 
-    /** The memberId of the leader. */
+    /** The playerId of the leader. */
     public int leaderId;
 
     /** Suitable for deserialization. */

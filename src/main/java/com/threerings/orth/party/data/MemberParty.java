@@ -7,13 +7,13 @@ import com.threerings.io.SimpleStreamableObject;
 import com.threerings.presents.dobj.DSet;
 
 /**
- * Contains basic information on the current party of a member on a peer.
+ * Contains basic information on the current party of a player on a peer.
  */
 public class MemberParty extends SimpleStreamableObject
     implements DSet.Entry
 {
-    /** The id of the member. */
-    public Integer memberId;
+    /** The id of the player. */
+    public Integer playerId;
 
     /** Their party id. */
     public int partyId;
@@ -26,15 +26,15 @@ public class MemberParty extends SimpleStreamableObject
     /**
      * Constructor.
      */
-    public MemberParty (Integer memberId, int partyId)
+    public MemberParty (Integer playerId, int partyId)
     {
-        this.memberId = memberId;
+        this.playerId = playerId;
         this.partyId = partyId;
     }
 
     // from DSet.Entry
     public Comparable<?> getKey ()
     {
-        return memberId;
+        return playerId;
     }
 }

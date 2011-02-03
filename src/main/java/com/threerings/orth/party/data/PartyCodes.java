@@ -11,7 +11,7 @@ public class PartyCodes
     /** Recruitment constant indicating anyone may join the party. */
     public static final byte RECRUITMENT_OPEN = 0;
 
-    /** Recruitment constant indicating that only members of the party's group may join. */
+    /** Recruitment constant indicating that only players of the party's group may join. */
     public static final byte RECRUITMENT_GROUP = 1;
 
     /** Recruitment constant indicating nobody but those invited by the leader may join. */

@@ -25,8 +25,8 @@ import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.notify.server.NotificationManager;
-import com.threerings.orth.server.MemberNodeActions;
 
+import com.threerings.orth.server.PlayerNodeActions;
 import com.threerings.orth.peer.data.HostedRoom;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
@@ -84,7 +84,7 @@ public class PartyManager
             // also publish a partyInfo to the node object in this transaction
             _partyObj.startTransaction();
             try {
-                _partyObj.setPartyService(_invMgr.registerDispatcher(new PartyDispatcher(this)));
+                _partyObj.setPartyService(_invMgr.registerProvider(this, PartyMarshaller.class));
     //            _partyObj.setSpeakService(_invMgr.registerDispatcher(
     //                new SpeakDispatcher(new SpeakHandler(_partyObj, this))));
                 updateStatus();
@@ -113,9 +113,9 @@ public class PartyManager
         try {
             nodeObj.removeFromHostedParties(_partyObj.id);
             nodeObj.removeFromPartyInfos(_partyObj.id);
-            // clear the party info from all remaining players' member objects
+            // clear the party info from all remaining players' player objects
             for (PartyPeep peep : _partyObj.peeps) {
-                indicateMemberPartying(peep.name.getId(), false);
+                indicatePlayerPartying(peep.name.getId(), false);
             }
         } finally {
             nodeObj.commitTransaction();
@@ -151,47 +151,47 @@ public class PartyManager
     }
 
     /**
-     * Called from the access controller when subscription is approved for the specified member.
+     * Called from the access controller when subscription is approved for the specified player.
      */
     public void clientSubscribed (PartierObject partier)
     {
-        final int memberId = partier.getMemberId();
+        final int playerId = partier.getPlayerId();
         // listen for them to die
         partier.addListener(new ObjectDeathListener() {
             public void objectDestroyed (ObjectDestroyedEvent event) {
-                removePlayer(memberId);
+                removePlayer(playerId);
             }
         });
 
         // clear their invites to this party, if any
-        _invitedIds.remove(memberId);
+        _invitedIds.remove(playerId);
 
-        // update member's party info via a node action
-        indicateMemberPartying(memberId, true);
+        // update player's party info via a node action
+        indicatePlayerPartying(playerId, true);
 
         // Crap, we used to do this in addPlayer, but they could never actually enter the party
         // and leave it hosed. The downside of doing it this way is that we could approve
         // more than MAX_PLAYERS to join the party...
         // The user may already be in the party if they arrived from another node.
-        if (!_partyObj.peeps.containsKey(memberId)) {
-            _partyObj.addToPeeps(new PartyPeep(partier.memberName, nextJoinOrder()));
+        if (!_partyObj.peeps.containsKey(playerId)) {
+            _partyObj.addToPeeps(new PartyPeep(partier.playerName, nextJoinOrder()));
         }
         updatePartyInfo();
     }
 
     public void inviteAllFriends (PlayerObject inviter)
     {
-        MemberNodeActions.inviteAllFriendsToParty(inviter, _partyObj.id, _partyObj.name);
+        PlayerNodeActions.inviteAllFriendsToParty(inviter, _partyObj.id, _partyObj.name);
     }
 
     // from interface PartyProvider
-    public void bootMember (
+    public void bootPlayer (
         ClientObject caller, int playerId, InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
         if (removePlayer(playerId)) {
-            MemberNodeActions.sendNotification(playerId,
+            PlayerNodeActions.sendNotification(playerId,
                 new GenericNotification("m.party_booted", Notification.PERSONAL));
         }
     }
@@ -218,13 +218,13 @@ public class PartyManager
 
     // from interface PartyProvider
     public void assignLeader (
-        ClientObject caller, int memberId, InvocationService.InvocationListener listener)
+        ClientObject caller, int playerId, InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
 
         PartyPeep leader = _partyObj.peeps.get(_partyObj.leaderId);
-        PartyPeep peep = _partyObj.peeps.get(memberId);
+        PartyPeep peep = _partyObj.peeps.get(playerId);
         if (peep == null || peep == leader) {
             // TODO: nicer error? The player may have just left
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
@@ -275,28 +275,28 @@ public class PartyManager
     }
 
     // from interface PartyProvider
-    public void inviteMember (
-        ClientObject caller, int memberId, InvocationService.InvocationListener listener)
+    public void invitePlayer (
+        ClientObject caller, int playerId, InvocationService.InvocationListener listener)
         throws InvocationException
     {
         PartierObject inviter = (PartierObject)caller;
         if (_partyObj.recruitment == PartyCodes.RECRUITMENT_CLOSED &&
-                _partyObj.leaderId != inviter.getMemberId()) {
+                _partyObj.leaderId != inviter.getPlayerId()) {
             throw new InvocationException(PartyCodes.E_CANT_INVITE_CLOSED);
         }
         // add them to the invited set
-        _invitedIds.add(memberId);
+        _invitedIds.add(playerId);
         // send them a notification
-        //MemberNodeActions.sendNotification(memberId, createInvite(inviter));
-        MemberNodeActions.inviteToParty(
-            memberId, inviter.memberName.toOrthName(), _partyObj.id, _partyObj.name);
+        //PlayerNodeActions.sendNotification(playerId, createInvite(inviter));
+        PlayerNodeActions.inviteToParty(
+            playerId, inviter.playerName.toPlayerName(), _partyObj.id, _partyObj.name);
     }
 
     protected PartierObject requireLeader (ClientObject client)
         throws InvocationException
     {
         PartierObject partier = (PartierObject)client;
-        if (partier.getMemberId() != _partyObj.leaderId) {
+        if (partier.getPlayerId() != _partyObj.leaderId) {
             throw new InvocationException(InvocationCodes.E_ACCESS_DENIED);
         }
         return partier;
@@ -306,10 +306,10 @@ public class PartyManager
      * Remove the specified player from the party.
      * @return true if they were removed.
      */
-    protected boolean removePlayer (int memberId)
+    protected boolean removePlayer (int playerId)
     {
         // make sure we're still alive and they're actually in
-        if (_partyObj == null || !_partyObj.peeps.containsKey(memberId)) {
+        if (_partyObj == null || !_partyObj.peeps.containsKey(playerId)) {
             return false;
         }
 
@@ -319,21 +319,21 @@ public class PartyManager
             return true;
         }
 
-        if ((_partyObj.leaderId == memberId) && _partyObj.disband) {
+        if ((_partyObj.leaderId == playerId) && _partyObj.disband) {
             _partyObj.postMessage(PartyObject.NOTIFICATION,
                 new GenericNotification("m.party_disbanded", Notification.PERSONAL));
             shutdown();
             return true;
         }
 
-        // clear the party info from this player's member object
-        indicateMemberPartying(memberId, false);
+        // clear the party info from this player's player object
+        indicatePlayerPartying(playerId, false);
 
         _partyObj.startTransaction();
         try {
-            _partyObj.removeFromPeeps(memberId);
+            _partyObj.removeFromPeeps(playerId);
             // maybe reassign the leader
-            if (_partyObj.leaderId == memberId) {
+            if (_partyObj.leaderId == playerId) {
                 _partyObj.setLeaderId(nextLeader());
             }
         } finally {
@@ -343,32 +343,32 @@ public class PartyManager
         return true;
     }
 
-    protected void indicateMemberPartying (int memberId, boolean set)
+    protected void indicatePlayerPartying (int playerId, boolean set)
     {
         OrthNodeObject nodeObj = _peerMgr.getOrthNodeObject();
 
         if (set) {
-            MemberParty mp = new MemberParty(memberId, _partyObj.id);
-            MemberParty omp = nodeObj.memberParties.get(mp.memberId);
+            MemberParty mp = new MemberParty(playerId, _partyObj.id);
+            MemberParty omp = nodeObj.playerParties.get(mp.playerId);
             if (omp == null) {
-                nodeObj.addToMemberParties(mp); // normal case
+                nodeObj.addToPlayerParties(mp); // normal case
             } else if (omp.partyId != mp.partyId) {
                 log.warning("Wha? Replacing stale MemberParty", "mp", mp, "omp", omp);
-                nodeObj.updateMemberParties(mp);
+                nodeObj.updatePlayerParties(mp);
             }
             // otherwise: no need to update anything. This can happen in normal circumstances
             // when a user logs in over themselves
 
         } else {
-            nodeObj.removeFromMemberParties(memberId);
+            nodeObj.removeFromPlayerParties(playerId);
         }
 
         // tell the registry about this one directly
-        _partyReg.updateUserParty(memberId, set ? _partyObj.id : 0, nodeObj);
+        _partyReg.updateUserParty(playerId, set ? _partyObj.id : 0, nodeObj);
 
         // and, if they're no longer partying, end their session
         if (!set) {
-            PartySession session = (PartySession) _clmgr.getClient(PartyAuthName.makeKey(memberId));
+            PartySession session = (PartySession) _clmgr.getClient(PartyAuthName.makeKey(playerId));
             if (session != null) {
                 session.endSession();
             }

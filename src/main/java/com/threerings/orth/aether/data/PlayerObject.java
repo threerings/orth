@@ -4,10 +4,13 @@
 package com.threerings.orth.aether.data;
 
 import javax.annotation.Generated;
-import com.threerings.orth.data.FriendEntry;
-import com.threerings.orth.data.OrthName;
+
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
+
+import com.threerings.orth.data.FriendEntry;
+import com.threerings.orth.data.OrthName;
+import com.threerings.orth.party.data.PartySummary;
 
 /**
  * The core distributed object representing the location-agnostic aspect of an Orth player.
@@ -73,14 +76,19 @@ public class PlayerObject extends ClientObject
         return friends.containsKey(memberId);
     }
 
-    // public void setParty (PartySummary summary)
-    // {
-    //     _party = summary;
-    //     int newPartyId = (summary == null) ? 0 : summary.id;
-    //     if (newPartyId != partyId) {
-    //         setPartyId(newPartyId); // avoid generating an extra event when we cross nodes
-    //     }
-    // }
+    public PartySummary getParty ()
+    {
+        return _party;
+    }
+
+    public void setParty (PartySummary summary)
+    {
+        _party = summary;
+        int newPartyId = (summary == null) ? 0 : summary.id;
+        if (newPartyId != partyId) {
+            setPartyId(newPartyId); // avoid generating an extra event when we cross nodes
+        }
+    }
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -237,6 +245,6 @@ public class PlayerObject extends ClientObject
     }
     // AUTO-GENERATED: METHODS END
 
-    // /** The user's party summary. Only needed on the server. */
-    // protected transient PartySummary _party;
+    /** The user's party summary. Only needed on the server. */
+    protected transient PartySummary _party;
 }

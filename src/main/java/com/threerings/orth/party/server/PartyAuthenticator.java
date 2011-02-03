@@ -12,6 +12,7 @@ import com.samskivert.util.ServiceWaiter;
 import com.threerings.web.gwt.ServiceException;
 import com.threerings.presents.server.PresentsDObjectMgr;
 
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthAuthCodes;
 import com.threerings.orth.server.AuxAuthenticator;
@@ -46,7 +47,7 @@ public class PartyAuthenticator extends AuxAuthenticator<PartyCredentials>
     }
 
     @Override // from AuxAuthenticator
-    protected void finishAuthentication (PartyCredentials creds, final OrthName name)
+    protected void finishAuthentication (PartyCredentials creds, final PlayerName name)
         throws ServiceException
     {
         final int partyId = creds.partyId;

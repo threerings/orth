@@ -33,28 +33,28 @@ public class PartyMarshaller extends InvocationMarshaller
         });
     }
 
-    /** The method id used to dispatch {@link #bootMember} requests. */
-    public static final int BOOT_MEMBER = 2;
+    /** The method id used to dispatch {@link #bootPlayer} requests. */
+    public static final int BOOT_PLAYER = 2;
 
     // from interface PartyService
-    public void bootMember (int arg1, InvocationService.InvocationListener arg2)
+    public void bootPlayer (int arg1, InvocationService.InvocationListener arg2)
     {
         ListenerMarshaller listener2 = new ListenerMarshaller();
         listener2.listener = arg2;
-        sendRequest(BOOT_MEMBER, new Object[] {
+        sendRequest(BOOT_PLAYER, new Object[] {
             Integer.valueOf(arg1), listener2
         });
     }
 
-    /** The method id used to dispatch {@link #inviteMember} requests. */
-    public static final int INVITE_MEMBER = 3;
+    /** The method id used to dispatch {@link #invitePlayer} requests. */
+    public static final int INVITE_PLAYER = 3;
 
     // from interface PartyService
-    public void inviteMember (int arg1, InvocationService.InvocationListener arg2)
+    public void invitePlayer (int arg1, InvocationService.InvocationListener arg2)
     {
         ListenerMarshaller listener2 = new ListenerMarshaller();
         listener2.listener = arg2;
-        sendRequest(INVITE_MEMBER, new Object[] {
+        sendRequest(INVITE_PLAYER, new Object[] {
             Integer.valueOf(arg1), listener2
         });
     }

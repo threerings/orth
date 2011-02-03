@@ -24,15 +24,15 @@ public interface PartyProvider extends InvocationProvider
         throws InvocationException;
 
     /**
-     * Handles a {@link PartyService#bootMember} request.
+     * Handles a {@link PartyService#bootPlayer} request.
      */
-    void bootMember (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)
+    void bootPlayer (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)
         throws InvocationException;
 
     /**
-     * Handles a {@link PartyService#inviteMember} request.
+     * Handles a {@link PartyService#invitePlayer} request.
      */
-    void inviteMember (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)
+    void invitePlayer (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)
         throws InvocationException;
 
     /**

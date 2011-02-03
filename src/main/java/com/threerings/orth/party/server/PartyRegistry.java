@@ -42,12 +42,10 @@ import com.threerings.crowd.server.PlaceRegistry;
 import com.threerings.whirled.data.ScenePlace;
 
 import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.server.PlayerLocator;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.notify.server.NotificationManager;
-import com.threerings.orth.server.MemberLocator;
-import com.threerings.orth.server.ServerConfig;
-import com.threerings.orth.server.util.ServiceUnit;
 
 import com.threerings.orth.notify.data.PartyInviteNotification;
 
@@ -65,6 +63,7 @@ import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyOccupantInfo;
 import com.threerings.orth.party.data.PartyPlaceObject;
 import com.threerings.orth.party.data.PartySummary;
+import com.threerings.orth.party.data.PeerPartyMarshaller;
 
 import static com.threerings.orth.Log.log;
 
@@ -80,7 +79,7 @@ public class PartyRegistry
     @Inject public PartyRegistry (InvocationManager invmgr, PresentsConnectionManager conmgr,
                                   ClientManager clmgr, PartyAuthenticator partyAuthor)
     {
-        invmgr.registerDispatcher(new PartyBoardDispatcher(this), OrthCodes.WORLD_GROUP);
+        invmgr.registerProvider(this, PartyBoardMarshaller.class, OrthCodes.WORLD_GROUP);
         partyAuthor.init(this); // fiddling to work around a circular dependency
         conmgr.addChainedAuthenticator(partyAuthor);
         clmgr.addSessionFactory(SessionFactory.newSessionFactory(
@@ -94,7 +93,7 @@ public class PartyRegistry
     public void init ()
     {
         _peerMgr.getOrthNodeObject().setPeerPartyService(
-            _invmgr.registerDispatcher(new PeerPartyDispatcher(this)));
+            _invmgr.registerProvider(this, PeerPartyMarshaller.class));
     }
 
     /**
@@ -127,9 +126,9 @@ public class PartyRegistry
      * Called on the server that hosts the passed-in player, not necessarily on the server
      * hosting the party.
      */
-    public void issueInvite (PlayerObject member, OrthName inviter, int partyId, String partyName)
+    public void issueInvite (PlayerObject player, OrthName inviter, int partyId, String partyName)
     {
-        _notifyMan.notify(member, new PartyInviteNotification(inviter, partyId, partyName));
+        _notifyMan.notify(player, new PartyInviteNotification(inviter, partyId, partyName));
     }
 
     /**
@@ -159,17 +158,17 @@ public class PartyRegistry
      * - from PartyManager, when the party is hosted on this node.
      * - from OrthPeerNode, for parties hosted on other nodes.
      */
-    public void updateUserParty (int memberId, int partyId, OrthNodeObject nodeObj)
+    public void updateUserParty (int playerId, int partyId, OrthNodeObject nodeObj)
     {
-        PlayerObject memberObj = _memberLocator.lookupMember(memberId);
-        if (memberObj == null && playerObj == null) {
+        PlayerObject playerObj = _playerLocator.lookupPlayer(playerId);
+        if (playerObj == null && playerObj == null) {
             return; // this node officially doesn't care
         }
 
         // we know that the PartySummary for this party is on the same nodeObj
         PartySummary summary = (partyId == 0) ? null : nodeObj.hostedParties.get(partyId);
-        if (memberObj != null) {
-            updateUserParty(memberObj, summary);
+        if (playerObj != null) {
+            updateUserParty(playerObj, summary);
         }
         if (playerObj != null) {
             updateUserParty(playerObj, summary);
@@ -195,7 +194,7 @@ public class PartyRegistry
     }
 
     /**
-     * Requests that the supplied member pre-join the specified party. If the method returns
+     * Requests that the supplied player pre-join the specified party. If the method returns
      * normally, the player will have been added to the specified party.
      *
      * @throws InvocationException if the party cannot be joined for some reason.
@@ -231,7 +230,7 @@ public class PartyRegistry
         ClientObject caller, final byte mode, final InvocationService.ResultListener rl)
         throws InvocationException
     {
-        final PlayerObject member = (PlayerObject)caller;
+        final PlayerObject player = (PlayerObject)caller;
 
         final List<PartyBoardInfo> list = Lists.newArrayList();
         for (OrthNodeObject nodeObj : _peerMgr.getOrthNodeObjects()) {
@@ -246,7 +245,7 @@ public class PartyRegistry
                 }
                 PartySummary summary = nodeObj.hostedParties.get(info.id);
                 PartyBoardInfo boardInfo = new PartyBoardInfo(summary, info);
-                boardInfo.computeScore(member);
+                boardInfo.computeScore(player);
                 list.add(boardInfo);
             }
         }
@@ -265,14 +264,14 @@ public class PartyRegistry
         final PartyBoardService.JoinListener jl)
         throws InvocationException
     {
-        final PlayerObject member = (PlayerObject)caller;
+        final PlayerObject player = (PlayerObject)caller;
 
-        if (member.partyId != 0) {
+        if (player.partyId != 0) {
             // TODO: possibly a better error? Surely this will be blocked on the client
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
 
-        finishCreateParty(member, name, inviteAllFriends, jl);
+        finishCreateParty(player, name, inviteAllFriends, jl);
     }
 
     // from PartyBoardProvider & PeerPartyProvider
@@ -314,7 +313,7 @@ public class PartyRegistry
     /**
      * Finish creating a new party.
      */
-    protected void finishCreateParty (PlayerObject member, String name,
+    protected void finishCreateParty (PlayerObject player, String name,
         boolean inviteAllFriends, PartyBoardService.JoinListener jl)
     {
         PartyObject pobj = null;
@@ -331,16 +330,16 @@ public class PartyRegistry
                 // we know that we're 66x60
                 MediaDesc.HALF_VERTICALLY_CONSTRAINED);
 
-            pobj.leaderId = member.getMemberId();
+            pobj.leaderId = player.getPlayerId();
             pobj.disband = true;
-            if (member.location instanceof ScenePlace) {
-                pobj.sceneId = ((ScenePlace) member.location).sceneId;
+            if (player.location instanceof ScenePlace) {
+                pobj.sceneId = ((ScenePlace) player.location).sceneId;
             }
 
-            // create the PartyManager and add the member
+            // create the PartyManager and add the player
             mgr = _injector.getInstance(PartyManager.class);
-            mgr.init(pobj, member.getMemberId());
-            mgr.addPlayer(member.memberName);
+            mgr.init(pobj, player.getPlayerId());
+            mgr.addPlayer(player.playerName);
 
             // we're hosting this party so we send them to this same node
             jl.foundParty(pobj.id, ServerConfig.serverHost, ServerConfig.serverPorts[0]);
@@ -367,12 +366,12 @@ public class PartyRegistry
         _parties.put(pobj.id, mgr);
 
         if (inviteAllFriends) {
-            mgr.inviteAllFriends(member);
+            mgr.inviteAllFriends(player);
         }
     }
 
     /**
-     * Called when the member represented by the specified user object has joined or left a party.
+     * Called when the player represented by the specified user object has joined or left a party.
      */
     protected void updateUserParty (PlayerObject userObj, PartySummary party)
     {
@@ -476,7 +475,7 @@ public class PartyRegistry
     @Inject protected BodyManager _bodyMan;
     @Inject protected Injector _injector;
     @Inject protected InvocationManager _invmgr;
-    @Inject protected MemberLocator _memberLocator;
+    @Inject protected PlayerLocator _playerLocator;
     @Inject protected OrthPeerManager _peerMgr;
     @Inject protected NotificationManager _notifyMan;
     @Inject protected PlaceRegistry _placeReg;

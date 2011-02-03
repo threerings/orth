@@ -10,18 +10,18 @@ import com.threerings.util.Name;
 
 import com.threerings.crowd.data.BodyObject;
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.aether.data.VizPlayerName;
 
 /**
- * Contains information on a party member logged into the server.
+ * Contains information on a party player logged into the server.
  */
 @ActionScript(omit=true)
 public class PartierObject extends BodyObject
 {
     // AUTO-GENERATED: FIELDS START
-    /** The field name of the <code>memberName</code> field. */
+    /** The field name of the <code>playerName</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String MEMBER_NAME = "memberName";
+    public static final String PLAYER_NAME = "playerName";
 
     /** The field name of the <code>partyId</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -29,28 +29,28 @@ public class PartierObject extends BodyObject
     // AUTO-GENERATED: FIELDS END
 
     /** The name and id information for this user. */
-    public OrthName memberName;
+    public VizPlayerName playerName;
 
     /** The party to which this partier is party. */
     public int partyId;
 
     /**
-     * Returns this member's unique id.
+     * Returns this player's unique id.
      */
-    public int getMemberId ()
+    public int getPlayerId ()
     {
-        return memberName.getId();
+        return playerName.getId();
     }
 
     @Override // from BodyObject
     public Name getVisibleName ()
     {
-        return memberName;
+        return playerName;
     }
 
     // AUTO-GENERATED: METHODS START
     /**
-     * Requests that the <code>memberName</code> field be set to the
+     * Requests that the <code>playerName</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
@@ -58,12 +58,12 @@ public class PartierObject extends BodyObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setMemberName (OrthName value)
+    public void setPlayerName (VizPlayerName value)
     {
-        OrthName ovalue = this.memberName;
+        VizPlayerName ovalue = this.playerName;
         requestAttributeChange(
-            MEMBER_NAME, value, ovalue);
-        this.memberName = value;
+            PLAYER_NAME, value, ovalue);
+        this.playerName = value;
     }
 
     /**

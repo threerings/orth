@@ -8,10 +8,8 @@ import com.google.inject.Inject;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.ClientResolver;
 
+import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.data.MediaDesc;
-
-import com.threerings.orth.server.persist.MemberRecord;
-import com.threerings.orth.server.persist.MemberRepository;
 
 import com.threerings.orth.person.server.persist.ProfileRecord;
 import com.threerings.orth.person.server.persist.ProfileRepository;
@@ -46,7 +44,7 @@ public class PartyClientResolver extends ClientResolver
         // NOTE: we avoid using the dobject setters here because we know the object is not out in
         // the wild and there's no point in generating a crapload of events during user
         // initialization when we know that no one is listening
-        partObj.memberName = new OrthName(member.name, member.memberId, photo);
+        partObj.playerName = new VizPlayerName(member.name, member.memberId, photo);
     }
 
     @Inject protected MemberRepository _memberRepo;
