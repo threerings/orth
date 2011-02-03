@@ -3,6 +3,7 @@
 package com.threerings.orth.world.data {
 
 import com.threerings.orth.world.client.WorldService;
+import com.threerings.orth.world.client.WorldService_WorldMoveListener;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.data.InvocationMarshaller;
 
@@ -16,5 +17,17 @@ import com.threerings.presents.data.InvocationMarshaller;
 public class WorldMarshaller extends InvocationMarshaller
     implements WorldService
 {
+    /** The method id used to dispatch <code>moveTo</code> requests. */
+    public static const MOVE_TO :int = 1;
+
+    // from interface WorldService
+    public function moveTo (arg1 :OrthPlace, arg2 :WorldService_WorldMoveListener) :void
+    {
+        var listener2 :WorldMarshaller_WorldMoveMarshaller = new WorldMarshaller_WorldMoveMarshaller();
+        listener2.listener = arg2;
+        sendRequest(MOVE_TO, [
+            arg1, listener2
+        ]);
+    }
 }
 }

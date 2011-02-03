@@ -11,4 +11,24 @@ import com.threerings.presents.client.InvocationService;
  */
 public interface WorldService extends InvocationService
 {
+    /**
+     * Used to communicate the response to a {@link WorldService#moveTo} request.
+     */
+    public static interface WorldMoveListener extends InvocationListener
+    {
+        /**
+         * Indicates that a move succeeded.
+         */
+        public void moveSucceeded (int placeId);
+
+        /**
+         * Indicates that the client must switch to the specified server and reissue its move
+         * request in order to relocate to its desired scene.
+         */
+        public void moveRequiresServerSwitch (String hostname, int[] ports);
+    }
+    
+
+    /** Request that this client move to some new {@link OrthPlace}. */
+    public void moveTo (OrthPlace place, WorldMoveListener listener);
 }
