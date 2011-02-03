@@ -6,6 +6,8 @@ package com.threerings.orth.peer.server;
 
 import java.util.Map;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
 import com.samskivert.util.Lifecycle;
@@ -48,6 +50,26 @@ public abstract class OrthPeerManager extends CrowdPeerManager
         super(cycle);
     }
 
+    /**
+     * Return a reference to our {@link OrthNodeObject}.
+     */
+    public OrthNodeObject getOrthNodeObject ()
+    {
+        return _onobj;
+    }
+
+    /**
+     * Returns an iterable over all node objects (this and other peers') casted to {@link
+     * OrthNodeObject}.
+     */
+    public Iterable<OrthNodeObject> getOrthNodeObjects ()
+    {
+        return Iterables.transform(getNodeObjects(), new Function<NodeObject, OrthNodeObject>() {
+            public OrthNodeObject apply (NodeObject node) {
+                return (OrthNodeObject)node;
+            }
+        });
+    }
     /**
      * Return a uniquely assigned integer for this node, smaller than {@link MAX_NODES}.
      */
@@ -208,12 +230,12 @@ public abstract class OrthPeerManager extends CrowdPeerManager
     public static interface FarSeeingObserver<T extends OrthName>
     {
         /**
-         * Notifies the observer when a member has logged onto an msoy server.
+         * Notifies the observer when a member has logged onto an orth server.
          */
         void loggedOn (String node, T member);
 
         /**
-         * Notifies the observer when a member has logged off of an msoy server.
+         * Notifies the observer when a member has logged off of an orth server.
          */
         void loggedOff (String peerName, T member);
     }
