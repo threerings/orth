@@ -14,6 +14,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.world.data.OrthPlace;
+import com.threerings.orth.aether.data.PlayerName;
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
@@ -26,7 +27,7 @@ public class PlayerObject extends ClientObject
 
     public var location :OrthPlace;
 
-    public var following :OrthName;
+    public var following :PlayerName;
 
     public var followers :DSet;
 
@@ -36,7 +37,7 @@ public class PlayerObject extends ClientObject
 
     public var playerNameChanged :Signal = new Signal(VizPlayerName, VizPlayerName);
     public var locationChanged :Signal = new Signal(OrthPlace, OrthPlace);
-    public var followingChanged :Signal = new Signal(OrthName, OrthName);
+    public var followingChanged :Signal = new Signal(PlayerName, PlayerName);
     public var followersChanged :Signal = new Signal(DSet, DSet);
     public var followersEntryAdded :Signal = new Signal(DSet_Entry);
     public var followersEntryRemoved :Signal = new Signal(DSet_Entry);
@@ -64,7 +65,7 @@ public class PlayerObject extends ClientObject
         super.readObject(ins);
         playerName = ins.readObject(VizPlayerName);
         location = ins.readObject(OrthPlace);
-        following = ins.readObject(OrthName);
+        following = ins.readObject(PlayerName);
         followers = ins.readObject(DSet);
         friends = ins.readObject(DSet);
         partyId = ins.readInt();

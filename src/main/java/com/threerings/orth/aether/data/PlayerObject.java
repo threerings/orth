@@ -8,8 +8,8 @@ import javax.annotation.Generated;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.FriendEntry;
-import com.threerings.orth.data.OrthName;
 import com.threerings.orth.world.data.OrthPlace;
 import com.threerings.orth.party.data.PartySummary;
 
@@ -55,10 +55,10 @@ public class PlayerObject extends ClientObject
     public OrthPlace location;
 
     /** The name of the member this member is following or null. */
-    public OrthName following;
+    public PlayerName following;
 
     /** The names of members following this member. */
-    public DSet<OrthName> followers = new DSet<OrthName>();
+    public DSet<PlayerName> followers = new DSet<PlayerName>();
 
     /** The online friends of this player. */
     public DSet<FriendEntry> friends = new DSet<FriendEntry>();
@@ -142,9 +142,9 @@ public class PlayerObject extends ClientObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setFollowing (OrthName value)
+    public void setFollowing (PlayerName value)
     {
-        OrthName ovalue = this.following;
+        PlayerName ovalue = this.following;
         requestAttributeChange(
             FOLLOWING, value, ovalue);
         this.following = value;
@@ -156,7 +156,7 @@ public class PlayerObject extends ClientObject
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void addToFollowers (OrthName elem)
+    public void addToFollowers (PlayerName elem)
     {
         requestEntryAdd(FOLLOWERS, followers, elem);
     }
@@ -178,7 +178,7 @@ public class PlayerObject extends ClientObject
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void updateFollowers (OrthName elem)
+    public void updateFollowers (PlayerName elem)
     {
         requestEntryUpdate(FOLLOWERS, followers, elem);
     }
@@ -194,10 +194,10 @@ public class PlayerObject extends ClientObject
      * value change when they received the attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setFollowers (DSet<OrthName> value)
+    public void setFollowers (DSet<PlayerName> value)
     {
         requestAttributeChange(FOLLOWERS, value, this.followers);
-        DSet<OrthName> clone = (value == null) ? null : value.clone();
+        DSet<PlayerName> clone = (value == null) ? null : value.clone();
         this.followers = clone;
     }
 
