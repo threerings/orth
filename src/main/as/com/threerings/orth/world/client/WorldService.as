@@ -4,7 +4,7 @@ package com.threerings.orth.world.client {
 
 import com.threerings.presents.client.InvocationService;
 
-import com.threerings.orth.world.data.OrthPlace;
+import com.threerings.orth.world.data.PlaceKey;
 
 /**
  * An ActionScript version of the Java WorldService interface.
@@ -12,6 +12,6 @@ import com.threerings.orth.world.data.OrthPlace;
 public interface WorldService extends InvocationService
 {
     // from Java interface WorldService
-    function moveTo (arg1 :OrthPlace, arg2 :WorldService_WorldMoveListener) :void;
+    function locatePlace (arg1 :PlaceKey, arg2 :WorldService_PlaceResolutionListener) :void;
 }
 }

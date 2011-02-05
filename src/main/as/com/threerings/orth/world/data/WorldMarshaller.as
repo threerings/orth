@@ -5,7 +5,7 @@ package com.threerings.orth.world.data {
 import com.threerings.presents.data.InvocationMarshaller;
 
 import com.threerings.orth.world.client.WorldService;
-import com.threerings.orth.world.client.WorldService_WorldMoveListener;
+import com.threerings.orth.world.client.WorldService_PlaceResolutionListener;
 
 /**
  * Provides the implementation of the <code>WorldService</code> interface
@@ -17,15 +17,15 @@ import com.threerings.orth.world.client.WorldService_WorldMoveListener;
 public class WorldMarshaller extends InvocationMarshaller
     implements WorldService
 {
-    /** The method id used to dispatch <code>moveTo</code> requests. */
-    public static const MOVE_TO :int = 1;
+    /** The method id used to dispatch <code>locatePlace</code> requests. */
+    public static const LOCATE_PLACE :int = 1;
 
     // from interface WorldService
-    public function moveTo (arg1 :OrthPlace, arg2 :WorldService_WorldMoveListener) :void
+    public function locatePlace (arg1 :PlaceKey, arg2 :WorldService_PlaceResolutionListener) :void
     {
-        var listener2 :WorldMarshaller_WorldMoveMarshaller = new WorldMarshaller_WorldMoveMarshaller();
+        var listener2 :WorldMarshaller_PlaceResolutionMarshaller = new WorldMarshaller_PlaceResolutionMarshaller();
         listener2.listener = arg2;
-        sendRequest(MOVE_TO, [
+        sendRequest(LOCATE_PLACE, [
             arg1, listener2
         ]);
     }

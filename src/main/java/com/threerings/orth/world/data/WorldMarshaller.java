@@ -21,49 +21,49 @@ public class WorldMarshaller extends InvocationMarshaller
     implements WorldService
 {
     /**
-     * Marshalls results to implementations of {@link WorldService.WorldMoveListener}.
+     * Marshalls results to implementations of {@link WorldService.PlaceResolutionListener}.
      */
-    public static class WorldMoveMarshaller extends ListenerMarshaller
-        implements WorldMoveListener
+    public static class PlaceResolutionMarshaller extends ListenerMarshaller
+        implements PlaceResolutionListener
     {
-        /** The method id used to dispatch {@link #moveRequiresServerSwitch}
+        /** The method id used to dispatch {@link #placeLocated}
          * responses. */
-        public static final int MOVE_REQUIRES_SERVER_SWITCH = 1;
+        public static final int PLACE_LOCATED = 1;
 
-        // from interface WorldMoveMarshaller
-        public void moveRequiresServerSwitch (String arg1, int[] arg2)
+        // from interface PlaceResolutionMarshaller
+        public void placeLocated (OrthPlace arg1)
         {
             _invId = null;
             omgr.postEvent(new InvocationResponseEvent(
-                               callerOid, requestId, MOVE_REQUIRES_SERVER_SWITCH,
-                               new Object[] { arg1, arg2 }, transport));
+                               callerOid, requestId, PLACE_LOCATED,
+                               new Object[] { arg1 }, transport));
         }
 
-        /** The method id used to dispatch {@link #moveSucceeded}
+        /** The method id used to dispatch {@link #resolutionFailed}
          * responses. */
-        public static final int MOVE_SUCCEEDED = 2;
+        public static final int RESOLUTION_FAILED = 2;
 
-        // from interface WorldMoveMarshaller
-        public void moveSucceeded (int arg1)
+        // from interface PlaceResolutionMarshaller
+        public void resolutionFailed (PlaceKey arg1, String arg2)
         {
             _invId = null;
             omgr.postEvent(new InvocationResponseEvent(
-                               callerOid, requestId, MOVE_SUCCEEDED,
-                               new Object[] { Integer.valueOf(arg1) }, transport));
+                               callerOid, requestId, RESOLUTION_FAILED,
+                               new Object[] { arg1, arg2 }, transport));
         }
 
         @Override // from InvocationMarshaller
         public void dispatchResponse (int methodId, Object[] args)
         {
             switch (methodId) {
-            case MOVE_REQUIRES_SERVER_SWITCH:
-                ((WorldMoveListener)listener).moveRequiresServerSwitch(
-                    (String)args[0], (int[])args[1]);
+            case PLACE_LOCATED:
+                ((PlaceResolutionListener)listener).placeLocated(
+                    (OrthPlace)args[0]);
                 return;
 
-            case MOVE_SUCCEEDED:
-                ((WorldMoveListener)listener).moveSucceeded(
-                    ((Integer)args[0]).intValue());
+            case RESOLUTION_FAILED:
+                ((PlaceResolutionListener)listener).resolutionFailed(
+                    (PlaceKey)args[0], (String)args[1]);
                 return;
 
             default:
@@ -73,15 +73,15 @@ public class WorldMarshaller extends InvocationMarshaller
         }
     }
 
-    /** The method id used to dispatch {@link #moveTo} requests. */
-    public static final int MOVE_TO = 1;
+    /** The method id used to dispatch {@link #locatePlace} requests. */
+    public static final int LOCATE_PLACE = 1;
 
     // from interface WorldService
-    public void moveTo (OrthPlace arg1, WorldService.WorldMoveListener arg2)
+    public void locatePlace (PlaceKey arg1, WorldService.PlaceResolutionListener arg2)
     {
-        WorldMarshaller.WorldMoveMarshaller listener2 = new WorldMarshaller.WorldMoveMarshaller();
+        WorldMarshaller.PlaceResolutionMarshaller listener2 = new WorldMarshaller.PlaceResolutionMarshaller();
         listener2.listener = arg2;
-        sendRequest(MOVE_TO, new Object[] {
+        sendRequest(LOCATE_PLACE, new Object[] {
             arg1, listener2
         });
     }

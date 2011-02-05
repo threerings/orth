@@ -2,53 +2,36 @@
 //
 // $Id$
 
-package com.threerings.orth.room.data {
-
-import com.threerings.whirled.data.ScenePlace;
+package com.threerings.orth.notify.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
-import com.threerings.orth.world.data.OrthPlace;
+import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.notify.data.Notification;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class RoomPlace extends ScenePlace
-    implements OrthPlace
+public class FollowInviteNotification extends Notification
 {
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
-    public var peer :String;
-
-    public var name :String;
-
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        peer = ins.readField(String);
-        name = ins.readField(String);
+        _inviter = ins.readObject(PlayerName);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeField(peer);
-        out.writeField(name);
+        out.writeObject(_inviter);
     }
 
+    protected var _inviter :PlayerName;
 // GENERATED STREAMING END
-
-    public function getPeer () :String
-    {
-        return peer;
-    }
-
-    public function describePlace () :String
-    {
-        return name;
-    }
 
 // GENERATED CLASSFINISH START
 }

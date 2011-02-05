@@ -21,6 +21,9 @@ import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.world.data.OrthPlace;
+import com.threerings.orth.world.data.PlaceKey;
+import com.threerings.orth.peer.data.HostedPlace;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.data.OrthNodeObject;
 
@@ -70,6 +73,27 @@ public abstract class OrthPeerManager extends CrowdPeerManager
             }
         });
     }
+
+    /** Returns a lock used to claim resolution of the specified scene. */
+    public static NodeObject.Lock getPlaceLock (PlaceKey place)
+    {
+        return new NodeObject.Lock("PlaceHost", place);
+    }
+
+    /**
+     * Returns the node name of the peer that is hosting the specified place, or null if no peer
+     * has published that they are hosting the place.
+     */
+    public OrthPlace findHostedPlace (final PlaceKey place)
+    {
+        return lookupNodeDatum(new Function<NodeObject, OrthPlace>() {
+            public OrthPlace apply (NodeObject nodeobj) {
+                HostedPlace info = ((OrthNodeObject) nodeobj).hostedPlaces.get(place);
+                return (info == null) ? null : info.key.toPlace(nodeobj.nodeName);
+            }
+        });
+    }
+
     /**
      * Return a uniquely assigned integer for this node, smaller than {@link MAX_NODES}.
      */

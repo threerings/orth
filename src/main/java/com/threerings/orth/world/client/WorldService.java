@@ -3,32 +3,22 @@
 
 package com.threerings.orth.world.client;
 
-import com.threerings.orth.world.data.OrthPlace;
+import com.threerings.io.Streamable;
 import com.threerings.presents.client.InvocationService;
+
+import com.threerings.orth.world.data.PlaceKey;
+import com.threerings.orth.world.data.OrthPlace;
 
 /**
  * Provides global services to the world client.
  */
 public interface WorldService extends InvocationService
 {
-    /**
-     * Used to communicate the response to a {@link WorldService#moveTo} request.
-     */
-    public static interface WorldMoveListener extends InvocationListener
+    public static interface PlaceResolutionListener extends InvocationListener
     {
-        /**
-         * Indicates that a move succeeded.
-         */
-        public void moveSucceeded (int placeId);
-
-        /**
-         * Indicates that the client must switch to the specified server and reissue its move
-         * request in order to relocate to its desired scene.
-         */
-        public void moveRequiresServerSwitch (String hostname, int[] ports);
+        public void placeLocated (OrthPlace place);
+        public void resolutionFailed (PlaceKey key, String cause);
     }
-    
 
-    /** Request that this client move to some new {@link OrthPlace}. */
-    public void moveTo (OrthPlace place, WorldMoveListener listener);
+    public void locatePlace (PlaceKey key, PlaceResolutionListener listener);
 }

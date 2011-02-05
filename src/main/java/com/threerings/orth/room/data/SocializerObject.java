@@ -25,7 +25,7 @@ import com.threerings.orth.room.data.SocializerInfo;
  * Represents an Orth player's in-room incarnation.
  */
 public class SocializerObject extends ActorObject
-    implements OrthPlayerBody<SocializerObject>
+    implements OrthPlayerBody
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>name</code> field. */

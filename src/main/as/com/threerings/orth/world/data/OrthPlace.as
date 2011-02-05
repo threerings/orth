@@ -1,39 +1,19 @@
-// GENERATED PREAMBLE START
 //
 // $Id$
 
 package com.threerings.orth.world.data {
 
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
-import com.threerings.io.SimpleStreamableObject;
+import com.threerings.io.Streamable;
 
-// GENERATED PREAMBLE END
-
-// GENERATED CLASSDECL START
-public class OrthPlace extends SimpleStreamableObject
+/**
+ * The base type for a peer-qualified, instantiated location that an Orth player can be in.
+ */
+public interface OrthPlace extends Streamable
 {
-// GENERATED CLASSDECL END
+    /** The peer this place is hosted on. */
+    function getPeer () :String;
 
-// GENERATED STREAMING START
-    public var peer :String;
-
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-        peer = ins.readField(String);
-    }
-
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        super.writeObject(out);
-        out.writeField(peer);
-    }
-
-// GENERATED STREAMING END
-
-// GENERATED CLASSFINISH START
+    /** A short, human-readable description of what place this is. */
+    function describePlace () :String;
 }
 }
-// GENERATED CLASSFINISH END
-

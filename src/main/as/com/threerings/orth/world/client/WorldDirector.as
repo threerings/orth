@@ -12,8 +12,6 @@ import com.threerings.presents.client.Client;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.room.data.OrthRoomConfig;
-import com.threerings.orth.room.data.PetMarshaller;
 import com.threerings.orth.world.data.OrthPlace;
 
 /**
@@ -23,10 +21,6 @@ import com.threerings.orth.world.data.OrthPlace;
 public class WorldDirector extends BasicDirector
 {
     public const log :Log = Log.getLog(this);
-
-    // statically reference classes we require
-    PetMarshaller;
-    OrthRoomConfig;
 
     public function WorldDirector (ctx :OrthContext)
     {
