@@ -192,7 +192,7 @@ public class OrthContext
     /**
      * Create an error handling function for use with InvocationService listener adapters.
      */
-    protected function chatErrHandler (
+    public function chatErrHandler (
         bundle :String, errWrap :String, component :UIComponent, logArgs :Array) :Function
     {
         return function (cause :String) :void {
