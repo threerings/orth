@@ -2,7 +2,6 @@
 // $Id: RoomController.as 17898 2009-08-24 03:38:13Z ray $
 
 package com.threerings.orth.room.client {
-
 import flash.display.DisplayObject;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
@@ -31,6 +30,7 @@ import com.threerings.crowd.util.CrowdContext;
 import com.threerings.flex.CommandMenu;
 import com.threerings.flex.PopUpUtil;
 import com.threerings.whirled.client.SceneController;
+import com.threerings.whirled.client.SceneDirector;
 
 import com.threerings.util.Log;
 import com.threerings.util.Map;
@@ -928,6 +928,7 @@ public class RoomController extends SceneController
 
     protected const _playerDir :PlayerDirector = inject(PlayerDirector);
     protected const _worldDir :WorldDirector = inject(WorldDirector);
+    protected const _sceneDir :OrthSceneDirector = inject(SceneDirector);
 
     protected const _app :Application = inject(Application);
     protected const _topPanel :TopPanel = inject(TopPanel);
