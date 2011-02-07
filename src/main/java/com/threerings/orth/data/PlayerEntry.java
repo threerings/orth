@@ -3,11 +3,8 @@
 
 package com.threerings.orth.data;
 
-import com.threerings.presents.dobj.DSet;
-
-import com.google.gwt.user.client.rpc.IsSerializable;
-
 import com.threerings.orth.aether.data.VizPlayerName;
+import com.threerings.presents.dobj.DSet;
 
 public class PlayerEntry
     implements /* IsSerializable, */ DSet.Entry

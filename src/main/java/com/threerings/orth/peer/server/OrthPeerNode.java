@@ -3,18 +3,12 @@
 
 package com.threerings.orth.peer.server;
 
-import com.google.inject.Inject;
-
+import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
-
 import com.threerings.presents.peer.server.PeerNode;
-
-import com.threerings.orth.party.data.PartyInfo;
-import com.threerings.orth.party.data.MemberParty;
-import com.threerings.orth.peer.data.OrthNodeObject;
 
 /**
  * Handles Orth-specific peer bits.
@@ -37,8 +31,8 @@ public class OrthPeerNode extends PeerNode
             String name = event.getName();
 
             if (OrthNodeObject.MEMBER_PARTIES.equals(name)) {
-                MemberParty memParty = (MemberParty) event.getEntry();
 // ORTH TODO
+//                MemberParty memParty = (MemberParty) event.getEntry();
 //                _partyReg.updateUserParty(
 //                    memParty.memberId, memParty.partyId, (OrthNodeObject)nodeobj);
             }
@@ -49,8 +43,8 @@ public class OrthPeerNode extends PeerNode
             String name = event.getName();
 
             if (OrthNodeObject.MEMBER_PARTIES.equals(name)) {
-                MemberParty memParty = (MemberParty) event.getEntry();
 // ORTH TODO
+//                MemberParty memParty = (MemberParty) event.getEntry();
 //                _partyReg.updateUserParty(
 //                    memParty.memberId, memParty.partyId, (OrthNodeObject)nodeobj);
 

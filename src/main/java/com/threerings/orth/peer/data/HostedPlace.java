@@ -5,12 +5,9 @@ package com.threerings.orth.peer.data;
 
 import com.google.common.collect.ComparisonChain;
 
-import com.samskivert.util.Tuple;
-
+import com.threerings.orth.world.data.PlaceKey;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.util.ActionScript;
-
-import com.threerings.orth.world.data.PlaceKey;
 
 /**
  * Information about a place hosted by a node.

@@ -5,8 +5,6 @@ package com.threerings.orth.room.data;
 
 import com.google.common.collect.ComparisonChain;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-
 /**
  * A fully qualified item identifier (type and integer id).
  */

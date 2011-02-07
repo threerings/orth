@@ -3,11 +3,9 @@
 
 package com.threerings.orth.world.client;
 
-import com.threerings.io.Streamable;
-import com.threerings.presents.client.InvocationService;
-
-import com.threerings.orth.world.data.PlaceKey;
 import com.threerings.orth.world.data.OrthPlace;
+import com.threerings.orth.world.data.PlaceKey;
+import com.threerings.presents.client.InvocationService;
 
 /**
  * Provides global services to the world client.

@@ -41,7 +41,7 @@ public class AetherManager
                                 final InvocationService.InvocationListener listener)
         throws InvocationException
     {
-        final PlayerObject user = (PlayerObject) caller; // 
+        final PlayerObject user = (PlayerObject) caller; //
 
         // make sure the target player is online and in the same room as the requester
         final PlayerObject target = _locator.lookupPlayer(playerId);
@@ -116,11 +116,11 @@ public class AetherManager
         final InvocationService.ConfirmListener listener)
         throws InvocationException
     {
-        final PlayerObject user = (PlayerObject) caller;
         // ORTH TODO: To Be Implemented
+        // final PlayerObject user = (PlayerObject) caller;
     }
 
-    
+
     @Inject protected NotificationManager _notifyMan;
     @Inject protected PlayerLocator _locator;
 }
