@@ -4,9 +4,13 @@ import com.threerings.presents.data.InvocationCodes;
 
 /**
  * Codes and constants relating to the Room services.
+ * ORTH TODO: Rename me to OrthRoomCodes
  */
 public interface OrthSceneCodes extends InvocationCodes
 {
+    /** Constant used to identify the orth.room world implementation. */
+    public static final String ROOM_PLACE_TYPE = "rooms";
+
     /** A message event type dispatched on the room object. */
     public static final String SPRITE_MESSAGE = "sprMsg";
 

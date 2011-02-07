@@ -2,6 +2,9 @@ package com.threerings.orth.room.data
 {
 public class OrthRoomCodes
 {
+    /** Constant used to identify the orth.room world implementation. */
+    public static const ROOM_PLACE_TYPE :String = "rooms";
+
     /** A message event type dispatched on the room object. */
     public static const SPRITE_MESSAGE :String = "sprMsg";
 
