@@ -18,7 +18,6 @@ import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
-import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.data.OrthCodes;
 
 import static com.threerings.orth.Log.log;
@@ -49,8 +48,9 @@ public class AetherManager
             throw new InvocationException("e.follow_not_in_room");
         }
 
+        // ORTH TODO: Implement _notifyMan
         // issue the follow invitation to the target
-        _notifyMan.notifyFollowInvite(target, user.playerName);
+        // _notifyMan.notifyFollowInvite(target, user.playerName);
     }
 
     @Override // from interface WorldProvider
@@ -121,6 +121,7 @@ public class AetherManager
     }
 
 
-    @Inject protected NotificationManager _notifyMan;
+    // ORTH TODO: Implement NotificationManager
+    // @Inject protected NotificationManager _notifyMan;
     @Inject protected PlayerLocator _locator;
 }
