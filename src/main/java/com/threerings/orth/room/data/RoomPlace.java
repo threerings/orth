@@ -12,6 +12,9 @@ public class RoomPlace extends ScenePlace
     /** The peer this room is hosted on. */
     public String peer;
 
+    /** The ports the room service listens to on the peer. */
+    public int[] ports;
+
     /** The name of this room. */
     public String name;
 
@@ -25,6 +28,12 @@ public class RoomPlace extends ScenePlace
     public String describePlace ()
     {
         return name;
+    }
+
+    // from OrthPlace
+    public String getPlaceType ()
+    {
+        return OrthSceneCodes.ROOM_PLACE_TYPE;
     }
 
     @Override

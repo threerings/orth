@@ -8,7 +8,10 @@ import com.threerings.whirled.data.ScenePlace;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+import com.threerings.io.TypedArray;
 
+import com.threerings.orth.room.client.RoomContext;
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.data.OrthPlace;
 
 // GENERATED PREAMBLE END
@@ -22,12 +25,15 @@ public class RoomPlace extends ScenePlace
 // GENERATED STREAMING START
     public var peer :String;
 
+    public var ports :TypedArray;
+
     public var name :String;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         peer = ins.readField(String);
+        ports = ins.readField(TypedArray.getJavaType(int));
         name = ins.readField(String);
     }
 
@@ -35,6 +41,7 @@ public class RoomPlace extends ScenePlace
     {
         super.writeObject(out);
         out.writeField(peer);
+        out.writeField(ports);
         out.writeField(name);
     }
 
@@ -45,9 +52,24 @@ public class RoomPlace extends ScenePlace
         return peer;
     }
 
+    public function getPorts () :Array
+    {
+        return ports;
+    }
+
     public function describePlace () :String
     {
         return name;
+    }
+
+    public function getPlaceType () :String
+    {
+        return OrthRoomCodes.ROOM_PLACE_TYPE;
+    }
+
+    public function createContext () :WorldContext
+    {
+        return new RoomContext();
     }
 
 // GENERATED CLASSFINISH START
