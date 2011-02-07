@@ -1,6 +1,7 @@
 //
 // $Id$
 package com.threerings.orth.world.data {
+import com.threerings.io.TypedArray;
 
 import com.threerings.presents.data.InvocationMarshaller_ListenerMarshaller;
 
@@ -15,21 +16,13 @@ public class WorldMarshaller_PlaceResolutionMarshaller
     /** The method id used to dispatch <code>placeLocated</code> responses. */
     public static const PLACE_LOCATED :int = 1;
 
-    /** The method id used to dispatch <code>resolutionFailed</code> responses. */
-    public static const RESOLUTION_FAILED :int = 2;
-
     // from InvocationMarshaller_ListenerMarshaller
     override public function dispatchResponse (methodId :int, args :Array) :void
     {
         switch (methodId) {
         case PLACE_LOCATED:
             (listener as WorldService_PlaceResolutionListener).placeLocated(
-                (args[0] as OrthPlace));
-            return;
-
-        case RESOLUTION_FAILED:
-            (listener as WorldService_PlaceResolutionListener).resolutionFailed(
-                (args[0] as PlaceKey), (args[1] as String));
+                (args[0] as String), (args[1] as TypedArray /* of int */), (args[2] as OrthPlace));
             return;
 
         default:

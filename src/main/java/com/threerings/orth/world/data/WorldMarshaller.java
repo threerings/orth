@@ -31,25 +31,12 @@ public class WorldMarshaller extends InvocationMarshaller
         public static final int PLACE_LOCATED = 1;
 
         // from interface PlaceResolutionMarshaller
-        public void placeLocated (OrthPlace arg1)
+        public void placeLocated (String arg1, int[] arg2, OrthPlace arg3)
         {
             _invId = null;
             omgr.postEvent(new InvocationResponseEvent(
                                callerOid, requestId, PLACE_LOCATED,
-                               new Object[] { arg1 }, transport));
-        }
-
-        /** The method id used to dispatch {@link #resolutionFailed}
-         * responses. */
-        public static final int RESOLUTION_FAILED = 2;
-
-        // from interface PlaceResolutionMarshaller
-        public void resolutionFailed (PlaceKey arg1, String arg2)
-        {
-            _invId = null;
-            omgr.postEvent(new InvocationResponseEvent(
-                               callerOid, requestId, RESOLUTION_FAILED,
-                               new Object[] { arg1, arg2 }, transport));
+                               new Object[] { arg1, arg2, arg3 }, transport));
         }
 
         @Override // from InvocationMarshaller
@@ -58,12 +45,7 @@ public class WorldMarshaller extends InvocationMarshaller
             switch (methodId) {
             case PLACE_LOCATED:
                 ((PlaceResolutionListener)listener).placeLocated(
-                    (OrthPlace)args[0]);
-                return;
-
-            case RESOLUTION_FAILED:
-                ((PlaceResolutionListener)listener).resolutionFailed(
-                    (PlaceKey)args[0], (String)args[1]);
+                    (String)args[0], (int[])args[1], (OrthPlace)args[2]);
                 return;
 
             default:

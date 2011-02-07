@@ -2,8 +2,9 @@
 // $Id: WorldDirector.as 18771 2009-11-24 22:03:46Z jamie $
 
 package com.threerings.orth.world.client {
-
 import flashx.funk.ioc.inject;
+
+import com.threerings.io.TypedArray;
 
 import com.threerings.util.Log;
 
@@ -67,7 +68,7 @@ public class WorldDirector extends BasicDirector
     }
 
     // from Java WorldService_PlaceResolutionListener
-    public function placeLocated (place :OrthPlace) :void
+    public function placeLocated (host :String, ports :TypedArray,  place :OrthPlace) :void
     {
         var worldClient :WorldClient = (_octx.wctx != null) ? _octx.wctx.getWorldClient() : null;
 
@@ -101,7 +102,7 @@ public class WorldDirector extends BasicDirector
         _currentPlace = null;
 
         // and finally log on
-        worldClient.logonTo(place);
+        worldClient.logonTo(host, ports, place);
     }
 
     // called if our connection to the world server fails or we fail to login
@@ -150,6 +151,6 @@ public class WorldDirector extends BasicDirector
     protected var _observer :ClientObserver;
 
     protected var _currentPlace :OrthPlace;
-    protected var _pendingPlace :OrthPlace;    
+    protected var _pendingPlace :OrthPlace;
 }
 }
