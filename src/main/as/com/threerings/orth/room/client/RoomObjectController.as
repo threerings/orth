@@ -207,8 +207,7 @@ public class RoomObjectController extends RoomController
             _orthCtrl.handleViewUrl(furni.splitActionData()[0] as String);
 
         } else if (furni.actionType.isPortal()) {
-            // ORTH TODO: Replace with equivalent functionality
-            // _sceneDir.traversePortal(furni.id);
+            _sceneDir.traversePortal(furni.id);
 
         } else if (furni.actionType.isHelpPage()) {
             var actionData :Array = furni.splitActionData();

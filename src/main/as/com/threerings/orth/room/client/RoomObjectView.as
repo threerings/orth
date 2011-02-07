@@ -107,8 +107,7 @@ public class RoomObjectView extends RoomView
      */
     public function rereadScene () :void
     {
-        // ORTH TODO
-        // setScene(_ctx.getSceneDirector().getScene() as OrthScene);
+        setScene(_sceneDir.getScene() as OrthScene);
     }
 
     /**
