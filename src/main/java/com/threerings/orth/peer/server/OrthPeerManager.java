@@ -12,6 +12,7 @@ import com.google.common.collect.Maps;
 
 import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList;
+import com.samskivert.util.Tuple;
 
 import com.threerings.crowd.peer.server.CrowdPeerManager;
 import com.threerings.presents.peer.data.ClientInfo;
@@ -21,7 +22,6 @@ import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.world.data.OrthPlace;
 import com.threerings.orth.world.data.PlaceKey;
 import com.threerings.orth.peer.data.HostedPlace;
 import com.threerings.orth.peer.data.OrthClientInfo;
@@ -84,12 +84,12 @@ public abstract class OrthPeerManager extends CrowdPeerManager
      * Returns the node name of the peer that is hosting the specified place, or null if no peer
      * has published that they are hosting the place.
      */
-    public OrthPlace findHostedPlace (final PlaceKey place)
+    public Tuple<String, HostedPlace> findHostedPlace (final PlaceKey place)
     {
-        return lookupNodeDatum(new Function<NodeObject, OrthPlace>() {
-            public OrthPlace apply (NodeObject nodeobj) {
+        return lookupNodeDatum(new Function<NodeObject, Tuple<String, HostedPlace>>() {
+            public Tuple<String, HostedPlace> apply (NodeObject nodeobj) {
                 HostedPlace info = ((OrthNodeObject) nodeobj).hostedPlaces.get(place);
-                return (info == null) ? null : info.key.toPlace(nodeobj.nodeName);
+                return (info == null) ? null : Tuple.newTuple(nodeobj.nodeName, info);
             }
         });
     }
