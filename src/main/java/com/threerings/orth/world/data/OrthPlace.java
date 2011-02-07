@@ -13,6 +13,9 @@ public interface OrthPlace extends Streamable
     /** The peer this place is hosted on. */
     public String getPeer ();
 
+    /** A short, opaque string uniquely identifying what type of place this is. */
+    public String getPlaceType ();
+
     /** A short, human-readable description of what place this is. */
     public String describePlace ();
 }
