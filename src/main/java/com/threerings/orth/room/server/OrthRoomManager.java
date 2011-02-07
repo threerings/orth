@@ -35,10 +35,10 @@ import com.threerings.whirled.spot.server.SpotSceneManager;
 
 import static com.threerings.orth.Log.log;
 
-public abstract class OrthSceneManager extends SpotSceneManager
+public abstract class OrthRoomManager extends SpotSceneManager
     implements OrthRoomProvider
 {
-    public OrthSceneManager ()
+    public OrthRoomManager ()
     {
         super();
     }
@@ -243,7 +243,7 @@ public abstract class OrthSceneManager extends SpotSceneManager
     {
         super.gotSceneData(extras);
 
-        _extras = (OrthSceneExtras) extras;
+        _extras = (OrthRoomExtras) extras;
     }
 
     @Override // from PlaceManager
@@ -428,7 +428,7 @@ public abstract class OrthSceneManager extends SpotSceneManager
     protected OrthRoomObject _orthObj;
 
     /** Extra data from scene resolution. */
-    protected OrthSceneExtras _extras;
+    protected OrthRoomExtras _extras;
 
     /** For all MemberInfo's, a mapping of ItemIdent to the member's oid. */
     protected Map<EntityIdent, Integer> _avatarIdents = Maps.newHashMap();
