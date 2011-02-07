@@ -15,9 +15,6 @@ public interface OrthPlace extends Streamable
     /** Returns the peer this place is hosted on. */
     function getPeer () :String;
 
-    /** Returns the ports this place is hosted on. */
-    function getPorts () :Array;
-
     /** Returns A short, opaque string uniquely identifying what type of place this is. */
     function getPlaceType () :String;
 

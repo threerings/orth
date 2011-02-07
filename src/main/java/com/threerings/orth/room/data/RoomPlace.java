@@ -4,6 +4,7 @@
 package com.threerings.orth.room.data;
 
 import com.threerings.orth.world.data.OrthPlace;
+
 import com.threerings.whirled.data.ScenePlace;
 
 public class RoomPlace extends ScenePlace
@@ -12,11 +13,19 @@ public class RoomPlace extends ScenePlace
     /** The peer this room is hosted on. */
     public String peer;
 
-    /** The ports the room service listens to on the peer. */
-    public int[] ports;
-
     /** The name of this room. */
     public String name;
+
+    public RoomPlace ()
+    {
+    }
+
+    public RoomPlace (String peer, int sceneOid, int sceneId, String name)
+    {
+        super(sceneOid, sceneId);
+        this.peer = peer;
+        this.name = name;
+    }
 
     // from OrthPlace
     public String getPeer ()
