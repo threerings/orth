@@ -1051,6 +1051,7 @@ public class RoomView extends Sprite
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _mediaDir :MediaDirector = inject(MediaDirector);
     protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);
+    protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
 
     /** When we first enter the room, we only load the background (if any). */
     protected var _loadAllMedia :Boolean = false;
