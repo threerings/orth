@@ -11,13 +11,15 @@ import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
-import com.threerings.crowd.util.CrowdContext;
+import com.threerings.whirled.client.SceneDirector;
+import com.threerings.whirled.util.WhirledContext;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
 
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.room.client.OrthSceneDirector;
 import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
@@ -28,7 +30,7 @@ import com.threerings.orth.world.data.OrthPlayerBody;
  * Defines services for the Room client.
  */
 public class RoomContext
-    implements CrowdContext, WorldContext
+    implements WhirledContext, WorldContext
 {
     public function RoomContext ()
     {
@@ -84,6 +86,12 @@ public class RoomContext
         _topPanel.clearMainView(DisplayObject(view));
     }
 
+    // from WhirledContext
+    public function getSceneDirector () :SceneDirector
+    {
+        return _sceneDir;
+    }
+
     // from WorldContext
     public function getPlayerBody () :OrthPlayerBody
     {
@@ -104,9 +112,10 @@ public class RoomContext
         return _client;
     }
 
+    // from WorldContext
     public function gotoPlace (place :OrthPlace) :void
     {
-        // ORTH TODO: i think we can just call _sceneDir here, once we revive it
+        _sceneDir.moveTo(RoomPlace(place).sceneId);
     }
 
 
@@ -120,6 +129,7 @@ public class RoomContext
 
     protected const _locDir :LocationDirector = inject(LocationDirector);
     protected const _occDir :OccupantDirector = inject(OccupantDirector);
+    protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
     protected const _topPanel :TopPanel = inject(TopPanel);
 
     // ORTH TODO: This is highly dubious and will change dramatically, as most chatting will be sent
