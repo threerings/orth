@@ -8,12 +8,14 @@ import com.google.common.collect.ComparisonChain;
 import com.samskivert.util.Tuple;
 
 import com.threerings.presents.dobj.DSet;
+import com.threerings.util.ActionScript;
 
 import com.threerings.orth.world.data.PlaceKey;
 
 /**
  * Information about a place hosted by a node.
  */
+@ActionScript(omit=true)
 public class HostedPlace
     implements DSet.Entry, Comparable<HostedPlace>
 {
