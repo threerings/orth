@@ -2,7 +2,6 @@
 // $Id: MsoySceneDirector.as 18370 2009-10-13 22:43:55Z jamie $
 
 package com.threerings.orth.room.client {
-
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.client.LocationDirector;
@@ -24,6 +23,7 @@ import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
+import com.threerings.orth.room.data.RoomKey;
 import com.threerings.orth.world.client.WorldController;
 import com.threerings.orth.world.client.WorldDirector;
 
@@ -40,7 +40,7 @@ public class OrthSceneDirector extends SceneDirector
 
     public function OrthSceneDirector ()
     {
-        super(_octx.wctx, inject(LocationDirector),
+        super(RoomContext(_octx.wctx), inject(LocationDirector),
             inject(SceneRepository), new OrthSceneFactory());
     }
 
