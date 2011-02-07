@@ -42,7 +42,7 @@ public class RoomPlace extends ScenePlace
     // from OrthPlace
     public String getPlaceType ()
     {
-        return OrthSceneCodes.ROOM_PLACE_TYPE;
+        return OrthRoomCodes.ROOM_PLACE_TYPE;
     }
 
     @Override

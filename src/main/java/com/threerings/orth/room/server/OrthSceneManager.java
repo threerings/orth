@@ -17,10 +17,10 @@ import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.data.OrthSceneCodes;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -56,7 +56,7 @@ public abstract class OrthSceneManager extends SpotSceneManager
         }
 
         // dispatch this as a simple MessageEvent
-        _plobj.postMessage(OrthSceneCodes.SPRITE_MESSAGE, item, name, arg, isAction);
+        _plobj.postMessage(OrthRoomCodes.SPRITE_MESSAGE, item, name, arg, isAction);
     }
 
     @Override
@@ -72,7 +72,7 @@ public abstract class OrthSceneManager extends SpotSceneManager
         }
 
         // dispatch this as a simple MessageEvent
-        _plobj.postMessage(OrthSceneCodes.SPRITE_SIGNAL, name, arg);
+        _plobj.postMessage(OrthRoomCodes.SPRITE_SIGNAL, name, arg);
     }
 
     @Override

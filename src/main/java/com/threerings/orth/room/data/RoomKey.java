@@ -23,7 +23,7 @@ public class RoomKey extends PlaceKey
     // from PlaceKey
     public String getPlaceType ()
     {
-        return OrthSceneCodes.ROOM_PLACE_TYPE;
+        return OrthRoomCodes.ROOM_PLACE_TYPE;
     }
 
     // from PlaceKey
