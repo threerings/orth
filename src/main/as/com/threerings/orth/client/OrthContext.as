@@ -2,6 +2,7 @@
 // $Id$
 
 package com.threerings.orth.client {
+
 import flashx.funk.ioc.inject;
 
 import mx.core.UIComponent;
@@ -22,7 +23,6 @@ import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.util.PresentsContext;
 
 import com.threerings.orth.aether.client.AetherClient;
-import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthCodes;
@@ -70,6 +70,12 @@ public class OrthContext
     public function get wctx () :WorldContext
     {
         return _wctx;
+    }
+
+    public function set wctx (ctx :WorldContext) :void
+    {
+        // ORTH TODO: probably add sanity checks here and whatnot
+        _wctx = ctx;
     }
 
     /**
@@ -145,48 +151,6 @@ public class OrthContext
     {
 // ORTH TODO
 //        getChatDirector().displayInfo(bundle, message, localType);
-    }
-
-    /**
-     * To be explicitly called when we've created a {@link WorldContext} with a {@link WorldClient}
-     * and are about to log into the corresponding world server.
-     */
-    public function enterWorld (ctxClass :Class, hostname :String, ports :Array) :void
-    {
-        if (_wctx != null) {
-            log.error("Aii! Being given a new world context with an old one in place!");
-            // but let it happen
-        }
-
-        // for now, fish our username out of our aether creds. should always be correct,
-        // but possibly not the most elegant
-
-        var username :Name = AetherCredentials(_client.getCredentials()).getUsername();
-
-        // create (but do not inject) the concrete WorldContext subclass we were given
-        _wctx = new ctxClass();
-
-        // configure the host/ports to connect to
-        //_injector.mapValue(String, hostname, "worldHostname");
-        //_injector.mapValue(Array, ports, "worldPorts");
-
-        //// map WorldClass to our instance for the duration of this world session
-        //_injector.mapValue(WorldContext, _wctx);
-
-        //// and perform injection, bootstrapping the world logon proceure
-        //_wctx = _injector.getInstance(ctxClass);
-    }
-
-    /**
-     * To be explicitly called when we've finished leaving a world location.
-     */
-    public function leftWorld () :void
-    {
-        if (_wctx == null) {
-            log.error("Aii Leaving the world with no configured world context.");
-            // but let it happen
-        }
-        _wctx == null;
     }
 
     /**
