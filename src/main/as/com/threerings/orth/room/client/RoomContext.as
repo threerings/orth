@@ -2,7 +2,6 @@
 // $Id: $
 
 package com.threerings.orth.room.client {
-
 import flash.display.DisplayObject;
 
 import flashx.funk.ioc.inject;
@@ -20,6 +19,7 @@ import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.client.OrthSceneDirector;
+import com.threerings.orth.room.data.RoomPlace;
 import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
@@ -117,7 +117,6 @@ public class RoomContext
     {
         _sceneDir.moveTo(RoomPlace(place).sceneId);
     }
-
 
     /** Return a fully casted socializer object, or null if we're not logged on. */
     public function getSocializerObject () :SocializerObject
