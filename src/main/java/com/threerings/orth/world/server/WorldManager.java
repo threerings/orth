@@ -9,22 +9,13 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 import com.samskivert.util.ResultListener;
+import com.samskivert.util.Tuple;
 
-import com.threerings.io.SimpleStreamableObject;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.peer.data.NodeObject;
-import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
 
-import com.threerings.crowd.data.PlaceConfig;
-import com.threerings.crowd.server.LocationManager;
-
-import com.threerings.whirled.data.SceneModel;
-import com.threerings.whirled.server.SceneManager;
-import com.threerings.whirled.server.SceneRegistry;
-import com.threerings.whirled.server.SceneRegistry.ResolutionListener;
-
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.peer.data.HostedPlace;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.world.client.WorldService.PlaceResolutionListener;
 import com.threerings.orth.world.data.OrthPlace;
@@ -43,22 +34,27 @@ public class WorldManager
      */
     public interface PlaceFactory
     {
-        public void resolve (PlaceKey key, PlaceResolutionListener listener);
+        void resolvePlace (PlaceKey key, PlaceResolutionListener listener);
+
+        OrthPlace toPlace (String nodeName, HostedPlace hostedPlace);
+
+        String getHost (String placeType);
+
+        int[] getPorts (String placeType);
     }
 
     /**
-     * Locate, possibly hosting, the given Orth place, and tell the client where to find it. 
+     * Locate, possibly hosting, the given Orth place, and tell the client where to find it.
      */
     public void locatePlace (
         ClientObject caller, final PlaceKey key, final PlaceResolutionListener listener)
         throws InvocationException
     {
         // ORTH TODO: Sanity check caller, throttle requests?
-
-        OrthPlace place = _peerMgr.findHostedPlace(key);
+        Tuple<String, HostedPlace> hosting = _peerMgr.findHostedPlace(key);
         // if it's already hosted, great
-        if (place != null) {
-            listener.placeLocated(place);
+        if (hosting != null) {
+            placeLocated(listener, hosting.left, hosting.right);
             return;
         }
 
@@ -74,11 +70,7 @@ public class WorldManager
                 if (_peerMgr.getNodeObject().nodeName.equals(nodeName)) {
                     log.info("Got lock, resolving place", "place", key);
                     try {
-                        PlaceFactory factory = _factories.get(key.getPlaceType());
-                        if (factory == null) {
-                            throw new IllegalStateException("Can't resolve unknown place type!");
-                        }
-                        factory.resolve(key, listener);
+                        getFactory(key).resolvePlace(key, listener);
 
                         // ORTH TODO: We have to actually update HostedPlaces
 
@@ -88,23 +80,41 @@ public class WorldManager
 
                 } else {
                     // we didn't get the lock, so let's see what happened by re-checking
-                    OrthPlace place = _peerMgr.findHostedPlace(key);
-                    if (place == null || nodeName == null || !nodeName.equals(place.getPeer())) {
+                    Tuple<String, HostedPlace> hosting = _peerMgr.findHostedPlace(key);
+                    if (hosting == null || nodeName == null || !nodeName.equals(hosting.left)) {
                         log.warning("Place resolved on wacked-out node?",
-                            "key", key, "nodeName", nodeName, "place", place);
-                        listener.resolutionFailed(key, "Whacked Out Node");
+                            "key", key, "nodeName", nodeName, "hosting", hosting);
+                        listener.requestFailed("Whacked Out Node");
 
                     } else {
                         // someone sniped us, return a reference to their newly hosted place
-                        listener.placeLocated(place);
+                        placeLocated(listener, hosting.left, hosting.right);
                     }
                 }
             }
             public void requestFailed (Exception cause) {
                 log.warning("Failed to acquire place resolution lock", "place", key, cause);
-                listener.resolutionFailed(key, cause.getMessage());
+                listener.requestFailed(cause.getMessage());
             }
-        });        
+        });
+    }
+
+    private PlaceFactory getFactory (PlaceKey key)
+    {
+        final PlaceFactory factory = _factories.get(key.getPlaceType());
+        if (factory == null) {
+            throw new IllegalStateException("Can't resolve unknown place type!");
+        }
+        return factory;
+    }
+
+    protected void placeLocated (PlaceResolutionListener listener, String node, HostedPlace place)
+    {
+        PlaceFactory factory = getFactory(place.key);
+        listener.placeLocated(
+            factory.getHost(place.key.getPlaceType()),
+            factory.getPorts(place.key.getPlaceType()),
+            factory.toPlace(node, place));
     }
 
     protected Map<String, PlaceFactory> _factories = Maps.newHashMap();
