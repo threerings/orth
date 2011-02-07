@@ -3,10 +3,11 @@
 
 package com.threerings.orth.room.data;
 
+import com.samskivert.util.Comparators;
+
 import com.threerings.orth.world.data.PlaceKey;
 
-public class RoomKey
-    implements PlaceKey
+public class RoomKey extends PlaceKey
 {
     public int sceneId;
 
@@ -20,21 +21,14 @@ public class RoomKey
     }
 
     // from PlaceKey
-    public OrthPlace toPlace (String hostingPeer, int[] hostingPorts)
-    {
-        RoomPlace place = new RoomPlace();
-        place.peer = hostingPeer;
-        place.ports = hostingPorts;
-
-        // ORTH TODO: this toPlace() business may not be the best idea; are we really
-        // supposed to have enough information available in this data object? Why would we?
-        place.name = "???";
-        
-    }
-
-    // from PlaceKey
     public String getPlaceType ()
     {
         return OrthSceneCodes.ROOM_PLACE_TYPE;
+    }
+
+    // from PlaceKey
+    @Override protected int compareWithinType (PlaceKey other)
+    {
+        return Comparators.compare(sceneId, ((RoomKey) other).sceneId);
     }
 }
