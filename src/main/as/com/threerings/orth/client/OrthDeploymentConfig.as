@@ -16,9 +16,9 @@ public interface OrthDeploymentConfig
      */
     function get development () :Boolean;
 
-    function get host () :String;
+    function get aetherHost () :String;
 
-    function get ports () :Array;
+    function get aetherPorts () :Array;
 
     function get policyPort () :int;
 }

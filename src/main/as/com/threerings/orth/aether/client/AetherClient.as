@@ -43,7 +43,7 @@ public class AetherClient extends Client
         const depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 
         // configure our server and port info
-        setServer(depConf.host, depConf.ports);
+        setServer(depConf.aetherHost, depConf.aetherPorts);
 
         // then register with it, as any client would
         PolicyLoader.registerClient(this, depConf.policyPort);
