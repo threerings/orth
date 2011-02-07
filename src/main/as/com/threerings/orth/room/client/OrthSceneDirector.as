@@ -5,34 +5,25 @@ package com.threerings.orth.room.client {
 
 import flashx.funk.ioc.inject;
 
-import com.threerings.util.Log;
-import com.threerings.util.ResultListener;
+import com.threerings.crowd.client.LocationDirector;
+import com.threerings.whirled.client.PendingData;
+import com.threerings.whirled.client.SceneDirector;
+import com.threerings.whirled.client.SceneService_SceneMoveListener;
+import com.threerings.whirled.client.persist.SceneRepository;
 
-import com.threerings.io.TypedArray;
+import com.threerings.util.Log;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.dobj.MessageAdapter;
 import com.threerings.presents.dobj.MessageEvent;
 
-import com.threerings.crowd.client.LocationDirector;
-import com.threerings.crowd.data.PlaceConfig;
-
-import com.threerings.whirled.client.PendingData;
-import com.threerings.whirled.client.SceneDirector;
-import com.threerings.whirled.client.SceneService_SceneMoveListener;
-import com.threerings.whirled.client.persist.SceneRepository;
-
 import com.threerings.orth.client.OrthContext;
-import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.client.OrthSceneFactory;
 import com.threerings.orth.room.data.OrthPortal;
-import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.data.OrthRoomMarshaller;
 import com.threerings.orth.room.data.OrthRoomCodes;
+import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
-import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldController;
 import com.threerings.orth.world.client.WorldDirector;
 
@@ -81,62 +72,12 @@ public class OrthSceneDirector extends SceneDirector
     }
 
     // from SceneDirector
-    override public function moveSucceeded (placeId :int, config :PlaceConfig) :void
-    {
-        var data :OrthPendingData = _pendingData as OrthPendingData;
-        if (data != null && data.message != null) {
-            _octx.displayFeedback(OrthCodes.GENERAL_MSGS, data.message);
-        }
-
-        super.moveSucceeded(placeId, config);
-    }
-
-    // from SceneDirector
-    override public function requestFailed (reason :String) :void
-    {
-        // remember which scene we came from, possibly on another peer
-        var pendingPreviousScene :int = _pendingData != null ?
-            (_pendingData as OrthPendingData).previousSceneId : -1;
-
-        _departingPortalId = -1;
-        super.requestFailed(reason);
-
-        _octx.displayFeedback(OrthCodes.GENERAL_MSGS, reason);
-
-        // otherwise try to deal with the player getting bumped back from a locked scene
-        if (reason == OrthRoomCodes.E_ENTRANCE_DENIED) {
-            bounceBack(_sceneId, pendingPreviousScene, reason);
-        }
-    }
-
-    // from SceneDirector
-    override protected function createPendingData () :PendingData
-    {
-        return new OrthPendingData();
-    }
-
-    // from SceneDirector
-    override public function prepareMoveTo (sceneId :int, rl :ResultListener) :Boolean
-    {
-        var result :Boolean = super.prepareMoveTo(sceneId, rl);
-        if (result) {
-            // super creates a pending request - fill it in with extra data
-            var data :OrthPendingData = _pendingData as OrthPendingData;
-            data.previousSceneId = _sceneId;
-            data.message = _postMoveMessage;
-            _postMoveMessage = null;
-        }
-        return result;
-    }
-
-    // from SceneDirector
     override protected function sendMoveRequest () :void
     {
         var data :OrthPendingData = _pendingData as OrthPendingData;
 
         // special code to handle moving to scene 0 (leaving all scenes)
         if (data.sceneId == 0) {
-            _previousSceneId = _sceneId;
             _pendingData = null;
             _locdir.leavePlace();
             _sceneId = 0; // not -1
@@ -155,9 +96,9 @@ public class OrthSceneDirector extends SceneDirector
         // switching from one server to another
 
         // issue a moveTo request
-        log.info("Issuing moveTo(" + data.previousSceneId + "->" + data.sceneId + ", " +
-                 sceneVers + ", " + _departingPortalId + ", " + data.destLoc + ").");
-        _mssvc.moveTo(data.sceneId, sceneVers, _departingPortalId, data.destLoc, this);
+        log.info("Issuing moveTo(->" + data.sceneId + ", " +
+                 sceneVers + ", " + data.destLoc + ").");
+        _mssvc.moveTo(data.sceneId, sceneVers, -1, data.destLoc, this);
     }
 
     // documentation inherited
@@ -169,39 +110,12 @@ public class OrthSceneDirector extends SceneDirector
         _ctx.getClient().getClientObject().addListener(_followListener);
     }
 
-    // documentation inherited
-    override public function clientDidLogoff (event :ClientEvent) :void
-    {
-        super.clientDidLogoff(event);
-
-        _departingPortalId = -1;
-        // _followListener implicitly goes away with our client object
-    }
-
     // from SceneDirector
     override protected function fetchServices (client :Client) :void
     {
         super.fetchServices(client);
         // get a handle on our special scene service
         _mssvc = (client.requireService(OrthSceneService) as OrthSceneService);
-    }
-
-    /**
-     * Do whatever cleanup is appropriate after we failed to enter a locked room. Returns true
-     * if the problem was handled, false for subclasses to take over.
-     */
-    protected function bounceBack (localSceneId :int, remoteSceneId :int, reason :String) :Boolean
-    {
-        // if we came here from a scene on another peer, let's go back there
-        if (remoteSceneId != -1) {
-            log.info("Returning to remote scene", "sceneId", remoteSceneId);
-            _postMoveMessage = reason; // remember the error message
-            _worldCtrl.handleGoScene(remoteSceneId);
-            return true;
-        }
-
-        // The Orth layer doesn't know how to deal with this; subclasses need to take over here
-        return false;
     }
 
     protected function memberMessageReceived (event :MessageEvent) :void
@@ -219,7 +133,6 @@ public class OrthSceneDirector extends SceneDirector
 
     protected var _mssvc :OrthSceneService;
     protected var _postMoveMessage :String;
-    protected var _departingPortalId :int = -1;
     protected var _followListener :MessageAdapter = new MessageAdapter(memberMessageReceived);
 }
 }
