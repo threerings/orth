@@ -6,6 +6,8 @@ import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.client.CrowdClient;
 
+import com.threerings.io.TypedArray;
+
 import com.threerings.util.Log;
 
 import com.threerings.presents.net.Credentials;
@@ -29,7 +31,7 @@ public class WorldClient extends CrowdClient
         setVersion(config.version);
     }
 
-    public function logonTo (place :OrthPlace) :void
+    public function logonTo (host :String, ports :TypedArray, place :OrthPlace) :void
     {
         if (isLoggedOn()) {
             Log.getLog(this).warning("Client already logged on in logon()", "place", place);
@@ -37,7 +39,7 @@ public class WorldClient extends CrowdClient
         }
 
         // configure our server and port info
-        setServer(place.getPeer(), place.getPorts());
+        setServer(host, ports);
         setCredentials(buildCredentials());
         logon();
     }
