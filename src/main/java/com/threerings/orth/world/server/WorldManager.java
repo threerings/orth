@@ -80,6 +80,8 @@ public class WorldManager
                         }
                         factory.resolve(key, listener);
 
+                        // ORTH TODO: We have to actually update HostedPlaces
+
                     } finally {
                         _peerMgr.releaseLock(lock, new ResultListener.NOOP<String>());
                     }
