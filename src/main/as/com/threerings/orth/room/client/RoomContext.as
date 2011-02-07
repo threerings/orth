@@ -7,21 +7,21 @@ import flash.display.DisplayObject;
 
 import flashx.funk.ioc.inject;
 
-import com.threerings.presents.client.Client;
-import com.threerings.presents.dobj.DObjectManager;
-
-import com.threerings.crowd.util.CrowdContext;
+import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
+import com.threerings.crowd.util.CrowdContext;
 
-import com.threerings.crowd.chat.client.ChatDirector;
+import com.threerings.presents.client.Client;
+import com.threerings.presents.dobj.DObjectManager;
 
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.world.data.OrthPlace;
 import com.threerings.orth.world.data.OrthPlayerBody;
 
 /**
@@ -97,6 +97,18 @@ public class RoomContext
 
         return (body != null) ? SocializerObject(body).name : null;
     }
+
+    // from WorldContext
+    public function getWorldClient () :WorldClient
+    {
+        return _client;
+    }
+
+    public function gotoPlace (place :OrthPlace) :void
+    {
+        // ORTH TODO: i think we can just call _sceneDir here, once we revive it
+    }
+
 
     /** Return a fully casted socializer object, or null if we're not logged on. */
     public function getSocializerObject () :SocializerObject
