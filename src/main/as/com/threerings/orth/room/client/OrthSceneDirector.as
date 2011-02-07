@@ -34,6 +34,7 @@ import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldController;
+import com.threerings.orth.world.client.WorldDirector;
 
 /**
  * Handles custom scene traversal and extra bits for Whirled.
@@ -75,18 +76,7 @@ public class OrthSceneDirector extends SceneDirector
             return false;
         }
 
-        // prepare to move to this scene (sets up pending data)
-        if (!prepareMoveTo(dest.targetSceneId, null)) {
-            log.info("Portal traversal vetoed", "portalId", portalId);
-            return false;
-        }
-
-        // note our departing portal id and target location in the destination scene
-        _departingPortalId = portalId;
-        (_pendingData as OrthPendingData).destLoc = dest.dest;
-
-        // now that everything is noted (in case we have to switch servers) ask to move
-        sendMoveRequest();
+        _worldDir.moveTo(new RoomKey(dest.targetSceneId));
         return true;
     }
 
@@ -223,8 +213,9 @@ public class OrthSceneDirector extends SceneDirector
         }
     }
 
-    protected const _worldCtrl :WorldController = inject(WorldController);
     protected const _octx :OrthContext = inject(OrthContext);
+    protected const _worldCtrl :WorldController = inject(WorldController);
+    protected const _worldDir :WorldDirector = inject(WorldDirector);
 
     protected var _mssvc :OrthSceneService;
     protected var _postMoveMessage :String;
