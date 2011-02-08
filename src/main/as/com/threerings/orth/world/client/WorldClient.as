@@ -14,7 +14,6 @@ import com.threerings.presents.net.Credentials;
 
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
-import com.threerings.orth.world.data.OrthPlace;
 
 /**
  * A client for connection to a world server. This class will autologon upon creation.
@@ -31,10 +30,10 @@ public class WorldClient extends CrowdClient
         setVersion(config.version);
     }
 
-    public function logonTo (host :String, ports :TypedArray, place :OrthPlace) :void
+    public function logonTo (host :String, ports :TypedArray) :void
     {
         if (isLoggedOn()) {
-            Log.getLog(this).warning("Client already logged on in logon()", "place", place);
+            Log.getLog(this).warning("Client already logged on in logon()");
             logoff(false);
         }
 

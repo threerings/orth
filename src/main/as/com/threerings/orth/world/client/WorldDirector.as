@@ -49,34 +49,36 @@ public class WorldDirector extends BasicDirector
             return;
         }
 
+        // remember where we're going
+        _pendingPlace = place;
+
         // begin by locating the correct peer
         _wsvc.locatePlace(place, this);
     }
 
     // from Java WorldService_PlaceResolutionListener
-    public function resolutionFailed (placeKey :PlaceKey, cause :String) :void
-    {
-        log.warning("Place resolution failed", "placeKey", placeKey, "cause", cause);
-        _octx.displayFeedback(OrthCodes.WORLD_MSGS, cause);
-    }
-
-    // from Java WorldService_PlaceResolutionListener
     public function requestFailed (cause :String) :void
     {
+        // clear our pending move
+        _pendingPlace = null;
+
         log.warning("Place resolution request failed", "cause", cause);
         _octx.displayFeedback(OrthCodes.WORLD_MSGS, cause);
     }
 
     // from Java WorldService_PlaceResolutionListener
-    public function placeLocated (host :String, ports :TypedArray,  place :OrthPlace) :void
+    public function placeLocated (peer :String, host :String, ports :TypedArray) :void
     {
+        // note our peer
+        _pendingPeer = peer;
+
         var worldClient :WorldClient = (_octx.wctx != null) ? _octx.wctx.getWorldClient() : null;
 
         // if we're switching place types, we need to instantiate a new world system
-        if (place.getPlaceType() != _currentPlace.getPlaceType()) {
+        if (_pendingPlace.getPlaceType() != _currentPlace.getPlaceType()) {
             _octx.wctx = place.createContext();
 
-        } else if (worldClient.isConnected() && place.getPeer() == _currentPlace.getPeer()) {
+        } else if (worldClient.isConnected() && peer == _currentPeer) {
             // this is the special case where we're already on the right peer
             gotoPendingPlace();
             return;
@@ -97,12 +99,8 @@ public class WorldDirector extends BasicDirector
         // listen to it
         worldClient.addClientObserver(_observer);
 
-        // update our state
-        _pendingPlace = place;
-        _currentPlace = null;
-
         // and finally log on
-        worldClient.logonTo(host, ports, place);
+        worldClient.logonTo(host, ports);
     }
 
     // called if our connection to the world server fails or we fail to login
@@ -114,6 +112,7 @@ public class WorldDirector extends BasicDirector
 
     protected function worldLogon (event :ClientEvent) :void
     {
+        _curentPeer = _pendingPeer;
         gotoPendingPlace();
     }
 
@@ -126,7 +125,10 @@ public class WorldDirector extends BasicDirector
 
         // we successfully logged on; hand control over to the world implementation
         _currentPlace = _pendingPlace;
+
+        _pendingPeer = null;
         _pendingPlace = null;
+
         _octx.wctx.gotoPlace(_currentPlace);
     }
 

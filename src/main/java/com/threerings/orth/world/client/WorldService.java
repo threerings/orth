@@ -14,7 +14,7 @@ public interface WorldService extends InvocationService
 {
     public static interface PlaceResolutionListener extends InvocationListener
     {
-        public void placeLocated (String host, int[] ports, OrthPlace place);
+        public void placeLocated (String peer, String host, int[] ports);
     }
 
     public void locatePlace (PlaceKey key, PlaceResolutionListener listener);

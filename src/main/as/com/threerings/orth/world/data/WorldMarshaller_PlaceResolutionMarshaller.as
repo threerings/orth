@@ -1,7 +1,6 @@
 //
 // $Id$
 package com.threerings.orth.world.data {
-import com.threerings.io.TypedArray;
 
 import com.threerings.presents.data.InvocationMarshaller_ListenerMarshaller;
 
@@ -22,7 +21,7 @@ public class WorldMarshaller_PlaceResolutionMarshaller
         switch (methodId) {
         case PLACE_LOCATED:
             (listener as WorldService_PlaceResolutionListener).placeLocated(
-                (args[0] as String), (args[1] as TypedArray /* of int */), (args[2] as OrthPlace));
+                (args[0] as String), (args[1] as String), (args[2] as TypedArray /* of int */));
             return;
 
         default:

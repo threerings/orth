@@ -34,7 +34,7 @@ public class WorldManager
      */
     public interface PlaceFactory
     {
-        void resolvePlace (PlaceKey key, PlaceResolutionListener listener);
+        void resolveLocalPlace (String ourNode, PlaceKey key, PlaceResolutionListener listener);
 
         OrthPlace toPlace (String nodeName, HostedPlace hostedPlace);
 
@@ -70,7 +70,7 @@ public class WorldManager
                 if (_peerMgr.getNodeObject().nodeName.equals(nodeName)) {
                     log.info("Got lock, resolving place", "place", key);
                     try {
-                        getFactory(key).resolvePlace(key, listener);
+                        getFactory(key).resolveLocalPlace(nodeName, key, listener);
 
                         // ORTH TODO: We have to actually update HostedPlaces
 
@@ -111,7 +111,7 @@ public class WorldManager
     protected void placeLocated (PlaceResolutionListener listener, String node, HostedPlace place)
     {
         PlaceFactory factory = getFactory(place.key);
-        listener.placeLocated(factory.getHost(), factory.getPorts(), factory.toPlace(node, place));
+        listener.placeLocated(node, factory.getHost(), factory.getPorts());
     }
 
     protected Map<String, PlaceFactory> _factories = Maps.newHashMap();

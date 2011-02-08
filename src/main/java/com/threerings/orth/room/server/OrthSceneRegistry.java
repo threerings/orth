@@ -70,11 +70,12 @@ public class OrthSceneRegistry extends SpotSceneRegistry
     }
 
     // from interface WorldManager.PlaceFactory
-    public void resolvePlace (PlaceKey key, final PlaceResolutionListener listener)
+    public void resolveLocalPlace (
+        final String ourNode, PlaceKey key, final PlaceResolutionListener listener)
     {
         resolveScene(((RoomKey) key).sceneId, new ResolutionListener() {
             public void sceneWasResolved (SceneManager scmgr) {
-                listener.placeLocated(getHost(), getPorts(), (RoomPlace) scmgr.getLocation());
+                listener.placeLocated(ourNode, getHost(), getPorts());
             }
             public void sceneFailedToResolve (int sceneId, Exception reason) {
                 listener.requestFailed(InvocationCodes.INTERNAL_ERROR);

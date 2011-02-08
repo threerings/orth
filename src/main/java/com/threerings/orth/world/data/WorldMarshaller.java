@@ -31,7 +31,7 @@ public class WorldMarshaller extends InvocationMarshaller
         public static final int PLACE_LOCATED = 1;
 
         // from interface PlaceResolutionMarshaller
-        public void placeLocated (String arg1, int[] arg2, OrthPlace arg3)
+        public void placeLocated (String arg1, String arg2, int[] arg3)
         {
             _invId = null;
             omgr.postEvent(new InvocationResponseEvent(
@@ -45,7 +45,7 @@ public class WorldMarshaller extends InvocationMarshaller
             switch (methodId) {
             case PLACE_LOCATED:
                 ((PlaceResolutionListener)listener).placeLocated(
-                    (String)args[0], (int[])args[1], (OrthPlace)args[2]);
+                    (String)args[0], (String)args[1], (int[])args[2]);
                 return;
 
             default:
