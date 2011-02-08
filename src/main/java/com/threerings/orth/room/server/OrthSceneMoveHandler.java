@@ -55,7 +55,8 @@ public class OrthSceneMoveHandler extends SceneMoveHandler
             return;
         }
 
-        _petobj = (_memobj != null) ? _petMan.getPetObject(_memobj.walkingId) : null;
+        // ORTH TODO -- A lot later
+        // _petobj = (_memobj != null) ? _petMan.getPetObject(_memobj.walkingId) : null;
 
         // create a fake "from" portal that contains our destination location
         OrthPortal from = new OrthPortal();
@@ -96,5 +97,6 @@ public class OrthSceneMoveHandler extends SceneMoveHandler
     protected PetObject _petobj;
 
     @Inject protected OrthSceneRegistry _screg;
-    @Inject protected PetManager _petMan;
+    // ORTH TODO -- A lot later
+    // @Inject protected PetManager _petMan;
 }
