@@ -105,6 +105,11 @@ public class SocializerObject extends ActorObject
         return (RoomPlace) location;
     }
 
+    public int getPlayerId ()
+    {
+        return name.getId();
+    }
+
     @Override // from BodyObject
     public OccupantInfo createOccupantInfo (PlaceObject plobj)
     {
