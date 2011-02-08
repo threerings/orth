@@ -1,23 +1,35 @@
+// GENERATED PREAMBLE START
 //
-// $Id: PetInfo.as 15623 2009-03-23 23:46:24Z ray $
+// $Id$
 
 package com.threerings.orth.room.data {
 
-/**
- * Contains published information on a pet in a scene.
- */
+import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
+
+import com.threerings.orth.room.data.ActorInfo;
+
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
 public class PetInfo extends ActorInfo
 {
+// GENERATED CLASSDECL END
+
     // statically reference classes we require
     PetName;
 
-//    /**
-//     * Returns the member id of this pet's owner.
-//     */
-//    public function getOwnerId () :int
-//    {
-//        return PetName(username).getOwnerId();
-//    }
+// GENERATED STREAMING START
+    override public function readObject (ins :ObjectInputStream) :void
+    {
+        super.readObject(ins);
+    }
+
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+    }
+
+// GENERATED STREAMING END
 
     // from ActorInfo
     override public function clone () :Object
@@ -26,5 +38,8 @@ public class PetInfo extends ActorInfo
         // presently: nothing else to copy
         return that;
     }
+
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END
