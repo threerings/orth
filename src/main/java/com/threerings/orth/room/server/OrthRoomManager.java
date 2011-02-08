@@ -10,6 +10,7 @@ import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ResultListener;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.crowd.data.Place;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.orth.room.client.OrthRoomService;
 import com.threerings.orth.room.data.ActorInfo;
@@ -21,8 +22,10 @@ import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.room.data.RoomPlace;
 
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -232,6 +235,13 @@ public abstract class OrthRoomManager extends SpotSceneManager
         // trusted environments
     }
 
+    @Override
+    public Place getLocation ()
+    {
+        return new RoomPlace(_peerMgr.getNodeObject().nodeName, _plobj.getOid(),
+            _scene.getId(), _orthObj.name);
+    }
+
     @Override // from PlaceManager
     protected PlaceObject createPlaceObject ()
     {
@@ -437,4 +447,5 @@ public abstract class OrthRoomManager extends SpotSceneManager
     protected RoomListener _roomListener = new RoomListener();
 
     @Inject protected MemorySupply _memSupply;
+    @Inject protected PeerManager _peerMgr;
 }

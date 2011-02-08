@@ -38,9 +38,9 @@ public class WorldManager
 
         OrthPlace toPlace (String nodeName, HostedPlace hostedPlace);
 
-        String getHost (String placeType);
+        String getHost ();
 
-        int[] getPorts (String placeType);
+        int[] getPorts ();
     }
 
     /**
@@ -111,10 +111,7 @@ public class WorldManager
     protected void placeLocated (PlaceResolutionListener listener, String node, HostedPlace place)
     {
         PlaceFactory factory = getFactory(place.key);
-        listener.placeLocated(
-            factory.getHost(place.key.getPlaceType()),
-            factory.getPorts(place.key.getPlaceType()),
-            factory.toPlace(node, place));
+        listener.placeLocated(factory.getHost(), factory.getPorts(), factory.toPlace(node, place));
     }
 
     protected Map<String, PlaceFactory> _factories = Maps.newHashMap();

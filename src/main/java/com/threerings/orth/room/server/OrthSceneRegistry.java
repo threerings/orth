@@ -9,6 +9,7 @@ import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.server.LocationManager;
 
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 import com.threerings.util.Name;
@@ -21,11 +22,19 @@ import com.threerings.whirled.spot.data.Portal;
 import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
 import com.threerings.orth.aether.server.PlayerNodeActions;
+import com.threerings.orth.client.OrthDeploymentConfig;
+import com.threerings.orth.world.client.WorldService.PlaceResolutionListener;
+import com.threerings.orth.world.data.OrthPlace;
+import com.threerings.orth.world.data.PlaceKey;
+import com.threerings.orth.world.server.WorldManager;
+import com.threerings.orth.peer.data.HostedPlace;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.room.client.OrthSceneService;
 import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
+import com.threerings.orth.room.data.RoomKey;
+import com.threerings.orth.room.data.RoomPlace;
 import com.threerings.orth.room.data.SocializerObject;
 
 import com.google.inject.Inject;
@@ -39,7 +48,7 @@ import static com.threerings.orth.Log.log;
  */
 @Singleton
 public class OrthSceneRegistry extends SpotSceneRegistry
-    implements OrthSceneProvider
+    implements OrthSceneProvider, WorldManager.PlaceFactory
 {
     @Inject public OrthSceneRegistry (InvocationManager invmgr)
     {
@@ -60,7 +69,38 @@ public class OrthSceneRegistry extends SpotSceneRegistry
                 _locman, mover, version, portalId, destLoc, listener));
     }
 
+    // from interface WorldManager.PlaceFactory
+    public void resolvePlace (PlaceKey key, final PlaceResolutionListener listener)
+    {
+        resolveScene(((RoomKey) key).sceneId, new ResolutionListener() {
+            public void sceneWasResolved (SceneManager scmgr) {
+                listener.placeLocated(getHost(), getPorts(), (RoomPlace) scmgr.getLocation());
+            }
+            public void sceneFailedToResolve (int sceneId, Exception reason) {
+                listener.requestFailed(InvocationCodes.INTERNAL_ERROR);
+            }
+        });
+    }
+
+
+    public OrthPlace toPlace (String nodeName, HostedPlace hostedPlace)
+    {
+        // ORTH TODO
+        return null;
+    }
+
+    public String getHost ()
+    {
+        return _depConf.getRoomHost();
+    }
+
+    public int[] getPorts ()
+    {
+        return _depConf.getRoomPorts();
+    }
+
     // our dependencies
     @Inject protected Injector _injector;
     @Inject protected OrthPeerManager _peerMan;
+    @Inject protected OrthDeploymentConfig _depConf;
 }
