@@ -2,6 +2,8 @@
 // $Id$
 package com.threerings.orth.world.client {
 
+import com.threerings.io.TypedArray;
+
 import com.threerings.presents.client.InvocationService_InvocationListener;
 
 /**
