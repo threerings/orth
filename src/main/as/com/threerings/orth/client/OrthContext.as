@@ -27,6 +27,7 @@ import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.world.client.WorldModule;
 
 /**
  * This is the beating heart of an Orth-based client. It provides access to the Aether client
@@ -72,10 +73,14 @@ public class OrthContext
         return _wctx;
     }
 
-    public function set wctx (ctx :WorldContext) :void
+    /**
+     * Set ourselves up with a brand new implemenation of the World layer, starting with
+     * the {@link WorldModule}.
+     */
+    public function setupWorld (moduleClass :Class) :void
     {
-        // ORTH TODO: probably add sanity checks here and whatnot
-        _wctx = ctx;
+        var wMod :WorldModule = _module.getInstance(moduleClass);
+        _wctx = wMod.getInstance(WorldContext);
     }
 
     /**
@@ -176,9 +181,8 @@ public class OrthContext
         };
     }
 
-
-
     protected const _client :AetherClient = inject(AetherClient);
+    protected const _module :OrthModule = inject(OrthModule);
 
     protected var _wctx :WorldContext;
 

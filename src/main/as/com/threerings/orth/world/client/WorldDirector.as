@@ -75,7 +75,7 @@ public class WorldDirector extends BasicDirector
 
         // if we're switching place types, we need to instantiate a new world system
         if (_pendingPlace.getPlaceType() != _currentPlace.getPlaceType()) {
-            _octx.wctx = _pendingPlace.createContext();
+            _octx.setupWorld(_pendingPlace.getModuleClass());
 
         } else if (worldClient.isConnected() && peer == _currentPeer) {
             // this is the special case where we're already on the right peer

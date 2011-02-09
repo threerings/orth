@@ -35,16 +35,10 @@ public class RoomContext
 {
     public function RoomContext ()
     {
-        // i expect this will be RoomClient() before too long
-        _client = new WorldClient();
-
         // instantiate the directors that aren't injection aware
         _locDir = new LocationDirector(this);
         _occDir = new OccupantDirector(this);
         _spotDir = new SpotSceneDirector(this, _locDir, _sceneDir);
-
-        // set up world-level binds
-        new RoomModule(this);
 
         // configure and launch client, however exactly we decide to make the WorldContext
         // implementations aware of e.g. username / token
@@ -139,12 +133,11 @@ public class RoomContext
         return _client.getClientObject() as SocializerObject;
     }
 
-    protected var _client :WorldClient;
-
     protected var _locDir :LocationDirector;
     protected var _occDir :OccupantDirector;
     protected var _spotDir :SpotSceneDirector;
 
+    protected const _client :WorldClient = inject(WorldClient);
     protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
     protected const _topPanel :TopPanel = inject(TopPanel);
 
