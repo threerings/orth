@@ -16,6 +16,7 @@ import com.threerings.presents.client.ClientObserver;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.world.data.OrthPlace;
 import com.threerings.orth.world.data.PlaceKey;
 
 /**
@@ -75,7 +76,7 @@ public class WorldDirector extends BasicDirector
 
         // if we're switching place types, we need to instantiate a new world system
         if (_pendingPlace.getPlaceType() != _currentPlace.getPlaceType()) {
-            _octx.wctx = _pendingPlace.createContext();
+            _octx.wctx = place.createContext();
 
         } else if (worldClient.isConnected() && peer == _currentPeer) {
             // this is the special case where we're already on the right peer
@@ -111,7 +112,7 @@ public class WorldDirector extends BasicDirector
 
     protected function worldLogon (event :ClientEvent) :void
     {
-        _currentPeer = _pendingPeer;
+        _curentPeer = _pendingPeer;
         gotoPendingPlace();
     }
 
@@ -151,10 +152,7 @@ public class WorldDirector extends BasicDirector
 
     protected var _observer :ClientObserver;
 
-    protected var _currentPlace :PlaceKey;
-    protected var _currentPeer :String;
-
-    protected var _pendingPlace :PlaceKey;
-    protected var _pendingPeer :String;
+    protected var _currentPlace :OrthPlace;
+    protected var _pendingPlace :OrthPlace;
 }
 }
