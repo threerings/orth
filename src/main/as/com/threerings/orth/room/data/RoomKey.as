@@ -7,6 +7,8 @@ package com.threerings.orth.room.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
+import com.threerings.orth.room.client.RoomContext;
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.data.PlaceKey;
 
 // GENERATED PREAMBLE END
@@ -34,6 +36,12 @@ public class RoomKey extends PlaceKey
     public function RoomKey (sceneId :int = 0)
     {
         this.sceneId = sceneId;
+    }
+
+    /** Creates a new {@link WorldContext} subclass of the appropriate type for this place. */
+    override public function createContext () :WorldContext
+    {
+        return new RoomContext();
     }
 
     // from PlaceKey

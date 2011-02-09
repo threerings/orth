@@ -9,8 +9,6 @@ import com.threerings.whirled.data.ScenePlace;
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
-import com.threerings.orth.room.client.RoomContext;
-import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.data.OrthPlace;
 
 // GENERATED PREAMBLE END
@@ -55,11 +53,6 @@ public class RoomPlace extends ScenePlace
     public function getPlaceType () :String
     {
         return OrthRoomCodes.ROOM_PLACE_TYPE;
-    }
-
-    public function createContext () :WorldContext
-    {
-        return new RoomContext();
     }
 
 // GENERATED CLASSFINISH START
