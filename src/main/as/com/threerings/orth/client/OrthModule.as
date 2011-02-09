@@ -11,11 +11,13 @@ import mx.core.Application;
 
 import com.threerings.util.Log;
 import com.threerings.util.MessageManager;
-import com.threerings.who.TopSprite;
+
+import com.threerings.orth.aether.client.AetherClient;
 
 /**
  * Interfaces and abstract classes that must be bound in any implementating layer:
  *  - OrthDeploymentConfig
+ *  - OrthResourceFactory
  */
 public class OrthModule extends AbstractModule
 {
@@ -29,7 +31,7 @@ public class OrthModule extends AbstractModule
         bind(Application).toInstance(app);
 
         // a handy stage reference
-        bind(Stage).toInstance(_app.stage);
+        bind(Stage).toInstance(app.stage);
 
         // our context and client
         bind(OrthContext).asSingleton();
@@ -40,6 +42,7 @@ public class OrthModule extends AbstractModule
         bind(OrthController).asSingleton();
 
         // UI elements
+        bind(ControlBar).asSingleton();
         bind(OrthPlaceBox).asSingleton();
         bind(TopPanel).asSingleton();
     }
