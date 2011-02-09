@@ -11,6 +11,7 @@ import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.whirled.client.SceneDirector;
+import com.threerings.whirled.spot.client.SpotSceneDirector;
 import com.threerings.whirled.util.WhirledContext;
 
 import com.threerings.presents.client.Client;
@@ -19,12 +20,12 @@ import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.client.OrthSceneDirector;
-import com.threerings.orth.room.data.RoomPlace;
+import com.threerings.orth.room.data.RoomKey;
 import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
-import com.threerings.orth.world.data.OrthPlace;
 import com.threerings.orth.world.data.OrthPlayerBody;
+import com.threerings.orth.world.data.PlaceKey;
 
 /**
  * Defines services for the Room client.
@@ -36,6 +37,14 @@ public class RoomContext
     {
         // i expect this will be RoomClient() before too long
         _client = new WorldClient();
+
+        // instantiate the directors that aren't injection aware
+        _locDir = new LocationDirector(this);
+        _occDir = new OccupantDirector(this);
+        _spotDir = new SpotSceneDirector(this, _locDir, _sceneDir);
+
+        // set up world-level binds
+        new RoomModule(this);
 
         // configure and launch client, however exactly we decide to make the WorldContext
         // implementations aware of e.g. username / token
@@ -113,9 +122,15 @@ public class RoomContext
     }
 
     // from WorldContext
-    public function gotoPlace (place :OrthPlace) :void
+    public function gotoPlace (place :PlaceKey) :void
     {
-        _sceneDir.moveTo(RoomPlace(place).sceneId);
+        _sceneDir.moveTo(RoomKey(place).sceneId);
+    }
+
+    /** We use this for moving around a scene. */
+    public function getSpotSceneDirector () :SpotSceneDirector
+    {
+        return _spotDir;
     }
 
     /** Return a fully casted socializer object, or null if we're not logged on. */
@@ -126,8 +141,10 @@ public class RoomContext
 
     protected var _client :WorldClient;
 
-    protected const _locDir :LocationDirector = inject(LocationDirector);
-    protected const _occDir :OccupantDirector = inject(OccupantDirector);
+    protected var _locDir :LocationDirector;
+    protected var _occDir :OccupantDirector;
+    protected var _spotDir :SpotSceneDirector;
+
     protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
     protected const _topPanel :TopPanel = inject(TopPanel);
 
