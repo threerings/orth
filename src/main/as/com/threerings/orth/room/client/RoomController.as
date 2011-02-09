@@ -31,7 +31,6 @@ import com.threerings.flex.CommandMenu;
 import com.threerings.flex.PopUpUtil;
 import com.threerings.whirled.client.SceneController;
 import com.threerings.whirled.client.SceneDirector;
-import com.threerings.whirled.spot.client.SpotSceneDirector;
 
 import com.threerings.util.Log;
 import com.threerings.util.Map;
@@ -930,7 +929,6 @@ public class RoomController extends SceneController
     protected const _playerDir :PlayerDirector = inject(PlayerDirector);
     protected const _worldDir :WorldDirector = inject(WorldDirector);
     protected const _sceneDir :OrthSceneDirector = inject(SceneDirector);
-    protected const _spotDir :SpotSceneDirector = inject(SpotSceneDirector);
 
     protected const _app :Application = inject(Application);
     protected const _topPanel :TopPanel = inject(TopPanel);

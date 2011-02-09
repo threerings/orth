@@ -50,9 +50,7 @@ import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.client.ClientObserver;
 import com.threerings.presents.net.Credentials;
 
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
@@ -63,6 +61,7 @@ import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.MediaDescSize;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.client.DisconnectedPanel;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.RoomController;
@@ -280,7 +279,7 @@ public class WorldController extends Controller
     {
         var menuItems :Array = [];
         // reconstitute the playerName from args
-        var memName :PlayerName = new PlayerName(name, memberId);
+        var memName :OrthName = new OrthName(name, memberId);
         addMemberMenuItems(memName, menuItems);
         CommandMenu.createMenu(menuItems, _topPanel).popUpAtMouse();
     }
@@ -412,7 +411,7 @@ public class WorldController extends Controller
     }
 
     public function addMemberMenuItems (
-        name :PlayerName, menuItems :Array, addWorldItems :Boolean = true) :void
+        name :OrthName, menuItems :Array, addWorldItems :Boolean = true) :void
     {
         const memId :int = name.getId();
         const us :PlayerObject = _octx.getPlayerObject();
@@ -464,9 +463,9 @@ public class WorldController extends Controller
         if (isUs) {
             icon = MediaWrapper.createView(
                 us.playerName.getPhoto(), MediaDescSize.QUARTER_THUMBNAIL_SIZE);
-//        } else if (name is VizPlayerName) {
+//        } else if (name is VizOrthName) {
 //            icon = MediaWrapper.createView(
-//                VizPlayerName(name).getPhoto(), MediaDescSize.QUARTER_THUMBNAIL_SIZE);
+//                VizOrthName(name).getPhoto(), MediaDesc.QUARTER_THUMBNAIL_SIZE);
         }
         CommandMenu.addTitle(menuItems, name.toString(), icon);
         if (isUs) {
@@ -553,7 +552,7 @@ public class WorldController extends Controller
         if (ownerMuted) {
             menuItems.push({ label: Msgs.GENERAL.get("b.unmute_owner"), icon: _rsrc.blockIcon,
                 callback: _muteDir.setMuted,
-                arg: [ new PlayerName("", petName.getOwnerId()), false ] });
+                arg: [ new OrthName("", petName.getOwnerId()), false ] });
         } else {
             const isMuted :Boolean = _muteDir.isMuted(petName);
             menuItems.push({ label: Msgs.GENERAL.get(isMuted ? "b.unmute_pet" : "b.mute_pet"),
