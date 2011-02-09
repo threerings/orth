@@ -8,8 +8,6 @@ import flash.events.TextEvent;
 import flashx.funk.ioc.IModule;
 import flashx.funk.ioc.inject;
 
-import com.threerings.crowd.chat.client.MuteDirector;
-
 import com.threerings.util.CommandEvent;
 import com.threerings.util.Controller;
 import com.threerings.util.Log;
@@ -245,7 +243,6 @@ public class OrthController extends Controller
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _client :AetherClient = inject(AetherClient);
     protected const _depCon :OrthDeploymentConfig = inject(OrthDeploymentConfig);
-    protected const _muteDir :MuteDirector = inject(MuteDirector);    
 
     /** The URL prefix for 'command' URLs, that post CommendEvents. */
     protected static const COMMAND_URL :String = "command://";
