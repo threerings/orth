@@ -21,20 +21,14 @@ public class PetObject extends ActorObject
 // GENERATED STREAMING START
     public var pet :Pet;
 
-    public var actorState :String;
-
     public var petChanged :Signal = new Signal(Pet, Pet);
-    public var actorStateChanged :Signal = new Signal(String, String);
 
     public static const PET :String = "pet";
-
-    public static const ACTOR_STATE :String = "actorState";
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         pet = ins.readObject(Pet);
-        actorState = ins.readField(String);
     }
 
     public function PetObject ()
@@ -80,9 +74,6 @@ class Signaller
         switch (event.getName()) {
             case "pet":
                 signal = _obj.petChanged;
-                break;
-            case "actorState":
-                signal = _obj.actorStateChanged;
                 break;
             default:
                 return;
