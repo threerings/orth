@@ -16,7 +16,7 @@ import mx.controls.scrollClasses.ScrollBar;
 import mx.core.Application;
 import mx.core.ScrollPolicy;
 
-import com.threerings.orth.chat.client.ComicOverlay;
+// import com.threerings.orth.chat.client.ComicOverlay;
 
 /**
  * Dispatched when the name of our current location changes. The value supplied will be a string
@@ -218,7 +218,7 @@ public class TopPanel extends Canvas
     protected const _app :Application = inject(Application);
     protected const _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
     protected const _controlBar :ControlBar = inject(ControlBar);
-    protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);
+//    protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);
 
     protected var _width :Number
     protected var _height :Number;
