@@ -17,8 +17,8 @@ import com.threerings.whirled.util.WhirledContext;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
 
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.TopPanel;
-import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.client.OrthSceneDirector;
 import com.threerings.orth.room.data.RoomKey;
 import com.threerings.orth.room.data.SocializerObject;
@@ -108,7 +108,7 @@ public class RoomContext
     }
 
     // from WorldContext
-    public function getMyName () :OrthName
+    public function getMyName () :PlayerName
     {
         var body :OrthPlayerBody = getPlayerBody();
 

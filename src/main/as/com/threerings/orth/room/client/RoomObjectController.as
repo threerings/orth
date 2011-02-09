@@ -78,7 +78,7 @@ public class RoomObjectController extends RoomController
     /**
      * Is the specified player in this room?
      */
-    public function containsPlayer (name :OrthName) :Boolean
+    public function containsPlayer (name :PlayerName) :Boolean
     {
         var info :OccupantInfo = _roomObj.getOccupantInfo(name);
         return (info != null);
@@ -87,7 +87,7 @@ public class RoomObjectController extends RoomController
     /**
      * Add to the specified menu, any room/avatar related menu items.
      */
-    public function addAvatarMenuItems (name :OrthName, menuItems :Array) :void
+    public function addAvatarMenuItems (name :PlayerName, menuItems :Array) :void
     {
         const occInfo :SocializerInfo = _roomObj.getOccupantInfo(name) as SocializerInfo;
         if (occInfo == null) {

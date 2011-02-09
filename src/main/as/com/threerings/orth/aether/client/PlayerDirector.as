@@ -75,10 +75,10 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.data.OrthName;
 
 class FollowingNotifier
     implements AttributeChangeListener, SetListener
@@ -92,7 +92,7 @@ class FollowingNotifier
     {
         switch (event.getName()) {
         case PlayerObject.FOLLOWING:
-            var leader :OrthName = event.getValue() as OrthName;
+            var leader :PlayerName = event.getValue() as PlayerName;
             if (leader != null) {
                 _octx.displayFeedback(OrthCodes.GENERAL_MSGS,
                     MessageBundle.tcompose("m.following", leader));
@@ -115,7 +115,7 @@ class FollowingNotifier
     {
         if (PlayerObject.FOLLOWERS == event.getName()) {
             _octx.displayFeedback(OrthCodes.GENERAL_MSGS,
-                MessageBundle.tcompose("m.new_follower", event.getEntry() as OrthName));
+                MessageBundle.tcompose("m.new_follower", event.getEntry() as PlayerName));
         }
     }
 
@@ -128,7 +128,7 @@ class FollowingNotifier
     {
         if (PlayerObject.FOLLOWERS == event.getName()) {
             _octx.displayFeedback(OrthCodes.GENERAL_MSGS,
-                MessageBundle.tcompose("m.follower_ditched", event.getOldEntry() as OrthName));
+                MessageBundle.tcompose("m.follower_ditched", event.getOldEntry() as PlayerName));
         }
     }
 

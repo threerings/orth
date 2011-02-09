@@ -5,7 +5,7 @@ package com.threerings.orth.world.client {
 
 import com.threerings.presents.util.PresentsContext;
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.world.data.OrthPlayerBody;
 import com.threerings.orth.world.data.PlaceKey;
 
@@ -20,7 +20,7 @@ public interface WorldContext
     function getPlayerBody () :OrthPlayerBody;
 
     /** For convenience, return our current display name. */
-    function getMyName () :OrthName;
+    function getMyName () :PlayerName;
 
     /** For convenience, return {@link #getClient} as a {@link WorldClient}. */
     function getWorldClient () :WorldClient;

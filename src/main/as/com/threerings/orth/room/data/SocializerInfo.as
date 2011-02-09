@@ -9,7 +9,7 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.util.Joiner;
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.party.data.PartyOccupantInfo;
 import com.threerings.orth.room.data.ActorInfo;
 
@@ -24,7 +24,7 @@ public class SocializerInfo extends ActorInfo
      */
     public function getPlayerId () :int
     {
-        return (username as OrthName).getId();
+        return (username as PlayerName).getId();
     }
 
     /**

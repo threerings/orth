@@ -3,7 +3,7 @@
 
 package com.threerings.orth.room.data;
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.aether.data.PlayerName;
 
 /**
  * Contains published information about a player in a room.
@@ -43,7 +43,7 @@ public class SocializerInfo extends ActorInfo
      */
     public int getSocializerId ()
     {
-        return ((OrthName) username).getId();
+        return ((PlayerName) username).getId();
     }
 
     // from PartyOccupantInfo
