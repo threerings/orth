@@ -77,6 +77,8 @@ import com.threerings.orth.world.data.WorldCredentials;
  * A persistent controller for the top UI element; this is not torn down and reconstructed
  * as we move about the world. It is a companion to OrthController that handles the directly
  * world-related activities.
+ *
+ * ORTH TODO: Some or much of this class needs to move into room/
  */
 public class WorldController extends Controller
     implements ClientObserver
@@ -751,6 +753,7 @@ public class WorldController extends Controller
     }
 
     protected const _octx :OrthContext = inject(OrthContext);
+    // ORTH TODO: we should most certainly not refer to RoomContext in a world/ class.
     protected const _rctx :RoomContext = inject(RoomContext);
     protected const _client :WorldClient = inject(WorldClient);
 
