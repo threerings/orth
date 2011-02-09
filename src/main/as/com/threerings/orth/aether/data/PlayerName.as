@@ -16,6 +16,15 @@ public class PlayerName extends OrthName
 {
 // GENERATED CLASSDECL END
 
+    /**
+     * Create a new PlayerName.
+     */
+    public function PlayerName (displayName :String = "", memberId :int = 0)
+    {
+        super(displayName, memberId);
+    }
+
+
 // GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void
     {
