@@ -57,6 +57,9 @@
     <delete dir="${deploy.dir}"/>
   </target>
 
+  <!-- this target needs to exist for consistency/sanity relative other projects -->
+  <target name="distcleanall" depends="distclean"/>
+
   <!-- build the java class files -->
   <target name="compile" depends="prepare">
     <copy todir="${classes.dir}">
