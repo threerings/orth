@@ -5,8 +5,6 @@ package com.threerings.orth.world.data {
 
 import com.threerings.io.Streamable;
 
-import com.threerings.orth.world.client.WorldContext;
-
 /**
  * The base type for a peer-qualified, instantiated location that an Orth player can be in.
  */
@@ -20,8 +18,5 @@ public interface OrthPlace extends Streamable
 
     /** Returns A short, human-readable description of what place this is. */
     function describePlace () :String;
-
-    /** Creates a new {@link WorldContext} subclass of the appropriate type for this place. */
-    function createContext () :WorldContext;
 }
 }
