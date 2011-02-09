@@ -22,6 +22,7 @@ import com.threerings.util.ValueEvent;
 import com.threerings.presents.dobj.AttributeChangeAdapter;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.TopPanel;
@@ -233,7 +234,7 @@ public class RoomObjectController extends RoomController
         }
 
         var menuItems :Array = [];
-        _worldCtrl.addMemberMenuItems(occInfo.username as OrthName, menuItems);
+        _worldCtrl.addMemberMenuItems(occInfo.username as PlayerName, menuItems);
         popActorMenu(avatar, menuItems);
     }
 
@@ -388,8 +389,7 @@ public class RoomObjectController extends RoomController
         reportLocationOwner();
 
         // get a copy of the scene
-        // ORTH TODO: Replace with equivalent functionality!
-        // _scene = _sceneDir.getScene() as OrthScene;
+        _scene = _sceneDir.getScene() as OrthScene;
 
 //        _rctx.getChatDirector().registerCommandHandler(
 //            Msgs.CHAT, "action", new AvatarChatHandler(false));
@@ -480,8 +480,7 @@ public class RoomObjectController extends RoomController
 
     override protected function requestAvatarMove (newLoc :OrthLocation) :void
     {
-        // ORTH TODO: Replace with equivalent functionality
-        // _sceneDir.changeLocation(newLoc, null);
+        _spotDir.changeLocation(newLoc, null);
     }
 
     // documentation inherited
