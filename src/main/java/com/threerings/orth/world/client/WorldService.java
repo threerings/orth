@@ -3,7 +3,6 @@
 
 package com.threerings.orth.world.client;
 
-import com.threerings.orth.world.data.OrthPlace;
 import com.threerings.orth.world.data.PlaceKey;
 import com.threerings.presents.client.InvocationService;
 

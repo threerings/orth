@@ -3,28 +3,21 @@
  */
 package com.threerings.orth.room.server;
 
-import static com.threerings.orth.Log.log;
-
-import java.util.List;
-
 import com.google.inject.Inject;
-
-import com.threerings.presents.server.InvocationException;
-
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.server.LocationManager;
-
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthPortal;
+import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.room.data.PetObject;
+import com.threerings.orth.room.data.SocializerObject;
+import com.threerings.presents.server.InvocationException;
 import com.threerings.whirled.client.SceneMoveAdapter;
 import com.threerings.whirled.client.SceneService.SceneMoveListener;
 import com.threerings.whirled.server.SceneManager;
 import com.threerings.whirled.server.SceneMoveHandler;
 
-import com.threerings.orth.room.data.SocializerObject;
-import com.threerings.orth.room.data.OrthLocation;
-import com.threerings.orth.room.data.OrthPortal;
-import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.data.PetObject;
-import com.threerings.orth.room.data.OrthRoomCodes;
+import static com.threerings.orth.Log.log;
 
 /**
  * Handle all the complexities that happen on Whirled when you transition from one scene
@@ -42,7 +35,8 @@ public class OrthSceneMoveHandler extends SceneMoveHandler
         _memobj = (mover instanceof SocializerObject) ? (SocializerObject) mover : null;
     }
 
-    protected void effectSceneMove (SceneManager scmgr)
+    @Override
+	protected void effectSceneMove (SceneManager scmgr)
         throws InvocationException
     {
         final OrthScene scene = (OrthScene) scmgr.getScene();

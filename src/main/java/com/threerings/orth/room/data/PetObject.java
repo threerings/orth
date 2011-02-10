@@ -5,15 +5,10 @@ package com.threerings.orth.room.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.Place;
 import com.threerings.crowd.data.PlaceObject;
-
 import com.threerings.orth.entity.data.Pet;
-import com.threerings.orth.room.data.ActorObject;
-import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.orth.room.data.EntityMemories;
 
 /**
  * Contains the distributed state associated with a Pet.
