@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.orth.client;
+package com.threerings.orth.server;
 
 public interface OrthDeploymentConfig
 {
