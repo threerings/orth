@@ -5,8 +5,6 @@ package com.threerings.orth.client {
 
 import flashx.funk.ioc.inject;
 
-import mx.core.UIComponent;
-
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
@@ -102,46 +100,30 @@ public class OrthContext
     public function listener (bundle :String = OrthCodes.GENERAL_MSGS,
         errWrap :String = null, ... logArgs) :InvocationService_InvocationListener
     {
-        return new InvocationAdapter(chatErrHandler(bundle, errWrap, null, logArgs));
+        return new InvocationAdapter(chatErrHandler(bundle, errWrap, logArgs));
     }
 
     // from OrthContext
     public function confirmListener (bundle :String = OrthCodes.GENERAL_MSGS, confirm :* = null,
-        errWrap :String = null, component :UIComponent = null, ... logArgs)
+        errWrap :String = null, ... logArgs)
         :InvocationService_ConfirmListener
     {
         var success :Function = function () :void {
-            if (component != null) {
-                component.enabled = true;
-            }
             if (confirm is Function) {
                 (confirm as Function)();
             } else if (confirm is String) {
                 displayFeedback(bundle, String(confirm));
             }
         };
-        if (component != null) {
-            component.enabled = false;
-        }
-        return new ConfirmAdapter(success, chatErrHandler(bundle, errWrap, component, logArgs));
+        return new ConfirmAdapter(success, chatErrHandler(bundle, errWrap, logArgs));
     }
 
     // from OrthContext
     public function resultListener (gotResult :Function, bundle :String = OrthCodes.GENERAL_MSGS,
-        errWrap :String = null, component :UIComponent = null, ... logArgs)
+        errWrap :String = null, ... logArgs)
         :InvocationService_ResultListener
     {
-        var success :Function;
-        if (component == null) {
-            success = gotResult;
-        } else {
-            component.enabled = false;
-            success = function (result :Object) :void {
-                component.enabled = true;
-                gotResult(result);
-            };
-        }
-        return new ResultAdapter(success, chatErrHandler(bundle, errWrap, component, logArgs));
+        return new ResultAdapter(gotResult, chatErrHandler(bundle, errWrap, logArgs));
     }
 
     // from OrthContext
@@ -161,13 +143,9 @@ public class OrthContext
     /**
      * Create an error handling function for use with InvocationService listener adapters.
      */
-    public function chatErrHandler (
-        bundle :String, errWrap :String, component :UIComponent, logArgs :Array) :Function
+    public function chatErrHandler (bundle :String, errWrap :String, logArgs :Array) :Function
     {
         return function (cause :String) :void {
-            if (component != null) {
-                component.enabled = true;
-            }
             var args :Array = logArgs.concat("cause", cause); // make a copy, we're reentrant
             if (args.length % 2 == 0) {
                 args.unshift("Reporting failure");
