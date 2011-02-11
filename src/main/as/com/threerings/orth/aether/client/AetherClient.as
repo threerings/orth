@@ -12,8 +12,6 @@ import flash.utils.Dictionary;
 
 import flashx.funk.ioc.inject;
 
-import com.threerings.ui.MenuUtil;
-
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.Client;
@@ -25,8 +23,6 @@ import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.ContextMenuProvider;
-import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.client.Prefs;
@@ -112,10 +108,6 @@ public class AetherClient extends Client
         // HACK: putting the separator in the menu causes the item to not
         // work in linux, so we don't do it in linux.
         var useSep :Boolean = (-1 == Capabilities.os.indexOf("Linux"));
-
-        // add the About menu item
-        custom.push(MenuUtil.createCommandContextMenuItem(
-            Msgs.GENERAL.get("b.about"), OrthController.ABOUT, null, useSep));
 
         // then, the menu will pop up
     }
