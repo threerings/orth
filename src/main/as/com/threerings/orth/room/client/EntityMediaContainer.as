@@ -7,19 +7,10 @@ import flash.display.LoaderInfo;
 import flash.events.Event;
 import flash.events.IEventDispatcher;
 
-import mx.core.Application;
-import mx.core.FlexGlobals;
-import mx.core.ISWFBridgeProvider;
-import mx.events.SWFBridgeEvent;
-import mx.managers.IMarshalSystemManager;
-
-import com.threerings.util.Capabilities;
-
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.ui.MediaDescContainer;
 
 public class EntityMediaContainer extends MediaDescContainer
-    implements ISWFBridgeProvider
 {
     public function EntityMediaContainer (
         desc :MediaDesc = null, suppressHitTestPoint :Boolean = false)
@@ -92,58 +83,25 @@ public class EntityMediaContainer extends MediaDescContainer
         return _h;
     }
 
-    // from ISWFBridgeProvider
-    public function get swfBridge () :IEventDispatcher
-    {
-        return _bridge;
-    }
-
-    // from ISWFBridgeProvider
-    public function get childAllowsParent () :Boolean
-    {
-        return true;
-    }
-
-    // from ISWFBridgeProvider
-    public function get parentAllowsChild () :Boolean
-    {
-        return false;
-    }
-
     override protected function addListeners (info :LoaderInfo) :void
     {
         super.addListeners(info);
 
-        if (Capabilities.isFlash10() && "uncaughtErrorEvents" in Object(info.loader)) {
-            Object(info.loader).uncaughtErrorEvents.addEventListener(
-                "uncaughtError", handleUncaughtErrors);
-        }
-        info.sharedEvents.addEventListener(SWFBridgeEvent.BRIDGE_NEW_APPLICATION, bridgeApp);
+        Object(info.loader).uncaughtErrorEvents.addEventListener(
+            "uncaughtError", handleUncaughtErrors);
     }
 
     override protected function removeListeners (info :LoaderInfo) :void
     {
         super.removeListeners(info);
 
-        if (Capabilities.isFlash10() && "uncaughtErrorEvents" in Object(info.loader)) {
-            Object(info.loader).uncaughtErrorEvents.removeEventListener(
-                "uncaughtError", handleUncaughtErrors);
-        }
-        info.sharedEvents.removeEventListener(SWFBridgeEvent.BRIDGE_NEW_APPLICATION, bridgeApp);
+        Object(info.loader).uncaughtErrorEvents.removeEventListener(
+            "uncaughtError", handleUncaughtErrors);
     }
 
     protected function handleUncaughtErrors (event :*) :void
     {
         log.info("Uncaught Error", "media", _desc, event);
-    }
-
-    protected function bridgeApp (event :Event) :void
-    {
-        _bridge = IEventDispatcher(event.currentTarget);
-        var app :Application = Application(FlexGlobals.topLevelApplication);
-        var msm :IMarshalSystemManager = IMarshalSystemManager(
-            app.systemManager.getImplementation("mx.managers::IMarshalSystemManager"));
-        msm.addChildBridge(_bridge, this);
     }
 
     protected var _suppressHitTestPoint :Boolean;
