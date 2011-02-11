@@ -21,7 +21,6 @@ import flashx.funk.ioc.inject;
 
 import mx.controls.Button;
 import mx.controls.Menu;
-import mx.core.IUITextField;
 import mx.events.MenuEvent;
 
 import com.threerings.crowd.chat.client.ChatCantStealFocus;
@@ -63,7 +62,6 @@ import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.MediaDescSize;
-import com.threerings.orth.room.client.DisconnectedPanel;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomObjectController;
@@ -127,8 +125,7 @@ public class WorldController extends Controller
         _rctx.getLocationDirector().addLocationObserver(
             new LocationAdapter(null, this.locationDidChange, null));
 
-        setControlledPanel(_topPanel.systemManager);
-        _stage.addEventListener(KeyboardEvent.KEY_DOWN, handleStageKeyDown, false, int.MAX_VALUE);
+        setControlledPanel(_topPanel.root);
         _stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown, false, int.MAX_VALUE);
     }
 
@@ -193,7 +190,7 @@ public class WorldController extends Controller
     public function clientDidLogoff (event :ClientEvent) :void
     {
         if (_logoffMessage != null) {
-            _topPanel.setMainView(new DisconnectedPanel(_client, _logoffMessage, reconnectClient));
+            // ORTH TODO: how do we let implementors do something nice here?
             _logoffMessage = null;
         } else {
             _topPanel.clearMainView();
@@ -203,8 +200,9 @@ public class WorldController extends Controller
     // from ClientObserver
     public function clientFailedToLogon (event :ClientEvent) :void
     {
-        _topPanel.setMainView(new DisconnectedPanel(
-                _client, event.getCause().message, reconnectClient));
+        // ORTH TODO: how do we let implementors do something nice here?
+//        _topPanel.setMainView(new DisconnectedPanel(
+//                _client, event.getCause().message, reconnectClient));
     }
 
     // from ClientObserver
@@ -597,7 +595,7 @@ public class WorldController extends Controller
         menu.setTriggerButton(trigger);
         var r :Rectangle = trigger.getBounds(trigger.stage);
         var y :int;
-        y = Math.min(r.top, _controlBar.localToGlobal(new Point()).y);
+        y = Math.min(r.top, _controlBar.self().localToGlobal(new Point()).y);
 
         menu.addEventListener(MenuEvent.MENU_SHOW, handleShowMenu);
         menu.addEventListener(MenuEvent.MENU_HIDE, handleHideMenu);
@@ -679,31 +677,6 @@ public class WorldController extends Controller
         if (nowIdle != _idle) {
             _idle = nowIdle;
             BodyService(_client.getService(BodyService)).setIdle(nowIdle);
-        }
-    }
-
-    /**
-     * TODO: remove someday.
-     * This is a boochy workaround for the bug in flex 3.2 where some people don't get a space
-     * character if they are pressing shift.
-     */
-    protected function handleStageKeyDown (event :KeyboardEvent) :void
-    {
-        if (event.shiftKey && (event.keyCode == Keyboard.SPACE) &&
-                (event.target is IUITextField)) {
-            var field :IUITextField = (event.target as IUITextField);
-            var caretIdx :int = field.caretIndex;
-            field.text = field.text.substr(0, caretIdx) + " " + field.text.substr(caretIdx);
-            caretIdx++;
-            field.setSelection(caretIdx, caretIdx);
-            // NOTE: here, we try desperately to prevent the key from being accepted,
-            // but it doesn't work: people who don't have the bug get double spaces.
-            // I suspect that maybe this is because we are listening on the stage and so the
-            // textfield itself may have already processed the key event?
-            // Unfortunately, there doesn't seem to be a way to hook-in to the creation
-            // of these text fields so that we could install a listener directly.
-            event.stopImmediatePropagation();
-            event.preventDefault();
         }
     }
 
