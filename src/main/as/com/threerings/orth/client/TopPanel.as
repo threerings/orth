@@ -4,17 +4,12 @@
 package com.threerings.orth.client {
 
 import flash.display.DisplayObject;
+import flash.display.Sprite;
 import flash.display.Stage;
 import flash.events.Event;
 import flash.geom.Rectangle;
 
 import flashx.funk.ioc.inject;
-
-import mx.containers.Canvas;
-import mx.controls.Label;
-import mx.controls.scrollClasses.ScrollBar;
-import mx.core.Application;
-import mx.core.ScrollPolicy;
 
 // import com.threerings.orth.chat.client.ComicOverlay;
 
@@ -34,7 +29,7 @@ import mx.core.ScrollPolicy;
  */
 [Event(name="locationOwnerChanged", type="com.threerings.util.ValueEvent")]
 
-public class TopPanel extends Canvas
+public class TopPanel extends Sprite
 {
     /** An event dispatched when our location name changes. */
     public static const LOCATION_NAME_CHANGED :String = "locationNameChanged";
@@ -47,47 +42,14 @@ public class TopPanel extends Canvas
         _width = inject(Stage).stageWidth;
         _height = inject(Stage).stageHeight;
 
-        percentWidth = 100;
-        percentHeight = 100;
-        verticalScrollPolicy = ScrollPolicy.OFF;
-        horizontalScrollPolicy = ScrollPolicy.OFF;
-        styleName = "topPanel";
-
-        _placeBox.autoLayout = false;
-        _placeBox.includeInLayout = false;
+        // ORTH TODO: Flex used to lay these out; we'll need to figure out what we want to do
         addChild(_placeBox);
-
-        // set up the control bar
-        _controlBar.includeInLayout = false;
-        _controlBar.init(this);
-        _controlBar.setStyle("left", 0);
-        _controlBar.setStyle("right", 0);
-        addChild(_controlBar);
-
-        // show a subtle build-stamp on dev builds
-
-        var depConf: OrthDeploymentConfig = inject(OrthDeploymentConfig);
-        if (depConf.development) {
-            var buildStamp :Label = new Label();
-            buildStamp.includeInLayout = false;
-            buildStamp.mouseEnabled = false;
-            buildStamp.mouseChildren = false;
-            buildStamp.text = "Build: " + depConf.version;
-            buildStamp.setStyle("color", "#F7069A");
-            buildStamp.setStyle("fontSize", 8);
-            buildStamp.setStyle("bottom", getControlBarHeight());
-            // The scrollbar isn't really this thick, but it's pretty close.
-            buildStamp.setStyle("right", ScrollBar.THICKNESS);
-            addChild(buildStamp);
-        }
+        addChild(_controlBar.self());
 
         // ORTH TODO: something like this here?
         // _chatDir.addChatDisplay(_comicOverlay);
 
-        // clear out the application and install ourselves as the only child
-        _app.removeAllChildren();
-        _app.addChild(this);
-        _app.stage.addEventListener(Event.RESIZE, stageResized);
+        _stage.addEventListener(Event.RESIZE, stageResized);
 
         setMainView(getBlankPlaceView());
     }
@@ -144,11 +106,13 @@ public class TopPanel extends Canvas
      */
     public function getPlaceViewBounds () :Rectangle
     {
-        var left :Number = _placeBox.getStyle("left");
-        var top :Number = _placeBox.getStyle("top");
-        var width :Number = _width - _placeBox.getStyle("right") - left;
-        var height :Number = _height - _placeBox.getStyle("bottom") - top;
-        return new Rectangle(left, top, width, height);
+        // ORTH TODO: find another way of doing this
+//        var left :Number = _placeBox.getStyle("left");
+//        var top :Number = _placeBox.getStyle("top");
+//        var width :Number = _width - _placeBox.getStyle("right") - left;
+//        var height :Number = _height - _placeBox.getStyle("bottom") - top;
+//        return new Rectangle(left, top, width, height);
+        return new Rectangle(0, 0, 640, 480);
     }
 
     /**
@@ -157,8 +121,10 @@ public class TopPanel extends Canvas
      */
     public function getMainAreaBounds () :Rectangle
     {
-        var height: Number = _height - _placeBox.getStyle("bottom");
-        return new Rectangle(0, _placeBox.getStyle("top"), _width, height);
+        // ORTH TODO: find another way of doing this
+//        var height: Number = _height - _placeBox.getStyle("bottom");
+//        return new Rectangle(0, _placeBox.getStyle("top"), _width, height);
+        return new Rectangle(0, 0, _width, height);
     }
 
     protected function stageResized (event :Event) :void
@@ -168,14 +134,6 @@ public class TopPanel extends Canvas
 
     protected function layoutPanels () :void
     {
-        // Pin the app to the stage.
-        // This became necessary for "stubs" after we upgraded to flex 3.2.
-        _app.width = _width;
-        _app.height = _height;
-
-        // center control bar in the "footer". we shall put other things here soon
-        _controlBar.setStyle("bottom", 0);
-
         updatePlaceViewSize();
     }
 
@@ -198,10 +156,11 @@ public class TopPanel extends Canvas
         // ORTH TODO: Somethign like this?
         // _comicOverlay.setTargetBounds(new Rectangle(0, 0, ChatOverlay.DEFAULT_WIDTH, h));
 
-        _placeBox.setStyle("top", top);
-        _placeBox.setStyle("bottom", bottom);
-        _placeBox.setStyle("right", right);
-        _placeBox.setStyle("left", left);
+        // ORTH TODO: Find another way of doing this
+//        _placeBox.setStyle("top", top);
+//        _placeBox.setStyle("bottom", bottom);
+//        _placeBox.setStyle("right", right);
+//        _placeBox.setStyle("left", left);
         _placeBox.setActualSize(w, h);
     }
 
@@ -210,12 +169,12 @@ public class TopPanel extends Canvas
      */
     protected function getBlankPlaceView () :DisplayObject
     {
-        var canvas :Canvas = new Canvas();
-        canvas.setStyle("background-color", "#663300");
+        var canvas :Sprite = new Sprite();
+        // ORTH TODO: paint it black?
         return canvas;
     }
 
-    protected const _app :Application = inject(Application);
+    protected const _stage :Stage = inject(Stage);
     protected const _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
     protected const _controlBar :ControlBar = inject(ControlBar);
 //    protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);

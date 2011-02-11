@@ -5,13 +5,9 @@ package com.threerings.orth.client {
 
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
+import flash.display.Sprite;
 import flash.geom.Matrix;
 import flash.utils.Dictionary;
-
-import mx.core.Container;
-import mx.core.UIComponent;
-
-import com.threerings.flex.FlexWrapper;
 
 import com.threerings.util.Log;
 
@@ -23,7 +19,7 @@ import com.threerings.util.Log;
  * we extend; it's still an improvement on separate pieces of our code base remotely
  * fiddling with rawChildren and competing for the top spot.
  */
-public class LayeredContainer extends Container
+public class LayeredContainer extends Sprite
     implements Snapshottable
 {
     public const log :Log = Log.getLog(this);
@@ -31,7 +27,7 @@ public class LayeredContainer extends Container
     public function setBaseLayer (base :DisplayObject) :void
     {
         clearBaseLayer();
-        addChildAt(_base = wrap(base), 0);
+        addChildAt(_base = base, 0);
     }
 
     public function clearBaseLayer () :void
@@ -66,13 +62,13 @@ public class LayeredContainer extends Container
         // step through the children until we find one whose layer is larger than ours
         for (var ii :int = 0; ii < numChildren; ii++) {
             if (getLayer(getChildAt(ii)) > layer) {
-                addChildAt(wrap(overlay), ii);
+                addChildAt(overlay, ii);
                 return;
             }
         }
 
         // if no such child found, just append
-        addChild(wrap(overlay));
+        addChild(overlay);
     }
 
     /**
@@ -84,12 +80,9 @@ public class LayeredContainer extends Container
 
         // remove this child from the display the hard way
         for (var ii :int = 0; ii < numChildren; ii++) {
-            var child :DisplayObject = unwrap(getChildAt(ii));
+            var child :DisplayObject = getChildAt(ii);
             if (child == overlay) {
                 child = removeChildAt(ii);
-                if (child is FlexWrapper) {
-                    (child as FlexWrapper).removeChildAt(0);
-                }
                 break;
             }
         }
@@ -97,7 +90,7 @@ public class LayeredContainer extends Container
 
     public function containsOverlay (overlay :DisplayObject) :Boolean
     {
-        return (unwrap(overlay) in _layers);
+        return (overlay in _layers);
     }
 
     /**
@@ -105,17 +98,7 @@ public class LayeredContainer extends Container
      */
     public function getLayer (overlay :DisplayObject) :int
     {
-        return int(_layers[unwrap(overlay)]);
-    }
-
-    protected function wrap (object :DisplayObject) :DisplayObject
-    {
-        return (object is UIComponent) ? object : new FlexWrapper(object);
-    }
-
-    protected function unwrap (object :DisplayObject) :DisplayObject
-    {
-        return (object is FlexWrapper) ? (object as FlexWrapper).getChildAt(0) : object;
+        return int(_layers[overlay]);
     }
 
     /** A mapping of overlays to the numerical layer priority at which they were added. */

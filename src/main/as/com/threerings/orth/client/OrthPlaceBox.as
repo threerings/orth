@@ -8,8 +8,6 @@ import flash.display.InteractiveObject;
 import flash.display.Shape;
 import flash.geom.Point;
 
-import mx.core.UIComponent;
-
 /**
  * A component that holds our main view and sets up a mask to ensure that it doesn't render
  * outside the box's bounds.
@@ -30,7 +28,7 @@ public class OrthPlaceBox extends LayeredContainer
 
     public function OrthPlaceBox ()
     {
-        rawChildren.addChild(_mask = new Shape());
+        addChild(_mask = new Shape());
     }
 
     public function getMainView () :DisplayObject
@@ -75,7 +73,7 @@ public class OrthPlaceBox extends LayeredContainer
     {
         var stagePoint :Point = new Point(stageX, stageY);
         for (var ii :int = 0; ii < numChildren; ii ++) {
-            var child :DisplayObject = unwrap(getChildAt(ii));
+            var child :DisplayObject = getChildAt(ii);
             if (child == _mainView) {
                 continue;
             }
@@ -95,16 +93,19 @@ public class OrthPlaceBox extends LayeredContainer
     /**
      * This must be called on when our size is changed to allow us update our MainView mask and
      * resize the MainView itself.
+     *
+     * ORTH TODO: This was automatically called when Flex did the layout; now we shall have to
+     * call it manually, or else change things around more substantially.
      */
-    override public function setActualSize (width :Number, height :Number) :void
+    public function setActualSize (width :Number, height :Number) :void
     {
-        super.setActualSize(width, height);
+        // super.setActualSize(width, height);
 
         setMasked(this, 0, 0, this.width, this.height);
 
         // any PlaceLayer layers get informed of the size change
         for (var ii :int = 0; ii < numChildren; ii ++) {
-            var child :DisplayObject = unwrap(getChildAt(ii));
+            var child :DisplayObject = getChildAt(ii);
             if (child == _mainView) {
                 continue; // we'll handle this later
             } else if (child is PlaceLayer) {
@@ -128,12 +129,10 @@ public class OrthPlaceBox extends LayeredContainer
         _base.x = 0;
         _base.y = 0;
 
-        if (_mainView is UIComponent) {
-            UIComponent(_mainView).setActualSize(w, h);
-        } else if (_mainView is PlaceLayer) {
+        if (_mainView is PlaceLayer) {
             PlaceLayer(_mainView).setPlaceSize(w, h);
         } else if (_mainView != null) {
-            log.warning("MainView is not a PlaceLayer or an UIComponent.");
+            log.warning("MainView is not a PlaceLayer.");
         }
     }
 
