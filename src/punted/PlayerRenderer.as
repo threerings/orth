@@ -70,7 +70,7 @@ public class PlayerRenderer extends HBox
             content.verticalScrollPolicy = ScrollPolicy.OFF;
             content.horizontalScrollPolicy = ScrollPolicy.OFF;
             content.setStyle("verticalGap", 0);
-            content.width = parent.width - icon.measuredWidth;
+            content.width = parent.width - icon.width;
             addChild(content);
 
             addCustomControls(content);
