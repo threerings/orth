@@ -202,15 +202,12 @@ public class EntityBackend extends ControlBackend
         if (_sprite == null || !(_sprite.viz.parent is RoomView)) {
             return false;
         }
-        return (_sprite.viz.parent as RoomView).getRoomController().showEntityPopup(
-            _sprite, title, panel, w, h, color, alpha);
+        throw new Error("not implemented in Orth");
     }
 
     protected function clearPopup_v1 () :void
     {
-        if (_sprite != null) {
-            (_sprite.viz.parent as RoomView).getRoomController().clearEntityPopup(_sprite);
-        }
+        throw new Error("not implemented in Orth");
     }
 
     // Deprecated on 2007-03-12

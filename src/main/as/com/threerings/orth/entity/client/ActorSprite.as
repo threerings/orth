@@ -138,8 +138,6 @@ public class ActorSprite extends OccupantSprite
         if (identChanged) {
             var view :RoomView = _sprite.parent as RoomView;
             if (view != null) {
-                // pop down any popup
-                view.getRoomController().clearEntityPopup(this);
                 // indicate that the old entity has left, the new one arrives
                 view.dispatchEntityLeft(oldIdent);
                 DelayUtil.delayFrame(view.dispatchEntityLeft, [ newIdent ]);

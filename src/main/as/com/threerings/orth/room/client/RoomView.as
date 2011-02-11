@@ -14,7 +14,6 @@ import flash.utils.ByteArray;
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.ui.MenuUtil;
 import com.threerings.whirled.spot.data.Location;
 import com.threerings.whirled.spot.data.Portal;
 
@@ -695,13 +694,6 @@ public class RoomView extends Sprite
      */
     protected function populateSpriteContextMenu (sprite :EntitySprite, menuItems :Array) :void
     {
-        if (sprite.getEntityIdent() != null && (sprite is FurniSprite) && _ctrl.canManageRoom() &&
-                sprite.hasCustomConfigPanel()) {
-            var kind :String = Msgs.GENERAL.get(sprite.getDesc());
-            menuItems.push(MenuUtil.createCommandContextMenuItem(
-                Msgs.GENERAL.get("b.config_item", kind), _ctrl.showConfigPopup, sprite, false,
-                _ctrl.memoriesWillSave()));
-        }
     }
 
     /**
@@ -992,9 +984,6 @@ public class RoomView extends Sprite
         removeFromEntityMap(sprite);
         removeChild(sprite.viz);
         _mediaDir.returnSprite(sprite);
-
-        // clear any popup associated with it
-        _ctrl.clearEntityPopup(sprite);
 
         if (sprite == _centerSprite) {
             _centerSprite = null;
