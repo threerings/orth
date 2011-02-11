@@ -5,7 +5,6 @@ package com.threerings.orth.client {
 import flash.events.IEventDispatcher;
 import flash.events.TextEvent;
 
-import flashx.funk.ioc.IModule;
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.CommandEvent;
@@ -26,9 +25,6 @@ import com.threerings.orth.data.OrthCodes;
 
 public class OrthController extends Controller
 {
-    /** Command to show the 'about' dialog. */
-    public static const ABOUT :String = "About";
-
     /** Command to log us on. */
     public static const LOGON :String = "Logon";
 
@@ -67,14 +63,6 @@ public class OrthController extends Controller
     public function OrthController ()
     {
         setControlledPanel(_topPanel);
-    }
-
-    /**
-     * Handles the ABOUT command.
-     */
-    public function handleAbout () :void
-    {
-        _mod.getInstance(AboutDialog);
     }
 
     /**
@@ -239,7 +227,6 @@ public class OrthController extends Controller
     }
 
     protected const _octx :OrthContext = inject(OrthContext);
-    protected const _mod :IModule = inject(IModule);
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _client :AetherClient = inject(AetherClient);
     protected const _depCon :OrthDeploymentConfig = inject(OrthDeploymentConfig);
