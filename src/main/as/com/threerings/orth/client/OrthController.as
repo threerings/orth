@@ -9,6 +9,7 @@ import flashx.funk.ioc.inject;
 
 import com.threerings.util.CommandEvent;
 import com.threerings.util.Controller;
+import com.threerings.util.DelayUtil;
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
@@ -71,7 +72,7 @@ public class OrthController extends Controller
     public function handleLogon (creds :AetherCredentials) :void
     {
         // give the client a chance to log off, then log back on
-        _topPanel.callLater(function () :void {
+        DelayUtil.delayFrame(function () :void {
             log.info("Logging on", "creds", creds, "version", _depCon.version);
             _client.logonWithCredentials(creds);
         });
