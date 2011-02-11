@@ -7,8 +7,6 @@ import flash.display.Stage;
 import flashx.funk.ioc.AbstractModule;
 import flashx.funk.ioc.IModule;
 
-import mx.core.Application;
-
 import com.threerings.util.Log;
 import com.threerings.util.MessageManager;
 
@@ -21,17 +19,14 @@ import com.threerings.orth.aether.client.AetherClient;
  */
 public class OrthModule extends AbstractModule
 {
-    public function OrthModule (app :Application)
+    public function OrthModule (stage :Stage)
     {
         // bind this module
         bind(OrthModule).toInstance(this);
         bind(IModule).toInstance(this);
 
-        // and the supplied application
-        bind(Application).toInstance(app);
-
         // a handy stage reference
-        bind(Stage).toInstance(app.stage);
+        bind(Stage).toInstance(stage);
 
         // our context and client
         bind(OrthContext).asSingleton();
