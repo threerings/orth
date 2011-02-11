@@ -16,12 +16,7 @@ import flash.utils.getTimer;
 
 import flashx.funk.ioc.inject;
 
-import mx.core.Application;
-import mx.core.IToolTip;
-import mx.core.UIComponent;
 import mx.events.MenuEvent;
-import mx.managers.ISystemManager;
-import mx.managers.ToolTipManager;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceConfig;
@@ -367,8 +362,8 @@ public class RoomController extends SceneController
             menu.addEventListener(MenuEvent.MENU_HIDE, function (event :MenuEvent) :void {
                 if (event.menu == menu) {
                     _clickSuppress = sprite;
-                    _topPanel.systemManager.topLevelSystemManager.getSandboxRoot().
-                        addEventListener(MouseEvent.MOUSE_DOWN, clearClickSuppress, false, 0, true);
+                    _topPanel.addEventListener(
+                        MouseEvent.MOUSE_DOWN, clearClickSuppress, false, 0, true);
                 }
             });
 
@@ -417,19 +412,20 @@ public class RoomController extends SceneController
             return undefined;
         }
 
+        // ORTH TODO: we will handle popups/windows some other way
         // first, avoid any popups
-        var smgr :ISystemManager = _app.systemManager;
-        var ii :int;
-        var disp :DisplayObject;
-        for (ii = smgr.numChildren - 1; ii >= 0; ii--) {
-            disp = smgr.getChildAt(ii)
-            if ((disp is Application) || (disp is UIComponent && !UIComponent(disp).visible)) {
-                continue;
-            }
-            if (disp.hitTestPoint(stageX, stageY)) {
-                return undefined;
-            }
-        }
+        // var smgr :ISystemManager = _app.systemManager;
+        // var ii :int;
+        // var disp :DisplayObject;
+        // for (ii = smgr.numChildren - 1; ii >= 0; ii--) {
+        //     disp = smgr.getChildAt(ii)
+        //     if ((disp is Application) || (disp is UIComponent && !UIComponent(disp).visible)) {
+        //         continue;
+        //     }
+        //     if (disp.hitTestPoint(stageX, stageY)) {
+        //         return undefined;
+        //     }
+        // }
 
         // then check with the OrthPlaceBox
         if (container.overlaysMousePoint(stageX, stageY)) {
@@ -579,44 +575,46 @@ public class RoomController extends SceneController
         if (hovered && text === true) {
             return; // this is a special-case shortcut we use to save time.
         }
-        var tip :IToolTip = IToolTip(_hoverTips[sprite]);
-        // maybe remove the tip
-        if ((tip != null) && (!hovered || text == null || tip.text != text)) {
-            delete _hoverTips[sprite];
-            ToolTipManager.destroyToolTip(tip);
-            tip = null;
-        }
-        // maybe add a new tip
-        if (hovered && (text != null)) {
-            if (isNaN(stageX) || isNaN(stageY)) {
-                var p :Point = sprite.viz.localToGlobal(sprite.getLayoutHotSpot());
-                stageX = p.x;
-                stageY = p.y;
-            }
-            _hoverTips[sprite] = addHoverTip(
-                sprite, String(text), stageX, stageY + MOUSE_TOOLTIP_Y_OFFSET);
-        }
+        // ORTH TODO: if we do tooltips, it'll be done in a non flex way
+        // var tip :IToolTip = IToolTip(_hoverTips[sprite]);
+        // // maybe remove the tip
+        // if ((tip != null) && (!hovered || text == null || tip.text != text)) {
+        //     delete _hoverTips[sprite];
+        //     ToolTipManager.destroyToolTip(tip);
+        //     tip = null;
+        // }
+        // // maybe add a new tip
+        // if (hovered && (text != null)) {
+        //     if (isNaN(stageX) || isNaN(stageY)) {
+        //         var p :Point = sprite.viz.localToGlobal(sprite.getLayoutHotSpot());
+        //         stageX = p.x;
+        //         stageY = p.y;
+        //     }
+        //     _hoverTips[sprite] = addHoverTip(
+        //         sprite, String(text), stageX, stageY + MOUSE_TOOLTIP_Y_OFFSET);
+        // }
     }
 
     /**
      * Utility method to create and style the hover tip for a sprite.
      */
-    protected function addHoverTip (
-        sprite :EntitySprite, tipText :String, stageX :Number, stageY :Number) :IToolTip
-    {
-        var tip :IToolTip = ToolTipManager.createToolTip(tipText, stageX, stageY);
-        var tipComp :UIComponent = UIComponent(tip);
-        tipComp.styleName = "roomToolTip";
-        tipComp.x -= tipComp.width/2;
-        tipComp.y -= tipComp.height/2;
-        PopUpUtil.fitInRect(tipComp, _topPanel.getPlaceViewBounds());
-        var hoverColor :uint = sprite.getHoverColor();
-        tipComp.setStyle("color", hoverColor);
-        if (hoverColor == 0) {
-            tipComp.setStyle("backgroundColor", 0xFFFFFF);
-        }
-        return tip;
-    }
+        // ORTH TODO: if we do tooltips, it'll be done in a non flex way
+    // protected function addHoverTip (
+    //     sprite :EntitySprite, tipText :String, stageX :Number, stageY :Number) :IToolTip
+    // {
+    //     var tip :IToolTip = ToolTipManager.createToolTip(tipText, stageX, stageY);
+    //     var tipComp :UIComponent = UIComponent(tip);
+    //     tipComp.styleName = "roomToolTip";
+    //     tipComp.x -= tipComp.width/2;
+    //     tipComp.y -= tipComp.height/2;
+    //     PopUpUtil.fitInRect(tipComp, _topPanel.getPlaceViewBounds());
+    //     var hoverColor :uint = sprite.getHoverColor();
+    //     tipComp.setStyle("color", hoverColor);
+    //     if (hoverColor == 0) {
+    //         tipComp.setStyle("backgroundColor", 0xFFFFFF);
+    //     }
+    //     return tip;
+    // }
 
     protected function mouseClicked (event :MouseEvent) :void
     {
@@ -673,8 +671,7 @@ public class RoomController extends SceneController
     protected function clearClickSuppress (event :MouseEvent) :void
     {
         _clickSuppress = null;
-        _topPanel.systemManager.topLevelSystemManager.getSandboxRoot().
-            removeEventListener(MouseEvent.MOUSE_DOWN, clearClickSuppress);
+        _topPanel.removeEventListener(MouseEvent.MOUSE_DOWN, clearClickSuppress);
     }
 
     /**
@@ -859,7 +856,6 @@ public class RoomController extends SceneController
     protected const _sceneDir :OrthSceneDirector = inject(SceneDirector);
     protected const _spotDir :SpotSceneDirector = inject(SpotSceneDirector);
 
-    protected const _app :Application = inject(Application);
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _controlBar :ControlBar = inject(ControlBar);
     protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);
