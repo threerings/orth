@@ -16,6 +16,11 @@ public class TokenCredentials extends Credentials
 {
 // GENERATED CLASSDECL END
 
+    public function TokenCredentials (token :String = null)
+    {
+        this.sessionToken = token;
+    }
+
 // GENERATED STREAMING START
     public var sessionToken :String;
 
