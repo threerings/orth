@@ -27,11 +27,9 @@ public class WorldDirector extends BasicDirector
 {
     public const log :Log = Log.getLog(this);
 
-    public function WorldDirector (ctx :OrthContext)
+    public function WorldDirector ()
     {
-        super(ctx);
-
-        _octx = ctx;
+        super(_octx);
 
         _observer = new ClientAdapter(null, worldLogon, null, null, worldFail, worldFail);
     }
