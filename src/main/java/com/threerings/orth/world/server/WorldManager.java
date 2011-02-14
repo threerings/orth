@@ -116,7 +116,7 @@ public class WorldManager
         });
     }
 
-    private PlaceFactory getFactory (PlaceKey key)
+    protected PlaceFactory getFactory (PlaceKey key)
     {
         final PlaceFactory factory = _factories.get(key.getPlaceType());
         if (factory == null) {
