@@ -36,7 +36,7 @@ public class OrthServer extends CrowdServer
             super.configure();
 
             // whirled
-            bind(SceneRepository.class).to(DummySceneRepository.class);
+            bind(SceneRepository.class).to(OrthSceneRepository.class);
             bind(SceneRegistry.class).to(OrthSceneRegistry.class);
             bind(SceneFactory.class).to(OrthSceneFactory.class);
             bind(SceneRegistry.ConfigFactory.class).to(OrthSceneFactory.class);
