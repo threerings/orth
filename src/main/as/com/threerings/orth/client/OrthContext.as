@@ -78,6 +78,7 @@ public class OrthContext
     public function setupWorld (moduleClass :Class) :void
     {
         var wMod :WorldModule = _module.getInstance(moduleClass);
+        log.info("Initializing new WorldContext", "mod", wMod);
         _wctx = wMod.getInstance(WorldContext);
     }
 
@@ -150,7 +151,7 @@ public class OrthContext
             if (args.length % 2 == 0) {
                 args.unshift("Reporting failure");
             }
-            Log.getLog(OrthContext).info.apply(null, args);
+            log.info.apply(null, args);
 
             if (errWrap != null) {
                 cause = MessageBundle.compose(errWrap, cause);
