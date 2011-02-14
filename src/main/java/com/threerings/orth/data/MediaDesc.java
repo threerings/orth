@@ -61,27 +61,9 @@ public interface MediaDesc
      */
     boolean isVideo ();
 
-    boolean isExternal ();
-
     /**
      * Return true if this media has a visual component that can be shown in
      * flash.
      */
     boolean hasFlashVisual ();
-
-    /**
-     * Is this a zip of some sort?
-     */
-    boolean isRemixed ();
-
-    /**
-     * Is this media remixable?
-     */
-    boolean isRemixable ();
-
-    /**
-     * Returns the path of the URL that loads this media proxied through our game server so that we
-     * can work around Java applet sandbox restrictions. Subclasses may override this.
-     */
-    String getProxyMediaPath ();
 }
