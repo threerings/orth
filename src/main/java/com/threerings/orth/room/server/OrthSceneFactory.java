@@ -32,7 +32,6 @@ public class OrthSceneFactory
     // from interface SceneRegistry.ConfigFactory
     public PlaceConfig createPlaceConfig (SceneModel smodel)
     {
-        // TODO: do the right thing
         return new OrthRoomConfig();
     }
 }
