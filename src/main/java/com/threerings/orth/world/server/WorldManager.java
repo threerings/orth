@@ -5,8 +5,10 @@ package com.threerings.orth.world.server;
 
 import java.util.Map;
 
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import com.google.common.collect.Maps;
 
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.Tuple;
@@ -29,6 +31,7 @@ import static com.threerings.orth.Log.log;
 /**
  * Accept a move request from the client and figure out what to do with it.
  */
+@Singleton
 public class WorldManager
     implements WorldProvider
 {
@@ -66,6 +69,7 @@ public class WorldManager
             log.warning("Factory registration collision", "type", placeType);
             throw new IllegalStateException("PlaceType factory already registered!");
         }
+        log.info("Registering place factory", "type", placeType, "factory", factory);
         _factories.put(placeType, factory);
     }
 
