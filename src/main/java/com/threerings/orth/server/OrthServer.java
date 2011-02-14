@@ -19,16 +19,16 @@ import com.threerings.orth.aether.server.AetherManager;
 @Singleton
 public class OrthServer extends CrowdServer
 {
-    /** Configures dependencies needed by the Doctor Who servers. */
+    /** Configures dependencies needed by the Orth servers. */
     public static class OrthModule extends CrowdModule
     {
         @Override protected void configure () {
             super.configure();
 
             bind(PeerManager.class).to(OrthPeerManager.class);
-        }        
+        }
     }
-    
+   
     @Override
     public void init (Injector injector)
         throws Exception
