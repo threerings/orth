@@ -21,6 +21,7 @@ import com.threerings.orth.peer.data.HostedPlace;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.room.data.RoomKey;
 import com.google.inject.Inject;
@@ -38,6 +39,7 @@ public class OrthSceneRegistry extends SpotSceneRegistry
     {
         super(invmgr);
         invmgr.registerProvider(this, OrthSceneMarshaller.class, SceneCodes.WHIRLED_GROUP);
+        _worldMan.registerFactory(OrthRoomCodes.ROOM_PLACE_TYPE, this);
     }
 
     // from interface OrthSceneProvider
@@ -88,4 +90,5 @@ public class OrthSceneRegistry extends SpotSceneRegistry
     @Inject protected Injector _injector;
     @Inject protected OrthPeerManager _peerMan;
     @Inject protected OrthDeploymentConfig _depConf;
+    @Inject protected WorldManager _worldMan;
 }
