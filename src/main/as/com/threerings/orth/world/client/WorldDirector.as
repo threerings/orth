@@ -17,6 +17,7 @@ import com.threerings.presents.client.ClientObserver;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.world.data.PlaceKey;
+import com.threerings.orth.world.data.WorldMarshaller;
 
 /**
  * Handles moving around in the virtual world.
@@ -26,6 +27,9 @@ public class WorldDirector extends BasicDirector
     implements WorldService_PlaceResolutionListener
 {
     public const log :Log = Log.getLog(this);
+
+    // statically reference classes we require
+    WorldMarshaller;
 
     public function WorldDirector ()
     {
