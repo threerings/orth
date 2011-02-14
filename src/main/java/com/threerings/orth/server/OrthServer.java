@@ -11,7 +11,7 @@ import com.threerings.presents.peer.server.PeerManager;
 
 import com.threerings.crowd.server.CrowdServer;
 
-import com.threerings.whirled.client.persist.SceneRepository;
+import com.threerings.whirled.server.persist.SceneRepository;
 import com.threerings.whirled.server.SceneRegistry;
 import com.threerings.whirled.util.SceneFactory;
 
