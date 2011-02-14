@@ -60,6 +60,14 @@ public class WorldManager
         // nothing yet
     }
 
+    public void registerFactory (String placeType, PlaceFactory factory)
+    {
+        if (_factories.containsKey(placeType)) {
+            throw new IllegalStateException("PlaceType factory already registered!");
+        }
+        _factories.put(placeType, factory);
+    }
+
     /**
      * Locate, possibly hosting, the given Orth place, and tell the client where to find it.
      */
