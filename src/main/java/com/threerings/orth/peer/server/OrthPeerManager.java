@@ -28,7 +28,7 @@ import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.data.OrthNodeObject;
 
 /**
- *
+ * Extends CrowdPeerManager with functionality needed for Orth and its intended uses.
  */
 public abstract class OrthPeerManager extends CrowdPeerManager
 {
