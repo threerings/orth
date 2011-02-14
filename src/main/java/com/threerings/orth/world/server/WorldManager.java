@@ -14,12 +14,15 @@ import com.samskivert.util.Tuple;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.InvocationManager;
 
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.peer.data.HostedPlace;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.world.client.WorldService.PlaceResolutionListener;
 import com.threerings.orth.world.data.OrthPlace;
 import com.threerings.orth.world.data.PlaceKey;
+import com.threerings.orth.world.data.WorldMarshaller;
 
 import static com.threerings.orth.Log.log;
 
@@ -41,6 +44,20 @@ public class WorldManager
         String getHost ();
 
         int[] getPorts ();
+    }
+
+    @Inject public WorldManager (InvocationManager invmgr)
+    {
+        // register our invocation service
+        invmgr.registerProvider(this, WorldMarshaller.class, OrthCodes.WORLD_GROUP);
+    }
+
+    /**
+     * Prepares our manager for operation.
+     */
+    public void init ()
+    {
+        // nothing yet
     }
 
     /**

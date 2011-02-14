@@ -35,6 +35,14 @@ public class AetherManager
         invmgr.registerProvider(this, PlayerMarshaller.class, OrthCodes.AETHER_GROUP);
     }
 
+    /**
+     * Prepares our manager for operation.
+     */
+    public void init ()
+    {
+        // nothing yet
+    }
+
     @Override // from interface WorldProvider
     public void inviteToFollow (final ClientObject caller, final int playerId,
                                 final InvocationService.InvocationListener listener)
