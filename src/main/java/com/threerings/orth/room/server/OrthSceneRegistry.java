@@ -35,11 +35,11 @@ import com.google.inject.Singleton;
 public class OrthSceneRegistry extends SpotSceneRegistry
     implements OrthSceneProvider, WorldManager.PlaceFactory
 {
-    @Inject public OrthSceneRegistry (InvocationManager invmgr)
+    @Inject public OrthSceneRegistry (InvocationManager invmgr, WorldManager worldMan)
     {
         super(invmgr);
         invmgr.registerProvider(this, OrthSceneMarshaller.class, SceneCodes.WHIRLED_GROUP);
-        _worldMan.registerFactory(OrthRoomCodes.ROOM_PLACE_TYPE, this);
+        worldMan.registerFactory(OrthRoomCodes.ROOM_PLACE_TYPE, this);
     }
 
     // from interface OrthSceneProvider
@@ -90,5 +90,4 @@ public class OrthSceneRegistry extends SpotSceneRegistry
     @Inject protected Injector _injector;
     @Inject protected OrthPeerManager _peerMan;
     @Inject protected OrthDeploymentConfig _depConf;
-    @Inject protected WorldManager _worldMan;
 }
