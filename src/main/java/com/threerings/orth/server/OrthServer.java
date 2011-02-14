@@ -8,8 +8,10 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 import com.threerings.crowd.server.CrowdServer;
+import com.threerings.whirled.server.SceneRegistry;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.orth.peer.server.OrthPeerManager;
+import com.threerings.orth.room.server.OrthSceneRegistry;
 import com.threerings.orth.world.server.WorldManager;
 import com.threerings.orth.aether.server.AetherManager;
 
@@ -26,9 +28,10 @@ public class OrthServer extends CrowdServer
             super.configure();
 
             bind(PeerManager.class).to(OrthPeerManager.class);
+            bind(SceneRegistry.class).to(OrthSceneRegistry.class);
         }
     }
-   
+
     @Override
     public void init (Injector injector)
         throws Exception
@@ -37,9 +40,11 @@ public class OrthServer extends CrowdServer
 
         _aetherMan.init();
         _worldMan.init();
+        
     }    
 
     @Inject protected AetherManager _aetherMan;
     @Inject protected WorldManager _worldMan;
+    @Inject protected OrthSceneRegistry _sceneReg;
 }
 
