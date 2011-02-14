@@ -10,7 +10,7 @@ import com.google.inject.Singleton;
 
 import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.data.OrthSceneModel;
-import com.threerings.whirled.client.persist.SceneRepository;
+import com.threerings.whirled.server.persist.SceneRepository;
 import com.threerings.whirled.util.NoSuchSceneException;
 import com.threerings.whirled.data.SceneModel;
 
