@@ -34,14 +34,14 @@ public class OrthServer extends CrowdServer
         @Override protected void configure () {
             super.configure();
 
-            // presents
-            bind(PeerManager.class).to(OrthPeerManager.class);
-
             // whirled
             bind(SceneRepository.class).to(OrthSceneRepository.class);
             bind(SceneRegistry.class).to(OrthSceneRegistry.class);
             bind(SceneFactory.class).to(OrthSceneFactory.class);
             bind(SceneRegistry.ConfigFactory.class).to(OrthSceneFactory.class);
+
+            // presents
+            bind(PeerManager.class).to(OrthPeerManager.class);
         }
     }
 
