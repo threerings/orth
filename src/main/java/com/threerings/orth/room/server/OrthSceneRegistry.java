@@ -3,10 +3,15 @@
 
 package com.threerings.orth.room.server;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
+
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
+
 import com.threerings.whirled.client.SceneService.SceneMoveListener;
 import com.threerings.whirled.data.SceneCodes;
 import com.threerings.whirled.server.SceneManager;
@@ -24,9 +29,6 @@ import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.room.data.RoomKey;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Singleton;
 
 /**
  * Handles some custom Whirled scene traversal business.
