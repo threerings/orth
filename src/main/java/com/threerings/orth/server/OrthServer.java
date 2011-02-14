@@ -11,6 +11,7 @@ import com.threerings.presents.peer.server.PeerManager;
 
 import com.threerings.crowd.server.CrowdServer;
 
+import com.threerings.whirled.server.persist.DummySceneRepository;
 import com.threerings.whirled.server.persist.SceneRepository;
 import com.threerings.whirled.server.SceneRegistry;
 import com.threerings.whirled.util.SceneFactory;
@@ -35,7 +36,7 @@ public class OrthServer extends CrowdServer
             super.configure();
 
             // whirled
-            bind(SceneRepository.class).to(OrthSceneRepository.class);
+            bind(SceneRepository.class).to(DummySceneRepository.class);
             bind(SceneRegistry.class).to(OrthSceneRegistry.class);
             bind(SceneFactory.class).to(OrthSceneFactory.class);
             bind(SceneRegistry.ConfigFactory.class).to(OrthSceneFactory.class);
