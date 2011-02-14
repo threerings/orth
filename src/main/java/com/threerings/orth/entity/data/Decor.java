@@ -9,8 +9,6 @@ package com.threerings.orth.entity.data;
 public interface Decor
     extends Entity
 {
-    void setType (byte type);
-
     float getHorizon ();
 
     short getDepth ();
