@@ -38,7 +38,7 @@ import com.threerings.whirled.spot.server.SpotSceneManager;
 
 import static com.threerings.orth.Log.log;
 
-public abstract class OrthRoomManager extends SpotSceneManager
+public class OrthRoomManager extends SpotSceneManager
     implements OrthRoomProvider
 {
     public OrthRoomManager ()
