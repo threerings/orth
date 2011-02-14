@@ -7,13 +7,20 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
-import com.threerings.crowd.server.CrowdServer;
-import com.threerings.whirled.server.SceneRegistry;
 import com.threerings.presents.peer.server.PeerManager;
-import com.threerings.orth.peer.server.OrthPeerManager;
-import com.threerings.orth.room.server.OrthSceneRegistry;
-import com.threerings.orth.world.server.WorldManager;
+
+import com.threerings.crowd.server.CrowdServer;
+
+import com.threerings.whirled.client.persist.SceneRepository;
+import com.threerings.whirled.server.SceneRegistry;
+import com.threerings.whirled.util.SceneFactory;
+
 import com.threerings.orth.aether.server.AetherManager;
+import com.threerings.orth.peer.server.OrthPeerManager;
+import com.threerings.orth.room.server.OrthSceneFactory;
+import com.threerings.orth.room.server.OrthSceneRegistry;
+import com.threerings.orth.room.server.persist.OrthSceneRepository;
+import com.threerings.orth.world.server.WorldManager;
 
 /**
  * Extends the main server class with Orth functionality.
@@ -27,8 +34,14 @@ public class OrthServer extends CrowdServer
         @Override protected void configure () {
             super.configure();
 
+            // presents
             bind(PeerManager.class).to(OrthPeerManager.class);
+
+            // whirled
+            bind(SceneRepository.class).to(OrthSceneRepository.class);
             bind(SceneRegistry.class).to(OrthSceneRegistry.class);
+            bind(SceneFactory.class).to(OrthSceneFactory.class);
+            bind(SceneRegistry.ConfigFactory.class).to(OrthSceneFactory.class);
         }
     }
 
