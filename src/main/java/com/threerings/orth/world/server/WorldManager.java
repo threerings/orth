@@ -63,6 +63,7 @@ public class WorldManager
     public void registerFactory (String placeType, PlaceFactory factory)
     {
         if (_factories.containsKey(placeType)) {
+            log.warning("Factory registration collision", "type", placeType);
             throw new IllegalStateException("PlaceType factory already registered!");
         }
         _factories.put(placeType, factory);
@@ -128,6 +129,7 @@ public class WorldManager
     {
         final PlaceFactory factory = _factories.get(key.getPlaceType());
         if (factory == null) {
+            log.warning("Factory requested for unknown place type", "type", key.getPlaceType());
             throw new IllegalStateException("Can't resolve unknown place type!");
         }
         return factory;
