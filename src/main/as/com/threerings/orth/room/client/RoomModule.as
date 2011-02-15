@@ -3,8 +3,6 @@
 
 package com.threerings.orth.room.client {
 
-import flashx.funk.ioc.inject;
-
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.whirled.client.SceneDirector;
@@ -23,7 +21,7 @@ public class RoomModule extends WorldModule
         bind(WorldContext).to(RoomContext).asSingleton();
 
         // grab an instance
-        var ctx :RoomContext = inject(WorldContext);
+        var ctx :RoomContext = getInstance(WorldContext);
 
         // bind the directors that need explicit instantiation
         bind(LocationDirector).toInstance(ctx.getLocationDirector());
