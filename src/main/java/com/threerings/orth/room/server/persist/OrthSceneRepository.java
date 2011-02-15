@@ -11,6 +11,7 @@ import com.samskivert.io.PersistenceException;
 
 import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.data.OrthSceneModel;
+import com.threerings.orth.room.server.OrthRoomExtras;
 import com.threerings.whirled.server.persist.SceneRepository;
 import com.threerings.whirled.util.NoSuchSceneException;
 import com.threerings.whirled.util.UpdateList;
@@ -39,7 +40,7 @@ public class OrthSceneRepository
     public Object loadExtras (int sceneId, SceneModel model)
         throws PersistenceException
     {
-        return null;
+        return new OrthRoomExtras();
     }
 
     public void applyAndRecordUpdate (SceneModel model, SceneUpdate update)
