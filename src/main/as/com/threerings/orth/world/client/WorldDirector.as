@@ -76,7 +76,8 @@ public class WorldDirector extends BasicDirector
         var worldClient :WorldClient = (_octx.wctx != null) ? _octx.wctx.getWorldClient() : null;
 
         // if we're switching place types, we need to instantiate a new world system
-        if (_pendingPlace.getPlaceType() != _currentPlace.getPlaceType()) {
+        if (_currentPlace == null ||
+            _pendingPlace.getPlaceType() != _currentPlace.getPlaceType()) {
             _octx.setupWorld(_pendingPlace.getModuleClass());
 
         } else if (worldClient.isConnected() && peer == _currentPeer) {
