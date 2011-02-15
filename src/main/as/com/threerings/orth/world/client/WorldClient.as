@@ -22,12 +22,11 @@ public class WorldClient extends CrowdClient
 {
     public function WorldClient ()
     {
-        const config :OrthDeploymentConfig = inject(OrthDeploymentConfig);
         // let the policy loader know about us
-        PolicyLoader.registerClient(this, config.policyPort);
+        PolicyLoader.registerClient(this, _config.policyPort);
 
         // configure our version
-        setVersion(config.version);
+        setVersion(_config.version);
     }
 
     public function logonTo (host :String, ports :TypedArray) :void
@@ -47,5 +46,7 @@ public class WorldClient extends CrowdClient
     {
         throw new Error("abstract");
     }
+
+    protected const _config :OrthDeploymentConig = inject(OrthDeploymentConfig);
 }
 }
