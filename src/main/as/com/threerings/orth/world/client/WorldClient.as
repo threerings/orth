@@ -47,6 +47,6 @@ public class WorldClient extends CrowdClient
         throw new Error("abstract");
     }
 
-    protected const _config :OrthDeploymentConig = inject(OrthDeploymentConfig);
+    protected const _config :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 }
 }
