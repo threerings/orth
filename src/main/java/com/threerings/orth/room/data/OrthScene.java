@@ -7,10 +7,12 @@ import com.threerings.util.Name;
 import com.threerings.whirled.data.SceneImpl;
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.spot.data.Portal;
+import com.threerings.whirled.spot.data.SpotScene;
 
 import com.threerings.orth.entity.data.Decor;
 
 public class OrthScene extends SceneImpl
+    implements SpotScene
 {
     public OrthScene (SceneModel model, PlaceConfig config)
     {
@@ -142,41 +144,49 @@ public class OrthScene extends SceneImpl
         return _orthModel.getNextFurniId(aboveId);
     }
 
+    // from SpotScene
     public void addPortal (Portal portal)
     {
         throw new UnsupportedOperationException();
     }
 
+    // from SpotScene
     public Portal getDefaultEntrance ()
     {
         return _orthModel.getDefaultEntrance();
     }
 
+    // from SpotScene
     public short getNextPortalId ()
     {
         throw new UnsupportedOperationException();
     }
 
+    // from SpotScene
     public Portal getPortal (int portalId)
     {
         return _orthModel.getPortal(portalId);
     }
 
+    // from SpotScene
     public int getPortalCount ()
     {
         return _orthModel.getPortalCount();
     }
 
+    // from SpotScene
     public Iterator<Portal> getPortals ()
     {
         return _orthModel.getPortals();
     }
 
+    // from SpotScene
     public void removePortal (Portal portal)
     {
         throw new UnsupportedOperationException();
     }
 
+    // from SpotScene
     public void setDefaultEntrance (Portal portal)
     {
         throw new UnsupportedOperationException();
