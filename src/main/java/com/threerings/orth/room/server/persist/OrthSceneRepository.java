@@ -18,6 +18,8 @@ import com.threerings.whirled.util.UpdateList;
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.data.SceneUpdate;
 
+import static com.threerings.orth.Log.log;
+
 @Singleton
 public class OrthSceneRepository
     implements SceneRepository
@@ -28,7 +30,9 @@ public class OrthSceneRepository
         if (sceneId != 1) {
             throw new IllegalArgumentException("Only scene 1 has been implemented!");
         }
-        return OrthSceneModel.blankOrthSceneModel();
+        OrthSceneModel model = OrthSceneModel.blankOrthSceneModel();
+        model.sceneId = 1;
+        return model;
     }
 
     public UpdateList loadUpdates (int sceneId)
