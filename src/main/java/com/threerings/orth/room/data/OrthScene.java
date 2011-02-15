@@ -17,6 +17,7 @@ public class OrthScene extends SceneImpl
     public OrthScene (SceneModel model, PlaceConfig config)
     {
         super(model, config);
+        _orthModel = (OrthSceneModel) model;
     }
 
     public OrthScene ()
