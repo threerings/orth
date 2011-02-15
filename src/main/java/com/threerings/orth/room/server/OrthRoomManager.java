@@ -38,6 +38,10 @@ import com.threerings.whirled.spot.server.SpotSceneManager;
 
 import static com.threerings.orth.Log.log;
 
+/**
+ * Manages all the various complex operations of an actual instantiated Orth room.
+ * This class relies on {@link MemorySupply} having been previously bound.
+ */
 public class OrthRoomManager extends SpotSceneManager
     implements OrthRoomProvider
 {
@@ -300,6 +304,17 @@ public class OrthRoomManager extends SpotSceneManager
     {
         void loadMemory (EntityIdent ident, ResultListener<EntityMemories> listener);
         void flushMemories (Iterable<EntityMemories> memories);
+    }
+
+    /** A trivial class that remembers nothing. */
+    public static class AmnesiacMemorySupply implements MemorySupply {
+        public void loadMemory (EntityIdent ident, ResultListener<EntityMemories> listener) {
+            // we remember nothing from before
+            listener.requestCompleted(new EntityMemories());
+        }
+        public void flushMemories (Iterable<EntityMemories> memories) {
+            // forget what we've learned
+        }
     }
 
     /**

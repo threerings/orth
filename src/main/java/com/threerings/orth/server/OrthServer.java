@@ -16,12 +16,18 @@ import com.threerings.whirled.server.persist.SceneRepository;
 import com.threerings.whirled.server.SceneRegistry;
 import com.threerings.whirled.util.SceneFactory;
 
-import com.threerings.orth.aether.server.AetherManager;
 import com.threerings.orth.peer.server.OrthPeerManager;
+
+import com.threerings.orth.aether.server.AetherManager;
+
+import com.threerings.orth.world.server.WorldManager;
+
+import com.threerings.orth.room.server.OrthRoomManager;
+import com.threerings.orth.room.server.OrthRoomManager.MemorySupply;
+import com.threerings.orth.room.server.OrthRoomManager.AmnesiacMemorySupply;
 import com.threerings.orth.room.server.OrthSceneFactory;
 import com.threerings.orth.room.server.OrthSceneRegistry;
 import com.threerings.orth.room.server.persist.OrthSceneRepository;
-import com.threerings.orth.world.server.WorldManager;
 
 /**
  * Extends the main server class with Orth functionality.
@@ -34,6 +40,9 @@ public class OrthServer extends CrowdServer
     {
         @Override protected void configure () {
             super.configure();
+
+            // room
+            bind(MemorySupply.class).to(AmnesiacMemorySupply.class);
 
             // whirled
             bind(SceneRepository.class).to(OrthSceneRepository.class);
