@@ -11,9 +11,6 @@ public class OrthRoomCodes
     /** A message event type dispatched on the room object. */
     public static const SPRITE_SIGNAL :String = "sprSig";
 
-    /** A message even dispatched on the member object to followers. */
-    public static const FOLLOWEE_MOVED :String = "folMov";
-
     /** Error reported when the entity is denied entrance to a scene. */
     public static const E_ENTRANCE_DENIED :String = "e.entrance_denied";
 
