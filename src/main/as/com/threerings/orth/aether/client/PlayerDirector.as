@@ -2,15 +2,20 @@
 // $Id: $
 
 package com.threerings.orth.aether.client {
+import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ClientEvent;
+import com.threerings.presents.dobj.MessageAdapter;
+import com.threerings.presents.dobj.MessageEvent;
 
-import com.threerings.orth.aether.client.PlayerService;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.room.data.RoomKey;
+import com.threerings.orth.world.client.WorldDirector;
 
 /**
  * Handles player-oriented requests.
@@ -36,6 +41,15 @@ public class PlayerDirector extends BasicDirector
         _psvc.setAvatar(avatarId, _octx.confirmListener());
     }
 
+    // documentation inherited
+     override public function clientDidLogon (event :ClientEvent) :void
+    {
+        super.clientDidLogon(event);
+
+        // add a listener that will respond to follow notifications
+        _ctx.getClient().getClientObject().addListener(_followListener);
+    }
+
     // from BasicDirector
     override protected function clientObjectUpdated (client :Client) :void
     {
@@ -58,10 +72,23 @@ public class PlayerDirector extends BasicDirector
         _psvc = (client.requireService(PlayerService) as PlayerService);
     }
 
+    protected function memberMessageReceived (event :MessageEvent) :void
+    {
+        if (event.getName() == OrthCodes.FOLLOWEE_MOVED) {
+            var sceneId :int = int(event.getArgs()[0]);
+            log.info("Following " + _octx.getPlayerObject().following + " to " + sceneId + ".");
+            // ORTH TODO: make this non-room-specific
+            _worldDir.moveTo(new RoomKey(sceneId));
+        }
+    }
+
+    protected const _worldDir :WorldDirector = inject(WorldDirector);
+
     protected var _octx :OrthContext;
     protected var _psvc :PlayerService;
 
     protected var _followingNotifier :FollowingNotifier;
+    protected var _followListener :MessageAdapter = new MessageAdapter(memberMessageReceived);
 }
 }
 

@@ -5,7 +5,6 @@ package com.threerings.orth.room.client {
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.client.LocationDirector;
-import com.threerings.whirled.client.PendingData;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.client.SceneService_SceneMoveListener;
 import com.threerings.whirled.client.persist.SceneRepository;
@@ -13,18 +12,12 @@ import com.threerings.whirled.client.persist.SceneRepository;
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.Client;
-import com.threerings.presents.client.ClientEvent;
-import com.threerings.presents.dobj.MessageAdapter;
-import com.threerings.presents.dobj.MessageEvent;
 
 import com.threerings.orth.client.OrthContext;
-import com.threerings.orth.room.client.OrthSceneFactory;
 import com.threerings.orth.room.data.OrthPortal;
-import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.room.data.RoomKey;
-import com.threerings.orth.world.client.WorldController;
 import com.threerings.orth.world.client.WorldDirector;
 
 /**
@@ -101,15 +94,6 @@ public class OrthSceneDirector extends SceneDirector
         _mssvc.moveTo(data.sceneId, sceneVers, -1, data.destLoc, this);
     }
 
-    // documentation inherited
-    override public function clientDidLogon (event :ClientEvent) :void
-    {
-        super.clientDidLogon(event);
-
-        // add a listener that will respond to follow notifications
-        _ctx.getClient().getClientObject().addListener(_followListener);
-    }
-
     // from SceneDirector
     override protected function fetchServices (client :Client) :void
     {
@@ -118,21 +102,10 @@ public class OrthSceneDirector extends SceneDirector
         _mssvc = (client.requireService(OrthSceneService) as OrthSceneService);
     }
 
-    protected function memberMessageReceived (event :MessageEvent) :void
-    {
-        if (event.getName() == OrthRoomCodes.FOLLOWEE_MOVED) {
-            var sceneId :int = int(event.getArgs()[0]);
-            log.info("Following " + _octx.getPlayerObject().following + " to " + sceneId + ".");
-            moveTo(sceneId);
-        }
-    }
+    protected var _octx :OrthContext = inject(OrthContext);
 
-    protected const _octx :OrthContext = inject(OrthContext);
-    protected const _worldCtrl :WorldController = inject(WorldController);
     protected const _worldDir :WorldDirector = inject(WorldDirector);
 
     protected var _mssvc :OrthSceneService;
-    protected var _postMoveMessage :String;
-    protected var _followListener :MessageAdapter = new MessageAdapter(memberMessageReceived);
 }
 }

@@ -22,6 +22,9 @@ public class OrthCodes extends InvocationCodes
     /** Defines our party invocation services group. */
     public static const PARTY_GROUP :String = "orth.party";
 
+    /** A message even dispatched on the member object to followers. */
+    public static const FOLLOWEE_MOVED :String = "folMov";
+
     /** Identifies our general message bundle. */
     public static const GENERAL_MSGS :String = "general";
 
