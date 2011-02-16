@@ -2,7 +2,7 @@
 // $Id$
 
 package com.threerings.orth.client {
-
+import flashx.funk.ioc.IModule;
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
@@ -23,6 +23,7 @@ import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.world.client.AbstractWorldModule;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldModule;
 
@@ -71,20 +72,19 @@ public class OrthContext
     }
 
     /**
-     * Instantiate a new {@link WorldModule} and use it to fire up a {@link WorldContext}
+     * Instantiate a new {@link AbstractWorldModule} and use it to fire up a {@link WorldContext}
      * of the correct concrete subtype, which in turn will instantiate all the necessary
      * infrastructure.
      */
     public function setupWorld (moduleClass :Class) :void
     {
         // instantiate the correct WorldModule subclass
-        var wMod :WorldModule = new moduleClass(_module);
+        var wMod :AbstractWorldModule = new moduleClass();
+       var cMod :IModule = wMod.init(_module);
 
         // and finally use it to bring the correct WorldContext subclass to life
         log.info("Initializing new WorldContext", "mod", wMod);
-        _wctx = wMod.getInstance(WorldContext);
-        // we instantiate all the directors separately to avoid injection dependency loops
-        _wctx.initDirectors();
+        _wctx = cMod.getInstance(WorldContext);
     }
 
     /**

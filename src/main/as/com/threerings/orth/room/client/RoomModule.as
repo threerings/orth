@@ -8,26 +8,33 @@ import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
 
-import com.threerings.orth.client.OrthModule;
+import com.threerings.orth.world.client.AbstractWorldModule;
 import com.threerings.orth.world.client.WorldContext;
-import com.threerings.orth.world.client.WorldModule;
 
-public class RoomModule extends WorldModule
+public class RoomModule extends AbstractWorldModule
 {
-    public function RoomModule (oMod :OrthModule)
+    override protected function doWorldBinds (ctx :WorldContext) :void
     {
-        super(oMod, RoomContext);
+        var rCtx :RoomContext = RoomContext(ctx);
 
-        // grab an instance
-        var ctx :RoomContext = getInstance(WorldContext);
+        // instantiate and bind the directors that need explicit instantiation
+        var locDir :LocationDirector = new LocationDirector(rCtx);
+        bind(LocationDirector).toInstance(locDir);
 
-        // bind the directors that need explicit instantiation
-        bind(LocationDirector).toInstance(ctx.getLocationDirector());
-        bind(OccupantDirector).toInstance(ctx.getOccupantDirector());
-        bind(SceneDirector).toInstance(ctx.getSceneDirector());
-        bind(SpotSceneDirector).toInstance(ctx.getSpotSceneDirector());
+        var occDir :OccupantDirector = new OccupantDirector(rCtx);
+        bind(OccupantDirector).toInstance(occDir);
+
+        var scDir :SceneDirector = new OrthSceneDirector();
+        bind(SceneDirector).toInstance(scDir);
+
+        bind(SpotSceneDirector).toInstance(new SpotSceneDirector(rCtx, locDir, scDir));
 
         // later we will most likely need to bind WorldClient to a RoomClient singleton here
+    }
+
+    override protected function getWorldContextClass () :Class
+    {
+        return RoomContext;
     }
 }
 }
