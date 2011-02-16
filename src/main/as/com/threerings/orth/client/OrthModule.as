@@ -5,7 +5,7 @@ package com.threerings.orth.client {
 import flash.display.Stage;
 
 import flashx.funk.ioc.AbstractModule;
-import flashx.funk.ioc.IModule;
+import flashx.funk.ioc.Module;
 
 import com.threerings.util.Log;
 import com.threerings.util.MessageManager;
@@ -23,7 +23,7 @@ public class OrthModule extends AbstractModule
     {
         // bind this module
         bind(OrthModule).toInstance(this);
-        bind(IModule).toInstance(this);
+        bind(Module).toInstance(this);
 
         // a handy stage reference
         bind(Stage).toInstance(stage);
