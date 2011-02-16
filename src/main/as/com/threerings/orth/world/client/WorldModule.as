@@ -2,18 +2,23 @@
 // $Id$
 
 package com.threerings.orth.world.client {
+import flashx.funk.ioc.ChainModule;
 
-import flashx.funk.ioc.AbstractModule;
+import com.threerings.orth.client.OrthModule;
 
 /**
  * Interfaces and abstract classes that must be bound in any implementating layer:
- *  - WorldContext
  *  - MuteDirector
  */
-public class WorldModule extends AbstractModule
+public class WorldModule extends ChainModule
 {
-    public function WorldModule ()
+    public function WorldModule (oMod :OrthModule, ctxClass :Class)
     {
+        super(oMod);
+
+        // bind the context
+        bind(WorldContext).to(ctxClass).asSingleton();
+
         bind(WorldModule).toInstance(this);
     }
 }

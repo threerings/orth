@@ -8,17 +8,15 @@ import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
 
+import com.threerings.orth.client.OrthModule;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldModule;
 
 public class RoomModule extends WorldModule
 {
-    public function RoomModule ()
+    public function RoomModule (oMod :OrthModule)
     {
-        super();
-
-        // bind the context
-        bind(WorldContext).to(RoomContext).asSingleton();
+        super(oMod, RoomContext);
 
         // grab an instance
         var ctx :RoomContext = getInstance(WorldContext);

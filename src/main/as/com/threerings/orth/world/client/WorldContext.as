@@ -16,6 +16,9 @@ import com.threerings.orth.world.data.PlaceKey;
 public interface WorldContext
     extends PresentsContext
 {
+    /** Will be called immediately following construction; set up dependencies here. */
+    function initDirectors () :void;
+
     /** Return the {@link BodyObject} subclass we're inhabiting, or null if we're not logged on. */
     function getPlayerBody () :OrthPlayerBody;
 

@@ -8,7 +8,6 @@ import flashx.funk.ioc.inject;
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
-import com.threerings.util.Name;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ConfirmAdapter;
@@ -72,14 +71,20 @@ public class OrthContext
     }
 
     /**
-     * Set ourselves up with a brand new implemenation of the World layer, starting with
-     * the {@link WorldModule}.
+     * Instantiate a new {@link WorldModule} and use it to fire up a {@link WorldContext}
+     * of the correct concrete subtype, which in turn will instantiate all the necessary
+     * infrastructure.
      */
     public function setupWorld (moduleClass :Class) :void
     {
-        var wMod :WorldModule = _module.getInstance(moduleClass);
+        // instantiate the correct WorldModule subclass
+        var wMod :WorldModule = new moduleClass(_module);
+
+        // and finally use it to bring the correct WorldContext subclass to life
         log.info("Initializing new WorldContext", "mod", wMod);
         _wctx = wMod.getInstance(WorldContext);
+        // we instantiate all the directors separately to avoid injection dependency loops
+        _wctx.initDirectors();
     }
 
     /**

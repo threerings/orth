@@ -35,10 +35,17 @@ public class RoomContext
 {
     public function RoomContext ()
     {
+
+    }
+
+    public function initDirectors () :void
+    {
         // instantiate the directors that aren't injection aware
         _locDir = new LocationDirector(this);
         _occDir = new OccupantDirector(this);
         _spotDir = new SpotSceneDirector(this, _locDir, _sceneDir);
+
+        _sceneDir = inject(OrthSceneDirector);
 
         // configure and launch client, however exactly we decide to make the WorldContext
         // implementations aware of e.g. username / token
@@ -136,9 +143,9 @@ public class RoomContext
     protected var _locDir :LocationDirector;
     protected var _occDir :OccupantDirector;
     protected var _spotDir :SpotSceneDirector;
+    protected var _sceneDir :OrthSceneDirector;
 
     protected const _client :WorldClient = inject(WorldClient);
-    protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
     protected const _topPanel :TopPanel = inject(TopPanel);
 
     // ORTH TODO: This is highly dubious and will change dramatically, as most chatting will be sent
