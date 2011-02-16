@@ -40,15 +40,6 @@ public class RoomContext
 
     public function initDirectors () :void
     {
-        // instantiate the directors that aren't injection aware
-        _locDir = new LocationDirector(this);
-        _occDir = new OccupantDirector(this);
-        _spotDir = new SpotSceneDirector(this, _locDir, _sceneDir);
-
-        _sceneDir = inject(OrthSceneDirector);
-
-        // configure and launch client, however exactly we decide to make the WorldContext
-        // implementations aware of e.g. username / token
     }
 
     // from PresentsContext
@@ -66,13 +57,13 @@ public class RoomContext
     // from CrowdContext
     public function getLocationDirector () :LocationDirector
     {
-        return _locDir;
+        return inject(LocationDirector);
     }
 
     // from CrowdContext
     public function getOccupantDirector () :OccupantDirector
     {
-        return _occDir;
+        return inject(OccupantDirector);
     }
 
     // from CrowdContext
@@ -99,7 +90,7 @@ public class RoomContext
     // from WhirledContext
     public function getSceneDirector () :SceneDirector
     {
-        return _sceneDir;
+        return inject(SceneDirector);
     }
 
     // from WorldContext
@@ -131,7 +122,7 @@ public class RoomContext
     /** We use this for moving around a scene. */
     public function getSpotSceneDirector () :SpotSceneDirector
     {
-        return _spotDir;
+        return inject(SpotSceneDirector);
     }
 
     /** Return a fully casted socializer object, or null if we're not logged on. */
@@ -140,9 +131,6 @@ public class RoomContext
         return _client.getClientObject() as SocializerObject;
     }
 
-    protected var _locDir :LocationDirector;
-    protected var _occDir :OccupantDirector;
-    protected var _spotDir :SpotSceneDirector;
     protected var _sceneDir :OrthSceneDirector;
 
     protected const _client :WorldClient = inject(WorldClient);
