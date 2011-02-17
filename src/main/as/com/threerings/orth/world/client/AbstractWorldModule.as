@@ -26,17 +26,17 @@ public class AbstractWorldModule extends BindingModule
     final public function init (oMod :OrthModule) :Module
     {
         // create the two-pronged injection scope
-        var cMod:ChainModule = new ChainModule(oMod,  this);
-        bind(Module).toInstance(cMod);
+        _chainMod = new ChainModule(oMod,  this);
+        bind(Module).toInstance(_chainMod);
 
         // and instantiate the context in that scope (and much of the world layer with it)
-        var ctx :WorldContext = cMod.getInstance(WorldContext);
+        var ctx :WorldContext = _chainMod.getInstance(WorldContext);
 
-        cMod.inject(function () :void {
+        _chainMod.inject(function () :void {
             doWorldBinds(ctx);
         });
 
-        return cMod;
+        return _chainMod;
     }
 
     protected /* abstract */ function getWorldContextClass () :Class
@@ -48,5 +48,7 @@ public class AbstractWorldModule extends BindingModule
     {
         // empty, but subclasses will want to implement
     }
+
+    protected var _chainMod :Module;
 }
 }
