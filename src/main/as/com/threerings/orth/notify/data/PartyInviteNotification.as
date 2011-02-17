@@ -6,8 +6,10 @@ package com.threerings.orth.notify.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.orth.notify.data.Notification;
+
 import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.notify.data.Notification;
+
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
