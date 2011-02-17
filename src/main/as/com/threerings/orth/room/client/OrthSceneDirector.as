@@ -14,6 +14,7 @@ import com.threerings.util.Log;
 import com.threerings.presents.client.Client;
 
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.room.client.OrthPendingData;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
@@ -61,14 +62,23 @@ public class OrthSceneDirector extends SceneDirector
             return false;
         }
 
+        // make a note of our target location in the destination room
+        (_pendingData as OrthPendingData).destLoc = dest.dest;
+
         _worldDir.moveTo(new RoomKey(dest.targetSceneId));
         return true;
     }
 
     // from SceneDirector
+    override protected function createPendingData () :PendingData
+    {
+        return new OrthPendingData();
+    }
+
+    // from SceneDirector
     override protected function sendMoveRequest () :void
     {
-        var data :OrthPendingData = _pendingData as OrthPendingData;
+        var data :OrthPendingData = OrthPendingData(_pendingData);
 
         // special code to handle moving to scene 0 (leaving all scenes)
         if (data.sceneId == 0) {
