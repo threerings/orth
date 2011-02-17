@@ -3,21 +3,16 @@
 
 package com.threerings.orth.room.data;
 
-import com.samskivert.util.ByteEnum;
 import com.threerings.io.Streamable;
+import com.threerings.util.ActionScript;
 
 /**
  * A fully qualified entity identifier (type and integer id).
  */
+@ActionScript(omit=true)
 public interface EntityIdent
     extends Streamable, Comparable<EntityIdent>
 {
-    /** An opaque entity type which each project should implement as a {@link ByteEnum}. */
-    public interface EntityType<T extends Enum<T> & EntityType<T>>
-        extends ByteEnum, Streamable, Comparable<T>
-    {
-    }
-
     /**
      * Return the {@link EntityType} of this entity.
      */

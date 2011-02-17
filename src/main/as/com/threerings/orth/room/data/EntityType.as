@@ -2,9 +2,9 @@ package com.threerings.orth.room.data
 {
 import com.threerings.util.ByteEnum;
 
-public class EntityIdent_EntityType extends ByteEnum
+public class EntityType extends ByteEnum
 {
-    public function EntityIdent_EntityType (name :String, code :int)
+    public function EntityType (name :String, code :int)
     {
         super(name, code);
     }
