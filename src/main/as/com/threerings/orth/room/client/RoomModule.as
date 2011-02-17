@@ -35,7 +35,7 @@ public class RoomModule extends AbstractWorldModule
         // the SceneDirector needs a binding for SceneRepository
         bind(SceneRepository).to(NullSceneRepository).asSingleton();
 
-        var scDir :SceneDirector = new OrthSceneDirector();
+        var scDir :SceneDirector = getInstance(OrthSceneDirector);
         bind(SceneDirector).toInstance(scDir);
 
         bind(SpotSceneDirector).toInstance(new SpotSceneDirector(rCtx, locDir, scDir));
