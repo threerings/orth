@@ -18,6 +18,7 @@ import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.room.data.RoomKey;
+import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldDirector;
 
 /**
@@ -33,7 +34,7 @@ public class OrthSceneDirector extends SceneDirector
 
     public function OrthSceneDirector ()
     {
-        super(inject(RoomContext), inject(LocationDirector),
+        super(inject(WorldContext), inject(LocationDirector),
             inject(SceneRepository), new OrthSceneFactory());
     }
 
