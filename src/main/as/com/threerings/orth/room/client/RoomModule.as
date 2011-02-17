@@ -18,7 +18,7 @@ public class RoomModule extends AbstractWorldModule
     public function RoomModule ()
     {
         // set up simple bindings in the constructor
-        bind(WorldClient).to(RoomClient);
+        bind(WorldClient).to(RoomClient).asSingleton();
     }
 
     override protected function doWorldBinds (ctx :WorldContext) :void
