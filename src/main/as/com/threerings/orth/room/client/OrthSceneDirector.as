@@ -33,7 +33,7 @@ public class OrthSceneDirector extends SceneDirector
 
     public function OrthSceneDirector ()
     {
-        super(RoomContext(_octx.wctx), inject(LocationDirector),
+        super(inject(RoomContext), inject(LocationDirector),
             inject(SceneRepository), new OrthSceneFactory());
     }
 
