@@ -14,7 +14,6 @@ import com.threerings.util.Log;
 
 import com.threerings.presents.client.Client;
 
-import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.room.client.OrthPendingData;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;

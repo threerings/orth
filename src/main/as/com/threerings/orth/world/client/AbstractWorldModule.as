@@ -5,12 +5,9 @@
 package com.threerings.orth.world.client {
 
 import flashx.funk.ioc.BindingModule;
-import flashx.funk.ioc.ChainModule;
-import flashx.funk.ioc.Module;
 import flashx.funk.util.isAbstract;
 
 import com.threerings.orth.client.OrthModule;
-import com.threerings.orth.world.client.WorldChainModule;
 
 /**
  * Interfaces and abstract classes that must be bound in any implementing layer:
@@ -23,7 +20,7 @@ public class AbstractWorldModule extends BindingModule
         // bind the context
         bind(WorldContext).to(getWorldContextClass()).asSingleton();
     }
-    
+
     final public function init (oMod :OrthModule) :WorldModule
     {
         // create the two-pronged injection scope
