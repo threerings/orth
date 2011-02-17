@@ -14,11 +14,5 @@ public class OrthPendingData extends PendingData
 {
     /** The location in the new scene at which we want to arrive. */
     public var destLoc :OrthLocation;
-
-    /** The id of the scene from which we came. */
-    public var previousSceneId :int;
-
-    /** Message to be displayed after a successful scene traversal. */
-    public var message :String;
 }
 }
