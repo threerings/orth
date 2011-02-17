@@ -27,6 +27,8 @@ import com.threerings.orth.room.server.OrthRoomManager.MemorySupply;
 import com.threerings.orth.room.server.OrthRoomManager.AmnesiacMemorySupply;
 import com.threerings.orth.room.server.OrthSceneFactory;
 import com.threerings.orth.room.server.OrthSceneRegistry;
+import com.threerings.orth.room.server.RoomAuthenticator;
+import com.threerings.orth.room.server.RoomSessionFactory;
 import com.threerings.orth.room.server.persist.OrthSceneRepository;
 
 /**
@@ -61,9 +63,12 @@ public class OrthServer extends CrowdServer
     {
         super.init(injector);
 
+        // handle room logins
+        _clmgr.addSessionFactory(injector.getInstance(RoomSessionFactory.class));
+        _conmgr.addChainedAuthenticator(injector.getInstance(RoomAuthenticator.class));
+
         _aetherMan.init();
         _worldMan.init();
-        
     }    
 
     @Inject protected AetherManager _aetherMan;
