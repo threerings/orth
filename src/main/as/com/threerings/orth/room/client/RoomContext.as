@@ -118,7 +118,7 @@ public class RoomContext
     // from WorldContext
     public function gotoPlace (place :PlaceKey) :void
     {
-        var sceneDir :OrthSceneDirector = _module.getInstance(OrthSceneDirector);
+        var sceneDir :OrthSceneDirector = _module.getInstance(SceneDirector);
         sceneDir.moveTo(RoomKey(place).sceneId);
     }
 
