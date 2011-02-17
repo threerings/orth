@@ -90,6 +90,7 @@ public class SocializerInfo extends ActorInfo
     {
         SocializerObject sobj = (SocializerObject) body;
 
+        // ORTH TODO: Let's decide if we can ever be without an avatar...
         _media = sobj.avatar.getAvatarMedia();
         _ident = sobj.avatar.getIdent();
         _scale = sobj.avatar.getScale();
