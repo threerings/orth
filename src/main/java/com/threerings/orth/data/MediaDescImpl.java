@@ -1,11 +1,14 @@
 package com.threerings.orth.data;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+import com.threerings.util.ActionScript;
+
 import com.threerings.io.Streamable;
 
 import com.threerings.orth.data.MediaDesc;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-
+@ActionScript(omit=true)
 public abstract class MediaDescImpl
     implements MediaDesc, IsSerializable, Streamable
 {
