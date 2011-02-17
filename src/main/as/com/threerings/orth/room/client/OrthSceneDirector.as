@@ -114,8 +114,6 @@ public class OrthSceneDirector extends SceneDirector
         _mssvc = (client.requireService(OrthSceneService) as OrthSceneService);
     }
 
-    protected var _octx :OrthContext = inject(OrthContext);
-
     protected const _worldDir :WorldDirector = inject(WorldDirector);
 
     protected var _mssvc :OrthSceneService;

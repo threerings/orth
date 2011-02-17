@@ -31,8 +31,7 @@ public class RoomSessionFactory extends SessionFactory
     public Class<? extends ClientResolver> getClientResolverClass (Name username)
     {
         if (username.getClass().equals(RoomAuthName.class)) {
-            // ORTH TODO: this is very temporary
-            return ClientResolver.class;
+            return RoomClientResolver.class;
         }
         return null;
     }
