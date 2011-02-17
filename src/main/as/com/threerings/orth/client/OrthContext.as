@@ -3,7 +3,6 @@
 
 package com.threerings.orth.client {
 
-import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
@@ -26,6 +25,7 @@ import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.world.client.AbstractWorldModule;
 import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.world.client.WorldModule;
 
 /**
  * This is the beating heart of an Orth-based client. It provides access to the Aether client
@@ -81,10 +81,10 @@ public class OrthContext
         // instantiate the correct WorldModule subclass
         var wMod :AbstractWorldModule = new moduleClass();
 
-        var cMod :Module = wMod.init(_module);
+        var cMod :WorldModule = wMod.init(_module);
 
         // and finally use it to bring the correct WorldContext subclass to life
-        log.info("Initializing new WorldContext", "mod", wMod);
+        log.info("Initializing new WorldContext", "mod", cMod);
         _wctx = cMod.getInstance(WorldContext);
     }
 

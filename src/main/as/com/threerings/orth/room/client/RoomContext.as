@@ -4,7 +4,6 @@
 package com.threerings.orth.room.client {
 import flash.display.DisplayObject;
 
-import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.chat.client.ChatDirector;
@@ -14,6 +13,8 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
 import com.threerings.whirled.util.WhirledContext;
+
+import com.threerings.util.Log;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
@@ -25,6 +26,7 @@ import com.threerings.orth.room.data.RoomKey;
 import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.world.client.WorldModule;
 import com.threerings.orth.world.data.OrthPlayerBody;
 import com.threerings.orth.world.data.PlaceKey;
 
@@ -36,7 +38,6 @@ public class RoomContext
 {
     public function RoomContext ()
     {
-
     }
 
     public function initDirectors () :void
@@ -135,7 +136,7 @@ public class RoomContext
 
     protected const _client :WorldClient = inject(WorldClient);
     protected const _topPanel :TopPanel = inject(TopPanel);
-    protected const _module :Module = inject(Module);
+    protected const _module :WorldModule = inject(WorldModule);
 
     // ORTH TODO: This is highly dubious and will change dramatically, as most chatting will be sent
     // TODO: over the Aether wire and our chat system needs to be multi-connection at any rate.

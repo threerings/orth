@@ -10,6 +10,7 @@ import flashx.funk.ioc.Module;
 import flashx.funk.util.isAbstract;
 
 import com.threerings.orth.client.OrthModule;
+import com.threerings.orth.world.client.WorldChainModule;
 
 /**
  * Interfaces and abstract classes that must be bound in any implementing layer:
@@ -23,11 +24,11 @@ public class AbstractWorldModule extends BindingModule
         bind(WorldContext).to(getWorldContextClass()).asSingleton();
     }
     
-    final public function init (oMod :OrthModule) :Module
+    final public function init (oMod :OrthModule) :WorldModule
     {
         // create the two-pronged injection scope
-        _chainMod = new ChainModule(oMod,  this);
-        bind(Module).toInstance(_chainMod);
+        _chainMod = new WorldChainModule(oMod,  this);
+        bind(WorldModule).toInstance(_chainMod);
 
         // and instantiate the context in that scope (and much of the world layer with it)
         var ctx :WorldContext = _chainMod.getInstance(WorldContext);
@@ -49,6 +50,6 @@ public class AbstractWorldModule extends BindingModule
         // empty, but subclasses will want to implement
     }
 
-    protected var _chainMod :Module;
+    protected var _chainMod :WorldModule;
 }
 }
