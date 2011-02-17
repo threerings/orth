@@ -9,11 +9,9 @@ import com.threerings.presents.net.Credentials;
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.AetherCredentials;
-
-import com.threerings.orth.world.client.WorldClient;
-
 import com.threerings.orth.room.data.RoomAuthName;
 import com.threerings.orth.room.data.RoomCredentials;
+import com.threerings.orth.world.client.WorldClient;
 
 public class RoomClient extends WorldClient
 {
