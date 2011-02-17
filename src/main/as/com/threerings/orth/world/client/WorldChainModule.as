@@ -17,7 +17,7 @@ public class WorldChainModule extends ChainModule
 {
     public function WorldChainModule (oMod :OrthModule, wMod :AbstractWorldModule)
     {
-        super(oMod, wMod);
+        super(wMod, oMod);
     }
 }
 }
