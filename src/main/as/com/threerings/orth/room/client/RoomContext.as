@@ -4,6 +4,7 @@
 package com.threerings.orth.room.client {
 import flash.display.DisplayObject;
 
+import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.chat.client.ChatDirector;
@@ -116,7 +117,8 @@ public class RoomContext
     // from WorldContext
     public function gotoPlace (place :PlaceKey) :void
     {
-        _sceneDir.moveTo(RoomKey(place).sceneId);
+        var sceneDir :OrthSceneDirector = _module.getInstance(OrthSceneDirector);
+        sceneDir.moveTo(RoomKey(place).sceneId);
     }
 
     /** We use this for moving around a scene. */
@@ -131,10 +133,9 @@ public class RoomContext
         return _client.getClientObject() as SocializerObject;
     }
 
-    protected var _sceneDir :OrthSceneDirector;
-
     protected const _client :WorldClient = inject(WorldClient);
     protected const _topPanel :TopPanel = inject(TopPanel);
+    protected const _module :Module = inject(Module);
 
     // ORTH TODO: This is highly dubious and will change dramatically, as most chatting will be sent
     // TODO: over the Aether wire and our chat system needs to be multi-connection at any rate.
