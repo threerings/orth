@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.orth.room.persist.server;
+package com.threerings.orth.persist.server;
 
 public interface OrthPlayerRepository
 {
