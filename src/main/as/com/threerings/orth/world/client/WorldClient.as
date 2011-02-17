@@ -38,7 +38,6 @@ public class WorldClient extends CrowdClient
 
         // configure our server and port info
         setServer(host, ports);
-        setVersion(depConf.version);
         setCredentials(buildCredentials());
         logon();
     }
