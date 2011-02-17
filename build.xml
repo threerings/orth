@@ -232,6 +232,8 @@
          <exclude name="com/threerings/orth/peer/**/*.java"/>
          <exclude name="**/*Object.java"/>
          <exclude name="**/*_CustomFieldSerializer.java"/>
+         <!-- flips out on generics -->
+         <exclude name="com/threerings/orth/room/data/Entity*.java"/>
          <exclude name="com/threerings/orth/party/**/*.java"/>
        </fileset>
      </genascriptstreamable>
