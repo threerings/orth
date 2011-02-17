@@ -69,7 +69,7 @@ public class SocializerObject extends ActorObject
     // from ActorObject
     @Override public EntityIdent getEntityIdent ()
     {
-        return avatar.getIdent();
+        return (avatar != null) ? avatar.getIdent() : null;
     }
 
     // from ActorObject
