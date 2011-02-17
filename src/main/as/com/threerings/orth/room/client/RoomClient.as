@@ -21,11 +21,13 @@ public class RoomClient extends WorldClient
 
     override protected function buildCredentials () :Credentials
     {
-        var aClient :AetherClient = inject(AetherClient);
-        var aCreds :AetherCredentials = AetherCredentials(aClient.getCredentials());
-        var aRsp :AetherAuthResponseData = AetherAuthResponseData(aClient.getAuthResponseData());
+        var aCreds :AetherCredentials = AetherCredentials(_aClient.getCredentials());
+        var aRsp :AetherAuthResponseData = AetherAuthResponseData(_aClient.getAuthResponseData());
 
         return new WorldCredentials(aCreds.getUsername(), aRsp.sessionToken);
     }
+
+    // this is the *aether* client
+    protected const _aClient :AetherClient = inject(AetherClient);
 }
 }
