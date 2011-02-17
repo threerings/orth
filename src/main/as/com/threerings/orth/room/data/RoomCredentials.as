@@ -33,6 +33,12 @@ public class RoomCredentials extends TokenCredentials
 
 // GENERATED STREAMING END
 
+    public function RoomCredentials (displayName :String = null, token :String = null)
+    {
+        super(token);
+        this.displayName = displayName;
+    }
+
 // GENERATED CLASSFINISH START
 }
 }
