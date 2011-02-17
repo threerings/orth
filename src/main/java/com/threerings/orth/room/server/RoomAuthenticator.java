@@ -13,10 +13,11 @@ import com.threerings.presents.server.ChainedAuthenticator;
 import com.threerings.presents.server.net.AuthingConnection;
 
 import com.threerings.orth.data.OrthAuthCodes;
-import com.threerings.orth.persist.server.OrthPlayerRepository;
 
 import com.threerings.orth.room.data.RoomCredentials;
 import com.threerings.orth.room.data.RoomAuthName;
+
+import com.threerings.orth.server.persist.OrthPlayerRepository;
 
 public class RoomAuthenticator extends ChainedAuthenticator
 {
