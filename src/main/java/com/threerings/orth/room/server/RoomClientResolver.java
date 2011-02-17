@@ -9,7 +9,7 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.ClientLocal;
 
 import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.AuthName;
 import com.threerings.orth.room.data.SocializerObject;
 
 /**
@@ -37,8 +37,7 @@ public class RoomClientResolver extends CrowdClientResolver
 
         SocializerObject sobj = (SocializerObject) clobj;
 
-        // ORTH TODO: shortly we will need to do more here, but for now it's just the name
-        OrthName name = (OrthName) clobj.username;
+        AuthName name = (AuthName) clobj.username;
         sobj.name = new PlayerName(name.toString(), name.getId());
     }
 }
