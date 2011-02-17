@@ -36,8 +36,12 @@ public class RoomClientResolver extends CrowdClientResolver
         super.resolveClientData(clobj);
 
         SocializerObject sobj = (SocializerObject) clobj;
+        populate(sobj);
+    }
 
-        AuthName name = (AuthName) clobj.username;
+    protected void populate (SocializerObject sobj)
+    {
+        AuthName name = (AuthName) sobj.username;
         sobj.name = new PlayerName(name.toString(), name.getId());
     }
 }
