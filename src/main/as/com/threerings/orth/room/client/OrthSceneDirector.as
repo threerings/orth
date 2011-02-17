@@ -5,6 +5,7 @@ package com.threerings.orth.room.client {
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.client.LocationDirector;
+import com.threerings.whirled.client.PendingData;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.client.SceneService_SceneMoveListener;
 import com.threerings.whirled.client.persist.SceneRepository;
