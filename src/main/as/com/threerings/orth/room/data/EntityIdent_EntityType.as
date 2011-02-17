@@ -4,24 +4,15 @@ import com.threerings.util.ByteEnum;
 
 public class EntityIdent_EntityType extends ByteEnum
 {
-    public function EntityIdent_EntityType (name :String, code :int, propType :String)
+    public function EntityIdent_EntityType (name :String, code :int)
     {
         super(name, code);
-
-        _propType = propType;
     }
 
+    // ORTH TODO: see MSOY's RoomController.ENTITY_TYPES
     public function getPropertyType () :String
     {
-//     ENTITY_TYPES[ItemTypes.FURNITURE] = "furni";
-//     ENTITY_TYPES[ItemTypes.TOY] = "furni";
-//     ENTITY_TYPES[ItemTypes.DECOR] = "furni";
-//     ENTITY_TYPES[ItemTypes.AVATAR] = "avatar";
-//     ENTITY_TYPES[ItemTypes.OCCUPANT] = "avatar";
-//     ENTITY_TYPES[ItemTypes.PET] = "pet";
         throw new Error("abstract");
     }
-
-    protected var _propType :String;
 }
 }
