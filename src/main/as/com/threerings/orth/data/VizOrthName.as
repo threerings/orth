@@ -6,10 +6,8 @@ package com.threerings.orth.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-
-import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthName;
-
+import com.threerings.orth.data.MediaDesc;
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
 public class VizOrthName extends OrthName

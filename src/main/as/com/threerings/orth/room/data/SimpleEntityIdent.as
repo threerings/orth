@@ -11,7 +11,7 @@ import com.threerings.util.ByteEnum;
 import com.threerings.util.ComparisonChain;
 
 import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.orth.room.data.EntityIdent_EntityType;
+import com.threerings.orth.room.data.EntityType;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
@@ -27,21 +27,20 @@ public class SimpleEntityIdent implements EntityIdent
     public static function fromString (str :String) :EntityIdent
     {
         var tokens :Array = str.split(":");
-        var entityType :EntityIdent_EntityType =
-            EntityIdent_EntityType(ByteEnum.fromByte(EntityIdent_EntityType, tokens[0]));
+        var entityType :EntityType = EntityType(ByteEnum.fromByte(EntityType, tokens[0]));
         var entityId :* = tokens[1];
 
         return new SimpleEntityIdent(entityType, entityId);
     }
 
-    public function SimpleEntityIdent (type :EntityIdent_EntityType, id :int)
+    public function SimpleEntityIdent (type :EntityType, id :int)
     {
         _type = type;
         _id = id;
     }
 
     // from interface EntityIdent
-    public function getType () :EntityIdent_EntityType
+    public function getType () :EntityType
     {
         return _type;
     }
@@ -87,7 +86,7 @@ public class SimpleEntityIdent implements EntityIdent
 // GENERATED STREAMING START
     public function readObject (ins :ObjectInputStream) :void
     {
-        _type = ins.readObject(EntityIdent_EntityType);
+        _type = ins.readObject(EntityType);
         _id = ins.readInt();
     }
 
@@ -97,7 +96,7 @@ public class SimpleEntityIdent implements EntityIdent
         out.writeInt(_id);
     }
 
-    protected var _type :EntityIdent_EntityType;
+    protected var _type :EntityType;
     protected var _id :int;
 // GENERATED STREAMING END
 // GENERATED CLASSFINISH START

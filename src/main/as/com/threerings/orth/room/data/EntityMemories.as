@@ -4,18 +4,14 @@
 
 package com.threerings.orth.room.data {
 
-import flash.utils.ByteArray;
-
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-
+import flash.utils.ByteArray;
 import com.threerings.util.Cloneable;
 import com.threerings.util.StreamableHashMap;
-
 import com.threerings.presents.dobj.DSet_Entry;
-
 import com.threerings.orth.room.data.EntityIdent;
-
+import com.threerings.io.streamers.MapStreamer;
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
 public class EntityMemories implements DSet_Entry, Cloneable

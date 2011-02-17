@@ -4,12 +4,10 @@
 
 package com.threerings.orth.aether.data {
 
-import org.osflash.signals.Signal;
-
 import com.threerings.io.ObjectInputStream;
-
+import com.threerings.io.ObjectOutputStream;
 import com.threerings.presents.net.AuthResponseData;
-
+import org.osflash.signals.Signal;
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
@@ -63,7 +61,11 @@ import com.threerings.presents.dobj.ElementUpdatedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
+import com.threerings.presents.dobj.MessageEvent;
+import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.dobj.ObjectAddedEvent;
+import com.threerings.presents.dobj.ObjectDeathListener;
+import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.dobj.ObjectRemovedEvent;
 import com.threerings.presents.dobj.OidListListener;
 import com.threerings.presents.dobj.SetListener;

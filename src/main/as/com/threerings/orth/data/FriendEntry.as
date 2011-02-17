@@ -6,9 +6,7 @@ package com.threerings.orth.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-
 import com.threerings.orth.data.PlayerEntry;
-
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
 public class FriendEntry extends PlayerEntry
