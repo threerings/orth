@@ -394,8 +394,8 @@ public class RoomObjectController extends RoomController
 
         _walkTarget.visible = false;
         _flyTarget.visible = false;
-        _roomView.addChildAt(_flyTarget, _roomView.numChildren);
-        _roomView.addChildAt(_walkTarget, _roomView.numChildren);
+        _roomView.appendElement(_flyTarget);
+        _roomView.appendElement(_walkTarget);
 
         _roomView.addEventListener(MouseEvent.CLICK, mouseClicked);
         _roomView.addEventListener(Event.ENTER_FRAME, checkMouse, false, int.MIN_VALUE);
@@ -419,8 +419,8 @@ public class RoomObjectController extends RoomController
         _roomView.stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyEvent);
         _roomView.stage.removeEventListener(KeyboardEvent.KEY_UP, keyEvent);
 
-        _roomView.removeChild(_walkTarget);
-        _roomView.removeChild(_flyTarget);
+        _roomView.removeElement(_walkTarget);
+        _roomView.removeElement(_flyTarget);
         setHoverSprite(null);
 
         if (_roomObj != null) {

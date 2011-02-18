@@ -107,6 +107,7 @@ public class RoomObjectView extends RoomView
      */
     public function rereadScene () :void
     {
+        log.info("rereadScene()", "scene", _sceneDir.getScene());
         setScene(_sceneDir.getScene() as OrthScene);
     }
 

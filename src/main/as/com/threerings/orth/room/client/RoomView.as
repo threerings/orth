@@ -3,6 +3,7 @@
 
 package com.threerings.orth.room.client {
 import flash.display.BitmapData;
+import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.geom.Matrix;
@@ -440,6 +441,29 @@ public class RoomView extends Sprite
             }
         }
         furni.loc = new OrthLocation(x, y, z);
+    }
+
+    public function addElement (element :RoomElement) :void
+    {
+        addChild(element.getVisualization());
+        addToElementMap(element);
+    }
+
+    public function appendElement (element :RoomElement) :void
+    {
+        addChildAt(element.getVisualization(), numChildren);
+        addToElementMap(element);
+    }
+
+    public function removeElement (element :RoomElement) :void
+    {
+        removeChild(element.getVisualization());
+        removeFromElementMap(element);
+    }
+
+    public function vizToEntity (viz :DisplayObject) :RoomElement
+    {
+        return _elements.get(viz);
     }
 
     /**
@@ -1015,6 +1039,7 @@ public class RoomView extends Sprite
         if (ident != null) {
             _entities.put(ident, sprite);
         }
+        addToElementMap(sprite);
     }
 
     /**
@@ -1023,6 +1048,22 @@ public class RoomView extends Sprite
     protected function removeFromEntityMap (sprite :EntitySprite) :void
     {
         _entities.remove(sprite.getEntityIdent()); // could be a no-op
+    }
+
+    /**
+     * Maps a {@link RoomElement}'s visualization (DisplayObject) back to the element.
+     */
+    protected function addToElementMap (element :RoomElement) :void
+    {
+        _elements.put(element.getVisualization(), element);
+    }
+
+    /**
+     * Unmaps a {@link RoomElement}'s visualization.
+     */
+    protected function removeFromElementMap (element :RoomElement) :void
+    {
+        _elements.remove(element.getVisualization());
     }
 
     /**
@@ -1050,6 +1091,9 @@ public class RoomView extends Sprite
 
     /** Maps EntityIdent -> EntitySprite for entities (furni, avatars, pets). */
     protected var _entities :Map = Maps.newMapOf(EntityIdent);
+
+    /** Maps DisplayObject -> RoomElement */
+    protected var _elements :Map = Maps.newMapOf(DisplayObject);
 
     /** The sprite we should center on. */
     protected var _centerSprite :EntitySprite;
