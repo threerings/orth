@@ -190,8 +190,8 @@ public class OrthSceneModel extends SceneModel
         model.accessControl = OrthSceneModel.ACCESS_EVERYONE;
         model.entrance = new OrthLocation(.5, 0, .5, 180);
         model.decor = defaultOrthSceneModelDecor();
-        model.version = 1;
         populateBlankOrthSceneModel(model);
+        model.version = 1;
         return model;
     }
 
