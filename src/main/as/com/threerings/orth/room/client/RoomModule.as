@@ -28,8 +28,6 @@ public class RoomModule extends AbstractWorldModule
 
         // instantiate and bind the directors that need explicit instantiation
         bind(MuteDirector).toInstance(new MuteDirector(rCtx));
-        bind(MediaDirector).toInstance(new MediaDirector(rCtx));
-        bind(OccupantDirector).toInstance(new OccupantDirector(rCtx));
 
         // the SceneDirector needs a binding for SceneRepository
         bind(SceneRepository).to(NullSceneRepository).asSingleton();
@@ -41,6 +39,10 @@ public class RoomModule extends AbstractWorldModule
         bind(SceneDirector).to(OrthSceneDirector).asSingleton();
 
         bind(SpotSceneDirector).toInstance(new SpotSceneDirector(rCtx, locDir, scDir));
+
+        // these rely on LocationDirector, so let's bind them after
+        bind(MediaDirector).toInstance(new MediaDirector(rCtx, locDir));
+        bind(OccupantDirector).toInstance(new OccupantDirector(rCtx));
     }
 
     override protected function getWorldContextClass () :Class
