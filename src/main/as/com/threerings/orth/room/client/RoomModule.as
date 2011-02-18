@@ -27,20 +27,18 @@ public class RoomModule extends AbstractWorldModule
         var rCtx :RoomContext = RoomContext(ctx);
 
         // instantiate and bind the directors that need explicit instantiation
-        var muteDir :MuteDirector = new MuteDirector(rCtx);
-        bind(MuteDirector).toInstance(muteDir);
-
-        var locDir :LocationDirector = new OrthLocationDirector(rCtx);
-        bind(LocationDirector).toInstance(locDir);
-
-        var occDir :OccupantDirector = new OccupantDirector(rCtx);
-        bind(OccupantDirector).toInstance(occDir);
+        bind(MuteDirector).toInstance(new MuteDirector(rCtx));
+        bind(MediaDirector).toInstance(new MediaDirector(rCtx));
+        bind(OccupantDirector).toInstance(new OccupantDirector(rCtx));
 
         // the SceneDirector needs a binding for SceneRepository
         bind(SceneRepository).to(NullSceneRepository).asSingleton();
 
+        var locDir :LocationDirector = new OrthLocationDirector(rCtx);
+        bind(LocationDirector).toInstance(locDir);
+
         var scDir :SceneDirector = _chainMod.getInstance(OrthSceneDirector);
-        bind(SceneDirector).toInstance(scDir);
+        bind(SceneDirector).to(OrthSceneDirector).asSingleton();
 
         bind(SpotSceneDirector).toInstance(new SpotSceneDirector(rCtx, locDir, scDir));
     }
