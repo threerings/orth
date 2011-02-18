@@ -357,7 +357,7 @@ public class RoomLayoutStandard implements RoomLayout
      */
     protected function compareRoomElement (index :int, cmpElement :RoomElement) :int
     {
-        var re :RoomElement = _parentView.getChildAt(index) as RoomElement;
+        var re :RoomElement = _parentView.vizToEntity(_parentView.getChildAt(index));
         if (re == null) {
             Log.getLog(this).warning("Non room element in room",
                 "index", index, "numChildren", _parentView.numChildren,
