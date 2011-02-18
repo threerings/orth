@@ -2,6 +2,7 @@
 // $Id: MediaDirector.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.world.client.WorldContext;
 
 import flashx.funk.ioc.inject;
 
@@ -15,7 +16,6 @@ import com.threerings.util.Log;
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.ClientEvent;
 
-import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
@@ -35,11 +35,11 @@ public class MediaDirector extends BasicDirector
 {
     public static const log :Log = Log.getLog(MediaDirector);
 
-    public function MediaDirector (ctx :OrthContext)
+    public function MediaDirector (ctx :WorldContext)
     {
         super(ctx);
 
-        _octx = ctx;
+        _wctx = ctx;
 
         _locDir.addLocationObserver(new LocationAdapter(null, locationDidChange));
     }
@@ -52,7 +52,7 @@ public class MediaDirector extends BasicDirector
     public function getSprite (occInfo :OccupantInfo, extraInfo :Object) :OccupantSprite
     {
         if (occInfo is SocializerInfo) {
-            var isOurs :Boolean = _octx.getMyName().equals(occInfo.username);
+            var isOurs :Boolean = _wctx.getMyName().equals(occInfo.username);
             if (isOurs && _ourAvatar != null) {
                 _ourAvatar.setOccupantInfo(occInfo, extraInfo);
                 return _ourAvatar;
@@ -131,7 +131,7 @@ public class MediaDirector extends BasicDirector
     }
 
     /** A casted copy of the context. */
-    protected var _octx :OrthContext;
+    protected var _wctx :WorldContext;
 
     protected const _locDir :LocationDirector = inject(LocationDirector);
 
