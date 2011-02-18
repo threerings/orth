@@ -168,16 +168,11 @@ public class WorldController extends Controller
     // from ClientObserver
     public function clientWillLogon (event :ClientEvent) :void
     {
-        // nada
     }
 
     // from ClientObserver
     public function clientDidLogon (event :ClientEvent) :void
     {
-        var name :Name = (_client.getCredentials() as WorldCredentials).getUsername();
-        if (name != null) {
-            Prefs.setUsername(name.toString());
-        }
     }
 
     // from ClientObserver
@@ -189,6 +184,7 @@ public class WorldController extends Controller
     // from ClientObserver
     public function clientDidLogoff (event :ClientEvent) :void
     {
+        log.info("clientDidLogoff()", "event", event, "client", _client);
         if (_logoffMessage != null) {
             // ORTH TODO: how do we let implementors do something nice here?
             _logoffMessage = null;
@@ -321,7 +317,7 @@ public class WorldController extends Controller
         menuData.push({ label: Msgs.GENERAL.get("b.chatPrefs"), command: CHAT_PREFS });
 
         // ORTH TODO
-//        menuData.push({ label: Msgs.GENERAL.get("b.clearChat"), 
+//        menuData.push({ label: Msgs.GENERAL.get("b.clearChat"),
 //            callback: _chatDir.clearAllDisplays });
         CommandMenu.addSeparator(menuData);
 
@@ -732,7 +728,7 @@ public class WorldController extends Controller
 
     protected const _orthCtrl :OrthController = inject(OrthController);
 
-    protected const _muteDir :MuteDirector = inject(MuteDirector);    
+    protected const _muteDir :MuteDirector = inject(MuteDirector);
     protected const _locDir :LocationDirector = inject(LocationDirector);
     protected const _sceneDir :SceneDirector = inject(SceneDirector);
 
