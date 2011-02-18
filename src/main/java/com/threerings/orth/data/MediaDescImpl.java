@@ -1,16 +1,13 @@
 package com.threerings.orth.data;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-
 import com.threerings.util.ActionScript;
 
 import com.threerings.io.Streamable;
 
 import com.threerings.orth.data.MediaDesc;
 
-@ActionScript(omit=true)
 public abstract class MediaDescImpl
-    implements MediaDesc, IsSerializable, Streamable
+    implements MediaDesc, /* IsSerializable */, Streamable
 {
     /** Used for deserialization. */
     public MediaDescImpl ()
@@ -59,7 +56,7 @@ public abstract class MediaDescImpl
     @Override // from Object
     public int hashCode ()
     {
-        return (getMimeType() * 43) + getConstraint();
+        return (getMimeType() * 43 + getConstraint()) * 43 ^ getMediaPath().hashCode();
     }
 
 	@Override // from Object
@@ -67,7 +64,8 @@ public abstract class MediaDescImpl
 	{
 		return (other instanceof MediaDesc) &&
 			(getMimeType() == ((MediaDesc) other).getMimeType()) &&
-            (getConstraint() == ((MediaDesc) other).getConstraint());
+            (getConstraint() == ((MediaDesc) other).getConstraint()) &&
+            (getMediaPath() == ((MediaDesc) other).getMediaPath());
 
 	}
 }
