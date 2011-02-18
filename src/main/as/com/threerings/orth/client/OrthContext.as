@@ -2,7 +2,6 @@
 // $Id$
 
 package com.threerings.orth.client {
-
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
@@ -49,6 +48,12 @@ public class OrthContext
         // initialize our convenience holder
         Msgs.init(inject(MessageManager));
     }
+
+    // called from OrthModule once this context and all its dependents are safely constructed
+    public function didInit () :void
+    {
+    }
+
 
     // from PresentsContext
     public function getClient () :Client
