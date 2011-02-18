@@ -9,7 +9,7 @@ import com.threerings.orth.data.MediaDesc;
 /**
  * A basic streamable implementation of {@link Avatar}.
  */
-public class AvatarObject extends EntityObject
+public class AvatarData extends EntityData
     implements Avatar
 {
     public MediaDesc media;

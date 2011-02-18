@@ -12,7 +12,7 @@ import com.threerings.orth.room.data.EntityIdent;
 /**
  * A basic streamable implementation of {@link Entity}.
  */
-public class EntityObject extends SimpleStreamableObject
+public class EntityData extends SimpleStreamableObject
     implements Entity
 {
     public MediaDesc media;

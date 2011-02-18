@@ -6,7 +6,7 @@ package com.threerings.orth.entity.data;
 /**
  * A basic streamable implementation of {@link Decor}.
  */
-public class DecorObject extends EntityObject
+public class DecorData extends EntityData
     implements Decor
 {
     public byte type;

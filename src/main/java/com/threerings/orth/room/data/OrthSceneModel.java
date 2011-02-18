@@ -15,9 +15,7 @@ import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.MediaMimeTypes;
 import com.threerings.orth.data.URLMediaDesc;
 import com.threerings.orth.entity.data.Decor;
-import com.threerings.orth.entity.data.DecorObject;
-import com.threerings.orth.room.data.DecorCodes;
-import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.entity.data.DecorData;
 
 import static com.threerings.orth.Log.log;
 
@@ -203,7 +201,7 @@ public class OrthSceneModel extends SceneModel
      */
     public static Decor defaultOrthSceneModelDecor ()
     {
-        DecorObject decor = new DecorObject();
+        DecorData decor = new DecorData();
         decor.media = DEFAULT_DECOR_MEDIA;
         decor.type = DecorCodes.IMAGE_OVERLAY;
         decor.width = 800;

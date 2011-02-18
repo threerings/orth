@@ -15,7 +15,7 @@ import com.threerings.orth.room.data.EntityIdent;
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class DecorObject extends SimpleStreamableObject
+public class DecorData extends SimpleStreamableObject
     implements Decor
 {
 // GENERATED CLASSDECL END
