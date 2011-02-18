@@ -3,7 +3,6 @@
 
 package com.threerings.orth.data;
 
-import com.threerings.util.ActionScript;
 
 /**
  * A somewhat more concrete {@link MediaDesc}.

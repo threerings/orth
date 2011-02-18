@@ -3,7 +3,6 @@
 
 package com.threerings.orth.data;
 
-import com.threerings.util.ActionScript;
 
 /**
  * A trivial MediaDesc implementation that is configured with an explicit URL.

@@ -1,10 +1,6 @@
 package com.threerings.orth.data;
 
-import com.threerings.util.ActionScript;
-
 import com.threerings.io.Streamable;
-
-import com.threerings.orth.data.MediaDesc;
 
 public abstract class MediaDescImpl
     implements MediaDesc, /* IsSerializable, */ Streamable
