@@ -26,10 +26,10 @@ public class RoomModule extends AbstractWorldModule
     {
         var rCtx :RoomContext = RoomContext(ctx);
 
-        // set up singletons
-        bind(MuteDirector).asSingleton();
-
         // instantiate and bind the directors that need explicit instantiation
+        var muteDir :MuteDirector = new MuteDirector(rCtx);
+        bind(MuteDirector).toInstance(muteDir);
+
         var locDir :LocationDirector = new OrthLocationDirector(rCtx);
         bind(LocationDirector).toInstance(locDir);
 
