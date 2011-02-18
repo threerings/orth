@@ -32,6 +32,11 @@ public class URLMediaDesc extends BasicMediaDesc
     protected var _url :String;
 // GENERATED STREAMING END
 
+    override public function getMediaPath ():String
+    {
+        return _url;
+    }
+
 // GENERATED CLASSFINISH START
 }
 }
