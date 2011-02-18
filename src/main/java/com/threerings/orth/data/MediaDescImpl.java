@@ -7,7 +7,7 @@ import com.threerings.io.Streamable;
 import com.threerings.orth.data.MediaDesc;
 
 public abstract class MediaDescImpl
-    implements MediaDesc, /* IsSerializable */, Streamable
+    implements MediaDesc, /* IsSerializable, */ Streamable
 {
     /** Used for deserialization. */
     public MediaDescImpl ()
