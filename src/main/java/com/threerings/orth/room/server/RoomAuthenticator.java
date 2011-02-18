@@ -31,7 +31,7 @@ public class RoomAuthenticator extends ChainedAuthenticator
         if (player == null) {
             throw new AuthException(OrthAuthCodes.SESSION_EXPIRED);
         }
-        conn.setAuthName(new RoomAuthName(player.getPlayerName(), player.getPlayerId());
+        conn.setAuthName(new RoomAuthName(player.getPlayerName(), player.getPlayerId()));
         rsp.getData().code = AuthResponseData.SUCCESS;
     }
 
