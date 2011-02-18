@@ -33,7 +33,7 @@ public class SimpleEntityIdent implements EntityIdent
         return new SimpleEntityIdent(entityType, entityId);
     }
 
-    public function SimpleEntityIdent (type :EntityType, id :int)
+    public function SimpleEntityIdent (type :EntityType = null, id :int = 0)
     {
         _type = type;
         _id = id;
