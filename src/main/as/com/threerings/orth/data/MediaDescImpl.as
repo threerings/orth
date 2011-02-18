@@ -83,7 +83,6 @@ public class MediaDescImpl implements MediaDesc, Streamable
 
     public function equals (other :Object) :Boolean
     {
-        Log.getLog(this).info("equals()", "other", other);
         return (other is MediaDesc) &&
             mimeType == MediaDesc(other).mimeType &&
             constraint == MediaDesc(other).constraint &&
