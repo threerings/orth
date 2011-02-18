@@ -42,6 +42,9 @@ public class OrthModule extends BindingModule
         bind(ControlBar).asSingleton();
         bind(OrthPlaceBox).asSingleton();
         bind(TopPanel).asSingleton();
+
+        // narya bits
+        bind(MessageManager).asSingleton();
     }
 
     public function init () :void
