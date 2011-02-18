@@ -1,8 +1,10 @@
 //
 // $Id$
 
+
 package com.threerings.orth.room.client {
 
+import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
@@ -10,6 +12,9 @@ import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.client.persist.SceneRepository;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
 
+import com.threerings.util.MessageManager;
+
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.world.client.AbstractWorldModule;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
@@ -43,6 +48,9 @@ public class RoomModule extends AbstractWorldModule
         // these rely on LocationDirector, so let's bind them after
         bind(MediaDirector).toInstance(new MediaDirector(rCtx, locDir));
         bind(OccupantDirector).toInstance(new OccupantDirector(rCtx));
+
+        bind(ChatDirector).toInstance(new ChatDirector(
+            rCtx, _chainMod.getInstance(MessageManager), OrthCodes.CHAT_MSGS));
     }
 
     override protected function getWorldContextClass () :Class

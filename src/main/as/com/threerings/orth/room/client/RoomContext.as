@@ -19,7 +19,6 @@ import com.threerings.presents.dobj.DObjectManager;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.TopPanel;
-import com.threerings.orth.room.client.OrthSceneDirector;
 import com.threerings.orth.room.data.RoomKey;
 import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
@@ -57,22 +56,19 @@ public class RoomContext
     // from CrowdContext
     public function getLocationDirector () :LocationDirector
     {
-        return inject(LocationDirector);
+        return _module.getInstance(LocationDirector);
     }
 
     // from CrowdContext
     public function getOccupantDirector () :OccupantDirector
     {
-        return inject(OccupantDirector);
+        return _module.getInstance(OccupantDirector);
     }
 
     // from CrowdContext
     public function getChatDirector () :ChatDirector
     {
-        return null;
-
-        // ORTH TODO
-        // return _chatDir;
+        return _module.getInstance(ChatDirector);
     }
 
     // from CrowdContext
@@ -90,7 +86,7 @@ public class RoomContext
     // from WhirledContext
     public function getSceneDirector () :SceneDirector
     {
-        return inject(SceneDirector);
+        return _module.getInstance(SceneDirector);
     }
 
     // from WorldContext
@@ -123,7 +119,7 @@ public class RoomContext
     /** We use this for moving around a scene. */
     public function getSpotSceneDirector () :SpotSceneDirector
     {
-        return inject(SpotSceneDirector);
+        return _module.getInstance(SpotSceneDirector);
     }
 
     /** Return a fully casted socializer object, or null if we're not logged on. */
@@ -135,9 +131,5 @@ public class RoomContext
     protected const _client :WorldClient = inject(WorldClient);
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _module :WorldModule = inject(WorldModule);
-
-    // ORTH TODO: This is highly dubious and will change dramatically, as most chatting will be sent
-    // TODO: over the Aether wire and our chat system needs to be multi-connection at any rate.
-    // protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
 }
 }
