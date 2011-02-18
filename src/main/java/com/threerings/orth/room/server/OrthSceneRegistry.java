@@ -45,6 +45,7 @@ public class OrthSceneRegistry extends SpotSceneRegistry
     }
 
     // from interface OrthSceneProvider
+    @Override
     public void moveTo (ClientObject caller, int sceneId, int version, int portalId,
         OrthLocation destLoc, SceneMoveListener listener)
         throws InvocationException
@@ -58,6 +59,7 @@ public class OrthSceneRegistry extends SpotSceneRegistry
     }
 
     // from interface WorldManager.PlaceFactory
+    @Override
     public void resolveLocalPlace (
         final String ourNode, PlaceKey key, final PlaceResolutionListener listener)
     {
@@ -70,7 +72,6 @@ public class OrthSceneRegistry extends SpotSceneRegistry
             }
         });
     }
-
 
     public OrthPlace toPlace (String nodeName, HostedPlace hostedPlace)
     {
