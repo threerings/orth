@@ -6,7 +6,7 @@ package com.threerings.orth.data;
 import com.threerings.presents.net.Credentials;
 
 /**
- * Contains extra information used during authentication with an orth server.
+ * Contains a sessionToken for secondary processes to authenticate with against an Orth server.
  */
 public class TokenCredentials extends Credentials
 {
