@@ -17,26 +17,21 @@ public class RoomCredentials extends TokenCredentials
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
-    public var displayName :String;
-
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        displayName = ins.readField(String);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeField(displayName);
     }
 
 // GENERATED STREAMING END
 
-    public function RoomCredentials (displayName :String = null, token :String = null)
+    public function RoomCredentials (token :String = null)
     {
         super(token);
-        this.displayName = displayName;
     }
 
 // GENERATED CLASSFINISH START

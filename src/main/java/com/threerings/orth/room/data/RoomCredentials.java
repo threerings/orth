@@ -4,5 +4,4 @@ import com.threerings.orth.data.TokenCredentials;
 
 public class RoomCredentials extends TokenCredentials
 {
-    public String displayName;
 }
