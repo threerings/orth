@@ -266,9 +266,7 @@ public class RoomLayoutStandard implements RoomLayout
     // from interface RoomLayout
     public function updateScreenLocation (target :RoomElement, offset :Point = null) :void
     {
-        if (!(target is DisplayObject)) {
-            throw new ArgumentError("Invalid target passed to updateScreenLocation: " + target);
-        }
+        var disp :DisplayObject = target.getVisualization();
 
         switch (target.getLayoutType()) {
         default:
@@ -285,7 +283,6 @@ public class RoomLayoutStandard implements RoomLayout
             break;
 
         case OrthRoomCodes.LAYOUT_FILL:
-            var disp :DisplayObject = (target as DisplayObject);
             disp.x = 0;
             disp.y = 0;
             var r :Rectangle = _parentView.getScrollBounds();
@@ -294,15 +291,17 @@ public class RoomLayoutStandard implements RoomLayout
             break;
         }
 
-        adjustZOrder(target as DisplayObject);
+        adjustZOrder(target);
     }
 
     /**
      * Adjust the z order of the specified sprite so that it is drawn according to its logical Z
      * coordinate relative to other sprites.
      */
-    protected function adjustZOrder (sprite :DisplayObject) :void
+    protected function adjustZOrder (element :RoomElement) :void
     {
+        var sprite :DisplayObject = element.getVisualization();
+
         var dex :int;
         try {
             dex = _parentView.getChildIndex(sprite);
@@ -313,12 +312,11 @@ public class RoomLayoutStandard implements RoomLayout
             return;
         }
 
-        var re :RoomElement = sprite as RoomElement;
         var newdex :int = dex;
         var cmp :int;
         // see if it should be moved behind
         while (newdex > 0) {
-            cmp = compareRoomElement(newdex - 1, re);
+            cmp = compareRoomElement(newdex - 1, element);
             if (cmp >= 0) {
                 break;
             }
@@ -328,7 +326,7 @@ public class RoomLayoutStandard implements RoomLayout
         if (newdex == dex) {
             // see if it should be moved forward
             while (newdex < _parentView.numChildren - 1) {
-                cmp = compareRoomElement(newdex + 1, re);
+                cmp = compareRoomElement(newdex + 1, element);
                 if (cmp <= 0) {
                     break;
                 }

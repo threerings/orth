@@ -9,8 +9,6 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.Streamable;
 
-import com.threerings.util.Log;
-
 import com.threerings.orth.data.MediaDesc;
 
 // GENERATED PREAMBLE END

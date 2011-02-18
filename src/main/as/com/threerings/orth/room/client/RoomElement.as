@@ -3,6 +3,8 @@
 
 package com.threerings.orth.room.client {
 
+import flash.display.DisplayObject;
+
 import com.threerings.orth.client.Snapshottable;
 import com.threerings.orth.room.data.OrthLocation;
 
@@ -12,6 +14,11 @@ import com.threerings.orth.room.data.OrthLocation;
  */
 public interface RoomElement extends Snapshottable
 {
+    /**
+     * Return the visualization of this room element. This value should always be non-null.
+     */
+    function getVisualization () :DisplayObject;
+
     /**
      * Return the type of layout to do for this element.
      *

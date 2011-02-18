@@ -3,7 +3,6 @@
 
 package com.threerings.orth.room.client.layout {
 
-import flash.display.DisplayObject;
 import flash.geom.Point;
 
 import com.threerings.geom.Vector3;
@@ -72,7 +71,7 @@ public class RoomLayoutTopdown extends RoomLayoutStandard
         target.setScreenLocation(loc.x * _metrics.sceneWidth - offset.x,
            ((1 - loc.z) * _metrics.sceneHeight) - offset.y, getDecorScale(target));
 
-        adjustZOrder(target as DisplayObject);
+        adjustZOrder(target);
     }
 
     // from interface RoomLayout
