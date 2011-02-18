@@ -1,7 +1,5 @@
 package com.threerings.orth.room.server;
 
-import com.google.inject.Inject;
-
 import com.threerings.presents.net.BootstrapData;
 import com.threerings.presents.server.PresentsSession;
 

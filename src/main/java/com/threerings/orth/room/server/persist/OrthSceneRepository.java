@@ -3,22 +3,17 @@
 
 package com.threerings.orth.room.server.persist;
 
-import java.io.IOException;
-
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
 import com.samskivert.io.PersistenceException;
 
-import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.data.OrthSceneModel;
 import com.threerings.orth.room.server.OrthRoomExtras;
+import com.threerings.whirled.data.SceneModel;
+import com.threerings.whirled.data.SceneUpdate;
 import com.threerings.whirled.server.persist.SceneRepository;
 import com.threerings.whirled.util.NoSuchSceneException;
 import com.threerings.whirled.util.UpdateList;
-import com.threerings.whirled.data.SceneModel;
-import com.threerings.whirled.data.SceneUpdate;
-
-import static com.threerings.orth.Log.log;
 
 @Singleton
 public class OrthSceneRepository
