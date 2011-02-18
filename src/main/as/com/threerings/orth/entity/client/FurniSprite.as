@@ -32,7 +32,7 @@ public class FurniSprite extends EntitySprite
     /**
      * Initializes a new FurniSprite.
      */
-    public function FurniSprite (furni :FurniData)
+    public function initFurniSprite (furni:FurniData):void
     {
         _furni = furni;
 
@@ -132,7 +132,7 @@ public class FurniSprite extends EntitySprite
 
     override protected function createBackend () :EntityBackend
     {
-        return new FurniBackend();
+        return _module.getInstance(FurniBackend);
     }
 
     override protected function useLocationScale () :Boolean

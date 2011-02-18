@@ -2,6 +2,9 @@
 // $Id: MediaDirector.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.room.client {
+import flashx.funk.ioc.Module;
+import flashx.funk.ioc.inject;
+
 import com.threerings.crowd.client.LocationAdapter;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.data.OccupantInfo;
@@ -54,14 +57,16 @@ public class MediaDirector extends BasicDirector
                 _ourAvatar.setOccupantInfo(occInfo, extraInfo);
                 return _ourAvatar;
             }
-            var mSprite :MemberSprite = new MemberSprite(occInfo as SocializerInfo, extraInfo);
+            var mSprite :MemberSprite = _module.getInstance(MemberSprite);
+            mSprite.initMemberSprite(occInfo as SocializerInfo, extraInfo);
             if (isOurs) {
                 _ourAvatar = mSprite;
             }
             return mSprite;
 
         } else if (occInfo is PetInfo) {
-            var pSprite :PetSprite = new PetSprite(occInfo as PetInfo, extraInfo);
+            var pSprite :PetSprite = _module.getInstance(PetSprite);
+            pSprite.initPetSprite(occInfo as PetInfo, extraInfo);
             return pSprite;
 
         } else {
@@ -75,7 +80,9 @@ public class MediaDirector extends BasicDirector
      */
     public function getFurni (furni :FurniData) :FurniSprite
     {
-        return new FurniSprite(furni);
+        var sprite :FurniSprite = _module.getInstance(FurniSprite);
+        sprite.initFurniSprite(furni);
+        return sprite;
     }
 
     /**
@@ -83,7 +90,9 @@ public class MediaDirector extends BasicDirector
      */
     public function getDecor (decor :Decor) :DecorSprite
     {
-        return new DecorSprite(decor);
+        var sprite :DecorSprite = _module.getInstance(DecorSprite);
+        sprite.initDecorSprite(decor);
+        return sprite;
     }
 
     /**
@@ -126,6 +135,9 @@ public class MediaDirector extends BasicDirector
             _ourAvatar = null;
         }
     }
+
+    // the wellspring of new classes
+    protected const _module :Module = inject(Module);
 
     /** A casted copy of the context. */
     protected var _wctx :WorldContext;

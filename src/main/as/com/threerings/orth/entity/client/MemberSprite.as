@@ -2,7 +2,6 @@
 // $Id: MemberSprite.as 19627 2010-11-24 16:02:41Z zell $
 
 package com.threerings.orth.entity.client {
-
 import flash.display.DisplayObject;
 import flash.geom.Rectangle;
 
@@ -12,6 +11,7 @@ import com.threerings.util.CommandEvent;
 
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.SocializerInfo;
+import com.threerings.orth.world.client.WorldContext;
 
 /**
  * Displays a sprite for a member in a scene.
@@ -21,9 +21,9 @@ public class MemberSprite extends ActorSprite
     /**
      * Initializes a sprite for the supplied member.
      */
-    public function MemberSprite (occInfo :SocializerInfo, extraInfo :Object)
+    public function initMemberSprite (occInfo :SocializerInfo, extraInfo :Object):void
     {
-        super(occInfo, extraInfo);
+        super.initActorSprite(occInfo, extraInfo);
     }
 
     /**
@@ -62,7 +62,7 @@ public class MemberSprite extends ActorSprite
     override public function isImportant () :Boolean
     {
         // our own sprite is more important than the others
-        return _ctx.getMyName().equals(_occInfo.username);
+        return _module.getInstance(WorldContext).getMyName().equals(_occInfo.username);
     }
 
     // from OccupantSprite
@@ -179,7 +179,7 @@ public class MemberSprite extends ActorSprite
     override protected function createBackend () :EntityBackend
     {
         _preferredY = 0;
-        return new AvatarBackend();
+        return _module.getInstance(AvatarBackend);
     }
 
     /**

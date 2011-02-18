@@ -15,6 +15,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
 import com.threerings.display.FilterUtil;
@@ -24,7 +25,6 @@ import com.threerings.util.Log;
 import com.threerings.util.StringUtil;
 import com.threerings.util.ValueEvent;
 
-import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.room.client.EntityMediaContainer;
 import com.threerings.orth.room.client.RoomController;
@@ -688,7 +688,7 @@ public class EntitySprite
      */
     protected function createBackend () :EntityBackend
     {
-        return new EntityBackend();
+        return _module.getInstance(EntityBackend);
     }
 
     /**
@@ -925,7 +925,7 @@ public class EntitySprite
         return (_backend != null) && _backend.hasUserCode(name);
     }
 
-    protected const _ctx :OrthContext = inject(OrthContext);
+    protected const _module :Module = inject(Module);
     protected const _rsrc :OrthResourceFactory = inject(OrthResourceFactory);
 
     /** The visual representation of us. */

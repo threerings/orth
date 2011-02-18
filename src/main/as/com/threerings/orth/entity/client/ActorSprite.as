@@ -24,9 +24,9 @@ public class ActorSprite extends OccupantSprite
     /**
      * Initializes an actor sprite for the supplied actor.
      */
-    public function ActorSprite (occInfo :ActorInfo, extraInfo :Object)
+    public function initActorSprite (occInfo :ActorInfo, extraInfo:Object) :void
     {
-        super(occInfo, extraInfo);
+        super.initOccupantSprite(occInfo, extraInfo);
     }
 
     /**
@@ -176,7 +176,7 @@ public class ActorSprite extends OccupantSprite
     // from EntitySprite
     override protected function createBackend () :EntityBackend
     {
-        return new ActorBackend();
+        return _module.getInstance(ActorBackend);
     }
 }
 }

@@ -55,7 +55,8 @@ public class OccupantSprite extends EntitySprite
     /**
      * Initializes a sprite for the supplied occupant.
      */
-    public function OccupantSprite (occInfo :OccupantInfo, extraInfo :Object)
+
+    public function initOccupantSprite (occInfo :OccupantInfo, extraInfo :Object):void
     {
         // The label often jumps visibly when the actor is hovered over, a pixel up or down, and/or
         // left or right. As far as I (Ray) can figure, when the glow filter is applied it's doing
@@ -686,6 +687,5 @@ public class OccupantSprite extends EntitySprite
         Comparators.createReverse(Comparators.createFields(["weight"], [0]));
 
     protected static const DECORATION_PAD :int = 5;
-
 }
 }
