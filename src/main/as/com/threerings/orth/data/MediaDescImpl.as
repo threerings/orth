@@ -3,12 +3,13 @@
 // $Id$
 
 package com.threerings.orth.data {
-
 import flashx.funk.util.isAbstract;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.Streamable;
+
+import com.threerings.util.Log;
 
 import com.threerings.orth.data.MediaDesc;
 
@@ -82,11 +83,12 @@ public class MediaDescImpl implements MediaDesc, Streamable
 
     public function equals (other :Object) :Boolean
     {
-        return getMimeType() == BasicMediaDesc(other).getMimeType() &&
-            getConstraint() == BasicMediaDesc(other).getConstraint() &&
-            getMediaPath() == BasicMediaDesc(other).getMediaPath();
+        Log.getLog(this).info("equals()", "other", other);
+        return (other is MediaDesc) &&
+            mimeType == MediaDesc(other).mimeType &&
+            constraint == MediaDesc(other).constraint &&
+            getMediaPath() == MediaDesc(other).getMediaPath();
     }
-
 
 // GENERATED STREAMING START
     public function readObject (ins :ObjectInputStream) :void
