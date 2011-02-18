@@ -2,10 +2,6 @@
 // $Id: MediaDirector.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.room.client {
-import com.threerings.orth.world.client.WorldContext;
-
-import flashx.funk.ioc.inject;
-
 import com.threerings.crowd.client.LocationAdapter;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.data.OccupantInfo;
@@ -27,6 +23,7 @@ import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.PetInfo;
 import com.threerings.orth.room.data.SocializerInfo;
+import com.threerings.orth.world.client.WorldContext;
 
 /**
  * Handles the loading of various media.
@@ -35,13 +32,13 @@ public class MediaDirector extends BasicDirector
 {
     public static const log :Log = Log.getLog(MediaDirector);
 
-    public function MediaDirector (ctx :WorldContext)
+    public function MediaDirector (ctx :WorldContext, locDir :LocationDirector)
     {
         super(ctx);
 
         _wctx = ctx;
 
-        _locDir.addLocationObserver(new LocationAdapter(null, locationDidChange));
+        locDir.addLocationObserver(new LocationAdapter(null, locationDidChange));
     }
 
     /**
@@ -132,8 +129,6 @@ public class MediaDirector extends BasicDirector
 
     /** A casted copy of the context. */
     protected var _wctx :WorldContext;
-
-    protected const _locDir :LocationDirector = inject(LocationDirector);
 
     /** Our very own avatar: avoid loading and unloading it. */
     protected var _ourAvatar :MemberSprite;
