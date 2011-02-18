@@ -19,6 +19,9 @@ public class AbstractWorldModule extends BindingModule
     {
         // bind the context
         bind(WorldContext).to(getWorldContextClass()).asSingleton();
+
+        // the world controller
+        bind(WorldController).asSingleton();
     }
 
     final public function init (oMod :OrthModule) :WorldModule
@@ -33,6 +36,9 @@ public class AbstractWorldModule extends BindingModule
         _chainMod.inject(function () :void {
             doWorldBinds(ctx);
         });
+
+        // force the instantiation of WorldController early
+        getInstance(WorldController);
 
         return _chainMod;
     }
