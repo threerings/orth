@@ -22,15 +22,12 @@ public interface MediaDesc
     function getMimeType () :int;
 
     /** The size constraint on this media, if any. See {@link #computeConstraint}. */
+    // ORTH TODO - nuke this
     function get constraint () :int;
 
     /** The MIME type of the media associated with this item. */
+    // ORTH TODO - nuke this
     function get mimeType () :int;
-
-    /**
-     * Is this media purely audio?
-     */
-    function isAudio () :Boolean;
 
     /**
      * Is this media merely an image type?
@@ -43,30 +40,14 @@ public interface MediaDesc
     function isSWF () :Boolean;
 
     /**
+     * Is this media purely audio?
+     */
+    function isAudio () :Boolean;
+
+    /**
      * Is this media video?
      */
     function isVideo () :Boolean;
-
-    function isExternal () :Boolean;
-
-    /**
-     * Get some identifier that can be used to refer to this media across
-     * sessions (used as a key in prefs).
-     */
-    /* abstract */ function getMediaId () :String;
-
-    // from MediaDesc
-    function isBleepable () :Boolean;
-
-    /**
-     * Is this a zip of some sort?
-     */
-    function isRemixed () :Boolean;
-
-    /**
-     * Is this media remixable?
-     */
-    function isRemixable () :Boolean;
 
     /**
      * Return true if this media has a visual component that can be shown
