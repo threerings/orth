@@ -24,13 +24,11 @@ public class PlayerDirector extends BasicDirector
 {
     public const log :Log = Log.getLog(this);
 
-    public function PlayerDirector (ctx :OrthContext)
+    public function PlayerDirector ()
     {
-        super(ctx);
+        super(_octx);
 
-        _octx = ctx;
-
-        _followingNotifier = new FollowingNotifier(_octx);
+        _followingNotifier = new FollowingNotifier();
     }
 
     /**
@@ -83,14 +81,16 @@ public class PlayerDirector extends BasicDirector
     }
 
     protected const _worldDir :WorldDirector = inject(WorldDirector);
+    protected const _octx :OrthContext = inject(OrthContext);
 
-    protected var _octx :OrthContext;
     protected var _psvc :PlayerService;
 
     protected var _followingNotifier :FollowingNotifier;
     protected var _followListener :MessageAdapter = new MessageAdapter(memberMessageReceived);
 }
 }
+
+import flashx.funk.ioc.inject;
 
 import com.threerings.util.MessageBundle;
 
@@ -110,11 +110,6 @@ import com.threerings.orth.data.OrthCodes;
 class FollowingNotifier
     implements AttributeChangeListener, SetListener
 {
-    public function FollowingNotifier (octx :OrthContext)
-    {
-        _octx = octx;
-    }
-
     public function attributeChanged (event :AttributeChangedEvent) :void
     {
         switch (event.getName()) {
@@ -159,5 +154,5 @@ class FollowingNotifier
         }
     }
 
-    protected var _octx :OrthContext;
+    protected const _octx :OrthContext = inject(OrthContext);
 }
