@@ -21,6 +21,7 @@ import com.threerings.presents.net.BootstrapData;
 
 import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.AetherCredentials;
+import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.OrthDeploymentConfig;
@@ -33,6 +34,7 @@ public class AetherClient extends Client
     // reference classes that would otherwise not be linked in
     AuthName;
     PlayerObject;
+    PlayerMarshaller;
 
     public function AetherClient ()
     {
