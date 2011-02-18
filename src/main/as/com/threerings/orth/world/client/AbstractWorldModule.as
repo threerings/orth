@@ -38,7 +38,7 @@ public class AbstractWorldModule extends BindingModule
         });
 
         // force the instantiation of WorldController early
-        getInstance(WorldController);
+        _chainMod.getInstance(WorldController);
 
         return _chainMod;
     }
