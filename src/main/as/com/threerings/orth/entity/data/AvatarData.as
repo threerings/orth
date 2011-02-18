@@ -20,25 +20,37 @@ public class AvatarData extends EntityData
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
-    public var media :MediaDesc;
+    public var avatarMedia :MediaDesc;
 
     public var scale :Number;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        media = ins.readObject(MediaDesc);
+        avatarMedia = ins.readObject(MediaDesc);
         scale = ins.readFloat();
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeObject(media);
+        out.writeObject(avatarMedia);
         out.writeFloat(scale);
     }
 
 // GENERATED STREAMING END
+
+    // from Entity
+    public function getAvatarMedia () :MediaDesc
+    {
+        return avatarMedia;
+    }
+
+    // from Entity
+    public function getScale () :Number
+    {
+        return scale;
+    }
 
 // GENERATED CLASSFINISH START
 }

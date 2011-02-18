@@ -11,8 +11,6 @@ import com.threerings.orth.data.MediaDesc;
 public interface Avatar
     extends Entity
 {
-    function get name () :String;
-
     /**
      * Returns a media descriptor for the media that implements our actual avatar.
      */

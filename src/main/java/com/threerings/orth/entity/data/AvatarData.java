@@ -12,12 +12,12 @@ import com.threerings.orth.data.MediaDesc;
 public class AvatarData extends EntityData
     implements Avatar
 {
-    public MediaDesc media;
+    public MediaDesc avatarMedia;
     public float scale;
 
     @Override public MediaDesc getAvatarMedia ()
     {
-        return media;
+        return avatarMedia;
     }
 
     @Override public float getScale ()

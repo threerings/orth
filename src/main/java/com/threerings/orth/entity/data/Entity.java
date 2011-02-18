@@ -15,6 +15,11 @@ public interface Entity
     extends Comparable<Entity>, DSet.Entry
 {
     /**
+     * The human-readable name of this entity.
+     */
+    String getName ();
+
+    /**
      * Returns this entity's composite identifier.
      */
     EntityIdent getIdent ();

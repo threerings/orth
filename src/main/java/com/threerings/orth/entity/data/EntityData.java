@@ -15,6 +15,7 @@ import com.threerings.orth.room.data.EntityIdent;
 public class EntityData extends SimpleStreamableObject
     implements Entity
 {
+    public String name;
     public MediaDesc media;
     public EntityIdent ident;
 
@@ -27,6 +28,11 @@ public class EntityData extends SimpleStreamableObject
     // from Comparable
     public int compareTo (Entity other) {
         return ident.compareTo(other.getIdent());
+    }
+
+    // from Entity
+    public String getName () {
+        return name;
     }
 
     // from Entity

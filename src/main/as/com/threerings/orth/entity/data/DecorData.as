@@ -7,10 +7,8 @@ package com.threerings.orth.entity.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
-import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.entity.data.EntityData;
-import com.threerings.orth.room.data.EntityIdent;
 
 // GENERATED PREAMBLE END
 
@@ -60,43 +58,6 @@ public class DecorData extends EntityData
     }
 
 // GENERATED STREAMING END
-
-    // from Comparable
-    public function compareTo (other :Object) :int {
-        // ORTH TODO: do not think we need this
-        return 0;
-    }
-
-    // from Hashable
-    public function hashCode () :int {
-        return ident.hashCode();
-    }
-
-    // from Equalable
-    public function equals (other :Object) :Boolean {
-        return ident.equals(other.ident);
-    }
-
-    // from DSet_Entry
-    public function getKey () :Object {
-        return ident;
-    }
-
-    // from Entity
-    public function getIdent () :EntityIdent {
-        return ident;
-    }
-
-    // from Entity
-    public function getThumbnailMedia () :MediaDesc {
-        // ORTH TODO: not sure we need this
-        return null;
-    }
-
-    // from Entity
-    public function getFurniMedia () :MediaDesc {
-        return media;
-    }
 
     // from Decor
     public function getHorizon () :Number {

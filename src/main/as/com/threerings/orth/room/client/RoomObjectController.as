@@ -249,7 +249,7 @@ public class RoomObjectController extends RoomController
 
         for (var ii :int = 0; ii < avatars.length; ii++) {
             var av :Avatar = avatars[ii] as Avatar;
-            avItems.push({ label: av.name, enabled: !av.equals(us.avatar),
+            avItems.push({ label: av.getName, enabled: !av.equals(us.avatar),
                 iconObject: MediaWrapper.createView(
                     av.getThumbnailMedia(), MediaDescSize.QUARTER_THUMBNAIL_SIZE),
                 callback: _playerDir.setAvatar, arg: av.getIdent().getItem() });

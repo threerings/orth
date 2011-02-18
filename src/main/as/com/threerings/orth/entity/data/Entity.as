@@ -18,6 +18,11 @@ public interface Entity
     extends Comparable, Hashable, DSet_Entry
 {
     /**
+     * The human-readable name of this entity.
+     */
+    function getName () :String;
+
+    /**
      * Returns this entity's composite identifier.
      */
     function getIdent () :EntityIdent;
