@@ -8,7 +8,6 @@ import com.threerings.util.ActionScript;
 /**
  * A somewhat more concrete {@link MediaDesc}.
  */
-@ActionScript(omit=true)
 public abstract class BasicMediaDesc extends MediaDescImpl
 {
     protected BasicMediaDesc ()
