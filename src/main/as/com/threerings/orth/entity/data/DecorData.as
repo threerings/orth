@@ -6,26 +6,22 @@ package com.threerings.orth.entity.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.entity.data.Decor;
+import com.threerings.orth.entity.data.EntityData;
 import com.threerings.orth.room.data.EntityIdent;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class DecorData extends SimpleStreamableObject
+public class DecorData extends EntityData
     implements Decor
 {
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
     public var type :int;
-
-    public var media :MediaDesc;
-
-    public var ident :EntityIdent;
 
     public var width :int;
 
@@ -43,8 +39,6 @@ public class DecorData extends SimpleStreamableObject
     {
         super.readObject(ins);
         type = ins.readByte();
-        media = ins.readObject(MediaDesc);
-        ident = ins.readObject(EntityIdent);
         width = ins.readShort();
         height = ins.readShort();
         depth = ins.readShort();
@@ -57,8 +51,6 @@ public class DecorData extends SimpleStreamableObject
     {
         super.writeObject(out);
         out.writeByte(type);
-        out.writeObject(media);
-        out.writeObject(ident);
         out.writeShort(width);
         out.writeShort(height);
         out.writeShort(depth);
