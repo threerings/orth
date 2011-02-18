@@ -3,6 +3,7 @@
 
 package com.threerings.orth.room.client {
 
+import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.whirled.client.SceneDirector;
@@ -25,8 +26,11 @@ public class RoomModule extends AbstractWorldModule
     {
         var rCtx :RoomContext = RoomContext(ctx);
 
+        // set up singletons
+        bind(MuteDirector).asSingleton();
+
         // instantiate and bind the directors that need explicit instantiation
-        var locDir :LocationDirector = new LocationDirector(rCtx);
+        var locDir :LocationDirector = new OrthLocationDirector(rCtx);
         bind(LocationDirector).toInstance(locDir);
 
         var occDir :OccupantDirector = new OccupantDirector(rCtx);
