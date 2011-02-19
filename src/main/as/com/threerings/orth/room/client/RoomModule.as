@@ -41,7 +41,8 @@ public class RoomModule extends AbstractWorldModule
         bind(LocationDirector).toInstance(locDir);
 
         var scDir :SceneDirector = _chainMod.getInstance(OrthSceneDirector);
-        bind(SceneDirector).to(OrthSceneDirector).asSingleton();
+        bind(OrthSceneDirector).toInstance(scDir);
+        bind(SceneDirector).toInstance(scDir);
 
         bind(SpotSceneDirector).toInstance(new SpotSceneDirector(rCtx, locDir, scDir));
 
