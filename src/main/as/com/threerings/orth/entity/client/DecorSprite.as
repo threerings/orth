@@ -90,6 +90,8 @@ public class DecorSprite extends FurniSprite
         var furniData :FurniData = new FurniData();
         furniData.item = decor.getIdent();
         furniData.media = decor.getFurniMedia();
+        furniData.scaleX = furniData.scaleY = 1;
+        furniData.rotation = 0;
 
         // sprite location: center and up-front, but shifted by specified offset
         furniData.loc = new OrthLocation(0.5, 0, 0);
