@@ -44,7 +44,7 @@ public class TopPanel extends Sprite
 
         // ORTH TODO: Flex used to lay these out; we'll need to figure out what we want to do
         addChild(_placeBox);
-        addChild(_controlBar.self());
+//        addChild(_controlBar.self());
 
         // ORTH TODO: something like this here?
         // _chatDir.addChatDisplay(_comicOverlay);
