@@ -27,7 +27,6 @@ import com.threerings.orth.room.server.OrthSceneFactory;
 import com.threerings.orth.room.server.OrthSceneRegistry;
 import com.threerings.orth.room.server.RoomAuthenticator;
 import com.threerings.orth.room.server.RoomSessionFactory;
-import com.threerings.orth.room.server.persist.OrthSceneRepository;
 
 /**
  * Extends the main server class with Orth functionality.
@@ -45,7 +44,6 @@ public class OrthServer extends CrowdServer
             bind(MemorySupply.class).to(AmnesiacMemorySupply.class);
 
             // whirled
-            bind(SceneRepository.class).to(OrthSceneRepository.class);
             bind(SceneRegistry.class).to(OrthSceneRegistry.class);
             bind(SceneFactory.class).to(OrthSceneFactory.class);
             bind(SceneRegistry.ConfigFactory.class).to(OrthSceneFactory.class);
