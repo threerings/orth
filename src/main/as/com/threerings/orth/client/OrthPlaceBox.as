@@ -42,6 +42,8 @@ public class OrthPlaceBox extends LayeredContainer
         setBaseLayer(view);
         _mainView = view;
 
+        this.graphics.drawRect(0, 0, 800, 500);
+
         layoutMainView();
     }
 
@@ -101,6 +103,8 @@ public class OrthPlaceBox extends LayeredContainer
     {
         // super.setActualSize(width, height);
 
+        log.info("setActualSize()", "width", width, "height", height);
+
         setMasked(this, 0, 0, this.width, this.height);
 
         // any PlaceLayer layers get informed of the size change
@@ -132,7 +136,7 @@ public class OrthPlaceBox extends LayeredContainer
         if (_mainView is PlaceLayer) {
             PlaceLayer(_mainView).setPlaceSize(w, h);
         } else if (_mainView != null) {
-            log.warning("MainView is not a PlaceLayer.");
+            log.warning("MainView is not a PlaceLayer.", "view", _mainView);
         }
     }
 
