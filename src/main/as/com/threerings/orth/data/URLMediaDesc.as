@@ -37,6 +37,11 @@ public class URLMediaDesc extends BasicMediaDesc
         return _url;
     }
 
+    public function toString () :String
+    {
+        return "[url=" + _url + "]";
+    }
+
 // GENERATED CLASSFINISH START
 }
 }
