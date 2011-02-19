@@ -3,24 +3,23 @@
 
 package com.threerings.orth.aether.server;
 
+import static com.threerings.orth.Log.log;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
 import com.samskivert.util.ObjectUtil;
 
+import com.threerings.orth.aether.data.PlayerMarshaller;
+import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.presents.annotation.EventThread;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
-
-import com.threerings.orth.aether.data.PlayerMarshaller;
-import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.aether.server.PlayerLocator;
-import com.threerings.orth.data.OrthCodes;
-
-import static com.threerings.orth.Log.log;
 
 /**
  * Manage Orth Players.
@@ -71,7 +70,7 @@ public class AetherManager
         // if the caller is requesting to clear their follow, do so
         if (playerId == 0) {
             if (user.following != null) {
-                PlayerNodeActions.removeFollower(user.following.getId(), user.getPlayerId());
+                _actions.removeFollower(user.following.getId(), user.getPlayerId());
                 user.setFollowing(null);
             }
             return;
@@ -128,8 +127,8 @@ public class AetherManager
         // final PlayerObject user = (PlayerObject) caller;
     }
 
-
     // ORTH TODO: Implement NotificationManager
     // @Inject protected NotificationManager _notifyMan;
+    @Inject protected PlayerNodeActions _actions;
     @Inject protected PlayerLocator _locator;
 }

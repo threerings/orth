@@ -3,28 +3,23 @@
 
 package com.threerings.orth.aether.server;
 
-import com.google.inject.Inject;
+import java.util.List;
 
-import com.threerings.presents.peer.data.NodeObject;
-import com.threerings.presents.peer.server.PeerManager;
-import com.threerings.orth.world.data.WorldCodes;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.aether.server.PlayerLocator;
-import com.threerings.orth.aether.server.PlayerManager;
-import com.threerings.orth.aether.server.PlayerNodeAction;
-
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.FriendEntry;
-
 import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.notify.server.NotificationManager;
-
-// import com.threerings.orth.party.server.PartyRegistry;
-
-import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
+import com.threerings.orth.world.data.WorldCodes;
+import com.threerings.presents.peer.data.NodeObject;
+import com.threerings.presents.peer.server.PeerManager;
 
 /**
  * Contains various player node actions.
@@ -32,18 +27,9 @@ import com.threerings.orth.peer.server.OrthPeerManager;
 public class PlayerNodeActions
 {
     /**
-     * Provides us with our peer manager reference. TODO: nix this and require callers to inject a
-     * PlayerNodeActions instance.
-     */
-    public static void init (OrthPeerManager peerMan)
-    {
-        _peerMan = peerMan;
-    }
-
-    /**
      * Send a mass-notification to all your friends.
      */
-    public static void notifyAllFriends (PlayerObject plobj, Notification notif)
+    public void notifyAllFriends (PlayerObject plobj, Notification notif)
     {
         if (plobj.friends.size() == 0) {
             return;
@@ -54,7 +40,7 @@ public class PlayerNodeActions
     /**
      * Boots a player from any server into which they are logged in.
      */
-    public static void bootPlayer (int playerId)
+    public void bootPlayer (int playerId)
     {
         _peerMan.invokeNodeAction(new BootPlayer(playerId));
     }
@@ -62,7 +48,7 @@ public class PlayerNodeActions
     /**
      * Send a notification to a player
      */
-    public static void sendNotification (int playerId, Notification notification)
+    public void sendNotification (int playerId, Notification notification)
     {
         _peerMan.invokeNodeAction(new SendNotification(playerId, notification));
     }
@@ -70,7 +56,7 @@ public class PlayerNodeActions
     /**
      * Sends an invite to the specified player to the specified party.
      */
-    public static void inviteToParty (
+    public void inviteToParty (
         int playerId, PlayerName inviter, int partyId, String partyName)
     {
         _peerMan.invokeNodeAction(new PartyInviteAction(playerId, inviter, partyId, partyName));
@@ -79,7 +65,7 @@ public class PlayerNodeActions
     /**
      * Sends an invite to all friends of the supplied inviter to the specified party.
      */
-    public static void inviteAllFriendsToParty (PlayerObject inviter, int partyId, String partyName)
+    public void inviteAllFriendsToParty (PlayerObject inviter, int partyId, String partyName)
     {
         if (inviter.friends.size() == 0) {
             return;
@@ -91,7 +77,7 @@ public class PlayerNodeActions
      * Notifies a follower that the leader is on the move (and potentially decouples this follower
      * from the leader if that turns out to be the right thing to do).
      */
-    public static void followTheLeader (final int followerId, final int leaderId, int sceneId)
+    public void followTheLeader (final int followerId, final int leaderId, int sceneId)
     {
         _peerMan.invokeNodeAction(new FollowTheLeaderAction(followerId, leaderId, sceneId),
                                   new Runnable() {
@@ -105,7 +91,7 @@ public class PlayerNodeActions
     /**
      * Removes the specified follower from the specified leader's follower set.
      */
-    public static void removeFollower (int leaderId, int followerId)
+    public void removeFollower (int leaderId, int followerId)
     {
         _peerMan.invokeNodeAction(new RemoveFollowerAction(leaderId, followerId));
     }
@@ -154,23 +140,18 @@ public class PlayerNodeActions
 
         public AllFriendsAction (PlayerObject plobj)
         {
-            _friends = new int[plobj.friends.size()];
-            int ii = 0;
+            _friends = Lists.newArrayListWithCapacity(plobj.friends.size());
             for (FriendEntry entry : plobj.friends) {
-                _friends[ii++] = entry.name.getId();
+                _friends.add(entry.name.getId());
             }
         }
 
-        @Override public boolean isApplicable (NodeObject nodeobj)
+        @Override public boolean isApplicable (final NodeObject nodeobj)
         {
-            OrthNodeObject orthNode = (OrthNodeObject)nodeobj;
-            for (int friendId : _friends) {
-                if (orthNode.clients.containsKey(AuthName.makeKey(friendId))) {
-                    return true;
-                }
-            }
-            // no friends found here, move along
-            return false;
+            return Iterables.any(_friends, new Predicate<Integer>() {
+                @Override public boolean apply (Integer friendId) {
+                    return nodeobj.clients.containsKey(AuthName.makeKey(friendId));
+                }});
         }
 
         @Override protected void execute ()
@@ -185,7 +166,7 @@ public class PlayerNodeActions
 
         protected abstract void execute (PlayerObject plobj);
 
-        protected int[] _friends;
+        protected List<Integer> _friends;
 
         /** Used to look up player objects. */
         @Inject protected transient PlayerLocator _locator;
@@ -327,5 +308,5 @@ public class PlayerNodeActions
         protected int _followerId;
     }
 
-    protected static OrthPeerManager _peerMan;
+    @Inject protected OrthPeerManager _peerMan;
 }
