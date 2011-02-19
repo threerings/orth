@@ -14,8 +14,8 @@ import com.threerings.whirled.spot.data.Portal;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.MediaMimeTypes;
 import com.threerings.orth.data.URLMediaDesc;
+
 import com.threerings.orth.entity.data.Decor;
-import com.threerings.orth.entity.data.DecorData;
 
 import static com.threerings.orth.Log.log;
 
@@ -40,13 +40,6 @@ public class OrthSceneModel extends SceneModel
     /** Access control constant, denotes that only the scene owner (or group manager,
      *  in case of a group scene) can enter this scene. */
     public static final byte ACCESS_OWNER_ONLY = 2;
-
-    /** The default decor URL. */
-    public static final String DEFAULT_DECOR_URL = "http://www.alyx.com/zell/pics/decor.jpg";
-
-    /** The default decor media. */
-    public static final MediaDesc DEFAULT_DECOR_MEDIA = new URLMediaDesc(
-        DEFAULT_DECOR_URL, MediaMimeTypes.IMAGE_JPEG, MediaDesc.NOT_CONSTRAINED);
 
     /** Access control, as one of the ACCESS constants. Limits who can enter the scene. */
     public byte accessControl;
@@ -179,44 +172,6 @@ public class OrthSceneModel extends SceneModel
     {
         validatePortalInfo();
         return _portalInfo.values().iterator();
-    }
-
-    /**
-     * Create a blank scene, with default decor data.
-     */
-    public static OrthSceneModel blankOrthSceneModel ()
-    {
-        OrthSceneModel model = new OrthSceneModel();
-        model.accessControl = OrthSceneModel.ACCESS_EVERYONE;
-        model.entrance = new OrthLocation(.5, 0, .5, 180);
-        model.decor = defaultOrthSceneModelDecor();
-        populateBlankOrthSceneModel(model);
-        model.version = 1;
-        return model;
-    }
-
-    /**
-     * Create a default decor for a blank scene. The decor will not be completely filled in,
-     * because it doesn't correspond to an entity inside the database, but it has enough to be
-     * displayed inside the room.
-     */
-    public static Decor defaultOrthSceneModelDecor ()
-    {
-        DecorData decor = new DecorData();
-        decor.media = DEFAULT_DECOR_MEDIA;
-        decor.type = DecorCodes.IMAGE_OVERLAY;
-        decor.width = 800;
-        decor.height = 500;
-        decor.depth = 400;
-        decor.horizon = .5f;
-        decor.actorScale = 1;
-        decor.furniScale = 1;
-        return decor;
-    }
-
-    protected static void populateBlankOrthSceneModel (OrthSceneModel model)
-    {
-        populateBlankSceneModel(model);
     }
 
     /**
