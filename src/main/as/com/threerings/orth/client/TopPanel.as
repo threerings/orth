@@ -11,6 +11,8 @@ import flash.geom.Rectangle;
 
 import flashx.funk.ioc.inject;
 
+import com.threerings.util.Log;
+
 // import com.threerings.orth.chat.client.ComicOverlay;
 
 /**
@@ -44,7 +46,11 @@ public class TopPanel extends Sprite
 
         // ORTH TODO: Flex used to lay these out; we'll need to figure out what we want to do
         addChild(_placeBox);
-//        addChild(_controlBar.self());
+        addChild(_controlBar.self());
+        _controlBar.self().y = _height - getControlBarHeight();
+
+        Log.getLog(this).info("Placing ControlBar...", "width", _width, "height", _height,
+            "position", _height - getControlBarHeight());
 
         // ORTH TODO: something like this here?
         // _chatDir.addChatDisplay(_comicOverlay);
@@ -112,7 +118,7 @@ public class TopPanel extends Sprite
 //        var width :Number = _width - _placeBox.getStyle("right") - left;
 //        var height :Number = _height - _placeBox.getStyle("bottom") - top;
 //        return new Rectangle(left, top, width, height);
-        return new Rectangle(0, 0, 640, 480);
+        return new Rectangle(0, 0, _width, _height);
     }
 
     /**
@@ -124,7 +130,7 @@ public class TopPanel extends Sprite
         // ORTH TODO: find another way of doing this
 //        var height: Number = _height - _placeBox.getStyle("bottom");
 //        return new Rectangle(0, _placeBox.getStyle("top"), _width, height);
-        return new Rectangle(0, 0, _width, height);
+        return new Rectangle(0, 0, _width, _height);
     }
 
     protected function stageResized (event :Event) :void
@@ -161,6 +167,7 @@ public class TopPanel extends Sprite
 //        _placeBox.setStyle("bottom", bottom);
 //        _placeBox.setStyle("right", right);
 //        _placeBox.setStyle("left", left);
+
         _placeBox.setActualSize(w, h);
     }
 
@@ -170,7 +177,9 @@ public class TopPanel extends Sprite
     protected function getBlankPlaceView () :DisplayObject
     {
         var canvas :Sprite = new Sprite();
-        // ORTH TODO: paint it black?
+        canvas.graphics.beginFill(0x000000);
+        canvas.graphics.drawRect(0, 0, _width, _height);
+        canvas.graphics.endFill();
         return canvas;
     }
 
