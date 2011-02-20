@@ -42,8 +42,6 @@ public class OrthPlaceBox extends LayeredContainer
         setBaseLayer(view);
         _mainView = view;
 
-        this.graphics.drawRect(0, 0, 800, 500);
-
         layoutMainView();
     }
 
@@ -101,11 +99,14 @@ public class OrthPlaceBox extends LayeredContainer
      */
     public function setActualSize (width :Number, height :Number) :void
     {
-        // super.setActualSize(width, height);
+        _width = width;
+        _height = height;
 
         log.info("setActualSize()", "width", width, "height", height);
 
-        setMasked(this, 0, 0, this.width, this.height);
+        this.graphics.drawRect(0, 0, width, height);
+
+        setMasked(this, 0, 0, width, height);
 
         // any PlaceLayer layers get informed of the size change
         for (var ii :int = 0; ii < numChildren; ii ++) {
@@ -122,13 +123,8 @@ public class OrthPlaceBox extends LayeredContainer
 
     protected function layoutMainView () :void
     {
-        var w :Number = this.width;
-        var h :Number = this.height;
-
-        var fullSize :Point = _lastFullSize;
-        if (fullSize == null) {
-            fullSize = new Point(w + 700, h);
-        }
+        var w :Number = _width;
+        var h :Number = _height;
 
         _base.x = 0;
         _base.y = 0;
@@ -158,6 +154,12 @@ public class OrthPlaceBox extends LayeredContainer
         _mask.graphics.endFill();
     }
 
+    /** The configured width of the placebox. */
+    protected var _width :Number;
+
+    /** The configured height of the placebox. */
+    protected var _height :Number;
+
     /** The mask configured on the box or view so that it doesn't overlap outside components. */
     protected var _mask :Shape = new Shape();
 
@@ -166,8 +168,5 @@ public class OrthPlaceBox extends LayeredContainer
 
     /** The current place view. */
     protected var _mainView :DisplayObject;
-
-    /** The size of the area the last time he had an unminimized layout. */
-    protected var _lastFullSize :Point;
 }
 }
