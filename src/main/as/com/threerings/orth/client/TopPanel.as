@@ -16,7 +16,7 @@ import com.threerings.util.Log;
 
 // import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.client.OrthResourceFactory;
-import com.threerings.orth.client.WTFControlBar;
+//import com.threerings.orth.client.WTFControlBar;
 
 /**
  * Dispatched when the name of our current location changes. The value supplied will be a string
