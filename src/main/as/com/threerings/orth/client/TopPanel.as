@@ -10,10 +10,13 @@ import flash.events.Event;
 import flash.geom.Rectangle;
 
 import flashx.funk.ioc.inject;
+import flashx.funk.ioc.Module;
 
 import com.threerings.util.Log;
 
 // import com.threerings.orth.chat.client.ComicOverlay;
+import com.threerings.orth.client.OrthResourceFactory;
+import com.threerings.orth.client.WTFControlBar;
 
 /**
  * Dispatched when the name of our current location changes. The value supplied will be a string
@@ -41,16 +44,23 @@ public class TopPanel extends Sprite
 
     public function TopPanel ()
     {
-        _width = inject(Stage).stageWidth;
-        _height = inject(Stage).stageHeight;
+        _width = _stage.stageWidth;
+        _height = _stage.stageHeight;
 
-        // ORTH TODO: Flex used to lay these out; we'll need to figure out what we want to do
-        addChild(_placeBox);
+        var stretch :Sprite = new Sprite();
+        stretch.alpha = 0.1;
+        stretch.graphics.beginFill(0xFF5511);
+        stretch.graphics.drawRect(0, 0, _width, _height);
+        stretch.graphics.endFill();
+        this.addChild(stretch);
+
         addChild(_controlBar.self());
-        _controlBar.self().y = _height - getControlBarHeight();
+        // I don't know what's up with the 40 here. The bottom of the stage won't show.
+        _controlBar.self().y = height - getControlBarHeight() - 40;
 
-        Log.getLog(this).info("Placing ControlBar...", "width", _width, "height", _height,
-            "position", _height - getControlBarHeight());
+        Log.getLog(this).info("ControlBar placed", "height", height - getControlBarHeight());
+
+        addChild(_placeBox);
 
         // ORTH TODO: something like this here?
         // _chatDir.addChatDisplay(_comicOverlay);
@@ -168,7 +178,7 @@ public class TopPanel extends Sprite
 //        _placeBox.setStyle("right", right);
 //        _placeBox.setStyle("left", left);
 
-        _placeBox.setActualSize(w, h);
+        _placeBox.setActualSize(w, h - 40);
     }
 
     /**
