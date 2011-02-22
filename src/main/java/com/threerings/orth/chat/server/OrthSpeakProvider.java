@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
 import com.threerings.orth.chat.data.OrthChatCodes;
-import com.threerings.orth.chat.server.SpeakObject;
+import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.data.Speak;
 import com.threerings.presents.client.InvocationService.InvocationListener;

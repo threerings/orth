@@ -20,6 +20,7 @@ import com.threerings.orth.data.Tell;
 import com.threerings.orth.chat.client.TellService.TellResultListener;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakMarshaller;
+import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.data.TellMarshaller;
 
 @Singleton

@@ -272,7 +272,7 @@ public class OrthRoomManager extends SpotSceneManager
         _orthObj.addListener(_roomListener);
 
         // add the Orth speak service for this room
-        _orthObj.speakService = _chatMgr.registerSpeakObject(_orthObj);
+        _orthObj.orthSpeakService = _chatMgr.registerSpeakObject(_orthObj);
 
         OrthScene mscene = (OrthScene) _scene;
         _orthObj.startTransaction();
