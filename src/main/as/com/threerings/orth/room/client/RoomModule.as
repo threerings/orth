@@ -15,6 +15,7 @@ import com.threerings.whirled.spot.client.SpotSceneDirector;
 import com.threerings.util.MessageManager;
 
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.room.client.FakeChatDirector;
 import com.threerings.orth.world.client.AbstractWorldModule;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
@@ -30,6 +31,9 @@ public class RoomModule extends AbstractWorldModule
     override protected function doWorldBinds (ctx :WorldContext) :void
     {
         var rCtx :RoomContext = RoomContext(ctx);
+
+        // mark our fake chat director as a singleton
+        bind(FakeChatDirector).asSingleton();
 
         // instantiate and bind the directors that need explicit instantiation
         bind(MuteDirector).toInstance(new MuteDirector(rCtx));
