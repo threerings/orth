@@ -1,10 +1,11 @@
 //
 // $Id: $
 
-
 package com.threerings.orth.peer.server;
 
 import java.util.Map;
+
+import com.google.inject.Inject;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -20,6 +21,8 @@ import com.threerings.presents.peer.server.PeerNode;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.PresentsSession;
 
+import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.server.PlayerLocator;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.world.data.PlaceKey;
@@ -115,6 +118,11 @@ public abstract class OrthPeerManager extends PeerManager
     protected void initClientInfo (PresentsSession client, ClientInfo info)
     {
         super.initClientInfo(client, info);
+
+        PlayerObject player = _locator.forClient(client.getClientObject());
+        if (player != null) {
+            ((OrthClientInfo)info).playerName = player.playerName;
+        }
 
         loggedOn((OrthClientInfo) info);
     }
@@ -230,7 +238,7 @@ public abstract class OrthPeerManager extends PeerManager
             _list.apply(new ObserverList.ObserverOp<FarSeeingObserver<T>>() {
                 public boolean apply (FarSeeingObserver<T> observer) {
                     @SuppressWarnings("unchecked")
-                    T vizName = (T) info.visibleName;
+                    T vizName = (T) info.playerName;
                     op.apply(observer, vizName);
                     return true;
                 }
@@ -277,6 +285,8 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     protected OrthNodeObject _onobj;
+
+    @Inject protected PlayerLocator _locator;
 
     protected final Map<Class<?>, Observation<?>> _observations = Maps.newHashMap();
 }

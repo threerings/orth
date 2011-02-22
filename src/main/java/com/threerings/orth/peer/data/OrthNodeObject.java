@@ -7,6 +7,7 @@ import javax.annotation.Generated;
 import com.threerings.util.ActionScript;
 
 import com.threerings.presents.dobj.DSet;
+import com.threerings.presents.peer.data.NodeObject;
 
 import com.threerings.crowd.peer.data.CrowdNodeObject;
 
@@ -20,7 +21,7 @@ import com.threerings.orth.peer.data.HostedPlace;
  * Maintains information on an Orth peer server.
  */
 @ActionScript(omit=true)
-public class OrthNodeObject extends CrowdNodeObject
+public class OrthNodeObject extends NodeObject
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>hostedPlaces</code> field. */

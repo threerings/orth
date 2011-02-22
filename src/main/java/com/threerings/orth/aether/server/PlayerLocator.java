@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import com.threerings.presents.annotation.EventThread;
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.ClientManager;
 
 import com.threerings.orth.aether.data.PlayerObject;
@@ -20,7 +21,12 @@ public class PlayerLocator
 {
     public PlayerObject lookupPlayer (int playerId)
     {
-        return (PlayerObject) _clientMgr.getClientObject(AuthName.makeKey(playerId));
+        return forClient(_clientMgr.getClientObject(AuthName.makeKey(playerId)));
+    }
+
+    public PlayerObject forClient (ClientObject client)
+    {
+        return (PlayerObject) client;
     }
 
     @Inject protected ClientManager _clientMgr;

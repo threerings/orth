@@ -3,17 +3,19 @@
 
 package com.threerings.orth.peer.data;
 
-import com.threerings.crowd.peer.data.CrowdClientInfo;
+import com.threerings.presents.peer.data.ClientInfo;
 
 import com.threerings.orth.aether.data.PlayerName;
 /**
  * Contains information on a player logged into one of our peer servers.
  */
-public class OrthClientInfo extends CrowdClientInfo
+public class OrthClientInfo extends ClientInfo
 {
+    public PlayerName playerName;
+
     /** Returns this member's unique identifier. */
     public int getMemberId ()
     {
-        return ((PlayerName)visibleName).getId();
+        return playerName.getId();
     }
 }
