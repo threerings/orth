@@ -12,6 +12,7 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.PlayerDirector;
+import com.threerings.orth.chat.client.OrthChatDirector;
 
 /**
  * Interfaces and abstract classes that must be bound in any implementating layer:
@@ -37,6 +38,7 @@ public class OrthModule extends BindingModule
         bind(MessageManager).asSingleton();
         bind(OrthController).asSingleton();
         bind(PlayerDirector).asSingleton();
+        bind(OrthChatDirector).asSingleton();
 
         // UI elements
         bind(ControlBar).asSingleton();
