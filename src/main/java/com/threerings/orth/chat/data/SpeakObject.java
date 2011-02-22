@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.orth.chat.server;
+package com.threerings.orth.chat.data;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.presents.dobj.DObject;
