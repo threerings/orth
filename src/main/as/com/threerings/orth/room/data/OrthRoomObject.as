@@ -12,11 +12,12 @@ import com.threerings.io.ObjectInputStream;
 
 import com.threerings.util.Name;
 
+import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
-import com.threerings.orth.chat.server.SpeakObject;
+import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
 
 // GENERATED PREAMBLE END
@@ -37,7 +38,7 @@ public class OrthRoomObject extends SpotSceneObject
 
     public var orthRoomService :OrthRoomMarshaller;
 
-    public var speakService :SpeakMarshaller;
+    public var orthSpeakService :SpeakMarshaller;
 
     public var memories :DSet;
 
@@ -45,7 +46,7 @@ public class OrthRoomObject extends SpotSceneObject
     public var ownerChanged :Signal = new Signal(Name, Name);
     public var accessControlChanged :Signal = new Signal(int, int);
     public var orthRoomServiceChanged :Signal = new Signal(OrthRoomMarshaller, OrthRoomMarshaller);
-    public var speakServiceChanged :Signal = new Signal(SpeakMarshaller, SpeakMarshaller);
+    public var orthSpeakServiceChanged :Signal = new Signal(SpeakMarshaller, SpeakMarshaller);
     public var memoriesChanged :Signal = new Signal(DSet, DSet);
     public var memoriesEntryAdded :Signal = new Signal(DSet_Entry);
     public var memoriesEntryRemoved :Signal = new Signal(DSet_Entry);
@@ -59,7 +60,7 @@ public class OrthRoomObject extends SpotSceneObject
 
     public static const ORTH_ROOM_SERVICE :String = "orthRoomService";
 
-    public static const SPEAK_SERVICE :String = "speakService";
+    public static const ORTH_SPEAK_SERVICE :String = "orthSpeakService";
 
     public static const MEMORIES :String = "memories";
 
@@ -70,7 +71,7 @@ public class OrthRoomObject extends SpotSceneObject
         owner = ins.readObject(Name);
         accessControl = ins.readByte();
         orthRoomService = ins.readObject(OrthRoomMarshaller);
-        speakService = ins.readObject(SpeakMarshaller);
+        orthSpeakService = ins.readObject(SpeakMarshaller);
         memories = ins.readObject(DSet);
     }
 
@@ -79,6 +80,20 @@ public class OrthRoomObject extends SpotSceneObject
         new Signaller(this);
     }
 // GENERATED STREAMING END
+
+    // from SpeakObject
+    public function asDObject () :DObject
+    {
+        return this;
+    }
+
+    // from SpeakObject
+    public function getSpeakService () :SpeakMarshaller
+    {
+        return orthSpeakService;
+    }
+    
+
 // GENERATED CLASSFINISH START
 }
 }
@@ -125,8 +140,8 @@ class Signaller
             case "orthRoomService":
                 signal = _obj.orthRoomServiceChanged;
                 break;
-            case "speakService":
-                signal = _obj.speakServiceChanged;
+            case "orthSpeakService":
+                signal = _obj.orthSpeakServiceChanged;
                 break;
             case "memories":
                 signal = _obj.memoriesChanged;
