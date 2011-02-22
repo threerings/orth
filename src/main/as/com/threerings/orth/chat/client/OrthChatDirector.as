@@ -14,9 +14,9 @@ import com.threerings.presents.dobj.MessageListener;
 
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakObject;
+import com.threerings.orth.chat.data.Speak;
+import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.client.OrthContext;
-import com.threerings.orth.data.Speak;
-import com.threerings.orth.data.Tell;
 
 public class OrthChatDirector extends BasicDirector
     implements MessageListener
