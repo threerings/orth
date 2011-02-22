@@ -15,6 +15,7 @@ import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.Tuple;
 
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerNode;
@@ -119,9 +120,9 @@ public abstract class OrthPeerManager extends PeerManager
     {
         super.initClientInfo(client, info);
 
-        PlayerObject player = _locator.forClient(client.getClientObject());
-        if (player != null) {
-            ((OrthClientInfo)info).playerName = player.playerName;
+        ClientObject clobj = client.getClientObject();
+        if (clobj instanceof PlayerObject) {
+            ((OrthClientInfo)info).playerName = ((PlayerObject) clobj).playerName;
         }
 
         loggedOn((OrthClientInfo) info);
