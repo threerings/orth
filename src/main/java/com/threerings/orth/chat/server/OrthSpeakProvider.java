@@ -12,7 +12,7 @@ import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.data.OrthPlayer;
-import com.threerings.orth.data.Speak;
+import com.threerings.orth.chat.data.Speak;
 import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;

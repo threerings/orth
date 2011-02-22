@@ -8,7 +8,7 @@ import com.google.inject.Inject;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
-import com.threerings.orth.data.Tell;
+import com.threerings.orth.chat.data.Tell;
 import com.threerings.util.Name;
 
 import com.threerings.presents.data.ClientObject;

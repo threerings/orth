@@ -15,7 +15,7 @@ import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
 import com.threerings.orth.data.AuthName;
-import com.threerings.orth.data.Tell;
+import com.threerings.orth.chat.data.Tell;
 
 import com.threerings.orth.chat.client.TellService.TellResultListener;
 import com.threerings.orth.chat.data.OrthChatCodes;
