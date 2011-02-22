@@ -19,6 +19,7 @@ import com.threerings.presents.dobj.DObjectManager;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.TopPanel;
+import com.threerings.orth.room.client.FakeChatDirector;
 import com.threerings.orth.room.data.RoomKey;
 import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
@@ -68,7 +69,7 @@ public class RoomContext
     // from CrowdContext
     public function getChatDirector () :ChatDirector
     {
-        return _module.getInstance(ChatDirector);
+        return _module.getInstance(FakeChatDirector);
     }
 
     // from CrowdContext
