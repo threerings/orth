@@ -31,6 +31,7 @@ public class OrthChatDirector extends BasicDirector
     {
         // if we're nowhere, ignore silently
         if (_place == null) {
+            log.warning("Eek! We're nowhere and we're trying to speak!");
             return;
         }
 
