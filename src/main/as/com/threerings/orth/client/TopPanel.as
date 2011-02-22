@@ -13,6 +13,8 @@ import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
 
+import com.threerings.orth.chat.client.ChatInput;
+
 /**
  * Dispatched when the name of our current location changes. The value supplied will be a string
  * with the new location name.
@@ -63,6 +65,9 @@ public class TopPanel extends Sprite
         _stage.addEventListener(Event.RESIZE, stageResized);
 
         setMainView(getBlankPlaceView());
+
+        // ORTH TODO - Quick hack to test chatting
+        addChild(new ChatInput(150));
     }
 
     /**
