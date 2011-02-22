@@ -6,10 +6,12 @@ package com.threerings.orth.aether.data;
 import javax.annotation.Generated;
 
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.FriendEntry;
+import com.threerings.orth.data.OrthPlayer;
 import com.threerings.orth.world.data.OrthPlace;
 import com.threerings.orth.party.data.PartySummary;
 
@@ -17,6 +19,7 @@ import com.threerings.orth.party.data.PartySummary;
  * The core distributed object representing the location-agnostic aspect of an Orth player.
  */
 public class PlayerObject extends ClientObject
+    implements OrthPlayer
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>playerName</code> field. */
@@ -73,6 +76,18 @@ public class PlayerObject extends ClientObject
     public int getPlayerId ()
     {
         return playerName.getId();
+    }
+
+    // from OrthPlayer
+    public DObject self ()
+    {
+        return this;
+    }
+
+    // from OrthPlayer
+    public PlayerName getPlayerName ()
+    {
+        return playerName;
     }
 
     /**

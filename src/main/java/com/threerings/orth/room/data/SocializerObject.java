@@ -105,6 +105,12 @@ public class SocializerObject extends ActorObject
         return (RoomPlace) location;
     }
 
+    // from OrthPlayer
+    public PlayerName getPlayerName ()
+    {
+        return name;
+    }
+
     public int getPlayerId ()
     {
         return name.getId();
