@@ -14,10 +14,10 @@ import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.Tuple;
 
-import com.threerings.crowd.peer.server.CrowdPeerManager;
 import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerNode;
+import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.orth.data.AuthName;
@@ -30,7 +30,7 @@ import com.threerings.orth.peer.data.OrthNodeObject;
 /**
  * Extends CrowdPeerManager with functionality needed for Orth and its intended uses.
  */
-public abstract class OrthPeerManager extends CrowdPeerManager
+public abstract class OrthPeerManager extends PeerManager
 {
     /** The maximum number of nodes we can start up after a global reboot. */
     public static final int MAX_NODES = 100;
@@ -99,13 +99,13 @@ public abstract class OrthPeerManager extends CrowdPeerManager
      */
     public abstract int getNodeId ();
 
-    @Override // from CrowdPeerManager
+    @Override // from PeerManager
     protected NodeObject createNodeObject ()
     {
         return (_onobj = new OrthNodeObject());
     }
 
-    @Override // from CrowdPeerManager
+    @Override // from PeerManager
     protected ClientInfo createClientInfo ()
     {
         return new OrthClientInfo();
