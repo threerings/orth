@@ -45,8 +45,6 @@ public class FakeChatDirector extends ChatDirector
         _chatDir.leftLocation(OrthRoomObject(place));
     }
 
-
-
     protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
 }
 }
