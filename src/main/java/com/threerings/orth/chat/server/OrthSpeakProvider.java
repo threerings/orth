@@ -5,11 +5,13 @@ package com.threerings.orth.chat.server;
 
 import com.google.inject.Inject;
 
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.server.SpeakProvider;
+import com.threerings.orth.data.OrthPlayer;
 import com.threerings.orth.data.Speak;
 import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.data.ClientObject;
@@ -33,12 +35,12 @@ public class OrthSpeakProvider
     public void speak (ClientObject caller, String msg, InvocationListener listener)
         throws InvocationException
     {
-        PlayerObject from = _locator.forClient(caller);
+        PlayerName name = ((OrthPlayer) caller).getPlayerName();
 
         // check access
 
         _speakObj.asDObject().postMessage(
-            OrthChatCodes.SPEAK_MSG_TYPE, new Speak(from.playerName, msg));
+            OrthChatCodes.SPEAK_MSG_TYPE, new Speak(name, msg));
     }
 
     protected SpeakObject _speakObj;
