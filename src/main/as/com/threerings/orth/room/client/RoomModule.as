@@ -34,6 +34,8 @@ public class RoomModule extends AbstractWorldModule
 
         // mark our fake chat director as a singleton
         bind(FakeChatDirector).asSingleton();
+        // instantiate it, so that it may register its services early
+        _chainMod.getInstance(FakeChatDirector);
 
         // instantiate and bind the directors that need explicit instantiation
         bind(MuteDirector).toInstance(new MuteDirector(rCtx));
