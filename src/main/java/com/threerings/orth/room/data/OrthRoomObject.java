@@ -12,7 +12,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.whirled.spot.data.SpotSceneObject;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
-import com.threerings.orth.chat.server.SpeakObject;
+import com.threerings.orth.chat.data.SpeakObject;
 
 import static com.threerings.orth.Log.log;
 
@@ -36,9 +36,9 @@ public class OrthRoomObject extends SpotSceneObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String ORTH_ROOM_SERVICE = "orthRoomService";
 
-    /** The field name of the <code>speakService</code> field. */
+    /** The field name of the <code>orthSpeakService</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String SPEAK_SERVICE = "speakService";
+    public static final String ORTH_SPEAK_SERVICE = "orthSpeakService";
 
     /** The field name of the <code>memories</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -58,7 +58,7 @@ public class OrthRoomObject extends SpotSceneObject
     public OrthRoomMarshaller orthRoomService;
 
     /** Our speak service. */
-    public SpeakMarshaller speakService;
+    public SpeakMarshaller orthSpeakService;
 
     /** Contains the memories for all entities in this room. */
     public DSet<EntityMemories> memories = DSet.newDSet();
@@ -77,7 +77,7 @@ public class OrthRoomObject extends SpotSceneObject
     // from Speakobject
     public SpeakMarshaller getSpeakService ()
     {
-        return speakService;
+        return orthSpeakService;
     }
 
     // AUTO-GENERATED: METHODS START
@@ -150,7 +150,7 @@ public class OrthRoomObject extends SpotSceneObject
     }
 
     /**
-     * Requests that the <code>speakService</code> field be set to the
+     * Requests that the <code>orthSpeakService</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
@@ -158,12 +158,12 @@ public class OrthRoomObject extends SpotSceneObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setSpeakService (SpeakMarshaller value)
+    public void setOrthSpeakService (SpeakMarshaller value)
     {
-        SpeakMarshaller ovalue = this.speakService;
+        SpeakMarshaller ovalue = this.orthSpeakService;
         requestAttributeChange(
-            SPEAK_SERVICE, value, ovalue);
-        this.speakService = value;
+            ORTH_SPEAK_SERVICE, value, ovalue);
+        this.orthSpeakService = value;
     }
 
     /**
