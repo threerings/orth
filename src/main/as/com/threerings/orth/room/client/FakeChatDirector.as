@@ -6,11 +6,14 @@ package com.threerings.orth.room.client {
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
+import com.threerings.util.MessageManager;
 
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.orth.chat.client.OrthChatDirector;
+import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.data.OrthRoomObject;
 
 /**
@@ -24,7 +27,7 @@ public class FakeChatDirector extends ChatDirector
 {
     public function FakeChatDirector ()
     {
-        super(null, null, null);
+        super(inject(RoomContext), inject(MessageManager), OrthCodes.CHAT_MSGS);
     }
 
     override public function displayFeedback (bundle :String, message :String) :void
