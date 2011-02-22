@@ -27,7 +27,11 @@ import com.threerings.orth.chat.data.TellMarshaller;
 public class ChatManager
     implements TellProvider
 {
-    public ChatManager ()
+    @Inject public ChatManager ()
+    {
+    }
+
+    public void init ()
     {
         // ORTH TODO: Bootstrap group?
         _invMgr.registerProvider(this, TellMarshaller.class);

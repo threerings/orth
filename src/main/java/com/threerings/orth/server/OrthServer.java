@@ -15,6 +15,7 @@ import com.threerings.whirled.server.persist.SceneRepository;
 import com.threerings.whirled.server.SceneRegistry;
 import com.threerings.whirled.util.SceneFactory;
 
+import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
 import com.threerings.orth.aether.server.AetherManager;
@@ -48,7 +49,6 @@ public class OrthServer extends CrowdServer
             bind(SceneFactory.class).to(OrthSceneFactory.class);
             bind(SceneRegistry.ConfigFactory.class).to(OrthSceneFactory.class);
 
-
             // presents
             bind(PeerManager.class).to(OrthPeerManager.class);
         }
@@ -64,12 +64,14 @@ public class OrthServer extends CrowdServer
         _clmgr.addSessionFactory(injector.getInstance(RoomSessionFactory.class));
         _conmgr.addChainedAuthenticator(injector.getInstance(RoomAuthenticator.class));
 
-        _aetherMan.init();
-        _worldMan.init();
+        _aetherMgr.init();
+        _worldMgr.init();
+        _chatMgr.init();
     }
 
-    @Inject protected AetherManager _aetherMan;
-    @Inject protected WorldManager _worldMan;
+    @Inject protected AetherManager _aetherMgr;
+    @Inject protected WorldManager _worldMgr;
+    @Inject protected ChatManager _chatMgr;
     @Inject protected OrthSceneRegistry _sceneReg;
 }
 
