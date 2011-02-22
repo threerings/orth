@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.orth.data;
+package com.threerings.orth.chat.data;
 
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.orth.aether.data.PlayerName;
