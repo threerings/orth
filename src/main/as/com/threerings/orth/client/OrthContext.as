@@ -141,15 +141,15 @@ public class OrthContext
     // from OrthContext
     public function displayFeedback (bundle :String, message :String) :void
     {
-// ORTH TODO
-//        getChatDirector().displayFeedback(bundle, message);
+        // ORTH TODO
+        log.info("displayFeedback", "message", message);
     }
 
     // from OrthContext
     public function displayInfo (bundle :String, message :String, localType :String = null) :void
     {
-// ORTH TODO
-//        getChatDirector().displayInfo(bundle, message, localType);
+        // ORTH TODO
+        log.info("displayInfo", "message", message);
     }
 
     /**
