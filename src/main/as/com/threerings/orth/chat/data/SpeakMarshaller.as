@@ -2,7 +2,9 @@
 // $Id$
 package com.threerings.orth.chat.data {
 
+import com.threerings.presents.client.InvocationService_InvocationListener;
 import com.threerings.presents.data.InvocationMarshaller;
+import com.threerings.presents.data.InvocationMarshaller_ListenerMarshaller;
 
 import com.threerings.orth.chat.client.SpeakService;
 
@@ -20,10 +22,12 @@ public class SpeakMarshaller extends InvocationMarshaller
     public static const SPEAK :int = 1;
 
     // from interface SpeakService
-    public function speak (arg1 :String) :void
+    public function speak (arg1 :String, arg2 :InvocationService_InvocationListener) :void
     {
+        var listener2 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
+        listener2.listener = arg2;
         sendRequest(SPEAK, [
-            arg1
+            arg1, listener2
         ]);
     }
 }

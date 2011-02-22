@@ -4,6 +4,7 @@
 package com.threerings.orth.chat.client;
 
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.client.InvocationService.InvocationListener;
 
 /**
  * An Orth chat system can register any number of speak services, each one operating via its own
@@ -14,5 +15,5 @@ import com.threerings.presents.client.InvocationService;
  */
 public interface SpeakService extends InvocationService
 {
-    public void speak (String msg);
+    public void speak (String msg, InvocationListener listener);
 }

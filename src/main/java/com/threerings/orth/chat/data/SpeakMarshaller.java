@@ -5,6 +5,7 @@ package com.threerings.orth.chat.data;
 import javax.annotation.Generated;
 
 import com.threerings.orth.chat.client.SpeakService;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
 
 /**
@@ -23,10 +24,12 @@ public class SpeakMarshaller extends InvocationMarshaller
     public static final int SPEAK = 1;
 
     // from interface SpeakService
-    public void speak (String arg1)
+    public void speak (String arg1, InvocationService.InvocationListener arg2)
     {
+        ListenerMarshaller listener2 = new ListenerMarshaller();
+        listener2.listener = arg2;
         sendRequest(SPEAK, new Object[] {
-            arg1
+            arg1, listener2
         });
     }
 }
