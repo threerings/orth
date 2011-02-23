@@ -13,6 +13,8 @@ import flash.geom.Rectangle;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.Log;
 import com.threerings.util.Map;
@@ -29,6 +31,7 @@ import com.threerings.orth.chat.data.OrthChatChannel;
 import com.threerings.orth.world.data.OrthPlayerBody;
 import com.threerings.orth.client.LayeredContainer;
 import com.threerings.orth.client.OrthPlaceBox;
+import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.client.RoomContext;
 
@@ -43,9 +46,9 @@ public class ComicOverlay extends ChatOverlay
     /**
      * Construct a comic chat overlay.
      */
-    public function ComicOverlay (target :LayeredContainer)
+    public function ComicOverlay ()
     {
-        super(target);
+        super(inject(TopPanel));
 
         // overlay for chat that stays in a given place in the scene, and is therefore scrolled
         // with it.
