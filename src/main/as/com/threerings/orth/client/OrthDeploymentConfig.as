@@ -16,6 +16,8 @@ public interface OrthDeploymentConfig
      */
     function get development () :Boolean;
 
+    function get buildTime () :String;
+
     function get aetherHost () :String;
 
     function get aetherPorts () :Array;
