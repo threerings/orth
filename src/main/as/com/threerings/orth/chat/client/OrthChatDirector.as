@@ -170,8 +170,8 @@ public class OrthChatDirector extends BasicDirector
     /** A list of registered chat displays. */
     protected var _displays :ObserverList = new ObserverList();
 
-    protected static const _msgMgr :MessageManager = inject(MessageManager);
-    protected static const _overlay :ComicOverlay = inject(ComicOverlay);
+    protected const _msgMgr :MessageManager = inject(MessageManager);
+    protected const _overlay :ComicOverlay = inject(ComicOverlay);
 
     private static const log :Log = Log.getLog(OrthChatDirector);
 }
