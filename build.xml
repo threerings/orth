@@ -157,17 +157,14 @@
     <!-- make sure the dobject class files are all compiled -->
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Object.java"/>
-      <exclude name="com/threerings/orth/party/**/*.java"/>
     </ooojavac>
     <!-- now generate the associated files -->
     <gendobj classpathref="build.classpath">
-      <fileset dir="${src.dir}" includes="**/*Object.java"
-               excludes="com/threerings/orth/party/**/*.java"/>
+      <fileset dir="${src.dir}" includes="**/*Object.java"/>
     </gendobj>
     <genascriptstreamable classpathref="build.classpath" header="lib/SOURCE_HEADER"
       asroot="${asrc.dir}">
-      <fileset dir="${src.dir}" includes="**/*Object.java"
-               excludes="com/threerings/orth/party/**/*.java"/>
+      <fileset dir="${src.dir}" includes="**/*Object.java"/>
     </genascriptstreamable>
     <asimports/>
   </target>
@@ -178,7 +175,6 @@
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Service.java"/>
       <exclude name="**/InvocationService.java"/>
-      <exclude name="com/threerings/orth/party/**/*.java"/>
     </ooojavac>
     <!-- now generate the associated files -->
     <genservice header="lib/SOURCE_HEADER" asroot="src/main/as" classpathref="build.classpath">
@@ -186,7 +182,6 @@
         <exclude name="**/InvocationService.java"/>
         <exclude name="**/peer/**"/>
         <exclude name="**/admin/**"/>
-        <exclude name="**/party/**"/>
       </fileset>
       <providerless service="ChatService"/>
       <providerless service="SimulatorService"/>
@@ -205,7 +200,6 @@
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
       <include name="**/*Receiver.java"/>
       <exclude name="**/InvocationReceiver.java"/>
-      <exclude name="com/threerings/orth/party/**/*.java"/>
     </ooojavac>
     <!-- now generate the associated files -->
     <genreceiver header="lib/SOURCE_HEADER" classpathref="build.classpath">
@@ -219,7 +213,6 @@
       <!-- make sure the streamable class files are all compiled -->
       <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath">
         <include name="**/data/*.java"/>
-        <exclude name="com/threerings/orth/party/**/*.java"/>
       </ooojavac>
      <genascriptstreamable classpathref="build.classpath" header="lib/SOURCE_HEADER"
                            asroot="${asrc.dir}">
@@ -230,7 +223,6 @@
          <exclude name="**/*_CustomFieldSerializer.java"/>
          <!-- flips out on generics -->
          <exclude name="com/threerings/orth/room/data/Entity*.java"/>
-         <exclude name="com/threerings/orth/party/**/*.java"/>
        </fileset>
      </genascriptstreamable>
      <asimports/>

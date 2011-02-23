@@ -6,17 +6,15 @@ package com.threerings.orth.client {
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.display.Stage;
-import flash.text.TextField;
-import flash.text.TextFieldAutoSize;
 import flash.events.Event;
 import flash.geom.Rectangle;
+import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 
 import flashx.funk.ioc.inject;
 
 import com.threerings.text.TextFieldUtil;
-import com.threerings.util.Log;
 
-import com.threerings.orth.chat.client.ChatInput;
 import com.threerings.orth.chat.client.ChatOverlay;
 import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.client.OrthChatDirector;

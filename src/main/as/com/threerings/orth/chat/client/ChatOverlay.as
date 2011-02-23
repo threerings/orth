@@ -8,36 +8,20 @@ import flash.display.DisplayObject;
 import flash.display.Graphics;
 import flash.display.InteractiveObject;
 import flash.display.Sprite;
-
 import flash.events.MouseEvent;
-
 import flash.geom.Point;
 import flash.geom.Rectangle;
-
 import flash.text.TextFormat;
-
-import flash.utils.getTimer; // function import
-
-import flashx.funk.ioc.inject;
-
-import mx.events.FlexEvent;
-import mx.events.ScrollEvent;
-
-import mx.controls.scrollClasses.ScrollBar;
-import mx.controls.VScrollBar;
+import flash.utils.getTimer;
 
 import flashx.funk.ioc.inject;
 
 import com.whirled.game.data.WhirledGameCodes;
 
-import com.threerings.util.ArrayUtil;
-import com.threerings.util.NamedValueEvent;
-import com.threerings.util.Log;
-import com.threerings.util.Map;
-import com.threerings.util.Maps;
-import com.threerings.util.Name;
-
-import com.threerings.display.ColorUtil;
+import mx.controls.VScrollBar;
+import mx.controls.scrollClasses.ScrollBar;
+import mx.events.FlexEvent;
+import mx.events.ScrollEvent;
 
 import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
@@ -45,10 +29,17 @@ import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.TellFeedbackMessage;
 import com.threerings.crowd.chat.data.UserMessage;
+import com.threerings.display.ColorUtil;
+
+import com.threerings.util.ArrayUtil;
+import com.threerings.util.Log;
+import com.threerings.util.Map;
+import com.threerings.util.Maps;
+import com.threerings.util.Name;
+import com.threerings.util.NamedValueEvent;
 
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.chat.data.OrthChatChannel;
-import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.client.LayeredContainer;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
@@ -56,13 +47,11 @@ import com.threerings.orth.client.OrthPlaceBox;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.VizOrthName;
-import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.data.PetName;
 import com.threerings.orth.utils.TextUtil;
-import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.world.client.WorldController;
 import com.threerings.orth.world.data.OrthPlayerBody;
-
 
 /**
  * TODO: Currently this class reaches into the world.* subpackage while itself residing

@@ -108,6 +108,12 @@ public class OrthContext
         return (player != null) ? player.playerName : null;
     }
 
+    public function getMyId () :int
+    {
+        var player :PlayerObject = getPlayerObject();
+        return (player != null) ? player.playerName.getId() : 0;
+    }
+
     // from OrthContext
     public function listener (bundle :String = OrthCodes.GENERAL_MSGS,
         errWrap :String = null, ... logArgs) :InvocationService_InvocationListener

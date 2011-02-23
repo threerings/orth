@@ -3,10 +3,7 @@
 
 package com.threerings.orth.chat.client {
 
-import flashx.funk.ioc.inject;
-
 import com.threerings.crowd.chat.client.ChatDisplay;
-
 import com.threerings.crowd.chat.data.ChatMessage;
 
 import com.threerings.util.Log;

@@ -5,7 +5,6 @@ package com.threerings.orth.chat.client {
 
 import flash.display.Sprite;
 import flash.events.MouseEvent;
-
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
@@ -15,7 +14,6 @@ import flashx.funk.ioc.inject;
 import com.threerings.flex.PopUpUtil;
 
 import com.threerings.orth.data.MediaDesc;
-
 import com.threerings.orth.ui.MediaWrapper;
 import com.threerings.orth.utils.TextUtil;
 

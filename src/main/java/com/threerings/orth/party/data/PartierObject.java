@@ -15,7 +15,6 @@ import com.threerings.orth.aether.data.VizPlayerName;
 /**
  * Contains information on a party player logged into the server.
  */
-@ActionScript(omit=true)
 public class PartierObject extends BodyObject
 {
     // AUTO-GENERATED: FIELDS START

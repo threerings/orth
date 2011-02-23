@@ -13,7 +13,7 @@ public class MemberParty extends SimpleStreamableObject
     implements DSet.Entry
 {
     /** The id of the player. */
-    public Integer playerId;
+    public int playerId;
 
     /** Their party id. */
     public int partyId;
@@ -26,7 +26,7 @@ public class MemberParty extends SimpleStreamableObject
     /**
      * Constructor.
      */
-    public MemberParty (Integer playerId, int partyId)
+    public MemberParty (int playerId, int partyId)
     {
         this.playerId = playerId;
         this.partyId = partyId;

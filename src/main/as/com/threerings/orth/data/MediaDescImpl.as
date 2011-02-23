@@ -3,6 +3,7 @@
 // $Id$
 
 package com.threerings.orth.data {
+
 import flashx.funk.util.isAbstract;
 
 import com.threerings.io.ObjectInputStream;

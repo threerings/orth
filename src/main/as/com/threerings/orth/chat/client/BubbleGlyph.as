@@ -2,22 +2,19 @@
 // $Id: BubbleGlyph.as 17626 2009-07-21 21:43:56Z mdb $
 
 package com.threerings.orth.chat.client {
-import com.threerings.orth.utils.TextUtil;
-
 import flash.display.BlendMode;
-
 import flash.filters.BevelFilter;
 import flash.filters.BitmapFilterQuality;
-
 import flash.geom.Rectangle;
-
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 
+import com.threerings.text.TextFieldUtil;
+
 import com.threerings.util.Name;
 
-import com.threerings.text.TextFieldUtil;
+import com.threerings.orth.utils.TextUtil;
 
 public class BubbleGlyph extends ChatGlyph
 {

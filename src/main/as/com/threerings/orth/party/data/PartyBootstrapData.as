@@ -2,41 +2,35 @@
 //
 // $Id$
 
-package com.threerings.orth.notify.data {
+package com.threerings.orth.party.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
-import com.threerings.orth.data.OrthName;
-import com.threerings.orth.notify.data.Notification;
+import com.threerings.presents.net.BootstrapData;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class PartyInviteNotification extends Notification
+public class PartyBootstrapData extends BootstrapData
 {
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
+    public var partyOid :int;
+
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        _inviter = ins.readObject(OrthName);
-        _partyId = ins.readInt();
-        _partyName = ins.readField(String);
+        partyOid = ins.readInt();
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeObject(_inviter);
-        out.writeInt(_partyId);
-        out.writeField(_partyName);
+        out.writeInt(partyOid);
     }
 
-    protected var _inviter :OrthName;
-    protected var _partyId :int;
-    protected var _partyName :String;
 // GENERATED STREAMING END
 
 // GENERATED CLASSFINISH START

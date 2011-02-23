@@ -13,7 +13,6 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.MediaDesc;
 
-@ActionScript(omit=true)
 public class PartyObject extends DObject
     implements /*SpeakObject,*/ Cloneable
 {

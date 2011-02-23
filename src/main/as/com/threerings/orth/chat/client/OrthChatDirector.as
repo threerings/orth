@@ -9,8 +9,8 @@ import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.UserMessage;
+
 import com.threerings.util.Log;
-import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 import com.threerings.util.ObserverList;
 
@@ -24,10 +24,9 @@ import com.threerings.presents.dobj.MessageListener;
 
 import com.threerings.orth.chat.client.HistoryList;
 import com.threerings.orth.chat.data.OrthChatCodes;
-import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.data.Speak;
+import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.data.Tell;
-import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
 

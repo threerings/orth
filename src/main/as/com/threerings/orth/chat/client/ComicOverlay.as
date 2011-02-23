@@ -6,12 +6,16 @@ package com.threerings.orth.chat.client {
 import flash.display.BlendMode;
 import flash.display.Graphics;
 import flash.display.Sprite;
-
 import flash.geom.Point;
 import flash.geom.Rectangle;
-
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
+
+import com.threerings.crowd.chat.data.ChatCodes;
+import com.threerings.crowd.chat.data.ChatMessage;
+import com.threerings.crowd.chat.data.SystemMessage;
+import com.threerings.crowd.chat.data.UserMessage;
+import com.threerings.display.ColorUtil;
 
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.Log;
@@ -19,20 +23,11 @@ import com.threerings.util.Map;
 import com.threerings.util.Maps;
 import com.threerings.util.Name;
 
-import com.threerings.crowd.chat.data.ChatCodes;
-import com.threerings.crowd.chat.data.ChatMessage;
-import com.threerings.crowd.chat.data.SystemMessage;
-import com.threerings.crowd.chat.data.UserMessage;
-
 import com.threerings.orth.chat.client.OccupantChatOverlay;
 import com.threerings.orth.chat.data.OrthChatChannel;
-import com.threerings.orth.world.data.OrthPlayerBody;
 import com.threerings.orth.client.LayeredContainer;
 import com.threerings.orth.client.OrthPlaceBox;
-import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.client.RoomContext;
-
-import com.threerings.display.ColorUtil;
+import com.threerings.orth.world.data.OrthPlayerBody;
 
 /**
  * Implements comic chat in the metasoy client.
@@ -586,18 +581,16 @@ public class ComicOverlay extends ChatOverlay
 }
 }
 
-import com.threerings.orth.chat.client.BubbleGlyph;
-import com.threerings.orth.chat.client.ComicOverlay;
-
 import flash.display.Sprite;
-
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
-import com.threerings.util.Log;
-
 import com.threerings.display.DisplayUtil;
 
+import com.threerings.util.Log;
+
+import com.threerings.orth.chat.client.BubbleGlyph;
+import com.threerings.orth.chat.client.ComicOverlay;
 
 /**
  * A class to keep track of the bubbles spoken by a speaker.  When the speaker moves, this class
