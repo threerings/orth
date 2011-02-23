@@ -28,6 +28,7 @@ import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
 
 public class OrthChatDirector extends BasicDirector
@@ -38,7 +39,6 @@ public class OrthChatDirector extends BasicDirector
         super(inject(OrthContext));
 
         _chatHistory = new HistoryList(this);
-        _bundle = _msgMgr.getBundle(OrthCodes.CHAT_MSGS);
     }
 
     /** Some code somewhere (e.g. a chat input control) wants us to speak in our room. */
@@ -131,13 +131,13 @@ public class OrthChatDirector extends BasicDirector
             var tell :Tell = Tell(value);
             msg.speaker = tell.from;
             msg.mode = ChatCodes.DEFAULT_MODE;
-            msg.setClientInfo(_bundle.xlate(tell.message), ChatCodes.USER_CHAT_TYPE);
+            msg.setClientInfo(Msgs.CHAT.xlate(tell.message), ChatCodes.USER_CHAT_TYPE);
 
         } else if (OrthChatCodes.SPEAK_MSG_TYPE == event.getName()) {
             var speak :Speak = Speak(value);
             msg.speaker = speak.from;
             msg.mode = ChatCodes.DEFAULT_MODE;
-            msg.setClientInfo(_bundle.xlate(speak.message), ChatCodes.PLACE_CHAT_TYPE);
+            msg.setClientInfo(Msgs.CHAT.xlate(speak.message), ChatCodes.PLACE_CHAT_TYPE);
         }
 
         dispatchPreparedMessage(msg);
@@ -170,7 +170,6 @@ public class OrthChatDirector extends BasicDirector
     protected var _clobj :ClientObject;
     protected var _place :SpeakObject;
     protected var _chatHistory :HistoryList;
-    protected var _bundle :MessageBundle;
 
     /** A list of registered chat displays. */
     protected var _displays :ObserverList = new ObserverList();
