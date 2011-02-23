@@ -16,6 +16,15 @@ import com.threerings.orth.aether.data.PlayerName;
 public class Speak extends SimpleStreamableObject
 {
 // GENERATED CLASSDECL END
+    public function get from () :PlayerName
+    {
+        return _from;
+    }
+
+    public function get message () :String
+    {
+        return _message;
+    }
 
 // GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void
