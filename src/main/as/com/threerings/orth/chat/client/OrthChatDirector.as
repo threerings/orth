@@ -9,7 +9,10 @@ import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.BasicDirector;
+import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.client.InvocationAdapter;
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 
@@ -86,11 +89,29 @@ public class OrthChatDirector extends BasicDirector
         }            
     }
 
+    // from BasicDirector
+    override protected function clientObjectUpdated (client :Client) :void
+    {
+        // we have an aether client object; listen to it for tells
+        _clobj = _ctx.getClient().getClientObject();
+        _clobj.addListener(this);
+    }
+
+    // from BasicDirector
+    override public function clientDidLogoff (event :ClientEvent) :void
+    {
+        // i don't see this happening often, but can't hurt to be proper
+        if (_clobj != null) {
+            _clobj.removeListener(this);
+        }
+    }
+
     protected function failure (cause :String) :void
     {
         log.error("Speak request failed", "cause", cause);
     }
 
+    protected var _clobj :ClientObject;
     protected var _place :SpeakObject;
     protected var _chatHistory :HistoryList;
 
