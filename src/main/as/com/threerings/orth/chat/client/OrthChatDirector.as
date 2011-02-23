@@ -8,6 +8,7 @@ import flashx.funk.ioc.inject;
 import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
+import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
@@ -117,7 +118,7 @@ public class OrthChatDirector extends BasicDirector
     // from MessageListener
     public function messageReceived (event :MessageEvent) :void
     {
-        var msg :ChatMessage = new ChatMessage();
+        var msg :UserMessage = new UserMessage();
 
         // ORTH TODO: for now, we have our own Tell and Speak objects from our rewrite,
         // but the ChatMessage-based approach of the rendering code (from Whirled). When
@@ -128,10 +129,14 @@ public class OrthChatDirector extends BasicDirector
         var value :Object = event.getArgs()[0];
         if (OrthChatCodes.TELL_MSG_TYPE == event.getName()) {
             var tell :Tell = Tell(value);
+            msg.speaker = tell.from;
+            msg.mode = ChatCodes.DEFAULT_MODE;
             msg.setClientInfo(_bundle.xlate(tell.message), ChatCodes.USER_CHAT_TYPE);
 
         } else if (OrthChatCodes.SPEAK_MSG_TYPE == event.getName()) {
             var speak :Speak = Speak(value);
+            msg.speaker = speak.from;
+            msg.mode = ChatCodes.DEFAULT_MODE;
             msg.setClientInfo(_bundle.xlate(speak.message), ChatCodes.PLACE_CHAT_TYPE);
         }
 
