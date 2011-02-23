@@ -26,10 +26,11 @@ import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.notify.server.NotificationManager;
 
-import com.threerings.orth.server.PlayerNodeActions;
-import com.threerings.orth.peer.data.HostedRoom;
+import com.threerings.orth.aether.server.PlayerNodeActions;
 import com.threerings.orth.peer.data.OrthNodeObject;
+import com.threerings.orth.peer.data.HostedPlace;
 import com.threerings.orth.peer.server.OrthPeerManager;
+import com.threerings.orth.room.data.RoomKey;
 
 import com.threerings.orth.notify.data.GenericNotification;
 import com.threerings.orth.notify.data.Notification;
@@ -40,6 +41,7 @@ import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyDetail;
 import com.threerings.orth.party.data.PartyInfo;
+import com.threerings.orth.party.data.PartyMarshaller;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.party.data.PartySummary;
@@ -181,7 +183,8 @@ public class PartyManager
 
     public void inviteAllFriends (PlayerObject inviter)
     {
-        PlayerNodeActions.inviteAllFriendsToParty(inviter, _partyObj.id, _partyObj.name);
+        // TODO(bruno):
+        //PlayerNodeActions.inviteAllFriendsToParty(inviter, _partyObj.id, _partyObj.name);
     }
 
     // from interface PartyProvider
@@ -191,8 +194,9 @@ public class PartyManager
     {
         requireLeader(caller);
         if (removePlayer(playerId)) {
-            PlayerNodeActions.sendNotification(playerId,
-                new GenericNotification("m.party_booted", Notification.PERSONAL));
+            // TODO(bruno):
+            //PlayerNodeActions.sendNotification(playerId,
+            //    new GenericNotification("m.party_booted", Notification.PERSONAL));
         }
     }
 
@@ -288,8 +292,8 @@ public class PartyManager
         _invitedIds.add(playerId);
         // send them a notification
         //PlayerNodeActions.sendNotification(playerId, createInvite(inviter));
-        PlayerNodeActions.inviteToParty(
-            playerId, inviter.playerName.toPlayerName(), _partyObj.id, _partyObj.name);
+        //PlayerNodeActions.inviteToParty(
+        //    playerId, inviter.playerName.toPlayerName(), _partyObj.id, _partyObj.name);
     }
 
     protected PartierObject requireLeader (ClientObject client)
@@ -349,18 +353,18 @@ public class PartyManager
 
         if (set) {
             MemberParty mp = new MemberParty(playerId, _partyObj.id);
-            MemberParty omp = nodeObj.playerParties.get(mp.playerId);
+            MemberParty omp = nodeObj.memberParties.get(mp.playerId);
             if (omp == null) {
-                nodeObj.addToPlayerParties(mp); // normal case
+                nodeObj.addToMemberParties(mp); // normal case
             } else if (omp.partyId != mp.partyId) {
                 log.warning("Wha? Replacing stale MemberParty", "mp", mp, "omp", omp);
-                nodeObj.updatePlayerParties(mp);
+                nodeObj.updateMemberParties(mp);
             }
             // otherwise: no need to update anything. This can happen in normal circumstances
             // when a user logs in over themselves
 
         } else {
-            nodeObj.removeFromPlayerParties(playerId);
+            nodeObj.removeFromMemberParties(playerId);
         }
 
         // tell the registry about this one directly
@@ -380,7 +384,8 @@ public class PartyManager
      */
     protected void updateStatus ()
     {
-        Tuple<String, HostedRoom> room = _peerMgr.getSceneHost(_partyObj.sceneId);
+        // TODO(bruno): This assumes the party is in a room. Can we make that assumption here?
+        Tuple<String, HostedPlace> room = _peerMgr.findHostedPlace(new RoomKey(_partyObj.sceneId));
         if (room != null) {
             setStatus(room.right.name, PartyCodes.STATUS_TYPE_SCENE);
         } else {

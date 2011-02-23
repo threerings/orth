@@ -8,8 +8,6 @@ import com.google.inject.Inject;
 import com.threerings.presents.net.BootstrapData;
 import com.threerings.presents.server.PresentsSession;
 
-import com.threerings.orth.server.OrthObjectAccess;
-
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyBootstrapData;
 import com.threerings.orth.party.data.PartyCredentials;
@@ -28,7 +26,8 @@ public class PartySession extends PresentsSession
 
         // set up our partier object
         _partierObj = (PartierObject) _clobj;
-        _partierObj.setAccessController(OrthObjectAccess.USER);
+        // TODO(bruno): OrthObjectAccess
+        //_partierObj.setAccessController(OrthObjectAccess.USER);
         _partierObj.setPartyId(((PartyCredentials)_areq.getCredentials()).partyId);
     }
 

@@ -3,7 +3,7 @@
 
 package com.threerings.orth.notify.data;
 
-import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.notify.data.Notification;
 
 public class PartyInviteNotification extends Notification
@@ -12,9 +12,9 @@ public class PartyInviteNotification extends Notification
     public PartyInviteNotification () {}
 
     /** Normal constructor. */
-    public PartyInviteNotification (PlayerName inviter, int partyId, String partyName)
+    public PartyInviteNotification (OrthName inviter, int partyId, String partyName)
     {
-        _inviter = inviter.toPlayerName();
+        _inviter = inviter;
         _partyId = partyId;
         _partyName = partyName;
     }
@@ -26,12 +26,12 @@ public class PartyInviteNotification extends Notification
     }
 
     @Override
-    public PlayerName getSender ()
+    public OrthName getSender ()
     {
         return _inviter;
     }
 
-    protected PlayerName _inviter;
+    protected OrthName _inviter;
     protected int _partyId;
     protected String _partyName;
 }

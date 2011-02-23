@@ -43,9 +43,12 @@ import com.threerings.whirled.data.ScenePlace;
 
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
+import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.notify.server.NotificationManager;
+import com.threerings.orth.party.data.PartyBoardMarshaller;
+import com.threerings.orth.room.data.RoomPlace;
 
 import com.threerings.orth.notify.data.PartyInviteNotification;
 
@@ -293,7 +296,7 @@ public class PartyRegistry
                 if (!mnode.hostedParties.containsKey(partyId)) {
                     return false;
                 }
-                mnode.peerPartyService.getPartyDetail(clinode.left, partyId, rl);
+                mnode.peerPartyService.getPartyDetail(partyId, rl);
                 return true;
             }
         });
@@ -326,9 +329,10 @@ public class PartyRegistry
 
             // TODO: Hackily use the static default group icon until we figure out how best
             // TODO: to eliminate the icon from the UI
-            pobj.icon = new StaticMediaDesc(MediaMimeTypes.IMAGE_PNG, "photo", "group_logo",
-                // we know that we're 66x60
-                MediaDesc.HALF_VERTICALLY_CONSTRAINED);
+            // TODO(bruno): ^^^^
+            //pobj.icon = new StaticMediaDesc(MediaMimeTypes.IMAGE_PNG, "photo", "group_logo",
+            //    // we know that we're 66x60
+            //    MediaDesc.HALF_VERTICALLY_CONSTRAINED);
 
             pobj.leaderId = player.getPlayerId();
             pobj.disband = true;
@@ -342,7 +346,9 @@ public class PartyRegistry
             mgr.addPlayer(player.playerName);
 
             // we're hosting this party so we send them to this same node
-            jl.foundParty(pobj.id, ServerConfig.serverHost, ServerConfig.serverPorts[0]);
+            //jl.foundParty(pobj.id, ServerConfig.serverHost, ServerConfig.serverPorts[0]);
+            // TODO(bruno): Send proper host/port
+            jl.foundParty(pobj.id, "thisneedschanging", 666);
 
         } catch (Exception e) {
             log.warning("Problem creating party", e);
@@ -380,7 +386,7 @@ public class PartyRegistry
         userObj.setParty(party);
 
         // then any place they may occupy
-        PlaceManager placeMan = _placeReg.getPlaceManager(userObj.getPlaceOid());
+        PlaceManager placeMan = _placeReg.getPlaceManager(((RoomPlace)userObj.location).sceneId);
         if (placeMan != null) {
             PlaceObject placeObj = placeMan.getPlaceObject();
             if (placeObj instanceof PartyPlaceObject) {

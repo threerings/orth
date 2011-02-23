@@ -10,7 +10,7 @@ import com.threerings.util.ActionScript;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
-import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.MediaDesc;
 
 @ActionScript(omit=true)
@@ -340,7 +340,7 @@ public class PartyObject extends DObject
      *
      * @return the reason for failure, or null if joinage may proceed.
      */
-    public String mayJoin (PlayerName player, boolean hasLeaderInvite)
+    public String mayJoin (OrthName player, boolean hasLeaderInvite)
     {
         if (peeps.size() >= PartyCodes.MAX_PARTY_SIZE) {
             return PartyCodes.E_PARTY_FULL;
