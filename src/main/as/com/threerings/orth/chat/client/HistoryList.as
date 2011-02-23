@@ -17,6 +17,11 @@ import com.threerings.util.Log;
 public class HistoryList
     implements ChatDisplay
 {
+    public function HistoryList (dir :OrthChatDirector)
+    {
+        _chatDir = dir;
+    }
+    
     /**
      * @return the current size of the history.
      */
@@ -67,6 +72,6 @@ public class HistoryList
     /** The array in which we store historical chat. */
     protected var _history :Array = [];
 
-    protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
+    protected var _chatDir :OrthChatDirector;
 }
 }

@@ -6,14 +6,20 @@ package com.threerings.orth.client {
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.display.Stage;
+import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 import flash.events.Event;
 import flash.geom.Rectangle;
 
 import flashx.funk.ioc.inject;
 
+import com.threerings.text.TextFieldUtil;
 import com.threerings.util.Log;
 
 import com.threerings.orth.chat.client.ChatInput;
+import com.threerings.orth.chat.client.ChatOverlay;
+import com.threerings.orth.chat.client.ComicOverlay;
+import com.threerings.orth.chat.client.OrthChatDirector;
 
 /**
  * Dispatched when the name of our current location changes. The value supplied will be a string
@@ -55,12 +61,19 @@ public class TopPanel extends Sprite
         // I don't know what's up with the 40 here. The bottom of the stage won't show.
         _controlBar.self().y = height - getControlBarHeight() - 40;
 
-        Log.getLog(this).info("ControlBar placed", "height", height - getControlBarHeight());
-
         addChild(_placeBox);
 
+        // show a subtle build-stamp on dev builds
+        if (_depConf.development) {
+            addChild(TextFieldUtil.createField(
+                    "Build: " + _depConf.buildTime + "\nVersion: " + _depConf.version,
+                { textColor: 0x0F7069A, selectable: false, wordWrap: false, x: 10, y: 10,
+                  width: 100, outlineColor: 0x000000, autoSize: TextFieldAutoSize.LEFT },
+                { font: "_sans", size: 8, bold: true }));
+        }
+
         // ORTH TODO: something like this here?
-        // _chatDir.addChatDisplay(_comicOverlay);
+        _chatDir.addChatDisplay(_comicOverlay);
 
         _stage.addEventListener(Event.RESIZE, stageResized);
 
@@ -102,9 +115,6 @@ public class TopPanel extends Sprite
     {
         _placeBox.setMainView(view);
         layoutPanels();
-
-        // ORTH TODO: Something like this?
-        // _comicOverlay.displayChat();
     }
 
     /**
@@ -169,8 +179,7 @@ public class TopPanel extends Sprite
         bottom += getControlBarHeight();
         h -= getControlBarHeight();
 
-        // ORTH TODO: Somethign like this?
-        // _comicOverlay.setTargetBounds(new Rectangle(0, 0, ChatOverlay.DEFAULT_WIDTH, h));
+        _comicOverlay.setTargetBounds(new Rectangle(0, 0, ChatOverlay.DEFAULT_WIDTH, h));
 
         // ORTH TODO: Find another way of doing this
 //        _placeBox.setStyle("top", top);
@@ -196,7 +205,9 @@ public class TopPanel extends Sprite
     protected const _stage :Stage = inject(Stage);
     protected const _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
     protected const _controlBar :ControlBar = inject(ControlBar);
-//    protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);
+    protected const _depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
+    protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);
+    protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
 
     protected var _width :Number
     protected var _height :Number;

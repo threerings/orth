@@ -43,9 +43,6 @@ public class OrthModule extends BindingModule
 
         // UI elements
         bind(ControlBar).asSingleton();
-        bind(ComicOverlay).asSingleton();
-        bind(OrthPlaceBox).asSingleton();
-        bind(TopPanel).asSingleton();
 
         // narya bits
         bind(MessageManager).asSingleton();
@@ -54,12 +51,26 @@ public class OrthModule extends BindingModule
     public function init () :void
     {
         var ctx :OrthContext = getInstance(OrthContext);
+
         didInit();
         ctx.didInit();
     }
 
     protected function didInit () :void
     {
+        // we instantiate these in explicit order so as to avoid a cyclic dependancy
+        var placeBox :OrthPlaceBox = getInstance(OrthPlaceBox);
+        bind(OrthPlaceBox).toInstance(placeBox);
+
+        // the ComicOverlay is configured with the OrthPlaceBox and injects OrthContext
+        var comicOverlay :ComicOverlay = getInstance(ComicOverlay);
+        comicOverlay.initComicOverlay(placeBox);
+        bind(ComicOverlay).toInstance(comicOverlay);
+
+        // and TopPanel injects ComicOverlay!
+        var topPanel :TopPanel = getInstance(TopPanel);
+        bind(TopPanel).toInstance(topPanel);
+
         // instantiate PlayerDirector
         getInstance(PlayerDirector);
     }

@@ -100,9 +100,12 @@ public class ChatOverlay
         return fmt;
     }
 
-    public function ChatOverlay (
-        target :LayeredContainer, scrollBarSide :int = SCROLL_BAR_LEFT,
-        includeOccupantList :Boolean = false)
+    public function ChatOverlay ()
+    {
+    }
+
+    public function initChatOverlay (target :LayeredContainer,
+        scrollBarSide :int = SCROLL_BAR_LEFT, includeOccupantList :Boolean = false) :void
     {
         _includeOccList = includeOccupantList;
         _scrollBarSide = scrollBarSide;
@@ -593,12 +596,12 @@ public class ChatOverlay
         if (type == BROADCAST || 
             (msg is SystemMessage && msg.localtype == ChatCodes.PLACE_CHAT_TYPE)) {
 
-            if (_ctx.wctx != null)
-            var body :OrthPlayerBody = _ctx.wctx.getPlayerBody();
-            if (body != null && body.getPlace() != null &&
-                OrthChatChannel.typeIsForRoom(msg.localtype)) {
-                return true;
-
+            if (_ctx.wctx != null) {
+                var body :OrthPlayerBody = _ctx.wctx.getPlayerBody();
+                if (body != null && body.getPlace() != null &&
+                    OrthChatChannel.typeIsForRoom(msg.localtype)) {
+                    return true;
+                }
             } else {
                 // in non-RoomContext we just watch for PLACE_CHAT_TYPE
                 if (_localtype == ChatCodes.PLACE_CHAT_TYPE) {

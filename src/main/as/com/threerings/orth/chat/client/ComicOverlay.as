@@ -13,8 +13,6 @@ import flash.geom.Rectangle;
 import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 
-import flashx.funk.ioc.inject;
-
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.Log;
 import com.threerings.util.Map;
@@ -31,7 +29,6 @@ import com.threerings.orth.chat.data.OrthChatChannel;
 import com.threerings.orth.world.data.OrthPlayerBody;
 import com.threerings.orth.client.LayeredContainer;
 import com.threerings.orth.client.OrthPlaceBox;
-import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.client.RoomContext;
 
@@ -48,7 +45,11 @@ public class ComicOverlay extends ChatOverlay
      */
     public function ComicOverlay ()
     {
-        super(inject(TopPanel));
+    }
+
+    public function initComicOverlay (target :LayeredContainer) :void
+    {
+        super.initChatOverlay(target);
 
         // overlay for chat that stays in a given place in the scene, and is therefore scrolled
         // with it.
@@ -72,7 +73,7 @@ public class ComicOverlay extends ChatOverlay
         _bubbles.clear();
         _allBubbles = [];
 
-        var overlays :Array = [ _scrollOverlay /*, _staticOverlay*/ ];
+        var overlays :Array = [ _scrollOverlay, _staticOverlay ];
         var layers :Array = [ OrthPlaceBox.LAYER_CHAT_SCROLL, OrthPlaceBox.LAYER_CHAT_STATIC ];
         for (var ii :int = 0; ii < overlays.length; ii++) {
             var contains :Boolean = _target.containsOverlay(overlays[ii]);

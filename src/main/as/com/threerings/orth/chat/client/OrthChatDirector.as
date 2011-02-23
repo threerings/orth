@@ -36,7 +36,7 @@ public class OrthChatDirector extends BasicDirector
     {
         super(inject(OrthContext));
 
-        _chatHistory = new HistoryList();
+        _chatHistory = new HistoryList(this);
         _bundle = _msgMgr.getBundle(OrthCodes.CHAT_MSGS);
     }
 
@@ -171,7 +171,6 @@ public class OrthChatDirector extends BasicDirector
     protected var _displays :ObserverList = new ObserverList();
 
     protected const _msgMgr :MessageManager = inject(MessageManager);
-    protected const _overlay :ComicOverlay = inject(ComicOverlay);
 
     private static const log :Log = Log.getLog(OrthChatDirector);
 }
