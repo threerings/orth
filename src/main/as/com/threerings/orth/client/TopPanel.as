@@ -57,7 +57,7 @@ public class TopPanel extends Sprite
 
         addChild(_controlBar.self());
         // I don't know what's up with the 40 here. The bottom of the stage won't show.
-        _controlBar.self().y = height - getControlBarHeight() - 40;
+        _controlBar.self().y = 500; // brutal
 
         addChild(_placeBox);
 
