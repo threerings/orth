@@ -3,6 +3,8 @@
 
 package com.threerings.orth.chat.client {
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.crowd.chat.client.ChatDisplay;
 
 import com.threerings.crowd.chat.data.ChatMessage;
@@ -15,11 +17,6 @@ import com.threerings.util.Log;
 public class HistoryList
     implements ChatDisplay
 {
-    public function HistoryList (chatDir :OrthChatDirector)
-    {
-        _chatDir = chatDir;
-    }
-
     /**
      * @return the current size of the history.
      */
@@ -67,9 +64,9 @@ public class HistoryList
     /** The number of history entries we'll prune when we hit the max. */
     protected static const PRUNE_HISTORY :int = 100;
 
-    protected var _chatDir :OrthChatDirector;
-
     /** The array in which we store historical chat. */
     protected var _history :Array = [];
+
+    protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
 }
 }

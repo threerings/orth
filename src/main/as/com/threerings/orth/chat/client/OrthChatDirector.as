@@ -5,6 +5,7 @@ package com.threerings.orth.chat.client {
 
 import flashx.funk.ioc.inject;
 
+import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.BasicDirector;
@@ -12,6 +13,7 @@ import com.threerings.presents.client.InvocationAdapter;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 
+import com.threerings.orth.chat.client.HistoryList;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.data.Speak;
@@ -24,6 +26,8 @@ public class OrthChatDirector extends BasicDirector
     public function OrthChatDirector ()
     {
         super(inject(OrthContext));
+
+        _chatHistory = new HistoryList();
     }
 
     /** Some code somewhere (e.g. a chat input control) wants us to speak in our room. */
@@ -37,6 +41,17 @@ public class OrthChatDirector extends BasicDirector
 
         // else invoke
         _place.getSpeakService().speak(msg, new InvocationAdapter(failure));
+    }
+
+    public function getHistoryList () :HistoryList
+    {
+        return _chatHistory;
+    }
+
+    /** This can be made to do something real if we implement tabbed chatting. */
+    public function getCurrentLocalType () :String
+    {
+        return ChatCodes.PLACE_CHAT_TYPE;
     }
 
     public function enteredLocation (place :SpeakObject) :void
@@ -77,6 +92,7 @@ public class OrthChatDirector extends BasicDirector
     }
 
     protected var _place :SpeakObject;
+    protected var _chatHistory :HistoryList;
 
     private static const log :Log = Log.getLog(OrthChatDirector);
 }

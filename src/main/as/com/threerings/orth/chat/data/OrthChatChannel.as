@@ -94,7 +94,7 @@ public class OrthChatChannel extends ChatChannel
     /**
      * Returns true if the localType matches a room channel with the given scene id.
      */
-    public static function typeIsForRoom (localType :String, sceneId :int) :Boolean
+    public static function typeIsForRoom (localType :String) :Boolean
     {
         return localType == ChatCodes.PLACE_CHAT_TYPE;
     }

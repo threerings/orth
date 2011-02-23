@@ -3,14 +3,12 @@
 
 package com.threerings.orth.chat.client {
 
+import flash.display.Sprite;
 import flash.events.MouseEvent;
 
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
-
-import mx.core.Application;
-import mx.managers.PopUpManager;
 
 import flashx.funk.ioc.inject;
 
@@ -73,20 +71,22 @@ public class SubtitleGlyph extends ChatGlyph
         if (thumbnail != null && thumbsEnabled) {
             _pop = MediaWrapper.createView(thumbnail);
             _pop.x = event.stageX + 10;
-            _pop.y = event.stageY - (_pop.height/2);
-            PopUpManager.addPopUp(_pop, inject(Application), false);
-            PopUpUtil.fit(_pop);
+           _pop.y = event.stageY - (_pop.height/2);
+// ORTH TODO - find a non-Flex replacement for Popups?
+//            PopUpManager.addPopUp(_pop, inject(Application), false);
+//            PopUpUtil.fit(_pop);
         }
     }
 
     protected function handleRollOut (event :MouseEvent) :void
     {
         if (_pop != null) {
-            PopUpManager.removePopUp(_pop);
+// ORTH TODO - find a non-Flex replacement for Popups?
+//            PopUpManager.removePopUp(_pop);
             _pop = null;
         }
     }
 
-    protected var _pop :MediaWrapper;
+    protected var _pop :Sprite;
 }
 }
