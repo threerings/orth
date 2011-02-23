@@ -5,10 +5,13 @@ package com.threerings.orth.chat.client {
 
 import flashx.funk.ioc.inject;
 
+import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.util.Log;
+import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
+import com.threerings.util.ObserverList;
 
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
@@ -47,7 +50,10 @@ public class OrthChatDirector extends BasicDirector
         }
 
         // else invoke
-        _place.getSpeakService().speak(msg, new InvocationAdapter(failure));
+        _place.getSpeakService().speak(msg, new InvocationAdapter(function (cause :String) :void {
+            log.error("Speak request failed", "cause", cause);
+        }));
+
     }
 
     public function getHistoryList () :HistoryList
@@ -59,6 +65,33 @@ public class OrthChatDirector extends BasicDirector
     public function getCurrentLocalType () :String
     {
         return ChatCodes.PLACE_CHAT_TYPE;
+    }
+
+    /**
+     * Adds the supplied chat display to the front of the chat display list. It will subsequently
+     * be notified of incoming chat messages as well as tell responses.
+     */
+    public function pushChatDisplay (display :ChatDisplay) :void
+    {
+        _displays.add(display, 0);
+    }
+
+    /**
+     * Adds the supplied chat display to the chat display list. It will subsequently be notified of
+     * incoming chat messages as well as tell responses.
+     */
+    public function addChatDisplay (display :ChatDisplay) :void
+    {
+        _displays.add(display);
+    }
+
+    /**
+     * Removes the specified chat display from the chat display list. The display will no longer
+     * receive chat related notifications.
+     */
+    public function removeChatDisplay (display :ChatDisplay) :void
+    {
+        _displays.remove(display);
     }
 
     public function enteredLocation (place :SpeakObject) :void
@@ -102,7 +135,7 @@ public class OrthChatDirector extends BasicDirector
             msg.setClientInfo(_bundle.xlate(speak.message), ChatCodes.PLACE_CHAT_TYPE);
         }
 
-        _layer.displayMessage(msg);
+        dispatchPreparedMessage(msg);
     }
 
     // from BasicDirector
@@ -122,14 +155,20 @@ public class OrthChatDirector extends BasicDirector
         }
     }
 
-    protected function failure (cause :String) :void
+    protected function dispatchPreparedMessage (message :ChatMessage) :void
     {
-        log.error("Speak request failed", "cause", cause);
+        _displays.apply(function (disp :ChatDisplay) :void {
+            disp.displayMessage(message);
+        });
     }
 
     protected var _clobj :ClientObject;
     protected var _place :SpeakObject;
     protected var _chatHistory :HistoryList;
+    protected var _bundle :MessageBundle;
+
+    /** A list of registered chat displays. */
+    protected var _displays :ObserverList = new ObserverList();
 
     protected static const _msgMgr :MessageManager = inject(MessageManager);
     protected static const _overlay :ComicOverlay = inject(ComicOverlay);
