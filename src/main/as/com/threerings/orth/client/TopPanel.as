@@ -78,9 +78,6 @@ public class TopPanel extends Sprite
         _stage.addEventListener(Event.RESIZE, stageResized);
 
         setMainView(getBlankPlaceView());
-
-        // ORTH TODO - Quick hack to test chatting
-        addChild(new ChatInput(150));
     }
 
     /**
@@ -177,7 +174,7 @@ public class TopPanel extends Sprite
         var h :int = _height;
 
         bottom += getControlBarHeight();
-        h -= getControlBarHeight();
+        h -= getControlBarHeight() + 80; // this number is bullshit, figure it out
 
         _comicOverlay.setTargetBounds(new Rectangle(0, 0, ChatOverlay.DEFAULT_WIDTH, h));
 
