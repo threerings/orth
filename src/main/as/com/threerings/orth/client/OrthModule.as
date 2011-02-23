@@ -12,6 +12,7 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.PlayerDirector;
+import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.client.OrthChatDirector;
 
 /**
@@ -42,6 +43,7 @@ public class OrthModule extends BindingModule
 
         // UI elements
         bind(ControlBar).asSingleton();
+        bind(ComicOverlay).asSingleton();
         bind(OrthPlaceBox).asSingleton();
         bind(TopPanel).asSingleton();
 
