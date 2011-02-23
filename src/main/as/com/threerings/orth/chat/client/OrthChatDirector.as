@@ -6,7 +6,9 @@ package com.threerings.orth.chat.client {
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.chat.data.ChatCodes;
+import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.util.Log;
+import com.threerings.util.MessageManager;
 
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
@@ -21,6 +23,7 @@ import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.Tell;
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.client.OrthContext;
 
 public class OrthChatDirector extends BasicDirector
@@ -31,6 +34,7 @@ public class OrthChatDirector extends BasicDirector
         super(inject(OrthContext));
 
         _chatHistory = new HistoryList();
+        _bundle = _msgMgr.getBundle(OrthCodes.CHAT_MSGS);
     }
 
     /** Some code somewhere (e.g. a chat input control) wants us to speak in our room. */
@@ -80,13 +84,25 @@ public class OrthChatDirector extends BasicDirector
     // from MessageListener
     public function messageReceived (event :MessageEvent) :void
     {
+        var msg :ChatMessage = new ChatMessage();
+
+        // ORTH TODO: for now, we have our own Tell and Speak objects from our rewrite,
+        // but the ChatMessage-based approach of the rendering code (from Whirled). When
+        // I did my from-scratch rewrite I wanted to be clear about not using any of the
+        // crowd stuff, and I still think that is cleaner, but then again it's perhaps a
+        // little silly to create near-exact duplicates of lots of useful data classes.
+        // We should decide to go one way or another rather than "convert" here.
         var value :Object = event.getArgs()[0];
         if (OrthChatCodes.TELL_MSG_TYPE == event.getName()) {
-            log.info("TELL()", "tell", Tell(value));
+            var tell :Tell = Tell(value);
+            msg.setClientInfo(_bundle.xlate(tell.message), ChatCodes.USER_CHAT_TYPE);
 
         } else if (OrthChatCodes.SPEAK_MSG_TYPE == event.getName()) {
-            log.info("SPEAK()", "speak", Speak(value));
-        }            
+            var speak :Speak = Speak(value);
+            msg.setClientInfo(_bundle.xlate(speak.message), ChatCodes.PLACE_CHAT_TYPE);
+        }
+
+        _layer.displayMessage(msg);
     }
 
     // from BasicDirector
@@ -114,6 +130,9 @@ public class OrthChatDirector extends BasicDirector
     protected var _clobj :ClientObject;
     protected var _place :SpeakObject;
     protected var _chatHistory :HistoryList;
+
+    protected static const _msgMgr :MessageManager = inject(MessageManager);
+    protected static const _overlay :ComicOverlay = inject(ComicOverlay);
 
     private static const log :Log = Log.getLog(OrthChatDirector);
 }
