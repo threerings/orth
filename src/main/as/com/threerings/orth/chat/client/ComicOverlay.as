@@ -212,7 +212,7 @@ public class ComicOverlay extends ChatOverlay
 
     override protected function getOverlays () :Array
     {
-        return super.getOverlays().concat(_scrollOverlay /*, _staticOverlay*/);
+        return super.getOverlays().concat(_scrollOverlay, _staticOverlay);
     }
 
     /**
@@ -316,7 +316,7 @@ public class ComicOverlay extends ChatOverlay
             _scrollOverlay.addChild(bubble);
         } else {
             log.warning("Do not have a static overlay anymore!");
-            //_staticOverlay.addChild(bubble);
+            _staticOverlay.addChild(bubble);
         }
         _allBubbles.unshift(bubble);
 
