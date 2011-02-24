@@ -1,8 +1,8 @@
+// GENERATED PREAMBLE START
 //
 // $Id$
 
 package com.threerings.orth.room.data {
-
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.data.SceneUpdate;
 
@@ -11,21 +11,39 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.util.Name;
 
-/**
- */
+// GENERATED PREAMBLE END
+// GENERATED CLASSDECL START
 public class SceneOwnershipUpdate extends SceneUpdate
 {
-    /** The new owner type. */
+// GENERATED CLASSDECL END
+// GENERATED STREAMING START
     public var ownerType :int;
 
-    /** The new owner id. */
     public var ownerId :int;
 
-    /** The new owner name. */
     public var ownerName :Name;
 
-    /** If true, the accessControl is set to ACCESS_OWNER_ONLY. */
     public var lockToOwner :Boolean;
+
+    override public function readObject (ins :ObjectInputStream) :void
+    {
+        super.readObject(ins);
+        ownerType = ins.readByte();
+        ownerId = ins.readInt();
+        ownerName = ins.readObject(Name);
+        lockToOwner = ins.readBoolean();
+    }
+
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+        out.writeByte(ownerType);
+        out.writeInt(ownerId);
+        out.writeObject(ownerName);
+        out.writeBoolean(lockToOwner);
+    }
+
+// GENERATED STREAMING END
 
     override public function apply (model :SceneModel) :void
     {
@@ -40,24 +58,7 @@ public class SceneOwnershipUpdate extends SceneUpdate
         }
     }
 
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        super.writeObject(out);
-
-        out.writeByte(ownerType);
-        out.writeInt(ownerId);
-        out.writeObject(ownerName);
-        out.writeBoolean(lockToOwner);
-    }
-
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-
-        ownerType = ins.readByte();
-        ownerId = ins.readInt();
-        ownerName = Name(ins.readObject());
-        lockToOwner = ins.readBoolean();
-    }
+// GENERATED CLASSFINISH START
 }
 }
+// GENERATED CLASSFINISH END
