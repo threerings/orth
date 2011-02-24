@@ -3,6 +3,8 @@
 
 package com.threerings.orth.notify.client {
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.crowd.client.CrowdClient;
 
 import com.threerings.util.Name;
@@ -15,22 +17,23 @@ import com.threerings.presents.client.ClientAdapter;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
-import com.threerings.presents.util.PresentsContext;
 
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.notify.data.GenericNotification;
 import com.threerings.orth.notify.data.Notification;
 
 public class NotificationDirector extends BasicDirector
     implements MessageListener
 {
-    public function NotificationDirector (ctx :PresentsContext, notificationName :String)
+    public function NotificationDirector ()
     {
-        super(ctx);
+        super(_octx);
 
-        _notificationName = notificationName;
+        // TODO(bruno): Have this be an injected arg
+        _notificationName = "XXX";
 
         // clear our display if we lose connection to the server
-        ctx.getClient().addClientObserver(new ClientAdapter(null, null, null, null, null,
+        _octx.getClient().addClientObserver(new ClientAdapter(null, null, null, null, null,
             clearNotifications, null, null));
     }
 
@@ -146,5 +149,7 @@ public class NotificationDirector extends BasicDirector
     protected var _notificationName :String;
 
     protected var _didStartupNotifs :Boolean;
+
+    protected var _octx :OrthContext = inject(OrthContext);
 }
 }

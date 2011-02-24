@@ -9,7 +9,6 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.util.Comparable;
-import com.threerings.util.Comparators;
 
 import com.threerings.orth.party.data.PartyInfo;
 import com.threerings.orth.party.data.PartySummary;

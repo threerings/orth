@@ -10,11 +10,9 @@ import flashx.funk.ioc.inject;
 import mx.core.UIComponent;
 
 import com.threerings.crowd.client.LocationAdapter;
-import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.CommandMenu;
-import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.data.Scene;
 
 import com.threerings.util.DelayUtil;
@@ -44,6 +42,9 @@ import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyDetail;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
+import com.threerings.orth.room.data.RoomKey;
+import com.threerings.orth.room.data.RoomPlace;
+import com.threerings.orth.world.client.WorldDirector;
 
 /**
  * Manages party stuff on the client.
@@ -80,13 +81,12 @@ public class PartyDirector extends BasicDirector
         Object(label).text = Msgs.PARTY.get("m.status_" + statusType, status);
     }
 
-    public function PartyDirector (ctx :OrthContext)
+    public function PartyDirector ()
     {
-        super(ctx);
+        super(_octx);
 
-        _octx = ctx;
-
-        _locDir.addLocationObserver(new LocationAdapter(null, locationDidChange, null));
+        // TODO(bruno): Enable
+        //_locDir.addLocationObserver(new LocationAdapter(null, locationDidChange, null));
     }
 
     /**
@@ -293,7 +293,7 @@ public class PartyDirector extends BasicDirector
     protected function checkFollowScene () :void
     {
         if (_partyObj.sceneId != 0) {
-            _sceneDir.moveTo(_partyObj.sceneId);
+            _worldDir.moveTo(new RoomKey(_partyObj.sceneId));
         }
     }
 
@@ -416,10 +416,9 @@ public class PartyDirector extends BasicDirector
     {
         // if we're the leader of the party, change the party's location when we move
         if (isPartyLeader()) {
-            var scene :Scene = _sceneDir.getScene();
-            var sceneId :int = (scene == null) ? 0 : scene.getId();
-            if (sceneId != _partyObj.sceneId) {
-                _partyObj.partyService.moveParty(sceneId, _octx.listener(OrthCodes.PARTY_MSGS));
+            var room :RoomPlace = _octx.wctx.getPlayerBody().getPlace() as RoomPlace;
+            if (room != null && room.sceneId != _partyObj.sceneId) {
+                _partyObj.partyService.moveParty(room.sceneId, _octx.listener(OrthCodes.PARTY_MSGS));
             }
         }
     }
@@ -495,11 +494,10 @@ public class PartyDirector extends BasicDirector
         //return WorldControlBar(_octx.getControlBar()).partyBtn;
     }
 
-    protected const _notDir :NotificationDirector = inject(NotificationDirector);
-    protected const _sceneDir :SceneDirector = inject(SceneDirector);
-    protected const _locDir :LocationDirector = inject(LocationDirector);
+    protected var _notDir :NotificationDirector = inject(NotificationDirector);
+    protected var _worldDir :WorldDirector = inject(WorldDirector);
 
-    protected var _octx :OrthContext;
+    protected var _octx :OrthContext = inject(OrthContext);
 
     protected var _pbsvc :PartyBoardService;
 
