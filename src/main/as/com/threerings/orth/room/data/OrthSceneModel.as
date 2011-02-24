@@ -3,7 +3,7 @@
 // $Id$
 
 package com.threerings.orth.room.data {
-import com.threerings.orth.entity.data.DecorData;
+
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.spot.data.Portal;
 
@@ -18,6 +18,9 @@ import com.threerings.util.Map;
 import com.threerings.util.Maps;
 import com.threerings.util.Name;
 import com.threerings.util.Short;
+
+import com.threerings.orth.entity.data.DecorData;
+import com.threerings.orth.room.data.OrthLocation;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
@@ -57,8 +60,6 @@ public class OrthSceneModel extends SceneModel
 
     public var entrance :OrthLocation;
 
-    public var decorIdent :EntityIdent;
-
     public var decor :DecorData;
 
     override public function readObject (ins :ObjectInputStream) :void
@@ -70,7 +71,6 @@ public class OrthSceneModel extends SceneModel
         ownerName = ins.readObject(Name);
         furnis = ins.readObject(TypedArray);
         entrance = ins.readObject(OrthLocation);
-        decorIdent = ins.readObject(EntityIdent);
         decor = ins.readObject(DecorData);
     }
 
@@ -83,7 +83,6 @@ public class OrthSceneModel extends SceneModel
         out.writeObject(ownerName);
         out.writeObject(furnis);
         out.writeObject(entrance);
-        out.writeObject(decorIdent);
         out.writeObject(decor);
     }
 
