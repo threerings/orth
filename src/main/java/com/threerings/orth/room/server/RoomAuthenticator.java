@@ -12,6 +12,7 @@ import com.threerings.presents.server.ChainedAuthenticator;
 
 import com.threerings.presents.server.net.AuthingConnection;
 
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.OrthAuthCodes;
 
 import com.threerings.orth.room.data.RoomCredentials;
@@ -31,7 +32,8 @@ public class RoomAuthenticator extends ChainedAuthenticator
         if (player == null) {
             throw new AuthException(OrthAuthCodes.SESSION_EXPIRED);
         }
-        conn.setAuthName(new RoomAuthName(player.getPlayerName(), player.getPlayerId()));
+        PlayerName name = player.getPlayerName();
+        conn.setAuthName(new RoomAuthName(name.toString(), name.getId()));
         rsp.getData().code = AuthResponseData.SUCCESS;
     }
 
