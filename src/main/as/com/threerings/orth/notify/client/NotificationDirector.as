@@ -29,9 +29,6 @@ public class NotificationDirector extends BasicDirector
     {
         super(_octx);
 
-        // TODO(bruno): Have this be an injected arg
-        _notificationName = "XXX";
-
         // clear our display if we lose connection to the server
         _octx.getClient().addClientObserver(new ClientAdapter(null, null, null, null, null,
             clearNotifications, null, null));
@@ -62,6 +59,16 @@ public class NotificationDirector extends BasicDirector
     public function getCurrentNotifications () :Array
     {
         return _notifications.toArray();
+    }
+
+    public function get notificationName () :String
+    {
+        return _notificationName;
+    }
+
+    public function set notificationName (notificationName :String) :void
+    {
+        _notificationName = notificationName;
     }
 
     // from interface MessageListener

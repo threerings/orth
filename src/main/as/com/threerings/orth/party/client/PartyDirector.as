@@ -85,6 +85,8 @@ public class PartyDirector extends BasicDirector
     {
         super(_octx);
 
+        _notDir.notificationName = PartyObject.NOTIFICATION;
+
         // TODO(bruno): Enable
         //_locDir.addLocationObserver(new LocationAdapter(null, locationDidChange, null));
     }

@@ -26,6 +26,10 @@ public class PartyObject extends DObject
 {
 // GENERATED CLASSDECL END
 
+    /** A message sent to indicate a notification that should be dispatched to all partiers.
+     * Format: [ Notification ]. */
+    public static const NOTIFICATION :String = "notification";
+
 // GENERATED STREAMING START
     public var id :int;
 
