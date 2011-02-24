@@ -3,7 +3,6 @@
 
 package com.threerings.orth.client {
 
-import flash.display.DisplayObject;
 import flash.display.Sprite;
 
 /**

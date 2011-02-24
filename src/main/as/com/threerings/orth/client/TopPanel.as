@@ -8,15 +8,10 @@ import flash.display.Sprite;
 import flash.display.Stage;
 import flash.events.Event;
 import flash.geom.Rectangle;
-import flash.text.TextField;
-import flash.text.TextFieldAutoSize;
 
 import flashx.funk.ioc.inject;
 import flashx.funk.util.isAbstract;
 
-import com.threerings.text.TextFieldUtil;
-
-import com.threerings.orth.chat.client.ChatOverlay;
 import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.client.ControlBar;

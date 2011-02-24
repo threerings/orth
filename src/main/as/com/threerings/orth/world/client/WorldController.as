@@ -2,8 +2,6 @@
 // $Id: WorldController.as 19431 2010-10-22 22:08:36Z zell $
 
 package com.threerings.orth.world.client {
-import com.threerings.orth.chat.client.OrthChatDirector;
-
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.events.Event;
@@ -42,6 +40,7 @@ import com.threerings.presents.client.ClientObserver;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
