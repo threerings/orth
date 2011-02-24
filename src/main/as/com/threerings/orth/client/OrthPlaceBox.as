@@ -102,8 +102,6 @@ public class OrthPlaceBox extends LayeredContainer
         _width = width;
         _height = height;
 
-        log.info("setActualSize()", "width", width, "height", height);
-
         setMasked(this, 0, 0, width, height);
 
         // any PlaceLayer layers get informed of the size change
