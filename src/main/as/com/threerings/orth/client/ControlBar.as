@@ -4,6 +4,7 @@
 package com.threerings.orth.client {
 
 import flash.display.DisplayObject;
+import flash.display.Sprite;
 
 /**
  * The control bar: the main menu and global UI element across the application
@@ -11,7 +12,7 @@ import flash.display.DisplayObject;
 public interface ControlBar
 {
     /** Return a casted version of yourself for convenience. */
-    function self () :DisplayObject;
+    function asSprite () :Sprite;
 
     /** Return the number of pixels the bar needs to take up. */
     function getBarHeight () :Number;
