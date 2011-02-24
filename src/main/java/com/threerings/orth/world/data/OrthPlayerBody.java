@@ -4,7 +4,6 @@
 package com.threerings.orth.world.data;
 
 import com.threerings.orth.data.OrthPlayer;
-import com.threerings.presents.dobj.DObject;
 
 /**
  * Implemented by any body that can represent an Orth player's body in an {@link OrthPlace}.

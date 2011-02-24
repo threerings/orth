@@ -9,8 +9,6 @@ import com.threerings.util.ActionScript;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.peer.data.NodeObject;
 
-import com.threerings.crowd.peer.data.CrowdNodeObject;
-
 import com.threerings.orth.party.data.MemberParty;
 import com.threerings.orth.party.data.PartyInfo;
 import com.threerings.orth.party.data.PartySummary;

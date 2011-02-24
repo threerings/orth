@@ -4,8 +4,6 @@
 package com.threerings.orth.chat.client;
 
 import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.client.InvocationService.ConfirmListener;
-
 import com.threerings.orth.aether.data.PlayerName;
 
 /**

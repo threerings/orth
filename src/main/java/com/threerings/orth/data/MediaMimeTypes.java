@@ -60,7 +60,7 @@ public abstract class MediaMimeTypes
             return IMAGE_PNG;
         } else if (mimeType.equals("image/jpeg")) {
             return IMAGE_JPEG;
-        } else if (mimeType.equals("image/gif")) { // 
+        } else if (mimeType.equals("image/gif")) { //
             return IMAGE_GIF;
         } else if (mimeType.equals("audio/mpeg")) {
             return AUDIO_MPEG;

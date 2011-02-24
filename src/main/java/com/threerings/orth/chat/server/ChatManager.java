@@ -39,7 +39,7 @@ public class ChatManager
 
     /**
      * Called when a new {@link SpeakObject} comes into existence and needs speaking to
-     * work through it. The returned provider 
+     * work through it. The returned provider
      */
     public SpeakMarshaller registerSpeakObject (SpeakObject speakObj)
     {

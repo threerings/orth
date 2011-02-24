@@ -5,8 +5,6 @@ package com.threerings.orth.party.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.util.ActionScript;
-
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 

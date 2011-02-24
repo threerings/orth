@@ -37,7 +37,7 @@
   <target name="preptools" depends="prepare">
     <mavendep id="tools">
       <artifact:remoteRepository refid="ooo.maven.depends.repo"/>
-      <artifact:dependency groupId="com.threerings" artifactId="narya-tools" version="1.5-SNAPSHOT"/>
+      <artifact:dependency groupId="com.threerings" artifactId="narya-tools" version="1.7-SNAPSHOT"/>
     </mavendep>
     <taskdef resource="com/threerings/presents/tools.properties" classpathref="tools.path"/>
   </target>
@@ -202,7 +202,7 @@
       <exclude name="**/InvocationReceiver.java"/>
     </ooojavac>
     <!-- now generate the associated files -->
-    <genreceiver header="lib/SOURCE_HEADER" classpathref="build.classpath">
+    <genreceiver header="lib/SOURCE_HEADER" classpathref="build.classpath" asroot="src/main/as">
       <fileset dir="${src.dir}" includes="**/*Receiver.java"
         excludes="**/InvocationReceiver.java"/>
     </genreceiver>
