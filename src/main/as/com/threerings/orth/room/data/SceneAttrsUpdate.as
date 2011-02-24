@@ -2,7 +2,7 @@
 // $Id: SceneAttrsUpdate.as 18590 2009-11-05 10:09:48Z jamie $
 
 package com.threerings.orth.room.data {
-
+import com.threerings.orth.entity.data.DecorData;
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.data.SceneUpdate;
 
@@ -26,7 +26,7 @@ public class SceneAttrsUpdate extends SceneUpdate
     public var accessControl :int;
 
     /** Full description of the new decor. */
-    public var decor :Decor;
+    public var decor :DecorData;
 
     /** The new entrance location. */
     public var entrance :OrthLocation;
