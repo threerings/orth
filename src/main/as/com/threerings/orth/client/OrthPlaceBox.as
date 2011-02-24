@@ -93,9 +93,6 @@ public class OrthPlaceBox extends LayeredContainer
     /**
      * This must be called on when our size is changed to allow us update our MainView mask and
      * resize the MainView itself.
-     *
-     * ORTH TODO: This was automatically called when Flex did the layout; now we shall have to
-     * call it manually, or else change things around more substantially.
      */
     public function setActualSize (width :Number, height :Number) :void
     {
