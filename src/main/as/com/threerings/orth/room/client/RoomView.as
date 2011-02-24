@@ -61,6 +61,15 @@ public class RoomView extends Sprite
     /** Logging facilities. */
     protected static const log :Log = Log.getLog(RoomView);
 
+    /** Fixed height of 500 (if available). */
+    public static const LETTERBOX :String = "letter_box";
+
+    /** Scale up or down to consume all height available. */
+    public static const FULL_HEIGHT :String = "full_height";
+
+    /** Fit the width of the room in the width of the view. */
+    public static const FIT_WIDTH :String = "fit_width";
+
     /**
      * Constructor.
      */
@@ -1150,15 +1159,6 @@ public class RoomView extends Sprite
 
     /** The maximum number of pixels to autoscroll per frame. */
     protected static const MAX_AUTO_SCROLL :int = 15;
-
-    /** Fixed height of 500 (if available). */
-    protected static const LETTERBOX :String = "letter_box";
-
-    /** Scale up or down to consume all height available. */
-    protected static const FULL_HEIGHT :String = "full_height";
-
-    /** Fit the width of the room in the width of the view. */
-    protected static const FIT_WIDTH :String = "fit_width";
 }
 }
 
