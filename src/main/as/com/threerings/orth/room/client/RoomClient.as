@@ -9,8 +9,10 @@ import com.threerings.presents.net.Credentials;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherAuthResponseData;
+import com.threerings.orth.client.Prefs;
 import com.threerings.orth.entity.data.AvatarData;
 import com.threerings.orth.entity.data.DecorData;
+import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.OrthRoomConfig;
 import com.threerings.orth.room.data.RoomAuthName;
 import com.threerings.orth.room.data.RoomCredentials;
@@ -27,6 +29,8 @@ public class RoomClient extends WorldClient
     public function RoomClient ()
     {
         super();
+
+        Prefs.setRoomZoom(RoomView.FULL_HEIGHT);
     }
 
     override protected function buildCredentials () :Credentials
