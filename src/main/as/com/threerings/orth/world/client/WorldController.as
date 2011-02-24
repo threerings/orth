@@ -581,7 +581,7 @@ public class WorldController extends Controller
         menu.setTriggerButton(trigger);
         var r :Rectangle = trigger.getBounds(trigger.stage);
         var y :int;
-        y = Math.min(r.top, _controlBar.self().localToGlobal(new Point()).y);
+        y = Math.min(r.top, _controlBar.asSprite().localToGlobal(new Point()).y);
 
         menu.addEventListener(MenuEvent.MENU_SHOW, handleShowMenu);
         menu.addEventListener(MenuEvent.MENU_HIDE, handleHideMenu);
