@@ -37,8 +37,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/as" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/src/main/as/com/threerings/orth/party" />
-      <excludeFolder url="file://$MODULE_DIR$/src/main/java/com/threerings/orth/party" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
