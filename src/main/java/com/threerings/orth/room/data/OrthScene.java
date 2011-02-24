@@ -97,13 +97,6 @@ public class OrthScene extends SceneImpl
     {
         return _orthModel.entrance;
     }
-    /**
-     * Retrieve the decor item reference.
-     */
-    public EntityIdent getDecorIdent ()
-    {
-        return _orthModel.decorIdent;
-    }
 
     /**
      * Retrieve the decor geometry information.

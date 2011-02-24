@@ -16,6 +16,7 @@ import com.threerings.orth.data.MediaMimeTypes;
 import com.threerings.orth.data.URLMediaDesc;
 
 import com.threerings.orth.entity.data.Decor;
+import com.threerings.orth.entity.data.DecorData;
 
 import static com.threerings.orth.Log.log;
 
@@ -59,11 +60,8 @@ public class OrthSceneModel extends SceneModel
     /** The entrance location. */
     public OrthLocation entrance;
 
-    /** Decor item reference. */
-    public EntityIdent decorIdent;
-
     /** Decor information. */
-    public Decor decor;
+    public DecorData decor;
 
     public OrthSceneModel ()
     {
