@@ -2,6 +2,7 @@
 // $Id: WorldController.as 19431 2010-10-22 22:08:36Z zell $
 
 package com.threerings.orth.world.client {
+import com.threerings.orth.chat.client.OrthChatDirector;
 
 import flash.display.DisplayObject;
 import flash.display.Stage;
@@ -253,9 +254,8 @@ public class WorldController extends Controller
         var menuData :Array = [];
         menuData.push({ label: Msgs.GENERAL.get("b.chatPrefs"), command: CHAT_PREFS });
 
-        // ORTH TODO
-//        menuData.push({ label: Msgs.GENERAL.get("b.clearChat"),
-//            callback: _chatDir.clearAllDisplays });
+        menuData.push({ label: Msgs.GENERAL.get("b.clearChat"),
+            callback: _chatDir.clearDisplays });
         CommandMenu.addSeparator(menuData);
 
         menuData.push({ command: TOGGLE_CHAT_HIDE, label: Msgs.GENERAL.get(
@@ -653,8 +653,7 @@ public class WorldController extends Controller
 
     protected const _rsrc :OrthResourceFactory = inject(OrthResourceFactory);
 
-    // ORTH TODO
-    // protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
+    protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
     // protected const _partyDir :OrthPartyDirector = inject(OrthPartyDirector);
 
     /** A scene to which to go after we logon. */
