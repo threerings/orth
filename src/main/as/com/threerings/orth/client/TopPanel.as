@@ -12,12 +12,15 @@ import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 
 import flashx.funk.ioc.inject;
+import flashx.funk.util.isAbstract;
 
 import com.threerings.text.TextFieldUtil;
 
 import com.threerings.orth.chat.client.ChatOverlay;
 import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.client.OrthChatDirector;
+import com.threerings.orth.client.ControlBar;
+import com.threerings.orth.client.OrthPlaceBox;
 
 /**
  * Dispatched when the name of our current location changes. The value supplied will be a string
@@ -46,44 +49,27 @@ public class TopPanel extends Sprite
     public function TopPanel ()
     {
         _width = _stage.stageWidth;
-        _height = _stage.stageHeight;
+        _height = 500 + _controlBar.getBarHeight();
 
-        var stretch :Sprite = new Sprite();
-        stretch.alpha = 0.1;
-        stretch.graphics.beginFill(0xFF5511);
-        stretch.graphics.drawRect(0, 0, _width, _height);
-        stretch.graphics.endFill();
-        this.addChild(stretch);
+        // var stretch :Sprite = new Sprite();
+        // stretch.alpha = 0.2;
+        // stretch.graphics.beginFill(0xFF5511);
+        // stretch.graphics.drawRect(0, 0, _width, _height);
+        // stretch.graphics.endFill();
+        // this.addChild(stretch);
 
-        addChild(_controlBar.self());
-        // I don't know what's up with the 40 here. The bottom of the stage won't show.
-        _controlBar.self().y = 500; // brutal
+        this.addChild(_placeBox);
+        this.addChild(_controlBar.asSprite());
 
-        addChild(_placeBox);
+        configureUI(_placeBox, _controlBar.asSprite());
 
-        // show a subtle build-stamp on dev builds
-        if (_depConf.development) {
-            addChild(TextFieldUtil.createField(
-                    "Build: " + _depConf.buildTime + "\nVersion: " + _depConf.version,
-                { textColor: 0x0F7069A, selectable: false, wordWrap: false, x: 10, y: 10,
-                  width: 100, outlineColor: 0x000000, autoSize: TextFieldAutoSize.LEFT },
-                { font: "_sans", size: 8, bold: true }));
-        }
-
-        // ORTH TODO: something like this here?
         _chatDir.addChatDisplay(_comicOverlay);
 
-        _stage.addEventListener(Event.RESIZE, stageResized);
+        _stage.addEventListener(Event.RESIZE, function (event :Event) :void {
+            needsLayout();
+        });
 
         setMainView(getBlankPlaceView());
-    }
-
-    /**
-     * Gets the height of the area at the bottom of the screen that contains the control bar.
-     */
-    public function getControlBarHeight () :Number
-    {
-        return _controlBar.getBarHeight();
     }
 
     /**
@@ -109,7 +95,7 @@ public class TopPanel extends Sprite
     public function setMainView (view :DisplayObject) :void
     {
         _placeBox.setMainView(view);
-        layoutPanels();
+        needsLayout();
     }
 
     /**
@@ -123,66 +109,35 @@ public class TopPanel extends Sprite
     }
 
     /**
-     * Returns the location and dimensions of the place view in relation to the entire stage.
-     */
-    public function getPlaceViewBounds () :Rectangle
-    {
-        // ORTH TODO: find another way of doing this
-//        var left :Number = _placeBox.getStyle("left");
-//        var top :Number = _placeBox.getStyle("top");
-//        var width :Number = _width - _placeBox.getStyle("right") - left;
-//        var height :Number = _height - _placeBox.getStyle("bottom") - top;
-//        return new Rectangle(left, top, width, height);
-        return new Rectangle(0, 0, _width, _height);
-    }
-
-    /**
      * Returns a rectangle in stage coordinates that specifies the main game area.  This is
      * basically just the bounds on the client, minus the any margins from control bar, etc.
      */
     public function getMainAreaBounds () :Rectangle
     {
-        // ORTH TODO: find another way of doing this
-//        var height: Number = _height - _placeBox.getStyle("bottom");
-//        return new Rectangle(0, _placeBox.getStyle("top"), _width, height);
-        return new Rectangle(0, 0, _width, _height);
+        return new Rectangle(0, 0, _width, 500);
     }
 
-    protected function stageResized (event :Event) :void
+    protected function configureUI (placeBox :DisplayObject, controlBar :DisplayObject) :void
     {
-        layoutPanels();
+        isAbstract();
     }
 
-    protected function layoutPanels () :void
+    protected function needsLayout () :void
     {
-        updatePlaceViewSize();
+        _width = _stage.width;
+        _height = 500;
+
+        doLayout(_placeBox, _controlBar);
     }
 
-    protected function updatePlaceViewSize () :void
+    protected function doLayout (placeBox :OrthPlaceBox, controlBar :ControlBar) :void
     {
-        if (_placeBox.parent != this) {
-            return; // nothing doing if we're not in control
-        }
+        placeBox.setActualSize(_width, 500);
+        placeBox.x = 0;
+        placeBox.y = 0;
 
-        var top :int = 0;
-        var left :int = 0;
-        var right :int = 0;
-        var bottom :int = 0;
-        var w :int = _width;
-        var h :int = _height;
-
-        bottom += getControlBarHeight();
-        h -= getControlBarHeight() + 80; // this number is bullshit, figure it out
-
-        _comicOverlay.setTargetBounds(new Rectangle(0, 0, ChatOverlay.DEFAULT_WIDTH, h));
-
-        // ORTH TODO: Find another way of doing this
-//        _placeBox.setStyle("top", top);
-//        _placeBox.setStyle("bottom", bottom);
-//        _placeBox.setStyle("right", right);
-//        _placeBox.setStyle("left", left);
-
-        _placeBox.setActualSize(w, h - 40);
+        controlBar.asSprite().x = 0;
+        controlBar.asSprite().y = 500;
     }
 
     /**
