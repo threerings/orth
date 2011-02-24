@@ -58,7 +58,7 @@ public class SceneAttrsUpdate extends SceneUpdate
 
         name = (ins.readField(String) as String);
         accessControl = ins.readByte();
-        decor = Decor(ins.readObject());
+        decor = DecorData(ins.readObject());
         entrance = OrthLocation(ins.readObject());
     }
 }
