@@ -94,6 +94,16 @@ public class OrthChatDirector extends BasicDirector
         _displays.remove(display);
     }
 
+    /**
+     * Requests that all chat displays clear their contents.
+     */
+    public function clearDisplays () :void
+    {
+        _displays.apply(function (disp :ChatDisplay) :void {
+            disp.clear();
+        });
+    }
+
     public function enteredLocation (place :SpeakObject) :void
     {
         // nix our old location if we have one
