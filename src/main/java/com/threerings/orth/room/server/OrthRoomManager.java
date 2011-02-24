@@ -2,12 +2,19 @@ package com.threerings.orth.room.server;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
 import com.google.inject.Inject;
+
+import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.util.ObjectUtil;
-import com.samskivert.util.ResultListener;
+
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.Place;
@@ -41,7 +48,7 @@ import static com.threerings.orth.Log.log;
 
 /**
  * Manages all the various complex operations of an actual instantiated Orth room.
- * This class relies on {@link MemorySupply} having been previously bound.
+ * This class relies on {@link MemoryRepository} having been previously bound.
  */
 public class OrthRoomManager extends SpotSceneManager
     implements OrthRoomProvider
@@ -304,19 +311,14 @@ public class OrthRoomManager extends SpotSceneManager
         _memSupply.flushMemories(_orthObj.memories.asSet());
     }
 
-    public interface MemorySupply
-    {
-        void loadMemory (EntityIdent ident, ResultListener<EntityMemories> listener);
-        void flushMemories (Iterable<EntityMemories> memories);
-    }
-
     /** A trivial class that remembers nothing. */
-    public static class AmnesiacMemorySupply implements MemorySupply {
-        public void loadMemory (EntityIdent ident, ResultListener<EntityMemories> listener) {
+    public static class AmnesiacMemorySupply implements MemoryRepository
+    {
+        @Override public List<EntityMemories> loadMemories (Set<EntityIdent> memoryIds) {
             // we remember nothing from before
-            listener.requestCompleted(new EntityMemories());
+            return Lists.newArrayList();
         }
-        public void flushMemories (Iterable<EntityMemories> memories) {
+        @Override public void flushMemories (Iterable<EntityMemories> memories) {
             // forget what we've learned
         }
     }
@@ -326,19 +328,23 @@ public class OrthRoomManager extends SpotSceneManager
      */
     protected void resolveMemories (final EntityIdent ident, final Runnable onCompletion)
     {
-        _memSupply.loadMemory(ident, new ResultListener<EntityMemories>() {
-            @Override public void requestCompleted (EntityMemories result) {
-                addMemoriesToRoom(Collections.singleton(result));
+        _invoker.postUnit(new RepositoryUnit("resolveMemories") {
+            @Override public void invokePersist () throws Exception {
+                _result = _memSupply.loadMemories(Collections.singleton(ident));
+            }
+            @Override public void handleSuccess () {
+                addMemoriesToRoom(_result);
                 if (onCompletion != null) {
                     onCompletion.run();
                 }
             }
-            @Override public void requestFailed (Exception cause) {
-                log.warning("Failed to resolve memories for entity", "ident", ident);
+            @Override public void handleFailure (Exception e) {
+                log.warning("Failed to resolve memories for entity", "ident", ident, e);
                 if (onCompletion != null) {
                     onCompletion.run();
                 }
             }
+            protected List<EntityMemories> _result;
         });
     }
 
@@ -465,7 +471,7 @@ public class OrthRoomManager extends SpotSceneManager
     /** Listens to the room object. */
     protected RoomListener _roomListener = new RoomListener();
 
-    @Inject protected MemorySupply _memSupply;
+    @Inject protected MemoryRepository _memSupply;
     @Inject protected PeerManager _peerMgr;
     @Inject protected ChatManager _chatMgr;
 }

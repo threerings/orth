@@ -11,7 +11,6 @@ import com.threerings.presents.peer.server.PeerManager;
 
 import com.threerings.crowd.server.CrowdServer;
 
-import com.threerings.whirled.server.persist.SceneRepository;
 import com.threerings.whirled.server.SceneRegistry;
 import com.threerings.whirled.util.SceneFactory;
 
@@ -20,9 +19,9 @@ import com.threerings.orth.peer.server.OrthPeerManager;
 
 import com.threerings.orth.aether.server.AetherManager;
 
+import com.threerings.orth.room.server.MemoryRepository;
 import com.threerings.orth.world.server.WorldManager;
 
-import com.threerings.orth.room.server.OrthRoomManager.MemorySupply;
 import com.threerings.orth.room.server.OrthRoomManager.AmnesiacMemorySupply;
 import com.threerings.orth.room.server.OrthSceneFactory;
 import com.threerings.orth.room.server.OrthSceneRegistry;
@@ -42,7 +41,7 @@ public class OrthServer extends CrowdServer
             super.configure();
 
             // room
-            bind(MemorySupply.class).to(AmnesiacMemorySupply.class);
+            bind(MemoryRepository.class).to(AmnesiacMemorySupply.class);
 
             // whirled
             bind(SceneRegistry.class).to(OrthSceneRegistry.class);
