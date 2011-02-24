@@ -9,7 +9,6 @@ import flash.events.Event;
 import flash.events.IEventDispatcher;
 import flash.events.KeyboardEvent;
 import flash.events.TimerEvent;
-import flash.external.ExternalInterface;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
@@ -27,16 +26,13 @@ import com.threerings.crowd.chat.client.ChatCantStealFocus;
 import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.client.BodyService;
-import com.threerings.crowd.client.LocationAdapter;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.data.CrowdCodes;
-import com.threerings.crowd.data.PlaceObject;
 import com.threerings.flex.ChatControl;
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.CommandMenu;
 import com.threerings.whirled.client.SceneDirector;
 
-import com.threerings.util.ArrayUtil;
 import com.threerings.util.Controller;
 import com.threerings.util.Log;
 
@@ -54,7 +50,6 @@ import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.MediaDescSize;
-import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.client.RoomObjectController;
 import com.threerings.orth.room.client.RoomView;
@@ -111,10 +106,6 @@ public class WorldController extends Controller
         _idleTimer = new Timer(1000);
         _idleTimer.addEventListener(TimerEvent.TIMER, handlePollIdleMouse);
 
-        // listen for location changes
-        _rctx.getLocationDirector().addLocationObserver(
-            new LocationAdapter(null, this.locationDidChange, null));
-
         setControlledPanel(_topPanel.root);
         _stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown, false, int.MAX_VALUE);
     }
@@ -125,34 +116,6 @@ public class WorldController extends Controller
     public function isIdle () :Boolean
     {
         return _idle;
-    }
-
-    /**
-     * Adds a place exit handler to be invoked whenever the user requests to leave the current
-     * place. The function should take no arguments and return a Boolean. A true return value means
-     * carry on closing the place view. A false value means ignore the current request. In the
-     * latter case, the handler ought to automatically re-close the place view when it is finished
-     * with its business.
-     */
-    public function addPlaceExitHandler (fn :Function) :void
-    {
-        _placeExitHandlers.push(fn);
-    }
-
-    /**
-     * Removes a previously added place exit handler.
-     */
-    public function removePlaceExitHandler (fn :Function) :void
-    {
-        ArrayUtil.removeAll(_placeExitHandlers, fn);
-    }
-
-    /**
-     * Attempts to reconnect to the server and return to our starting location.
-     */
-    public function reconnectClient () :void
-    {
-        _client.logon();
     }
 
     // from ClientObserver
@@ -218,22 +181,6 @@ public class WorldController extends Controller
     {
         _idleStamp = getTimer();
         setIdle(false);
-    }
-
-    /**
-     * Returns true if all installed exit handlers have sanctioned the closure of the place view,
-     * or false if we need to abort.
-     */
-    public function sanctionClosePlaceView () :Boolean
-    {
-        // give the handlers a chance to prevent closure
-        for each (var fn :Function in _placeExitHandlers.slice()) {
-            var okay :Boolean = fn();
-            if (!okay) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -548,19 +495,6 @@ public class WorldController extends Controller
         }
     }
 
-    /**
-     * Inform our parent web page that our display name has changed.
-     */
-    public function refreshDisplayName () :void
-    {
-        try {
-            if (ExternalInterface.available) {
-                ExternalInterface.call("refreshDisplayName");
-            }
-        } catch (e :Error) {
-        }
-    }
-
     override protected function setControlledPanel (panel :IEventDispatcher) :void
     {
         _idleTimer.reset();
@@ -630,13 +564,6 @@ public class WorldController extends Controller
                 (c == 47 || (c >= 97 && c <= 122) || (c >= 65 && c <= 90))) {
             checkChatFocus();
         }
-    }
-
-    /**
-     * Called when our location changes.
-     */
-    protected function locationDidChange (place :PlaceObject) :void
-    {
     }
 
     protected function handlePollIdleMouse (event :TimerEvent) :void
@@ -712,8 +639,6 @@ public class WorldController extends Controller
     }
 
     protected const _octx :OrthContext = inject(OrthContext);
-    // ORTH TODO: we should most certainly not refer to RoomContext in a world/ class.
-    protected const _rctx :RoomContext = inject(RoomContext);
     protected const _client :WorldClient = inject(WorldClient);
 
     protected const _orthCtrl :OrthController = inject(OrthController);
@@ -748,9 +673,6 @@ public class WorldController extends Controller
     protected var _idleMousePoint :Point;
 
     protected var _idleStamp :Number;
-
-    /** Handlers that can perform actions and/or abort the exiting of a place. */
-    protected var _placeExitHandlers :Array = [];
 
     /** The menus that we are currently showing. */
     protected var _currentMenus :Array = [];
