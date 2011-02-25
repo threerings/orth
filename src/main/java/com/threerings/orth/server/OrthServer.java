@@ -50,6 +50,9 @@ public class OrthServer extends CrowdServer
 
             // presents
             bind(PeerManager.class).to(OrthPeerManager.class);
+
+            // orth
+            bind(MediaDescFactory.class).to(OrthMediaDescFactory.class);
         }
     }
 
@@ -58,6 +61,8 @@ public class OrthServer extends CrowdServer
         throws Exception
     {
         super.init(injector);
+
+        MediaDescFactory.init(injector.getInstance(MediaDescFactory.class));
 
         // handle room logins
         _clmgr.addSessionFactory(injector.getInstance(RoomSessionFactory.class));
