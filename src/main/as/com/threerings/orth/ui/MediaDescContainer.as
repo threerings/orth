@@ -4,14 +4,14 @@
 package com.threerings.orth.ui {
 
 import com.threerings.media.MediaContainer;
-
+import com.threerings.orth.data.ClientMediaDesc;
 import com.threerings.util.Util;
 
 import com.threerings.orth.data.MediaDesc;
 
 public class MediaDescContainer extends MediaContainer
 {
-    public function MediaDescContainer (desc: MediaDesc = null)
+    public function MediaDescContainer (desc: ClientMediaDesc = null)
     {
         super(null);
 
@@ -33,7 +33,7 @@ public class MediaDescContainer extends MediaContainer
     /**
      * Set a new MediaDescriptor. Returns true if the descriptor really changed.
      */
-    public function setMediaDesc (desc :MediaDesc) :Boolean
+    public function setMediaDesc (desc :ClientMediaDesc) :Boolean
     {
         if (Util.equals(desc, _desc)) {
             return false;
@@ -59,6 +59,6 @@ public class MediaDescContainer extends MediaContainer
     }
 
     /** Our Media descriptor. */
-    protected var _desc :MediaDesc;
+    protected var _desc :ClientMediaDesc;
 }
 }

@@ -37,6 +37,14 @@ public class URLMediaDesc extends BasicMediaDesc
         return _url;
     }
 
+    override public function equals (other :Object) :Boolean
+    {
+        return (other is URLMediaDesc) &&
+            mimeType == URLMediaDesc(other).mimeType &&
+            constraint == URLMediaDesc(other).constraint &&
+            getMediaPath() == URLMediaDesc(other).getMediaPath();
+    }
+
     public function toString () :String
     {
         return "[url=" + _url + "]";

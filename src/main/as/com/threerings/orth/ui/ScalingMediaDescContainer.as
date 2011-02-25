@@ -2,8 +2,7 @@
 // $Id: ScalingMsoyMediaContainer.as 19431 2010-10-22 22:08:36Z zell $
 
 package com.threerings.orth.ui {
-
-import com.threerings.orth.data.MediaDesc;
+import com.threerings.orth.data.ClientMediaDesc;
 import com.threerings.orth.data.MediaDescSize;
 
 public class ScalingMediaDescContainer extends MediaDescContainer
@@ -11,7 +10,7 @@ public class ScalingMediaDescContainer extends MediaDescContainer
     /**
      * Factory to create a MediaContainer for viewing a MediaDesc.
      */
-    public static function createView (desc :MediaDesc, size :int = MediaDescSize.THUMBNAIL_SIZE)
+    public static function createView (desc :ClientMediaDesc, size :int = MediaDescSize.THUMBNAIL_SIZE)
         :ScalingMediaDescContainer
     {
         var smc :ScalingMediaDescContainer = new ScalingMediaDescContainer(
