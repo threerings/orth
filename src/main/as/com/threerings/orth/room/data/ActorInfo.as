@@ -8,7 +8,7 @@ import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-
+import com.threerings.orth.data.ClientMediaDesc;
 import com.threerings.util.Joiner;
 
 import com.threerings.orth.data.MediaDesc;
@@ -22,7 +22,7 @@ public class ActorInfo extends OccupantInfo
     /**
      * Returns the media that is used to display this actor.
      */
-    public function getMedia () :MediaDesc
+    public function getMedia () :ClientMediaDesc
     {
         return _media;
     }
@@ -85,7 +85,7 @@ public class ActorInfo extends OccupantInfo
         out.writeField(_state);
     }
 
-    protected var _media :MediaDesc;
+    protected var _media :ClientMediaDesc;
     protected var _ident :EntityIdent;
     protected var _state :String;
 // GENERATED STREAMING END

@@ -7,7 +7,7 @@ package com.threerings.orth.party.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
-
+import com.threerings.orth.data.ClientMediaDesc;
 import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.data.MediaDesc;
@@ -25,14 +25,14 @@ public class PartySummary extends SimpleStreamableObject
 
     public var name :String;
 
-    public var icon :MediaDesc;
+    public var icon :ClientMediaDesc;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         id = ins.readInt();
         name = ins.readField(String);
-        icon = ins.readObject(MediaDesc);
+        icon = ins.readObject(ClientMediaDesc);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void

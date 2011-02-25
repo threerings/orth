@@ -2,13 +2,12 @@
 // $Id: $
 
 package com.threerings.orth.entity.data {
-
+import com.threerings.orth.data.ClientMediaDesc;
 import com.threerings.util.Comparable;
 import com.threerings.util.Hashable;
 
 import com.threerings.presents.dobj.DSet_Entry;
 
-import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.room.data.EntityIdent;
 
 /**
@@ -31,12 +30,12 @@ public interface Entity
      * Returns a media descriptor for the media that should be used to display our thumbnail
      * representation.
      */
-    function getThumbnailMedia () :MediaDesc;
+    function getThumbnailMedia () :ClientMediaDesc;
 
     /**
      * Returns a media descriptor for the media that should be used to display our furniture
      * representation.
      */
-    function getFurniMedia () :MediaDesc;
+    function getFurniMedia () :ClientMediaDesc;
 }
 }
