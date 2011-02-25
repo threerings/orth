@@ -50,9 +50,6 @@ public class OrthServer extends CrowdServer
 
             // presents
             bind(PeerManager.class).to(OrthPeerManager.class);
-
-            // orth
-            bind(MediaDescFactory.class).to(OrthMediaDescFactory.class);
         }
     }
 
