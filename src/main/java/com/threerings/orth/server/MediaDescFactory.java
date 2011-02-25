@@ -4,6 +4,8 @@
 package com.threerings.orth.server;
 
 import com.threerings.orth.data.ClientMediaDesc;
+import com.threerings.orth.data.MediaDesc;
+import com.threerings.orth.data.MediaMimeTypes;
 
 import static com.threerings.orth.Log.log;
 
@@ -21,6 +23,16 @@ public abstract class MediaDescFactory
     public static MediaDescFactory get ()
     {
         return _self;
+    }
+
+    public ClientMediaDesc make (String URL)
+    {
+        return make (URL, MediaMimeTypes.suffixToMimeType(URL));
+    }
+
+    public ClientMediaDesc make (String URL, byte mimeType)
+    {
+        return make (URL, mimeType, MediaDesc.NOT_CONSTRAINED);
     }
 
     public abstract ClientMediaDesc make (String URL, byte mimeType, byte constraint);
