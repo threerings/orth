@@ -11,7 +11,7 @@ import com.threerings.util.ActionScript;
 
 /** An opaque entity type which each project should implement as a {@link ByteEnum}. */
 @ActionScript(omit=true)
-public interface EntityType
-    extends ByteEnum, Streamable
+public interface EntityType<T extends Enum<T> & EntityType<T>>
+    extends ByteEnum, Streamable, Comparable<T>
 {
 }
