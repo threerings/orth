@@ -26,15 +26,10 @@ public interface MediaDesc
     byte HALF_VERTICALLY_CONSTRAINED = 4;
 
     /**
-     * Returns the path of the URL that references this media.
-     */
-    String getMediaPath ();
-
-    /**
      * Returns the mime type of this media.
      */
     byte getMimeType ();
-    
+
     /** The size constraint on this media, if any. */
     byte getConstraint ();
 

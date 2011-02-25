@@ -8,6 +8,7 @@ package com.threerings.orth.data;
  * A trivial MediaDesc implementation that is configured with an explicit URL.
  */
 public class URLMediaDesc extends BasicMediaDesc
+    implements ClientMediaDesc
 {
     public URLMediaDesc ()
     {
