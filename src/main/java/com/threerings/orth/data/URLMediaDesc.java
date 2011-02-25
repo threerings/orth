@@ -31,6 +31,22 @@ public class URLMediaDesc extends BasicMediaDesc
         return new URLMediaDesc(_url, _mimeType, constraint);
     }
 
+    @Override // from Object
+    public int hashCode ()
+    {
+        return (getMimeType() * 43 + getConstraint()) * 43 ^ getMediaPath().hashCode();
+    }
+
+	@Override // from Object
+	public boolean equals (Object other)
+	{
+		return (other instanceof URLMediaDesc) &&
+			(getMimeType() == ((URLMediaDesc) other).getMimeType()) &&
+            (getConstraint() == ((URLMediaDesc) other).getConstraint()) &&
+            (getMediaPath().equals(((URLMediaDesc) other).getMediaPath()));
+
+	}
+
     protected String _url;
 }
 

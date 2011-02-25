@@ -48,20 +48,4 @@ public abstract class MediaDescImpl
             return false;
         }
     }
-
-    @Override // from Object
-    public int hashCode ()
-    {
-        return (getMimeType() * 43 + getConstraint()) * 43 ^ getMediaPath().hashCode();
-    }
-
-	@Override // from Object
-	public boolean equals (Object other)
-	{
-		return (other instanceof MediaDesc) &&
-			(getMimeType() == ((MediaDesc) other).getMimeType()) &&
-            (getConstraint() == ((MediaDesc) other).getConstraint()) &&
-            (getMediaPath() == ((MediaDesc) other).getMediaPath());
-
-	}
 }
