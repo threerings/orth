@@ -2,13 +2,6 @@
 // $Id$
 
 package com.threerings.orth.aether.client {
-import flash.display.DisplayObject;
-import flash.display.Stage;
-import flash.events.ContextMenuEvent;
-import flash.geom.Point;
-import flash.system.Capabilities;
-import flash.ui.ContextMenu;
-import flash.utils.Dictionary;
 
 import flashx.funk.ioc.inject;
 
@@ -23,7 +16,6 @@ import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.client.Prefs;
@@ -47,13 +39,6 @@ public class AetherClient extends Client
         PolicyLoader.registerClient(this, depConf.policyPort);
         // configure our version
         setVersion(depConf.version);
-
-        // TODO - reenable without Application for non-flex clients
-        // set up a context menu that blocks funnybiz on the stage
-        //var menu :ContextMenu = new ContextMenu();
-        //menu.hideBuiltInItems();
-        //menu.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenuWillPopUp);
-        //inject(Application).contextMenu = menu;
     }
 
     public function getPlayerObject () :PlayerObject
@@ -98,50 +83,7 @@ public class AetherClient extends Client
         _plobj = PlayerObject(clobj);
     }
 
-    /**
-     * Called to process ContextMenuEvent.MENU_SELECT.
-     */
-    protected function contextMenuWillPopUp (event :ContextMenuEvent) :void
-    {
-        var menu :ContextMenu = (event.target as ContextMenu);
-        var custom :Array = menu.customItems;
-        custom.length = 0;
-
-        populateContextMenu(custom);
-
-        // HACK: putting the separator in the menu causes the item to not
-        // work in linux, so we don't do it in linux.
-        var useSep :Boolean = (-1 == Capabilities.os.indexOf("Linux"));
-
-        // then, the menu will pop up
-    }
-
-    protected function populateContextMenu (custom :Array) :void
-    {
-        try {
-            var allObjs :Array = _stage.getObjectsUnderPoint(new Point(_stage.mouseX, _stage.mouseY));
-            var seen :Dictionary = new Dictionary();
-            for each (var disp :DisplayObject in allObjs) {
-                try {
-                    while (disp != null && !(disp in seen)) {
-                        seen[disp] = true;
-                        if (disp is ContextMenuProvider) {
-                            (disp as ContextMenuProvider).populateContextMenu(custom);
-                        }
-                        disp = disp.parent;
-                    }
-                } catch (serr :SecurityError) {
-                    // that's ok, let's move on
-                }
-            }
-        } catch (e :Error) {
-            log.warning("Error populating context menu", e);
-        }
-    }
-
     protected var _plobj :PlayerObject;
-
-    protected const _stage :Stage = inject(Stage);
 
     private static const log :Log = Log.getLog(AetherClient);
 }

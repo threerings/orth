@@ -2,8 +2,15 @@
 // $Id: $
 package com.threerings.orth.client {
 
+import flash.display.DisplayObject;
+import flash.display.Stage;
+import flash.geom.Point;
+import flash.events.ContextMenuEvent;
 import flash.events.IEventDispatcher;
 import flash.events.TextEvent;
+import flash.ui.ContextMenu;
+import flash.utils.Dictionary;
+import flash.system.Capabilities;
 
 import flashx.funk.ioc.inject;
 
@@ -19,6 +26,7 @@ import com.threerings.util.StringUtil;
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.PlayerService;
 import com.threerings.orth.aether.data.AetherCredentials;
+import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.TopPanel;
@@ -64,6 +72,12 @@ public class OrthController extends Controller
     public function OrthController ()
     {
         setControlledPanel(_topPanel);
+
+
+        var menu :ContextMenu = new ContextMenu();
+        menu.hideBuiltInItems();
+        menu.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenuWillPopUp);
+        _topPanel.contextMenu = menu;
     }
 
     /**
@@ -227,7 +241,50 @@ public class OrthController extends Controller
         }
     }
 
+    /**
+     * Called to process ContextMenuEvent.MENU_SELECT.
+     */
+    protected function contextMenuWillPopUp (event :ContextMenuEvent) :void
+    {
+        var menu :ContextMenu = (event.target as ContextMenu);
+        var custom :Array = menu.customItems;
+        custom.length = 0;
+
+        populateContextMenu(custom);
+
+        // HACK: putting the separator in the menu causes the item to not
+        // work in linux, so we don't do it in linux.
+        var useSep :Boolean = (-1 == Capabilities.os.indexOf("Linux"));
+
+        // then, the menu will pop up
+    }
+
+    protected function populateContextMenu (custom :Array) :void
+    {
+        try {
+            var allObjs :Array =
+                _stage.getObjectsUnderPoint(new Point(_stage.mouseX, _stage.mouseY));
+            var seen :Dictionary = new Dictionary();
+            for each (var disp :DisplayObject in allObjs) {
+                try {
+                    while (disp != null && !(disp in seen)) {
+                        seen[disp] = true;
+                        if (disp is ContextMenuProvider) {
+                            (disp as ContextMenuProvider).populateContextMenu(custom);
+                        }
+                        disp = disp.parent;
+                    }
+                } catch (serr :SecurityError) {
+                    // that's ok, let's move on
+                }
+            }
+        } catch (e :Error) {
+            log.warning("Error populating context menu", e);
+        }
+    }
+
     protected const _octx :OrthContext = inject(OrthContext);
+    protected const _stage :Stage = inject(Stage);
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _client :AetherClient = inject(AetherClient);
     protected const _depCon :OrthDeploymentConfig = inject(OrthDeploymentConfig);

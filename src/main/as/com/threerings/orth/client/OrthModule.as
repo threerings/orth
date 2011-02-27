@@ -71,8 +71,10 @@ public class OrthModule extends BindingModule
         var topPanel :TopPanel = getInstance(TopPanel);
         bind(TopPanel).toInstance(topPanel);
 
-        // instantiate PlayerDirector
+        // instantiate directors and controllers
         getInstance(PlayerDirector);
+        getInstance(OrthChatDirector);
+        getInstance(OrthController);
     }
 
     private static const log :Log = Log.getLog(OrthModule);
