@@ -45,6 +45,7 @@ import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.MemberSprite;
+import com.threerings.orth.room.client.RoomElement;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
@@ -439,7 +440,11 @@ public class RoomController extends SceneController
 
         // we search from last-drawn to first drawn to get the topmost...
         for (var dex :int = _roomView.numChildren - 1; dex >= 0; dex--) {
-            var spr :EntitySprite = (_roomView.getChildAt(dex) as EntitySprite);
+            // see if this child represents a RoomElement
+            var el :RoomElement = _roomView.vizToEntity(_roomView.getChildAt(dex));
+            // and we're actually only interested in EntitySprite objects
+            var spr :EntitySprite = (el as EntitySprite);
+
             if ((spr != null) && (all || (spr.isActive() && spr.capturesMouse())) &&
                 spr.viz.hitTestPoint(stageX, stageY, true))
             {
