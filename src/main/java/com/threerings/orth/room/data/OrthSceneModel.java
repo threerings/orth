@@ -22,9 +22,6 @@ public class OrthSceneModel extends SceneModel
     /** Constant for Member room owners **/
     public static final byte OWNER_TYPE_MEMBER = 1;
 
-    /** Constant for Group room owners **/
-    public static final byte OWNER_TYPE_GROUP = 2;
-
     /** Access control constant, denotes that anyone can enter this scene. */
     public static final byte ACCESS_EVERYONE = 0;
 
