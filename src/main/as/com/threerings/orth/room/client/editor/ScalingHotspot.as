@@ -60,7 +60,7 @@ public class ScalingHotspot extends Hotspot
         _displayStandard = new klass() as DisplayObject;
 
         var c :Class = (_corner.x == _corner.y) ?
-            _editor.rsrc.edHotspotScaleOverLeft : _editor.rsrc.edHotspotScaleRight;
+            _editor.rsrc.edHotspotScaleOverLeft : _editor.rsrc.edHotspotScaleOverRight;
         _displayMouseOver = new c() as DisplayObject;
     }
 
