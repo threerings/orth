@@ -11,7 +11,6 @@ import mx.containers.Box;
 import mx.containers.Grid;
 import mx.containers.HBox;
 import mx.containers.VBox;
-import mx.modules.Module;
 import mx.controls.ColorPicker;
 import mx.controls.HRule;
 import mx.controls.Label;
