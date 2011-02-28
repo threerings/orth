@@ -268,8 +268,9 @@ public class WorldController extends Controller
         // slap your friends in a menu
         var friends :Array = [];
         for each (var fe :FriendEntry in me.getSortedFriends()) {
-            friends.push(
-                { label: fe.name.toString(), command: OrthController.OPEN_CHANNEL, arg: fe.name });
+            // ORTH TODO: OPEN_CHANNEL is gone, do something else
+//            friends.push(
+//                { label: fe.name.toString(), command: OrthController.OPEN_CHANNEL, arg: fe.name });
         }
         if (friends.length == 0) {
             friends.push({ label: Msgs.GENERAL.get("m.no_friends"), enabled: false });
@@ -411,9 +412,10 @@ public class WorldController extends Controller
             const isInOurRoom :Boolean = (placeCtrl is RoomObjectController) &&
                 RoomObjectController(placeCtrl).containsPlayer(name);
             // whisper
-            menuItems.push({
-                label: Msgs.GENERAL.get("b.open_channel"), icon: _rsrc.whisperIcon,
-                command: OrthController.OPEN_CHANNEL, arg: name, enabled: !muted });
+            // ORTH TODO: OPEN_CHANNEL is gone, do something else
+//            menuItems.push({
+//                label: Msgs.GENERAL.get("b.open_channel"), icon: _rsrc.whisperIcon,
+//                command: OrthController.OPEN_CHANNEL, arg: name, enabled: !muted });
             // add as friend
             if (!onlineFriend) {
                 menuItems.push({
