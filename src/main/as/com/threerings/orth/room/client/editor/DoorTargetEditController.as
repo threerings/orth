@@ -33,49 +33,34 @@ import com.threerings.orth.room.data.OrthScene;
  * This controller handles in-world door editing. The player picks a door to edit, then travels
  * the whirled in search of a target room. Once target is selected, the player will be returned
  * to the door location, and the door will be set to point to the target scene.
- *
- * Note: this object is a singleton, because it needs to exist independently of the different
- * room views that get created when player moves between scenes.
  */
 public class DoorTargetEditController
 {
-    /**
-     * Singleton constructor. Do not instantiate the singleton directly - use the static
-     * function start() instead.
-     */
-    public function DoorTargetEditController ()
-    {
-        // this would be simpler if Actionscript supported non-public constructors. why doesn't it?
-        if (_this != null) {
-            throw new Error("DoorTargetEditController must not be instantiated directly.");
-        }
-    }
-
     /** Returns true if a door is currently being edited. */
-    public static function get editing () :Boolean
+    public function get editing () :Boolean
     {
-        return (_this._doorScene != 0);
+        return (_doorScene != 0);
     }
 
     /**
      * Returns true if a door is currently being edited, and we're in the middle of
      * committing a new door target selection.
      */
-    protected static function get committing () :Boolean
+    protected function get committing () :Boolean
     {
-        return editing && (_this._destinationScene != 0);
+        return editing && (_destinationScene != 0);
     }
 
     /**
      * Start editing a door. Displays the target editor window, which waits for the player to click
      * on a 'submit' button to specify target location.
      */
-    public static function start (doorData :FurniData) :void
+    public function start (doorData :FurniData) :void
     {
         if (editing) {
-            _this.deinit();
+            deinit();
         } else {
-            _this.init(doorData);
+            init(doorData);
         }
     }
 
@@ -205,7 +190,7 @@ public class DoorTargetEditController
      * Called when the player enters a new room. If we're committing a door, and we
      * just traveled to the room where the door was placed, finish up editing.
      */
-    public static function updateLocation () :void
+    public function updateLocation () :void
     {
         // we only care about this if we're actually in the process of setting a target door
         if (committing) {
@@ -213,8 +198,8 @@ public class DoorTargetEditController
 
             // if we're editing, and we traversed back to the original door location,
             // update the door and end editing.
-            if (scene.getId() == _this._doorScene) {
-                _this.finalizeCommit(scene);
+            if (scene.getId() == _doorScene) {
+                finalizeCommit(scene);
             }
         }
     }
@@ -239,9 +224,6 @@ public class DoorTargetEditController
         deinit();
     }
 
-    /** Singleton constant. */
-    protected static var _this :DoorTargetEditController = new DoorTargetEditController();
-
     /** Scene ID where the door resides. */
     protected var _doorScene :int = 0;
 
@@ -261,8 +243,11 @@ public class DoorTargetEditController
     protected var _ui :FloatingPanel;
 
     protected const _worldCtrl :WorldController = inject(WorldController);
+
     protected const _sceneDir :SceneDirector = inject(SceneDirector);
+
     protected const _spotSceneDir :SpotSceneDirector = inject(SpotSceneDirector);
+
     protected const _roomObjectCtrl :RoomObjectController = inject(RoomObjectController);
 }
 }
