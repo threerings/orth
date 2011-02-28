@@ -5,14 +5,14 @@ package com.threerings.orth.room.client.editor {
 
 import com.threerings.flex.FlexUtil;
 
-import com.threerings.msoy.client.Msgs;
-import com.threerings.msoy.ui.FloatingPanel;
+import com.threerings.orth.client.Msgs;
+import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 
-import com.threerings.msoy.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 
 public class ItemUsedDialog extends FloatingPanel
 {
-    public function ItemUsedDialog (ctx :WorldContext, type :String, yesClosure :Function)
+    public function ItemUsedDialog (ctx :RoomContext, type :String, yesClosure :Function)
     {
         super(ctx, Msgs.EDITING.get("t.item_used"));
         _yesClosure = yesClosure;

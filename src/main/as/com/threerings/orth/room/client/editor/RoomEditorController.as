@@ -7,9 +7,9 @@ import flash.events.MouseEvent;
 
 import com.threerings.io.TypedArray;
 
-import com.threerings.msoy.client.Msgs;
+import com.threerings.orth.client.Msgs;
 
-import com.threerings.msoy.data.MsoyCodes;
+import com.threerings.orth.data.OrthCodes;
 
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.Log;
@@ -22,14 +22,14 @@ import com.threerings.whirled.data.SceneUpdate;
 
 import com.threerings.msoy.data.Address;
 
-import com.threerings.msoy.client.DeploymentConfig;
+import com.threerings.orth.client.DeploymentConfig;
 
 import com.threerings.msoy.item.client.ItemService;
 import com.threerings.msoy.item.data.all.Item;
 import com.threerings.msoy.item.data.all.ItemIdent;
 
-import com.threerings.msoy.world.client.WorldContext;
-import com.threerings.msoy.world.client.WorldService;
+import com.threerings.orth.room.client.RoomContext;
+import com.threerings.orth.room.client.RoomService;
 
 import com.threerings.orth.room.client.FurniSprite;
 import com.threerings.orth.room.client.EntitySprite;
@@ -41,7 +41,7 @@ import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.FurniUpdate_Add;
 import com.threerings.orth.room.data.FurniUpdate_Change;
 import com.threerings.orth.room.data.FurniUpdate_Remove;
-import com.threerings.orth.room.data.MsoyLocation;
+import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
 import com.threerings.orth.room.data.SceneAttrsUpdate;
@@ -55,7 +55,7 @@ import com.threerings.msoy.tutorial.client.TutorialSequenceBuilder;
  */
 public class RoomEditorController
 {
-    public function RoomEditorController (ctx :WorldContext, view :RoomObjectView)
+    public function RoomEditorController (ctx :RoomContext, view :RoomObjectView)
     {
         _ctx = ctx;
         _view = view;
@@ -69,7 +69,7 @@ public class RoomEditorController
         return _view;
     }
 
-    public function get ctx () :WorldContext
+    public function get ctx () :RoomContext
     {
         return _ctx;
     }
@@ -335,7 +335,7 @@ public class RoomEditorController
             if (yDelta != 0) {
                 var f :FurniData = _edit.target.getFurniData().clone() as FurniData;
                 _edit.updateTargetLocation(
-                    new MsoyLocation(f.loc.x, f.loc.y + yDelta, f.loc.z));
+                    new OrthLocation(f.loc.x, f.loc.y + yDelta, f.loc.z));
             }
         });
     }
@@ -346,7 +346,7 @@ public class RoomEditorController
     {
         withFurniUpdate(function () :void {
             if (resetLocation) {
-                _edit.updateTargetLocation(new MsoyLocation(0.5, 0.5, 0.5));
+                _edit.updateTargetLocation(new OrthLocation(0.5, 0.5, 0.5));
             }
             if (resetSize) {
                 _edit.updateTargetScale(1.0, 1.0);
@@ -458,7 +458,7 @@ public class RoomEditorController
             "m.group_home_room_changed" : "m.home_room_changed";
         var svc :WorldService = _ctx.getClient().requireService(WorldService) as WorldService;
         svc.setHomeSceneId(model.ownerType, model.ownerId, model.sceneId,
-            _ctx.confirmListener(successMsg, MsoyCodes.EDITING_MSGS));
+            _ctx.confirmListener(successMsg, OrthCodes.EDITING_MSGS));
     }
 
     /**
@@ -723,7 +723,7 @@ public class RoomEditorController
         }
     }
 
-    protected var _ctx :WorldContext;
+    protected var _ctx :RoomContext;
     protected var _view :RoomObjectView;
     protected var _edit :FurniEditor;
     protected var _hover :FurniHighlight;

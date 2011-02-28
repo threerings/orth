@@ -11,7 +11,7 @@ import com.threerings.display.GraphicsUtil;
 import com.threerings.orth.room.client.FurniSprite;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.FurniData;
-import com.threerings.orth.room.data.MsoyLocation;
+import com.threerings.orth.room.data.OrthLocation;
 
 /**
  * Tracks the furni sprite that's currently being edited, and decorates it with draggable hotspots.
@@ -76,7 +76,7 @@ public class FurniEditor extends FurniHighlight
     }
 
     /** Called by hotspots, changes the target's display position. */
-    public function updateTargetLocation (loc :MsoyLocation) :void
+    public function updateTargetLocation (loc :OrthLocation) :void
     {
         target.setLocation(loc);          // change position on screen...
         target.getFurniData().loc = loc;  // ...and in the data parameters
@@ -167,12 +167,12 @@ public class FurniEditor extends FurniHighlight
         // compute location info for the stem from the current location to the floor
 
         // get target location in room and stage coordinates
-        var roomLocation :MsoyLocation = target.getLocation();
+        var roomLocation :OrthLocation = target.getLocation();
         var stageLocation :Point = view.localToGlobal(view.layout.locationToPoint(roomLocation));
         var targetLocation :Point = target.viz.globalToLocal(stageLocation);
 
         // get stem root location by dropping the target y value, and converting back to screen
-        var roomRoot :MsoyLocation = new MsoyLocation(roomLocation.x, 0, roomLocation.z, 0);
+        var roomRoot :OrthLocation = new OrthLocation(roomLocation.x, 0, roomLocation.z, 0);
         var stageRoot :Point = view.localToGlobal(view.layout.locationToPoint(roomRoot));
         var targetRoot :Point = target.viz.globalToLocal(stageRoot);
 

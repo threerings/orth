@@ -9,7 +9,7 @@ import flash.geom.Point;
 
 import com.threerings.util.Log;
 
-import com.threerings.msoy.client.Msgs;
+import com.threerings.orth.client.Msgs;
 
 /**
  * Hotspot that scales the object based on user's mouse movement.

@@ -6,16 +6,16 @@ package com.threerings.orth.room.client.editor {
 import mx.controls.Label;
 import mx.controls.TextInput;
 
-import com.threerings.msoy.client.Msgs;
-import com.threerings.msoy.client.MsoyContext;
-import com.threerings.msoy.ui.FloatingPanel;
+import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.RoomContext;
+import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 
 /**
  * Displays an "Enter the address:" dialog
  */
 public class UrlDialog extends FloatingPanel
 {
-    public function UrlDialog (ctx :MsoyContext, callback :Function)
+    public function UrlDialog (ctx :RoomContext, callback :Function)
     {
         super(ctx, Msgs.EDITING.get("t.url_dialog"));
 

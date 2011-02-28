@@ -11,10 +11,10 @@ import flash.geom.ColorTransform;
 import flash.geom.Point;
 
 import com.threerings.util.MathUtil;
-import com.threerings.msoy.client.Msgs;
+import com.threerings.orth.client.Msgs;
 import com.threerings.orth.room.client.ClickLocation;
 import com.threerings.orth.room.client.RoomMetrics;
-import com.threerings.orth.room.data.MsoyLocation;
+import com.threerings.orth.room.data.OrthLocation;
 
 /**
  * Hotspot that moves the target object along the Y axis.
@@ -79,7 +79,7 @@ public class MovementXZHotspot extends Hotspot
     /** Moves the furni over to the new location. */
     protected function updateTargetLocation (sx :Number, sy :Number) :void
     {
-        var loc :MsoyLocation = null;
+        var loc :OrthLocation = null;
         if (_currentDisplay == _displayYMouseOver) {
             sx -= (_anchor.x - _originalHotspot.x);
             sy -= (_anchor.y - _originalHotspot.y);
@@ -111,7 +111,7 @@ public class MovementXZHotspot extends Hotspot
 
     protected function getStemHeight () :Number
     {
-        var oldloc :MsoyLocation = _editor.target.getLocation();
+        var oldloc :OrthLocation = _editor.target.getLocation();
         return _editor.roomView.layout.metrics.roomDistanceToPixelDistance(
             new Point(0, oldloc.y), oldloc.z).y;
     }

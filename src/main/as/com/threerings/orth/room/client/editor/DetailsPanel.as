@@ -12,9 +12,9 @@ import mx.events.FlexEvent;
 
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.GridUtil;
-import com.threerings.msoy.client.Msgs;
+import com.threerings.orth.client.Msgs;
 import com.threerings.orth.room.data.FurniData;
-import com.threerings.orth.room.data.MsoyLocation;
+import com.threerings.orth.room.data.OrthLocation;
 
 /**
  * Displays details about the position, size, and other numeric values of the furni.
@@ -66,7 +66,7 @@ public class DetailsPanel extends BasePanel
 
         // do a manual copy, remembering that FurniData.clone is a shallow copy!
         var data :FurniData = _furniData.clone() as FurniData;
-        data.loc = _furniData.loc.clone() as MsoyLocation;
+        data.loc = _furniData.loc.clone() as OrthLocation;
 
         data.loc.x = maybeReplace(_locx, data.loc.x);
         data.loc.y = maybeReplace(_locy, data.loc.y);

@@ -18,12 +18,12 @@ import com.threerings.flex.CommandButton;
 import com.threerings.util.Log;
 import com.threerings.util.Util;
 
-import com.threerings.msoy.client.Msgs;
+import com.threerings.orth.client.Msgs;
 
 import com.threerings.msoy.data.MemberObject;
-import com.threerings.msoy.data.MsoyCodes;
-import com.threerings.msoy.world.client.WorldService;
-import com.threerings.msoy.world.client.WorldService_HomeResultListenerAdapter;
+import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.room.client.RoomService;
+import com.threerings.orth.room.client.RoomService_HomeResultListenerAdapter;
 
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthScene;
@@ -101,7 +101,7 @@ public class RoomPanel extends BasePanel
                     _controller.ctx.getClient().requireService(WorldService) as WorldService;
                 svc.getHomeId(OrthSceneModel.OWNER_TYPE_GROUP, sceneModel.ownerId,
                     new WorldService_HomeResultListenerAdapter(resultHandler, null,
-                        Util.adapt(_controller.ctx.displayFeedback, MsoyCodes.EDITING_MSGS)));
+                        Util.adapt(_controller.ctx.displayFeedback, OrthCodes.EDITING_MSGS)));
             }
 
         } else {

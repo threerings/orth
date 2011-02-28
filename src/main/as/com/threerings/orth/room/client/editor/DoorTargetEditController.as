@@ -14,16 +14,16 @@ import com.threerings.flex.FlexUtil;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.data.Scene;
 
-import com.threerings.msoy.client.HeaderBar;
-import com.threerings.msoy.client.Msgs;
+import com.threerings.orth.client.HeaderBar;
+import com.threerings.orth.client.Msgs;
 
-import com.threerings.msoy.ui.FloatingPanel;
-import com.threerings.msoy.world.client.WorldContext;
+import com.threerings.orth.room.client.editor.ui.FloatingPanel;
+import com.threerings.orth.room.client.RoomContext;
 
 import com.threerings.orth.room.client.RoomObjectController;
 import com.threerings.orth.room.client.updates.FurniUpdateAction;
 import com.threerings.orth.room.data.FurniData;
-import com.threerings.orth.room.data.MsoyLocation;
+import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
 
 /**
@@ -67,7 +67,7 @@ public class DoorTargetEditController
      * Start editing a door. Displays the target editor window, which waits for the player to click
      * on a 'submit' button to specify target location.
      */
-    public static function start (doorData :FurniData, ctx :WorldContext) :void
+    public static function start (doorData :FurniData, ctx :RoomContext) :void
     {
         if (editing) {
             _this.deinit();
@@ -79,7 +79,7 @@ public class DoorTargetEditController
     /**
      * Initializes all internal data structures.
      */
-    protected function init (doorData :FurniData, ctx :WorldContext) :void
+    protected function init (doorData :FurniData, ctx :RoomContext) :void
     {
         _ctx = ctx;
         _container = ctx.getTopPanel().getPlaceContainer();
@@ -197,7 +197,7 @@ public class DoorTargetEditController
 
         // remember the target
         _destinationScene = targetSceneId;
-        _destinationLoc = _ctx.getSpotSceneDirector().getIntendedLocation() as MsoyLocation;
+        _destinationLoc = _ctx.getSpotSceneDirector().getIntendedLocation() as OrthLocation;
         _destinationName = _ctx.getSceneDirector().getScene().getName();
 
         // are we already in the room with the door?
@@ -263,7 +263,7 @@ public class DoorTargetEditController
     protected var _destinationScene :int = 0;
 
     /** The location at which to arrive in our destination. */
-    protected var _destinationLoc :MsoyLocation;
+    protected var _destinationLoc :OrthLocation;
 
     /** The name of the destination scene. */
     protected var _destinationName :String;
@@ -272,7 +272,7 @@ public class DoorTargetEditController
     protected var _container :Container;
 
     /** World context, what else? */
-    protected var _ctx :WorldContext;
+    protected var _ctx :RoomContext;
 
     /** Canvas that contains the editing UI. */
     protected var _ui :FloatingPanel;

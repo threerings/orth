@@ -8,11 +8,11 @@ import flash.display.BitmapData;
 import flash.geom.Matrix;
 
 
-import com.threerings.msoy.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 
 import com.threerings.orth.room.client.FurniSprite;
-import com.threerings.orth.room.data.MsoyLocation;
-import com.threerings.msoy.data.all.MediaDescImpl;
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.data.MediaDescImpl;
 
 public class EntranceSprite extends FurniSprite
 {
@@ -20,7 +20,7 @@ public class EntranceSprite extends FurniSprite
     [Embed(source="../../../../../../../../rsrc/media/entrance.png")]
     public static const MEDIA_CLASS :Class;
 
-    public function EntranceSprite (ctx :WorldContext, location :MsoyLocation)
+    public function EntranceSprite (ctx :RoomContext, location :OrthLocation)
     {
         // fake furni data for the fake sprite
         var furniData :EntranceFurniData = new EntranceFurniData();

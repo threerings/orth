@@ -28,12 +28,12 @@ import com.threerings.util.CommandEvent;
 import com.threerings.msoy.ui.FlyingPanel;
 import com.threerings.msoy.ui.SkinnableImage;
 
-import com.threerings.msoy.client.Msgs;
+import com.threerings.orth.client.Msgs;
 
 import com.threerings.msoy.item.data.all.Decor;
 import com.threerings.msoy.item.data.all.Item;
 
-import com.threerings.msoy.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.msoy.world.client.WorldController;
 
 import com.threerings.orth.room.client.FurniSprite;
@@ -45,7 +45,7 @@ import com.threerings.orth.room.data.OrthSceneModel;
  */
 public class RoomEditorPanel extends FlyingPanel
 {
-    public function RoomEditorPanel (ctx :WorldContext, controller :RoomEditorController)
+    public function RoomEditorPanel (ctx :RoomContext, controller :RoomEditorController)
     {
         super(ctx, Msgs.EDITING.get("t.editor"));
         _wctx = ctx;
@@ -584,7 +584,7 @@ public class RoomEditorPanel extends FlyingPanel
 
     protected static const DONE_BUTTON :int = 1;
 
-    protected var _wctx :WorldContext;
+    protected var _wctx :RoomContext;
 
     protected var _switchablePanels :Box;
     protected var _undoButtons :Array; // of CommandButton

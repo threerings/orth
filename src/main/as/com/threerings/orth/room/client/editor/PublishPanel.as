@@ -13,11 +13,11 @@ import com.threerings.util.Log;
 
 import com.threerings.flex.FlexUtil;
 
-import com.threerings.msoy.ui.FloatingPanel;
+import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 
-import com.threerings.msoy.client.Msgs;
+import com.threerings.orth.client.Msgs;
 
-import com.threerings.msoy.world.client.WorldContext;
+import com.threerings.orth.room.client.RoomContext;
 
 import com.threerings.orth.room.client.RoomObjectController;
 import com.threerings.orth.room.client.RoomObjectView;
@@ -30,7 +30,7 @@ import com.threerings.orth.room.data.OrthSceneModel;
  */
 public class PublishPanel extends FloatingPanel
 {
-    public function PublishPanel (ctx :WorldContext, view :RoomObjectView)
+    public function PublishPanel (ctx :RoomContext, view :RoomObjectView)
     {
         super(ctx, Msgs.EDITING.get("t.publish"));
         _view = view;
@@ -85,7 +85,7 @@ public class PublishPanel extends FloatingPanel
     protected function onUploadComplete (data :String) :void
     {
         if (_postcard.selected) {
-            new RoomPostcardPanel(_ctx as WorldContext).open();
+            new RoomPostcardPanel(_ctx as RoomContext).open();
         }
     }
 
