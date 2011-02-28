@@ -9,6 +9,7 @@ import flash.geom.Matrix;
 
 import flashx.funk.ioc.inject;
 
+import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.data.MediaDescImpl;
