@@ -14,8 +14,8 @@ import com.threerings.flex.FlexUtil;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.data.Scene;
 
-import com.threerings.orth.client.HeaderBar;
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.world.client.WorldController;
 
 import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 import com.threerings.orth.room.client.RoomContext;
@@ -86,10 +86,10 @@ public class DoorTargetEditController
         _ui = makeUI();
         _ui.open();
         _ui.x = 5;
-        _ui.y = HeaderBar.getHeight(ctx.getMsoyClient()) + 5;
+        _ui.y = /* HeaderBar.getHeight(ctx.getMsoyClient()) + */ 5;
 
         _doorScene = _ctx.getSceneDirector().getScene().getId();
-        _doorId = doorData.itemId;
+        _doorId = doorData.item.getItem();
 
         _destinationScene = 0;
         _destinationLoc = null;
@@ -145,14 +145,14 @@ public class DoorTargetEditController
     /** Creates the UI. */
     protected function makeUI () :FloatingPanel
     {
-        var panel :FloatingPanel = new FloatingPanel(_ctx, Msgs.EDITING.get("t.edit_door"));
+        var panel :FloatingPanel = new FloatingPanel(Msgs.EDITING.get("t.edit_door"));
         panel.setButtonWidth(0);
         panel.showCloseButton = true;
 
         panel.addChild(FlexUtil.createText(Msgs.EDITING.get("m.edit_door"), 400));
 
         var showRooms :CommandButton = new CommandButton(Msgs.EDITING.get("b.show_rooms"),
-            _ctx.getWorldController().displayPage, [ "people", "rooms_" + _ctx.getMyId() ]);
+            _worldCtrl.displayPage, [ "people", "rooms_" + _ctx.getMyName().getId() ]);
         showRooms.styleName = "orangeButton";
         panel.addChild(showRooms);
 
@@ -240,7 +240,7 @@ public class DoorTargetEditController
         for each (var data :FurniData in furnis) {
             // check to make sure the object still exists there, and is still a door.
             // todo: we probably want some kind of a lock here.
-            if (data.itemId == _doorId && data.actionType == FurniData.ACTION_PORTAL) {
+            if (data.item.getItem() == _doorId && data.actionType.isPortal()) {
                 deinit(data);
                 return;
             }
@@ -276,6 +276,8 @@ public class DoorTargetEditController
 
     /** Canvas that contains the editing UI. */
     protected var _ui :FloatingPanel;
+
+    protected const _worldCtrl :WorldController = inject(WorldController);
 }
 }
 
