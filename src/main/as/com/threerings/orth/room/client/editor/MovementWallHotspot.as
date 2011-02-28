@@ -11,6 +11,7 @@ import flash.events.MouseEvent;
 
 import flash.geom.Point;
 
+import com.threerings.orth.client.OrthPlaceBox;
 import com.threerings.orth.room.client.ClickLocation;
 
 /**
