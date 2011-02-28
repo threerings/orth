@@ -26,7 +26,6 @@ import com.threerings.orth.client.DeploymentConfig;
 
 import com.threerings.msoy.item.client.ItemService;
 import com.threerings.msoy.item.data.all.Item;
-import com.threerings.msoy.item.data.all.ItemIdent;
 
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.RoomService;
@@ -37,6 +36,7 @@ import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.updates.FurniUpdateAction;
 import com.threerings.orth.room.client.updates.SceneUpdateAction;
 
+import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.FurniUpdate_Add;
 import com.threerings.orth.room.data.FurniUpdate_Change;
@@ -45,8 +45,6 @@ import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
 import com.threerings.orth.room.data.SceneAttrsUpdate;
-
-import com.threerings.msoy.tutorial.client.TutorialSequenceBuilder;
 
 /**
  * Controller for the room editing panel. It starts up two different types of UI: one is
@@ -116,7 +114,7 @@ public class RoomEditorController
         _entranceSprite.initEntranceSprite(scene.getEntrance());
         _entranceSprite.setEditing(true);
         _view.addOtherSprite(_entranceSprite);
-        var id :ItemIdent = _entranceSprite.getFurniData().getItemIdent();
+        var id :EntityIdent = _entranceSprite.getFurniData().item;
         _names.put(id, { label: Msgs.EDITING.get("l.entrance"), data: id });
 
         _panel.setDecor(scene.getDecor());
@@ -128,9 +126,6 @@ public class RoomEditorController
         // hide advanced ui
         actionAdvancedEditing(false);
         updateNameDisplay();
-
-        // show tutorial
-        maybeShowTutorial();
     }
 
     /**
@@ -198,8 +193,8 @@ public class RoomEditorController
 
         } else if (update is FurniUpdate_Remove) {
             // if the target furni just got removed, we should lose focus.
-            if (_edit.target != null && _edit.target.getFurniData().getItemIdent().equals(
-                    (update as FurniUpdate_Remove).data.getItemIdent())) {
+            if (_edit.target != null && _edit.target.getFurniData().item.equals(
+                    (update as FurniUpdate_Remove).data.item)) {
                 setTarget(null, null);
             }
             updateNameDisplay();
@@ -252,7 +247,7 @@ public class RoomEditorController
      * or due to user interaction - causes the specified item to be selected as the new target.
      * Note: this searches through the list of sprites; use setTarget() directly if possible.
      */
-    public function findAndSetTarget (ident :ItemIdent) :void
+    public function findAndSetTarget (ident :EntityIdent) :void
     {
         // is this our special entrance sprite? if so, it's not in the room contents list.
         if (ident.equals(EntranceFurniData.ITEM_IDENT)) {
@@ -261,11 +256,11 @@ public class RoomEditorController
         }
 
         // it's a bona fide selection. if the new target is different, let's select it
-        if (_edit.target == null || ! _edit.target.getFurniData().getItemIdent().equals(ident)) {
+        if (_edit.target == null || ! _edit.target.getFurniData().item.equals(ident)) {
             var sprites :Array = _view.getFurniSprites().values();
             // unfortunately, we have to search through all sprites to find the one we want
             var index :int = ArrayUtil.indexIf(sprites, function (sprite :FurniSprite) :Boolean {
-                    return sprite.getFurniData().getItemIdent().equals(ident);
+                    return sprite.getFurniData().item.equals(ident);
                 });
             setTarget(index == -1 ? null : sprites[index], null);
         }
@@ -474,80 +469,6 @@ public class RoomEditorController
         updateScene(scene, newscene);
     }
 
-    protected function maybeShowTutorial () :void
-    {
-        if (!DeploymentConfig.enableTutorial) {
-            return;
-        }
-
-        function xlate (msg :String) :String {
-            return Msgs.NPC.get(msg);
-        }
-
-        function display (address :Address) :Function {
-            return Util.adapt(_ctx.getWorldController().displayAddress, address);
-        }
-
-        var sequence :TutorialSequenceBuilder;
-        sequence = _ctx.getTutorialDirector().newSequence("roomEdit").newbie().limit(isEditing);
-
-        // click and drag
-        sequence.newSuggestion(xlate("i.edit_click")).button(xlate("b.edit_click"), null)
-            .buttonCloses(true).queue();
-
-        // try other options
-        sequence.newSuggestion(xlate("i.edit_try_more")).button(xlate("b.edit_try_more"), null)
-            .buttonCloses(true).highlightObj(_panel).queue();
-
-        // register for unregistered players
-        if (!_ctx.isRegistered()) {
-            sequence.newSuggestion(xlate("i.edit_register")).button(xlate("b.edit_register"),
-                display(Address.REGISTER)).finishText(xlate("i.edit_register_finish")).queue();
-        }
-
-        // shop
-        sequence.newSuggestion(xlate("i.edit_shop")).button(xlate("b.edit_shop"),
-            display(Address.SHOP_FURNI)).buttonCloses().limit(_ctx.isRegistered).queue();
-
-        // let 'er rip
-        if (sequence.activate(true)) {
-            return;
-        }
-
-        _ctx.getTutorialDirector().newSuggestion("roomEditWiki", xlate("i.edit_wiki")).beginner()
-            .button(xlate("b.edit_wiki"), display(Address.wiki("Edit_your_room")))
-            .buttonCloses().queue();
-    }
-
-    protected function maybeShowSelectionTutorial (selected :FurniSprite) :void
-    {
-        if (selected == null) {
-            return;
-        }
-
-        function xlate (msg :String) :String {
-            return Msgs.NPC.get(msg);
-        }
-
-        // what's a welcome mat?
-        if (selected == _entranceSprite) {
-            _ctx.getTutorialDirector().newSuggestion("roomEditEntrance", xlate("i.edit_entrance"))
-                .beginner().button(xlate("b.edit_entrance"), null)
-                .finishText(xlate("i.edit_entrance_finish")).queue();
-            return;
-        }
-
-        // make a door
-        if (selected.getFurniData().actionType == FurniData.ACTION_NONE && _addCount == 1) {
-            function button () :* {
-                return isEditing() ? _panel.getMakeDoorButton() : null;
-            }
-            _ctx.getTutorialDirector().newSuggestion("roomEditDoor", xlate("i.edit_door"))
-                .beginner().highlightFn(button).queue();
-            return;
-        }
-    }
-
     /**
      * Handles mouse presses, starts editing furniture.
      */
@@ -583,15 +504,15 @@ public class RoomEditorController
     }
 
     /**
-     * Helper function, returns an array of ItemIdents of pieces of furniture from the specified
+     * Helper function, returns an array of EntityIdents of pieces of furniture from the specified
      * /furnis/ array, whose names are not stored in the cache.
      */
-    protected function findNamelessFurnis (furnis :Array) :TypedArray /* of ItemIdent */
+    protected function findNamelessFurnis (furnis :Array) :TypedArray /* of EntityIdent */
     {
-        var idents :TypedArray = TypedArray.create(ItemIdent);
-        var ident :ItemIdent;
+        var idents :TypedArray = TypedArray.create(EntityIdent);
+        var ident :EntityIdent;
         for each (var data :FurniData in furnis) {
-            ident = data.getItemIdent();
+            ident = data.item;
             if (! _names.containsKey(ident)) {          // only query for new items
                 if (data.itemType != Item.NOT_A_TYPE) { // skip freebie doors and other fake items
                     idents.push(ident);
@@ -642,7 +563,7 @@ public class RoomEditorController
 
         // pull out selected furni
         var targetData :FurniData = _edit.target.getFurniData();
-        var ident :ItemIdent = targetData.getItemIdent();
+        var ident :EntityIdent = targetData.item;
         _panel.updateDisplay(_edit.target);
 
         // if this is a special furni, deal with it in a special way
@@ -666,8 +587,8 @@ public class RoomEditorController
     protected function updateNameDisplay () :void
     {
         var idents :Array = this.scene.getFurni().map(
-            function(furni :FurniData, i :*, a :*) :ItemIdent {
-                return furni.getItemIdent();
+            function(furni :FurniData, i :*, a :*) :EntityIdent {
+                return furni.item;
             });
         var defs :Array = _names.values().filter(function (def :Object, ... ignored) :Boolean {
             return ArrayUtil.contains(idents, def.data);
@@ -689,7 +610,6 @@ public class RoomEditorController
         }
         targetSpriteUpdated();
         selectTargetName();
-        maybeShowSelectionTutorial(targetSprite);
     }
 
     /** Sets the currently edited target's action (if applicable). */
@@ -731,9 +651,11 @@ public class RoomEditorController
     protected var _panel :RoomEditorPanel;
     protected var _wrapupFn :Function;   // will be called when ending editing
 
-    /** Mapping from ItemIdents to combo box entries that contain both names and ItemIdents.  This
-     * cache is updated once when the editor is opened, and then following each furni update. */
-    protected var _names :Map = Maps.newMapOf(ItemIdent);
+    /**
+     * Mapping from EntityIdents to combo box entries that contain names and EntityIdents. This
+     * cache is updated once when the editor is opened, and then following each furni update.
+     */
+    protected var _names :Map = Maps.newMapOf(EntityIdent);
 
     protected var _entranceSprite :EntranceSprite;
 
