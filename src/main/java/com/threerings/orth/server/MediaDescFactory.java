@@ -24,7 +24,7 @@ public abstract class MediaDescFactory
         return _self;
     }
 
-    public ClientMediaDesc make (String URL)
+    public MediaDesc make (String URL)
     {
         // ORTH TODO: Should only pass in the path component of URL here
         return make (URL, MediaMimeTypes.suffixToMimeType(URL));
