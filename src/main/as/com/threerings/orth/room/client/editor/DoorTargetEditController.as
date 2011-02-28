@@ -6,6 +6,8 @@ package com.threerings.orth.room.client.editor {
 import mx.containers.Canvas;
 import mx.core.Container;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.util.Log;
 
 import com.threerings.flex.CommandButton;
@@ -13,6 +15,7 @@ import com.threerings.flex.FlexUtil;
 
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.data.Scene;
+import com.threerings.whirled.spot.client.SpotSceneDirector;
 
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.world.client.WorldController;
@@ -67,28 +70,26 @@ public class DoorTargetEditController
      * Start editing a door. Displays the target editor window, which waits for the player to click
      * on a 'submit' button to specify target location.
      */
-    public static function start (doorData :FurniData, ctx :RoomContext) :void
+    public static function start (doorData :FurniData) :void
     {
         if (editing) {
             _this.deinit();
         } else {
-            _this.init(doorData, ctx);
+            _this.init(doorData);
         }
     }
 
     /**
      * Initializes all internal data structures.
      */
-    protected function init (doorData :FurniData, ctx :RoomContext) :void
+    protected function init (doorData :FurniData) :void
     {
-        _ctx = ctx;
-        _container = ctx.getTopPanel().getPlaceContainer();
         _ui = makeUI();
         _ui.open();
         _ui.x = 5;
         _ui.y = /* HeaderBar.getHeight(ctx.getMsoyClient()) + */ 5;
 
-        _doorScene = _ctx.getSceneDirector().getScene().getId();
+        _doorScene = _sceneDir.getScene().getId();
         _doorId = doorData.item.getItem();
 
         _destinationScene = 0;
@@ -104,8 +105,6 @@ public class DoorTargetEditController
         // if we got update info...
         if (doorData != null) {
             // ...create a furni update based on the door data, and send it to the server.
-            var ctrl :RoomObjectController =
-                _ctx.getLocationDirector().getPlaceController() as RoomObjectController;
 
             var newdata :FurniData = doorData.clone() as FurniData;
             // note: the destinationName may have colons in it, so we split with care in FurniData
@@ -113,7 +112,7 @@ public class DoorTargetEditController
                 roundCoord(_destinationLoc.y) + ":" +  roundCoord(_destinationLoc.z) + ":" +
                 _destinationLoc.orient + ":" + _destinationName;
 
-            ctrl.applyUpdate(new FurniUpdateAction(_ctx, doorData, newdata));
+            _roomObjectCtrl.applyUpdate(new FurniUpdateAction(doorData, newdata));
         }
 
         // now clean up
@@ -123,8 +122,6 @@ public class DoorTargetEditController
 
         _ui.close();
         _ui = null;
-        _container = null;
-        _ctx = null;
     }
 
     /** Used to round locations to nearest hundredths to avoid giant actionData strings. */
@@ -151,10 +148,11 @@ public class DoorTargetEditController
 
         panel.addChild(FlexUtil.createText(Msgs.EDITING.get("m.edit_door"), 400));
 
-        var showRooms :CommandButton = new CommandButton(Msgs.EDITING.get("b.show_rooms"),
-            _worldCtrl.displayPage, [ "people", "rooms_" + _ctx.getMyName().getId() ]);
-        showRooms.styleName = "orangeButton";
-        panel.addChild(showRooms);
+// ORTH TODO
+//        var showRooms :CommandButton = new CommandButton(Msgs.EDITING.get("b.show_rooms"),
+//            _worldCtrl.displayPage, [ "people", "rooms_" + _ctx.getMyName().getId() ]);
+//        showRooms.styleName = "orangeButton";
+//        panel.addChild(showRooms);
 
         panel.addButtons(new CommandButton(Msgs.EDITING.get("b.set_door"), setTarget));
 
@@ -166,11 +164,8 @@ public class DoorTargetEditController
      */
     protected function setTarget () :void
     {
-        var sd :SceneDirector = _ctx.getSceneDirector();
-        if (sd != null) {
-            // the door should point to where we are right now
-            setDoor(sd.getScene().getId());
-        }
+        // the door should point to where we are right now
+        setDoor(_sceneDir.getScene().getId());
     }
 
     /**
@@ -187,18 +182,12 @@ public class DoorTargetEditController
         // this baroque order of operations reflects a usage pattern in our code,
         // which requires that a scene be loaded up before it can be edited.
 
-        var sd :SceneDirector = _ctx.getSceneDirector();
-        if (sd == null) {
-            Log.getLog(this).warning("Room purchase failure: scene director not initialized.");
-            return;
-        }
-
-        var scene :OrthScene = sd.getScene() as OrthScene;
+        var scene :OrthScene = _sceneDir.getScene() as OrthScene;
 
         // remember the target
         _destinationScene = targetSceneId;
-        _destinationLoc = _ctx.getSpotSceneDirector().getIntendedLocation() as OrthLocation;
-        _destinationName = _ctx.getSceneDirector().getScene().getName();
+        _destinationLoc = _spotSceneDir.getIntendedLocation() as OrthLocation;
+        _destinationName = _sceneDir.getScene().getName();
 
         // are we already in the room with the door?
         if (scene.getId() == _doorScene) {
@@ -207,7 +196,7 @@ public class DoorTargetEditController
 
         } else {
             // move the player back to the room with the door
-            sd.moveTo(_doorScene);
+            _sceneDir.moveTo(_doorScene);
             // the rest will be triggered via updateLocation(), once we get there...
         }
     }
@@ -220,7 +209,7 @@ public class DoorTargetEditController
     {
         // we only care about this if we're actually in the process of setting a target door
         if (committing) {
-            var scene :OrthScene = _this._ctx.getSceneDirector().getScene() as OrthScene;
+            var scene :OrthScene = _sceneDir.getScene() as OrthScene;
 
             // if we're editing, and we traversed back to the original door location,
             // update the door and end editing.
@@ -268,16 +257,13 @@ public class DoorTargetEditController
     /** The name of the destination scene. */
     protected var _destinationName :String;
 
-    /** Flex container for the scene. */
-    protected var _container :Container;
-
-    /** World context, what else? */
-    protected var _ctx :RoomContext;
-
     /** Canvas that contains the editing UI. */
     protected var _ui :FloatingPanel;
 
     protected const _worldCtrl :WorldController = inject(WorldController);
+    protected const _sceneDir :SceneDirector = inject(SceneDirector);
+    protected const _spotSceneDir :SpotSceneDirector = inject(SpotSceneDirector);
+    protected const _roomObjectCtrl :RoomObjectController = inject(RoomObjectController);
 }
 }
 
