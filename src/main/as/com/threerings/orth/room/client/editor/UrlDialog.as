@@ -15,9 +15,9 @@ import com.threerings.orth.room.client.editor.ui.FloatingPanel;
  */
 public class UrlDialog extends FloatingPanel
 {
-    public function UrlDialog (ctx :RoomContext, callback :Function)
+    public function UrlDialog (callback :Function)
     {
-        super(ctx, Msgs.EDITING.get("t.url_dialog"));
+        super(Msgs.EDITING.get("t.url_dialog"));
 
         _callback = callback;
         open(true);
