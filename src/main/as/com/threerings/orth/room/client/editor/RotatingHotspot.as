@@ -15,8 +15,7 @@ import com.threerings.geom.Vector2;
 import com.threerings.msoy.ui.MsoyLoadedAsset;
 
 import com.threerings.orth.client.Msgs;
-
-import com.threerings.orth.room.client.EntitySprite;
+import com.threerings.orth.entity.client.EntitySprite;
 
 /**
  * Hotspot that rotates the object.
