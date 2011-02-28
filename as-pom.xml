@@ -29,7 +29,7 @@
     <dependency>
       <groupId>com.threerings</groupId>
       <artifactId>naryalib</artifactId>
-      <version>1.5-SNAPSHOT</version>
+      <version>1.8-SNAPSHOT</version>
       <scope>compile</scope>
       <type>swc</type>
     </dependency>
