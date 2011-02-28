@@ -53,9 +53,6 @@ public class OrthController extends Controller
     /** Command to invite someone to be a friend. */
     public static const INVITE_FRIEND :String = "InviteFriend";
 
-    /** Command to open the chat interface for a particular chat channel. */
-    public static const OPEN_CHANNEL :String = "OpenChannel";
-
     /** Command to join a party. */
     public static const JOIN_PARTY :String = "JoinParty";
 
@@ -166,15 +163,6 @@ public class OrthController extends Controller
     {
         PlayerService(_client.requireService(PlayerService)).
             followPlayer(playerId, _octx.listener());
-    }
-
-    /**
-     * Handles the OPEN_CHANNEL command.
-     */
-    public function handleOpenChannel (name :Name) :void
-    {
-        // ORTH TODO
-        // _chatDir.openChannel(name);
     }
 
     /**
