@@ -1,5 +1,8 @@
-package com.threerings.orth.room.data
-{
+//
+// $Id$
+
+package com.threerings.orth.room.data {
+
 import com.threerings.util.ByteEnum;
 
 public class EntityType extends ByteEnum
