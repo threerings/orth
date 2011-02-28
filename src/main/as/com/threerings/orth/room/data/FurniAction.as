@@ -3,6 +3,7 @@
 
 package com.threerings.orth.room.data {
 
+import flashx.funk.util.isAbstract;
 import com.threerings.util.ByteEnum;
 
 public class FurniAction extends ByteEnum
@@ -14,16 +15,19 @@ public class FurniAction extends ByteEnum
         super(name, code);
     }
 
-    public function isPortal () :Boolean {
-        return false;
+    public function isPortal () :Boolean
+    {
+        return isAbstract();
     }
 
-    public function isURL () :Boolean {
-        return false;
+    public function isURL () :Boolean
+    {
+        return isAbstract();
     }
 
-    public function isHelpPage () :Boolean {
-        return true;
+    public function isHelpPage () :Boolean
+    {
+        return isAbstract();
     }
 }
 }
