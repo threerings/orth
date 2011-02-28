@@ -100,7 +100,7 @@ public class MovementWallHotspot extends Hotspot
         sy -= (_anchor.y - _originalHotspot.y);
 
         // clamp against the place view
-        var placeBox :OrthPlaceBox = _editor.controller.ctx.getTopPanel().getPlaceContainer();
+        var placeBox :OrthPlaceBox = _editor.controller.topPanel;
         sy = Math.min(sy, placeBox.height + placeBox.y);
 
         var cloc :ClickLocation = _editor.roomView.layout.pointToFurniLocation(sx, sy);
