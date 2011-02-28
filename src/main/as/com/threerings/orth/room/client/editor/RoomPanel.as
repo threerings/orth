@@ -187,9 +187,9 @@ public class RoomPanel extends BasePanel
     ];
 
     protected const ICONS :Array = [
-        inject(OrthResourceFactory)edButtonAccessEveryone,
-        inject(OrthResourceFactory)edButtonAccessOwnerAndFriends,
-        inject(OrthResourceFactory)edButtonAccessOwnerOnly
+        inject(OrthResourceFactory).edButtonAccessEveryone,
+        inject(OrthResourceFactory).edButtonAccessOwnerAndFriends,
+        inject(OrthResourceFactory).edButtonAccessOwnerOnly
     ];
 }
 }
