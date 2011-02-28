@@ -11,6 +11,7 @@ import mx.containers.Box;
 import mx.containers.Grid;
 import mx.containers.HBox;
 import mx.containers.VBox;
+import mx.modules.Module;
 import mx.controls.ColorPicker;
 import mx.controls.HRule;
 import mx.controls.Label;
@@ -18,6 +19,9 @@ import mx.controls.Text;
 import mx.core.Container;
 import mx.core.UIComponent;
 import mx.events.ColorPickerEvent;
+
+import flashx.funk.ioc.inject;
+import flashx.funk.ioc.Module;
 
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.CommandComboBox;
@@ -28,6 +32,7 @@ import com.threerings.util.CommandEvent;
 import com.threerings.msoy.ui.SkinnableImage;
 
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.TopPanel;
 
 import com.threerings.msoy.item.data.all.Decor;
 import com.threerings.msoy.item.data.all.Item;
@@ -45,11 +50,9 @@ import com.threerings.orth.room.data.OrthSceneModel;
  */
 public class RoomEditorPanel extends FloatingPanel
 {
-    public function RoomEditorPanel (ctx :RoomContext, controller :RoomEditorController)
+    public function RoomEditorPanel ()
     {
-        super(ctx, Msgs.EDITING.get("t.editor"));
-        _wctx = ctx;
-        _controller = controller;
+        super(Msgs.EDITING.get("t.editor"));
 
         styleName = "roomEditPanel";
         showCloseButton = true;
@@ -550,7 +553,6 @@ public class RoomEditorPanel extends FloatingPanel
     override protected function getButtonLabel (buttonId :int) :String
     {
         switch (buttonId) {
-        case OK_BUTTON: return Msgs.EDITING.get("b.publish");
         case DONE_BUTTON: return Msgs.EDITING.get("b.end_editing");
         default: return super.getButtonLabel(buttonId);
         }
@@ -565,15 +567,10 @@ public class RoomEditorPanel extends FloatingPanel
         }
     }
 
-    override protected function okButtonClicked () :void
-    {
-        new PublishPanel(_wctx, _controller.roomView);
-    }
-
     // @Override from FloatingPanel
     override protected function didOpen () :void
     {
-        var r :Rectangle = _ctx.getTopPanel().getPlaceViewBounds();
+        var r :Rectangle = _topPanel.getPlaceViewBounds();
         this.x = r.right - width - PADDING;
         this.y = r.y + PADDING;
 
@@ -621,6 +618,8 @@ public class RoomEditorPanel extends FloatingPanel
 
     protected var _room :RoomPanel;
     protected var _namebox :CommandComboBox;
-    protected var _controller :RoomEditorController;
+
+    protected const _module :Module = inject(Module);
+    protected const _controller :RoomEditorController = inject(RoomEditorController);
 }
 }
