@@ -7,7 +7,7 @@ import mx.controls.Label;
 import mx.controls.TextInput;
 
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.RoomContext;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 
 /**
@@ -15,12 +15,16 @@ import com.threerings.orth.room.client.editor.ui.FloatingPanel;
  */
 public class UrlDialog extends FloatingPanel
 {
-    public function UrlDialog (callback :Function)
+    public function UrlDialog ()
     {
         super(Msgs.EDITING.get("t.url_dialog"));
 
-        _callback = callback;
         open(true);
+    }
+
+    public function init (callback :Function) :void
+    {
+        _callback = callback;
     }
 
     override protected function okButtonClicked () :void
