@@ -56,9 +56,11 @@ public class ScalingHotspot extends Hotspot
     // @Override from Hotspot
     override protected function initializeDisplay () :void
     {
-        _displayStandard = new HOTSPOT() as DisplayObject;
+        var klass :Class = _editor.rsrc.edHotspotScale;
+        _displayStandard = new klass() as DisplayObject;
 
-        var c :Class = (_corner.x == _corner.y) ? HOTSPOT_OVER_TOPLEFT : HOTSPOT_OVER_TOPRIGHT;
+        var c :Class = (_corner.x == _corner.y) ?
+            _editor.rsrc.edHotspotScaleOverLeft : _editor.rsrc.edHotspotScaleRight;
         _displayMouseOver = new c() as DisplayObject;
     }
 
@@ -126,13 +128,5 @@ public class ScalingHotspot extends Hotspot
 
     /** Bitmap used for hotspot with no scale locking. */
     protected var _displayUnlocked :DisplayObject;
-
-    // Bitmaps galore!
-    [Embed(source="../../../../../../../../rsrc/media/skins/button/roomeditor/hotspot_scale.png")]
-    public static const HOTSPOT :Class;
-    [Embed(source="../../../../../../../../rsrc/media/skins/button/roomeditor/hotspot_scale_over_l.png")]
-    public static const HOTSPOT_OVER_TOPLEFT :Class;
-    [Embed(source="../../../../../../../../rsrc/media/skins/button/roomeditor/hotspot_scale_over_r.png")]
-    public static const HOTSPOT_OVER_TOPRIGHT :Class;
 }
 }
