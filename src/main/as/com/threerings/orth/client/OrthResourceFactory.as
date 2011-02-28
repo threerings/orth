@@ -19,5 +19,18 @@ public interface OrthResourceFactory
     function get visitIcon () :Class;
     function get blockIcon () :Class;
     function get reportIcon () :Class;
+
+    // editor resources
+
+    /** The sprite image used for positioning the entrance location. */
+    function get edEntrance () :Class;
+    function get edHotspotMoveXZ () :Class;
+    function get edHotspotMoveY () :Class;
+    function get edButtonAccessEveryone () :Class;
+    function get edButtonAccessOwnerAndFriends () :Class;
+    function get edButtonAccessOwnerOnly () :Class;
+    function get edHotspotScale () :Class;
+    function get edHotspotScaleOverLeft () :Class;
+    function get edHotspotScaleOverRight () :Class;
 }
 }
