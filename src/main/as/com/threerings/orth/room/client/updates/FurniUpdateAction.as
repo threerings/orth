@@ -19,9 +19,8 @@ public class FurniUpdateAction
     implements UpdateAction
 {
     /** Create a new furni update command. */
-    public function FurniUpdateAction (ctx :RoomContext, oldData :FurniData, newData :FurniData)
+    public function FurniUpdateAction (oldData :FurniData, newData :FurniData)
     {
-        _ctx = ctx;
         _oldData = oldData;
         _newData = newData;
     }
@@ -58,7 +57,6 @@ public class FurniUpdateAction
         return furniUpdate;
     }
 
-    protected var _ctx :RoomContext;
     protected var _oldData :FurniData;
     protected var _newData :FurniData;
 }
