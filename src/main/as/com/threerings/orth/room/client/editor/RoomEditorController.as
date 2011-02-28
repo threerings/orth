@@ -118,10 +118,6 @@ public class RoomEditorController
         _names.put(id, { label: Msgs.EDITING.get("l.entrance"), data: id });
 
         _panel.setDecor(scene.getDecor());
-        _panel.updatePlaylistControl(scene.getPlaylistControl());
-        _panel.setBackgroundColor(scene.getBackgroundColor());
-        _panel.setMayHavePuppet(scene.mayHavePuppet());
-        _panel.setPuppetEnabled(scene.isPuppetEnabled());
 
         // hide advanced ui
         actionAdvancedEditing(false);
@@ -141,25 +137,6 @@ public class RoomEditorController
         // actionEditorClosed()
     }
 
-    public function setPlaylistControl (openAccess :Boolean) :void
-    {
-        var newscene :OrthScene = scene.clone() as OrthScene;
-        var newmodel :OrthSceneModel = newscene.getSceneModel() as OrthSceneModel;
-        newmodel.playlistControl =
-            openAccess ? OrthSceneModel.ACCESS_EVERYONE : OrthSceneModel.ACCESS_OWNER_ONLY;
-        updateScene(scene, newscene);
-    }
-
-    public function setPuppetEnabled (showPuppet :Boolean) :void
-    {
-        if (scene.mayHavePuppet()) {
-            var newscene :OrthScene = scene.clone() as OrthScene;
-            var newmodel :OrthSceneModel = newscene.getSceneModel() as OrthSceneModel;
-            newmodel.noPuppet = !showPuppet;
-            updateScene(scene, newscene);
-        }
-    }
-
     /**
      * Receives a scene update from the controller, and refreshes the edited target appropriately.
      */
@@ -175,10 +152,7 @@ public class RoomEditorController
             // update sprite data
             _entranceSprite.getFurniData().loc.set(up.entrance);
             _entranceSprite.update(_entranceSprite.getFurniData());
-            _panel.updatePlaylistControl(up.playlistControl);
             _panel.setDecor(up.decor);
-            _panel.setBackgroundColor(up.backgroundColor);
-            _panel.setPuppetEnabled(!up.noPuppet);
             updateNameDisplay();
 
             refreshTarget();
@@ -455,18 +429,6 @@ public class RoomEditorController
         var svc :WorldService = _ctx.getClient().requireService(WorldService) as WorldService;
         svc.setHomeSceneId(model.ownerType, model.ownerId, model.sceneId,
             _ctx.confirmListener(successMsg, OrthCodes.EDITING_MSGS));
-    }
-
-    /**
-     * Creates an update for the background color of the scene, obtaining the color from the user's
-     * currently set custom background color.
-     */
-    public function updateBackgroundColor (value :uint) :void
-    {
-        var newscene :OrthScene = scene.clone() as OrthScene;
-        var newmodel :OrthSceneModel = newscene.getSceneModel() as OrthSceneModel;
-        newmodel.backgroundColor = value;
-        updateScene(scene, newscene);
     }
 
     /**

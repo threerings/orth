@@ -146,16 +146,6 @@ public class RoomEditorPanel extends FloatingPanel
         _decorLabel.text = Msgs.EDITING.get("m.decor", decor.name || Msgs.EDITING.get("m.none"));
     }
 
-    public function updatePlaylistControl (playlistControl :int) :void
-    {
-        _playlistControl.selected = (playlistControl == OrthSceneModel.ACCESS_EVERYONE);
-    }
-
-    public function setBackgroundColor (color :uint) :void
-    {
-        _backgroundColor.selectedColor = color;
-    }
-
     public function setHomeButtonEnabled (enabled :Boolean) :void
     {
         _room.setHomeButtonEnabled(enabled);
@@ -174,28 +164,6 @@ public class RoomEditorPanel extends FloatingPanel
             if (! containsDefault) { _switchablePanels.addChild(_defaultPanel); }
             if (containsAdvanced) { _switchablePanels.removeChild(_advancedPanels); }
         }
-    }
-
-    /**
-     * Sets whether or not we should show the puppet control check box. Note that this is intended
-     * for use during initialization of editing mode and should only be called once prior to
-     * opening the panel.
-     */
-    public function setMayHavePuppet (visible :Boolean) :void
-    {
-        // remove the control so layout looks right
-        if (!visible && _removePuppetControl != null) {
-            _removePuppetControl();
-            _removePuppetControl = null;
-        }
-    }
-
-    /**
-     * Sets whether or not the puppet control check box is selected.
-     */
-    public function setPuppetEnabled (enabled :Boolean) :void
-    {
-        _puppetControl.selected = enabled;
     }
 
     /**
@@ -341,19 +309,6 @@ public class RoomEditorPanel extends FloatingPanel
         contents.percentWidth = 100;
         addChild(contents);
 
-        // playlist control
-        _playlistControl = new CommandCheckBox(Msgs.EDITING.get("l.playlist"),
-            _controller.setPlaylistControl);
-        GridUtil.addRow(contents, _playlistControl, [ 3, 1 ]);
-
-        // puppet control
-        var puppetControlRow :UIComponent = GridUtil.addRow(contents,
-            _puppetControl = new CommandCheckBox(Msgs.EDITING.get("l.show_puppet"),
-                _controller.setPuppetEnabled), [ 3, 1 ]);
-        _removePuppetControl = function () :void {
-            contents.removeChild(puppetControlRow);
-        };
-
         // decor name
         var decorBox :Box = new HBox();
         decorBox.percentWidth = 100;
@@ -362,21 +317,6 @@ public class RoomEditorPanel extends FloatingPanel
         decorBox.addChild(new CommandButton(
             Msgs.EDITING.get("b.change"), WorldController.VIEW_STUFF, Item.DECOR));
         GridUtil.addRow(contents, decorBox, [3, 1]);
-
-        // background color
-        var colorBox :Box = new HBox();
-        colorBox.styleName = "roomEditBackgroundColorRow";
-        colorBox.percentWidth = 100;
-        var colorLabel :Label = FlexUtil.createLabel("Background color");
-        colorBox.addChild(colorLabel);
-        colorLabel.width = 200;
-        _backgroundColor = new ColorPicker();
-        colorBox.addChild(_backgroundColor);
-        _backgroundColor.addEventListener(ColorPickerEvent.CHANGE,
-            function (evt :ColorPickerEvent) :void {
-                _controller.updateBackgroundColor(evt.color);
-            });
-        GridUtil.addRow(contents, colorBox, [3, 1]);
 
         // item name combo box
         var box :Box = new HBox();
@@ -596,14 +536,7 @@ public class RoomEditorPanel extends FloatingPanel
     protected var _removeLinkButton :UIComponent;
     protected var _customConfigButton :UIComponent;
 
-    protected var _playlistControl :CommandCheckBox;
-
-    protected var _removePuppetControl :Function;
-    protected var _puppetControl :CommandCheckBox;
-
     protected var _decorLabel :Label;
-
-    protected var _backgroundColor :ColorPicker;
 
     protected var _curTarget :FurniSprite;
 
