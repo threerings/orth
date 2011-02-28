@@ -373,7 +373,7 @@ public class FloatingPanel extends TitleWindow
      */
     protected function didOpen () :void
     {
-        PopUpUtil.avoidOtherPopups(this, _topPanel.getPlaceViewBounds(), PADDING);
+        PopUpUtil.avoidOtherPopups(this, _topPanel.getMainViewBounds(), PADDING);
     }
 
     /** Our topmost display container. */
