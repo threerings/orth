@@ -328,7 +328,7 @@ public class RoomEditorPanel extends FlyingPanel
         var namebar :VBox = new VBox();
         namebar.styleName = "roomEditNameBar";
         namebar.percentWidth = 100;
-        namebar.addChild(_room = new RoomPanel(_controller));
+        namebar.addChild(_room = inject(RoomPanel));
         addChild(namebar);
 
         // container for item stuffs

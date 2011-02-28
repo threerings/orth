@@ -34,11 +34,6 @@ import com.threerings.orth.room.data.OrthSceneModel;
  */
 public class RoomPanel extends BasePanel
 {
-    public function RoomPanel (controller :RoomEditorController)
-    {
-        super(controller);
-    }
-
     // @Override from BasePanel
     override public function updateDisplay (data :FurniData) :void
     {
@@ -170,9 +165,7 @@ public class RoomPanel extends BasePanel
         var model :OrthSceneModel = _controller.scene.getSceneModel() as OrthSceneModel;
         if (_buttonbar.dataProvider == null) {
             var defs :Array = new Array();
-            for each (var ii :int in [ OrthSceneModel.ACCESS_EVERYONE,
-                                       OrthSceneModel.ACCESS_OWNER_AND_FRIENDS,
-                                       OrthSceneModel.ACCESS_OWNER_ONLY ]) {
+            for each (var ii :int in ACCESSES) {
                 var tip :String = Msgs.EDITING.get("m.access_" + model.ownerType + "_" + ii);
                 defs.push({ id: ii, icon: ICONS[ii], toolTip: tip });
             }
@@ -187,12 +180,16 @@ public class RoomPanel extends BasePanel
     protected var _buttonbar :ToggleButtonBar;
     protected var _homeButton :CommandButton;
 
-    [Embed(source="../../../../../../../../rsrc/media/skins/button/roomeditor/button_access_everyone.png")]
-    protected static const ICON_EVERYONE :Class;
-    [Embed(source="../../../../../../../../rsrc/media/skins/button/roomeditor/button_access_owner_and_friends.png")]
-    protected static const ICON_OWNER_FRIENDS :Class;
-    [Embed(source="../../../../../../../../rsrc/media/skins/button/roomeditor/button_access_owner_only.png")]
-    protected static const ICON_OWNER :Class;
-    protected static const ICONS :Array = [ ICON_EVERYONE, ICON_OWNER_FRIENDS, ICON_OWNER ];
+    protected const ACCESSES :Array = [
+        OrthSceneModel.ACCESS_EVERYONE,
+        OrthSceneModel.ACCSS_OWNER_AND_FRIENDS,
+        OrthSceneModel.ACCESS_OWNER_ONLY
+    ];
+
+    protected const ICONS :Array = [
+        inject(OrthResourceFactory)edButtonAccessEveryone,
+        inject(OrthResourceFactory)edButtonAccessOwnerAndFriends,
+        inject(OrthResourceFactory)edButtonAccessOwnerOnly
+    ];
 }
 }

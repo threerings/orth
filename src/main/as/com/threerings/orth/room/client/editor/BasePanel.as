@@ -18,9 +18,8 @@ import com.threerings.orth.room.data.FurniData;
  */
 public class BasePanel extends VBox
 {
-    public function BasePanel (controller :RoomEditorController)
+    public function BasePanel ()
     {
-        _controller = controller;
         this.percentWidth = 100;
     }
 
@@ -118,7 +117,7 @@ public class BasePanel extends VBox
     }
 
     protected var _furniData :FurniData;
-    protected var _controller :RoomEditorController;
+    protected var _controller :RoomEditorController = inject(RoomEditorController);
     protected var _buttons :HBox;
     protected var _buttonsEnabled :Boolean;
     protected var _applyButton :CommandButton;
