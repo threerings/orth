@@ -25,7 +25,6 @@ import com.threerings.flex.CommandCheckBox;
 import com.threerings.flex.FlexUtil;
 import com.threerings.flex.GridUtil;
 import com.threerings.util.CommandEvent;
-import com.threerings.msoy.ui.FlyingPanel;
 import com.threerings.msoy.ui.SkinnableImage;
 
 import com.threerings.orth.client.Msgs;
@@ -38,12 +37,13 @@ import com.threerings.msoy.world.client.WorldController;
 
 import com.threerings.orth.room.client.FurniSprite;
 import com.threerings.orth.room.data.FurniData;
+import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 import com.threerings.orth.room.data.OrthSceneModel;
 
 /**
  * A separate room editing panel, which lets the player edit furniture inside the room.
  */
-public class RoomEditorPanel extends FlyingPanel
+public class RoomEditorPanel extends FloatingPanel
 {
     public function RoomEditorPanel (ctx :RoomContext, controller :RoomEditorController)
     {
