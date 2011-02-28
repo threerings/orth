@@ -11,7 +11,6 @@ import flash.events.MouseEvent;
 
 import flash.geom.Point;
 
-import com.threerings.orth.client.PlaceBox;
 import com.threerings.orth.room.client.ClickLocation;
 
 /**
@@ -100,7 +99,7 @@ public class MovementWallHotspot extends Hotspot
         sy -= (_anchor.y - _originalHotspot.y);
 
         // clamp against the place view
-        var placeBox :PlaceBox = _editor.controller.ctx.getTopPanel().getPlaceContainer();
+        var placeBox :OrthPlaceBox = _editor.controller.ctx.getTopPanel().getPlaceContainer();
         sy = Math.min(sy, placeBox.height + placeBox.y);
 
         var cloc :ClickLocation = _editor.roomView.layout.pointToFurniLocation(sx, sy);
