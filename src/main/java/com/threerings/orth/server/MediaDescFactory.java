@@ -3,7 +3,6 @@
 
 package com.threerings.orth.server;
 
-import com.threerings.orth.data.ClientMediaDesc;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.MediaMimeTypes;
 
@@ -31,12 +30,12 @@ public abstract class MediaDescFactory
         return make (URL, MediaMimeTypes.suffixToMimeType(URL));
     }
 
-    public ClientMediaDesc make (String URL, byte mimeType)
+    public MediaDesc make (String URL, byte mimeType)
     {
         return make (URL, mimeType, MediaDesc.NOT_CONSTRAINED);
     }
 
-    public abstract ClientMediaDesc make (String URL, byte mimeType, byte constraint);
+    public abstract MediaDesc make (String URL, byte mimeType, byte constraint);
 
     protected static MediaDescFactory _self;
 }

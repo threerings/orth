@@ -12,6 +12,11 @@ public interface MediaDesc
     extends Equalable
 {
     /**
+     * Returns the path of the URL that references this media.
+     */
+    function getMediaPath () :String;
+
+    /**
      * Returns the mime type of this media.
      */
     function getMimeType () :int;
