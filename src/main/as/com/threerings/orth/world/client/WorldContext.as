@@ -6,8 +6,8 @@ package com.threerings.orth.world.client {
 import com.threerings.presents.util.PresentsContext;
 
 import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.world.data.Destination;
 import com.threerings.orth.world.data.OrthPlayerBody;
-import com.threerings.orth.world.data.PlaceKey;
 
 /**
  * The shared functionality, on top of PresentsContext, that any location implementation
@@ -32,6 +32,6 @@ public interface WorldContext
      * Given the precondition that our world client is logged onto the correct server and
      * that the given place is guaranteed to be resolved on it, request a move into the place.
      */
-    function gotoPlace (place :PlaceKey) :void;
+    function go (destination :Destination) :void;
 }
 }

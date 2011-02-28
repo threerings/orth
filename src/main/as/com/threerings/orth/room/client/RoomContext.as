@@ -25,6 +25,7 @@ import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldModule;
+import com.threerings.orth.world.data.Destination;
 import com.threerings.orth.world.data.OrthPlayerBody;
 import com.threerings.orth.world.data.PlaceKey;
 
@@ -111,10 +112,10 @@ public class RoomContext
     }
 
     // from WorldContext
-    public function gotoPlace (place :PlaceKey) :void
+    public function go (destination :Destination) :void
     {
         var sceneDir :OrthSceneDirector = _module.getInstance(SceneDirector);
-        sceneDir.moveTo(RoomKey(place).sceneId);
+        sceneDir.moveToPlace(destination);
     }
 
     /** We use this for moving around a scene. */

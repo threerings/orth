@@ -42,6 +42,7 @@ import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyDetail;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
+import com.threerings.orth.room.data.RoomDestination;
 import com.threerings.orth.room.data.RoomKey;
 import com.threerings.orth.room.data.RoomPlace;
 import com.threerings.orth.world.client.WorldDirector;
@@ -295,7 +296,7 @@ public class PartyDirector extends BasicDirector
     protected function checkFollowScene () :void
     {
         if (_partyObj.sceneId != 0) {
-            _worldDir.moveTo(new RoomKey(_partyObj.sceneId));
+            _worldDir.moveTo(new RoomDestination(new RoomKey(_partyObj.sceneId)));
         }
     }
 

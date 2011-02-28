@@ -16,6 +16,7 @@ import com.threerings.presents.client.ClientObserver;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.world.data.Destination;
 import com.threerings.orth.world.data.PlaceKey;
 import com.threerings.orth.world.data.WorldMarshaller;
 
@@ -41,27 +42,27 @@ public class WorldDirector extends BasicDirector
     /**
      * Request a move.
      */
-    public function moveTo (place :PlaceKey) :void
+    public function moveTo (dest :Destination) :void
     {
-        if (_pendingPlace != null) {
+        if (_pendingDest != null) {
             // this might be a bit too hard-ass, but they *can* always restart their client...
             log.warning("Refusing to move while we're already in mid-move",
-                "desired destination", place, "pending destination", _pendingPlace);
+                "desired destination", dest, "pending destination", _pendingDest);
             return;
         }
 
         // remember where we're going
-        _pendingPlace = place;
+        _pendingDest = dest;
 
         // begin by locating the correct peer
-        _wsvc.locatePlace(place, this);
+        _wsvc.locatePlace(dest.getPlaceKey(), this);
     }
 
     // from Java WorldService_PlaceResolutionListener
     public function requestFailed (cause :String) :void
     {
         // clear our pending move
-        _pendingPlace = null;
+        _pendingDest = null;
 
         log.warning("Place resolution request failed", "cause", cause);
         _octx.displayFeedback(OrthCodes.WORLD_MSGS, cause);
@@ -75,10 +76,13 @@ public class WorldDirector extends BasicDirector
 
         var worldClient :WorldClient = (_octx.wctx != null) ? _octx.wctx.getWorldClient() : null;
 
+        // convenience variable
+        var pendingPlace :PlaceKey = _pendingDest.getPlaceKey();
+
         // if we're switching place types, we need to instantiate a new world system
         if (_currentPlace == null ||
-            _pendingPlace.getPlaceType() != _currentPlace.getPlaceType()) {
-            _octx.setupWorld(_pendingPlace.getModuleClass());
+            pendingPlace.getPlaceType() != _currentPlace.getPlaceType()) {
+            _octx.setupWorld(pendingPlace.getModuleClass());
 
         } else if (worldClient.isConnected() && peer == _currentPeer) {
             // this is the special case where we're already on the right peer
@@ -126,12 +130,16 @@ public class WorldDirector extends BasicDirector
         }
 
         // we successfully logged on; hand control over to the world implementation
-        _currentPlace = _pendingPlace;
+        _currentPlace = _pendingDest.getPlaceKey();
+
+        // squirrel this away before we reset our class members
+        var destination :Destination = _pendingDest;
 
         _pendingPeer = null;
-        _pendingPlace = null;
+        _pendingDest = null;
 
-        _octx.wctx.gotoPlace(_currentPlace);
+        // finally go!
+        _octx.wctx.go(destination);
     }
 
     // from BasicDirector
@@ -157,7 +165,7 @@ public class WorldDirector extends BasicDirector
     protected var _currentPlace :PlaceKey;
     protected var _currentPeer :String;
 
-    protected var _pendingPlace :PlaceKey;
+    protected var _pendingDest :Destination;
     protected var _pendingPeer :String;
 }
 }

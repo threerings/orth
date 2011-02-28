@@ -15,12 +15,15 @@ import com.threerings.util.Log;
 import com.threerings.presents.client.Client;
 
 import com.threerings.orth.room.client.OrthPendingData;
+import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
+import com.threerings.orth.room.data.RoomDestination;
 import com.threerings.orth.room.data.RoomKey;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldDirector;
+import com.threerings.orth.world.data.Destination;
 
 /**
  * Handles custom scene traversal and extra bits for Whirled.
@@ -62,17 +65,14 @@ public class OrthSceneDirector extends SceneDirector
             return false;
         }
 
-        // prepare to move to this scene (sets up pending data)
-        if (!prepareMoveTo(dest.targetSceneId, null)) {
-            log.info("Portal traversal vetoed", "portalId", portalId);
-            return false;
-        }
-
-        // make a note of our target location in the destination room
-        (_pendingData as OrthPendingData).destLoc = dest.dest;
-
-        _worldDir.moveTo(new RoomKey(dest.targetSceneId));
+        _worldDir.moveTo(new RoomDestination(new RoomKey(dest.targetSceneId), dest.dest));
         return true;
+    }
+
+    public function moveToPlace (destination :Destination) :void
+    {
+        _pendingLocation = RoomDestination(destination).getLocation();
+        moveTo(RoomKey(destination.getPlaceKey()).sceneId);
     }
 
     // from SceneDirector
@@ -93,6 +93,9 @@ public class OrthSceneDirector extends SceneDirector
             _sceneId = 0; // not -1
             return;
         }
+
+        data.destLoc = _pendingLocation;
+        _pendingLocation = null;
 
         // check the version of our cached copy of the scene to which we're requesting to move; if
         // we were unable to load it, assume a cached version of zero
@@ -119,8 +122,11 @@ public class OrthSceneDirector extends SceneDirector
         _mssvc = (client.requireService(OrthSceneService) as OrthSceneService);
     }
 
+    protected var _mssvc :OrthSceneService;
+
+    protected var _pendingLocation :OrthLocation;
+
     protected const _worldDir :WorldDirector = inject(WorldDirector);
 
-    protected var _mssvc :OrthSceneService;
 }
 }
