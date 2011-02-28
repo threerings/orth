@@ -24,12 +24,12 @@ import com.threerings.util.Log;
 public class Hotspot extends Sprite
 {
     /**
-     * Constructor.
+     * Initialize this Hotspot.
      *
      * @param editor Reference to the editor
      * @param advancedOnly If true, this hotspot will only be visible in advanced mode.
      */
-    public function Hotspot (editor :FurniEditor, advancedOnly :Boolean)
+    public function initHotspot (editor :FurniEditor, advancedOnly :Boolean) :void
     {
         _editor = editor;
         _displayInAdvancedOnly = advancedOnly;

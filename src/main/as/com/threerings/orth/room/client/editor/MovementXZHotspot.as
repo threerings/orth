@@ -66,7 +66,8 @@ public class MovementXZHotspot extends Hotspot
     override protected function initializeDisplay () :void
     {
         // do not call super - we're providing different bitmaps
-        _displayStandard = new HOTSPOTXZ() as DisplayObject;
+        var klass :Class = _editor.rsrc.edHotspotMoveXZ;
+        _displayStandard = new klass() as DisplayObject;
         const bd :BitmapData = (_displayStandard as Bitmap).bitmapData;
 
         _displayMouseOver = new Bitmap(bd);
@@ -123,8 +124,5 @@ public class MovementXZHotspot extends Hotspot
 
     /** Bitmap used for hotspot with mouseover when shift pressed. */
     protected var _displayYMouseOver :DisplayObject;
-
-    [Embed(source="../../../../../../../../rsrc/media/skins/button/roomeditor/hotspot_move_xz.png")]
-    public static const HOTSPOTXZ :Class;
 }
 }

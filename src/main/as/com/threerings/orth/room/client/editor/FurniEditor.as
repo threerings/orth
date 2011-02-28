@@ -6,8 +6,11 @@ package com.threerings.orth.room.client.editor {
 import flash.display.Graphics;
 import flash.geom.Point;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.display.GraphicsUtil;
 
+import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.room.client.FurniSprite;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.FurniData;
@@ -18,6 +21,11 @@ import com.threerings.orth.room.data.OrthLocation;
  */
 public class FurniEditor extends FurniHighlight
 {
+    public function get rsrc () :OrthResourceFactory
+    {
+        return _rsrcFactory;
+    }
+
     public function FurniEditor (controller :RoomEditorController)
     {
         super(controller);
@@ -211,5 +219,7 @@ public class FurniEditor extends FurniHighlight
 
     /** Array of all Hotspot instances (initialized in the constructor). */
     protected var _hotspots :Array; // of Hotspot references
+
+    protected const _rsrcFactory :OrthResourceFactory = inject(OrthResourceFactory);
 }
 }

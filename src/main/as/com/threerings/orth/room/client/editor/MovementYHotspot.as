@@ -43,7 +43,8 @@ public class MovementYHotspot extends Hotspot
     override protected function initializeDisplay () :void
     {
         // do not call super - we're providing different bitmaps
-        _displayStandard = new HOTSPOT() as DisplayObject;
+        var klass :Class = _editor.rsrc.edHotspotMoveY;
+        _displayStandard = new klass() as DisplayObject;
 
         _displayMouseOver = new Bitmap((_displayStandard as Bitmap).bitmapData);
         _displayMouseOver.transform.colorTransform = new ColorTransform(1.25, 1.25, 1.25);
@@ -64,9 +65,5 @@ public class MovementYHotspot extends Hotspot
 
         _editor.updateTargetLocation(cloc.loc);
     }
-
-    // Bitmaps galore!
-    [Embed(source="../../../../../../../../rsrc/media/skins/button/roomeditor/hotspot_move_y.png")]
-    public static const HOTSPOT :Class;
 }
 }
