@@ -4,6 +4,7 @@
 package com.threerings.orth.room.client.editor {
 
 import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.EntityType;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.SimpleEntityIdent;
 
