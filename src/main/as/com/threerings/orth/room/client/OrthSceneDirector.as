@@ -62,6 +62,12 @@ public class OrthSceneDirector extends SceneDirector
             return false;
         }
 
+        // prepare to move to this scene (sets up pending data)
+        if (!prepareMoveTo(dest.targetSceneId, null)) {
+            log.info("Portal traversal vetoed", "portalId", portalId);
+            return false;
+        }
+
         // make a note of our target location in the destination room
         (_pendingData as OrthPendingData).destLoc = dest.dest;
 
