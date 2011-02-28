@@ -18,11 +18,13 @@ import com.threerings.util.Maps;
 import com.threerings.util.StringUtil;
 import com.threerings.util.Util;
 
+import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.data.SceneUpdate;
 
 import com.threerings.msoy.data.Address;
 
 import com.threerings.orth.client.DeploymentConfig;
+import com.threerings.orth.client.TopPanel;
 
 import com.threerings.msoy.item.client.ItemService;
 import com.threerings.msoy.item.data.all.Item;
@@ -30,8 +32,8 @@ import com.threerings.msoy.item.data.all.Item;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.RoomService;
 
+import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
-import com.threerings.orth.room.client.EntitySprite;
 import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.updates.FurniUpdateAction;
 import com.threerings.orth.room.client.updates.SceneUpdateAction;
@@ -67,6 +69,11 @@ public class RoomEditorController
         return _view;
     }
 
+    public function get topPanel () :TopPanel
+    {
+        return _topPanel;
+    }
+
     public function get ctx () :RoomContext
     {
         return _ctx;
@@ -74,7 +81,7 @@ public class RoomEditorController
 
     public function get scene () :OrthScene
     {
-        return _ctx.getSceneDirector().getScene() as OrthScene;
+        return _sceneDir.getScene() as OrthScene;
     }
 
     /**
@@ -623,6 +630,9 @@ public class RoomEditorController
 
     /** Tracks how many items have been added to the room this session. */
     protected var _addCount :int;
+
+    protected const _sceneDir :SceneDirector = inject(SceneDirector);
+    protected const _topPanel :TopPanel = inject(TopPanel);
 
     private const log :Log = Log.getLog(this);
 }
