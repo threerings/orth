@@ -3,6 +3,7 @@
 // $Id$
 
 package com.threerings.orth.room.data {
+
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.data.SceneUpdate;
 
@@ -10,6 +11,7 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.entity.data.DecorData;
+import com.threerings.orth.room.data.OrthLocation;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START

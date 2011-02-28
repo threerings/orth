@@ -18,7 +18,7 @@ public class VizOrthName extends OrthName
     /**
      * Returns this member's photo.
      */
-    public function getPhoto () :ClientMediaDesc
+    public function getPhoto () :MediaDesc
     {
         return _photo;
     }
@@ -27,7 +27,7 @@ public class VizOrthName extends OrthName
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        _photo = ins.readObject(ClientMediaDesc);
+        _photo = ins.readObject(MediaDesc);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
@@ -36,7 +36,7 @@ public class VizOrthName extends OrthName
         out.writeObject(_photo);
     }
 
-    protected var _photo :ClientMediaDesc;
+    protected var _photo :MediaDesc;
 // GENERATED STREAMING END
 // GENERATED CLASSFINISH START
 }

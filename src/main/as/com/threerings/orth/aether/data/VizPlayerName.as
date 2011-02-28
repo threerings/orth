@@ -8,7 +8,6 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.data.ClientMediaDesc;
 import com.threerings.orth.data.MediaDesc;
 
 // GENERATED PREAMBLE END
@@ -22,7 +21,7 @@ public class VizPlayerName extends PlayerName
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        _photo = ins.readObject(ClientMediaDesc);
+        _photo = ins.readObject(MediaDesc);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
@@ -31,10 +30,10 @@ public class VizPlayerName extends PlayerName
         out.writeObject(_photo);
     }
 
-    protected var _photo :ClientMediaDesc;
+    protected var _photo :MediaDesc;
 // GENERATED STREAMING END
 
-    public function getPhoto () :ClientMediaDesc
+    public function getPhoto () :MediaDesc
     {
         return _photo;
     }

@@ -3,6 +3,7 @@
 // $Id$
 
 package com.threerings.orth.room.data {
+
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.data.SceneUpdate;
 

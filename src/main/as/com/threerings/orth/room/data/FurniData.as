@@ -7,7 +7,7 @@ package com.threerings.orth.room.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
-import com.threerings.orth.data.ClientMediaDesc;
+
 import com.threerings.util.ClassUtil;
 import com.threerings.util.Util;
 
@@ -28,7 +28,7 @@ public class FurniData extends SimpleStreamableObject
 
     public var item :EntityIdent;
 
-    public var media :ClientMediaDesc;
+    public var media :MediaDesc;
 
     public var loc :OrthLocation;
 

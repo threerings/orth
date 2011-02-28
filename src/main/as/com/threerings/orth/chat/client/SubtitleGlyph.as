@@ -2,14 +2,13 @@
 // $Id: SubtitleGlyph.as 19754 2010-12-07 16:19:29Z zell $
 
 package com.threerings.orth.chat.client {
-import com.threerings.orth.data.ClientMediaDesc;
-
 import flash.display.Sprite;
 import flash.events.MouseEvent;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 
+import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.ui.MediaWrapper;
 import com.threerings.orth.utils.TextUtil;
 
@@ -19,7 +18,7 @@ public class SubtitleGlyph extends ChatGlyph
      * to find the corresponding ChatMessage. */
     public var histIndex :int;
 
-    public var thumbnail :ClientMediaDesc;
+    public var thumbnail :MediaDesc;
 
     public static var thumbsEnabled :Boolean;
 

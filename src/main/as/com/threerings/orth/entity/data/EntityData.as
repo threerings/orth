@@ -7,7 +7,7 @@ package com.threerings.orth.entity.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
-import com.threerings.orth.data.ClientMediaDesc;
+
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.entity.data.Entity;
 import com.threerings.orth.room.data.EntityIdent;
@@ -23,7 +23,7 @@ public class EntityData extends SimpleStreamableObject
 // GENERATED STREAMING START
     public var name :String;
 
-    public var media :ClientMediaDesc;
+    public var media :MediaDesc;
 
     public var ident :EntityIdent;
 
@@ -31,7 +31,7 @@ public class EntityData extends SimpleStreamableObject
     {
         super.readObject(ins);
         name = ins.readField(String);
-        media = ins.readObject(ClientMediaDesc);
+        media = ins.readObject(MediaDesc);
         ident = ins.readObject(EntityIdent);
     }
 
@@ -58,14 +58,14 @@ public class EntityData extends SimpleStreamableObject
     }
 
     // from Entity
-    public function getThumbnailMedia () :ClientMediaDesc
+    public function getThumbnailMedia () :MediaDesc
     {
         // ORTH TODO: Only used in a single place, in {@link RoomObjectController}, nuke?
         return null;
     }
 
     // from Entity
-    public function getFurniMedia () :ClientMediaDesc
+    public function getFurniMedia () :MediaDesc
     {
         return media;
     }

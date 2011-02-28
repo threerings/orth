@@ -4,7 +4,7 @@
 package com.threerings.orth.entity.client {
 
 import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.orth.data.ClientMediaDesc;
+
 import com.threerings.util.DelayUtil;
 import com.threerings.util.Log;
 import com.threerings.util.Util;
@@ -148,7 +148,7 @@ public class ActorSprite extends OccupantSprite
         }
 
         // check the media
-        const newMedia :ClientMediaDesc = (newInfo as ActorInfo).getMedia();
+        const newMedia :MediaDesc = (newInfo as ActorInfo).getMedia();
         const mediaChanged :Boolean = !newMedia.equals(_sprite.getMediaDesc());
         if (!mediaChanged && !identChanged) {
             return false; // nothing changed, bail

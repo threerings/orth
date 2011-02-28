@@ -4,13 +4,13 @@ package com.threerings.orth.client {
 
 import flash.display.DisplayObject;
 import flash.display.Stage;
-import flash.geom.Point;
 import flash.events.ContextMenuEvent;
 import flash.events.IEventDispatcher;
 import flash.events.TextEvent;
+import flash.geom.Point;
+import flash.system.Capabilities;
 import flash.ui.ContextMenu;
 import flash.utils.Dictionary;
-import flash.system.Capabilities;
 
 import flashx.funk.ioc.inject;
 
@@ -19,7 +19,6 @@ import com.threerings.util.Controller;
 import com.threerings.util.DelayUtil;
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
-import com.threerings.util.Name;
 import com.threerings.util.NetUtil;
 import com.threerings.util.StringUtil;
 

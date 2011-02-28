@@ -2,10 +2,9 @@
 // $Id: MediaWrapper.as 19431 2010-10-22 22:08:36Z zell $
 
 package com.threerings.orth.ui {
-import com.threerings.orth.data.ClientMediaDesc;
-
 import flash.display.Sprite;
 
+import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.MediaDescSize;
 
 /**
@@ -21,7 +20,7 @@ public class MediaWrapper
      * keep this static function which helpfully creates a scaling container.
      */
     public static function createView (
-        desc :ClientMediaDesc, size :int = MediaDescSize.THUMBNAIL_SIZE) :Sprite
+        desc :MediaDesc, size :int = MediaDescSize.THUMBNAIL_SIZE) :Sprite
     {
         return  ScalingMediaDescContainer.createView(desc, size);
     }
