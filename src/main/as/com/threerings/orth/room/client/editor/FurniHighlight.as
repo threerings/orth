@@ -9,7 +9,7 @@ import flash.events.Event;
 
 import com.threerings.display.GraphicsUtil;
 import com.threerings.media.MediaContainer;
-import com.threerings.orth.room.client.FurniSprite;
+import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.room.client.RoomElementSprite;
 
 /**

@@ -35,7 +35,7 @@ import com.threerings.msoy.item.data.all.Item;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.msoy.world.client.WorldController;
 
-import com.threerings.orth.room.client.FurniSprite;
+import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 import com.threerings.orth.room.data.OrthSceneModel;

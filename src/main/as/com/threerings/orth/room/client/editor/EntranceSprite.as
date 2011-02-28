@@ -7,7 +7,7 @@ import flash.display.BitmapData;
 
 import flash.geom.Matrix;
 
-import com.threerings.orth.room.client.FurniSprite;
+import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.data.MediaDescImpl;
 

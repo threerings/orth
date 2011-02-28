@@ -31,7 +31,7 @@ import com.threerings.msoy.item.data.all.ItemIdent;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.RoomService;
 
-import com.threerings.orth.room.client.FurniSprite;
+import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.room.client.EntitySprite;
 import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.updates.FurniUpdateAction;

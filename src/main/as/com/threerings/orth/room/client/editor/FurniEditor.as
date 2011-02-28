@@ -11,7 +11,7 @@ import flashx.funk.ioc.inject;
 import com.threerings.display.GraphicsUtil;
 
 import com.threerings.orth.client.OrthResourceFactory;
-import com.threerings.orth.room.client.FurniSprite;
+import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
