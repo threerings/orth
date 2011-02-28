@@ -7,28 +7,21 @@ import flash.display.BitmapData;
 
 import flash.geom.Matrix;
 
-
-import com.threerings.orth.room.client.RoomContext;
-
 import com.threerings.orth.room.client.FurniSprite;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.data.MediaDescImpl;
 
 public class EntranceSprite extends FurniSprite
 {
-    /** The sprite image used for positioning the entrance location. */
-    [Embed(source="../../../../../../../../rsrc/media/entrance.png")]
-    public static const MEDIA_CLASS :Class;
-
-    public function EntranceSprite (ctx :RoomContext, location :OrthLocation)
+    public function initEntranceSprite (location :OrthLocation) :void
     {
         // fake furni data for the fake sprite
         var furniData :EntranceFurniData = new EntranceFurniData();
         furniData.media = null;
         furniData.loc = location;
-        super(ctx, furniData);
+        super.initFurniSprite(furniData);
 
-        _sprite.setMediaClass(MEDIA_CLASS);
+        _sprite.setMediaClass(inject(OrthResourceFactory).getEntrance());
         setLocation(location);
     }
 
