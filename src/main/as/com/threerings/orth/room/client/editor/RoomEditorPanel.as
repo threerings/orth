@@ -218,8 +218,9 @@ public class RoomEditorPanel extends FloatingPanel
     /** Displays the furniture inventory. */
     protected function displayFurnitureInventory () :void
     {
-        CommandEvent.dispatch(this, WorldController.VIEW_STUFF, Item.FURNITURE);
-        selectInNameList(null);
+// ORTH TODO
+//        CommandEvent.dispatch(this, WorldController.VIEW_STUFF, Item.FURNITURE);
+//        selectInNameList(null);
     }
 
     /** The current target is now initialized. */
@@ -282,8 +283,9 @@ public class RoomEditorPanel extends FloatingPanel
         decorBox.percentWidth = 100;
         decorBox.addChild(_decorLabel = FlexUtil.createLabel(""));
         _decorLabel.width = 200;
-        decorBox.addChild(new CommandButton(
-            Msgs.EDITING.get("b.change"), WorldController.VIEW_STUFF, Item.DECOR));
+// ORTH TODO
+//        decorBox.addChild(new CommandButton(
+//            Msgs.EDITING.get("b.change"), WorldController.VIEW_STUFF, Item.DECOR));
         GridUtil.addRow(contents, decorBox, [3, 1]);
 
         // item name combo box
@@ -420,8 +422,8 @@ public class RoomEditorPanel extends FloatingPanel
             _advancedPanels.addChild(c);
         }
 
-        addPanel(Msgs.EDITING.get("t.item_prefs"), _details = new DetailsPanel(_controller));
-        addPanel(Msgs.EDITING.get("t.item_action"), _action = new ActionPanel(_controller));
+        addPanel(Msgs.EDITING.get("t.item_prefs"), _details = _module.getInstance(DetailsPanel));
+        addPanel(Msgs.EDITING.get("t.item_action"), _action = _module.getInstance(ActionPanel));
 
         // invader zim says: "it's not stupid, it's advanced!"
         box = new VBox();
@@ -465,7 +467,7 @@ public class RoomEditorPanel extends FloatingPanel
     // @Override from FloatingPanel
     override protected function didOpen () :void
     {
-        var r :Rectangle = _topPanel.getPlaceViewBounds();
+        var r :Rectangle = _topPanel.getMainAreaBounds();
         this.x = r.right - width - PADDING;
         this.y = r.y + PADDING;
 
