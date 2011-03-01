@@ -32,5 +32,6 @@ public interface OrthResourceFactory
     function get edHotspotScale () :Class;
     function get edHotspotScaleOverLeft () :Class;
     function get edHotspotScaleOverRight () :Class;
+    function get edHotspotRotating () :Class;
 }
 }

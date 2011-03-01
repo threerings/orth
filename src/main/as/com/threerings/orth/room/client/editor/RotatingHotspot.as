@@ -12,8 +12,6 @@ import flash.geom.Point;
 import com.threerings.util.MathUtil;
 import com.threerings.geom.Vector2;
 
-import com.threerings.msoy.ui.MsoyLoadedAsset;
-
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.entity.client.EntitySprite;
 
@@ -71,7 +69,8 @@ public class RotatingHotspot extends Hotspot
         g.endFill();
         _displayStandard = s;
 
-        _displayMouseOver = new MsoyLoadedAsset("images/ui/editor/hotspot_rotate.png");
+        var klass :Class = _editor.rsrc.edHotspotRotating;
+        _displayMouseOver = new klass() as DisplayObject;
 
         var rot :Number = Math.abs((_corner.y * 270) + (_corner.x * -90)); // magic!
         _displayMouseOver.rotation = rot;
