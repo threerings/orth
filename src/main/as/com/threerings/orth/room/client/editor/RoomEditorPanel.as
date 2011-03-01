@@ -92,13 +92,13 @@ public class RoomEditorPanel extends FloatingPanel
 
         if (_middle != null) {
             // display the correct link button
-            if (selected && target.getFurniData().actionType == FurniData.ACTION_URL) {
+            if (selected && target.getFurniData().actionType.isURL()) {
                 swapButtons(_middle, _makeLinkButton, _removeLinkButton);
             } else {
                 swapButtons(_middle, _removeLinkButton, _makeLinkButton);
             }
             // same for the door button
-            if (selected && target.getFurniData().actionType == FurniData.ACTION_PORTAL) {
+            if (selected && target.getFurniData().actionType.isPortal()) {
                 swapButtons(_middle, _makeDoorButton, _removeDoorButton);
             } else {
                 swapButtons(_middle, _removeDoorButton, _makeDoorButton);
