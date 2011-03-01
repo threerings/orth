@@ -24,10 +24,6 @@ import com.threerings.flex.CommandCheckBox;
 import com.threerings.flex.CommandComboBox;
 import com.threerings.flex.FlexUtil;
 import com.threerings.flex.GridUtil;
-import com.threerings.msoy.item.data.all.Decor;
-import com.threerings.msoy.item.data.all.Item;
-import com.threerings.msoy.ui.SkinnableImage;
-import com.threerings.msoy.world.client.WorldController;
 
 import com.threerings.util.CommandEvent;
 
@@ -35,8 +31,10 @@ import com.threerings.orth.client.Msgs;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.editor.ui.FloatingPanel;
+import com.threerings.orth.room.client.editor.ui.SkinnableImage;
 import com.threerings.orth.room.data.FurniData;
 
+import com.threerings.orth.entity.data.Decor;
 /**
  * A separate room editing panel, which lets the player edit furniture inside the room.
  */
@@ -136,7 +134,8 @@ public class RoomEditorPanel extends FloatingPanel
 
     public function setDecor (decor :Decor) :void
     {
-        _decorLabel.text = Msgs.EDITING.get("m.decor", decor.name || Msgs.EDITING.get("m.none"));
+        _decorLabel.text = Msgs.EDITING.get("m.decor",
+            decor.getName() || Msgs.EDITING.get("m.none"));
     }
 
     public function setHomeButtonEnabled (enabled :Boolean) :void
