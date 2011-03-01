@@ -9,6 +9,7 @@ import flash.ui.Keyboard;
 import flash.utils.ByteArray;
 
 import flashx.funk.ioc.inject;
+import flashx.funk.ioc.Module;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.OccupantInfo;
@@ -150,7 +151,7 @@ public class RoomObjectController extends RoomController
      */
     public function isRoomEditing () :Boolean
     {
-        return _editor.isEditing();
+        return (_editor != null) && _editor.isEditing();
     }
 
     /**
@@ -163,7 +164,7 @@ public class RoomObjectController extends RoomController
         }
 
         var handleResult :Function = function (result :Object) :void {
-            _doorCtrl.start(furniData);
+            _module.getInstance(DoorTargetEditController).start(furniData);
         };
         _roomObj.orthRoomService.editRoom(_octx.resultListener(
                 handleResult, OrthCodes.EDITING_MSGS));
@@ -175,7 +176,7 @@ public class RoomObjectController extends RoomController
      */
     public function backgroundFinishedLoading () :void
     {
-        _doorCtrl.updateLocation();
+        _module.getInstance(DoorTargetEditController).updateLocation();
     }
 
     /**
@@ -443,10 +444,10 @@ public class RoomObjectController extends RoomController
 
         // this function will be called when the edit panel is closing
         var wrapupFn :Function = function () :void {
-// ORTH TODO: I sure hope this isn't necessary, why would it be?
-//            _editor = null;
+            _editor = null;
         }
 
+        _editor = _module.getInstance(RoomEditorController);
         _editor.initRoomEditorController(_roomObjectView);
         _editor.startEditing(wrapupFn);
         _editor.updateUndoStatus(_updates.length != 0);
@@ -611,12 +612,12 @@ public class RoomObjectController extends RoomController
     /** A flag to indicate that the room editor should be opened when the view is un-minimized */
     protected var _openEditor :Boolean = false;
 
+    protected var _editor :RoomEditorController;
+
     /** Listens for room attribute changes. */
     protected var _roomAttrListener :AttributeChangeAdapter =
         new AttributeChangeAdapter(roomAttrChanged);
 
-    protected const _doorCtrl :DoorTargetEditController = inject(DoorTargetEditController);
-    protected const _editor :RoomEditorController = inject(RoomEditorController);
-
+    protected const _module :Module = inject(Module);
 }
 }
