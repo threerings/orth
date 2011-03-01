@@ -17,9 +17,8 @@ public class SceneUpdateAction
     implements UpdateAction
 {
     /** Create a new furni update command. */
-    public function SceneUpdateAction (ctx :RoomContext, oldScene :OrthScene, newScene :OrthScene)
+    public function SceneUpdateAction (oldScene :OrthScene, newScene :OrthScene)
     {
-        _ctx = ctx;
         _oldSceneData = new Object();
         _newSceneData = new Object();
 
@@ -67,6 +66,5 @@ public class SceneUpdateAction
 
     protected var _oldSceneData :Object;
     protected var _newSceneData :Object;
-    protected var _ctx :RoomContext;
 }
 }
