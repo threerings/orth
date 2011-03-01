@@ -302,7 +302,7 @@ public class ActionPanel extends BasePanel
             }
 
         } else if (type.isPortal()) {
-            if (_furniData.isPortal()) {
+            if (_furniData.actionType.isPortal()) {
                 // preserve the existing portal target if we're currently a portal
                 newData.actionData = _furniData.actionData;
             } else {
