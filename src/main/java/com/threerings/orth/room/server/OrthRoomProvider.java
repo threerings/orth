@@ -10,6 +10,7 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
+import com.threerings.whirled.data.SceneUpdate;
 import com.threerings.whirled.spot.data.Location;
 
 /**
@@ -23,6 +24,12 @@ public interface OrthRoomProvider extends InvocationProvider
      * Handles a {@link OrthRoomService#changeLocation} request.
      */
     void changeLocation (ClientObject caller, EntityIdent arg1, Location arg2);
+
+    /**
+     * Handles a {@link OrthRoomService#editRoom} request.
+     */
+    void editRoom (ClientObject caller, InvocationService.ResultListener arg1)
+        throws InvocationException;
 
     /**
      * Handles a {@link OrthRoomService#sendSpriteMessage} request.
@@ -43,5 +50,11 @@ public interface OrthRoomProvider extends InvocationProvider
      * Handles a {@link OrthRoomService#updateMemory} request.
      */
     void updateMemory (ClientObject caller, EntityIdent arg1, String arg2, byte[] arg3, InvocationService.ResultListener arg4)
+        throws InvocationException;
+
+    /**
+     * Handles a {@link OrthRoomService#updateRoom} request.
+     */
+    void updateRoom (ClientObject caller, SceneUpdate arg1, InvocationService.InvocationListener arg2)
         throws InvocationException;
 }

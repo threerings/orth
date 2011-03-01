@@ -4,9 +4,11 @@ package com.threerings.orth.room.client {
 
 import flash.utils.ByteArray;
 
+import com.threerings.whirled.data.SceneUpdate;
 import com.threerings.whirled.spot.data.Location;
 
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.client.InvocationService_InvocationListener;
 import com.threerings.presents.client.InvocationService_ResultListener;
 
 import com.threerings.orth.room.data.EntityIdent;
@@ -20,6 +22,9 @@ public interface OrthRoomService extends InvocationService
     function changeLocation (arg1 :EntityIdent, arg2 :Location) :void;
 
     // from Java interface OrthRoomService
+    function editRoom (arg1 :InvocationService_ResultListener) :void;
+
+    // from Java interface OrthRoomService
     function sendSpriteMessage (arg1 :EntityIdent, arg2 :String, arg3 :ByteArray, arg4 :Boolean) :void;
 
     // from Java interface OrthRoomService
@@ -30,5 +35,8 @@ public interface OrthRoomService extends InvocationService
 
     // from Java interface OrthRoomService
     function updateMemory (arg1 :EntityIdent, arg2 :String, arg3 :ByteArray, arg4 :InvocationService_ResultListener) :void;
+
+    // from Java interface OrthRoomService
+    function updateRoom (arg1 :SceneUpdate, arg2 :InvocationService_InvocationListener) :void;
 }
 }

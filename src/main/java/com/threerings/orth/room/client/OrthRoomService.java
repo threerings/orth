@@ -2,6 +2,7 @@ package com.threerings.orth.room.client;
 
 import com.threerings.presents.client.InvocationService;
 
+import com.threerings.whirled.data.SceneUpdate;
 import com.threerings.whirled.spot.data.Location;
 
 import com.threerings.orth.room.data.EntityIdent;
@@ -32,6 +33,18 @@ public interface OrthRoomService extends InvocationService
      * Requests to update an actor's state.
      */
     void setActorState (EntityIdent item, int actorOid, String state);
+
+    /**
+     * Requests to edit the client's current room.
+     *
+     * @param listener will be informed with an array of items in the room.
+     */
+    void editRoom (ResultListener listener);
+
+    /**
+     * Requests to apply the specified scene update to the room.
+     */
+    void updateRoom (SceneUpdate update, InvocationListener listener);
 
     /**
      * Issues a request to update the memory of the specified entity (which is associated with a
