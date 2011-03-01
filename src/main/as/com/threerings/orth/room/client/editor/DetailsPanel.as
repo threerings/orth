@@ -22,11 +22,6 @@ import com.threerings.orth.room.data.OrthLocation;
  */
 public class DetailsPanel extends BasePanel
 {
-    public function DetailsPanel (controller :RoomEditorController)
-    {
-        super(controller);
-    }
-
     // @Override from BasePanel
     override public function updateDisplay (data :FurniData) :void
     {
