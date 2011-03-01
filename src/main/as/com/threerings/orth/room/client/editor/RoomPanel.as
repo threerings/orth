@@ -11,13 +11,15 @@ import mx.controls.ToggleButtonBar;
 import mx.events.FlexEvent;
 import mx.events.ItemClickEvent;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.flex.CommandButton;
-import com.threerings.msoy.data.MemberObject;
 
 import com.threerings.util.Log;
 import com.threerings.util.Util;
 
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthScene;
@@ -143,7 +145,7 @@ public class RoomPanel extends BasePanel
 
     protected const ACCESSES :Array = [
         OrthSceneModel.ACCESS_EVERYONE,
-        OrthSceneModel.ACCSS_OWNER_AND_FRIENDS,
+        OrthSceneModel.ACCESS_OWNER_AND_FRIENDS,
         OrthSceneModel.ACCESS_OWNER_ONLY
     ];
 
