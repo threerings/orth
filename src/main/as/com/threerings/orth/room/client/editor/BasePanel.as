@@ -5,11 +5,11 @@ package com.threerings.orth.room.client.editor {
 
 import flash.events.Event;
 
+import flashx.funk.ioc.inject;
+
 import mx.containers.HBox;
 import mx.containers.VBox;
 import mx.core.Container;
-
-import flashx.funk.ioc.inject;
 
 import com.threerings.flex.CommandButton;
 

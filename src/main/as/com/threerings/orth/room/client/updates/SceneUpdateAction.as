@@ -6,7 +6,6 @@ import com.threerings.whirled.data.SceneUpdate;
 
 import com.threerings.util.Log;
 
-import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.SceneAttrsUpdate;
 

@@ -6,7 +6,6 @@ package com.threerings.orth.room.client.editor {
 import com.threerings.flex.FlexUtil;
 
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 
 public class ItemUsedDialog extends FloatingPanel

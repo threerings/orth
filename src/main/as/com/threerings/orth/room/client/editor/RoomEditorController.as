@@ -5,8 +5,8 @@ package com.threerings.orth.room.client.editor {
 
 import flash.events.MouseEvent;
 
-import flashx.funk.ioc.inject;
 import flashx.funk.ioc.Module;
+import flashx.funk.ioc.inject;
 
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.data.SceneUpdate;
@@ -23,10 +23,8 @@ import com.threerings.util.Util;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.TopPanel;
-import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
-import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.RoomObjectController;
 import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.updates.FurniUpdateAction;

@@ -5,22 +5,20 @@ package com.threerings.orth.room.client.editor {
 
 import flash.events.Event;
 
+import flashx.funk.ioc.inject;
+
 import mx.containers.HBox;
 import mx.controls.TextInput;
 import mx.controls.ToggleButtonBar;
 import mx.events.FlexEvent;
 import mx.events.ItemClickEvent;
 
-import flashx.funk.ioc.inject;
-
 import com.threerings.flex.CommandButton;
 
 import com.threerings.util.Log;
-import com.threerings.util.Util;
 
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthResourceFactory;
-import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;

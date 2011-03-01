@@ -8,8 +8,8 @@ import flash.events.MouseEvent;
 import flash.ui.Keyboard;
 import flash.utils.ByteArray;
 
-import flashx.funk.ioc.inject;
 import flashx.funk.ioc.Module;
+import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.OccupantInfo;

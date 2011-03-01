@@ -2,7 +2,6 @@
 // $Id: MsoyMediaContainer.as 19763 2010-12-08 03:07:58Z zell $
 
 package com.threerings.orth.room.client {
-import flash.display.LoaderInfo;
 import flash.events.IEventDispatcher;
 
 import com.threerings.orth.data.MediaDesc;

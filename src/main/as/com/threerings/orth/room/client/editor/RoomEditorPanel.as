@@ -29,12 +29,12 @@ import com.threerings.util.CommandEvent;
 
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.entity.client.FurniSprite;
+import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 import com.threerings.orth.room.client.editor.ui.SkinnableImage;
 import com.threerings.orth.room.data.FurniData;
 
-import com.threerings.orth.entity.data.Decor;
 /**
  * A separate room editing panel, which lets the player edit furniture inside the room.
  */
