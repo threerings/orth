@@ -105,14 +105,12 @@ public class RoomEditorPanel extends FloatingPanel
             }
         }
 
-        // For the custom config panel stuff, we need to avoid repeatedly watching
-        // the same sprite
+        // avoid repeatedly watching the same sprite
         if (target != _curTarget) {
             if (_curTarget != null) {
                 _curTarget.viz.removeEventListener(Event.INIT, handleTargetInit);
             }
             _curTarget = target;
-            checkCustomPanel();
         }
     }
 
@@ -202,12 +200,6 @@ public class RoomEditorPanel extends FloatingPanel
         swapButtons(_middle, _removeDoorButton, _makeDoorButton);
     }
 
-    /** Shows the custom config panel. */
-    protected function showCustomConfig () :void
-    {
-        _controller.roomView.getRoomController().showConfigPopup(_curTarget);
-    }
-
     /** Swaps two UI components in a container. */
     protected function swapButtons (
         container :Container, oldButton :UIComponent, newButton :UIComponent) :void
@@ -230,26 +222,10 @@ public class RoomEditorPanel extends FloatingPanel
         selectInNameList(null);
     }
 
-    /** See if we should display the custom panel button for the specified furni. */
-    protected function checkCustomPanel () :void
-    {
-        var hasPanel :Boolean = false;
-        if (_curTarget != null) {
-            hasPanel = _curTarget.hasCustomConfigPanel();
-            if (!hasPanel && !_curTarget.viz.isContentInitialized()) {
-                _curTarget.viz.addEventListener(Event.INIT, handleTargetInit);
-            }
-        }
-
-        // assume we won't show it
-        _customConfigButton.visible = hasPanel;
-    }
-
     /** The current target is now initialized. */
     protected function handleTargetInit (event :Event) :void
     {
         _curTarget.viz.removeEventListener(Event.INIT, handleTargetInit);
-        checkCustomPanel();
     }
 
     // from superclasses
@@ -425,18 +401,6 @@ public class RoomEditorPanel extends FloatingPanel
         // undoall.enabled = false;
         // right.addChild(undoall);
 
-        // Instead, we're putting a custom config button in its place
-        _customConfigButton = makeActionButton(
-            showCustomConfig, "roomEditCustom", "item_custom", null, true);
-        _customConfigButton.visible = false;
-        right.addChild(_customConfigButton);
-
-        // TEMP: adjust the size, since we have no icon
-        var b :CommandButton = _customConfigButton.getChildAt(0) as CommandButton;
-        b.width = 42;
-        b.height = 42;
-        // END: temp
-
         updateTargetSelected(null); // disable most buttons
 
         // now populate advanced settings panel
@@ -526,7 +490,6 @@ public class RoomEditorPanel extends FloatingPanel
     protected var _removeDoorButton :UIComponent;
     protected var _makeLinkButton :UIComponent;
     protected var _removeLinkButton :UIComponent;
-    protected var _customConfigButton :UIComponent;
 
     protected var _decorLabel :Label;
 
