@@ -23,6 +23,7 @@ import com.threerings.flex.GridUtil;
 import com.threerings.util.StringUtil;
 
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.room.data.FurniAction;
 import com.threerings.orth.room.data.FurniData;
 
 /**
@@ -30,11 +31,6 @@ import com.threerings.orth.room.data.FurniData;
  */
 public class ActionPanel extends BasePanel
 {
-    public function ActionPanel (controller :RoomEditorController)
-    {
-        super(controller);
-    }
-
     // @Override from BasePanel
     override public function updateDisplay (data :FurniData) :void
     {
@@ -73,19 +69,13 @@ public class ActionPanel extends BasePanel
     {
         super.createChildren();
 
-        var playerIsSupportPlus :Boolean = _controller.ctx.getTokens().isSupport();
-
         // generate combo box definitions, including only those actions whose editable flag is set,
         // and which are available for the player's account level
         var entries :Array = new Array();
         for each (var def :Object in ACTIONS) {
             // is it editable in the first place?
             if (isActionTypeEditable(def.data)) {
-                // make sure the action is either available to everyone, or if it's support+ only,
-                // that the player has the credentials.
-                if (isActionTypeForAllPlayers(def.data) || playerIsSupportPlus) {
-                    entries.push(def);
-                }
+                entries.push(def);
             }
         }
 
@@ -128,13 +118,6 @@ public class ActionPanel extends BasePanel
         _debug.maxWidth = 250;
         _debug.editable = false;
         _debug.enabled = false;
-        if (playerIsSupportPlus) {
-            var dgrid :Grid = new Grid();
-            dgrid.setStyle("color", 0xff0000);
-            addChild(dgrid);
-            GridUtil.addRow(dgrid, Msgs.EDITING.get("l.action_debug"));
-            GridUtil.addRow(dgrid, _debug);
-        }
 
         addChild(makeApplyButtons());
     }
@@ -298,7 +281,7 @@ public class ActionPanel extends BasePanel
         }
 
         var newData :FurniData;
-        var type :int = int(_actionTypeSelection.selectedData);
+        var type :FurniAction = FurniAction(_actionTypeSelection.selectedData);
 
         if (! isActionTypeEditable(type)) {
             // these aren't handled by this editor, so let's not touch the data
@@ -308,39 +291,30 @@ public class ActionPanel extends BasePanel
         newData = _furniData.clone() as FurniData;
         newData.actionType = type;
 
-        switch (type) {
-        case FurniData.ACTION_NONE:
+        if (type == FurniAction.NONE) {
             newData.actionData = _ignoreMouse.selected ? "-" : null;
-            break;
-        case FurniData.ACTION_URL:
+
+        } else if (type.isURL()) {
             newData.actionData = _url.text;
             var tip :String = StringUtil.trim(_urlTip.text);
             if (!StringUtil.isBlank(tip)) {
                 newData.actionData += "||" + tip;
             }
-            break;
-        case FurniData.ACTION_PORTAL:
-            if (_furniData.actionType == FurniData.ACTION_PORTAL) {
+
+        } else if (type.isPortal()) {
+            if (_furniData.isPortal()) {
                 // preserve the existing portal target if we're currently a portal
                 newData.actionData = _furniData.actionData;
             } else {
                 newData.actionData = DEFAULT_PORTAL_DEST;
             }
-            break;
-        case FurniData.ACTION_HELP_PAGE:
-            newData.actionData = _helpTabAction.text;
-            break;
         }
 
-        if (! _furniData.equivalent(newData)) {
-            return newData;
-        } else {
-            return null;
-        }
+        return _furniData.equivalent(newData) ? null : newData;
     }
 
     /** Returns the index in ACTIONS of the action definiton with specified type. */
-    protected function getActionIndex (actionType :int) :int
+    protected function getActionIndex (actionType :FurniAction) :int
     {
         for (var i :int = 0; i < ACTIONS.length; i++) {
             if (ACTIONS[i].data == actionType) {
@@ -352,62 +326,38 @@ public class ActionPanel extends BasePanel
     }
 
     /** Returns definition object for the specified action type. */
-    protected function getActionDef (actionType :int) :Object
+    protected function getActionDef (actionType :FurniAction) :Object
     {
         var index :int = getActionIndex(actionType);
         return (index != -1) ? ACTIONS[index] : null;
     }
 
     /** Returns true if the specified action type is available in the combo box. */
-    protected function isActionTypeEditable (actionType :int) :Boolean
+    protected function isActionTypeEditable (actionType :FurniAction) :Boolean
     {
         var def :Object = getActionDef(actionType);
         return (def != null) && Boolean(def.editable);
     }
 
-    /** Returns true if the specifies action type should be displayed to all players,
-     *  or false if it should be displayed to support+ staff only. */
-    protected function isActionTypeForAllPlayers (actionType :int) :Boolean
-    {
-        var def :Object = getActionDef(actionType);
-        return (def != null) && (! Boolean(def.supportOnly));
-    }
-
     /** Definitions of different action types and how they affect the preferences panel. */
     protected const ACTIONS :Array = [
-        { data: FurniData.ACTION_NONE,
+        { data: FurniAction.NONE,
           label: Msgs.EDITING.get("l.action_none"),
           editable: true,
           panelCreateFn: createNonePanel,
           panelUpdateFn: updateNonePanel },
 
-        { data: FurniData.ACTION_PORTAL,
+        { data: FurniAction.NONE, // ORTH TODO
           label: Msgs.EDITING.get("l.action_portal"),
           editable: true,
           panelCreateFn: createPortalPanel,
           panelUpdateFn: updatePortalPanel },
 
-        { data: FurniData.ACTION_URL,
+        { data: FurniAction.NONE, // ORTH TODO
           label: Msgs.EDITING.get("l.action_url"),
           editable: true,
           panelCreateFn: createURLPanel,
           panelUpdateFn: updateURLPanel },
-
-        { data: FurniData.ACTION_LOBBY_GAME,
-          label: Msgs.EDITING.get("l.action_lobby_game"),
-          supportOnly: true },
-
-        { data: FurniData.ACTION_WORLD_GAME,
-          label: Msgs.EDITING.get("l.action_world_game"),
-          supportOnly: true },
-
-        // Help page is not currently available.
-        { data: FurniData.ACTION_HELP_PAGE,
-          label: "Obsolete", // Msgs.EDITING.get("l.action_help_page"),
-          editable: true,
-          supportOnly: true,
-          panelCreateFn: createHelpTabPanel,
-          panelUpdateFn: updateHelpTabPanel },
     ];
 
     /** Default location for doors, in case they get interrupted mid-editing. */
