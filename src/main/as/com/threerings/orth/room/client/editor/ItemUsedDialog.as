@@ -11,9 +11,9 @@ import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 
 public class ItemUsedDialog extends FloatingPanel
 {
-    public function ItemUsedDialog (ctx :RoomContext, type :String, yesClosure :Function)
+    public function ItemUsedDialog (type :String, yesClosure :Function)
     {
-        super(ctx, Msgs.EDITING.get("t.item_used"));
+        super(Msgs.EDITING.get("t.item_used"));
         _yesClosure = yesClosure;
         addChild(FlexUtil.createText(Msgs.EDITING.get("m.item_used", type), 250));
     }
