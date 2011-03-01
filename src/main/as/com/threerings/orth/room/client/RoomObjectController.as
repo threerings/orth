@@ -150,7 +150,7 @@ public class RoomObjectController extends RoomController
      */
     public function isRoomEditing () :Boolean
     {
-        return (_editor != null) && _editor.isEditing();
+        return _editor.isEditing();
     }
 
     /**
@@ -443,10 +443,11 @@ public class RoomObjectController extends RoomController
 
         // this function will be called when the edit panel is closing
         var wrapupFn :Function = function () :void {
-            _editor = null;
+// ORTH TODO: I sure hope this isn't necessary, why would it be?
+//            _editor = null;
         }
 
-        _editor = new RoomEditorController(_rctx, _roomObjectView);
+        _editor.initRoomEditorController(_roomObjectView);
         _editor.startEditing(wrapupFn);
         _editor.updateUndoStatus(_updates.length != 0);
     }
@@ -604,9 +605,6 @@ public class RoomObjectController extends RoomController
     /** The current scene we're viewing. */
     protected var _scene :OrthScene;
 
-    /** Controller for in-room furni editing. */
-    protected var _editor :RoomEditorController;
-
     /** Stack that stores the sequence of room updates. */
     protected var _updates :UpdateStack = new UpdateStack(updateRoom);
 
@@ -618,5 +616,7 @@ public class RoomObjectController extends RoomController
         new AttributeChangeAdapter(roomAttrChanged);
 
     protected const _doorCtrl :DoorTargetEditController = inject(DoorTargetEditController);
+    protected const _editor :RoomEditorController = inject(RoomEditorController);
+
 }
 }
