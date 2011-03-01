@@ -5,8 +5,9 @@ package com.threerings.orth.room.client.editor {
 
 import flash.events.MouseEvent;
 
-import com.threerings.msoy.item.client.ItemService;
-import com.threerings.msoy.item.data.all.Item;
+import flashx.funk.ioc.inject;
+import flashx.funk.ioc.Module;
+
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.data.SceneUpdate;
 
@@ -20,15 +21,19 @@ import com.threerings.util.StringUtil;
 import com.threerings.util.Util;
 
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.room.client.RoomContext;
+import com.threerings.orth.room.client.RoomObjectController;
 import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.updates.FurniUpdateAction;
 import com.threerings.orth.room.client.updates.SceneUpdateAction;
 import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.orth.room.data.EntityType;
+import com.threerings.orth.room.data.FurniAction;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.FurniUpdate_Add;
 import com.threerings.orth.room.data.FurniUpdate_Change;
@@ -45,9 +50,8 @@ import com.threerings.orth.room.data.SceneAttrsUpdate;
  */
 public class RoomEditorController
 {
-    public function RoomEditorController (ctx :RoomContext, view :RoomObjectView)
+    public function initRoomEditorController (view :RoomObjectView) :void
     {
-        _ctx = ctx;
         _view = view;
 
         _edit = new FurniEditor(this);
@@ -62,11 +66,6 @@ public class RoomEditorController
     public function get topPanel () :TopPanel
     {
         return _topPanel;
-    }
-
-    public function get ctx () :RoomContext
-    {
-        return _ctx;
     }
 
     public function get scene () :OrthScene
@@ -91,7 +90,7 @@ public class RoomEditorController
             log.warning("Cannot edit a null room view!");
         }
 
-        _panel = new RoomEditorPanel(_ctx, this);
+        _panel = _module.getInstance(RoomEditorPanel);
         _wrapupFn = wrapupFn;
 
         _view.setEditing(true);
@@ -197,8 +196,7 @@ public class RoomEditorController
             updateScene(scene, newscene);
         } else {
             // it's a genuine furni update - apply it
-            _view.getRoomObjectController().applyUpdate(
-                new FurniUpdateAction(_ctx, toRemove, toAdd));
+            _view.getRoomObjectController().applyUpdate(new FurniUpdateAction(toRemove, toAdd));
         }
         updateUndoStatus(true);
     }
@@ -208,8 +206,7 @@ public class RoomEditorController
      */
     public function updateScene (oldScene :OrthScene, newScene :OrthScene) :void
     {
-        _view.getRoomObjectController().applyUpdate(
-            new SceneUpdateAction(_ctx, oldScene, newScene));
+        _roomObjCtrl.applyUpdate(new SceneUpdateAction(oldScene, newScene));
         updateUndoStatus(true);
     }
 
@@ -335,7 +332,8 @@ public class RoomEditorController
 
         // make the furni's type to a portal, and save on the server
         withFurniUpdate(function () :void {
-            data.actionType = FurniData.ACTION_PORTAL;
+            // ORTH TODO: Figure out how Who can get its WhoFurniActions in here
+            data.actionType = FurniAction.NONE;
             data.actionData = "" + scene.getId() + ":" + scene.getName();
         });
 
@@ -352,13 +350,15 @@ public class RoomEditorController
         if (!StringUtil.isBlank(tip)) {
             actionData += "||" + tip;
         }
-        setTargetAction(FurniData.ACTION_URL, actionData);
+
+        // ORTH TODO: Figure out how Who can get its WhoFurniActions in here
+        setTargetAction(FurniAction.NONE, actionData);
     }
 
     /** Makes the target into a regular furni. */
     public function actionTargetClear () :void
     {
-        setTargetAction(FurniData.ACTION_NONE, null);
+        setTargetAction(FurniAction.NONE, null);
     }
 
     /**
@@ -416,18 +416,6 @@ public class RoomEditorController
         _panel.updateDisplay(_edit.target);
     }
 
-    public function makeHome () :void
-    {
-        _panel.setHomeButtonEnabled(false);
-
-        var model :OrthSceneModel = scene.getSceneModel() as OrthSceneModel;
-        var successMsg :String = (model.ownerType == OrthSceneModel.OWNER_TYPE_GROUP) ?
-            "m.group_home_room_changed" : "m.home_room_changed";
-        var svc :WorldService = _ctx.getClient().requireService(WorldService) as WorldService;
-        svc.setHomeSceneId(model.ownerType, model.ownerId, model.sceneId,
-            _ctx.confirmListener(successMsg, OrthCodes.EDITING_MSGS));
-    }
-
     /**
      * Handles mouse presses, starts editing furniture.
      */
@@ -472,8 +460,10 @@ public class RoomEditorController
         var ident :EntityIdent;
         for each (var data :FurniData in furnis) {
             ident = data.item;
-            if (! _names.containsKey(ident)) {          // only query for new items
-                if (data.itemType != Item.NOT_A_TYPE) { // skip freebie doors and other fake items
+            // only query for new items
+            if (! _names.containsKey(ident)) {
+                // skip freebie doors and other fake items
+                if (data.item.getType() != EntityType.NOT_A_TYPE) {
                     idents.push(ident);
                 }
             }
@@ -505,8 +495,9 @@ public class RoomEditorController
             }
             updateNameDisplay();
         };
-        var svc :ItemService = _ctx.getClient().requireService(ItemService) as ItemService;
-        svc.getItemNames(idents, _ctx.resultListener(resultHandler));
+        // ORTH TODO: items will be compiled into the client, but we're not sure how yet
+//        var svc :ItemService = _client.requireService(ItemService) as ItemService;
+//        svc.getItemNames(idents, _octx.resultListener(resultHandler));
     }
 
     /**
@@ -531,7 +522,7 @@ public class RoomEditorController
             return;
         }
 
-        if (ident.type == Item.NOT_A_TYPE) {
+        if (ident.getType() == EntityType.NOT_A_TYPE) {
             // this must be one of the "freebie" doors - since this isn't an actual Item,
             // it has no name.
             _panel.selectInNameList(null);
@@ -572,7 +563,7 @@ public class RoomEditorController
     }
 
     /** Sets the currently edited target's action (if applicable). */
-    protected function setTargetAction (actionType :int, actionData :String) :void
+    protected function setTargetAction (actionType :FurniAction, actionData :String) :void
     {
         withFurniUpdate(function () :void {
             if (_edit.target == null || ! _edit.target.isActionModifiable()) {
@@ -603,7 +594,6 @@ public class RoomEditorController
         }
     }
 
-    protected var _ctx :RoomContext;
     protected var _view :RoomObjectView;
     protected var _edit :FurniEditor;
     protected var _hover :FurniHighlight;
@@ -621,6 +611,9 @@ public class RoomEditorController
     /** Tracks how many items have been added to the room this session. */
     protected var _addCount :int;
 
+    protected const _octx :OrthContext = inject(OrthContext);
+    protected const _module :Module = inject(Module);
+    protected const _roomObjCtrl :RoomObjectController = inject(RoomObjectController);
     protected const _sceneDir :SceneDirector = inject(SceneDirector);
     protected const _topPanel :TopPanel = inject(TopPanel);
 
