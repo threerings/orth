@@ -8,6 +8,8 @@ import flash.events.MouseEvent;
 import flash.ui.Keyboard;
 import flash.utils.ByteArray;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
@@ -34,6 +36,7 @@ import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.entity.data.Avatar;
 import com.threerings.orth.entity.data.PetOrders;
+import com.threerings.orth.room.client.editor.DoorTargetEditController;
 import com.threerings.orth.room.client.editor.RoomEditorController;
 import com.threerings.orth.room.client.updates.UpdateAction;
 import com.threerings.orth.room.client.updates.UpdateStack;
@@ -160,7 +163,7 @@ public class RoomObjectController extends RoomController
         }
 
         var handleResult :Function = function (result :Object) :void {
-            DoorTargetEditController.start(furniData, _rctx);
+            _doorCtrl.start(furniData);
         };
         _roomObj.orthRoomService.editRoom(_octx.resultListener(
                 handleResult, OrthCodes.EDITING_MSGS));
@@ -172,7 +175,7 @@ public class RoomObjectController extends RoomController
      */
     public function backgroundFinishedLoading () :void
     {
-        DoorTargetEditController.updateLocation();
+        _doorCtrl.updateLocation();
     }
 
     /**
@@ -614,5 +617,6 @@ public class RoomObjectController extends RoomController
     protected var _roomAttrListener :AttributeChangeAdapter =
         new AttributeChangeAdapter(roomAttrChanged);
 
+    protected const _doorCtrl :DoorTargetEditController = inject(DoorTargetEditController);
 }
 }
