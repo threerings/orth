@@ -6,8 +6,6 @@ package com.threerings.orth.server;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.MediaMimeTypes;
 
-import static com.threerings.orth.Log.log;
-
 /**
  * A central class for statically constructor media descriptors that are ready to view
  * on a client, which for us means they need to be signed for Amazon's CloudFront service.

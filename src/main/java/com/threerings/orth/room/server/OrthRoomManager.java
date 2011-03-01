@@ -8,8 +8,6 @@ import java.util.Set;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
 import com.google.inject.Inject;
 
 import com.samskivert.jdbc.RepositoryUnit;

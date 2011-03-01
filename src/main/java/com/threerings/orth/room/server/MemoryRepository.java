@@ -7,8 +7,6 @@ package com.threerings.orth.room.server;
 import java.util.List;
 import java.util.Set;
 
-import com.samskivert.util.ResultListener;
-
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
 

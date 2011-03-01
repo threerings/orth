@@ -14,7 +14,6 @@ import com.threerings.whirled.util.SceneFactory;
 
 import com.threerings.orth.room.data.OrthRoomConfig;
 import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.data.OrthSceneModel;
 
 /**
  * Scene and config factory for Orth.
@@ -26,7 +25,7 @@ public class OrthSceneFactory
     // from interface SceneFactory
     public Scene createScene (SceneModel model, PlaceConfig config)
     {
-        return new OrthScene((OrthSceneModel) model, config);
+        return new OrthScene(model, config);
     }
 
     // from interface SceneRegistry.ConfigFactory
