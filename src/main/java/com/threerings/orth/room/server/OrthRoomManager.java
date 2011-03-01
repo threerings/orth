@@ -32,13 +32,16 @@ import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.RoomPlace;
 
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.SetListener;
+import com.threerings.whirled.data.SceneUpdate;
 import com.threerings.whirled.spot.data.Location;
 import com.threerings.whirled.spot.data.Portal;
 import com.threerings.whirled.spot.data.SceneLocation;
@@ -116,6 +119,23 @@ public class OrthRoomManager extends SpotSceneManager
         // call the public (non-invocation service) method to enact it
         setState(actor, state);
     }
+
+    @Override
+    public void editRoom (ClientObject caller, InvocationService.ResultListener listener)
+        throws InvocationException
+    {
+        // for now send back a TRUE
+        listener.requestProcessed(Boolean.TRUE);
+    }
+
+    // documentation inherited from RoomProvider
+    public void updateRoom (ClientObject caller, final SceneUpdate update,
+                            InvocationService.InvocationListener listener)
+        throws InvocationException
+    {
+        throw new IllegalStateException("Not yet implemented");
+    }
+
 
     @Override
     public void updateMemory (ClientObject caller, EntityIdent ident,
