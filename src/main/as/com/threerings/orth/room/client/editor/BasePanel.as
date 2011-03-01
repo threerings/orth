@@ -9,6 +9,8 @@ import mx.containers.HBox;
 import mx.containers.VBox;
 import mx.core.Container;
 
+import flashx.funk.ioc.inject;
+
 import com.threerings.flex.CommandButton;
 
 import com.threerings.orth.client.Msgs;
