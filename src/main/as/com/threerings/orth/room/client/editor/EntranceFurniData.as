@@ -16,11 +16,13 @@ public class EntranceFurniData extends FurniData
 {
     public static const ENTRANCE_FURNI_ID :int = -1;
 
+    public static const ITEM_IDENT :EntityIdent =
+        new SimpleEntityIdent(EntityType.NOT_A_TYPE, ENTRANCE_FURNI_ID);
+
     public function EntranceFurniData ()
     {
         super();
-        this.item = new SimpleEntityIdent(EntityType.NOT_A_TYPE, ENTRANCE_FURNI_ID);
-
+        this.item = ITEM_IDENT;
     }
 
     // @Override from FurniData
