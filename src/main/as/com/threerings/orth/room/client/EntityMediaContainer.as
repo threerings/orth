@@ -81,22 +81,6 @@ public class EntityMediaContainer extends MediaDescContainer
         return _h;
     }
 
-    override protected function addListeners (info :LoaderInfo) :void
-    {
-        super.addListeners(info);
-
-        Object(info.loader).uncaughtErrorEvents.addEventListener(
-            "uncaughtError", handleUncaughtErrors);
-    }
-
-    override protected function removeListeners (info :LoaderInfo) :void
-    {
-        super.removeListeners(info);
-
-        Object(info.loader).uncaughtErrorEvents.removeEventListener(
-            "uncaughtError", handleUncaughtErrors);
-    }
-
     protected function handleUncaughtErrors (event :*) :void
     {
         log.info("Uncaught Error", "media", _desc, event);
