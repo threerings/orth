@@ -7,7 +7,6 @@ import mx.controls.Label;
 import mx.controls.TextInput;
 
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 
 /**

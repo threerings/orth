@@ -12,6 +12,7 @@ import mx.events.FlexEvent;
 
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.GridUtil;
+
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;

@@ -3,31 +3,24 @@
 
 package com.threerings.orth.room.client.editor {
 
-import mx.containers.Canvas;
-import mx.core.Container;
-
 import flashx.funk.ioc.inject;
 
-import com.threerings.util.Log;
+import mx.containers.Canvas;
 
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.FlexUtil;
-
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.data.Scene;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
 
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.world.client.WorldController;
-
-import com.threerings.orth.room.client.editor.ui.FloatingPanel;
-import com.threerings.orth.room.client.RoomContext;
-
 import com.threerings.orth.room.client.RoomObjectController;
+import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 import com.threerings.orth.room.client.updates.FurniUpdateAction;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.world.client.WorldController;
 
 /**
  * This controller handles in-world door editing. The player picks a door to edit, then travels

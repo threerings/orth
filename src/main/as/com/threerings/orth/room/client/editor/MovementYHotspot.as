@@ -9,6 +9,7 @@ import flash.events.MouseEvent;
 import flash.geom.ColorTransform;
 
 import com.threerings.util.MathUtil;
+
 import com.threerings.orth.room.client.ClickLocation;
 import com.threerings.orth.room.client.RoomMetrics;
 

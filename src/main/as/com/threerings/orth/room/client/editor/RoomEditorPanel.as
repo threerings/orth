@@ -4,45 +4,38 @@
 package com.threerings.orth.room.client.editor {
 
 import flash.events.Event;
-
 import flash.geom.Rectangle;
+
+import flashx.funk.ioc.Module;
+import flashx.funk.ioc.inject;
 
 import mx.containers.Box;
 import mx.containers.Grid;
 import mx.containers.HBox;
 import mx.containers.VBox;
-import mx.controls.ColorPicker;
 import mx.controls.HRule;
 import mx.controls.Label;
 import mx.controls.Text;
 import mx.core.Container;
 import mx.core.UIComponent;
-import mx.events.ColorPickerEvent;
-
-import flashx.funk.ioc.inject;
-import flashx.funk.ioc.Module;
 
 import com.threerings.flex.CommandButton;
-import com.threerings.flex.CommandComboBox;
 import com.threerings.flex.CommandCheckBox;
+import com.threerings.flex.CommandComboBox;
 import com.threerings.flex.FlexUtil;
 import com.threerings.flex.GridUtil;
-import com.threerings.util.CommandEvent;
-import com.threerings.msoy.ui.SkinnableImage;
-
-import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.TopPanel;
-
 import com.threerings.msoy.item.data.all.Decor;
 import com.threerings.msoy.item.data.all.Item;
-
-import com.threerings.orth.room.client.RoomContext;
+import com.threerings.msoy.ui.SkinnableImage;
 import com.threerings.msoy.world.client.WorldController;
 
+import com.threerings.util.CommandEvent;
+
+import com.threerings.orth.client.Msgs;
 import com.threerings.orth.entity.client.FurniSprite;
-import com.threerings.orth.room.data.FurniData;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.editor.ui.FloatingPanel;
-import com.threerings.orth.room.data.OrthSceneModel;
+import com.threerings.orth.room.data.FurniData;
 
 /**
  * A separate room editing panel, which lets the player edit furniture inside the room.

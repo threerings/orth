@@ -15,12 +15,13 @@ import mx.controls.TextInput;
 import mx.core.UIComponent;
 import mx.events.FlexEvent;
 
-import com.threerings.util.StringUtil;
-
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.CommandComboBox;
-import com.threerings.flex.GridUtil;
 import com.threerings.flex.FlexUtil;
+import com.threerings.flex.GridUtil;
+
+import com.threerings.util.StringUtil;
+
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.room.data.FurniData;
 

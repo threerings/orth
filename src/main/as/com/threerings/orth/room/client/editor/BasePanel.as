@@ -10,6 +10,7 @@ import mx.containers.VBox;
 import mx.core.Container;
 
 import com.threerings.flex.CommandButton;
+
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.room.data.FurniData;
 

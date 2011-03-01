@@ -8,20 +8,17 @@ import flash.events.Event;
 
 import mx.controls.CheckBox;
 
+import com.threerings.flex.FlexUtil;
+
 import com.threerings.util.CommandEvent;
 import com.threerings.util.Log;
 
-import com.threerings.flex.FlexUtil;
-
-import com.threerings.orth.room.client.editor.ui.FloatingPanel;
-
 import com.threerings.orth.client.Msgs;
-
 import com.threerings.orth.room.client.RoomContext;
-
 import com.threerings.orth.room.client.RoomObjectController;
 import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.RoomPostcardPanel;
+import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 import com.threerings.orth.room.client.snapshot.Snapshot;
 import com.threerings.orth.room.data.OrthSceneModel;
 

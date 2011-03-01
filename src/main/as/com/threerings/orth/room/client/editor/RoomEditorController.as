@@ -5,11 +5,12 @@ package com.threerings.orth.room.client.editor {
 
 import flash.events.MouseEvent;
 
+import com.threerings.msoy.item.client.ItemService;
+import com.threerings.msoy.item.data.all.Item;
+import com.threerings.whirled.client.SceneDirector;
+import com.threerings.whirled.data.SceneUpdate;
+
 import com.threerings.io.TypedArray;
-
-import com.threerings.orth.client.Msgs;
-
-import com.threerings.orth.data.OrthCodes;
 
 import com.threerings.util.ArrayUtil;
 import com.threerings.util.Log;
@@ -18,26 +19,15 @@ import com.threerings.util.Maps;
 import com.threerings.util.StringUtil;
 import com.threerings.util.Util;
 
-import com.threerings.whirled.client.SceneDirector;
-import com.threerings.whirled.data.SceneUpdate;
-
-import com.threerings.msoy.data.Address;
-
-import com.threerings.orth.client.DeploymentConfig;
+import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.TopPanel;
-
-import com.threerings.msoy.item.client.ItemService;
-import com.threerings.msoy.item.data.all.Item;
-
-import com.threerings.orth.room.client.RoomContext;
-import com.threerings.orth.room.client.RoomService;
-
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.RoomObjectView;
 import com.threerings.orth.room.client.updates.FurniUpdateAction;
 import com.threerings.orth.room.client.updates.SceneUpdateAction;
-
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.FurniUpdate_Add;
