@@ -20,14 +20,12 @@ import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.room.client.FakeChatDirector;
-import com.threerings.orth.room.data.RoomKey;
 import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldModule;
 import com.threerings.orth.world.data.Destination;
 import com.threerings.orth.world.data.OrthPlayerBody;
-import com.threerings.orth.world.data.PlaceKey;
 
 /**
  * Defines services for the Room client.
