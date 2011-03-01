@@ -66,39 +66,6 @@ public class RoomPanel extends BasePanel
         _name.maxChars = OrthSceneModel.MAX_NAME_LENGTH;
         box.addChild(_name);
 
-        // make this room my/this whirled's home button
-        _homeButton = new CommandButton();
-        _homeButton.styleName = "roomEditButtonMakeMyHome";
-        _homeButton.setCallback(_controller.makeHome);
-        var sceneModel :OrthSceneModel = _controller.scene.getSceneModel() as OrthSceneModel;
-        var memberObject :MemberObject = _controller.ctx.getMemberObject();
-        if (sceneModel.ownerType == OrthSceneModel.OWNER_TYPE_MEMBER) {
-            _homeButton.toolTip = Msgs.EDITING.get("b.make_home");
-            _homeButton.enabled =
-                sceneModel.ownerId == memberObject.getMemberId() &&
-                sceneModel.sceneId != memberObject.homeSceneId;
-
-        } else if (sceneModel.ownerType == OrthSceneModel.OWNER_TYPE_GROUP) {
-            _homeButton.toolTip = Msgs.EDITING.get("b.make_group_home");
-            _homeButton.enabled = false;
-
-            if (memberObject.isGroupManager(sceneModel.ownerId)) {
-                var resultHandler :Function = function (result :Object) :void {
-                    _homeButton.enabled = (sceneModel.sceneId != (result as int));
-                };
-                var svc :WorldService =
-                    _controller.ctx.getClient().requireService(WorldService) as WorldService;
-                svc.getHomeId(OrthSceneModel.OWNER_TYPE_GROUP, sceneModel.ownerId,
-                    new WorldService_HomeResultListenerAdapter(resultHandler, null,
-                        Util.adapt(_controller.ctx.displayFeedback, OrthCodes.EDITING_MSGS)));
-            }
-
-        } else {
-            log.warning("unrecognized room ownership type [" + sceneModel.ownerType + "]");
-            _homeButton.enabled = false;
-        }
-        box.addChild(_homeButton);
-
         _buttonbar = new ToggleButtonBar();
         _buttonbar.styleName = "roomEditAccessButtons";
         box.addChild(_buttonbar);
