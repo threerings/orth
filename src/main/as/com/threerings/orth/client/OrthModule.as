@@ -77,6 +77,7 @@ public class OrthModule extends BindingModule
         getInstance(PlayerDirector);
         getInstance(OrthChatDirector);
         getInstance(OrthController);
+        getInstance(PartyDirector);
     }
 
     private static const log :Log = Log.getLog(OrthModule);
