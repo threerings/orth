@@ -116,7 +116,10 @@ public class NotificationDirector extends BasicDirector
     override protected function clientObjectUpdated (client :Client) :void
     {
         super.clientObjectUpdated(client);
-        (client as CrowdClient).bodyOf().addListener(this);
+
+        if (client is CrowdClient) {
+            CrowdClient(client).bodyOf().addListener(this);
+        }
 
         // and, let's always update the control bar button
         if (!_didStartupNotifs) {
