@@ -464,10 +464,12 @@ public class PartyDirector extends BasicDirector
     {
         super.clientObjectUpdated(client);
 
-        var assignedPartyId :int = _octx.getPlayerObject().partyId;
-        if (assignedPartyId != 0) {
-            // join it!
-            DelayUtil.delayFrame(joinParty, [ assignedPartyId ]);
+        if (_octx.getPlayerObject() != null) {
+            var assignedPartyId :int = _octx.getPlayerObject().partyId;
+            if (assignedPartyId != 0) {
+                // join it!
+                DelayUtil.delayFrame(joinParty, [ assignedPartyId ]);
+            }
         }
     }
 
