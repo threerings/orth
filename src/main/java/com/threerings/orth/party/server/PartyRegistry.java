@@ -131,7 +131,8 @@ public class PartyRegistry
      */
     public void issueInvite (PlayerObject player, OrthName inviter, int partyId, String partyName)
     {
-        _notifyMan.notify(player, new PartyInviteNotification(inviter, partyId, partyName));
+        // TODO(bruno): Wire up notifications
+        //_notifyMan.notify(player, new PartyInviteNotification(inviter, partyId, partyName));
     }
 
     /**
@@ -483,7 +484,7 @@ public class PartyRegistry
     @Inject protected InvocationManager _invmgr;
     @Inject protected PlayerLocator _playerLocator;
     @Inject protected OrthPeerManager _peerMgr;
-    @Inject protected NotificationManager _notifyMan;
+    //@Inject protected NotificationManager _notifyMan;
     @Inject protected PlaceRegistry _placeReg;
     @Inject protected RootDObjectManager _omgr;
 }

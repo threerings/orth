@@ -28,6 +28,8 @@ import com.threerings.orth.room.server.OrthSceneRegistry;
 import com.threerings.orth.room.server.RoomAuthenticator;
 import com.threerings.orth.room.server.RoomSessionFactory;
 
+import com.threerings.orth.party.server.PartyRegistry;
+
 /**
  * Extends the main server class with Orth functionality.
  */
@@ -68,11 +70,13 @@ public class OrthServer extends CrowdServer
         _aetherMgr.init();
         _worldMgr.init();
         _chatMgr.init();
+        //_partyReg.init();
     }
 
     @Inject protected AetherManager _aetherMgr;
     @Inject protected WorldManager _worldMgr;
     @Inject protected ChatManager _chatMgr;
     @Inject protected OrthSceneRegistry _sceneReg;
+    @Inject protected PartyRegistry _partyReg;
 }
 
