@@ -2,7 +2,6 @@
 // $Id: NotificationDirector.as 19250 2010-06-25 15:15:17Z zell $
 
 package com.threerings.orth.notify.client {
-
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.client.CrowdClient;
@@ -30,8 +29,7 @@ public class NotificationDirector extends BasicDirector
         super(_octx);
 
         // clear our display if we lose connection to the server
-        _octx.getClient().addClientObserver(new ClientAdapter(null, null, null, null, null,
-            clearNotifications, null, null));
+        _octx.getClient().addEventListener(ClientEvent.CLIENT_CONNECTION_FAILED, clearNotifications);
     }
 
     public function addGenericNotification (
