@@ -4,16 +4,17 @@
 package com.threerings.orth.party.client {
 
 import flashx.funk.ioc.inject;
+import flashx.funk.ioc.Module;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
 
 import com.threerings.orth.aether.client.AetherClient;
+import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.data.TokenCredentials;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyCredentials;
 
@@ -22,9 +23,11 @@ import com.threerings.orth.party.data.PartyCredentials;
  */
 public class PartyContextImpl implements PartyContext
 {
-    public function PartyContextImpl (octx :OrthContext)
+    public function PartyContextImpl (module :Module)
     {
-        _client = octx.getClient();
+        _module = module;
+        _octx = _module.getInstance(OrthContext);
+        _client = new Client();
     }
 
     /**
@@ -33,14 +36,16 @@ public class PartyContextImpl implements PartyContext
     public function connect (partyId :int, hostname :String, port :int) :void
     {
         var pcreds :PartyCredentials = new PartyCredentials();
-        pcreds.sessionToken = TokenCredentials(inject(AetherClient).getCredentials()).sessionToken;
+        pcreds.sessionToken = AetherAuthResponseData(
+            _module.getInstance(AetherClient).getAuthResponseData()).sessionToken;
         pcreds.partyId = partyId;
 
-        PolicyLoader.registerClient(_client, _depConf.policyPort);
+        var depConf :OrthDeploymentConfig = _module.getInstance(OrthDeploymentConfig);
+        PolicyLoader.registerClient(_client, depConf.policyPort);
 
         // configure our client and logon
         _client.addServiceGroup(OrthCodes.PARTY_GROUP);
-        _client.setVersion(_depConf.version);
+        _client.setVersion(depConf.version);
         _client.setServer(hostname, [ port ]);
         _client.setCredentials(pcreds);
         _client.logon();
@@ -61,7 +66,7 @@ public class PartyContextImpl implements PartyContext
     // from PartyContext
     public function getOrthContext () :OrthContext
     {
-        return _ctx;
+        return _octx;
     }
 
     // from PartyContext
@@ -70,9 +75,9 @@ public class PartyContextImpl implements PartyContext
         return (_client.getClientObject() as PartierObject);
     }
 
-    protected const _ctx :OrthContext = inject(OrthContext);
-    protected const _depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
+    protected var _module :Module;
 
+    protected var _octx :OrthContext;
     protected var _client :Client;
 }
 }

@@ -6,6 +6,7 @@ package com.threerings.orth.party.client {
 import flash.utils.Dictionary;
 
 import flashx.funk.ioc.inject;
+import flashx.funk.ioc.Module;
 
 import mx.core.UIComponent;
 
@@ -36,6 +37,7 @@ import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.orth.notify.data.Notification;
+import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyBoardMarshaller;
 import com.threerings.orth.party.data.PartyBootstrapData;
 import com.threerings.orth.party.data.PartyCodes;
@@ -52,8 +54,10 @@ import com.threerings.orth.world.client.WorldDirector;
  */
 public class PartyDirector extends BasicDirector
 {
-    // reference the PartyBoardMarshaller class
+    // Hard reference some classes
     PartyBoardMarshaller;
+    PartyAuthName;
+    PartyObject;
 
     public const log :Log = Log.getLog(this);
 
@@ -228,13 +232,6 @@ public class PartyDirector extends BasicDirector
      */
     public function clearParty () :void
     {
-        // pop down the party window.
-        var btn :CommandButton = getButton();
-        if (btn.selected) {
-            btn.activate();
-        }
-        btn.clearStyle("highlight");
-
         if (_safeSubscriber != null) {
             _safeSubscriber.unsubscribe(_pctx.getDObjectManager());
             _safeSubscriber = null;
@@ -338,7 +335,7 @@ public class PartyDirector extends BasicDirector
         closeAllDetailPanels();
 
         // create a new party session and connect to our party host node
-        _pctx = new PartyContextImpl(_octx);
+        _pctx = new PartyContextImpl(_module);
         _pctx.getClient().addClientObserver(new ClientAdapter(
             null, partyDidLogon, null, null, partyLogonFailed, partyConnectFailed));
         _pctx.connect(partyId, hostname, port);
@@ -355,18 +352,6 @@ public class PartyDirector extends BasicDirector
         _partyListener.messageReceived = partyMsgReceived;
         _partyListener.objectDestroyed = Util.adapt(clearParty);
         _partyObj.addListener(_partyListener);
-
-        // if the party popup is up, change to the new popup...
-        var btn :CommandButton = getButton();
-        if (btn.selected) {
-            // click it down and then back up...
-            btn.activate();
-            btn.activate();
-
-        } else {
-            btn.activate();
-        }
-        btn.setStyle("highlight", 0x3fa3cc);
 
         // we might need to warp to the party location
         checkFollowScene();
@@ -489,15 +474,7 @@ public class PartyDirector extends BasicDirector
         _pbsvc = (client.requireService(PartyBoardService) as PartyBoardService);
     }
 
-    /**
-     * Access the party button.
-     */
-    protected function getButton () :CommandButton
-    {
-        // TODO(bruno)
-        return null;
-        //return WorldControlBar(_octx.getControlBar()).partyBtn;
-    }
+    protected var _module :Module = inject(Module);
 
     protected var _notDir :NotificationDirector = inject(NotificationDirector);
     protected var _worldDir :WorldDirector = inject(WorldDirector);

@@ -17,4 +17,8 @@ public interface OrthDeploymentConfig
     String getRoomHost ();
 
     int[] getRoomPorts ();
+
+    String getPartyHost ();
+
+    int getPartyPort ();
 }

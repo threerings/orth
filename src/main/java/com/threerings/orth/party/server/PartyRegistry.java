@@ -49,6 +49,7 @@ import com.threerings.orth.data.OrthName;
 import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.party.data.PartyBoardMarshaller;
 import com.threerings.orth.room.data.RoomPlace;
+import com.threerings.orth.server.OrthDeploymentConfig;
 
 import com.threerings.orth.notify.data.PartyInviteNotification;
 
@@ -346,10 +347,7 @@ public class PartyRegistry
             mgr.init(pobj, player.getPlayerId());
             mgr.addPlayer(player.playerName);
 
-            // we're hosting this party so we send them to this same node
-            //jl.foundParty(pobj.id, ServerConfig.serverHost, ServerConfig.serverPorts[0]);
-            // TODO(bruno): Send proper host/port
-            jl.foundParty(pobj.id, "thisneedschanging", 666);
+            jl.foundParty(pobj.id, _depConf.getPartyHost(), _depConf.getPartyPort());
 
         } catch (Exception e) {
             log.warning("Problem creating party", e);
@@ -479,6 +477,7 @@ public class PartyRegistry
     protected static final Object PARTY_PURCHASE_KEY = new Object();
 
     @Inject protected @MainInvoker Invoker _invoker;
+    @Inject protected OrthDeploymentConfig _depConf;
     @Inject protected BodyManager _bodyMan;
     @Inject protected Injector _injector;
     @Inject protected InvocationManager _invmgr;
