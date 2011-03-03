@@ -2,8 +2,6 @@
 // $Id$
 
 package com.threerings.orth.chat.client {
-import com.threerings.orth.data.OrthCodes;
-import com.threerings.presents.client.ConfirmAdapter;
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.chat.client.ChatDisplay;
@@ -18,6 +16,7 @@ import com.threerings.util.ObserverList;
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
+import com.threerings.presents.client.ConfirmAdapter;
 import com.threerings.presents.client.InvocationAdapter;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.MessageEvent;
@@ -31,6 +30,7 @@ import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.data.OrthCodes;
 
 public class OrthChatDirector extends BasicDirector
     implements MessageListener

@@ -3,7 +3,6 @@
 
 package com.threerings.orth.party.client {
 
-import flashx.funk.ioc.inject;
 import flashx.funk.ioc.Module;
 
 import com.threerings.presents.client.Client;

@@ -43,15 +43,11 @@ import com.threerings.whirled.data.ScenePlace;
 
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
-import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.party.data.PartyBoardMarshaller;
 import com.threerings.orth.room.data.RoomPlace;
 import com.threerings.orth.server.OrthDeploymentConfig;
-
-import com.threerings.orth.notify.data.PartyInviteNotification;
 
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;

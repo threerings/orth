@@ -5,14 +5,13 @@ package com.threerings.orth.party.client {
 
 import flash.utils.Dictionary;
 
-import flashx.funk.ioc.inject;
 import flashx.funk.ioc.Module;
+import flashx.funk.ioc.inject;
 
 import mx.core.UIComponent;
 
 import com.threerings.crowd.client.LocationAdapter;
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.flex.CommandButton;
 import com.threerings.flex.CommandMenu;
 import com.threerings.whirled.data.Scene;
 

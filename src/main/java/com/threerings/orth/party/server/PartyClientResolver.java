@@ -3,14 +3,10 @@
 
 package com.threerings.orth.party.server;
 
-import com.google.inject.Inject;
-
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.ClientResolver;
 
 import com.threerings.orth.aether.data.VizPlayerName;
-import com.threerings.orth.data.MediaDesc;
-
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyAuthName;
 
