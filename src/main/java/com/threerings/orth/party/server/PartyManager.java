@@ -469,7 +469,7 @@ public class PartyManager
     @Inject protected ClientManager _clmgr;
     @Inject protected InvocationManager _invMgr;
     @Inject protected OrthPeerManager _peerMgr;
-    @Inject protected NotificationManager _notifyMgr;
+    //@Inject protected NotificationManager _notifyMgr;
     @Inject protected PartyRegistry _partyReg;
     @Inject protected RootDObjectManager _omgr;
 }
