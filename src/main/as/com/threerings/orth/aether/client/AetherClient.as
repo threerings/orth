@@ -16,6 +16,7 @@ import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.chat.data.TellMarshaller;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.client.Prefs;
@@ -27,6 +28,7 @@ public class AetherClient extends Client
     AuthName;
     PlayerObject;
     PlayerMarshaller;
+    TellMarshaller;
 
     public function AetherClient ()
     {
