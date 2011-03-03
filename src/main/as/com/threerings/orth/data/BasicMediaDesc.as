@@ -6,6 +6,7 @@ package com.threerings.orth.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+import com.threerings.io.Streamable;
 
 import com.threerings.orth.data.MediaDescImpl;
 
@@ -13,6 +14,7 @@ import com.threerings.orth.data.MediaDescImpl;
 
 // GENERATED CLASSDECL START
 public class BasicMediaDesc extends MediaDescImpl
+    implements Streamable
 {
 // GENERATED CLASSDECL END
 
@@ -37,16 +39,14 @@ public class BasicMediaDesc extends MediaDescImpl
     }
 
 // GENERATED STREAMING START
-    override public function readObject (ins :ObjectInputStream) :void
+    public function readObject (ins :ObjectInputStream) :void
     {
-        super.readObject(ins);
         _mimeType = ins.readByte();
         _constraint = ins.readByte();
     }
 
-    override public function writeObject (out :ObjectOutputStream) :void
+    public function writeObject (out :ObjectOutputStream) :void
     {
-        super.writeObject(out);
         out.writeByte(_mimeType);
         out.writeByte(_constraint);
     }

@@ -1,4 +1,3 @@
-// GENERATED PREAMBLE START
 //
 // $Id$
 
@@ -12,12 +11,9 @@ import com.threerings.io.Streamable;
 
 import com.threerings.orth.data.MediaDesc;
 
-// GENERATED PREAMBLE END
-
-// GENERATED CLASSDECL START
-public class MediaDescImpl implements MediaDesc, Streamable
+public class MediaDescImpl
+    implements MediaDesc
 {
-// GENERATED CLASSDECL END
     public function getMimeType () :int
     {
         return isAbstract();
@@ -78,20 +74,6 @@ public class MediaDescImpl implements MediaDesc, Streamable
     {
         return isAbstract();
     }
-
-// GENERATED STREAMING START
-    public function readObject (ins :ObjectInputStream) :void
-    {
-    }
-
-    public function writeObject (out :ObjectOutputStream) :void
-    {
-    }
-
-// GENERATED STREAMING END
-
-// GENERATED CLASSFINISH START
 }
 }
-// GENERATED CLASSFINISH END
 
