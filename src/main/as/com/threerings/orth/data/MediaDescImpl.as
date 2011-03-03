@@ -24,16 +24,6 @@ public class MediaDescImpl
         return isAbstract();
     }
 
-    public function get mimeType () :int
-    {
-        return isAbstract();
-    }
-
-    public function get constraint () :int
-    {
-        return isAbstract();
-    }
-
     public function isImage () :Boolean
     {
         return MediaMimeTypes.isImage(getMimeType());

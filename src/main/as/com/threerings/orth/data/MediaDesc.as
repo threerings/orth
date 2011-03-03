@@ -16,13 +16,10 @@ public interface MediaDesc
      */
     function getMimeType () :int;
 
-    /** The size constraint on this media, if any. See {@link #computeConstraint}. */
-    // ORTH TODO - nuke this
-    function get constraint () :int;
-
-    /** The MIME type of the media associated with this item. */
-    // ORTH TODO - nuke this
-    function get mimeType () :int;
+    /**
+     * Returns the constraint on this media, if any.
+     */
+    function getConstraint () :int;
 
     /**
      * Is this media merely an image type?

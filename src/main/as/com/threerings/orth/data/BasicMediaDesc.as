@@ -28,16 +28,6 @@ public class BasicMediaDesc extends MediaDescImpl
         return _constraint;
     }
 
-    override public function get mimeType () :int
-    {
-        return _mimeType;
-    }
-
-    override public function get constraint () :int
-    {
-        return _constraint;
-    }
-
 // GENERATED STREAMING START
     public function readObject (ins :ObjectInputStream) :void
     {
