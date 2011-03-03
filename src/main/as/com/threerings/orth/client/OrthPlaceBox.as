@@ -124,8 +124,6 @@ public class OrthPlaceBox extends LayeredContainer
 
         if (_mainView is PlaceLayer) {
             PlaceLayer(_mainView).setPlaceSize(w, h);
-        } else if (_mainView != null) {
-            log.warning("MainView is not a PlaceLayer.", "view", _mainView);
         }
     }
 
