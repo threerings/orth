@@ -18,12 +18,6 @@ import com.threerings.orth.data.MediaDesc;
 public class MediaDescImpl implements MediaDesc, Streamable
 {
 // GENERATED CLASSDECL END
-
-    public function getMediaPath () :String
-    {
-        return isAbstract();
-    }
-
     public function getMimeType () :int
     {
         return isAbstract();

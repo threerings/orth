@@ -21,16 +21,6 @@ public class MediaDescContainer extends MediaContainer
     }
 
     /**
-     * ATTENTION: don't use this method in unless you know what you're doing.
-     * This class almost always wants MediaDescs rather than URLs.
-     */
-    override public function setMedia (url :String) :void
-    {
-        // this method exists purely for the change in documentation.
-        super.setMedia(url);
-    }
-
-    /**
      * Set a new MediaDescriptor. Returns true if the descriptor really changed.
      */
     public function setMediaDesc (desc :MediaDesc) :Boolean
@@ -40,7 +30,16 @@ public class MediaDescContainer extends MediaContainer
         }
 
         _desc = desc;
-        super.setMedia((desc == null) ? null : desc.getMediaPath());
+
+        if (desc == null) {
+            super.setMedia(null);
+        } else if (desc is PathMediaDesc) {
+            super.setMedia(PathMediaDesc(desc).getMediaPath());
+        } else if (desc is ObjectMediaDesc) {
+            super.setMediaObject(ObjectMediaDesc(desc).getMediaObject());
+        } else {
+            throw new Error("Unknown media type: " + desc);
+        }
         return true;
     }
 

@@ -78,7 +78,7 @@ public class DecorSprite extends FurniSprite
     {
         if (_furni != null) {
             return "DecorSprite[item=" + _furni.item + ", loc=" + _furni.loc + ", media=" +
-                _furni.media.getMediaPath() + "]";
+                _furni.media + "]";
         } else {
             return "DecorSprite[null]";
         }
