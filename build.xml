@@ -71,9 +71,7 @@
 
   <target name="aslib" depends="mavendeps">
       <compc4 srcdir="${asrc.dir}" libpath="${aslib.path}"
-          dest="${deploy.dir}/${ant.project.name}lib.swc">
-        <arg value="-compiler.library-path+=lib/tweener.swc"/>
-      </compc4>
+          dest="${deploy.dir}/${ant.project.name}lib.swc"/>
   </target>
 
   <target name="javadoc" depends="prepare">

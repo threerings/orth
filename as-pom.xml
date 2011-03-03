@@ -67,5 +67,11 @@
       <version>0.4-SNAPSHOT</version>
       <type>swc</type>
     </dependency>
+    <dependency>
+      <groupId>caurina</groupId>
+      <artifactId>tweener</artifactId>
+      <version>1.33.74</version>
+      <type>swc</type>
+    </dependency>
   </dependencies>
 </project>
