@@ -9,8 +9,8 @@
 
   <repositories>
     <repository>
-      <id>ooo</id>
-      <url>https://build.earth.threerings.net/maven-repository</url>
+      <id>ooo-internal</id>
+      <url>http://build.earth.threerings.net/maven-repository</url>
     </repository>
     <repository>
       <id>ooo-external</id>
