@@ -5,6 +5,7 @@ package com.threerings.orth.party.server;
 
 import java.util.Set;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -24,9 +25,6 @@ import com.threerings.presents.dobj.RootDObjectManager;
 
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.notify.server.NotificationManager;
-
-import com.threerings.orth.aether.server.PlayerNodeActions;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.data.HostedPlace;
 import com.threerings.orth.peer.server.OrthPeerManager;
@@ -67,8 +65,7 @@ public class PartyManager
      */
     public PartyDetail getPartyDetail ()
     {
-        return new PartyDetail(
-            _summary, _lastInfo, _partyObj.peeps.toArray(new PartyPeep[_partyObj.peeps.size()]));
+        return new PartyDetail(_summary, _lastInfo, Lists.newArrayList(_partyObj.peeps));
     }
 
     public void init (PartyObject partyObj, int creatorId)

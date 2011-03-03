@@ -7,6 +7,7 @@ package com.threerings.orth.party.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.TypedArray;
+import com.threerings.io.streamers.ArrayStreamer;
 
 import com.threerings.orth.party.data.PartyBoardInfo;
 
@@ -23,13 +24,13 @@ public class PartyDetail extends PartyBoardInfo
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        peeps = ins.readObject(TypedArray);
+        peeps = ins.readField(ArrayStreamer.INSTANCE);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeObject(peeps);
+        out.writeField(peeps, ArrayStreamer.INSTANCE);
     }
 
 // GENERATED STREAMING END
