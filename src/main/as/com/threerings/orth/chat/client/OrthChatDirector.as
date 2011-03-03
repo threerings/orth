@@ -2,7 +2,8 @@
 // $Id$
 
 package com.threerings.orth.chat.client {
-
+import com.threerings.orth.data.OrthCodes;
+import com.threerings.presents.client.ConfirmAdapter;
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.chat.client.ChatDisplay;
@@ -23,6 +24,7 @@ import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 
 import com.threerings.orth.chat.client.HistoryList;
+import com.threerings.orth.chat.client.TellService;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakObject;
@@ -54,6 +56,13 @@ public class OrthChatDirector extends BasicDirector
             log.error("Speak request failed", "cause", cause);
         }));
 
+    }
+
+    public function requestSendTell (memberId :int, msg :String) :void
+    {
+        trace(_ctx.getClient());
+        trace(_ctx.getClient().getBootstrapData().services);
+        TellService(_ctx.getClient().requireService(TellService)).sendTell(memberId, msg, new ConfirmAdapter(null, null));
     }
 
     public function getHistoryList () :HistoryList
@@ -176,9 +185,15 @@ public class OrthChatDirector extends BasicDirector
         });
     }
 
+    override protected function registerServices (client :Client) :void
+    {
+        client.addServiceGroup(OrthCodes.AETHER_GROUP);
+    }
+
     protected var _clobj :ClientObject;
     protected var _place :SpeakObject;
     protected var _chatHistory :HistoryList;
+    protected var _tellService :TellService;
 
     /** A list of registered chat displays. */
     protected var _displays :ObserverList = new ObserverList();

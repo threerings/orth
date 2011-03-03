@@ -6,35 +6,29 @@ package com.threerings.orth.chat.server;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
-import com.threerings.presents.peer.server.PeerManager;
 
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
-import com.threerings.orth.data.AuthName;
-import com.threerings.orth.chat.data.Tell;
-
-import com.threerings.orth.chat.client.TellService.TellResultListener;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.data.SpeakObject;
+import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.chat.data.TellMarshaller;
+import com.threerings.orth.data.AuthName;
+import com.threerings.orth.data.OrthCodes;
 
 @Singleton
 public class ChatManager
     implements TellProvider
 {
-    @Inject public ChatManager ()
-    {
-    }
-
     public void init ()
     {
-        // ORTH TODO: Bootstrap group?
-        _invMgr.registerProvider(this, TellMarshaller.class);
+        _invMgr.registerProvider(this, TellMarshaller.class, OrthCodes.AETHER_GROUP);
     }
 
     /**
@@ -49,8 +43,8 @@ public class ChatManager
     }
 
     // from TellProvider
-    public void sendTell (ClientObject caller, PlayerName to, String msg,
-            final TellResultListener listener)
+    public void sendTell (ClientObject caller, int playerId, String msg,
+            final ConfirmListener listener)
         throws InvocationException
     {
         PlayerObject from = _locator.forClient(caller);
@@ -58,7 +52,7 @@ public class ChatManager
         Tell tell = new Tell(from.playerName, msg);
 
         _peerMgr.invokeNodeAction(
-            new TellNodeAction(AuthName.makeKey(to.getId()), tell, listener),
+            new TellNodeAction(AuthName.makeKey(playerId), tell, listener),
             new Runnable() {
                 public void run () {
                     listener.requestFailed(OrthChatCodes.USER_NOT_ONLINE);

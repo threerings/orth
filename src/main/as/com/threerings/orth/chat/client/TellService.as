@@ -3,8 +3,7 @@
 package com.threerings.orth.chat.client {
 
 import com.threerings.presents.client.InvocationService;
-
-import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.presents.client.InvocationService_ConfirmListener;
 
 /**
  * An ActionScript version of the Java TellService interface.
@@ -12,6 +11,6 @@ import com.threerings.orth.aether.data.PlayerName;
 public interface TellService extends InvocationService
 {
     // from Java interface TellService
-    function sendTell (arg1 :PlayerName, arg2 :String, arg3 :TellService_TellResultListener) :void;
+    function sendTell (arg1 :int, arg2 :String, arg3 :InvocationService_ConfirmListener) :void;
 }
 }

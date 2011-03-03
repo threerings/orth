@@ -9,18 +9,16 @@ import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
 import com.threerings.orth.chat.data.Tell;
-import com.threerings.util.Name;
-
+import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.ClientManager;
-
-import com.threerings.orth.chat.client.TellService.TellResultListener;
+import com.threerings.util.Name;
 
 public class TellNodeAction extends PeerManager.NodeAction
 {
-    public TellNodeAction (Name to, Tell tell, TellResultListener listener)
+    public TellNodeAction (Name to, Tell tell, ConfirmListener listener)
     {
         _to = to;
         _tell = tell;
@@ -40,7 +38,7 @@ public class TellNodeAction extends PeerManager.NodeAction
         if (clobj != null) {
             PlayerObject player = _locator.forClient(clobj);
             player.postMessage(ChatCodes.USER_CHAT_TYPE, _tell);
-            _listener.tellSucceeded();
+            _listener.requestProcessed();
             return;
         }
 
@@ -50,7 +48,7 @@ public class TellNodeAction extends PeerManager.NodeAction
 
     protected Name _to;
     protected Tell _tell;
-    protected TellResultListener _listener;
+    protected ConfirmListener _listener;
 
     @Inject protected transient ClientManager _clMgr;
     @Inject protected transient PlayerLocator _locator;

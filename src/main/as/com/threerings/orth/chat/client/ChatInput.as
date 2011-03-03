@@ -2,7 +2,6 @@
 // $Id$
 
 package com.threerings.orth.chat.client {
-
 import flash.display.Sprite;
 import flash.events.KeyboardEvent;
 import flash.text.TextField;
@@ -13,6 +12,8 @@ import flashx.funk.ioc.inject;
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.text.TextFieldUtil;
 import com.threerings.ui.KeyboardCodes;
+
+import com.threerings.util.StringUtil;
 
 import com.threerings.orth.chat.client.OrthChatDirector;
 
@@ -32,7 +33,11 @@ public class ChatInput extends Sprite
     protected function onKeyDown (event :KeyboardEvent) :void
     {
         if (event.charCode == KeyboardCodes.ENTER && _root.text.length > 0) {
-            _chatDir.requestPlaceSpeak(_root.text);
+            if (StringUtil.startsWith(_root.text, "/tell")) {
+                _chatDir.requestSendTell(0, _root.text);
+            } else {
+                _chatDir.requestPlaceSpeak(_root.text);
+            }
             _root.text = "";
         }
     }

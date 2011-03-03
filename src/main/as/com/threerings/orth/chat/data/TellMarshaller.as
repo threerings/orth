@@ -2,11 +2,13 @@
 // $Id$
 package com.threerings.orth.chat.data {
 
-import com.threerings.presents.data.InvocationMarshaller;
+import com.threerings.util.Integer;
 
-import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.presents.client.InvocationService_ConfirmListener;
+import com.threerings.presents.data.InvocationMarshaller;
+import com.threerings.presents.data.InvocationMarshaller_ConfirmMarshaller;
+
 import com.threerings.orth.chat.client.TellService;
-import com.threerings.orth.chat.client.TellService_TellResultListener;
 
 /**
  * Provides the implementation of the <code>TellService</code> interface
@@ -22,12 +24,12 @@ public class TellMarshaller extends InvocationMarshaller
     public static const SEND_TELL :int = 1;
 
     // from interface TellService
-    public function sendTell (arg1 :PlayerName, arg2 :String, arg3 :TellService_TellResultListener) :void
+    public function sendTell (arg1 :int, arg2 :String, arg3 :InvocationService_ConfirmListener) :void
     {
-        var listener3 :TellMarshaller_TellResultMarshaller = new TellMarshaller_TellResultMarshaller();
+        var listener3 :InvocationMarshaller_ConfirmMarshaller = new InvocationMarshaller_ConfirmMarshaller();
         listener3.listener = arg3;
         sendRequest(SEND_TELL, [
-            arg1, arg2, listener3
+            Integer.valueOf(arg1), arg2, listener3
         ]);
     }
 }
