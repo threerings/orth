@@ -11,6 +11,8 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.io.Streamable;
 
+import com.threerings.orth.data.MediaDesc;
+
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
@@ -37,12 +39,14 @@ public class BasicMediaDesc extends SimpleStreamableObject
 // GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void
     {
+        super.readObject(ins);
         _mimeType = ins.readByte();
         _constraint = ins.readByte();
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
+        super.writeObject(out);
         out.writeByte(_mimeType);
         out.writeByte(_constraint);
     }
