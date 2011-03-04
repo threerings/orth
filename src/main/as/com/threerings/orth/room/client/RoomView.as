@@ -37,6 +37,7 @@ import com.threerings.orth.client.Snapshottable;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.client.Zoomable;
 import com.threerings.orth.data.MediaDesc;
+import com.threerings.orth.data.MediaMimeTypes;
 import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
@@ -586,7 +587,7 @@ public class RoomView extends Sprite
     {
         if (shouldLoadAll()) {
             for each (var furni :FurniData in _scene.getFurni()) {
-                if (!furni.media.isAudio()) {
+                if (!MediaMimeTypes.isAudio(furni.media.getMimeType())) {
                     updateFurni(furni);
                 }
             }

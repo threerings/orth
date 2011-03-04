@@ -32,30 +32,4 @@ public interface MediaDesc
 
     /** The size constraint on this media, if any. */
     byte getConstraint ();
-
-    /**
-     * Is this media merely an image type?
-     */
-    boolean isImage ();
-
-    /**
-     * Is this media a SWF?
-     */
-    boolean isSWF ();
-
-    /**
-     * Is this media purely audio?
-     */
-    boolean isAudio ();
-
-    /**
-     * Is this media video?
-     */
-    boolean isVideo ();
-
-    /**
-     * Return true if this media has a visual component that can be shown in
-     * flash.
-     */
-    boolean hasFlashVisual ();
 }

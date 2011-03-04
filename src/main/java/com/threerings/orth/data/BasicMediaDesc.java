@@ -3,13 +3,15 @@
 
 package com.threerings.orth.data;
 
-import com.threerings.io.Streamable;
+import com.threerings.io.SimpleStreamableObject;
+
+import com.threerings.orth.data.MediaDesc;
 
 /**
- * A somewhat more concrete {@link MediaDesc}.
+ * An implementation base for certain kinds of {@link MediaDesc}.
  */
-public abstract class BasicMediaDesc extends MediaDescImpl
-    implements Streamable
+public abstract class BasicMediaDesc extends SimpleStreamableObject
+    implements MediaDesc
 {
     protected BasicMediaDesc ()
     {
@@ -26,17 +28,16 @@ public abstract class BasicMediaDesc extends MediaDescImpl
         _constraint = constraint;
     }
 
-    @Override public byte getMimeType ()
+    public byte getMimeType ()
     {
         return _mimeType;
     }
 
-    @Override public byte getConstraint ()
+    public byte getConstraint ()
     {
         return _constraint;
     }
 
     protected byte _mimeType;
-
     protected byte _constraint;
 }

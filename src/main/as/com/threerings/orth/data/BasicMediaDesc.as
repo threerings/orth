@@ -4,38 +4,44 @@
 
 package com.threerings.orth.data {
 
+import flashx.funk.util.isAbstract;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+import com.threerings.io.SimpleStreamableObject;
 import com.threerings.io.Streamable;
-
-import com.threerings.orth.data.MediaDescImpl;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class BasicMediaDesc extends MediaDescImpl
-    implements Streamable
+public class BasicMediaDesc extends SimpleStreamableObject
+    implements MediaDesc
 {
 // GENERATED CLASSDECL END
 
-    override public function getMimeType () :int
+    public function getMimeType () :int
     {
         return _mimeType;
     }
 
-    override public function getConstraint () :int
+    public function getConstraint () :int
     {
         return _constraint;
     }
 
+    public function equals (other :Object) :Boolean
+    {
+        return isAbstract();
+    }
+
 // GENERATED STREAMING START
-    public function readObject (ins :ObjectInputStream) :void
+    override public function readObject (ins :ObjectInputStream) :void
     {
         _mimeType = ins.readByte();
         _constraint = ins.readByte();
     }
 
-    public function writeObject (out :ObjectOutputStream) :void
+    override public function writeObject (out :ObjectOutputStream) :void
     {
         out.writeByte(_mimeType);
         out.writeByte(_constraint);
