@@ -33,9 +33,6 @@ public interface MediaDesc
     /** The size constraint on this media, if any. */
     byte getConstraint ();
 
-    /** Create and return a new MediaDesc, identical except with the new constraint. */
-    MediaDesc newWithConstraint (byte constraint);
-
     /**
      * Is this media merely an image type?
      */
