@@ -89,6 +89,12 @@ public class OrthSceneRegistry extends SpotSceneRegistry
         return _depConf.getRoomPorts();
     }
 
+    @Override
+    public String toString ()
+    {
+        return getClass().getSimpleName();
+    }
+
     // our dependencies
     @Inject protected Injector _injector;
     @Inject protected OrthPeerManager _peerMan;
