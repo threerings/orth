@@ -60,9 +60,7 @@ public class OrthChatDirector extends BasicDirector
 
     public function requestSendTell (memberId :int, msg :String) :void
     {
-        trace(_ctx.getClient());
-        trace(_ctx.getClient().getBootstrapData().services);
-        TellService(_ctx.getClient().requireService(TellService)).sendTell(memberId, msg, new ConfirmAdapter(null, null));
+        _tellService.sendTell(memberId, msg, new ConfirmAdapter(null, null));
     }
 
     public function getHistoryList () :HistoryList
@@ -188,6 +186,11 @@ public class OrthChatDirector extends BasicDirector
     override protected function registerServices (client :Client) :void
     {
         client.addServiceGroup(OrthCodes.AETHER_GROUP);
+    }
+
+    override protected function fetchServices (client :Client) :void
+    {
+        _tellService = TellService(_ctx.getClient().requireService(TellService));
     }
 
     protected var _clobj :ClientObject;
