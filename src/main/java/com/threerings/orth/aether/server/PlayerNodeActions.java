@@ -10,9 +10,9 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
+import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.notify.server.NotificationManager;
@@ -150,7 +150,7 @@ public class PlayerNodeActions
         {
             return Iterables.any(_friends, new Predicate<Integer>() {
                 @Override public boolean apply (Integer friendId) {
-                    return nodeobj.clients.containsKey(AuthName.makeKey(friendId));
+                    return nodeobj.clients.containsKey(AetherAuthName.makeKey(friendId));
                 }});
         }
 

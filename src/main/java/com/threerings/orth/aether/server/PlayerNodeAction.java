@@ -5,8 +5,8 @@ package com.threerings.orth.aether.server;
 
 import com.google.inject.Inject;
 
+import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.data.AuthName;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerManager;
 
@@ -21,7 +21,6 @@ public abstract class PlayerNodeAction extends PeerManager.NodeAction
     public PlayerNodeAction (int playerId)
     {
         _playerId = playerId;
-        _playerKey = AuthName.makeKey(playerId);
     }
 
     public PlayerNodeAction ()
@@ -31,7 +30,7 @@ public abstract class PlayerNodeAction extends PeerManager.NodeAction
     @Override // from PeerManager.NodeAction
     public boolean isApplicable (NodeObject nodeobj)
     {
-        return nodeobj.clients.containsKey(_playerKey);
+        return nodeobj.clients.containsKey( AetherAuthName.makeKey(_playerId));
     }
 
     @Override // from PeerManager.NodeAction
@@ -50,8 +49,6 @@ public abstract class PlayerNodeAction extends PeerManager.NodeAction
     protected abstract void execute (PlayerObject memobj);
 
     protected int _playerId;
-
-    protected transient AuthName _playerKey;
 
     /** Used to look up player objects. */
     @Inject protected transient PlayerLocator _locator;

@@ -8,21 +8,23 @@ import com.google.inject.Inject;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
+import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Tell;
-import com.threerings.presents.client.InvocationService.ConfirmListener;
+import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.util.Name;
 
-public class TellNodeAction extends PeerManager.NodeAction
+public class TellNodeAction extends PeerManager.NodeRequest
 {
-    public TellNodeAction (Name to, Tell tell, ConfirmListener listener)
+    public TellNodeAction() {}
+
+    public TellNodeAction (Name to, Tell tell)
     {
         _to = to;
         _tell = tell;
-        _listener = listener;
     }
 
     @Override
@@ -30,25 +32,22 @@ public class TellNodeAction extends PeerManager.NodeAction
     {
         return nodeobj.clients.containsKey(_to);
     }
-
     @Override
-    protected void execute ()
+    protected void execute (ResultListener listener)
     {
         ClientObject clobj = _clMgr.getClientObject(_to);
         if (clobj != null) {
             PlayerObject player = _locator.forClient(clobj);
-            player.postMessage(ChatCodes.USER_CHAT_TYPE, _tell);
-            _listener.requestProcessed();
-            return;
+            player.postMessage(OrthChatCodes.TELL_MSG_TYPE, _tell);
+            listener.requestProcessed(null);
+        } else {
+            // either something is quite wrong or we were just unlucky with the timing
+            listener.requestFailed(ChatCodes.USER_NOT_ONLINE);
         }
-
-        // either something is quite wrong or we were just unlucky with the timing
-        _listener.requestFailed(ChatCodes.USER_NOT_ONLINE);
     }
 
     protected Name _to;
     protected Tell _tell;
-    protected ConfirmListener _listener;
 
     @Inject protected transient ClientManager _clMgr;
     @Inject protected transient PlayerLocator _locator;

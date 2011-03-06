@@ -5,21 +5,23 @@ package com.threerings.orth.chat.server;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.internal.Iterables;
 
 import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.peer.server.NodeRequestsListener;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
+import com.threerings.orth.Log;
+import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
-import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.chat.data.TellMarshaller;
-import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthCodes;
 
 @Singleton
@@ -51,13 +53,21 @@ public class ChatManager
 
         Tell tell = new Tell(from.playerName, msg);
 
-        _peerMgr.invokeNodeAction(
-            new TellNodeAction(AuthName.makeKey(playerId), tell, listener),
-            new Runnable() {
-                public void run () {
-                    listener.requestFailed(OrthChatCodes.USER_NOT_ONLINE);
+        _peerMgr.invokeNodeRequest(new TellNodeAction(AetherAuthName.makeKey(playerId), tell),
+            new NodeRequestsListener<Void>() {
+
+            @Override public void requestFailed (String cause) {
+                Log.log.warning("Tell request failed", "cause", cause);
+                listener.requestFailed(cause);
+            }
+
+            @Override public void requestsProcessed (NodeRequestsResult<Void> result) {
+                if (!result.getNodeErrors().values().isEmpty()) {
+                    listener.requestFailed(Iterables.getOnlyElement(result.getNodeErrors().values()));
+                } else {
+                    listener.requestProcessed();
                 }
-        });
+            }});
     }
 
     @Inject protected PlayerLocator _locator;

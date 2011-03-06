@@ -60,7 +60,9 @@ public class OrthChatDirector extends BasicDirector
 
     public function requestSendTell (memberId :int, msg :String) :void
     {
-        _tellService.sendTell(memberId, msg, new ConfirmAdapter(null, null));
+        _tellService.sendTell(memberId, msg, new ConfirmAdapter(
+            function (..._) :void { log.info("Tell succeeded!") },
+            function (cause :String) :void { log.warning("Tell failed!", "reason", cause); }));
     }
 
     public function getHistoryList () :HistoryList
@@ -154,7 +156,11 @@ public class OrthChatDirector extends BasicDirector
             msg.speaker = speak.from;
             msg.mode = ChatCodes.DEFAULT_MODE;
             msg.setClientInfo(Msgs.CHAT.xlate(speak.message), ChatCodes.PLACE_CHAT_TYPE);
+        } else {
+            log.warning("Got unhandled message type", "eventName", event.getName(), "event", event);
+            return;
         }
+
 
         dispatchPreparedMessage(msg);
     }

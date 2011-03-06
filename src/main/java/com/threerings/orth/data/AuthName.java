@@ -12,14 +12,6 @@ import com.threerings.util.Name;
  */
 public class AuthName extends Name
 {
-    /**
-     * Creates an instance that can be used as a DSet key.
-     */
-    public static AuthName makeKey (int playerId)
-    {
-        return new AuthName("", playerId);
-    }
-
     /** Creates a name for the member with the supplied account name and id. */
     public AuthName (String accountName, int id)
     {
