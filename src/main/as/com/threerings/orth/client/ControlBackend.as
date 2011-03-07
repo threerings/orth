@@ -21,9 +21,9 @@ public class ControlBackend
     /**
      * Initialize a backend to safely communicate with usercode.
      */
-    public function init (contentLoaderInfo :LoaderInfo) :void
+    public function init (events :EventDispatcher) :void
     {
-        _sharedEvents = contentLoaderInfo.sharedEvents;
+        _sharedEvents = events;
         _sharedEvents.addEventListener("controlConnect", handleUserCodeConnect, false, 0, true);
     }
 
