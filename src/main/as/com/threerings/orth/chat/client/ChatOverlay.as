@@ -16,8 +16,6 @@ import flash.utils.getTimer;
 
 import flashx.funk.ioc.inject;
 
-import com.whirled.game.data.WhirledGameCodes;
-
 import mx.controls.VScrollBar;
 import mx.controls.scrollClasses.ScrollBar;
 import mx.events.FlexEvent;
@@ -575,9 +573,7 @@ public class ChatOverlay
         // TODO: this would be cleaner if game user chat and usercode generated info were using
         // the same localtype - this special case would be unneccessary then, as game chat would
         // go to a tab with that localtype specified instead of PLACE_CHAT_TYPE
-        if (_localtype == ChatCodes.PLACE_CHAT_TYPE &&
-                (msg.localtype == WhirledGameCodes.USERGAME_CHAT_TYPE ||
-                 msg.localtype == ChatCodes.USER_CHAT_TYPE)) {
+        if (_localtype == ChatCodes.PLACE_CHAT_TYPE && msg.localtype == ChatCodes.USER_CHAT_TYPE) {
             return true;
         }
 
@@ -883,7 +879,7 @@ public class ChatOverlay
         } else if (msg is SystemMessage) {
             switch ((msg as SystemMessage).attentionLevel) {
             case SystemMessage.INFO:
-                return msg.localtype == WhirledGameCodes.USERGAME_CHAT_TYPE ? GAME : INFO;
+                return INFO;
             case SystemMessage.FEEDBACK:
                 return FEEDBACK;
             case SystemMessage.ATTENTION:
