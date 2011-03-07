@@ -14,9 +14,9 @@
   <property name="gwtjar.dir"   location="${deploy.dir}/gwt-jar"/>
 
   <!-- bring in our standard build support -->
-  <property name="ooo-build.vers" value="1.24"/>
+  <property name="ooo-build.vers" value="2.1"/>
   <ant antfile="bootstrap.xml"/>
-  <import file="${user.home}/.m2/ant-support/${ooo-build.vers}/build-support.xml"/>
+  <import file="${user.home}/.m2/ooo-build/${ooo-build.vers}/ooo-build.xml"/>
 
   <!-- -prepares the application directories -->
   <target name="prepare" depends="mavendeps">
@@ -36,7 +36,6 @@
   <!-- makes sure our tools are compiled and defines the ant tasks -->
   <target name="preptools" depends="prepare">
     <mavendep id="tools">
-      <artifact:remoteRepository refid="ooo.maven.depends.repo"/>
       <artifact:dependency groupId="com.threerings" artifactId="narya-tools" version="1.7-SNAPSHOT"/>
     </mavendep>
     <taskdef resource="com/threerings/presents/tools.properties" classpathref="tools.path"/>
@@ -70,8 +69,9 @@
   </target>
 
   <target name="aslib" depends="mavendeps">
-      <compc4 srcdir="${asrc.dir}" libpath="${aslib.path}"
-          dest="${deploy.dir}/${ant.project.name}lib.swc"/>
+    <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.0"/>
+    <compc srcdir="${asrc.dir}" libpath="${aslib.path}"
+        dest="${deploy.dir}/${ant.project.name}lib.swc"/>
   </target>
 
   <target name="javadoc" depends="prepare">
@@ -97,20 +97,10 @@
   </target>
 
   <!-- builds the ActionScript documention -->
-  <target name="asdoc" unless="no_build_aslib" depends="mavendeps">
+  <target name="asdoc" depends="mavendeps">
     <mkdir dir="${deploy.dir}/asdocs"/>
-    <requireflex/>
-    <java classpath="${flexsdk.dir}/lib/asdoc.jar" classname="flex2.tools.ASDoc" fork="true">
-      <jvmarg value="-Xmx1024m"/>
-      <jvmarg value="-Dsun.io.useCanonCashes=false"/>
-      <jvmarg value="-Xbootclasspath/p:${flexsdk.dir}/asdoc/lib/xalan.jar"/>
-      <arg value="+flexlib=${flexsdk.dir}/frameworks"/>
-      <arg line="-library-path ${flexsdk.dir}/frameworks/libs"/>
-      <arg line="-library-path+=${aslib.path}"/>
-      <arg line="-templates-path ${flexsdk.dir}/asdoc/templates"/>
-      <arg line="-doc-sources ${asrc.dir}"/>
-      <arg line="-output ${deploy.dir}/asdocs"/>
-    </java>
+    <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.0"/>
+    <asdoc srcdir="${asrc.dir}" destdir="${deploy.dir}/asdocs" libpath="${aslib.path}"/>
   </target>
 
   <!-- a target for rebuilding everything -->
