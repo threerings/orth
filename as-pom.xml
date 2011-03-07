@@ -48,13 +48,6 @@
       <type>swc</type>
     </dependency>
     <dependency>
-      <groupId>com.threerings</groupId>
-      <artifactId>whirledlib</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <scope>compile</scope>
-      <type>swc</type>
-    </dependency>
-    <dependency>
       <groupId>com.adobe</groupId>
       <artifactId>as3corelib</artifactId>
       <version>0.93</version>
