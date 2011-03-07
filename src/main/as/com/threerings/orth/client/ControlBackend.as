@@ -3,7 +3,6 @@
 
 package com.threerings.orth.client {
 
-import flash.display.LoaderInfo;
 import flash.events.EventDispatcher;
 
 import flashx.funk.ioc.inject;

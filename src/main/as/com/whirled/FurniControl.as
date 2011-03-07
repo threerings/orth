@@ -6,9 +6,7 @@
 package com.whirled {
 
 import flash.display.DisplayObject;
-
 import flash.events.Event;
-import flash.events.EventDispatcher;
 import flash.events.MouseEvent;
 
 /**

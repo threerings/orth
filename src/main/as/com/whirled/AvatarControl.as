@@ -6,7 +6,6 @@
 package com.whirled {
 
 import flash.display.DisplayObject;
-import flash.errors.IllegalOperationError;
 
 import com.threerings.util.Util;
 

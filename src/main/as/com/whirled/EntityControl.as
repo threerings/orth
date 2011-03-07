@@ -6,15 +6,10 @@
 package com.whirled {
 
 import flash.display.DisplayObject;
-import flash.display.Sprite;
-
 import flash.events.Event;
-import flash.events.EventDispatcher;
 import flash.events.TimerEvent;
-
 import flash.media.Camera;
 import flash.media.Microphone;
-
 import flash.utils.ByteArray;
 import flash.utils.Timer;
 
