@@ -36,14 +36,6 @@ public class AbstractControl extends EventDispatcher
      */
     public function AbstractControl (disp :DisplayObject, initialUserProps :Object = null)
     {
-        // always create our sub-controls
-        _subControls = createSubControls();
-
-        // stop here if we ourselves are a sub-control
-        if (this is AbstractSubControl) {
-            return;
-        }
-
         if (disp.root == null) {
             throw new Error("Display object used to instantiate a control must be on the stage");
         }
@@ -156,9 +148,7 @@ public class AbstractControl extends EventDispatcher
      */
     public function setUserProps (o :Object) :void
     {
-        for each (var ctrl :AbstractSubControl in _subControls) {
-            ctrl.setUserProps(o);
-        }
+        // nothing here
     }
 
     /**
@@ -169,10 +159,6 @@ public class AbstractControl extends EventDispatcher
     {
         // by default, we just use these props as our _funcs
         _funcs = o;
-
-        for each (var ctrl :AbstractSubControl in _subControls) {
-            ctrl.gotHostProps(o);
-        }
     }
 
     /**
@@ -217,20 +203,8 @@ public class AbstractControl extends EventDispatcher
         }
     }
 
-    /**
-     * Override and return any custom sub-controls.
-     * @private
-     */
-    protected function createSubControls () :Array
-    {
-        return null;
-    }
-
     /** The functions supplied by the host. @private */
     protected var _funcs :Object;
-
-    /** Any sub-controls we may have. @private */
-    protected var _subControls :Array;
 }
 }
 
