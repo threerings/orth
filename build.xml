@@ -35,10 +35,9 @@
 
   <!-- makes sure our tools are compiled and defines the ant tasks -->
   <target name="preptools" depends="prepare">
-    <mavendep id="tools">
-      <artifact:dependency groupId="com.threerings" artifactId="narya-tools" version="1.7-SNAPSHOT"/>
-    </mavendep>
-    <taskdef resource="com/threerings/presents/tools.properties" classpathref="tools.path"/>
+    <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.2"/>
+    <maventaskdef groupId="com.threerings" artifactId="narya-tools" version="1.8-SNAPSHOT"
+      resource="com/threerings/presents/tools.properties"/>
   </target>
 
   <!-- cleans out the intermediate build files -->
