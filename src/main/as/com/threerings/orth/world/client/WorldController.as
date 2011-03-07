@@ -590,7 +590,7 @@ public class WorldController extends Controller
     {
         if (nowIdle != _idle) {
             _idle = nowIdle;
-            BodyService(_client.getService(BodyService)).setIdle(nowIdle);
+            BodyService(_client.requireService(BodyService)).setIdle(nowIdle);
         }
     }
 
