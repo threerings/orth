@@ -9,6 +9,7 @@ import flash.display.DisplayObject;
 import flash.display.DisplayObjectContainer;
 import flash.display.LoaderInfo;
 import flash.events.Event;
+import flash.events.EventDispatcher;
 import flash.events.MouseEvent;
 import flash.filters.GlowFilter;
 import flash.geom.Matrix;
@@ -516,6 +517,10 @@ public class EntitySprite
 
     protected function handleNewMedia (event :Event) :void
     {
+        if (_backend == null) {
+            // if we get to here without having a set up a backend, the media is local
+            initBackend(_sprite.getMedia());
+        }
         scaleUpdated();
         rotationUpdated();
         configureMouseProperties();
@@ -523,11 +528,14 @@ public class EntitySprite
 
     protected function loaderReady (event :ValueEvent) :void
     {
-        var info :LoaderInfo = LoaderInfo(event.value);
+        initBackend(LoaderInfo(event.value).sharedEvents);
+    }
 
+    protected function initBackend (events :EventDispatcher) :void
+    {
         _backend = createBackend();
         if (_backend != null) {
-            _backend.init(info);
+            _backend.init(events);
             _backend.setSprite(this);
         }
     }
