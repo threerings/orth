@@ -29,6 +29,9 @@ public class OrthScene extends SceneImpl
      */
     public function canManage (member :PlayerObject, allowSupport :Boolean = true) :Boolean
     {
+        // ORTH TODO
+        return true;
+
         var hasRights :Boolean;
         switch (_orthModel.ownerType) {
         case OrthSceneModel.OWNER_TYPE_MEMBER:
