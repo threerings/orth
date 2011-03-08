@@ -23,7 +23,7 @@ public class FurniEditor extends FurniHighlight
 {
     public function get rsrc () :OrthResourceFactory
     {
-        return _rsrcFactory;
+        return _controller.rsrc;
     }
 
     public function FurniEditor (controller :RoomEditorController)
@@ -219,7 +219,5 @@ public class FurniEditor extends FurniHighlight
 
     /** Array of all Hotspot instances (initialized in the constructor). */
     protected var _hotspots :Array; // of Hotspot references
-
-    protected const _rsrcFactory :OrthResourceFactory = inject(OrthResourceFactory);
 }
 }

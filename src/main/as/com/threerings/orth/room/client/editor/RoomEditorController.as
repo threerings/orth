@@ -2,6 +2,7 @@
 // $Id: RoomEditorController.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.room.client.editor {
+import com.threerings.orth.client.OrthResourceFactory;
 
 import flash.events.MouseEvent;
 
@@ -44,7 +45,7 @@ import com.threerings.orth.room.data.SceneAttrsUpdate;
 /**
  * Controller for the room editing panel. It starts up two different types of UI: one is
  * a regular Flex window with buttons like "delete" and "undo", and the other is a furni editor,
- * displayed as a border around the targetted furni with grabbable hotspots to manipulate it.
+ * displayed as a border around the targeted furni with grabable hotspots to manipulate it.
  */
 public class RoomEditorController
 {
@@ -54,6 +55,11 @@ public class RoomEditorController
 
         _edit = new FurniEditor(this);
         _hover = new FurniHighlight(this);
+    }
+
+    public function get rsrc () :OrthResourceFactory
+    {
+        return _rsrcFactory;
     }
 
     public function get roomView () :RoomObjectView
@@ -614,6 +620,8 @@ public class RoomEditorController
     protected const _roomObjCtrl :RoomObjectController = inject(RoomObjectController);
     protected const _sceneDir :SceneDirector = inject(SceneDirector);
     protected const _topPanel :TopPanel = inject(TopPanel);
+
+    protected const _rsrcFactory :OrthResourceFactory = inject(OrthResourceFactory);
 
     private const log :Log = Log.getLog(this);
 }
