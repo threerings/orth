@@ -30,6 +30,7 @@ import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.party.client.PartyDirector;
 
 public class OrthController extends Controller
 {
@@ -68,7 +69,6 @@ public class OrthController extends Controller
     public function OrthController ()
     {
         setControlledPanel(_topPanel);
-
 
         var menu :ContextMenu = new ContextMenu();
         menu.hideBuiltInItems();
@@ -141,8 +141,7 @@ public class OrthController extends Controller
      */
     public function handleJoinParty (partyId :int) :void
     {
-        // ORTH TODO
-        // _partyDir.joinParty(partyId);
+        _partyDir.joinParty(partyId);
     }
 
     /**
@@ -275,6 +274,8 @@ public class OrthController extends Controller
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _client :AetherClient = inject(AetherClient);
     protected const _depCon :OrthDeploymentConfig = inject(OrthDeploymentConfig);
+
+    protected const _partyDir :PartyDirector = inject(PartyDirector);
 
     /** The URL prefix for 'command' URLs, that post CommendEvents. */
     protected static const COMMAND_URL :String = "command://";
