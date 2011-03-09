@@ -380,27 +380,29 @@ public class PartyRegistry
         PartySummary oldSummary = userObj.getParty();
         userObj.setParty(party);
 
-        // then any place they may occupy
-        PlaceManager placeMan = _placeReg.getPlaceManager(((RoomPlace)userObj.location).sceneId);
-        if (placeMan != null) {
-            PlaceObject placeObj = placeMan.getPlaceObject();
-            if (placeObj instanceof PartyPlaceObject) {
-                placeObj.startTransaction();
-                try {
-                    // we need to add a new party BEFORE updating the occInfo
-                    userEnteringPlace(userObj, (PartyPlaceObject)placeObj);
-                    // update the occupant info
-                    final int newPartyId = (party == null) ? 0 : party.id;
-                    placeMan.updateOccupantInfo(userObj.getOid(),
-                        new OccupantInfo.Updater<OccupantInfo>() {
-                            public boolean update (OccupantInfo info) {
-                                return ((PartyOccupantInfo) info).updatePartyId(newPartyId);
-                            }
-                        });
-                    // we need to remove an old party AFTER updating the occInfo
-                    maybeRemovePartyFromPlace(oldSummary, (PartyPlaceObject)placeObj);
-                } finally {
-                    placeObj.commitTransaction();
+        if (userObj.location != null) { // TODO: Why is userObj.location always null?
+            // then any place they may occupy
+            PlaceManager placeMan = _placeReg.getPlaceManager(((RoomPlace)userObj.location).sceneId);
+            if (placeMan != null) {
+                PlaceObject placeObj = placeMan.getPlaceObject();
+                if (placeObj instanceof PartyPlaceObject) {
+                    placeObj.startTransaction();
+                    try {
+                        // we need to add a new party BEFORE updating the occInfo
+                        userEnteringPlace(userObj, (PartyPlaceObject)placeObj);
+                        // update the occupant info
+                        final int newPartyId = (party == null) ? 0 : party.id;
+                        placeMan.updateOccupantInfo(userObj.getOid(),
+                            new OccupantInfo.Updater<OccupantInfo>() {
+                                public boolean update (OccupantInfo info) {
+                                    return ((PartyOccupantInfo) info).updatePartyId(newPartyId);
+                                }
+                            });
+                        // we need to remove an old party AFTER updating the occInfo
+                        maybeRemovePartyFromPlace(oldSummary, (PartyPlaceObject)placeObj);
+                    } finally {
+                        placeObj.commitTransaction();
+                    }
                 }
             }
         }
