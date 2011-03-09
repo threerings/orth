@@ -8,6 +8,8 @@ import flash.geom.Point;
 
 import flashx.funk.ioc.inject;
 
+import com.threerings.util.Log;
+
 import com.threerings.display.GraphicsUtil;
 
 import com.threerings.orth.client.OrthResourceFactory;
@@ -80,6 +82,8 @@ public class FurniEditor extends FurniHighlight
         target.setMediaScaleX(x);
         target.setMediaScaleY(y);
 
+        Log.getLog(this).info("New target scale", "x", x, "y", y);
+
         _controller.targetSpriteUpdated();
     }
 
@@ -88,6 +92,8 @@ public class FurniEditor extends FurniHighlight
     {
         target.setLocation(loc);          // change position on screen...
         target.getFurniData().loc = loc;  // ...and in the data parameters
+
+        Log.getLog(this).info("New target location", "loc", loc);
 
         _controller.targetSpriteUpdated();
     }
