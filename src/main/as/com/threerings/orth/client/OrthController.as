@@ -53,6 +53,9 @@ public class OrthController extends Controller
     /** Command to invite someone to be a friend. */
     public static const INVITE_FRIEND :String = "InviteFriend";
 
+    /** Command to create a party. */
+    public static const CREATE_PARTY :String = "CreateParty";
+
     /** Command to join a party. */
     public static const JOIN_PARTY :String = "JoinParty";
 
@@ -136,6 +139,15 @@ public class OrthController extends Controller
         // ORTH TODO
         //         _partyDir.inviteMember(playerId);
     }
+
+    /**
+     * Handles the CREATE_PARTY command.
+     */
+    public function handleCreateParty (name :String, inviteAllFriends :Boolean) :void
+    {
+        _partyDir.createParty(name, inviteAllFriends);
+    }
+
     /**
      * Handles the JOIN_PARTY command.
      */
