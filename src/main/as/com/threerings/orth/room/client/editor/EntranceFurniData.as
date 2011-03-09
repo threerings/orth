@@ -5,6 +5,7 @@ package com.threerings.orth.room.client.editor {
 
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityType;
+import com.threerings.orth.room.data.FurniAction;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.SimpleEntityIdent;
 
@@ -23,6 +24,7 @@ public class EntranceFurniData extends FurniData
     {
         super();
         this.item = ITEM_IDENT;
+        this.actionType = FurniAction.NOT_AN_ACTION;
     }
 
     // @Override from FurniData

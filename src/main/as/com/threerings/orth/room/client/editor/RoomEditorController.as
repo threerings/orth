@@ -337,7 +337,7 @@ public class RoomEditorController
         // make the furni's type to a portal, and save on the server
         withFurniUpdate(function () :void {
             // ORTH TODO: Figure out how Who can get its WhoFurniActions in here
-            data.actionType = FurniAction.NONE;
+            data.actionType = FurniAction.NOT_AN_ACTION;
             data.actionData = "" + scene.getId() + ":" + scene.getName();
         });
 
@@ -356,13 +356,14 @@ public class RoomEditorController
         }
 
         // ORTH TODO: Figure out how Who can get its WhoFurniActions in here
-        setTargetAction(FurniAction.NONE, actionData);
+        setTargetAction(FurniAction.NOT_AN_ACTION, actionData);
     }
 
     /** Makes the target into a regular furni. */
     public function actionTargetClear () :void
     {
-        setTargetAction(FurniAction.NONE, null);
+        // ORTH TODO: Figure out how Who can get its WhoFurniActions in here
+        setTargetAction(FurniAction.NOT_AN_ACTION, null);
     }
 
     /**

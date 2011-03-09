@@ -291,7 +291,7 @@ public class ActionPanel extends BasePanel
         newData = _furniData.clone() as FurniData;
         newData.actionType = type;
 
-        if (type == FurniAction.NONE) {
+        if (type.isNone()) {
             newData.actionData = _ignoreMouse.selected ? "-" : null;
 
         } else if (type.isURL()) {
@@ -341,19 +341,19 @@ public class ActionPanel extends BasePanel
 
     /** Definitions of different action types and how they affect the preferences panel. */
     protected const ACTIONS :Array = [
-        { data: FurniAction.NONE,
+        { data: FurniAction.NOT_AN_ACTION,
           label: Msgs.EDITING.get("l.action_none"),
           editable: true,
           panelCreateFn: createNonePanel,
           panelUpdateFn: updateNonePanel },
 
-        { data: FurniAction.NONE, // ORTH TODO
+        { data: FurniAction.NOT_AN_ACTION, // ORTH TODO
           label: Msgs.EDITING.get("l.action_portal"),
           editable: true,
           panelCreateFn: createPortalPanel,
           panelUpdateFn: updatePortalPanel },
 
-        { data: FurniAction.NONE, // ORTH TODO
+        { data: FurniAction.NOT_AN_ACTION, // ORTH TODO
           label: Msgs.EDITING.get("l.action_url"),
           editable: true,
           panelCreateFn: createURLPanel,
