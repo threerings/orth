@@ -88,7 +88,7 @@ public class FurniSprite extends EntitySprite
         // clear out any residuals from the last action
         var actionData :Array = _furni.splitActionData();
 
-        if (_furni.actionType == FurniAction.NONE) {
+        if (_furni.actionType.isNone()) {
             return null;
         }
         if (_furni.actionType.isPortal()) {
@@ -166,12 +166,12 @@ public class FurniSprite extends EntitySprite
     // documentation inherited
     override public function hasAction () :Boolean
     {
-        return _furni.actionType != FurniAction.NONE;
+        return !_furni.actionType.isNone();
     }
 
     override public function capturesMouse () :Boolean
     {
-        if (_furni.actionType == FurniAction.NONE) {
+        if (_furni.actionType.isNone()) {
             return (_furni.actionData == null);
         }
         return super.capturesMouse();

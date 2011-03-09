@@ -9,26 +9,32 @@ import com.threerings.util.ByteEnum;
 
 public class FurniAction extends ByteEnum
 {
-    public static const NONE :FurniAction = new FurniAction("NONE", 0);
+    // ORTH TODO: temporary
+    public static const NOT_AN_ACTION :FurniAction = new FurniAction("NOT_AN_ACTION", -1);
 
     public function FurniAction (name :String, code :int)
     {
         super(name, code);
     }
 
+    public function isNone () :Boolean
+    {
+        return this == NOT_AN_ACTION;
+    }
+
     public function isPortal () :Boolean
     {
-        return isAbstract();
+        return this != NOT_AN_ACTION;
     }
 
     public function isURL () :Boolean
     {
-        return isAbstract();
+        return this != NOT_AN_ACTION;
     }
 
     public function isHelpPage () :Boolean
     {
-        return isAbstract();
+        return this != NOT_AN_ACTION;
     }
 }
 }
