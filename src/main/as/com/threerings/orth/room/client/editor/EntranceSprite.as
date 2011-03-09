@@ -22,7 +22,7 @@ public class EntranceSprite extends FurniSprite
         furniData.loc = location;
         super.initFurniSprite(furniData);
 
-        _sprite.setMediaClass(inject(OrthResourceFactory).getEntrance());
+        _sprite.setMediaClass(_rsrc.edEntrance);
         setLocation(location);
     }
 
