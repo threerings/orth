@@ -61,7 +61,8 @@ public class RoomEditorPanel extends FloatingPanel
     {
         var data :FurniData = (target != null) ? target.getFurniData() : null;
         _details.updateDisplay(data);
-        _action.updateDisplay(data);
+// ORTH TODO
+//        _action.updateDisplay(data);
         _room.updateDisplay(data);
     }
 
@@ -269,7 +270,7 @@ public class RoomEditorPanel extends FloatingPanel
         var namebar :VBox = new VBox();
         namebar.styleName = "roomEditNameBar";
         namebar.percentWidth = 100;
-        namebar.addChild(_room = inject(RoomPanel));
+        namebar.addChild(_room = _module.getInstance(RoomPanel));
         addChild(namebar);
 
         // container for item stuffs
@@ -423,7 +424,8 @@ public class RoomEditorPanel extends FloatingPanel
         }
 
         addPanel(Msgs.EDITING.get("t.item_prefs"), _details = _module.getInstance(DetailsPanel));
-        addPanel(Msgs.EDITING.get("t.item_action"), _action = _module.getInstance(ActionPanel));
+// ORTH TODO
+//        addPanel(Msgs.EDITING.get("t.item_action"), _action = _module.getInstance(ActionPanel));
 
         // invader zim says: "it's not stupid, it's advanced!"
         box = new VBox();
