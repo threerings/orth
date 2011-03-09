@@ -19,6 +19,19 @@ public class EntityData extends SimpleStreamableObject
     public MediaDesc media;
     public EntityIdent ident;
 
+    /** Deserializing constructor. */
+    public EntityData ()
+    {
+    }
+
+    /** Initializing constructor. */
+    public EntityData (String name, MediaDesc media, EntityIdent ident)
+    {
+        this.name = name;
+        this.media = media;
+        this.ident = ident;
+    }
+
     // from DSet.Entry
     public Comparable<?> getKey ()
     {
