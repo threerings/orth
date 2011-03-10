@@ -2,6 +2,7 @@
 // $Id: $
 
 package com.threerings.orth.client {
+import com.threerings.util.Log;
 
 import flash.display.DisplayObject;
 import flash.display.Sprite;
@@ -43,8 +44,10 @@ public class TopPanel extends Sprite
 
     public function TopPanel ()
     {
+        Log.getLog(this).info("Constructing TopPanel...", "_stage", _stage,
+            "inject(Stage)", inject(Stage), "_placeBox", _placeBox);
         _width = _stage.stageWidth;
-        _height = 500 + _controlBar.getBarHeight();
+        _height = 560 + _controlBar.getBarHeight();
 
         // var stretch :Sprite = new Sprite();
         // stretch.alpha = 0.2;
@@ -109,7 +112,7 @@ public class TopPanel extends Sprite
      */
     public function getMainAreaBounds () :Rectangle
     {
-        return new Rectangle(0, 0, _width, 500);
+        return new Rectangle(0, 0, _width, 560);
     }
 
     protected function configureUI (placeBox :DisplayObject, controlBar :DisplayObject) :void
@@ -120,19 +123,19 @@ public class TopPanel extends Sprite
     protected function needsLayout () :void
     {
         _width = _stage.width;
-        _height = 500;
+        _height = 560;
 
         doLayout(_placeBox, _controlBar);
     }
 
     protected function doLayout (placeBox :OrthPlaceBox, controlBar :ControlBar) :void
     {
-        placeBox.setActualSize(_width, 500);
+        placeBox.setActualSize(_width, 560);
         placeBox.x = 0;
         placeBox.y = 0;
 
         controlBar.asSprite().x = 0;
-        controlBar.asSprite().y = 500;
+        controlBar.asSprite().y = 560;
     }
 
     /**
