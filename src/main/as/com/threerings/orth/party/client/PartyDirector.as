@@ -163,6 +163,11 @@ public class PartyDirector extends BasicDirector
         //CommandMenu.createMenu(menuItems, _topPanel).popUpAtMouse();
     }
 
+    public function getPartyObject () :PartyObject
+    {
+        return _partyObj;
+    }
+
     /**
      * Get the party board.
      */
