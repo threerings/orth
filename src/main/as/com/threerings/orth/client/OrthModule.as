@@ -70,8 +70,7 @@ public class OrthModule extends BindingModule
         bind(ComicOverlay).toInstance(comicOverlay);
 
         // and TopPanel injects ComicOverlay!
-        var topPanel :TopPanel = getInstance(TopPanel);
-        bind(TopPanel).toInstance(topPanel);
+        getInstance(TopPanel);
 
         // instantiate directors and controllers
         getInstance(PlayerDirector);
