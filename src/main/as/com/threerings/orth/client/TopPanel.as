@@ -7,6 +7,8 @@ import com.threerings.util.Log;
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.display.Stage;
+import flash.display.StageScaleMode;
+import flash.display.StageAlign;
 import flash.events.Event;
 import flash.geom.Rectangle;
 
@@ -42,12 +44,20 @@ public class TopPanel extends Sprite
     /** An event dispatched when our location owner changes. */
     public static const LOCATION_OWNER_CHANGED :String = "locationOwnerChanged";
 
+    public static const CLIENT_WIDTH :int = 1024;
+    public static const CLIENT_HEIGHT :int = 560;
+
     public function TopPanel ()
     {
-        Log.getLog(this).info("Constructing TopPanel...", "_stage", _stage,
-            "inject(Stage)", inject(Stage), "_placeBox", _placeBox);
-        _width = _stage.stageWidth;
-        _height = 560 + _controlBar.getBarHeight();
+        _width = CLIENT_WIDTH;
+        _height = CLIENT_HEIGHT + _controlBar.getBarHeight();
+
+        // configure the stage
+        _stage.scaleMode = StageScaleMode.NO_SCALE;
+        _stage.align = StageAlign.TOP_LEFT;
+
+        // clip all drawing to our client bounds
+        this.scrollRect = new Rectangle(0, 0, _width, _height);
 
         // var stretch :Sprite = new Sprite();
         // stretch.alpha = 0.2;
@@ -112,7 +122,7 @@ public class TopPanel extends Sprite
      */
     public function getMainAreaBounds () :Rectangle
     {
-        return new Rectangle(0, 0, _width, 560);
+        return new Rectangle(0, 0, _width, CLIENT_HEIGHT);
     }
 
     protected function configureUI (placeBox :DisplayObject, controlBar :DisplayObject) :void
@@ -122,20 +132,20 @@ public class TopPanel extends Sprite
 
     protected function needsLayout () :void
     {
-        _width = _stage.width;
-        _height = 560;
+        _width = CLIENT_WIDTH;
+        _height = CLIENT_HEIGHT + _controlBar.getBarHeight();
 
         doLayout(_placeBox, _controlBar);
     }
 
     protected function doLayout (placeBox :OrthPlaceBox, controlBar :ControlBar) :void
     {
-        placeBox.setActualSize(_width, 560);
+        placeBox.setActualSize(_width, CLIENT_HEIGHT);
         placeBox.x = 0;
         placeBox.y = 0;
 
         controlBar.asSprite().x = 0;
-        controlBar.asSprite().y = 560;
+        controlBar.asSprite().y = CLIENT_HEIGHT;
     }
 
     /**
