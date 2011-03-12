@@ -12,6 +12,8 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.PlayerDirector;
+import com.threerings.orth.room.client.editor.DoorTargetEditController;
+import com.threerings.orth.room.client.editor.RoomEditorController;
 import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.party.client.PartyDirector;
@@ -42,6 +44,10 @@ public class OrthModule extends BindingModule
         bind(PlayerDirector).asSingleton();
         bind(OrthChatDirector).asSingleton();
         bind(PartyDirector).asSingleton();
+
+        // editor bits
+        bind(RoomEditorController).asSingleton();
+        bind(DoorTargetEditController).asSingleton();
 
         // UI elements
         bind(ControlBar).asSingleton();
