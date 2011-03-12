@@ -24,7 +24,6 @@ import mx.events.MenuEvent;
 import com.threerings.crowd.chat.client.ChatCantStealFocus;
 import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.chat.data.ChatCodes;
-import com.threerings.crowd.client.BodyService;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.data.CrowdCodes;
 import com.threerings.flex.ChatControl;
@@ -590,7 +589,9 @@ public class WorldController extends Controller
     {
         if (nowIdle != _idle) {
             _idle = nowIdle;
-            BodyService(_client.requireService(BodyService)).setIdle(nowIdle);
+// ORTH TODO: this call will need to go over the aether client, where there certainly
+// is no BodyService; we will implement our own support.
+//            BodyService(_client.requireService(BodyService)).setIdle(nowIdle);
         }
     }
 
