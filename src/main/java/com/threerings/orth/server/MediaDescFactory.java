@@ -24,8 +24,11 @@ public abstract class MediaDescFactory
 
     public MediaDesc make (String URL)
     {
-        // ORTH TODO: Should only pass in the path component of URL here
-        return make (URL, MediaMimeTypes.suffixToMimeType(URL));
+        int ix = URL.lastIndexOf('.');
+        if (ix < 0) {
+            throw new IllegalArgumentException("Can't build MediaDesc from suffix-less URL.");
+        }
+        return make (URL.substring(0, ix), MediaMimeTypes.suffixToMimeType(URL));
     }
 
     public MediaDesc make (String URL, byte mimeType)
