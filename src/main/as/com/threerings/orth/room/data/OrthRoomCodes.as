@@ -28,5 +28,8 @@ public class OrthRoomCodes
 
     /** Layout constant: fill the visible room area. */
     public static const LAYOUT_FILL :int = 1;
+
+    /** Layout constant: backdrop entities */
+    public static const LAYOUT_PARALLAX :int = 2;
 }
 }

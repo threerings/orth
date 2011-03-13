@@ -57,6 +57,38 @@ public class FurniData extends SimpleStreamableObject
     }
 
     /**
+     * Set whether or not this furni doesn't scale.
+     */
+    public void setNoScale (boolean noscale)
+    {
+        setLayoutInfo(NOSCALE_FLAG, noscale);
+    }
+
+    /**
+     * Is this furniture non-scaling?
+     */
+    public boolean isNoScale ()
+    {
+        return isLayoutInfo(NOSCALE_FLAG);
+    }
+
+    /**
+     * Set whether or not this furni is a parallax element.
+     */
+    public void setParallax (boolean parallax)
+    {
+        setLayoutInfo(PARALLAX_FLAG, parallax);
+    }
+
+    /**
+     * Is this furniture non-scaling?
+     */
+    public boolean isParallax ()
+    {
+        return isLayoutInfo(PARALLAX_FLAG);
+    }
+
+    /**
      * @return true if the other FurniData is identical.
      */
     public boolean equivalent (FurniData that)
@@ -107,4 +139,27 @@ public class FurniData extends SimpleStreamableObject
             throw new AssertionError(cnse); // not going to happen
         }
     }
+
+    /**
+     * Set a layoutInfo flag on or off.
+     */
+    protected void setLayoutInfo (int flag, boolean on)
+    {
+        if (on) {
+            layoutInfo |= flag;
+        } else {
+            layoutInfo &= ~flag;
+        }
+    }
+
+    /**
+     * Test a layoutInfo flag.
+     */
+    protected boolean isLayoutInfo (int flag)
+    {
+        return (layoutInfo & flag) != 0;
+    }
+
+    protected static final int NOSCALE_FLAG = (1 << 0);
+    protected static final int PARALLAX_FLAG = (1 << 1);
 }

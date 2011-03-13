@@ -20,6 +20,7 @@ import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
+import com.threerings.orth.entity.client.ParallaxSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.data.FurniData;
@@ -80,7 +81,8 @@ public class MediaDirector extends BasicDirector
      */
     public function getFurni (furni :FurniData) :FurniSprite
     {
-        var sprite :FurniSprite = _module.getInstance(FurniSprite);
+        var sprite :FurniSprite = _module.getInstance(
+            furni.isParallax() ? ParallaxSprite : FurniSprite);
         sprite.initFurniSprite(furni);
         return sprite;
     }

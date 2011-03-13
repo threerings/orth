@@ -665,8 +665,7 @@ public class EntitySprite
 
         // update the hotspot
         if (_hotSpot == null) {
-            _hotSpot = new Point(Math.min(x, _sprite.getMaxContentWidth())/2,
-                                 Math.min(y, _sprite.getMaxContentHeight()));
+            _hotSpot = calculateHotspot(x, y);
         }
 
         // we'll want to call locationUpdated() now, but it's done for us as a result of calling
@@ -675,6 +674,12 @@ public class EntitySprite
         // even if we don't have strange (negative) scaling, we should do this because it ends up
         // calling locationUpdated().
         updateMediaPosition();
+    }
+
+    protected function calculateHotspot (contentWidth :Number, contentHeight :Number) :Point
+    {
+        return new Point(Math.min(contentWidth, _sprite.getMaxContentWidth())/2,
+                         Math.min(contentHeight, _sprite.getMaxContentHeight()));
     }
 
     public function getHoverColor () :uint
@@ -957,7 +962,7 @@ public class EntitySprite
 
     /** The 'location' scale of the media: the scaling that is the result of emulating perspective
      * while we move around the room. */
-    protected var _locScale :Number = 1;
+    protected var _locScale :Number = 0;
 
     /** Are we active, i.e. not dimmed? */
     protected var _active :Boolean = true;

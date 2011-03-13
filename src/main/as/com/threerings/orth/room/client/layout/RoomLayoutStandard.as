@@ -267,6 +267,7 @@ public class RoomLayoutStandard implements RoomLayout
     public function updateScreenLocation (target :RoomElement, offset :Point = null) :void
     {
         var disp :DisplayObject = target.getVisualization();
+        var loc :OrthLocation = target.getLocation();
 
         switch (target.getLayoutType()) {
         default:
@@ -274,8 +275,12 @@ public class RoomLayoutStandard implements RoomLayout
                 ", falling back to LAYOUT_NORMAL.");
             // fall through to LAYOUT_NORMAL
 
+        case OrthRoomCodes.LAYOUT_PARALLAX:
+            // parallax layout is exactly as normal, except we pretend z is 0
+            loc = new OrthLocation(loc.x, loc.y, 0);
+            // fall through deliberately
+
         case OrthRoomCodes.LAYOUT_NORMAL:
-            var loc :OrthLocation = target.getLocation();
             var screen :Point = _metrics.roomToScreen(loc.x, loc.y, loc.z);
             var scale :Number = _metrics.scaleAtDepth(loc.z) * getDecorScale(target);
             offset = (offset != null ? offset : NO_OFFSET);

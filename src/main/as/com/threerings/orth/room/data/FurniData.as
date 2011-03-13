@@ -100,6 +100,21 @@ public class FurniData extends SimpleStreamableObject
         return isLayoutInfo(NOSCALE_FLAG);
     }
 
+    /**
+     * Set whether or not this furni doesn't scale.
+     */
+    public function setParallax (parallax :Boolean) :void
+    {
+        setLayoutInfo(PARALLAX_FLAG, parallax);
+    }
+
+    /**
+     * Is this furniture non-scaling?
+     */
+    public function isParallax () :Boolean
+    {
+        return isLayoutInfo(PARALLAX_FLAG);
+    }
 
     // from DSet_Entry
     public function getKey () :Object
@@ -216,8 +231,8 @@ public class FurniData extends SimpleStreamableObject
         return (layoutInfo & flag) != 0;
     }
 
-    /** layoutInfo bitmask flag constant. Indicates if the furni is non-scaling. */
     protected static const NOSCALE_FLAG :int = (1 << 0);
+    protected static const PARALLAX_FLAG :int = (1 << 1);
 
 // GENERATED CLASSFINISH START
 }
