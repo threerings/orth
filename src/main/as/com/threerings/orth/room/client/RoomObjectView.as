@@ -36,10 +36,12 @@ import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
+import com.threerings.orth.entity.client.ParallaxSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
+import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.FurniUpdate_Remove;
 import com.threerings.orth.room.data.MemoryChangedListener;
 import com.threerings.orth.room.data.OrthLocation;
@@ -403,6 +405,12 @@ public class RoomObjectView extends RoomView
     {
         super.scrollRect = r;
         _comicOverlay.setScrollRect(r);
+
+        forEachEntity(function (key :Object, sprite :EntitySprite) :void {
+            if (sprite is ParallaxSprite) {
+                relayoutSprite(sprite);
+            }
+        });
     }
 
     /**

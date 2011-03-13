@@ -191,6 +191,10 @@ public class RoomLayoutStandard implements RoomLayout
         var disp :DisplayObject = target.getVisualization();
         var loc :OrthLocation = target.getLocation();
 
+        if (offset == null) {
+            offset = NO_OFFSET;
+        }
+
         switch (target.getLayoutType()) {
         default:
             Log.getLog(this).warning("Unknown layout type: " + target.getLayoutType() +
@@ -199,13 +203,25 @@ public class RoomLayoutStandard implements RoomLayout
 
         case OrthRoomCodes.LAYOUT_PARALLAX:
             // parallax layout is exactly as normal, except we pretend z is 0
+            var z :Number = loc.z;
             loc = new OrthLocation(loc.x, loc.y, 0);
-            // fall through deliberately
+
+            // counter the scrolling depending on the z-depth of the sprite, where at 1.0
+            // there no compensation; objects closer than that will actually scroll *more*
+            // than the decor & scene as a whole
+            if (z > 0) {
+                offset.x -= _parentView.getScrollOffset() * (1 - 1/z);;
+                Log.getLog(this).info("Adjusting xOffset for parallax", "item", target,
+                    "z", z, "offset", _parentView.getScrollOffset() / z,
+                    "scale", _metrics.scaleAtDepth(loc.z) * getDecorScale(target),
+                    "screen",  _metrics.roomToScreen(loc.x, loc.y, loc.z));
+            }
+
+            // finally fall through deliberately
 
         case OrthRoomCodes.LAYOUT_NORMAL:
             var screen :Point = _metrics.roomToScreen(loc.x, loc.y, loc.z);
             var scale :Number = _metrics.scaleAtDepth(loc.z) * getDecorScale(target);
-            offset = (offset != null ? offset : NO_OFFSET);
             target.setScreenLocation(screen.x - offset.x, screen.y - offset.y, scale);
             break;
 
