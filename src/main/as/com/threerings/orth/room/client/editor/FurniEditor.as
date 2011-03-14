@@ -6,11 +6,9 @@ package com.threerings.orth.room.client.editor {
 import flash.display.Graphics;
 import flash.geom.Point;
 
-import flashx.funk.ioc.inject;
+import com.threerings.display.GraphicsUtil;
 
 import com.threerings.util.Log;
-
-import com.threerings.display.GraphicsUtil;
 
 import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.entity.client.FurniSprite;

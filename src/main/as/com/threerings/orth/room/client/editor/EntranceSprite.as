@@ -6,9 +6,6 @@ package com.threerings.orth.room.client.editor {
 import flash.display.BitmapData;
 import flash.geom.Matrix;
 
-import flashx.funk.ioc.inject;
-
-import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.room.data.OrthLocation;
 

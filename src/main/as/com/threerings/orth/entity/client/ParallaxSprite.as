@@ -3,9 +3,9 @@
 
 package com.threerings.orth.entity.client {
 
-import com.threerings.orth.room.data.OrthRoomCodes;
-
 import flash.geom.Point;
+
+import com.threerings.orth.room.data.OrthRoomCodes;
 
 /**
  * A simple subclass that modifies the layout behaviour of a Furni as follows:

@@ -2,8 +2,6 @@
 // $Id: RoomEditorController.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.room.client.editor {
-import com.threerings.orth.client.OrthResourceFactory;
-
 import flash.events.MouseEvent;
 
 import flashx.funk.ioc.Module;
@@ -23,6 +21,7 @@ import com.threerings.util.Util;
 
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;

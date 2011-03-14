@@ -3,8 +3,6 @@
 
 package com.threerings.orth.room.data {
 
-import flashx.funk.util.isAbstract;
-
 import com.threerings.util.ByteEnum;
 
 public class FurniAction extends ByteEnum

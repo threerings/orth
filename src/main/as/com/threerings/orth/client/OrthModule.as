@@ -12,11 +12,11 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.PlayerDirector;
-import com.threerings.orth.room.client.editor.DoorTargetEditController;
-import com.threerings.orth.room.client.editor.RoomEditorController;
 import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.party.client.PartyDirector;
+import com.threerings.orth.room.client.editor.DoorTargetEditController;
+import com.threerings.orth.room.client.editor.RoomEditorController;
 
 /**
  * Interfaces and abstract classes that must be bound in any implementating layer:

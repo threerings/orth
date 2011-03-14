@@ -15,9 +15,7 @@ import com.threerings.util.ValueEvent;
 import com.threerings.orth.client.LoadingWatcher;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.room.client.RoomController;
-import com.threerings.orth.room.data.FurniAction;
 import com.threerings.orth.room.data.FurniData;
-import com.threerings.orth.room.data.OrthRoomCodes;
 
 public class FurniSprite extends EntitySprite
 {

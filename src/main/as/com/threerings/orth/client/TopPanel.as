@@ -2,13 +2,11 @@
 // $Id: $
 
 package com.threerings.orth.client {
-import com.threerings.util.Log;
-
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.display.Stage;
-import flash.display.StageScaleMode;
 import flash.display.StageAlign;
+import flash.display.StageScaleMode;
 import flash.events.Event;
 import flash.geom.Rectangle;
 
