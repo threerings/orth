@@ -209,8 +209,12 @@ public class RoomLayoutStandard implements RoomLayout
             // counter the scrolling depending on the z-depth of the sprite, where at 1.0
             // there no compensation; objects closer than that will actually scroll *more*
             // than the decor & scene as a whole
-            if (z > 0) {
-                offset.x -= _parentView.getScrollOffset() * (1 - 1/z);;
+            if (z >= 0) {
+                // we want z=oo to mean full offset
+                // z=1 to mean zero offset
+                // and z=0 to mean negative offset
+                // these conditions are satisfied by (1 - 2/(z + 1))
+                offset.x -= _parentView.getScrollOffset() * (1 - 2/(z+1));;
             }
 
             // finally fall through deliberately
