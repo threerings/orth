@@ -22,4 +22,6 @@ public interface Decor
     float getFurniScale ();
 
     byte getDecorType ();
+
+    Walkability getWalkability ();
 }

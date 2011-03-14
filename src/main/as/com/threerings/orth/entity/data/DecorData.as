@@ -9,6 +9,7 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.entity.data.EntityData;
+import com.threerings.orth.entity.data.Walkability;
 
 // GENERATED PREAMBLE END
 
@@ -33,6 +34,8 @@ public class DecorData extends EntityData
 
     public var furniScale :Number;
 
+    public var walkability :Walkability;
+
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
@@ -43,6 +46,7 @@ public class DecorData extends EntityData
         horizon = ins.readFloat();
         actorScale = ins.readFloat();
         furniScale = ins.readFloat();
+        walkability = ins.readObject(Walkability);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
@@ -55,6 +59,7 @@ public class DecorData extends EntityData
         out.writeFloat(horizon);
         out.writeFloat(actorScale);
         out.writeFloat(furniScale);
+        out.writeObject(walkability);
     }
 
 // GENERATED STREAMING END
@@ -99,6 +104,10 @@ public class DecorData extends EntityData
         return false;
     }
 
+    // from Decor
+    public function getWalkability () :Walkability {
+        return walkability;
+    }
 
 // GENERATED CLASSFINISH START
 }

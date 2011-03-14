@@ -4,6 +4,7 @@
 package com.threerings.orth.entity.data;
 
 import com.threerings.orth.data.MediaDesc;
+import com.threerings.orth.entity.data.Walkability;
 import com.threerings.orth.room.data.EntityIdent;
 
 /**
@@ -19,6 +20,7 @@ public class DecorData extends EntityData
     public float horizon;
     public float actorScale;
     public float furniScale;
+    public Walkability walkability;
 
     /** Deserializing constructor. */
     public DecorData ()
@@ -27,7 +29,8 @@ public class DecorData extends EntityData
 
     /** Initializing constructor. */
     public DecorData (String name, MediaDesc media, EntityIdent ident, byte type, short width,
-        short height, short depth, float horizon, float actorScale, float furniScale)
+        short height, short depth, float horizon, float actorScale, float furniScale,
+        Walkability walkability)
     {
         super(name, media, ident);
 
@@ -38,6 +41,7 @@ public class DecorData extends EntityData
         this.horizon = horizon;
         this.actorScale = actorScale;
         this.furniScale = furniScale;
+        this.walkability = walkability;
     }
 
     // from Decor
@@ -73,5 +77,10 @@ public class DecorData extends EntityData
     // from Decor
     public byte getDecorType () {
         return type;
+    }
+
+    // from Decor
+    public Walkability getWalkability () {
+        return walkability;
     }
 }

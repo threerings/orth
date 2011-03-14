@@ -23,7 +23,8 @@ public interface Decor
 
     function getDecorType () :int;
 
-    function doHideWalls () :Boolean;
+    function getWalkability () :Walkability;
 
+    function doHideWalls () :Boolean;
 }
 }
