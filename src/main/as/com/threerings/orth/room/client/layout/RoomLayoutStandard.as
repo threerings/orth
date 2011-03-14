@@ -211,10 +211,6 @@ public class RoomLayoutStandard implements RoomLayout
             // than the decor & scene as a whole
             if (z > 0) {
                 offset.x -= _parentView.getScrollOffset() * (1 - 1/z);;
-                Log.getLog(this).info("Adjusting xOffset for parallax", "item", target,
-                    "z", z, "offset", _parentView.getScrollOffset() / z,
-                    "scale", _metrics.scaleAtDepth(loc.z) * getDecorScale(target),
-                    "screen",  _metrics.roomToScreen(loc.x, loc.y, loc.z));
             }
 
             // finally fall through deliberately
