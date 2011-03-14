@@ -12,6 +12,7 @@ import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.entity.data.AvatarData;
 import com.threerings.orth.entity.data.DecorData;
+import com.threerings.orth.entity.data.MediaWalkability;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.OrthRoomConfig;
 import com.threerings.orth.room.data.RoomAuthName;
@@ -25,6 +26,7 @@ public class RoomClient extends WorldClient
     OrthRoomConfig;
     DecorData;
     AvatarData;
+    MediaWalkability;
 
     public function RoomClient ()
     {
