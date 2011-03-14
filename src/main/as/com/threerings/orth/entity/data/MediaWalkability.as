@@ -12,8 +12,8 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.data.MediaDesc;
-import com.threerings.orth.ui.MediaDescContainer;
 import com.threerings.orth.entity.data.Walkability;
+import com.threerings.orth.ui.MediaDescContainer;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
@@ -23,12 +23,20 @@ public class MediaWalkability extends Walkability
 
     public function MediaWalkability (media :MediaDesc = null)
     {
-        // we want an initialied container, even if it won't yet hold actual media
-        _container = new MediaDescContainer(media);
+        _media = media;
     }
 
     override public function isPathWalkable (from :Point, to :Point) :Boolean
     {
+        // if we've yet to set up the container, do so here
+        if (_container == null) {
+            // unless there's not even any media, an unlikely situation to be sure
+            if (_media == null) {
+                return false;
+            }
+            _container = new MediaDescContainer(_media);
+        }
+            
         // create a sprite to hold the movement path
         var path :Sprite = new Sprite();
         // draw the path
@@ -36,8 +44,8 @@ public class MediaWalkability extends Walkability
         path.graphics.lineTo(to.x, to.y);
 
         // we can walk as long as the path does *not* intersect with the obstruction map
-        var media :DisplayObject = _container.getMedia();
-        return (media != null) && !media.hitTestObject(path);
+        var map :DisplayObject = _container.getMedia();
+        return (map != null) && !map.hitTestObject(path);
     }
 
 // GENERATED STREAMING START
@@ -45,7 +53,6 @@ public class MediaWalkability extends Walkability
     {
         super.readObject(ins);
         _media = ins.readObject(MediaDesc);
-        _container.setMediaDesc(_media);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
