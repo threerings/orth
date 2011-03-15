@@ -44,6 +44,7 @@ import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.data.Decor;
+import com.threerings.orth.entity.data.Walkability;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.layout.RoomLayout;
 import com.threerings.orth.room.client.layout.RoomLayoutFactory;
@@ -549,6 +550,25 @@ public class RoomView extends Sprite
     public function getScene () :OrthScene
     {
         return _scene;
+    }
+
+    // ORTH TODO: once this uses logical coordinates, it really belongs in the controller
+    public function canWalkTo (toLoc :OrthLocation) :Boolean
+    {
+        var myLoc :OrthLocation = getMyCurrentLocation();
+        var walkability :Walkability = getScene().getDecor().getWalkability();
+
+        if (walkability == null || myLoc == null) {
+            return true;
+        }
+
+        var from :Point = _layout.metrics.roomToScreen(myLoc.x, myLoc.y, myLoc.z);
+        from = _bg.viz.globalToLocal(from);
+
+        var to :Point = _layout.metrics.roomToScreen(toLoc.x, toLoc.y, toLoc.z);
+        to = _bg.viz.globalToLocal(to);
+
+        return walkability.isPathWalkable(from, to);
     }
 
     /**

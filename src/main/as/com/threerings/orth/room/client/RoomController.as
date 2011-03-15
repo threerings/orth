@@ -43,8 +43,10 @@ import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.OrthPlaceBox;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.entity.client.ActorSprite;
+import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.MemberSprite;
+import com.threerings.orth.entity.data.Walkability;
 import com.threerings.orth.room.client.RoomElement;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityIdent;
@@ -514,8 +516,10 @@ public class RoomController extends SceneController
                         _walkTarget.alpha = 1;
                     }
 
+                    var walkable :Boolean = _roomView.canWalkTo(cloc.loc);
+
                     // don't show the walk target if we're "in front" of the room view
-                    showWalkTarget = (cloc.loc.z >= 0);
+                    showWalkTarget = (walkable && cloc.loc.z >= 0);
                     _walkTarget.setLocation(cloc.loc);
                     _roomView.layout.updateScreenLocation(_walkTarget);
                 }
