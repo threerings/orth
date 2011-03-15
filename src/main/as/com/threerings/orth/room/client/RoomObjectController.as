@@ -229,6 +229,9 @@ public class RoomObjectController extends RoomController
      */
     override public function handleAvatarClicked (avatar :MemberSprite) :void
     {
+        // ORTH TODO: this freezes the client
+        return;
+
         var occInfo :SocializerInfo = (avatar.getActorInfo() as SocializerInfo);
         if (occInfo == null) {
             log.info("Clicked on non-SocializerInfo sprite", "info", avatar.getActorInfo());
