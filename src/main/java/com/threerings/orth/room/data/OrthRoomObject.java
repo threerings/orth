@@ -13,6 +13,7 @@ import com.threerings.whirled.spot.data.SpotSceneObject;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.data.SpeakObject;
+import com.threerings.orth.data.MediaDesc;
 
 import static com.threerings.orth.Log.log;
 
@@ -31,6 +32,10 @@ public class OrthRoomObject extends SpotSceneObject
     /** The field name of the <code>accessControl</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String ACCESS_CONTROL = "accessControl";
+
+    /** The field name of the <code>music</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String MUSIC = "music";
 
     /** The field name of the <code>orthRoomService</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -54,6 +59,9 @@ public class OrthRoomObject extends SpotSceneObject
     /** Access control, as one of the ACCESS constants. Limits who can enter the scene. */
     public byte accessControl;
 
+    /** The background music for this room. */
+    public MediaDesc music;
+    
     /** Our service marshaller. */
     public OrthRoomMarshaller orthRoomService;
 
@@ -130,6 +138,23 @@ public class OrthRoomObject extends SpotSceneObject
         requestAttributeChange(
             ACCESS_CONTROL, Byte.valueOf(value), Byte.valueOf(ovalue));
         this.accessControl = value;
+    }
+
+    /**
+     * Requests that the <code>music</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setMusic (MediaDesc value)
+    {
+        MediaDesc ovalue = this.music;
+        requestAttributeChange(
+            MUSIC, value, ovalue);
+        this.music = value;
     }
 
     /**

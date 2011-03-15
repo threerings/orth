@@ -9,6 +9,7 @@ import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.spot.data.Portal;
 import com.threerings.whirled.spot.data.SpotScene;
 
+import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.entity.data.Decor;
 
 public class OrthScene extends SceneImpl
@@ -136,6 +137,14 @@ public class OrthScene extends SceneImpl
     public short getNextFurniId (short aboveId)
     {
         return _orthModel.getNextFurniId(aboveId);
+    }
+
+    /**
+     * Returns the music for the scene.
+     */
+    public MediaDesc getMusic ()
+    {
+        return _orthModel.music;
     }
 
     // from SpotScene

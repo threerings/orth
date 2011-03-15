@@ -19,6 +19,7 @@ import com.threerings.util.Maps;
 import com.threerings.util.Name;
 import com.threerings.util.Short;
 
+import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.entity.data.DecorData;
 import com.threerings.orth.room.data.OrthLocation;
 
@@ -56,6 +57,8 @@ public class OrthSceneModel extends SceneModel
 
     public var ownerName :Name;
 
+    public var music :MediaDesc;
+
     public var furnis :TypedArray;
 
     public var entrance :OrthLocation;
@@ -69,6 +72,7 @@ public class OrthSceneModel extends SceneModel
         ownerType = ins.readByte();
         ownerId = ins.readInt();
         ownerName = ins.readObject(Name);
+        music = ins.readObject(MediaDesc);
         furnis = ins.readObject(TypedArray);
         entrance = ins.readObject(OrthLocation);
         decor = ins.readObject(DecorData);
@@ -81,6 +85,7 @@ public class OrthSceneModel extends SceneModel
         out.writeByte(ownerType);
         out.writeInt(ownerId);
         out.writeObject(ownerName);
+        out.writeObject(music);
         out.writeObject(furnis);
         out.writeObject(entrance);
         out.writeObject(decor);

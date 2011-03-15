@@ -14,6 +14,8 @@ import flash.utils.Dictionary;
 
 import flashx.funk.ioc.inject;
 
+import com.threerings.media.Mp3AudioPlayer;
+
 import com.threerings.util.CommandEvent;
 import com.threerings.util.Controller;
 import com.threerings.util.DelayUtil;
@@ -29,8 +31,10 @@ import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.TopPanel;
+import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.party.client.PartyDirector;
+import com.threerings.orth.ui.PathMediaDesc;
 
 public class OrthController extends Controller
 {
@@ -42,6 +46,9 @@ public class OrthController extends Controller
 
     /** Command to show an (external) URL. */
     public static const VIEW_URL :String = "ViewUrl";
+
+    /** Command to play music. Arg: null to stop, or PathMediaDesc. */
+    public static const PLAY_MUSIC :String = "PlayMusic";
 
     /** Command to complain about a member. */
     public static const COMPLAIN_MEMBER :String = "ComplainMember";
@@ -113,6 +120,23 @@ public class OrthController extends Controller
         _octx.displayFeedback(OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
 
         return false;
+    }
+
+    /**
+     * Handles PLAY_MUSIC.
+     */
+    public function handlePlayMusic (music :MediaDesc) :void
+    {
+        if (music != null && music.equals(_music)) {
+            // asked to play what we're already playing; don't restart
+            return;
+        }
+        _music = music;
+
+        _musicPlayer.unload();
+        if (music != null) {
+            _musicPlayer.load(PathMediaDesc(music).getMediaPath());
+        }
     }
 
     /**
@@ -280,6 +304,9 @@ public class OrthController extends Controller
             log.warning("Error populating context menu", e);
         }
     }
+
+    protected var _musicPlayer :Mp3AudioPlayer = new Mp3AudioPlayer(true);
+    protected var _music :MediaDesc;
 
     protected const _octx :OrthContext = inject(OrthContext);
     protected const _stage :Stage = inject(Stage);
