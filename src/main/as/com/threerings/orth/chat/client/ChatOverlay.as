@@ -133,7 +133,8 @@ public class ChatOverlay
                 showCurrentHistory();
             }
         } else {
-            addSubtitle(createSubtitle(msg, getType(msg, false), true));
+            // ORTH TODO: temporarily disabling chat expiration
+            addSubtitle(createSubtitle(msg, getType(msg, false), false));
         }
     }
 
