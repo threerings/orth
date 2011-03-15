@@ -212,9 +212,9 @@ public class RoomLayoutStandard implements RoomLayout
             if (z >= 0) {
                 // we want z=oo to mean full offset
                 // z=1 to mean zero offset
-                // and z=0 to mean negative offset
-                // these conditions are satisfied by (1 - 2/(z + 1))
-                offset.x -= _parentView.getScrollOffset() * (1 - 2/(z+1));;
+                // and z=0 to mean 50% negative offset
+                // these conditions are satisfied by (1 - 3/(z+2))
+                offset.x -= _parentView.getScrollOffset() * (1 - 3/(z+2));;
             }
 
             // finally fall through deliberately
