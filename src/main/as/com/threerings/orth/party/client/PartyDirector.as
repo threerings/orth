@@ -43,6 +43,7 @@ import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyDetail;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
+import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.data.RoomDestination;
 import com.threerings.orth.room.data.RoomKey;
 import com.threerings.orth.room.data.RoomPlace;
@@ -241,6 +242,7 @@ public class PartyDirector extends BasicDirector
             _safeSubscriber = null;
         }
         if (_partyObj != null) {
+            RoomContext(_octx.wctx).getLocationDirector().removeLocationObserver(_locationObserver);
             _partyObj.removeListener(_partyListener);
             _partyListener = null;
             _partyObj = null;
@@ -356,6 +358,9 @@ public class PartyDirector extends BasicDirector
         _partyListener.messageReceived = partyMsgReceived;
         _partyListener.objectDestroyed = Util.adapt(clearParty);
         _partyObj.addListener(_partyListener);
+
+        _locationObserver = new LocationAdapter(null, locationDidChange, null);
+        RoomContext(_octx.wctx).getLocationDirector().addLocationObserver(_locationObserver);
 
         // we might need to warp to the party location
         checkFollowScene();
@@ -494,6 +499,7 @@ public class PartyDirector extends BasicDirector
     protected var _detailRequests :Dictionary = new Dictionary();
     protected var _detailPanels :Dictionary = new Dictionary();
 
+    protected var _locationObserver :LocationAdapter;
     protected var _partyListener :EventAdapter;
 }
 }
