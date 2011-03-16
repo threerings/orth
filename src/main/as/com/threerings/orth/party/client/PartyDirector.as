@@ -8,6 +8,8 @@ import flash.utils.Dictionary;
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
+import org.osflash.signals.Signal;
+
 import mx.core.UIComponent;
 
 import com.threerings.crowd.client.LocationAdapter;
@@ -60,6 +62,9 @@ public class PartyDirector extends BasicDirector
     PartyObject;
 
     public const log :Log = Log.getLog(this);
+
+    public const partyJoined :Signal = new Signal();
+    public const partyLeft :Signal = new Signal();
 
     /**
      * Format the specified Label or TextInput to have the right status.
@@ -246,6 +251,7 @@ public class PartyDirector extends BasicDirector
             _partyObj.removeListener(_partyListener);
             _partyListener = null;
             _partyObj = null;
+            partyLeft.dispatch();
         }
         if (_pctx != null) {
             _pctx.getClient().logoff(false);
@@ -361,6 +367,8 @@ public class PartyDirector extends BasicDirector
 
         _locationObserver = new LocationAdapter(null, locationDidChange, null);
         RoomContext(_octx.wctx).getLocationDirector().addLocationObserver(_locationObserver);
+
+        partyJoined.dispatch();
 
         // we might need to warp to the party location
         checkFollowScene();
