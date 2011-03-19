@@ -1,7 +1,6 @@
 //
 // $Id$
 
-
 package com.threerings.orth.room.client {
 
 import com.threerings.crowd.chat.client.ChatDirector;

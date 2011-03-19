@@ -4,7 +4,6 @@ import com.threerings.presents.data.InvocationCodes;
 
 /**
  * Codes and constants relating to the Room services.
- * ORTH TODO: Rename me to OrthRoomCodes
  */
 public interface OrthRoomCodes extends InvocationCodes
 {
