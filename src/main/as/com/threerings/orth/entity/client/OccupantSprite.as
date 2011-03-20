@@ -67,8 +67,6 @@ public class OccupantSprite extends EntitySprite
 
         // _label.cacheAsBitmap = true;
 
-        _sprite.setMaxContentDimensions(MAX_WIDTH, MAX_HEIGHT);
-
         _sprite.addEventListener(ProgressEvent.PROGRESS, handleMediaProgress);
         _sprite.addEventListener(MediaContainer.DID_SHOW_NEW_MEDIA, handleNewMedia);
 
