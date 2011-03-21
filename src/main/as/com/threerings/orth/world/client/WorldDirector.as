@@ -32,11 +32,19 @@ public class WorldDirector extends BasicDirector
     // statically reference classes we require
     WorldMarshaller;
 
-    public function WorldDirector ()
+    public function WorldDirector (externalObserver :ClientObserver = null)
     {
         super(_octx);
 
+        _externalObserver = externalObserver;
+
         _observer = new ClientAdapter(null, worldLogon, null, null, worldFail, worldFail);
+    }
+
+    // TODO: Obviously this should be an addExternalObserver, TODO soon
+    public function setExternalObserver (observer :ClientObserver) :void
+    {
+        _externalObserver = observer;
     }
 
     /**
@@ -76,6 +84,7 @@ public class WorldDirector extends BasicDirector
 
         var worldClient :WorldClient = (_octx.wctx != null) ? _octx.wctx.getWorldClient() : null;
 
+
         // convenience variable
         var pendingPlace :PlaceKey = _pendingDest.getPlaceKey();
 
@@ -94,6 +103,9 @@ public class WorldDirector extends BasicDirector
         if (worldClient != null) {
             // first stop listening to the client
             worldClient.removeClientObserver(_observer);
+            if (_externalObserver != null) {
+                worldClient.removeClientObserver(_externalObserver);
+            }
 
             // the really cut the cord
             worldClient.logoff(false);
@@ -104,6 +116,9 @@ public class WorldDirector extends BasicDirector
 
         // listen to it
         worldClient.addClientObserver(_observer);
+        if (_externalObserver != null) {
+            worldClient.addClientObserver(_externalObserver);
+        }
 
         // and finally log on
         worldClient.logonTo(host, ports);
@@ -159,6 +174,7 @@ public class WorldDirector extends BasicDirector
     protected var _octx :OrthContext = inject(OrthContext);
 
     protected var _wsvc :WorldService;
+    protected var _externalObserver :ClientObserver;
 
     protected var _observer :ClientObserver;
 
