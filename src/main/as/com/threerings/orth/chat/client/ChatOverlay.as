@@ -134,7 +134,7 @@ public class ChatOverlay
             }
         } else {
             // ORTH TODO: temporarily disabling chat expiration
-            addSubtitle(createSubtitle(msg, getType(msg, false), false));
+            addSubtitle(createSubtitle(msg, getType(msg, false), true));
         }
     }
 
@@ -579,7 +579,7 @@ public class ChatOverlay
         }
 
         // If we're on the room tab, display any System message that do not have a custom localtype
-        if (type == BROADCAST || 
+        if (type == BROADCAST ||
             (msg is SystemMessage && msg.localtype == ChatCodes.PLACE_CHAT_TYPE)) {
 
             if (_ctx.wctx != null) {
