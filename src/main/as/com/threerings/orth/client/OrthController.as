@@ -84,6 +84,8 @@ public class OrthController extends Controller
         menu.hideBuiltInItems();
         menu.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenuWillPopUp);
         _topPanel.contextMenu = menu;
+
+        _musicPlayer.setVolume(0.25);
     }
 
     /**
