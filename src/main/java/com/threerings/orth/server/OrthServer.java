@@ -7,28 +7,19 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
-import com.threerings.presents.peer.server.PeerManager;
-
 import com.threerings.crowd.server.CrowdServer;
-
-import com.threerings.whirled.server.SceneRegistry;
-import com.threerings.whirled.util.SceneFactory;
-
-import com.threerings.orth.chat.server.ChatManager;
-import com.threerings.orth.peer.server.OrthPeerManager;
-
 import com.threerings.orth.aether.server.AetherManager;
-
+import com.threerings.orth.chat.server.ChatManager;
+import com.threerings.orth.party.server.PartyRegistry;
+import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.room.server.MemoryRepository;
-import com.threerings.orth.world.server.WorldManager;
-
 import com.threerings.orth.room.server.OrthRoomManager.AmnesiacMemorySupply;
-import com.threerings.orth.room.server.OrthSceneFactory;
 import com.threerings.orth.room.server.OrthSceneRegistry;
 import com.threerings.orth.room.server.RoomAuthenticator;
 import com.threerings.orth.room.server.RoomSessionFactory;
-
-import com.threerings.orth.party.server.PartyRegistry;
+import com.threerings.orth.world.server.WorldManager;
+import com.threerings.presents.peer.server.PeerManager;
+import com.threerings.whirled.server.SceneRegistry;
 
 /**
  * Extends the main server class with Orth functionality.
