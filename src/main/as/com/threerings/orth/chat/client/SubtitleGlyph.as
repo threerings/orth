@@ -28,8 +28,7 @@ public class SubtitleGlyph extends ChatGlyph
      * default format if not preceded by a TextFormat.
      */
     public function SubtitleGlyph (
-        overlay :ChatOverlay, type :int, lifetime :int, defaultFmt :TextFormat,
-        texts :Array)
+        overlay :ChatOverlay, type :int, lifetime :int, defaultFmt :TextFormat, texts:Array)
     {
         super(overlay, type, lifetime);
         // default to transparent
