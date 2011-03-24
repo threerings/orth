@@ -2,6 +2,9 @@
 // $Id: RoomObjectView.as 18642 2009-11-10 22:55:00Z jamie $
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.room.data.FurniData;
+import com.threerings.util.Set;
+import com.threerings.util.Sets;
 
 import flash.events.Event;
 import flash.geom.Point;
@@ -11,7 +14,6 @@ import flash.utils.ByteArray;
 import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.client.ChatSnooper;
 import com.threerings.crowd.chat.data.ChatMessage;
-import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.whirled.data.SceneUpdate;
@@ -38,7 +40,6 @@ import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.ParallaxSprite;
 import com.threerings.orth.entity.client.PetSprite;
-import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.FurniUpdate_Remove;
@@ -368,10 +369,10 @@ public class RoomObjectView extends RoomView
         // seen it)
         portalTraversed(getMyCurrentLocation(), true);
 
-        // load the background image first
-        setBackground(_scene.getDecor());
-        // load the decor data we have, even if it's just default values.
-        _bg.setLoadedCallback(backgroundFinishedLoading);
+        // hide until our background is loaded
+        this.visible = false;
+
+        loadBackgrounds();
     }
 
     // from RoomView
@@ -424,8 +425,40 @@ public class RoomObjectView extends RoomView
         return null;
     }
 
+    protected function loadBackgrounds () :void
+    {
+        // load the background image first
+        setBackground(_scene.getDecor());
+        // load the decor data we have, even if it's just default values.
+        _bg.setLoadedCallback(backgroundSpriteLoaded);
+        _bgSprites.add(_bg);
+
+        _scene.getFurni().forEach(function (data :FurniData, ix :int, arr :Array) :void {
+            if (data.loc.z >= 1.0) {
+                updateFurni(data);
+                var sprite :FurniSprite = (_furni.get(data.id) as FurniSprite);
+                if (sprite != null) {
+                    // should always be true
+                    sprite.setLoadedCallback(backgroundSpriteLoaded);
+                    _bgSprites.add(sprite);
+                }
+            }
+        });
+        log.info("Loading backgrounds", "sprites", _bgSprites, "count", _bgSprites.size());
+    }
+
+    protected function backgroundSpriteLoaded (sprite :FurniSprite) :void
+    {
+        log.info("Background loaded", "sprite", sprite.getEntityIdent());
+        _bgSprites.remove(sprite);
+        if (_bgSprites.isEmpty()) {
+            backgroundFinishedLoading();
+        }
+    }
+
     override protected function backgroundFinishedLoading () :void
     {
+        this.visible = true;
         super.backgroundFinishedLoading();
 
         _octrl.backgroundFinishedLoading();
@@ -543,6 +576,9 @@ public class RoomObjectView extends RoomView
 
     /** The transitory properties of the current scene. */
     protected var _roomObj :OrthRoomObject;
+
+    /** The background sprites to load before we do the rest. */
+    protected var _bgSprites :Set = Sets.newSetOf(FurniSprite);
 
     /** Monitors and displays loading progress for furni/decor. */
     protected var _loadingWatcher :LoadingWatcher;
