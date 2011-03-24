@@ -46,6 +46,7 @@ public class FurniSprite extends EntitySprite
         _sprite.addEventListener(MouseEvent.ROLL_OVER, handleMouseHover);
         _sprite.addEventListener(MouseEvent.ROLL_OUT, handleMouseHover);
         _sprite.addEventListener(MediaContainer.LOADER_READY, handleLoaderReady);
+        _sprite.addEventListener(Event.COMPLETE, handleMediaComplete);
     }
 
     override public function getDesc () :String
@@ -203,7 +204,7 @@ public class FurniSprite extends EntitySprite
     protected function handleMediaComplete (event:Event):void
     {
         if (_loadedCallback != null) {
-            _loadedCallback();
+            _loadedCallback(this);
         }
     }
 

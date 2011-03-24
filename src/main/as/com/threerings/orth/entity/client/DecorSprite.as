@@ -8,8 +8,6 @@ import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.util.Log;
 
-import flash.events.Event;
-
 public class DecorSprite extends FurniSprite
 {
     /**
@@ -23,7 +21,6 @@ public class DecorSprite extends FurniSprite
         setLocation(furniData.loc);
 
         _sprite.setSuppressHitTestPoint(true);
-        _sprite.addEventListener(Event.COMPLETE, handleMediaComplete);
     }
 
     override public function getRoomLayer () :int
