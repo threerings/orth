@@ -2,15 +2,13 @@
 // $Id: DecorSprite.as 19413 2010-10-15 19:28:43Z zell $
 
 package com.threerings.orth.entity.client {
-
-import flash.events.Event;
-
-import com.threerings.util.Log;
-
 import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomCodes;
+import com.threerings.util.Log;
+
+import flash.events.Event;
 
 public class DecorSprite extends FurniSprite
 {
@@ -26,14 +24,6 @@ public class DecorSprite extends FurniSprite
 
         _sprite.setSuppressHitTestPoint(true);
         _sprite.addEventListener(Event.COMPLETE, handleMediaComplete);
-    }
-
-    /**
-     * Call the provided function when this particular sprite is done loading
-     */
-    public function setLoadedCallback (fn :Function) :void
-    {
-        _loadedCallback = fn;
     }
 
     override public function getRoomLayer () :int
@@ -99,14 +89,5 @@ public class DecorSprite extends FurniSprite
         return furniData;
     }
 
-    protected function handleMediaComplete (event :Event) :void
-    {
-        if (_loadedCallback != null) {
-            _loadedCallback();
-        }
-    }
-
-    /** A function we call when we've finished loading. */
-    protected var _loadedCallback :Function;
 }
 }

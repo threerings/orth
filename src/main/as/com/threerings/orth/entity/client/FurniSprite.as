@@ -2,20 +2,18 @@
 // $Id: FurniSprite.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.entity.client {
-
-import flash.display.LoaderInfo;
-import flash.events.MouseEvent;
-import flash.geom.Point;
-
 import com.threerings.media.MediaContainer;
-
-import com.threerings.util.CommandEvent;
-import com.threerings.util.ValueEvent;
-
 import com.threerings.orth.client.LoadingWatcher;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.FurniData;
+import com.threerings.util.CommandEvent;
+import com.threerings.util.ValueEvent;
+
+import flash.display.LoaderInfo;
+import flash.events.Event;
+import flash.events.MouseEvent;
+import flash.geom.Point;
 
 public class FurniSprite extends EntitySprite
 {
@@ -58,6 +56,14 @@ public class FurniSprite extends EntitySprite
     public function getFurniData () :FurniData
     {
         return _furni;
+    }
+
+    /**
+     * Call the provided function when this particular sprite is done loading
+     */
+    public function setLoadedCallback (fn:Function):void
+    {
+        _loadedCallback = fn;
     }
 
     /** Can this sprite be removed from the room? */
@@ -194,6 +200,13 @@ public class FurniSprite extends EntitySprite
         }
     }
 
+    protected function handleMediaComplete (event:Event):void
+    {
+        if (_loadedCallback != null) {
+            _loadedCallback();
+        }
+    }
+
     /**
      * Listens for ROLL_OVER and ROLL_OUT, which we only receive if the sprite
      * has action.
@@ -214,6 +227,9 @@ public class FurniSprite extends EntitySprite
 
     /** The furniture data for this piece of furni. */
     protected var _furni :FurniData;
+
+    /** A function we call when we've finished loading. */
+    protected var _loadedCallback:Function;
 
     /** The watcher for loading progress. */
     protected static var _loadingWatcher :LoadingWatcher;
