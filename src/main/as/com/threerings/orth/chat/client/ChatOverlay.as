@@ -6,7 +6,7 @@ import com.threerings.orth.client.LayeredContainer;
 
 public interface ChatOverlay extends ChatDisplay
 {
-    function initChatOverlay (target :LayeredContainer, includeOccupantList :Boolean = false) :void;
+    function initOverlay (target :LayeredContainer) :void;
 
     function displayChat (display :Boolean) :void;
 
@@ -19,17 +19,5 @@ public interface ChatOverlay extends ChatDisplay
      * Sets whether or not the glyphs are clickable.
      */
     function setClickableGlyphs (clickable :Boolean) :void;
-
-    /**
-     * Remove a glyph from the overlay.
-     */
-    function removeGlyph (glyph :ChatGlyph) :void;
-
-    /**
-     * Callback from a ChatGlyph when it wants to be removed.
-     */
-    function glyphExpired (glyph :ChatGlyph) :void;
-
-    function getTargetTextWidth () :int;
 }
 }

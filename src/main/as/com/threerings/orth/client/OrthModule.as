@@ -74,7 +74,7 @@ public class OrthModule extends BindingModule
 
         // the ComicOverlay is configured with the OrthPlaceBox and injects OrthContext
         var comicOverlay :ComicOverlay = getInstance(ComicOverlay);
-        comicOverlay.initComicOverlay(placeBox);
+        comicOverlay.initOverlay(placeBox);
 
         getInstance(OrthChatDirector).addChatDisplay(comicOverlay);
 
