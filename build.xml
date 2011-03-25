@@ -121,6 +121,11 @@
     <delete dir="${gwtjar.dir}"/>
   </target>
 
+  <!-- reorders our actionscript imports -->
+  <target name="asimports" depends="preptools" description="Reorders actionscript imports">
+    <asimports srcdir="${asrc.dir}"/>
+  </target>
+
   <target name="gencode" depends="gendobj,genreceiver,genrecord,genservice,genstreamable"
     description="Runs all gen tasks"/>
 
