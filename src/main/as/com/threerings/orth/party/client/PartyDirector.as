@@ -8,9 +8,9 @@ import flash.utils.Dictionary;
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
-import org.osflash.signals.Signal;
-
 import mx.core.UIComponent;
+
+import org.osflash.signals.Signal;
 
 import com.threerings.crowd.client.LocationAdapter;
 import com.threerings.crowd.data.PlaceObject;

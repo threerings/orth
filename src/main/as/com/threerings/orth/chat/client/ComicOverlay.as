@@ -12,7 +12,6 @@ import flash.geom.Rectangle;
 
 import com.threerings.orth.client.LayeredContainer;
 
-
 public interface ComicOverlay extends ChatOverlay, OccupantChatOverlay
 {
     function initComicOverlay (target :LayeredContainer) :void;

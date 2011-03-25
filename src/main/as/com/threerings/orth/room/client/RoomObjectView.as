@@ -2,10 +2,6 @@
 // $Id: RoomObjectView.as 18642 2009-11-10 22:55:00Z jamie $
 
 package com.threerings.orth.room.client {
-import com.threerings.orth.room.data.FurniData;
-import com.threerings.util.Set;
-import com.threerings.util.Sets;
-
 import flash.events.Event;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -23,6 +19,8 @@ import com.threerings.whirled.spot.data.SpotSceneObject;
 import com.threerings.util.Map;
 import com.threerings.util.Name;
 import com.threerings.util.Predicates;
+import com.threerings.util.Set;
+import com.threerings.util.Sets;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
@@ -42,6 +40,7 @@ import com.threerings.orth.entity.client.ParallaxSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
+import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.FurniUpdate_Remove;
 import com.threerings.orth.room.data.MemoryChangedListener;
 import com.threerings.orth.room.data.OrthLocation;

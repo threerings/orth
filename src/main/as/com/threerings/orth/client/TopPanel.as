@@ -3,9 +3,6 @@
 
 package com.threerings.orth.client {
 
-import com.threerings.orth.chat.client.ComicOverlay;
-import com.threerings.orth.chat.client.OrthChatDirector;
-
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.display.Stage;

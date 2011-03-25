@@ -20,7 +20,6 @@ import com.threerings.flex.CommandMenu;
 import com.threerings.whirled.data.SceneUpdate;
 
 import com.threerings.util.ArrayUtil;
-import com.threerings.util.CommandEvent;
 import com.threerings.util.ObjectMarshaller;
 import com.threerings.util.ValueEvent;
 

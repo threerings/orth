@@ -2,18 +2,20 @@
 // $Id: FurniSprite.as 19622 2010-11-23 22:59:49Z zell $
 
 package com.threerings.orth.entity.client {
-import com.threerings.media.MediaContainer;
-import com.threerings.orth.client.LoadingWatcher;
-import com.threerings.orth.client.Msgs;
-import com.threerings.orth.room.client.RoomController;
-import com.threerings.orth.room.data.FurniData;
-import com.threerings.util.CommandEvent;
-import com.threerings.util.ValueEvent;
-
 import flash.display.LoaderInfo;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.Point;
+
+import com.threerings.media.MediaContainer;
+
+import com.threerings.util.CommandEvent;
+import com.threerings.util.ValueEvent;
+
+import com.threerings.orth.client.LoadingWatcher;
+import com.threerings.orth.client.Msgs;
+import com.threerings.orth.room.client.RoomController;
+import com.threerings.orth.room.data.FurniData;
 
 public class FurniSprite extends EntitySprite
 {
