@@ -2,6 +2,7 @@
 // $Id$
 
 package com.threerings.orth.client {
+import com.threerings.orth.chat.client.ChatOverlay;
 
 import flash.display.Stage;
 
@@ -75,8 +76,12 @@ public class OrthModule extends BindingModule
         // the ComicOverlay is configured with the OrthPlaceBox and injects OrthContext
         var comicOverlay :ComicOverlay = getInstance(ComicOverlay);
         comicOverlay.initOverlay(placeBox);
-
         getInstance(OrthChatDirector).addChatDisplay(comicOverlay);
+
+        // the ChatOverlay is configured with the OrthPlaceBox and injects OrthContext
+        var chatOverlay :ChatOverlay = getInstance(ChatOverlay);
+        chatOverlay.initOverlay(placeBox);
+        getInstance(OrthChatDirector).addChatDisplay(chatOverlay);
 
         // and TopPanel injects ComicOverlay!
         getInstance(TopPanel);
