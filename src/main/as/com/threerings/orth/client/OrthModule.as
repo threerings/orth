@@ -2,13 +2,10 @@
 // $Id$
 
 package com.threerings.orth.client {
+
 import flash.display.Stage;
 
 import flashx.funk.ioc.BindingModule;
-import flashx.funk.ioc.Module;
-
-import com.threerings.util.Log;
-import com.threerings.util.MessageManager;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.PlayerDirector;
@@ -17,6 +14,8 @@ import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.room.client.editor.DoorTargetEditController;
 import com.threerings.orth.room.client.editor.RoomEditorController;
+import com.threerings.util.Log;
+import com.threerings.util.MessageManager;
 
 /**
  * Interfaces and abstract classes that must be bound in any implementating layer:
@@ -29,7 +28,6 @@ public class OrthModule extends BindingModule
     {
         // bind this module
         bind(OrthModule).toInstance(this);
-        bind(Module).toInstance(this);
 
         // a handy stage reference
         bind(Stage).toInstance(stage);
@@ -44,6 +42,9 @@ public class OrthModule extends BindingModule
         bind(PlayerDirector).asSingleton();
         bind(OrthChatDirector).asSingleton();
         bind(PartyDirector).asSingleton();
+
+        // the chat overlay is a singleton
+        bind(ComicOverlay).asSingleton();
 
         // editor bits
         bind(RoomEditorController).asSingleton();
@@ -73,7 +74,8 @@ public class OrthModule extends BindingModule
         // the ComicOverlay is configured with the OrthPlaceBox and injects OrthContext
         var comicOverlay :ComicOverlay = getInstance(ComicOverlay);
         comicOverlay.initComicOverlay(placeBox);
-        bind(ComicOverlay).toInstance(comicOverlay);
+
+        getInstance(OrthChatDirector).addChatDisplay(comicOverlay);
 
         // and TopPanel injects ComicOverlay!
         getInstance(TopPanel);

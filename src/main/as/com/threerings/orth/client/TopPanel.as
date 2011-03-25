@@ -2,6 +2,10 @@
 // $Id: $
 
 package com.threerings.orth.client {
+
+import com.threerings.orth.chat.client.ComicOverlay;
+import com.threerings.orth.chat.client.OrthChatDirector;
+
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.display.Stage;
@@ -12,11 +16,6 @@ import flash.geom.Rectangle;
 
 import flashx.funk.ioc.inject;
 import flashx.funk.util.isAbstract;
-
-import com.threerings.orth.chat.client.ComicOverlay;
-import com.threerings.orth.chat.client.OrthChatDirector;
-import com.threerings.orth.client.ControlBar;
-import com.threerings.orth.client.OrthPlaceBox;
 
 /**
  * Dispatched when the name of our current location changes. The value supplied will be a string
@@ -68,8 +67,6 @@ public class TopPanel extends Sprite
         this.addChild(_controlBar.asSprite());
 
         configureUI(_placeBox, _controlBar.asSprite());
-
-        _chatDir.addChatDisplay(_comicOverlay);
 
         _stage.addEventListener(Event.RESIZE, function (event :Event) :void {
             needsLayout();
@@ -162,8 +159,6 @@ public class TopPanel extends Sprite
     protected const _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
     protected const _controlBar :ControlBar = inject(ControlBar);
     protected const _depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
-    protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);
-    protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
 
     protected var _width :Number
     protected var _height :Number;
