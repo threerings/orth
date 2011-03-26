@@ -7,6 +7,7 @@ import flashx.funk.ioc.inject;
 import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
+import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.util.Log;
@@ -22,8 +23,6 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 
-import com.threerings.orth.chat.client.HistoryList;
-import com.threerings.orth.chat.client.TellService;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakObject;
@@ -131,6 +130,11 @@ public class OrthChatDirector extends BasicDirector
             _place.asDObject().removeListener(this);
             _place = null;
         }
+    }
+
+    public function displayFeedback (bundle :String, msg :String) :void
+    {
+        dispatchPreparedMessage(new SystemMessage(msg, bundle, SystemMessage.FEEDBACK));
     }
 
     // from MessageListener

@@ -21,6 +21,7 @@ import com.threerings.presents.util.PresentsContext;
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.world.client.AbstractWorldModule;
 import com.threerings.orth.world.client.WorldContext;
@@ -147,15 +148,7 @@ public class OrthContext
     // from OrthContext
     public function displayFeedback (bundle :String, message :String) :void
     {
-        // ORTH TODO
-        log.info("displayFeedback", "message", message);
-    }
-
-    // from OrthContext
-    public function displayInfo (bundle :String, message :String, localType :String = null) :void
-    {
-        // ORTH TODO
-        log.info("displayInfo", "message", message);
+        _module.getInstance(OrthChatDirector).displayFeedback(bundle, message);
     }
 
     /**

@@ -2,8 +2,6 @@
 // $Id$
 
 package com.threerings.orth.client {
-import com.threerings.orth.chat.client.ChatOverlay;
-
 import flash.display.Stage;
 
 import flashx.funk.ioc.BindingModule;
@@ -13,6 +11,7 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.PlayerDirector;
+import com.threerings.orth.chat.client.ChatOverlay;
 import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.party.client.PartyDirector;
@@ -88,7 +87,6 @@ public class OrthModule extends BindingModule
 
         // instantiate directors and controllers
         getInstance(PlayerDirector);
-        getInstance(OrthChatDirector);
         getInstance(OrthController);
         getInstance(PartyDirector);
     }
