@@ -2,7 +2,6 @@
 // $Id$
 
 package com.threerings.orth.party.client {
-
 import flash.utils.Dictionary;
 
 import flashx.funk.ioc.Module;
@@ -12,8 +11,6 @@ import mx.core.UIComponent;
 
 import org.osflash.signals.Signal;
 
-import com.threerings.crowd.client.LocationAdapter;
-import com.threerings.crowd.data.PlaceObject;
 import com.threerings.flex.CommandMenu;
 import com.threerings.whirled.data.Scene;
 
@@ -45,10 +42,7 @@ import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyDetail;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
-import com.threerings.orth.room.client.RoomContext;
-import com.threerings.orth.room.data.RoomDestination;
-import com.threerings.orth.room.data.RoomKey;
-import com.threerings.orth.room.data.RoomPlace;
+import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.world.client.WorldDirector;
 
 /**
@@ -96,9 +90,6 @@ public class PartyDirector extends BasicDirector
         super(_octx);
 
         _notDir.notificationName = PartyObject.NOTIFICATION;
-
-        // TODO(bruno): Enable
-        //_locDir.addLocationObserver(new LocationAdapter(null, locationDidChange, null));
     }
 
     /**
@@ -247,7 +238,6 @@ public class PartyDirector extends BasicDirector
             _safeSubscriber = null;
         }
         if (_partyObj != null) {
-            RoomContext(_octx.wctx).getLocationDirector().removeLocationObserver(_locationObserver);
             _partyObj.removeListener(_partyListener);
             _partyListener = null;
             _partyObj = null;
@@ -305,7 +295,7 @@ public class PartyDirector extends BasicDirector
     protected function checkFollowScene () :void
     {
         if (_partyObj.sceneId != 0) {
-            _worldDir.moveTo(new RoomDestination(new RoomKey(_partyObj.sceneId)));
+            _worldDir.moveTo(new RoomLocus(_partyObj.sceneId));
         }
     }
 
@@ -365,8 +355,6 @@ public class PartyDirector extends BasicDirector
         _partyListener.objectDestroyed = Util.adapt(clearParty);
         _partyObj.addListener(_partyListener);
 
-        _locationObserver = new LocationAdapter(null, locationDidChange, null);
-        RoomContext(_octx.wctx).getLocationDirector().addLocationObserver(_locationObserver);
 
         partyJoined.dispatch();
 
@@ -412,20 +400,6 @@ public class PartyDirector extends BasicDirector
     {
         log.warning("Party subscription failed", "cause", cause);
         clearParty();
-    }
-
-    /**
-     * Called when our world location changes.
-     */
-    protected function locationDidChange (place :PlaceObject) :void
-    {
-        // if we're the leader of the party, change the party's location when we move
-        if (isPartyLeader()) {
-            var room :RoomPlace = _octx.wctx.getPlayerBody().getPlace() as RoomPlace;
-            if (room != null && room.sceneId != _partyObj.sceneId) {
-                _partyObj.partyService.moveParty(room.sceneId, _octx.listener(OrthCodes.PARTY_MSGS));
-            }
-        }
     }
 
     /**
@@ -480,7 +454,7 @@ public class PartyDirector extends BasicDirector
     {
         super.registerServices(client);
 
-        client.addServiceGroup(OrthCodes.WORLD_GROUP);
+        client.addServiceGroup(OrthCodes.PARTY_GROUP);
     }
 
     // from BasicDirector
@@ -507,7 +481,6 @@ public class PartyDirector extends BasicDirector
     protected var _detailRequests :Dictionary = new Dictionary();
     protected var _detailPanels :Dictionary = new Dictionary();
 
-    protected var _locationObserver :LocationAdapter;
     protected var _partyListener :EventAdapter;
 }
 }

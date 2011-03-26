@@ -19,13 +19,12 @@ import com.threerings.presents.dobj.DObjectManager;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.TopPanel;
+import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.room.client.FakeChatDirector;
 import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.world.client.WorldClient;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldModule;
-import com.threerings.orth.world.data.Destination;
-import com.threerings.orth.world.data.OrthPlayerBody;
 
 /**
  * Defines services for the Room client.
@@ -90,17 +89,11 @@ public class RoomContext
     }
 
     // from WorldContext
-    public function getPlayerBody () :OrthPlayerBody
-    {
-        return _client.getClientObject() as SocializerObject;
-    }
-
-    // from WorldContext
     public function getMyName () :PlayerName
     {
-        var body :OrthPlayerBody = getPlayerBody();
+        var body :SocializerObject = getSocializerObject();
 
-        return (body != null) ? SocializerObject(body).name : null;
+        return (body != null) ? body.name : null;
     }
 
     // from WorldContext
@@ -110,10 +103,10 @@ public class RoomContext
     }
 
     // from WorldContext
-    public function go (destination :Destination) :void
+    public function go (locus :Locus) :void
     {
         var sceneDir :OrthSceneDirector = _module.getInstance(SceneDirector);
-        sceneDir.moveToPlace(destination);
+        sceneDir.moveToPlace(locus);
     }
 
     /** We use this for moving around a scene. */

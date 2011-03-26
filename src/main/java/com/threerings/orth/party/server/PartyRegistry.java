@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Function;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -34,19 +32,13 @@ import com.threerings.presents.server.SessionFactory;
 import com.threerings.presents.server.net.PresentsConnectionManager;
 import com.threerings.presents.server.InvocationManager;
 
-import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.BodyManager;
-import com.threerings.crowd.server.PlaceManager;
 import com.threerings.crowd.server.PlaceRegistry;
-import com.threerings.whirled.data.ScenePlace;
-
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.party.data.PartyBoardMarshaller;
-import com.threerings.orth.room.data.RoomPlace;
 import com.threerings.orth.server.OrthDeploymentConfig;
 
 import com.threerings.orth.peer.data.OrthNodeObject;
@@ -58,10 +50,7 @@ import com.threerings.orth.party.data.PartyBoardInfo;
 import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyCredentials;
 import com.threerings.orth.party.data.PartyInfo;
-import com.threerings.orth.party.data.PartyLeader;
 import com.threerings.orth.party.data.PartyObject;
-import com.threerings.orth.party.data.PartyOccupantInfo;
-import com.threerings.orth.party.data.PartyPlaceObject;
 import com.threerings.orth.party.data.PartySummary;
 import com.threerings.orth.party.data.PeerPartyMarshaller;
 
@@ -79,7 +68,7 @@ public class PartyRegistry
     @Inject public PartyRegistry (InvocationManager invmgr, PresentsConnectionManager conmgr,
                                   ClientManager clmgr, PartyAuthenticator partyAuthor)
     {
-        invmgr.registerProvider(this, PartyBoardMarshaller.class, OrthCodes.WORLD_GROUP);
+        invmgr.registerProvider(this, PartyBoardMarshaller.class, OrthCodes.PARTY_GROUP);
         partyAuthor.init(this); // fiddling to work around a circular dependency
         conmgr.addChainedAuthenticator(partyAuthor);
         clmgr.addSessionFactory(SessionFactory.newSessionFactory(
@@ -133,28 +122,6 @@ public class PartyRegistry
     }
 
     /**
-     * Called by a PartyPlaceManager when a user enters.
-     */
-    public void userEnteringPlace (PlayerObject userObj, PartyPlaceObject placeObj)
-    {
-        PartySummary summary = userObj.getParty();
-        if ((summary != null) && !placeObj.getParties().containsKey(summary.id)) {
-            // look up the leader and add that
-            placeObj.addToPartyLeaders(new PartyLeader(summary.id, lookupLeaderId(summary.id)));
-            placeObj.addToParties(summary);
-            _partyPlaces.put(summary.id, placeObj);
-        }
-    }
-
-    /**
-     * Called by a PartyPlaceManager when a user enters.
-     */
-    public void userLeavingPlace (PlayerObject userObj, PartyPlaceObject placeObj)
-    {
-        maybeRemovePartyFromPlace(userObj.getParty(), placeObj);
-    }
-
-    /**
      * Called when a user's party id changes. Happens in two places:
      * - from PartyManager, when the party is hosted on this node.
      * - from OrthPeerNode, for parties hosted on other nodes.
@@ -185,12 +152,6 @@ public class PartyRegistry
     {
         if (oldInfo.leaderId == newInfo.leaderId) {
             return;
-        }
-
-        // publish a new leader id to all the places currently hosting this party
-        PartyLeader leader = new PartyLeader(newInfo.id, newInfo.leaderId);
-        for (PartyPlaceObject placeObj : _partyPlaces.get(newInfo.id)) {
-            placeObj.updatePartyLeaders(leader);
         }
     }
 
@@ -334,9 +295,6 @@ public class PartyRegistry
 
             pobj.leaderId = player.getPlayerId();
             pobj.disband = true;
-            if (player.location instanceof ScenePlace) {
-                pobj.sceneId = ((ScenePlace) player.location).sceneId;
-            }
 
             // create the PartyManager and add the player
             mgr = _injector.getInstance(PartyManager.class);
@@ -371,41 +329,9 @@ public class PartyRegistry
         }
     }
 
-    /**
-     * Called when the player represented by the specified user object has joined or left a party.
-     */
     protected void updateUserParty (PlayerObject userObj, PartySummary party)
     {
-        // first update the user
-        PartySummary oldSummary = userObj.getParty();
         userObj.setParty(party);
-
-        if (userObj.location != null) { // TODO: Why is userObj.location always null?
-            // then any place they may occupy
-            PlaceManager placeMan = _placeReg.getPlaceManager(((RoomPlace)userObj.location).sceneId);
-            if (placeMan != null) {
-                PlaceObject placeObj = placeMan.getPlaceObject();
-                if (placeObj instanceof PartyPlaceObject) {
-                    placeObj.startTransaction();
-                    try {
-                        // we need to add a new party BEFORE updating the occInfo
-                        userEnteringPlace(userObj, (PartyPlaceObject)placeObj);
-                        // update the occupant info
-                        final int newPartyId = (party == null) ? 0 : party.id;
-                        placeMan.updateOccupantInfo(userObj.getOid(),
-                            new OccupantInfo.Updater<OccupantInfo>() {
-                                public boolean update (OccupantInfo info) {
-                                    return ((PartyOccupantInfo) info).updatePartyId(newPartyId);
-                                }
-                            });
-                        // we need to remove an old party AFTER updating the occInfo
-                        maybeRemovePartyFromPlace(oldSummary, (PartyPlaceObject)placeObj);
-                    } finally {
-                        placeObj.commitTransaction();
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -431,25 +357,6 @@ public class PartyRegistry
     }
 
     /**
-     * Called when we should remove a party from a place.
-     */
-    protected void maybeRemovePartyFromPlace (PartySummary summary, PartyPlaceObject placeObj)
-    {
-        if ((summary == null) || !placeObj.getParties().containsKey(summary.id)) {
-            return;
-        }
-        for (OccupantInfo info : placeObj.getOccupants()) {
-            if ((info instanceof PartyOccupantInfo) &&
-                    (((PartyOccupantInfo) info).getPartyId() == summary.id)) {
-                return; // there's still a partier here!
-            }
-        }
-        placeObj.removeFromParties(summary.id);
-        placeObj.removeFromPartyLeaders(summary.id);
-        _partyPlaces.remove(summary.id, placeObj);
-    }
-
-    /**
      * Returns the next party id that may be assigned by this server.
      * Only called from the PartyRegistry, does not need synchronization.
      */
@@ -463,8 +370,6 @@ public class PartyRegistry
     }
 
     protected Map<Integer, PartyManager> _parties = Maps.newHashMap();
-
-    protected Multimap<Integer,PartyPlaceObject> _partyPlaces = HashMultimap.create();
 
     protected static final int PARTIES_PER_BOARD = 10;
 

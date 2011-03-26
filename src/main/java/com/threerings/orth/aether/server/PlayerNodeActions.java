@@ -14,10 +14,10 @@ import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.FriendEntry;
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.peer.server.OrthPeerManager;
-import com.threerings.orth.world.data.WorldCodes;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerManager;
 
@@ -279,7 +279,7 @@ public class PlayerNodeActions
                 _peerMan.invokeNodeAction(
                     new RemoveFollowerAction(_leaderId, plobj.getPlayerId()));
             } else {
-                plobj.postMessage(WorldCodes.FOLLOWEE_MOVED, _sceneId);
+                plobj.postMessage(OrthCodes.FOLLOWEE_MOVED, _sceneId);
             }
         }
 

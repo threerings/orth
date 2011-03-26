@@ -14,16 +14,15 @@ import com.threerings.util.Log;
 
 import com.threerings.presents.client.Client;
 
+import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.room.client.OrthPendingData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
-import com.threerings.orth.room.data.RoomDestination;
-import com.threerings.orth.room.data.RoomKey;
+import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.world.client.WorldContext;
 import com.threerings.orth.world.client.WorldDirector;
-import com.threerings.orth.world.data.Destination;
 
 /**
  * Handles custom scene traversal and extra bits for Whirled.
@@ -65,14 +64,14 @@ public class OrthSceneDirector extends SceneDirector
             return false;
         }
 
-        _worldDir.moveTo(new RoomDestination(new RoomKey(dest.targetSceneId), dest.dest));
+        _worldDir.moveTo(new RoomLocus(dest.targetSceneId, dest.dest));
         return true;
     }
 
-    public function moveToPlace (destination :Destination) :void
+    public function moveToPlace (locus :Locus) :void
     {
-        _pendingLocation = RoomDestination(destination).getLocation();
-        moveTo(RoomKey(destination.getPlaceKey()).sceneId);
+        _pendingLocation = RoomLocus(locus).loc;
+        moveTo(RoomLocus(locus).sceneId);
     }
 
     // from SceneDirector

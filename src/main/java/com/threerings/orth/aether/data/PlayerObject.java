@@ -12,7 +12,6 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthPlayer;
-import com.threerings.orth.world.data.OrthPlace;
 import com.threerings.orth.party.data.PartySummary;
 
 /**
@@ -25,10 +24,6 @@ public class PlayerObject extends ClientObject
     /** The field name of the <code>playerName</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String PLAYER_NAME = "playerName";
-
-    /** The field name of the <code>location</code> field. */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String LOCATION = "location";
 
     /** The field name of the <code>following</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -53,9 +48,6 @@ public class PlayerObject extends ClientObject
 
     /** The name and id information for this player. */
     public VizPlayerName playerName;
-
-    /** What world location this player is currently in, or null. */
-    public OrthPlace location;
 
     /** The name of the member this member is following or null. */
     public PlayerName following;
@@ -129,23 +121,6 @@ public class PlayerObject extends ClientObject
         requestAttributeChange(
             PLAYER_NAME, value, ovalue);
         this.playerName = value;
-    }
-
-    /**
-     * Requests that the <code>location</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setLocation (OrthPlace value)
-    {
-        OrthPlace ovalue = this.location;
-        requestAttributeChange(
-            LOCATION, value, ovalue);
-        this.location = value;
     }
 
     /**

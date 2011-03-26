@@ -13,7 +13,6 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.util.Name;
 
 import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.world.data.OrthPlayerBody;
 import com.threerings.orth.entity.data.Avatar;
 import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.EntityIdent;
@@ -25,7 +24,6 @@ import com.threerings.orth.room.data.SocializerInfo;
  * Represents an Orth player's in-room incarnation.
  */
 public class SocializerObject extends ActorObject
-    implements OrthPlayerBody
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>name</code> field. */

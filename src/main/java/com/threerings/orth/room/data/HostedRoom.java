@@ -1,30 +1,25 @@
 //
-// $Id: $
-
+//
 
 package com.threerings.orth.room.data;
 
-import com.threerings.util.ActionScript;
+import com.threerings.orth.locus.data.HostedLocus;
+import com.threerings.presents.dobj.DSet;
 
-import com.threerings.orth.peer.data.HostedPlace;
-
-/**
- *
- */
-@ActionScript(omit=true)
-public class HostedRoom extends HostedPlace
+public class HostedRoom extends HostedLocus implements DSet.Entry
 {
     public HostedRoom ()
     {
     }
 
-    public HostedRoom (RoomKey key, String name)
+    public HostedRoom (RoomLocus locus, String host, int[] port)
     {
-        super(key, name);
+        super(locus, host, port);
     }
 
-    public RoomKey getRoomKey ()
+    @Override
+    public Comparable<?> getKey ()
     {
-        return (RoomKey) key;
+        return (RoomLocus)locus;
     }
 }

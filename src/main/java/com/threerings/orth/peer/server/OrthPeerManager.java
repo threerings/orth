@@ -13,8 +13,6 @@ import com.google.common.collect.Maps;
 
 import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList;
-import com.samskivert.util.Tuple;
-
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.data.NodeObject;
@@ -26,10 +24,10 @@ import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.world.data.PlaceKey;
-import com.threerings.orth.peer.data.HostedPlace;
+import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.data.OrthNodeObject;
+import com.threerings.orth.room.data.RoomLocus;
 
 /**
  * Extends CrowdPeerManager with functionality needed for Orth and its intended uses.
@@ -78,22 +76,15 @@ public abstract class OrthPeerManager extends PeerManager
         });
     }
 
-    /** Returns a lock used to claim resolution of the specified scene. */
-    public static NodeObject.Lock getPlaceLock (PlaceKey place)
-    {
-        return new NodeObject.Lock("PlaceHost", place);
-    }
-
     /**
      * Returns the node name of the peer that is hosting the specified place, or null if no peer
      * has published that they are hosting the place.
      */
-    public Tuple<String, HostedPlace> findHostedPlace (final PlaceKey place)
+    public HostedLocus findHostedRoom (final RoomLocus place)
     {
-        return lookupNodeDatum(new Function<NodeObject, Tuple<String, HostedPlace>>() {
-            public Tuple<String, HostedPlace> apply (NodeObject nodeobj) {
-                HostedPlace info = ((OrthNodeObject) nodeobj).hostedPlaces.get(place);
-                return (info == null) ? null : Tuple.newTuple(nodeobj.nodeName, info);
+        return lookupNodeDatum(new Function<NodeObject, HostedLocus>() {
+            public HostedLocus apply (NodeObject nodeobj) {
+                return ((OrthNodeObject) nodeobj).hostedRooms.get(place);
             }
         });
     }

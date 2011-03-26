@@ -10,13 +10,11 @@ import com.threerings.presents.data.InvocationCodes;
  */
 public interface OrthCodes extends InvocationCodes
 {
-    /** Defines our aether invocation services group. */
+    /* Service groups */
     public static final String AETHER_GROUP = "orth.aether";
-
-    /** Defines our world invocation services group. */
     public static final String WORLD_GROUP = "orth.world";
-
-    /** Defines our room invocation services group. */
+    public static final String LOCUS_GROUP = "orth.locus";
+    public static final String PARTY_GROUP = "orth.party";
     public static final String ROOM_GROUP = "orth.room";
 
     /** The translation message bundle for our general client bits. */
@@ -25,4 +23,6 @@ public interface OrthCodes extends InvocationCodes
     /** The translation message bundle for our chat messages. */
     public static final String CHAT_MSGS = "chat";
 
+    /** A message even dispatched on the member object to followers. */
+    public static final String FOLLOWEE_MOVED = "folMov";
 }

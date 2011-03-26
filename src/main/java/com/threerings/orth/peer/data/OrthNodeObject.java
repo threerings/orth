@@ -4,16 +4,15 @@
 package com.threerings.orth.peer.data;
 
 import javax.annotation.Generated;
-import com.threerings.util.ActionScript;
-
-import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.peer.data.NodeObject;
 
 import com.threerings.orth.party.data.MemberParty;
 import com.threerings.orth.party.data.PartyInfo;
 import com.threerings.orth.party.data.PartySummary;
 import com.threerings.orth.party.data.PeerPartyMarshaller;
-import com.threerings.orth.peer.data.HostedPlace;
+import com.threerings.orth.room.data.HostedRoom;
+import com.threerings.presents.dobj.DSet;
+import com.threerings.presents.peer.data.NodeObject;
+import com.threerings.util.ActionScript;
 
 /**
  * Maintains information on an Orth peer server.
@@ -22,9 +21,9 @@ import com.threerings.orth.peer.data.HostedPlace;
 public class OrthNodeObject extends NodeObject
 {
     // AUTO-GENERATED: FIELDS START
-    /** The field name of the <code>hostedPlaces</code> field. */
+    /** The field name of the <code>hostedRooms</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String HOSTED_PLACES = "hostedPlaces";
+    public static final String HOSTED_ROOMS = "hostedRooms";
 
     /** The field name of the <code>hostedParties</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -44,7 +43,7 @@ public class OrthNodeObject extends NodeObject
     // AUTO-GENERATED: FIELDS END
 
     /** Contains info on all places hosted by this server. */
-    public DSet<HostedPlace> hostedPlaces = DSet.newDSet();
+    public DSet<HostedRoom> hostedRooms = DSet.newDSet();
 
     /** Contains the immutable summaries for all parties on this node. */
     public DSet<PartySummary> hostedParties = DSet.newDSet();
@@ -61,39 +60,39 @@ public class OrthNodeObject extends NodeObject
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the specified entry be added to the
-     * <code>hostedPlaces</code> set. The set will not change until the event is
+     * <code>hostedRooms</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void addToHostedPlaces (HostedPlace elem)
+    public void addToHostedRooms (HostedRoom elem)
     {
-        requestEntryAdd(HOSTED_PLACES, hostedPlaces, elem);
+        requestEntryAdd(HOSTED_ROOMS, hostedRooms, elem);
     }
 
     /**
      * Requests that the entry matching the supplied key be removed from
-     * the <code>hostedPlaces</code> set. The set will not change until the
+     * the <code>hostedRooms</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void removeFromHostedPlaces (Comparable<?> key)
+    public void removeFromHostedRooms (Comparable<?> key)
     {
-        requestEntryRemove(HOSTED_PLACES, hostedPlaces, key);
+        requestEntryRemove(HOSTED_ROOMS, hostedRooms, key);
     }
 
     /**
      * Requests that the specified entry be updated in the
-     * <code>hostedPlaces</code> set. The set will not change until the event is
+     * <code>hostedRooms</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void updateHostedPlaces (HostedPlace elem)
+    public void updateHostedRooms (HostedRoom elem)
     {
-        requestEntryUpdate(HOSTED_PLACES, hostedPlaces, elem);
+        requestEntryUpdate(HOSTED_ROOMS, hostedRooms, elem);
     }
 
     /**
-     * Requests that the <code>hostedPlaces</code> field be set to the
+     * Requests that the <code>hostedRooms</code> field be set to the
      * specified value. Generally one only adds, updates and removes
      * entries of a distributed set, but certain situations call for a
      * complete replacement of the set value. The local value will be
@@ -103,11 +102,11 @@ public class OrthNodeObject extends NodeObject
      * value change when they received the attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setHostedPlaces (DSet<HostedPlace> value)
+    public void setHostedRooms (DSet<HostedRoom> value)
     {
-        requestAttributeChange(HOSTED_PLACES, value, this.hostedPlaces);
-        DSet<HostedPlace> clone = (value == null) ? null : value.clone();
-        this.hostedPlaces = clone;
+        requestAttributeChange(HOSTED_ROOMS, value, this.hostedRooms);
+        DSet<HostedRoom> clone = (value == null) ? null : value.clone();
+        this.hostedRooms = clone;
     }
 
     /**

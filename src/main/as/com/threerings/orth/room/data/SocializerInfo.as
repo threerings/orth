@@ -10,7 +10,6 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.util.Joiner;
 
 import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.party.data.PartyOccupantInfo;
 import com.threerings.orth.room.data.ActorInfo;
 
 // GENERATED PREAMBLE END
@@ -52,7 +51,6 @@ public class SocializerInfo extends ActorInfo
         return _away;
     }
 
-    // from PartyOccupantInfo
     public function getPartyId () :int
     {
         return _partyId;

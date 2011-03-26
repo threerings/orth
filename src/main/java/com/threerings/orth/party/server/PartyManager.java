@@ -3,6 +3,8 @@
 
 package com.threerings.orth.party.server;
 
+import static com.threerings.orth.Log.log;
+
 import java.util.Set;
 
 import com.google.common.collect.Lists;
@@ -10,29 +12,12 @@ import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 import com.samskivert.util.StringUtil;
-import com.samskivert.util.Tuple;
-
-import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.data.InvocationCodes;
-import com.threerings.presents.server.ClientManager;
-import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.server.InvocationManager;
-
-import com.threerings.presents.dobj.ObjectDeathListener;
-import com.threerings.presents.dobj.ObjectDestroyedEvent;
-import com.threerings.presents.dobj.RootDObjectManager;
 
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.peer.data.OrthNodeObject;
-import com.threerings.orth.peer.data.HostedPlace;
-import com.threerings.orth.peer.server.OrthPeerManager;
-import com.threerings.orth.room.data.RoomKey;
-
+import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.notify.data.GenericNotification;
 import com.threerings.orth.notify.data.Notification;
-
 import com.threerings.orth.party.data.MemberParty;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyAuthName;
@@ -43,8 +28,18 @@ import com.threerings.orth.party.data.PartyMarshaller;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.party.data.PartySummary;
-
-import static com.threerings.orth.Log.log;
+import com.threerings.orth.peer.data.OrthNodeObject;
+import com.threerings.orth.peer.server.OrthPeerManager;
+import com.threerings.orth.room.data.RoomLocus;
+import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.data.InvocationCodes;
+import com.threerings.presents.dobj.ObjectDeathListener;
+import com.threerings.presents.dobj.ObjectDestroyedEvent;
+import com.threerings.presents.dobj.RootDObjectManager;
+import com.threerings.presents.server.ClientManager;
+import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.InvocationManager;
 
 /**
  * Manages a particular party, living on a single node.
@@ -382,9 +377,9 @@ public class PartyManager
     protected void updateStatus ()
     {
         // TODO(bruno): This assumes the party is in a room. Can we make that assumption here?
-        Tuple<String, HostedPlace> room = _peerMgr.findHostedPlace(new RoomKey(_partyObj.sceneId));
+        HostedLocus room = _peerMgr.findHostedRoom(new RoomLocus(_partyObj.sceneId));
         if (room != null) {
-            setStatus(room.right.name, PartyCodes.STATUS_TYPE_SCENE);
+            setStatus("" + ((RoomLocus)room.locus).sceneId, PartyCodes.STATUS_TYPE_SCENE);
         } else {
             // we see this, we can investigate
             setStatus("unknown: " + _partyObj.sceneId, PartyCodes.STATUS_TYPE_USER);

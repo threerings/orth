@@ -13,8 +13,8 @@ public class OrthCodes extends InvocationCodes
     /** Defines our aether invocation services group. */
     public static const AETHER_GROUP :String = "orth.aether";
 
-    /** Defines our world invocation services group. */
-    public static const WORLD_GROUP :String = "orth.world";
+    /** Defines our locus invocation services group. */
+    public static const LOCUS_GROUP :String = "orth.locus";
 
     /** Defines our room invocation services group. */
     public static const ROOM_GROUP :String = "orth.room";

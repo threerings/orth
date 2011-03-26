@@ -1,12 +1,10 @@
-//
-// $Id: WorldDirector.as 18771 2009-11-24 22:03:46Z jamie $
-
 package com.threerings.orth.world.client {
+import flash.utils.getQualifiedClassName;
+
 import flashx.funk.ioc.inject;
 
-import com.threerings.io.TypedArray;
-
 import com.threerings.util.Log;
+import com.threerings.util.Preconditions;
 
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
@@ -16,21 +14,25 @@ import com.threerings.presents.client.ClientObserver;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.world.data.Destination;
-import com.threerings.orth.world.data.PlaceKey;
-import com.threerings.orth.world.data.WorldMarshaller;
+import com.threerings.orth.locus.client.LocusService;
+import com.threerings.orth.locus.client.LocusService_LocusMaterializationListener;
+import com.threerings.orth.locus.data.HostedLocus;
+import com.threerings.orth.locus.data.Locus;
+import com.threerings.orth.locus.data.LocusMarshaller;
+import com.threerings.orth.room.data.HostedRoom;
 
 /**
  * Handles moving around in the virtual world.
  *
  */
 public class WorldDirector extends BasicDirector
-    implements WorldService_PlaceResolutionListener
+    implements LocusService_LocusMaterializationListener
 {
     public const log :Log = Log.getLog(this);
 
     // statically reference classes we require
-    WorldMarshaller;
+    LocusMarshaller;
+    HostedRoom;
 
     public function WorldDirector (externalObserver :ClientObserver = null)
     {
@@ -50,50 +52,47 @@ public class WorldDirector extends BasicDirector
     /**
      * Request a move.
      */
-    public function moveTo (dest :Destination) :void
+    public function moveTo (locus :Locus) :void
     {
-        if (_pendingDest != null) {
+        if (_pending != null) {
             // this might be a bit too hard-ass, but they *can* always restart their client...
             log.warning("Refusing to move while we're already in mid-move",
-                "desired destination", dest, "pending destination", _pendingDest);
+                "desired", locus, "pending", _pending);
             return;
         }
 
         // remember where we're going
-        _pendingDest = dest;
+        _pending = locus;
 
         // begin by locating the correct peer
-        _wsvc.locatePlace(dest.getPlaceKey(), this);
+        _lsvc.materializeLocus(_pending, this);
     }
 
     // from Java WorldService_PlaceResolutionListener
     public function requestFailed (cause :String) :void
     {
         // clear our pending move
-        _pendingDest = null;
+        _pending = null;
 
         log.warning("Place resolution request failed", "cause", cause);
         _octx.displayFeedback(OrthCodes.WORLD_MSGS, cause);
     }
 
     // from Java WorldService_PlaceResolutionListener
-    public function placeLocated (peer :String, host :String, ports :TypedArray) :void
+    public function locusMaterialized (hosted :HostedLocus) :void
     {
         // note our peer
-        _pendingPeer = peer;
+        _pendingPeer = hosted.host;
 
         var worldClient :WorldClient = (_octx.wctx != null) ? _octx.wctx.getWorldClient() : null;
 
 
-        // convenience variable
-        var pendingPlace :PlaceKey = _pendingDest.getPlaceKey();
-
         // if we're switching place types, we need to instantiate a new world system
-        if (_currentPlace == null ||
-            pendingPlace.getPlaceType() != _currentPlace.getPlaceType()) {
-            _octx.setupWorld(pendingPlace.getModuleClass());
+        if (_current == null ||
+            getQualifiedClassName(_pending) != getQualifiedClassName(_current)) {
+            _octx.setupWorld(_pending.moduleClass);
 
-        } else if (worldClient.isConnected() && peer == _currentPeer) {
+        } else if (worldClient.isConnected() && _pendingPeer == _currentPeer) {
             // this is the special case where we're already on the right peer
             gotoPendingPlace();
             return;
@@ -121,13 +120,13 @@ public class WorldDirector extends BasicDirector
         }
 
         // and finally log on
-        worldClient.logonTo(host, ports);
+        worldClient.logonTo(_pendingPeer, hosted.ports);
     }
 
     // called if our connection to the world server fails or we fail to login
     public function worldFail (event :ClientEvent) :void
     {
-        log.warning("World connection failed", "place", _currentPlace, "event", event);
+        log.warning("World connection failed", "place", _current, "event", event);
         _octx.displayFeedback(OrthCodes.WORLD_MSGS, "Connection failed");
     }
 
@@ -139,28 +138,26 @@ public class WorldDirector extends BasicDirector
 
     protected function gotoPendingPlace () :void
     {
-        if (_octx.wctx == null) {
-            log.warning("Freak out! We logged onto a world server but the world context is gone!");
-            return;
-        }
+        Preconditions.checkNotNull(_octx.wctx,
+            "We logged onto a world server but the world context is gone!");
 
         // we successfully logged on; hand control over to the world implementation
-        _currentPlace = _pendingDest.getPlaceKey();
+        _current = _pending;
 
         // squirrel this away before we reset our class members
-        var destination :Destination = _pendingDest;
+        var locus :Locus = _pending;
 
         _pendingPeer = null;
-        _pendingDest = null;
+        _pending = null;
 
         // finally go!
-        _octx.wctx.go(destination);
+        _octx.wctx.go(locus);
     }
 
     // from BasicDirector
     override protected function registerServices (client :Client) :void
     {
-        client.addServiceGroup(OrthCodes.WORLD_GROUP);
+        client.addServiceGroup(OrthCodes.LOCUS_GROUP);
     }
 
     // from BasicDirector
@@ -168,20 +165,20 @@ public class WorldDirector extends BasicDirector
     {
         super.fetchServices(client);
 
-        _wsvc = (client.requireService(WorldService) as WorldService);
+        _lsvc = LocusService(client.requireService(LocusService));
     }
 
     protected var _octx :OrthContext = inject(OrthContext);
 
-    protected var _wsvc :WorldService;
+    protected var _lsvc :LocusService;
     protected var _externalObserver :ClientObserver;
 
     protected var _observer :ClientObserver;
 
-    protected var _currentPlace :PlaceKey;
+    protected var _current :Locus;
     protected var _currentPeer :String;
 
-    protected var _pendingDest :Destination;
+    protected var _pending :Locus;
     protected var _pendingPeer :String;
 }
 }

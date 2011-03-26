@@ -14,8 +14,7 @@ import com.threerings.presents.dobj.MessageEvent;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.room.data.RoomDestination;
-import com.threerings.orth.room.data.RoomKey;
+import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.world.client.WorldDirector;
 
 /**
@@ -77,7 +76,7 @@ public class PlayerDirector extends BasicDirector
             var sceneId :int = int(event.getArgs()[0]);
             log.info("Following " + _octx.getPlayerObject().following + " to " + sceneId + ".");
             // ORTH TODO: make this non-room-specific
-            _worldDir.moveTo(new RoomDestination(new RoomKey(sceneId)));
+            _worldDir.moveTo(new RoomLocus(sceneId));
         }
     }
 

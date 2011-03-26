@@ -15,14 +15,11 @@ import com.threerings.presents.dobj.DSet_Entry;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.entity.data.Avatar;
 import com.threerings.orth.room.data.ActorObject;
-import com.threerings.orth.world.data.OrthPlace;
-import com.threerings.orth.world.data.OrthPlayerBody;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
 public class SocializerObject extends ActorObject
-    implements OrthPlayerBody
 {
 // GENERATED CLASSDECL END
 
@@ -70,12 +67,6 @@ public class SocializerObject extends ActorObject
     public function self () :DObject
     {
         return this;
-    }
-
-    // from OrthPlayerBody
-    public function getPlace () :OrthPlace
-    {
-        return RoomPlace(location);
     }
 
     public function getPlayerId () :int

@@ -3,12 +3,9 @@
 
 package com.threerings.orth.room.data;
 
-import com.threerings.orth.world.data.OrthPlace;
-
 import com.threerings.whirled.data.ScenePlace;
 
 public class RoomPlace extends ScenePlace
-    implements OrthPlace
 {
     /** The peer this room is hosted on. */
     public String peer;
@@ -25,24 +22,6 @@ public class RoomPlace extends ScenePlace
         super(sceneOid, sceneId);
         this.peer = peer;
         this.name = name;
-    }
-
-    // from OrthPlace
-    public String getPeer ()
-    {
-        return peer;
-    }
-
-    // from OrthPlace
-    public String describePlace ()
-    {
-        return name;
-    }
-
-    // from OrthPlace
-    public String getPlaceType ()
-    {
-        return OrthRoomCodes.ROOM_PLACE_TYPE;
     }
 
     @Override

@@ -7,9 +7,6 @@ import com.threerings.presents.data.InvocationCodes;
  */
 public interface OrthRoomCodes extends InvocationCodes
 {
-    /** Constant used to identify the orth.room world implementation. */
-    public static final String ROOM_PLACE_TYPE = "rooms";
-
     /** A message event type dispatched on the room object. */
     public static final String SPRITE_MESSAGE = "sprMsg";
 

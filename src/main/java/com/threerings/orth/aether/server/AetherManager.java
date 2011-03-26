@@ -8,8 +8,6 @@ import static com.threerings.orth.Log.log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import com.samskivert.util.ObjectUtil;
-
 import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
@@ -47,13 +45,13 @@ public class AetherManager
                                 final InvocationService.InvocationListener listener)
         throws InvocationException
     {
-        final PlayerObject user = (PlayerObject) caller; //
+        //final PlayerObject user = (PlayerObject) caller; //
 
         // make sure the target player is online and in the same room as the requester
-        final PlayerObject target = _locator.lookupPlayer(playerId);
-        if (target == null || !ObjectUtil.equals(user.location, target.location)) {
-            throw new InvocationException("e.follow_not_in_room");
-        }
+        //final PlayerObject target = _locator.lookupPlayer(playerId);
+        //if (target == null || !ObjectUtil.equals(user.location, target.location)) {
+        //    throw new InvocationException("e.follow_not_in_room");
+        //}
 
         // ORTH TODO: Implement _notifyMan
         // issue the follow invitation to the target

@@ -22,7 +22,7 @@ public class PartyBoardMarshaller extends InvocationMarshaller
     implements PartyBoardService
 {
     /**
-     * Marshalls results to implementations of {@link PartyBoardService.JoinListener}.
+     * Marshalls results to implementations of {@code PartyBoardService.JoinListener}.
      */
     public static class JoinMarshaller extends ListenerMarshaller
         implements JoinListener
