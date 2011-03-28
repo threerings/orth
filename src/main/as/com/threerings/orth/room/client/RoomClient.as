@@ -1,8 +1,6 @@
 //
 // $Id: $
-package com.threerings.orth.room.client
-{
-
+package com.threerings.orth.room.client {
 import flashx.funk.ioc.inject;
 
 import com.threerings.presents.net.Credentials;
@@ -17,12 +15,14 @@ import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.OrthRoomConfig;
 import com.threerings.orth.room.data.RoomAuthName;
 import com.threerings.orth.room.data.RoomCredentials;
+import com.threerings.orth.room.data.RoomPlace;
 import com.threerings.orth.world.client.WorldClient;
 
 public class RoomClient extends WorldClient
 {
     // reference classes that would otherwise not be linked in
     RoomAuthName;
+    RoomPlace;
     OrthRoomConfig;
     DecorData;
     AvatarData;

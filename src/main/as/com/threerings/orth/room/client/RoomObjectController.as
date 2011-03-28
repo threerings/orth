@@ -288,7 +288,7 @@ public class RoomObjectController extends RoomController
 
         var menuItems :Array = [];
 
-        _worldCtrl.addPetMenuItems(PetName(occInfo.username), menuItems);
+        addPetMenuItems(PetName(occInfo.username), menuItems);
 
         if (isPetOwner) {
             CommandMenu.addSeparator(menuItems);
