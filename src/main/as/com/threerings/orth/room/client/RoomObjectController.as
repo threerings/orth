@@ -283,7 +283,7 @@ public class RoomObjectController extends RoomController
         }
 
         const memObj :SocializerObject = _rctx.getSocializerObject();
-        const isPetOwner :Boolean = (PetSprite(pet).getOwnerId() == memObj.getPlayerId());
+        const isPetOwner :Boolean = (PetSprite(pet).getOwnerId() == memObj.getPlayerName().getId());
         const petId :int = occInfo.getEntityIdent().getItem();
 
         var menuItems :Array = [];
