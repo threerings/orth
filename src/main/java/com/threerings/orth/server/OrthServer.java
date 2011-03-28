@@ -51,7 +51,6 @@ public class OrthServer extends CrowdServer
             _materializers.addBinding(RoomLocus.class).to(OrthSceneRegistry.class);
         }
 
-
         protected MapBinder<Class<?>, LocusMaterializer> _materializers;
     }
 
@@ -78,4 +77,3 @@ public class OrthServer extends CrowdServer
     @Inject protected OrthSceneRegistry _sceneReg;
     @Inject protected PartyRegistry _partyReg;
 }
-
