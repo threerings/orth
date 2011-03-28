@@ -11,7 +11,6 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.PlayerDirector;
-import com.threerings.orth.chat.client.ChatOverlay;
 import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.party.client.PartyDirector;
@@ -68,24 +67,8 @@ public class OrthModule extends BindingModule
 
     protected function didInit () :void
     {
-        // we instantiate these in explicit order so as to avoid a cyclic dependancy
-        var placeBox :OrthPlaceBox = getInstance(OrthPlaceBox);
-        bind(OrthPlaceBox).toInstance(placeBox);
-
-        // the ComicOverlay is configured with the OrthPlaceBox and injects OrthContext
-        var comicOverlay :ComicOverlay = getInstance(ComicOverlay);
-        comicOverlay.initOverlay(placeBox);
-        getInstance(OrthChatDirector).addChatDisplay(comicOverlay);
-
-        // the ChatOverlay is configured with the OrthPlaceBox and injects OrthContext
-        var chatOverlay :ChatOverlay = getInstance(ChatOverlay);
-        chatOverlay.initOverlay(placeBox);
-        getInstance(OrthChatDirector).addChatDisplay(chatOverlay);
-
-        // and TopPanel injects ComicOverlay!
-        getInstance(TopPanel);
-
         // instantiate directors and controllers
+        getInstance(OrthChatDirector);
         getInstance(PlayerDirector);
         getInstance(OrthController);
         getInstance(PartyDirector);
