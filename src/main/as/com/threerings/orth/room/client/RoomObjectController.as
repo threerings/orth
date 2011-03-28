@@ -54,7 +54,7 @@ import com.threerings.orth.room.data.PetName;
 import com.threerings.orth.room.data.SocializerInfo;
 import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.ui.MediaWrapper;
-import com.threerings.orth.world.client.BootablePlaceController;
+import com.threerings.orth.locus.client.BootablePlaceController;
 
 /**
  * Manages the various interactions that take place in a room scene.
@@ -245,7 +245,7 @@ public class RoomObjectController extends RoomController
         }
 
         var menuItems :Array = [];
-        _worldCtrl.addMemberMenuItems(occInfo.username as PlayerName, menuItems);
+        _locusCtrl.addMemberMenuItems(occInfo.username as PlayerName, menuItems);
         popActorMenu(avatar, menuItems);
     }
 

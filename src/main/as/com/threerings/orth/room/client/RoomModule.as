@@ -15,19 +15,19 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.room.client.FakeChatDirector;
-import com.threerings.orth.world.client.AbstractWorldModule;
-import com.threerings.orth.world.client.WorldClient;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.locus.client.AbstractLocusModule;
+import com.threerings.orth.locus.client.LocusClient;
+import com.threerings.orth.locus.client.LocusContext;
 
-public class RoomModule extends AbstractWorldModule
+public class RoomModule extends AbstractLocusModule
 {
     public function RoomModule ()
     {
         // set up simple bindings in the constructor
-        bind(WorldClient).to(RoomClient).asSingleton();
+        bind(LocusClient).to(RoomClient).asSingleton();
     }
 
-    override protected function doWorldBinds (ctx :WorldContext) :void
+    override protected function doLocusBinds (ctx :LocusContext) :void
     {
         var rCtx :RoomContext = RoomContext(ctx);
 
@@ -59,7 +59,7 @@ public class RoomModule extends AbstractWorldModule
             rCtx, _chainMod.getInstance(MessageManager), OrthCodes.CHAT_MSGS));
     }
 
-    override protected function getWorldContextClass () :Class
+    override protected function getLocusContextClass () :Class
     {
         return RoomContext;
     }

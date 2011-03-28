@@ -15,7 +15,7 @@ import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.room.data.RoomLocus;
-import com.threerings.orth.world.client.WorldDirector;
+import com.threerings.orth.locus.client.LocusDirector;
 
 /**
  * Handles player-oriented requests.
@@ -66,7 +66,7 @@ public class PlayerDirector extends BasicDirector
     {
         super.fetchServices(client);
 
-        // TODO: move more of the functions we use into a WorldService
+        // TODO: move more of the functions we use into a LocusService
         _psvc = (client.requireService(PlayerService) as PlayerService);
     }
 
@@ -76,11 +76,11 @@ public class PlayerDirector extends BasicDirector
             var sceneId :int = int(event.getArgs()[0]);
             log.info("Following " + _octx.getPlayerObject().following + " to " + sceneId + ".");
             // ORTH TODO: make this non-room-specific
-            _worldDir.moveTo(new RoomLocus(sceneId));
+            _locusDir.moveTo(new RoomLocus(sceneId));
         }
     }
 
-    protected const _worldDir :WorldDirector = inject(WorldDirector);
+    protected const _locusDir :LocusDirector = inject(LocusDirector);
     protected const _octx :OrthContext = inject(OrthContext);
 
     protected var _psvc :PlayerService;

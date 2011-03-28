@@ -66,9 +66,9 @@ import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.PetName;
 import com.threerings.orth.room.data.SimpleEntityIdent;
 import com.threerings.orth.ui.MediaWrapper;
-import com.threerings.orth.world.client.BootablePlaceController;
-import com.threerings.orth.world.client.WorldController;
-import com.threerings.orth.world.client.WorldDirector;
+import com.threerings.orth.locus.client.BootablePlaceController;
+import com.threerings.orth.locus.client.LocusController;
+import com.threerings.orth.locus.client.LocusDirector;
 
 /**
  * Manages the various interactions that take place in a room scene.
@@ -1286,13 +1286,13 @@ public class RoomController extends SceneController
     protected const _locDir :LocationDirector = inject(LocationDirector);
 
     protected const _orthCtrl :OrthController = inject(OrthController);
-    protected const _worldCtrl :WorldController = inject(WorldController);
+    protected const _locusCtrl :LocusController = inject(LocusController);
     protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
     protected const _rsrc :OrthResourceFactory = inject(OrthResourceFactory);
 
 
     protected const _playerDir :PlayerDirector = inject(PlayerDirector);
-    protected const _worldDir :WorldDirector = inject(WorldDirector);
+    protected const _locusDir :LocusDirector = inject(LocusDirector);
     protected const _sceneDir :OrthSceneDirector = inject(SceneDirector);
     protected const _spotDir :SpotSceneDirector = inject(SpotSceneDirector);
 

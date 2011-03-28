@@ -11,7 +11,7 @@ import com.threerings.util.CommandEvent;
 
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.SocializerInfo;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.locus.client.LocusContext;
 
 /**
  * Displays a sprite for a member in a scene.
@@ -62,7 +62,7 @@ public class MemberSprite extends ActorSprite
     override public function isImportant () :Boolean
     {
         // our own sprite is more important than the others
-        return _module.getInstance(WorldContext).getMyName().equals(_occInfo.username);
+        return _module.getInstance(LocusContext).getMyName().equals(_occInfo.username);
     }
 
     // from OccupantSprite

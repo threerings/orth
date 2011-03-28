@@ -1,7 +1,7 @@
 //
 // $Id: BootablePlaceController.as 9285 2008-05-28 01:56:04Z ray $
 
-package com.threerings.orth.world.client {
+package com.threerings.orth.locus.client {
 
 public interface BootablePlaceController
 {

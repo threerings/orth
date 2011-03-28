@@ -27,7 +27,7 @@ import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.PetInfo;
 import com.threerings.orth.room.data.SocializerInfo;
-import com.threerings.orth.world.client.WorldContext;
+import com.threerings.orth.locus.client.LocusContext;
 
 /**
  * Handles the loading of various media.
@@ -36,7 +36,7 @@ public class MediaDirector extends BasicDirector
 {
     public static const log :Log = Log.getLog(MediaDirector);
 
-    public function MediaDirector (ctx :WorldContext, locDir :LocationDirector)
+    public function MediaDirector (ctx :LocusContext, locDir :LocationDirector)
     {
         super(ctx);
 
@@ -142,7 +142,7 @@ public class MediaDirector extends BasicDirector
     protected const _module :Module = inject(Module);
 
     /** A casted copy of the context. */
-    protected var _wctx :WorldContext;
+    protected var _wctx :LocusContext;
 
     /** Our very own avatar: avoid loading and unloading it. */
     protected var _ourAvatar :MemberSprite;

@@ -1,7 +1,7 @@
 //
-// $Id: WorldController.as 19431 2010-10-22 22:08:36Z zell $
+// $Id: LocusController.as 19431 2010-10-22 22:08:36Z zell $
 
-package com.threerings.orth.world.client {
+package com.threerings.orth.locus.client {
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.events.Event;
@@ -31,12 +31,12 @@ import com.threerings.orth.client.TopPanel;
 
 /**
  * A persistent controller for the top UI element; this is not torn down and reconstructed
- * as we move about the world. It is a companion to OrthController that handles the directly
- * world-related activities.
+ * as we move about the locus. It is a companion to OrthController that handles the directly
+ * locus-related activities.
  */
-public class WorldController extends Controller
+public class LocusController extends Controller
 {
-    public function WorldController ()
+    public function LocusController ()
     {
         _client.addServiceGroup(CrowdCodes.CROWD_GROUP);
         _client.addEventListener(ClientEvent.CLIENT_FAILED_TO_LOGON,
@@ -159,7 +159,7 @@ public class WorldController extends Controller
         }
     }
 
-    protected const _client :WorldClient = inject(WorldClient);
+    protected const _client :LocusClient = inject(LocusClient);
 
     protected const _stage :Stage = inject(Stage);
     protected const _topPanel :TopPanel = inject(TopPanel);
@@ -178,6 +178,6 @@ public class WorldController extends Controller
 
     protected var _idleStamp :Number;
 
-    private static const log :Log = Log.getLog(WorldController);
+    private static const log :Log = Log.getLog(LocusController);
 }
 }

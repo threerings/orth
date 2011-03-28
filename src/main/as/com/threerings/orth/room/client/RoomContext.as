@@ -22,15 +22,15 @@ import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.room.client.FakeChatDirector;
 import com.threerings.orth.room.data.SocializerObject;
-import com.threerings.orth.world.client.WorldClient;
-import com.threerings.orth.world.client.WorldContext;
-import com.threerings.orth.world.client.WorldModule;
+import com.threerings.orth.locus.client.LocusClient;
+import com.threerings.orth.locus.client.LocusContext;
+import com.threerings.orth.locus.client.LocusModule;
 
 /**
  * Defines services for the Room client.
  */
 public class RoomContext
-    implements WhirledContext, WorldContext
+    implements WhirledContext, LocusContext
 {
     public function RoomContext ()
     {
@@ -88,7 +88,7 @@ public class RoomContext
         return _module.getInstance(SceneDirector);
     }
 
-    // from WorldContext
+    // from LocusContext
     public function getMyName () :PlayerName
     {
         var body :SocializerObject = getSocializerObject();
@@ -96,13 +96,13 @@ public class RoomContext
         return (body != null) ? body.name : null;
     }
 
-    // from WorldContext
-    public function getWorldClient () :WorldClient
+    // from LocusContext
+    public function getLocusClient () :LocusClient
     {
         return _client;
     }
 
-    // from WorldContext
+    // from LocusContext
     public function go (locus :Locus) :void
     {
         var sceneDir :OrthSceneDirector = _module.getInstance(SceneDirector);
@@ -121,8 +121,8 @@ public class RoomContext
         return _client.getClientObject() as SocializerObject;
     }
 
-    protected const _client :WorldClient = inject(WorldClient);
+    protected const _client :LocusClient = inject(LocusClient);
     protected const _topPanel :TopPanel = inject(TopPanel);
-    protected const _module :WorldModule = inject(WorldModule);
+    protected const _module :LocusModule = inject(LocusModule);
 }
 }

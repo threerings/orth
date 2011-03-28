@@ -43,7 +43,7 @@ import com.threerings.orth.party.data.PartyDetail;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.room.data.RoomLocus;
-import com.threerings.orth.world.client.WorldDirector;
+import com.threerings.orth.locus.client.LocusDirector;
 
 /**
  * Manages party stuff on the client.
@@ -295,7 +295,7 @@ public class PartyDirector extends BasicDirector
     protected function checkFollowScene () :void
     {
         if (_partyObj.sceneId != 0) {
-            _worldDir.moveTo(new RoomLocus(_partyObj.sceneId));
+            _locusDir.moveTo(new RoomLocus(_partyObj.sceneId));
         }
     }
 
@@ -324,7 +324,7 @@ public class PartyDirector extends BasicDirector
         _pctx = null;
         clearParty(); // clear the rest
 
-        // report via world chat that we lost our party connection
+        // report via locus chat that we lost our party connection
         if (cause != null) {
             _octx.displayFeedback(OrthCodes.PARTY_MSGS,
                 MessageBundle.tcompose("e.lost_party", cause.message));
@@ -468,7 +468,7 @@ public class PartyDirector extends BasicDirector
     protected var _module :Module = inject(Module);
 
     protected var _notDir :NotificationDirector = inject(NotificationDirector);
-    protected var _worldDir :WorldDirector = inject(WorldDirector);
+    protected var _locusDir :LocusDirector = inject(LocusDirector);
 
     protected var _octx :OrthContext = inject(OrthContext);
 

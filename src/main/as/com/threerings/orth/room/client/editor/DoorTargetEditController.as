@@ -20,7 +20,7 @@ import com.threerings.orth.room.client.updates.FurniUpdateAction;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.world.client.WorldController;
+import com.threerings.orth.locus.client.LocusController;
 
 /**
  * This controller handles in-world door editing. The player picks a door to edit, then travels
@@ -128,7 +128,7 @@ public class DoorTargetEditController
 
 // ORTH TODO
 //        var showRooms :CommandButton = new CommandButton(Msgs.EDITING.get("b.show_rooms"),
-//            _worldCtrl.displayPage, [ "people", "rooms_" + _ctx.getMyName().getId() ]);
+//            _locusCtrl.displayPage, [ "people", "rooms_" + _ctx.getMyName().getId() ]);
 //        showRooms.styleName = "orangeButton";
 //        panel.addChild(showRooms);
 
@@ -235,7 +235,7 @@ public class DoorTargetEditController
     /** Canvas that contains the editing UI. */
     protected var _ui :FloatingPanel;
 
-    protected const _worldCtrl :WorldController = inject(WorldController);
+    protected const _locusCtrl :LocusController = inject(LocusController);
 
     protected const _sceneDir :SceneDirector = inject(SceneDirector);
 

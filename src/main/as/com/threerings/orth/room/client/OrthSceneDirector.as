@@ -21,8 +21,8 @@ import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.room.data.RoomLocus;
-import com.threerings.orth.world.client.WorldContext;
-import com.threerings.orth.world.client.WorldDirector;
+import com.threerings.orth.locus.client.LocusContext;
+import com.threerings.orth.locus.client.LocusDirector;
 
 /**
  * Handles custom scene traversal and extra bits for Whirled.
@@ -37,7 +37,7 @@ public class OrthSceneDirector extends SceneDirector
 
     public function OrthSceneDirector ()
     {
-        super(inject(WorldContext), inject(LocationDirector),
+        super(inject(LocusContext), inject(LocationDirector),
             inject(SceneRepository), new OrthSceneFactory());
     }
 
@@ -64,7 +64,7 @@ public class OrthSceneDirector extends SceneDirector
             return false;
         }
 
-        _worldDir.moveTo(new RoomLocus(dest.targetSceneId, dest.dest));
+        _locusDir.moveTo(new RoomLocus(dest.targetSceneId, dest.dest));
         return true;
     }
 
@@ -125,7 +125,7 @@ public class OrthSceneDirector extends SceneDirector
 
     protected var _pendingLocation :OrthLocation;
 
-    protected const _worldDir :WorldDirector = inject(WorldDirector);
+    protected const _locusDir :LocusDirector = inject(LocusDirector);
 
 }
 }

@@ -1,6 +1,6 @@
 //
 // $Id: $
-package com.threerings.orth.world.client
+package com.threerings.orth.locus.client
 {
 import flashx.funk.ioc.inject;
 
@@ -16,11 +16,11 @@ import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 
 /**
- * A client for connection to a world server. This class will autologon upon creation.
+ * A client for connection to a locus server. This class will autologon upon creation.
  */
-public class WorldClient extends CrowdClient
+public class LocusClient extends CrowdClient
 {
-    public function WorldClient ()
+    public function LocusClient ()
     {
         // let the policy loader know about us
         PolicyLoader.registerClient(this, _config.policyPort);

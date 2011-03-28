@@ -23,23 +23,23 @@ import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.world.client.AbstractWorldModule;
-import com.threerings.orth.world.client.WorldContext;
-import com.threerings.orth.world.client.WorldModule;
+import com.threerings.orth.locus.client.AbstractLocusModule;
+import com.threerings.orth.locus.client.LocusContext;
+import com.threerings.orth.locus.client.LocusModule;
 
 /**
  * This is the beating heart of an Orth-based client. It provides access to the Aether client
  * and its associated distributed object manager along with all the directors responsible for
  * the services that take place over the Aether link.
  *
- * Whenever the player is in a world location, this context additionally returns a non-null
- * reference to a {@link WorldContext}, which is the nexus of the entirely distinct other half
+ * Whenever the player is in a locus location, this context additionally returns a non-null
+ * reference to a {@link LocusContext}, which is the nexus of the entirely distinct other half
  * of the client's workings: a separate client connected to its own server and distributed object
  * system and, consequently, a different set of directors to take advantage of it all.
  *
  * Never confuse the two contexts. They represent different systems. This one is primary, in that
  * there is always an {@link OrthContext} and always an {@link AetherClient}, but only some of
- * the time is that true for {@link WorldContext} and {@link WorldClient}.
+ * the time is that true for {@link LocusContext} and {@link LocusClient}.
  */
 public class OrthContext
     implements PresentsContext
@@ -69,29 +69,29 @@ public class OrthContext
     }
 
     /**
-     * Return a reference to the current {@link WorldContext}, or null if the player is
+     * Return a reference to the current {@link LocusContext}, or null if the player is
      * not currently in a location.
      */
-    public function get wctx () :WorldContext
+    public function get wctx () :LocusContext
     {
         return _wctx;
     }
 
     /**
-     * Instantiate a new {@link AbstractWorldModule} and use it to fire up a {@link WorldContext}
+     * Instantiate a new {@link AbstractLocusModule} and use it to fire up a {@link LocusContext}
      * of the correct concrete subtype, which in turn will instantiate all the necessary
      * infrastructure.
      */
-    public function setupWorld (moduleClass :Class) :void
+    public function setupLocus (moduleClass :Class) :void
     {
-        // instantiate the correct WorldModule subclass
-        var wMod :AbstractWorldModule = new moduleClass();
+        // instantiate the correct LocusModule subclass
+        var wMod :AbstractLocusModule = new moduleClass();
 
-        var cMod :WorldModule = wMod.init(_module);
+        var cMod :LocusModule = wMod.init(_module);
 
-        // and finally use it to bring the correct WorldContext subclass to life
-        log.info("Initializing new WorldContext", "mod", cMod);
-        _wctx = cMod.getInstance(WorldContext);
+        // and finally use it to bring the correct LocusContext subclass to life
+        log.info("Initializing new LocusContext", "mod", cMod);
+        _wctx = cMod.getInstance(LocusContext);
     }
 
     /**
@@ -173,7 +173,7 @@ public class OrthContext
     protected const _client :AetherClient = inject(AetherClient);
     protected const _module :OrthModule = inject(OrthModule);
 
-    protected var _wctx :WorldContext;
+    protected var _wctx :LocusContext;
 
     protected static const log :Log = Log.getLog(OrthContext);
 }

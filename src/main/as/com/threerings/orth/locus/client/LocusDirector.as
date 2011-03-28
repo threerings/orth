@@ -1,4 +1,4 @@
-package com.threerings.orth.world.client {
+package com.threerings.orth.locus.client {
 import flash.utils.getQualifiedClassName;
 
 import flashx.funk.ioc.inject;
@@ -22,10 +22,10 @@ import com.threerings.orth.locus.data.LocusMarshaller;
 import com.threerings.orth.room.data.HostedRoom;
 
 /**
- * Handles moving around in the virtual world.
+ * Handles moving around in the virtual locus.
  *
  */
-public class WorldDirector extends BasicDirector
+public class LocusDirector extends BasicDirector
     implements LocusService_LocusMaterializationListener
 {
     public const log :Log = Log.getLog(this);
@@ -34,13 +34,13 @@ public class WorldDirector extends BasicDirector
     LocusMarshaller;
     HostedRoom;
 
-    public function WorldDirector (externalObserver :ClientObserver = null)
+    public function LocusDirector (externalObserver :ClientObserver = null)
     {
         super(_octx);
 
         _externalObserver = externalObserver;
 
-        _observer = new ClientAdapter(null, worldLogon, null, null, worldFail, worldFail);
+        _observer = new ClientAdapter(null, locusLogon, null, null, locusFail, locusFail);
     }
 
     // TODO: Obviously this should be an addExternalObserver, TODO soon
@@ -68,7 +68,7 @@ public class WorldDirector extends BasicDirector
         _lsvc.materializeLocus(_pending, this);
     }
 
-    // from Java WorldService_PlaceResolutionListener
+    // from Java LocusService_PlaceResolutionListener
     public function requestFailed (cause :String) :void
     {
         // clear our pending move
@@ -78,59 +78,59 @@ public class WorldDirector extends BasicDirector
         _octx.displayFeedback(OrthCodes.WORLD_MSGS, cause);
     }
 
-    // from Java WorldService_PlaceResolutionListener
+    // from Java LocusService_PlaceResolutionListener
     public function locusMaterialized (hosted :HostedLocus) :void
     {
         // note our peer
         _pendingPeer = hosted.host;
 
-        var worldClient :WorldClient = (_octx.wctx != null) ? _octx.wctx.getWorldClient() : null;
+        var locusClient :LocusClient = (_octx.wctx != null) ? _octx.wctx.getLocusClient() : null;
 
 
-        // if we're switching place types, we need to instantiate a new world system
+        // if we're switching place types, we need to instantiate a new locus system
         if (_current == null ||
             getQualifiedClassName(_pending) != getQualifiedClassName(_current)) {
-            _octx.setupWorld(_pending.moduleClass);
+            _octx.setupLocus(_pending.moduleClass);
 
-        } else if (worldClient.isConnected() && _pendingPeer == _currentPeer) {
+        } else if (locusClient.isConnected() && _pendingPeer == _currentPeer) {
             // this is the special case where we're already on the right peer
             gotoPendingPlace();
             return;
         }
 
         // otherwise, we need to log out
-        if (worldClient != null) {
+        if (locusClient != null) {
             // first stop listening to the client
-            worldClient.removeClientObserver(_observer);
+            locusClient.removeClientObserver(_observer);
             if (_externalObserver != null) {
-                worldClient.removeClientObserver(_externalObserver);
+                locusClient.removeClientObserver(_externalObserver);
             }
 
             // the really cut the cord
-            worldClient.logoff(false);
+            locusClient.logoff(false);
         }
 
         // make sure we're manipulating the right client henceforth
-        worldClient = _octx.wctx.getWorldClient();
+        locusClient = _octx.wctx.getLocusClient();
 
         // listen to it
-        worldClient.addClientObserver(_observer);
+        locusClient.addClientObserver(_observer);
         if (_externalObserver != null) {
-            worldClient.addClientObserver(_externalObserver);
+            locusClient.addClientObserver(_externalObserver);
         }
 
         // and finally log on
-        worldClient.logonTo(_pendingPeer, hosted.ports);
+        locusClient.logonTo(_pendingPeer, hosted.ports);
     }
 
-    // called if our connection to the world server fails or we fail to login
-    public function worldFail (event :ClientEvent) :void
+    // called if our connection to the locus server fails or we fail to login
+    public function locusFail (event :ClientEvent) :void
     {
-        log.warning("World connection failed", "place", _current, "event", event);
+        log.warning("Locus connection failed", "place", _current, "event", event);
         _octx.displayFeedback(OrthCodes.WORLD_MSGS, "Connection failed");
     }
 
-    protected function worldLogon (event :ClientEvent) :void
+    protected function locusLogon (event :ClientEvent) :void
     {
         _currentPeer = _pendingPeer;
         gotoPendingPlace();
@@ -139,9 +139,9 @@ public class WorldDirector extends BasicDirector
     protected function gotoPendingPlace () :void
     {
         Preconditions.checkNotNull(_octx.wctx,
-            "We logged onto a world server but the world context is gone!");
+            "We logged onto a locus server but the locus context is gone!");
 
-        // we successfully logged on; hand control over to the world implementation
+        // we successfully logged on; hand control over to the locus implementation
         _current = _pending;
 
         // squirrel this away before we reset our class members

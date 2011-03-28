@@ -16,9 +16,9 @@ import com.threerings.orth.room.data.OrthRoomConfig;
 import com.threerings.orth.room.data.RoomAuthName;
 import com.threerings.orth.room.data.RoomCredentials;
 import com.threerings.orth.room.data.RoomPlace;
-import com.threerings.orth.world.client.WorldClient;
+import com.threerings.orth.locus.client.LocusClient;
 
-public class RoomClient extends WorldClient
+public class RoomClient extends LocusClient
 {
     // reference classes that would otherwise not be linked in
     RoomAuthName;
