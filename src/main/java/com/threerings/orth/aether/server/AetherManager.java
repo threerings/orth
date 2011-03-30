@@ -240,5 +240,5 @@ public class AetherManager
     @Inject protected PlayerLocator _locator;
     @Inject protected OrthPeerManager _peermgr;
     @Inject protected RelationshipRepository _friendrepo;
-    @Inject @MainInvoker Invoker _invoker;
+    @Inject protected @MainInvoker Invoker _invoker;
 }
