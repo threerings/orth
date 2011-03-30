@@ -22,8 +22,21 @@ import com.threerings.orth.aether.client.PlayerService;
 public class PlayerMarshaller extends InvocationMarshaller
     implements PlayerService
 {
+    /** The method id used to dispatch <code>acceptFriendshipRequest</code> requests. */
+    public static const ACCEPT_FRIENDSHIP_REQUEST :int = 1;
+
+    // from interface PlayerService
+    public function acceptFriendshipRequest (arg1 :int, arg2 :InvocationService_InvocationListener) :void
+    {
+        var listener2 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(ACCEPT_FRIENDSHIP_REQUEST, [
+            Integer.valueOf(arg1), listener2
+        ]);
+    }
+
     /** The method id used to dispatch <code>ditchFollower</code> requests. */
-    public static const DITCH_FOLLOWER :int = 1;
+    public static const DITCH_FOLLOWER :int = 2;
 
     // from interface PlayerService
     public function ditchFollower (arg1 :int, arg2 :InvocationService_InvocationListener) :void
@@ -36,7 +49,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch <code>followPlayer</code> requests. */
-    public static const FOLLOW_PLAYER :int = 2;
+    public static const FOLLOW_PLAYER :int = 3;
 
     // from interface PlayerService
     public function followPlayer (arg1 :int, arg2 :InvocationService_InvocationListener) :void
@@ -49,7 +62,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch <code>inviteToFollow</code> requests. */
-    public static const INVITE_TO_FOLLOW :int = 3;
+    public static const INVITE_TO_FOLLOW :int = 4;
 
     // from interface PlayerService
     public function inviteToFollow (arg1 :int, arg2 :InvocationService_InvocationListener) :void
@@ -61,8 +74,21 @@ public class PlayerMarshaller extends InvocationMarshaller
         ]);
     }
 
+    /** The method id used to dispatch <code>requestFriendship</code> requests. */
+    public static const REQUEST_FRIENDSHIP :int = 5;
+
+    // from interface PlayerService
+    public function requestFriendship (arg1 :int, arg2 :InvocationService_InvocationListener) :void
+    {
+        var listener2 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(REQUEST_FRIENDSHIP, [
+            Integer.valueOf(arg1), listener2
+        ]);
+    }
+
     /** The method id used to dispatch <code>setAvatar</code> requests. */
-    public static const SET_AVATAR :int = 4;
+    public static const SET_AVATAR :int = 6;
 
     // from interface PlayerService
     public function setAvatar (arg1 :int, arg2 :InvocationService_ConfirmListener) :void

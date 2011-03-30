@@ -8,14 +8,24 @@ import static com.threerings.orth.Log.log;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.notify.data.FriendInviteNotification;
+import com.threerings.orth.notify.server.NotificationManager;
+import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.presents.annotation.EventThread;
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.client.InvocationService.InvocationListener;
+import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
+import com.threerings.presents.peer.data.NodeObject;
+import com.threerings.presents.peer.server.NodeRequestsListener;
+import com.threerings.presents.peer.server.PeerManager;
+import com.threerings.presents.peer.server.PeerManager.NodeRequest;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
@@ -26,6 +36,25 @@ import com.threerings.presents.server.InvocationManager;
 public class AetherManager
     implements PlayerProvider
 {
+    public static class FriendshipRequest extends PlayerNodeRequest
+    {
+        public FriendshipRequest (PlayerName sender, int targetPlayerId)
+        {
+            super(targetPlayerId);
+            _sender = sender;
+        }
+
+        @Override
+        protected void execute (PlayerObject player, ResultListener listener)
+        {
+            _notMgr.notify(player, new FriendInviteNotification(_sender));
+            listener.requestProcessed(null);
+        }
+
+        protected PlayerName _sender;
+        @Inject transient NotificationManager _notMgr;
+    }
+
     @Inject public AetherManager (InvocationManager invmgr)
     {
         // register our bootstrap invocation service
@@ -125,8 +154,35 @@ public class AetherManager
         // final PlayerObject user = (PlayerObject) caller;
     }
 
+    @Override
+    public void requestFriendship (ClientObject caller, int targetId,
+        final InvocationListener listener)
+        throws InvocationException
+    {
+        PlayerObject player = (PlayerObject)caller;
+        _peermgr.invokeNodeRequest(new FriendshipRequest(player.getPlayerName(), targetId),
+                new NodeRequestsListener<Void>() {
+            @Override public void requestsProcessed (NodeRequestsResult<Void> result) {
+                // yay no need to respond
+            }
+            @Override public void requestFailed (String cause) {
+                listener.requestFailed(cause);
+            }
+        });
+    }
+
+    @Override
+    public void acceptFriendshipRequest (
+        ClientObject caller, int senderId, InvocationListener listener)
+        throws InvocationException
+    {
+        // TODO
+        listener.requestFailed(AetherCodes.E_INTERNAL_ERROR);
+    }
+
     // ORTH TODO: Implement NotificationManager
     // @Inject protected NotificationManager _notifyMan;
     @Inject protected PlayerNodeActions _actions;
     @Inject protected PlayerLocator _locator;
+    @Inject protected OrthPeerManager _peermgr;
 }

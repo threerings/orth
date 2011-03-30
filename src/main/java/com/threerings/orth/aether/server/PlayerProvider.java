@@ -18,6 +18,12 @@ import com.threerings.presents.server.InvocationProvider;
 public interface PlayerProvider extends InvocationProvider
 {
     /**
+     * Handles a {@link PlayerService#acceptFriendshipRequest} request.
+     */
+    void acceptFriendshipRequest (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)
+        throws InvocationException;
+
+    /**
      * Handles a {@link PlayerService#ditchFollower} request.
      */
     void ditchFollower (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)
@@ -33,6 +39,12 @@ public interface PlayerProvider extends InvocationProvider
      * Handles a {@link PlayerService#inviteToFollow} request.
      */
     void inviteToFollow (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)
+        throws InvocationException;
+
+    /**
+     * Handles a {@link PlayerService#requestFriendship} request.
+     */
+    void requestFriendship (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)
         throws InvocationException;
 
     /**

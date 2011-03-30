@@ -12,6 +12,9 @@ import com.threerings.presents.client.InvocationService_InvocationListener;
 public interface PlayerService extends InvocationService
 {
     // from Java interface PlayerService
+    function acceptFriendshipRequest (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
+
+    // from Java interface PlayerService
     function ditchFollower (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface PlayerService
@@ -19,6 +22,9 @@ public interface PlayerService extends InvocationService
 
     // from Java interface PlayerService
     function inviteToFollow (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
+
+    // from Java interface PlayerService
+    function requestFriendship (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface PlayerService
     function setAvatar (arg1 :int, arg2 :InvocationService_ConfirmListener) :void;

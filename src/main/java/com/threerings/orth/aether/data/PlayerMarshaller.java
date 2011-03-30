@@ -20,8 +20,21 @@ import com.threerings.presents.data.InvocationMarshaller;
 public class PlayerMarshaller extends InvocationMarshaller
     implements PlayerService
 {
+    /** The method id used to dispatch {@link #acceptFriendshipRequest} requests. */
+    public static final int ACCEPT_FRIENDSHIP_REQUEST = 1;
+
+    // from interface PlayerService
+    public void acceptFriendshipRequest (int arg1, InvocationService.InvocationListener arg2)
+    {
+        ListenerMarshaller listener2 = new ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(ACCEPT_FRIENDSHIP_REQUEST, new Object[] {
+            Integer.valueOf(arg1), listener2
+        });
+    }
+
     /** The method id used to dispatch {@link #ditchFollower} requests. */
-    public static final int DITCH_FOLLOWER = 1;
+    public static final int DITCH_FOLLOWER = 2;
 
     // from interface PlayerService
     public void ditchFollower (int arg1, InvocationService.InvocationListener arg2)
@@ -34,7 +47,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #followPlayer} requests. */
-    public static final int FOLLOW_PLAYER = 2;
+    public static final int FOLLOW_PLAYER = 3;
 
     // from interface PlayerService
     public void followPlayer (int arg1, InvocationService.InvocationListener arg2)
@@ -47,7 +60,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #inviteToFollow} requests. */
-    public static final int INVITE_TO_FOLLOW = 3;
+    public static final int INVITE_TO_FOLLOW = 4;
 
     // from interface PlayerService
     public void inviteToFollow (int arg1, InvocationService.InvocationListener arg2)
@@ -59,8 +72,21 @@ public class PlayerMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #requestFriendship} requests. */
+    public static final int REQUEST_FRIENDSHIP = 5;
+
+    // from interface PlayerService
+    public void requestFriendship (int arg1, InvocationService.InvocationListener arg2)
+    {
+        ListenerMarshaller listener2 = new ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(REQUEST_FRIENDSHIP, new Object[] {
+            Integer.valueOf(arg1), listener2
+        });
+    }
+
     /** The method id used to dispatch {@link #setAvatar} requests. */
-    public static final int SET_AVATAR = 4;
+    public static final int SET_AVATAR = 6;
 
     // from interface PlayerService
     public void setAvatar (int arg1, InvocationService.ConfirmListener arg2)
