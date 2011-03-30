@@ -14,10 +14,10 @@ import com.threerings.whirled.spot.client.SpotSceneDirector;
 import com.threerings.util.MessageManager;
 
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.room.client.FakeChatDirector;
 import com.threerings.orth.locus.client.AbstractLocusModule;
 import com.threerings.orth.locus.client.LocusClient;
 import com.threerings.orth.locus.client.LocusContext;
+import com.threerings.orth.room.client.FakeChatDirector;
 
 public class RoomModule extends AbstractLocusModule
 {

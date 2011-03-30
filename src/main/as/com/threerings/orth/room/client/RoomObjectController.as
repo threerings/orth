@@ -38,6 +38,7 @@ import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.entity.data.Avatar;
 import com.threerings.orth.entity.data.PetOrders;
+import com.threerings.orth.locus.client.BootablePlaceController;
 import com.threerings.orth.room.client.editor.DoorTargetEditController;
 import com.threerings.orth.room.client.editor.RoomEditorController;
 import com.threerings.orth.room.client.updates.UpdateAction;
@@ -54,7 +55,6 @@ import com.threerings.orth.room.data.PetName;
 import com.threerings.orth.room.data.SocializerInfo;
 import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.ui.MediaWrapper;
-import com.threerings.orth.locus.client.BootablePlaceController;
 
 /**
  * Manages the various interactions that take place in a room scene.

@@ -14,13 +14,13 @@ import com.threerings.whirled.data.Scene;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
 
 import com.threerings.orth.client.Msgs;
+import com.threerings.orth.locus.client.LocusController;
 import com.threerings.orth.room.client.RoomObjectController;
 import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 import com.threerings.orth.room.client.updates.FurniUpdateAction;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.locus.client.LocusController;
 
 /**
  * This controller handles in-world door editing. The player picks a door to edit, then travels

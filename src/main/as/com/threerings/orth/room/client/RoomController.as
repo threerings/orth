@@ -57,6 +57,9 @@ import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.MemberSprite;
+import com.threerings.orth.locus.client.BootablePlaceController;
+import com.threerings.orth.locus.client.LocusController;
+import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.room.client.RoomElement;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityIdent;
@@ -66,9 +69,6 @@ import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.PetName;
 import com.threerings.orth.room.data.SimpleEntityIdent;
 import com.threerings.orth.ui.MediaWrapper;
-import com.threerings.orth.locus.client.BootablePlaceController;
-import com.threerings.orth.locus.client.LocusController;
-import com.threerings.orth.locus.client.LocusDirector;
 
 /**
  * Manages the various interactions that take place in a room scene.

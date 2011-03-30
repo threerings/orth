@@ -19,12 +19,12 @@ import com.threerings.presents.dobj.DObjectManager;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.TopPanel;
-import com.threerings.orth.locus.data.Locus;
-import com.threerings.orth.room.client.FakeChatDirector;
-import com.threerings.orth.room.data.SocializerObject;
 import com.threerings.orth.locus.client.LocusClient;
 import com.threerings.orth.locus.client.LocusContext;
 import com.threerings.orth.locus.client.LocusModule;
+import com.threerings.orth.locus.data.Locus;
+import com.threerings.orth.room.client.FakeChatDirector;
+import com.threerings.orth.room.data.SocializerObject;
 
 /**
  * Defines services for the Room client.
