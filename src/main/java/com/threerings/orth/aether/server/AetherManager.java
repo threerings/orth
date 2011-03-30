@@ -36,25 +36,6 @@ import com.threerings.presents.server.InvocationManager;
 public class AetherManager
     implements PlayerProvider
 {
-    public static class FriendshipRequest extends PlayerNodeRequest
-    {
-        public FriendshipRequest (PlayerName sender, int targetPlayerId)
-        {
-            super(targetPlayerId);
-            _sender = sender;
-        }
-
-        @Override
-        protected void execute (PlayerObject player, ResultListener listener)
-        {
-            _notMgr.notify(player, new FriendInviteNotification(_sender));
-            listener.requestProcessed(null);
-        }
-
-        protected PlayerName _sender;
-        @Inject transient NotificationManager _notMgr;
-    }
-
     @Inject public AetherManager (InvocationManager invmgr)
     {
         // register our bootstrap invocation service
@@ -160,6 +141,8 @@ public class AetherManager
         throws InvocationException
     {
         final PlayerObject player = (PlayerObject)caller;
+
+        // anti-spam logic
         final Map<Integer, Long> pending = player.getLocal(PlayerLocal.class).pendingFriendRequests;
         Long lastRequest = pending.get(targetId);
         long now = System.currentTimeMillis();
@@ -167,8 +150,15 @@ public class AetherManager
             throw new InvocationException(AetherCodes.FRIEND_REQUEST_ALREADY_SENT);
         }
         pending.put(targetId, now);
-        _peermgr.invokeNodeRequest(new FriendshipRequest(player.getPlayerName(), targetId),
-                new NodeRequestsListener<Void>() {
+
+        // ok, notify the other player, wherever they are
+        _peermgr.invokeNodeRequest(new PlayerNodeRequest(targetId) {
+            @Override protected void execute (PlayerObject player, ResultListener listener) {
+                _notMgr.notify(player, new FriendInviteNotification(player.getPlayerName()));
+                listener.requestProcessed(null);
+            }
+            @Inject transient NotificationManager _notMgr;
+        }, new NodeRequestsListener<Void>() {
             @Override public void requestsProcessed (NodeRequestsResult<Void> result) {
             }
             @Override public void requestFailed (String cause) {
