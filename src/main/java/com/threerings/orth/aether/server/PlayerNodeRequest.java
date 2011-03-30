@@ -15,15 +15,10 @@ import com.threerings.presents.peer.server.PeerManager.NodeRequest;
  */
 public abstract class PlayerNodeRequest extends NodeRequest
 {
-    /** De-serializable */
-    public PlayerNodeRequest ()
-    {
-    }
-
     /**
      * Creates a new requests targeting the given player id.
      */
-    protected PlayerNodeRequest (int targetPlayerId)
+    public PlayerNodeRequest (int targetPlayerId)
     {
         _targetPlayer = AetherAuthName.makeKey(targetPlayerId);
     }

@@ -13,9 +13,6 @@ public class FriendInviteNotification extends Notification
         _sender = sender;
     }
 
-    /** For deserialization */
-    public FriendInviteNotification() {}
-
     @Override
     public String getAnnouncement ()
     {
