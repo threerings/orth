@@ -2,12 +2,9 @@ package com.threerings.orth.aether.server.persist;
 
 import java.util.Collection;
 
-import com.google.inject.Singleton;
-
 /**
  * Methods for managing persistent relationships between players.
  */
-@Singleton
 public interface RelationshipRepository
 {
     /**
