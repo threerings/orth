@@ -5,9 +5,7 @@ import com.google.inject.Inject;
 
 import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.data.AuthName;
-import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.OrthPlayerRecord;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
 import com.threerings.presents.data.ClientObject;
