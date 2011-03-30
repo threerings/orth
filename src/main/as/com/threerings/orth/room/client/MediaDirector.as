@@ -23,11 +23,11 @@ import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.ParallaxSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.entity.data.Decor;
+import com.threerings.orth.locus.client.LocusContext;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.PetInfo;
 import com.threerings.orth.room.data.SocializerInfo;
-import com.threerings.orth.locus.client.LocusContext;
 
 /**
  * Handles the loading of various media.

@@ -14,8 +14,8 @@ import com.threerings.presents.dobj.MessageEvent;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.locus.client.LocusDirector;
+import com.threerings.orth.room.data.RoomLocus;
 
 /**
  * Handles player-oriented requests.

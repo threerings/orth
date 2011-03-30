@@ -9,9 +9,9 @@ import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.util.CommandEvent;
 
+import com.threerings.orth.locus.client.LocusContext;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.SocializerInfo;
-import com.threerings.orth.locus.client.LocusContext;
 
 /**
  * Displays a sprite for a member in a scene.

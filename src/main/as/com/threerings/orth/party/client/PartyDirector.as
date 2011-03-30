@@ -33,6 +33,7 @@ import com.threerings.presents.util.SafeSubscriber;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.party.data.PartyAuthName;
@@ -43,7 +44,6 @@ import com.threerings.orth.party.data.PartyDetail;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.room.data.RoomLocus;
-import com.threerings.orth.locus.client.LocusDirector;
 
 /**
  * Manages party stuff on the client.
