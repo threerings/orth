@@ -10,16 +10,23 @@ import java.util.Map;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import com.samskivert.util.Invoker;
+
 import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
+import com.threerings.orth.data.FriendEntry;
+import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.notify.data.FriendInviteNotification;
 import com.threerings.orth.notify.server.NotificationManager;
+import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.presents.annotation.EventThread;
+import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.client.InvocationService.ResultListener;
@@ -170,11 +177,59 @@ public class AetherManager
 
     @Override
     public void acceptFriendshipRequest (
-        ClientObject caller, int senderId, InvocationListener listener)
+        ClientObject caller, final int senderId, final InvocationListener listener)
         throws InvocationException
     {
-        // TODO: post a peer request for the senderId and persist it
-        listener.requestFailed(AetherCodes.E_INTERNAL_ERROR);
+        final PlayerObject acceptingPlayer = (PlayerObject)caller;
+        final int acceptingPlayerId = acceptingPlayer.getPlayerId();
+
+        // forward this acceptance to the server the other player is on
+        _peermgr.invokeNodeRequest(new PlayerNodeRequest(senderId) {
+            @Inject transient OrthPeerManager peermgr;
+            @Override protected void execute (PlayerObject sender, ResultListener listener) {
+                PlayerLocal local = sender.getLocal(PlayerLocal.class);
+                if (local.pendingFriendRequests.remove(acceptingPlayerId) == null) {
+                    log.warning("Uninvited friend acceptance!", "playerId", acceptingPlayerId,
+                        "sender", _targetPlayer);
+                    listener.requestFailed(AetherCodes.INTERNAL_ERROR);
+                    return;
+                }
+
+                // add the friend!
+                addFriend(sender, peermgr.locatePlayer(acceptingPlayerId));
+
+                // finished, go back to the original peer
+                listener.requestProcessed(null);
+            }
+        }, new NodeRequestsListener<Void>() {
+            @Override public void requestsProcessed (NodeRequestsResult<Void> result) {
+                // all clear, add the friend!
+                addFriend(acceptingPlayer, _peermgr.locatePlayer(senderId));
+
+                // persist: friends4evah
+                _invoker.postRunnable(new Runnable() {
+                   @Override public void run () {
+                       _friendrepo.addFriendship(acceptingPlayerId, senderId);
+                   }
+                   @Override public String toString () {
+                       return "Add friends";
+                   }
+                });
+            }
+            @Override public void requestFailed (String cause) {
+                listener.requestFailed(cause);
+            }
+        });
+    }
+
+    protected static void addFriend (PlayerObject player, OrthClientInfo other)
+    {
+        if (other == null) {
+            return;
+        }
+        String status = null; // TODO
+        MediaDesc photo = null; // TODO
+        player.addToFriends(new FriendEntry(new VizPlayerName(other.playerName, photo), status));
     }
 
     protected static final long MIN_FRIEND_REQUEST_PERIOD = 60 * 1000L;
@@ -185,4 +240,5 @@ public class AetherManager
     @Inject protected PlayerLocator _locator;
     @Inject protected OrthPeerManager _peermgr;
     @Inject protected RelationshipRepository _friendrepo;
+    @Inject @MainInvoker Invoker _invoker;
 }

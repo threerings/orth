@@ -20,6 +20,7 @@ import com.threerings.presents.peer.server.PeerNode;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.PresentsSession;
 
+import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerLocator;
 import com.threerings.orth.data.AuthName;
@@ -87,6 +88,14 @@ public abstract class OrthPeerManager extends PeerManager
                 return ((OrthNodeObject) nodeobj).hostedRooms.get(place);
             }
         });
+    }
+
+    /**
+     * Locate a client by player id.
+     */
+    public OrthClientInfo locatePlayer (int playerId)
+    {
+        return (OrthClientInfo)locateClient(AetherAuthName.makeKey(playerId));
     }
 
     /**
