@@ -22,10 +22,7 @@ import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.NodeRequestsListener;
-import com.threerings.presents.peer.server.PeerManager;
-import com.threerings.presents.peer.server.PeerManager.NodeRequest;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
