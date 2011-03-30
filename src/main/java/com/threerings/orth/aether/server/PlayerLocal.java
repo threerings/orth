@@ -1,8 +1,10 @@
 package com.threerings.orth.aether.server;
 
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import com.threerings.crowd.server.BodyLocal;
 import com.threerings.orth.notify.data.Notification;
@@ -18,6 +20,10 @@ public class PlayerLocal extends BodyLocal
      * for them. Will be null once the deferred notifications have been dispatched. */
     public List<Notification> deferredNotifications;
 
+    /** Ids of players that this player has sent friend requests to, but have not replied, mapped
+     * to the timestamp when the request was made. */
+    public Map<Integer, Long> pendingFriendRequests;
+
     /**
      * Called during client resolution to prepare this local data for use.
      */
@@ -29,6 +35,7 @@ public class PlayerLocal extends BodyLocal
         // PlayerLocator.Observers are notified because that's precisely when early notifications
         // are likely to be generated
         deferredNotifications = Lists.newArrayList();
+        pendingFriendRequests = Maps.newHashMap();
     }
 
     @Override

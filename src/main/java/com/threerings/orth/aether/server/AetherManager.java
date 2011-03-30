@@ -5,6 +5,8 @@ package com.threerings.orth.aether.server;
 
 import static com.threerings.orth.Log.log;
 
+import java.util.Map;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -12,6 +14,7 @@ import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.notify.data.FriendInviteNotification;
 import com.threerings.orth.notify.server.NotificationManager;
@@ -152,17 +155,24 @@ public class AetherManager
     }
 
     @Override
-    public void requestFriendship (ClientObject caller, int targetId,
+    public void requestFriendship (ClientObject caller, final int targetId,
         final InvocationListener listener)
         throws InvocationException
     {
-        PlayerObject player = (PlayerObject)caller;
+        final PlayerObject player = (PlayerObject)caller;
+        final Map<Integer, Long> pending = player.getLocal(PlayerLocal.class).pendingFriendRequests;
+        Long lastRequest = pending.get(targetId);
+        long now = System.currentTimeMillis();
+        if (lastRequest != null && now - lastRequest < MIN_FRIEND_REQUEST_PERIOD) {
+            throw new InvocationException(AetherCodes.FRIEND_REQUEST_ALREADY_SENT);
+        }
+        pending.put(targetId, now);
         _peermgr.invokeNodeRequest(new FriendshipRequest(player.getPlayerName(), targetId),
                 new NodeRequestsListener<Void>() {
             @Override public void requestsProcessed (NodeRequestsResult<Void> result) {
-                // yay no need to respond
             }
             @Override public void requestFailed (String cause) {
+                pending.remove(targetId);
                 listener.requestFailed(cause);
             }
         });
@@ -173,13 +183,16 @@ public class AetherManager
         ClientObject caller, int senderId, InvocationListener listener)
         throws InvocationException
     {
-        // TODO
+        // TODO: post a peer request for the senderId and persist it
         listener.requestFailed(AetherCodes.E_INTERNAL_ERROR);
     }
+
+    protected static final long MIN_FRIEND_REQUEST_PERIOD = 60 * 1000L;
 
     // ORTH TODO: Implement NotificationManager
     // @Inject protected NotificationManager _notifyMan;
     @Inject protected PlayerNodeActions _actions;
     @Inject protected PlayerLocator _locator;
     @Inject protected OrthPeerManager _peermgr;
+    @Inject protected RelationshipRepository _friendrepo;
 }
