@@ -264,17 +264,17 @@ public class AetherManager
 
         final PlayerLocal local = player.getLocal(PlayerLocal.class);
         final List<FriendEntry> friends = Lists.newArrayListWithCapacity(
-            local.offlineFriendIds.size());
-        for (Iterator<Integer> iter = local.offlineFriendIds.iterator(); iter.hasNext(); ) {
+            local.unresolvedFriendIds.size());
+        for (Iterator<Integer> iter = local.unresolvedFriendIds.iterator(); iter.hasNext(); ) {
             Integer friendId = iter.next();
             OrthClientInfo clientInfo = _peermgr.locatePlayer(friendId);
             if (clientInfo != null) {
                 friends.add(toFriendEntry(clientInfo));
-                local.offlineFriendIds.remove(friendId);
+                local.unresolvedFriendIds.remove(friendId);
             }
         }
 
-        if (local.offlineFriendIds.size() == 0) {
+        if (local.unresolvedFriendIds.size() == 0) {
             initFriends2(player, friends);
             return;
         }
@@ -283,7 +283,7 @@ public class AetherManager
         _invoker.postUnit(new Resulting<Map<Integer, String>>("Load offline friend names") {
             @Override public Map<Integer, String> invokePersist () throws Exception {
                 // if this fails, we will be in a pretty bad state
-                return _playerrepo.resolvePlayerNames(local.offlineFriendIds);
+                return _playerrepo.resolvePlayerNames(local.unresolvedFriendIds);
             }
 
             @Override public void requestCompleted (Map<Integer, String> result) {
@@ -316,7 +316,7 @@ public class AetherManager
         player.setFriends(DSet.newDSet(friends));
 
         // clear out the holding buffer
-        player.getLocal(PlayerLocal.class).offlineFriendIds = null;
+        player.getLocal(PlayerLocal.class).unresolvedFriendIds = null;
     }
 
     protected void shutdownFriends (int memberId)

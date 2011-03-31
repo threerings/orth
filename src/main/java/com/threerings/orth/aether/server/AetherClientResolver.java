@@ -50,7 +50,7 @@ public class AetherClientResolver extends CrowdClientResolver
             "Missing player record for authenticated player? [username=%s]", _username);
 
         // load the friend ids, these will get fully resolved later
-        plobj.getLocal(PlayerLocal.class).offlineFriendIds = Sets.newHashSet(
+        plobj.getLocal(PlayerLocal.class).unresolvedFriendIds = Sets.newHashSet(
             _friendRepo.getFriendIds(playerId));
     }
 

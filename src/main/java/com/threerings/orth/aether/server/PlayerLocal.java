@@ -26,10 +26,10 @@ public class PlayerLocal extends BodyLocal
     public Map<Integer, Long> pendingFriendRequests;
 
     /**
-     * This is set doing client resolution and cleared later after {@link PlayerObject#friends} is
+     * This is set during client resolution and cleared later after {@link PlayerObject#friends} is
      * populated.
      */
-    public Set<Integer> offlineFriendIds;
+    public Set<Integer> unresolvedFriendIds;
 
     /**
      * Called during client resolution to prepare this local data for use.
