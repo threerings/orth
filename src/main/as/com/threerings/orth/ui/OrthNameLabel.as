@@ -44,7 +44,7 @@ public class OrthNameLabel extends Sprite
      * Set the displayed name.
      */
     public function setName (name :String) :void
-    { 
+    {
         TextFieldUtil.updateText(_label, name);
     }
 

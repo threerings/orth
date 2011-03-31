@@ -8,7 +8,7 @@ import flash.display.DisplayObject;
 import com.threerings.orth.data.MediaDesc;
 
 /**
- * To be implemented by any {@link MediaDescs} that supplies a fully instantiated 
+ * To be implemented by any {@link MediaDescs} that supplies a fully instantiated
  * {@link DisplayObject}.
  */
 public interface ObjectMediaDesc extends MediaDesc

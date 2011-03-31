@@ -38,7 +38,7 @@ public class MemberParty extends SimpleStreamableObject
     }
 
 // GENERATED STREAMING END
-    
+
     public function getKey () :Object
     {
         return playerId;

@@ -18,7 +18,7 @@ public class HistoryList
     {
         _chatDir = dir;
     }
-    
+
     /**
      * @return the current size of the history.
      */

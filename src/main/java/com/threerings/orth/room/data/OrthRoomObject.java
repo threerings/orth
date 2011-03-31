@@ -61,7 +61,7 @@ public class OrthRoomObject extends SpotSceneObject
 
     /** The background music for this room. */
     public MediaDesc music;
-    
+
     /** Our service marshaller. */
     public OrthRoomMarshaller orthRoomService;
 
