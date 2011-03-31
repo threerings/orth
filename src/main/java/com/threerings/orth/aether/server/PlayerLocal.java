@@ -2,6 +2,7 @@ package com.threerings.orth.aether.server;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -23,6 +24,12 @@ public class PlayerLocal extends BodyLocal
     /** Ids of players that this player has sent friend requests to, but have not replied, mapped
      * to the timestamp when the request was made. */
     public Map<Integer, Long> pendingFriendRequests;
+
+    /**
+     * This is set doing client resolution and cleared later after {@link PlayerObject#friends} is
+     * populated.
+     */
+    public Set<Integer> offlineFriendIds;
 
     /**
      * Called during client resolution to prepare this local data for use.

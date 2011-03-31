@@ -1,10 +1,12 @@
 package com.threerings.orth.aether.server;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.server.persist.OrthPlayerRecord;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
@@ -47,11 +49,14 @@ public class AetherClientResolver extends CrowdClientResolver
         _playerRec = Preconditions.checkNotNull(_playerRepo.loadPlayer(playerId),
             "Missing player record for authenticated player? [username=%s]", _username);
 
-        // TODO: setup plobj.friends
+        // load the friend ids, these will get fully resolved later
+        plobj.getLocal(PlayerLocal.class).offlineFriendIds = Sets.newHashSet(
+            _friendRepo.getFriendIds(playerId));
     }
 
     protected OrthPlayerRecord _playerRec;
 
     // dependencies
     @Inject protected OrthPlayerRepository _playerRepo;
+    @Inject protected RelationshipRepository _friendRepo;
 }

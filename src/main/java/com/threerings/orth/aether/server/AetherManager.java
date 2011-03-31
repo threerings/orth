@@ -5,13 +5,19 @@ package com.threerings.orth.aether.server;
 
 import static com.threerings.orth.Log.log;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import com.samskivert.util.Invoker;
+import com.samskivert.util.ObserverList;
 
+import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerName;
@@ -25,6 +31,7 @@ import com.threerings.orth.notify.data.FriendInviteNotification;
 import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
+import com.threerings.orth.server.persist.OrthPlayerRepository;
 import com.threerings.presents.annotation.EventThread;
 import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.client.InvocationService;
@@ -35,6 +42,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.peer.server.NodeRequestsListener;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
+import com.threerings.util.Resulting;
 
 /**
  * Manage Orth Players.
@@ -54,7 +62,24 @@ public class AetherManager
      */
     public void init ()
     {
-        // nothing yet
+        _observers = _peermgr.observe(AetherAuthName.class);
+
+        _observers.add(new OrthPeerManager.FarSeeingObserver<PlayerName>() {
+            @Override public void loggedOn (String node, PlayerName member) {
+                boolean local = Objects.equal(_peermgr.getNodeObject().nodeName, node);
+                if (local) {
+                    initFriends(member.getId());
+                }
+                notifyFriends(member.getId(), true);
+            }
+            @Override public void loggedOff (String node, PlayerName member) {
+                boolean local = Objects.equal(_peermgr.getNodeObject().nodeName, node);
+                if (local) {
+                    shutdownFriends(member.getId());
+                }
+                notifyFriends(member.getId(), false);
+            }
+        });
     }
 
     @Override // from interface WorldProvider
@@ -222,23 +247,114 @@ public class AetherManager
         });
     }
 
+    /**
+     * Sets up the members friends and adds to friend tracking.
+     */
+    protected void initFriends (final int memberId)
+    {
+        final PlayerObject player = _locator.lookupPlayer(memberId);
+        if (player == null) {
+            log.warning("Expected the player to be resolved by now", "memberId", memberId);
+            return;
+        }
+        if (player.friends.size() != 0) {
+            log.warning("Friends already? Something is very wrong.", "player", player.who());
+            return;
+        }
+
+        final PlayerLocal local = player.getLocal(PlayerLocal.class);
+        final List<FriendEntry> friends = Lists.newArrayListWithCapacity(
+            local.offlineFriendIds.size());
+        for (Iterator<Integer> iter = local.offlineFriendIds.iterator(); iter.hasNext(); ) {
+            Integer friendId = iter.next();
+            OrthClientInfo clientInfo = _peermgr.locatePlayer(friendId);
+            if (clientInfo != null) {
+                friends.add(toFriendEntry(clientInfo));
+                local.offlineFriendIds.remove(friendId);
+            }
+        }
+
+        if (local.offlineFriendIds.size() == 0) {
+            initFriends2(player, friends);
+            return;
+        }
+
+        // now we need to load the names for offline friends
+        _invoker.postUnit(new Resulting<Map<Integer, String>>("Load offline friend names") {
+            @Override public Map<Integer, String> invokePersist () throws Exception {
+                // if this fails, we will be in a pretty bad state
+                return _playerrepo.resolvePlayerNames(local.offlineFriendIds);
+            }
+
+            @Override public void requestCompleted (Map<Integer, String> result) {
+                if (!player.isActive()) {
+                    log.info("Player logged off prior to getting friends. Sad.",
+                        "player", player.who());
+                    return;
+                }
+
+                for (Map.Entry<Integer, String> pair : result.entrySet()) {
+                    MediaDesc photo = null; // TODO: repo will need to yield more than just String
+                    String status = null; // TODO
+                    friends.add(new FriendEntry(
+                        new VizPlayerName(pair.getValue(), pair.getKey(), photo), status)); 
+                }
+                initFriends2(player, friends);
+            }
+        });
+    }
+
+    protected void initFriends2 (PlayerObject player, List<FriendEntry> friends)
+    {
+        // the player may have had some friends come online already, replace the ones in our list
+        // this is inefficient but very very rare
+        for (FriendEntry entry : player.friends) {
+            friends.remove(entry);
+        }
+
+        // set the friends
+        player.setFriends(DSet.newDSet(friends));
+
+        // clear out the holding buffer
+        player.getLocal(PlayerLocal.class).offlineFriendIds = null;
+    }
+
+    protected void shutdownFriends (int memberId)
+    {
+        // TODO
+    }
+
+    protected void notifyFriends (int memberId, boolean online)
+    {
+        // TODO
+    }
+
+    protected static FriendEntry toFriendEntry (OrthClientInfo info)
+    {
+        MediaDesc photo = null; // TODO: OrthClientInfo#photo ?
+        String status = null; // TODO
+        return new FriendEntry(new VizPlayerName(info.playerName, photo), status);
+    }
+
     protected static void addFriend (PlayerObject player, OrthClientInfo other)
     {
         if (other == null) {
             return;
         }
-        String status = null; // TODO
-        MediaDesc photo = null; // TODO
-        player.addToFriends(new FriendEntry(new VizPlayerName(other.playerName, photo), status));
+        player.addToFriends(toFriendEntry(other));
     }
 
     protected static final long MIN_FRIEND_REQUEST_PERIOD = 60 * 1000L;
+
+    /** Observers of aether logins throughout the cluster. */
+    protected ObserverList<OrthPeerManager.FarSeeingObserver<PlayerName>> _observers;
 
     // ORTH TODO: Implement NotificationManager
     // @Inject protected NotificationManager _notifyMan;
     @Inject protected PlayerNodeActions _actions;
     @Inject protected PlayerLocator _locator;
     @Inject protected OrthPeerManager _peermgr;
+    @Inject protected OrthPlayerRepository _playerrepo;
     @Inject protected RelationshipRepository _friendrepo;
     @Inject protected @MainInvoker Invoker _invoker;
 }
