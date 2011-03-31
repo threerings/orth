@@ -1,4 +1,6 @@
 package com.threerings.orth.locus.client {
+import com.threerings.util.ObserverList;
+
 import flash.utils.getQualifiedClassName;
 
 import flashx.funk.ioc.inject;
@@ -34,19 +36,21 @@ public class LocusDirector extends BasicDirector
     LocusMarshaller;
     HostedRoom;
 
-    public function LocusDirector (externalObserver :ClientObserver = null)
+    public function LocusDirector ()
     {
         super(_octx);
-
-        _externalObserver = externalObserver;
 
         _observer = new ClientAdapter(null, locusLogon, null, null, locusFail, locusFail);
     }
 
-    // TODO: Obviously this should be an addExternalObserver, TODO soon
-    public function setExternalObserver (observer :ClientObserver) :void
+    public function addExternalObserver (observer :ClientObserver) :void
     {
-        _externalObserver = observer;
+        _observers.add(observer);
+    }
+
+    public function removeExternalObserver (observer :ClientObserver) :void
+    {
+        _observers.remove(observer);
     }
 
     /**
@@ -86,9 +90,8 @@ public class LocusDirector extends BasicDirector
 
         var locusClient :LocusClient = (_octx.wctx != null) ? _octx.wctx.getLocusClient() : null;
 
-
         // if we're switching place types, we need to instantiate a new locus system
-        if (_current == null ||
+        if (locusClient == null || _current == null ||
             getQualifiedClassName(_pending) != getQualifiedClassName(_current)) {
             _octx.setupLocus(_pending.moduleClass);
 
@@ -102,9 +105,7 @@ public class LocusDirector extends BasicDirector
         if (locusClient != null) {
             // first stop listening to the client
             locusClient.removeClientObserver(_observer);
-            if (_externalObserver != null) {
-                locusClient.removeClientObserver(_externalObserver);
-            }
+            _observers.apply(locusClient.removeClientObserver);
 
             // the really cut the cord
             locusClient.logoff(false);
@@ -115,9 +116,7 @@ public class LocusDirector extends BasicDirector
 
         // listen to it
         locusClient.addClientObserver(_observer);
-        if (_externalObserver != null) {
-            locusClient.addClientObserver(_externalObserver);
-        }
+        _observers.apply(locusClient.addClientObserver);
 
         // and finally log on
         locusClient.logonTo(_pendingPeer, hosted.ports);
@@ -171,7 +170,8 @@ public class LocusDirector extends BasicDirector
     protected var _octx :OrthContext = inject(OrthContext);
 
     protected var _lsvc :LocusService;
-    protected var _externalObserver :ClientObserver;
+
+    protected var _observers :ObserverList = new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
 
     protected var _observer :ClientObserver;
 
