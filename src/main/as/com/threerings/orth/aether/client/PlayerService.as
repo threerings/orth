@@ -15,6 +15,9 @@ public interface PlayerService extends InvocationService
     function acceptFriendshipRequest (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface PlayerService
+    function dispatchDeferredNotifications () :void;
+
+    // from Java interface PlayerService
     function ditchFollower (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface PlayerService

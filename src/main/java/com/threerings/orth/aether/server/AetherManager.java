@@ -82,6 +82,12 @@ public class AetherManager
         });
     }
 
+    @Override
+    public void dispatchDeferredNotifications (ClientObject caller)
+    {
+        _notifyMan.dispatchDeferredNotifications(caller);
+    }
+
     @Override // from interface WorldProvider
     public void inviteToFollow (final ClientObject caller, final int playerId,
                                 final InvocationService.InvocationListener listener)
@@ -185,11 +191,11 @@ public class AetherManager
 
         // ok, notify the other player, wherever they are
         _peermgr.invokeNodeRequest(new PlayerNodeRequest(targetId) {
+            @Inject transient NotificationManager notMgr;
             @Override protected void execute (PlayerObject player, ResultListener listener) {
-                _notMgr.notify(player, new FriendInviteNotification(player.getPlayerName()));
+                notMgr.notify(player, new FriendInviteNotification(player.getPlayerName()));
                 listener.requestProcessed(null);
             }
-            @Inject transient NotificationManager _notMgr;
         }, new NodeRequestsListener<Void>() {
             @Override public void requestsProcessed (NodeRequestsResult<Void> result) {
             }
@@ -350,7 +356,7 @@ public class AetherManager
     protected ObserverList<OrthPeerManager.FarSeeingObserver<PlayerName>> _observers;
 
     // ORTH TODO: Implement NotificationManager
-    // @Inject protected NotificationManager _notifyMan;
+    @Inject protected NotificationManager _notifyMan;
     @Inject protected PlayerNodeActions _actions;
     @Inject protected PlayerLocator _locator;
     @Inject protected OrthPeerManager _peermgr;

@@ -24,6 +24,11 @@ public interface PlayerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link PlayerService#dispatchDeferredNotifications} request.
+     */
+    void dispatchDeferredNotifications (ClientObject caller);
+
+    /**
      * Handles a {@link PlayerService#ditchFollower} request.
      */
     void ditchFollower (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)

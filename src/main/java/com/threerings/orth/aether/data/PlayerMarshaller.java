@@ -33,8 +33,18 @@ public class PlayerMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #dispatchDeferredNotifications} requests. */
+    public static final int DISPATCH_DEFERRED_NOTIFICATIONS = 2;
+
+    // from interface PlayerService
+    public void dispatchDeferredNotifications ()
+    {
+        sendRequest(DISPATCH_DEFERRED_NOTIFICATIONS, new Object[] {
+        });
+    }
+
     /** The method id used to dispatch {@link #ditchFollower} requests. */
-    public static final int DITCH_FOLLOWER = 2;
+    public static final int DITCH_FOLLOWER = 3;
 
     // from interface PlayerService
     public void ditchFollower (int arg1, InvocationService.InvocationListener arg2)
@@ -47,7 +57,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #followPlayer} requests. */
-    public static final int FOLLOW_PLAYER = 3;
+    public static final int FOLLOW_PLAYER = 4;
 
     // from interface PlayerService
     public void followPlayer (int arg1, InvocationService.InvocationListener arg2)
@@ -60,7 +70,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #inviteToFollow} requests. */
-    public static final int INVITE_TO_FOLLOW = 4;
+    public static final int INVITE_TO_FOLLOW = 5;
 
     // from interface PlayerService
     public void inviteToFollow (int arg1, InvocationService.InvocationListener arg2)
@@ -73,7 +83,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #requestFriendship} requests. */
-    public static final int REQUEST_FRIENDSHIP = 5;
+    public static final int REQUEST_FRIENDSHIP = 6;
 
     // from interface PlayerService
     public void requestFriendship (int arg1, InvocationService.InvocationListener arg2)
@@ -86,7 +96,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #setAvatar} requests. */
-    public static final int SET_AVATAR = 6;
+    public static final int SET_AVATAR = 7;
 
     // from interface PlayerService
     public void setAvatar (int arg1, InvocationService.ConfirmListener arg2)

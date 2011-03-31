@@ -35,8 +35,19 @@ public class PlayerMarshaller extends InvocationMarshaller
         ]);
     }
 
+    /** The method id used to dispatch <code>dispatchDeferredNotifications</code> requests. */
+    public static const DISPATCH_DEFERRED_NOTIFICATIONS :int = 2;
+
+    // from interface PlayerService
+    public function dispatchDeferredNotifications () :void
+    {
+        sendRequest(DISPATCH_DEFERRED_NOTIFICATIONS, [
+            
+        ]);
+    }
+
     /** The method id used to dispatch <code>ditchFollower</code> requests. */
-    public static const DITCH_FOLLOWER :int = 2;
+    public static const DITCH_FOLLOWER :int = 3;
 
     // from interface PlayerService
     public function ditchFollower (arg1 :int, arg2 :InvocationService_InvocationListener) :void
@@ -49,7 +60,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch <code>followPlayer</code> requests. */
-    public static const FOLLOW_PLAYER :int = 3;
+    public static const FOLLOW_PLAYER :int = 4;
 
     // from interface PlayerService
     public function followPlayer (arg1 :int, arg2 :InvocationService_InvocationListener) :void
@@ -62,7 +73,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch <code>inviteToFollow</code> requests. */
-    public static const INVITE_TO_FOLLOW :int = 4;
+    public static const INVITE_TO_FOLLOW :int = 5;
 
     // from interface PlayerService
     public function inviteToFollow (arg1 :int, arg2 :InvocationService_InvocationListener) :void
@@ -75,7 +86,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch <code>requestFriendship</code> requests. */
-    public static const REQUEST_FRIENDSHIP :int = 5;
+    public static const REQUEST_FRIENDSHIP :int = 6;
 
     // from interface PlayerService
     public function requestFriendship (arg1 :int, arg2 :InvocationService_InvocationListener) :void
@@ -88,7 +99,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch <code>setAvatar</code> requests. */
-    public static const SET_AVATAR :int = 6;
+    public static const SET_AVATAR :int = 7;
 
     // from interface PlayerService
     public function setAvatar (arg1 :int, arg2 :InvocationService_ConfirmListener) :void

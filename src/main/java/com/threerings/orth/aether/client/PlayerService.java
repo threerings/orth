@@ -12,6 +12,11 @@ import com.threerings.presents.client.InvocationService;
 public interface PlayerService extends InvocationService
 {
     /**
+     * Lets the server know we are now ready to get our logon notifications.
+     */
+    void dispatchDeferredNotifications ();
+
+    /**
      * Invites the specified player to follow the caller. Passing 0 for the playerId will clear all
      * of the caller's followers.
      */
