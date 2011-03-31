@@ -1,11 +1,10 @@
 package com.threerings.orth.locus.client {
-import com.threerings.util.ObserverList;
-
 import flash.utils.getQualifiedClassName;
 
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
+import com.threerings.util.ObserverList;
 import com.threerings.util.Preconditions;
 
 import com.threerings.presents.client.BasicDirector;
