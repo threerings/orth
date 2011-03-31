@@ -46,6 +46,9 @@ public class OrthModule extends BindingModule
         // the chat overlay is a singleton
         bind(ComicOverlay).asSingleton();
 
+        // as is the placebox
+        bind(OrthPlaceBox).asSingleton();
+
         // editor bits
         bind(RoomEditorController).asSingleton();
         bind(DoorTargetEditController).asSingleton();
