@@ -125,7 +125,7 @@ public abstract class OrthPeerManager extends PeerManager
             ((OrthClientInfo)info).playerName = ((PlayerObject) clobj).playerName;
         }
 
-        loggedOn((OrthClientInfo) info);
+        loggedOn(_nodeName, (OrthClientInfo) info);
     }
 
     @Override // from PeerManager
@@ -139,7 +139,7 @@ public abstract class OrthPeerManager extends PeerManager
     {
         super.clearClientInfo(client, info);
 
-        loggedOff((OrthClientInfo)info);
+        loggedOff(_nodeName, (OrthClientInfo)info);
     }
 
     @Override // from PeerManager
@@ -147,7 +147,7 @@ public abstract class OrthPeerManager extends PeerManager
     {
         super.clientLoggedOn(nodeName, clinfo);
 
-        loggedOn((OrthClientInfo)clinfo);
+        loggedOn(nodeName, (OrthClientInfo)clinfo);
     }
 
     @Override // from PeerManager
@@ -155,7 +155,7 @@ public abstract class OrthPeerManager extends PeerManager
     {
         super.clientLoggedOff(nodeName, clinfo);
 
-        loggedOff( (OrthClientInfo)clinfo);
+        loggedOff(nodeName, (OrthClientInfo)clinfo);
     }
 
     @Override // from PeerManager
@@ -189,21 +189,21 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     /** Call the 'loggedOn' method on this client's registered {@link FarSeeingObserver} list. */
-    protected  <T extends OrthName> void loggedOn (OrthClientInfo info)
+    protected  <T extends OrthName> void loggedOn (final String nodeName, OrthClientInfo info)
     {
         apply(info, new VizOp<T>() {
             public void apply (FarSeeingObserver<T> observer, T name) {
-                observer.loggedOn(_nodeName, name);
+                observer.loggedOn(nodeName, name);
             }
         });
     }
 
     /** Call the 'loggedOff' method on this client's registered {@link FarSeeingObserver} list. */
-    protected <T extends OrthName> void loggedOff (OrthClientInfo info)
+    protected <T extends OrthName> void loggedOff (final String nodeName, OrthClientInfo info)
     {
         apply(info, new VizOp<T>() {
             public void apply (FarSeeingObserver<T> observer, T name) {
-                observer.loggedOff(_nodeName, name);
+                observer.loggedOff(nodeName, name);
             }
         });
     }
@@ -270,7 +270,7 @@ public abstract class OrthPeerManager extends PeerManager
         /**
          * Notifies the observer when a member has logged off of an orth server.
          */
-        void loggedOff (String peerName, T member);
+        void loggedOff (String node, T member);
     }
 
     /**
