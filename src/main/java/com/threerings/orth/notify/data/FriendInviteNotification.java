@@ -7,6 +7,11 @@ import com.threerings.orth.aether.data.PlayerName;
  */
 public class FriendInviteNotification extends Notification
 {
+    /** Creates a new notification for deserializing. */
+    public FriendInviteNotification()
+    {
+    }
+
     /** Creates a new notification for the given sender. */
     public FriendInviteNotification(PlayerName sender)
     {
