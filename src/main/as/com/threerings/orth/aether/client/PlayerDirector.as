@@ -39,8 +39,18 @@ public class PlayerDirector extends BasicDirector
         _psvc.setAvatar(avatarId, _octx.confirmListener());
     }
 
+    public function inviteFriend (playerId :int) :void
+    {
+        _psvc.requestFriendship(playerId, _octx.listener());
+    }
+
+    public function acceptFriendInvite (friendId :int) :void
+    {
+        _psvc.acceptFriendshipRequest(friendId, _octx.listener());
+    }
+
     // documentation inherited
-     override public function clientDidLogon (event :ClientEvent) :void
+    override public function clientDidLogon (event :ClientEvent) :void
     {
         super.clientDidLogon(event);
 
