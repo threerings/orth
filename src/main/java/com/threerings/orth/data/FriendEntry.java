@@ -13,11 +13,6 @@ public class FriendEntry extends PlayerEntry
     /** This player's current status. */
     public String status;
 
-    /** Suitable for deserialization. */
-    public FriendEntry ()
-    {
-    }
-
      /** Mr. Constructor. */
     public FriendEntry (VizPlayerName name, String status)
     {

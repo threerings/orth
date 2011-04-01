@@ -13,10 +13,6 @@ public class RoomPlace extends ScenePlace
     /** The name of this room. */
     public String name;
 
-    public RoomPlace ()
-    {
-    }
-
     public RoomPlace (String peer, int sceneOid, int sceneId, String name)
     {
         super(sceneOid, sceneId);

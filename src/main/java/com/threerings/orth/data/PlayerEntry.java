@@ -12,11 +12,6 @@ public class PlayerEntry
     /** The display name of the friend. */
     public VizPlayerName name;
 
-    /** Suitable for deserialization. */
-    public PlayerEntry ()
-    {
-    }
-
     public PlayerEntry (VizPlayerName name)
     {
         this.name = name;
