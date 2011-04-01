@@ -80,9 +80,8 @@ public class AetherClient extends Client
 
     override public function gotClientObject (clobj :ClientObject):void
     {
-        super.gotClientObject(clobj);
-
         _plobj = PlayerObject(clobj);
+        super.gotClientObject(clobj);
     }
 
     protected var _plobj :PlayerObject;
