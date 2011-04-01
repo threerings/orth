@@ -174,13 +174,12 @@ public class PlayerNodeActions
 
     protected static class FriendEntryUpdate extends AllFriendsAction
     {
-        public FriendEntryUpdate () {}
-
         public FriendEntryUpdate (PlayerObject plobj)
         {
             super(plobj);
 
-            _entry = new FriendEntry(plobj.playerName, "");
+            // TODO: status?
+            _entry = new FriendEntry(plobj.playerName, "", true);
         }
 
         @Override protected void execute (PlayerObject plobj)
