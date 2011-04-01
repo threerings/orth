@@ -192,8 +192,8 @@ public class AetherManager
         // ok, notify the other player, wherever they are
         _peermgr.invokeNodeRequest(new PlayerNodeRequest(targetId) {
             @Inject transient NotificationManager notMgr;
-            @Override protected void execute (PlayerObject player, ResultListener listener) {
-                notMgr.notify(player, new FriendInviteNotification(player.getPlayerName()));
+            @Override protected void execute (PlayerObject target, ResultListener listener) {
+                notMgr.notify(target, new FriendInviteNotification(player.getPlayerName()));
                 listener.requestProcessed(null);
             }
         }, new NodeRequestsListener<Void>() {
