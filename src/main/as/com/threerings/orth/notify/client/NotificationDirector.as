@@ -6,6 +6,7 @@ import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.client.CrowdClient;
 
+import com.threerings.util.Log;
 import com.threerings.util.Name;
 import com.threerings.util.Set;
 import com.threerings.util.Sets;
@@ -41,9 +42,11 @@ public class NotificationDirector extends BasicDirector
 
     public function addNotification (notification :Notification) :void
     {
+        log.debug("Adding a notification", notification);
         const sender :Name = notification.getSender();
         if (sender != null && isMuted(sender)) {
             // we have muted this sender: do not notify.
+            log.debug("Sender muted");
             return;
         }
 
@@ -120,6 +123,11 @@ public class NotificationDirector extends BasicDirector
             CrowdClient(client).bodyOf().addListener(this);
         }
 
+        // add our message listener
+        if (client.getClientObject() != null) {
+            client.getClientObject().addListener(this);
+        }
+
         // and, let's always update the control bar button
         if (!_didStartupNotifs) {
             _didStartupNotifs = true;
@@ -158,5 +166,7 @@ public class NotificationDirector extends BasicDirector
     protected var _didStartupNotifs :Boolean;
 
     protected var _octx :OrthContext = inject(OrthContext);
+
+    private static var log :Log = Log.getLog(NotificationDirector);
 }
 }
