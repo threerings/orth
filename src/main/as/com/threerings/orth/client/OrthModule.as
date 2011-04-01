@@ -13,6 +13,7 @@ import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.PlayerDirector;
 import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.client.OrthChatDirector;
+import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.room.client.editor.DoorTargetEditController;
 import com.threerings.orth.room.client.editor.RoomEditorController;
@@ -75,6 +76,7 @@ public class OrthModule extends BindingModule
         getInstance(PlayerDirector);
         getInstance(OrthController);
         getInstance(PartyDirector);
+        getInstance(NotificationDirector);
     }
 
     private static const log :Log = Log.getLog(OrthModule);
