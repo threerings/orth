@@ -1,5 +1,5 @@
 //
-// $Id: MemberInfo.java 19640 2010-11-28 22:24:27Z zell $
+// $Id$
 
 package com.threerings.orth.room.data;
 

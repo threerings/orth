@@ -1,3 +1,6 @@
+//
+// $Id$
+
 package com.threerings.orth.locus.server;
 
 import java.util.Map;

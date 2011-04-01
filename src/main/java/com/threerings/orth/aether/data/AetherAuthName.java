@@ -1,3 +1,6 @@
+//
+// $Id$
+
 package com.threerings.orth.aether.data;
 
 import com.threerings.orth.data.AuthName;

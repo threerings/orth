@@ -1,5 +1,5 @@
 //
-// $Id: PetInfo.java 19760 2010-12-07 23:11:56Z mdb $
+// $Id$
 
 package com.threerings.orth.room.data;
 

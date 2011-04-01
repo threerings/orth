@@ -1,5 +1,6 @@
 //
 // $Id$
+
 package com.threerings.orth.aether.data;
 
 import javax.annotation.Generated;

@@ -1,3 +1,6 @@
+//
+// $Id$
+
 package com.threerings.orth.room.data;
 
 import com.samskivert.util.Comparators;

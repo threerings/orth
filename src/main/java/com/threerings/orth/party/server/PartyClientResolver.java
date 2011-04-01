@@ -1,5 +1,5 @@
 //
-// $Id: PartyClientResolver.java 19629 2010-11-24 16:40:04Z zell $
+// $Id$
 
 package com.threerings.orth.party.server;
 

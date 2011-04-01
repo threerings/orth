@@ -1,3 +1,6 @@
+//
+// $Id$
+
 package com.threerings.orth.data;
 
 import com.threerings.orth.data.MediaDesc;

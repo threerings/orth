@@ -1,5 +1,5 @@
 //
-// $Id: Notification.java 15046 2009-02-25 01:52:12Z ray $
+// $Id$
 
 package com.threerings.orth.notify.data;
 

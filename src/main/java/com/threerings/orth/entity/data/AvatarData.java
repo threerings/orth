@@ -1,6 +1,5 @@
 //
-// $Id: $
-
+// $Id$
 
 package com.threerings.orth.entity.data;
 

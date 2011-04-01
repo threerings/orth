@@ -1,5 +1,5 @@
 //
-// $Id: MsoyPortal.java 11759 2008-09-16 16:05:16Z mdb $
+// $Id$
 
 package com.threerings.orth.room.data;
 

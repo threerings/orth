@@ -1,5 +1,6 @@
 //
 // $Id$
+
 package com.threerings.orth.chat.server;
 
 import javax.annotation.Generated;

@@ -1,5 +1,5 @@
 //
-// $Id: PartySession.java 17332 2009-06-23 06:31:30Z mdb $
+// $Id$
 
 package com.threerings.orth.party.server;
 

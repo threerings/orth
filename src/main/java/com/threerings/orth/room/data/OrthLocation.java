@@ -1,5 +1,5 @@
 //
-// $Id: MsoyLocation.java 18925 2010-01-13 20:00:54Z ray $
+// $Id$
 
 package com.threerings.orth.room.data;
 

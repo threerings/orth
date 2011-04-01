@@ -1,5 +1,6 @@
 //
 // $Id$
+
 package com.threerings.orth.party.data;
 
 import javax.annotation.Generated;

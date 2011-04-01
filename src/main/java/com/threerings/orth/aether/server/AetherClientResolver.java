@@ -1,3 +1,6 @@
+//
+// $Id$
+
 package com.threerings.orth.aether.server;
 
 import com.google.common.base.Preconditions;

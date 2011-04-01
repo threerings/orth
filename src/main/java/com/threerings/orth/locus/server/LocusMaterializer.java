@@ -1,3 +1,6 @@
+//
+// $Id$
+
 package com.threerings.orth.locus.server;
 
 import com.threerings.orth.locus.client.LocusService;

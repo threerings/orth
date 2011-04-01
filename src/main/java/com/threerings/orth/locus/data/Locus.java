@@ -1,3 +1,6 @@
+//
+// $Id$
+
 package com.threerings.orth.locus.data;
 
 import com.threerings.io.SimpleStreamableObject;

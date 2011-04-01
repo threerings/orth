@@ -1,5 +1,5 @@
 //
-// $Id: VizMemberName.java 19625 2010-11-24 15:47:54Z zell $
+// $Id$
 
 package com.threerings.orth.data;
 

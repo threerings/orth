@@ -1,5 +1,5 @@
 //
-// $Id: PartyPeep.java 13690 2008-12-05 03:54:36Z ray $
+// $Id$
 
 package com.threerings.orth.party.data;
 

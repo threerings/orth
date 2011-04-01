@@ -1,5 +1,5 @@
 //
-// $Id: PartyCredentials.java 14788 2009-02-12 18:18:00Z mdb $
+// $Id$
 
 package com.threerings.orth.party.data;
 

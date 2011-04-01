@@ -1,5 +1,5 @@
 //
-// $Id: FriendEntry.java 16520 2009-05-08 01:47:50Z ray $
+// $Id$
 
 package com.threerings.orth.data;
 

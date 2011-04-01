@@ -1,5 +1,5 @@
 //
-// $Id: FurniUpdate.java 10500 2008-08-07 19:14:38Z mdb $
+// $Id$
 
 package com.threerings.orth.room.data;
 

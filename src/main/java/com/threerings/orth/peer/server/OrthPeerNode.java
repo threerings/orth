@@ -1,5 +1,5 @@
 //
-// $Id: OrthPeerNode.java 17327 2009-06-22 22:04:29Z mdb $
+// $Id$
 
 package com.threerings.orth.peer.server;
 

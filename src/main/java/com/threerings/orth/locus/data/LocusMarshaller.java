@@ -1,5 +1,6 @@
 //
 // $Id$
+
 package com.threerings.orth.locus.data;
 
 import javax.annotation.Generated;

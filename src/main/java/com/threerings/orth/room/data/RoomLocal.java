@@ -1,5 +1,5 @@
 //
-// $Id: RoomLocal.java 13697 2008-12-05 21:07:52Z mdb $
+// $Id$
 
 package com.threerings.orth.room.data;
 

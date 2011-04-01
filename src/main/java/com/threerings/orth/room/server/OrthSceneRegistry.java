@@ -1,5 +1,5 @@
 //
-// $Id: OrthSceneRegistry.java 19814 2011-01-10 15:11:24Z zell $
+// $Id$
 
 package com.threerings.orth.room.server;
 

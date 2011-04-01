@@ -1,5 +1,5 @@
 //
-// $Id: AuthName.java 19318 2010-09-28 22:24:03Z zell $
+// $Id$
 
 package com.threerings.orth.data;
 

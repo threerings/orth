@@ -1,3 +1,6 @@
+//
+// $Id$
+
 package com.threerings.orth.room.server;
 
 import com.google.inject.Inject;

@@ -1,5 +1,5 @@
 //
-// $Id: SceneAttrsUpdate.java 18590 2009-11-05 10:09:48Z jamie $
+// $Id$
 
 package com.threerings.orth.room.data;
 

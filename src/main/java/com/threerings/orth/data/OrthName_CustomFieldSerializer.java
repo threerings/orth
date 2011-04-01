@@ -1,5 +1,5 @@
 //
-// $Id: OrthName_CustomFieldSerializer.java 9944 2008-07-22 17:30:34Z mdb $
+// $Id$
 
 package com.threerings.orth.data;
 

@@ -1,5 +1,5 @@
 //
-// $Id: MsoyBodyObject.java 19120 2010-04-13 00:54:16Z ray $
+// $Id$
 
 package com.threerings.orth.room.data;
 

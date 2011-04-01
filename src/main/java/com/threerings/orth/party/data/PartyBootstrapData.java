@@ -1,5 +1,5 @@
 //
-// $Id: PartyBootstrapData.java 14290 2009-01-08 22:00:42Z mdb $
+// $Id$
 
 package com.threerings.orth.party.data;
 

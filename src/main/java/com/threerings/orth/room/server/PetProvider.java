@@ -1,5 +1,6 @@
 //
 // $Id$
+
 package com.threerings.orth.room.server;
 
 import javax.annotation.Generated;

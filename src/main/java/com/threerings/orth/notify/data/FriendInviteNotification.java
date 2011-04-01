@@ -1,3 +1,6 @@
+//
+// $Id$
+
 package com.threerings.orth.notify.data;
 
 import com.threerings.orth.aether.data.PlayerName;

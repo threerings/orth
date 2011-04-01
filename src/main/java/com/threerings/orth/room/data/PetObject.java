@@ -1,5 +1,5 @@
 //
-// $Id: PetObject.java 19643 2010-11-28 22:48:23Z zell $
+// $Id$
 
 package com.threerings.orth.room.data;
 
