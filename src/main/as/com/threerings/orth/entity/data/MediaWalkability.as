@@ -2,6 +2,7 @@
 //
 // $Id$
 
+
 package com.threerings.orth.entity.data {
 
 import flash.display.DisplayObject;

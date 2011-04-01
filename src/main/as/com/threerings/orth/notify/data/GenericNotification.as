@@ -2,6 +2,7 @@
 //
 // $Id$
 
+
 package com.threerings.orth.notify.data {
 
 import com.threerings.io.ObjectInputStream;
