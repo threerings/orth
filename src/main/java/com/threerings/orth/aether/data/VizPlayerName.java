@@ -10,6 +10,7 @@ public class VizPlayerName extends PlayerName
     /** For unserialization. */
     public VizPlayerName ()
     {
+        super(null, 0);
     }
 
     /**

@@ -4,23 +4,18 @@
 package com.threerings.orth.room.data;
 
 import com.threerings.presents.dobj.DObject;
-
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.NamedEvent;
+import com.threerings.presents.net.Transport;
 
 import static com.threerings.orth.Log.log;
 
 public class MemoryChangedEvent extends NamedEvent
 {
-    /** Suitable for serialization. */
-    public MemoryChangedEvent ()
-    {
-    }
-
     public MemoryChangedEvent (
         int targetOid, String name, EntityIdent ident, String key, byte[] newValue)
     {
-        super(targetOid, name);
+        super(targetOid, name, Transport.DEFAULT);
 
         _ident = ident;
         _key = key;

@@ -15,9 +15,4 @@ public class RoomAuthName extends AuthName
     {
         super(accountName, playerId);
     }
-
-    // for deserialization
-    public RoomAuthName ()
-    {
-    }
 }

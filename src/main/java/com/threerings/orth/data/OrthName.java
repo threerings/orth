@@ -40,16 +40,10 @@ public class OrthName extends Name implements DSet.Entry
         return m1.toString().toLowerCase().compareTo(m2.toString().toLowerCase());
     }
 
-    /** For unserialization. */
-    public OrthName ()
-    {
-    }
-
     /** Create a new Orthname with the given display name and id. */
     public OrthName (String name, int id)
     {
         super(name);
-
         _id = id;
     }
 

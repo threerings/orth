@@ -16,11 +16,6 @@ public class PetInfo extends ActorInfo
         super(petobj);
     }
 
-    /** Constructor used for unserialization. */
-    public PetInfo ()
-    {
-    }
-
     @Override // from ActorInfo
     public void updateMedia (ActorObject body)
     {

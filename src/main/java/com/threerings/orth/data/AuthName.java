@@ -19,11 +19,6 @@ public class AuthName extends Name
         _id = id;
     }
 
-    /** Used when unserializing. */
-    public AuthName ()
-    {
-    }
-
     /** Returns this session's unique id. */
     public int getId ()
     {

@@ -11,6 +11,7 @@ public abstract class VizOrthName extends OrthName
     /** For unserialization. */
     public VizOrthName ()
     {
+        super(null, 0);
     }
 
     /**

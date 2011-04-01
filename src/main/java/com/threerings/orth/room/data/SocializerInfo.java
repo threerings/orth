@@ -26,16 +26,12 @@ public class SocializerInfo extends ActorInfo
 
     public SocializerInfo (SocializerObject sobj)
     {
-        super(sobj); // we'll fill these in later
-
-        // configure our various bits
-//        updatePartyId(sobj.partyId);
-        updateIsAway(sobj);
-    }
-
-    /** Used for unserialization. */
-    public SocializerInfo ()
-    {
+        super(sobj);
+        if (sobj != null) { // is null when unserializing
+            // configure our various bits
+            // updatePartyId(sobj.partyId);
+            updateIsAway(sobj);
+        }
     }
 
     /**

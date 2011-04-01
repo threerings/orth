@@ -23,9 +23,4 @@ public class PartyAuthName extends AuthName
     {
         super(accountName, playerId);
     }
-
-    /** Used for unserializing. */
-    public PartyAuthName ()
-    {
-    }
 }

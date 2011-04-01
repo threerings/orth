@@ -17,11 +17,4 @@ public class AetherAuthName extends AuthName
     {
         super(accountName, playerId);
     }
-
-    /** Used for unserializing. */
-    public AetherAuthName ()
-    {
-    }
-
-
 }
