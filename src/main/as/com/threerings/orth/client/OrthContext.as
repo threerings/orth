@@ -26,6 +26,7 @@ import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.AbstractLocusModule;
 import com.threerings.orth.locus.client.LocusContext;
 import com.threerings.orth.locus.client.LocusModule;
+import com.threerings.orth.notify.client.NotificationDirector;
 
 /**
  * This is the beating heart of an Orth-based client. It provides access to the Aether client
@@ -53,8 +54,18 @@ public class OrthContext
     // called from OrthModule once this context and all its dependents are safely constructed
     public function didInit () :void
     {
+        // The notification director is an abstract class but generally should be bound to
+        // something. We can't create it in the constructor because it needs a context.
+        // TODO: In general, a Context creates directors and directors inject a context so hmm...
+        //       Maybe a createDirectors method here like in msoy? Zell, you have a plan?
+        // TODO: make the notification director a little more usable...
+        //       it shouldn't need to be abstract
+        try {
+            inject(NotificationDirector);
+        } catch (e :Error) {
+            log.info("No notification director injected, proceeding");
+        }
     }
-
 
     // from PresentsContext
     public function getClient () :Client
