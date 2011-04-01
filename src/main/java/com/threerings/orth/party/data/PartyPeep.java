@@ -17,11 +17,6 @@ public class PartyPeep extends PlayerEntry
      */
     public int joinOrder;
 
-    /** Suitable for deserialization. */
-    public PartyPeep ()
-    {
-    }
-
     /** Mr. Constructor. */
     public PartyPeep (VizPlayerName name, int joinOrder)
     {
