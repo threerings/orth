@@ -52,10 +52,13 @@ public abstract class ActorInfo extends OccupantInfo
     protected ActorInfo (ActorObject body)
     {
         super(body);
-        if (body != null) { // body is null when unserializing
-            _state = body.actorState;
-            updateMedia(body);
-        }
+        _state = body.actorState;
+        updateMedia(body);
+    }
+
+    /** Used when unserializing. */
+    protected ActorInfo ()
+    {
     }
 
     @Override // from SimpleStreamableObject
