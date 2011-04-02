@@ -34,10 +34,7 @@ public class LocusMarshaller extends InvocationMarshaller
         // from interface LocusMaterializationMarshaller
         public void locusMaterialized (HostedLocus arg1)
         {
-            _invId = null;
-            omgr.postEvent(new InvocationResponseEvent(
-                               callerOid, requestId, LOCUS_MATERIALIZED,
-                               new Object[] { arg1 }, transport));
+            sendResponse(LOCUS_MATERIALIZED, new Object[] { arg1 });
         }
 
         @Override // from InvocationMarshaller

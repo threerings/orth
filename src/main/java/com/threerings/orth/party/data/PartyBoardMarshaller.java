@@ -35,10 +35,7 @@ public class PartyBoardMarshaller extends InvocationMarshaller
         // from interface JoinMarshaller
         public void foundParty (int arg1, String arg2, int arg3)
         {
-            _invId = null;
-            omgr.postEvent(new InvocationResponseEvent(
-                               callerOid, requestId, FOUND_PARTY,
-                               new Object[] { Integer.valueOf(arg1), arg2, Integer.valueOf(arg3) }, transport));
+            sendResponse(FOUND_PARTY, new Object[] { Integer.valueOf(arg1), arg2, Integer.valueOf(arg3) });
         }
 
         @Override // from InvocationMarshaller
