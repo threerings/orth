@@ -2,6 +2,7 @@
 //
 // $Id$
 
+
 package com.threerings.orth.data {
 
 import flashx.funk.util.isAbstract;

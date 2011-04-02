@@ -13,11 +13,16 @@ public class FriendEntry extends PlayerEntry
     /** This player's current status. */
     public String status;
 
-     /** Mr. Constructor. */
-    public FriendEntry (VizPlayerName name, String status)
+    /** Whether this friend is online.
+     * TODO: should this be in the superclass? */
+    public boolean online;
+
+    /** Mr. Constructor. */
+    public FriendEntry (VizPlayerName name, String status, boolean online)
     {
-    	super(name);
+        super(name);
         this.status = status;
+        this.online = online;
     }
 
     @Override

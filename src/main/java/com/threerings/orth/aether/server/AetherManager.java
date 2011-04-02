@@ -303,7 +303,7 @@ public class AetherManager
                     MediaDesc photo = null; // TODO: repo will need to yield more than just String
                     String status = null; // TODO
                     friends.add(new FriendEntry(
-                        new VizPlayerName(pair.getValue(), pair.getKey(), photo), status)); 
+                        new VizPlayerName(pair.getValue(), pair.getKey(), photo), status, false)); 
                 }
                 initFriends2(player, friends);
             }
@@ -339,7 +339,7 @@ public class AetherManager
     {
         MediaDesc photo = null; // TODO: OrthClientInfo#photo ?
         String status = null; // TODO
-        return new FriendEntry(new VizPlayerName(info.playerName, photo), status);
+        return new FriendEntry(new VizPlayerName(info.playerName, photo), status, true);
     }
 
     protected static void addFriend (PlayerObject player, OrthClientInfo other)
