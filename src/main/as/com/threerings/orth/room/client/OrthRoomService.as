@@ -1,5 +1,6 @@
 //
 // $Id$
+
 package com.threerings.orth.room.client {
 
 import flash.utils.ByteArray;

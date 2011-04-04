@@ -1,5 +1,6 @@
 //
 // $Id$
+
 package com.threerings.orth.locus.client {
 
 import com.threerings.presents.client.InvocationService;

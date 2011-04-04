@@ -1,5 +1,6 @@
 //
 // $Id$
+
 package com.threerings.orth.room.client {
 
 import com.threerings.whirled.client.SceneService_SceneMoveListener;

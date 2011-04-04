@@ -1,5 +1,6 @@
 //
 // $Id$
+
 package com.threerings.orth.party.data {
 
 import com.threerings.presents.data.InvocationMarshaller_ListenerMarshaller;

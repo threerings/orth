@@ -1,5 +1,6 @@
 //
 // $Id$
+
 package com.threerings.orth.chat.client {
 
 import com.threerings.presents.client.InvocationService;

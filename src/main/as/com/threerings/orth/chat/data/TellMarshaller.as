@@ -1,5 +1,6 @@
 //
 // $Id$
+
 package com.threerings.orth.chat.data {
 
 import com.threerings.util.Integer;

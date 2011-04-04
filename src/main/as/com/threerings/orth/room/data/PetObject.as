@@ -2,6 +2,7 @@
 //
 // $Id$
 
+
 package com.threerings.orth.room.data {
 
 import org.osflash.signals.Signal;
