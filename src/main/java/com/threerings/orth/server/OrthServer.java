@@ -9,8 +9,6 @@ import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 
-import com.samskivert.util.Lifecycle;
-
 import com.threerings.crowd.server.CrowdServer;
 import com.threerings.orth.aether.server.AetherManager;
 import com.threerings.orth.chat.server.ChatManager;
