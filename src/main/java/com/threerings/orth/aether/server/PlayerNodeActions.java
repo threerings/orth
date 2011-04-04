@@ -179,7 +179,7 @@ public class PlayerNodeActions
             super(plobj);
 
             // TODO: status?
-            _entry = new FriendEntry(plobj.playerName, "", true);
+            _entry = FriendEntry.fromPlayerName(plobj.playerName, FriendEntry.Status.ONLINE);
         }
 
         @Override protected void execute (PlayerObject plobj)

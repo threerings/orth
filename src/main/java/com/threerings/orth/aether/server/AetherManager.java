@@ -22,10 +22,8 @@ import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.data.FriendEntry;
-import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.notify.data.FriendInviteNotification;
 import com.threerings.orth.notify.server.NotificationManager;
@@ -300,10 +298,7 @@ public class AetherManager
                 }
 
                 for (Map.Entry<Integer, String> pair : result.entrySet()) {
-                    MediaDesc photo = null; // TODO: repo will need to yield more than just String
-                    String status = null; // TODO
-                    friends.add(new FriendEntry(
-                        new VizPlayerName(pair.getValue(), pair.getKey(), photo), status, false)); 
+                    friends.add(FriendEntry.offline(pair.getKey(), pair.getValue()));
                 }
                 initFriends2(player, friends);
             }
@@ -337,9 +332,7 @@ public class AetherManager
 
     protected static FriendEntry toFriendEntry (OrthClientInfo info)
     {
-        MediaDesc photo = null; // TODO: OrthClientInfo#photo ?
-        String status = null; // TODO
-        return new FriendEntry(new VizPlayerName(info.playerName, photo), status, true);
+        return FriendEntry.fromPlayerName(info.playerName, FriendEntry.Status.ONLINE);
     }
 
     protected static void addFriend (PlayerObject player, OrthClientInfo other)
