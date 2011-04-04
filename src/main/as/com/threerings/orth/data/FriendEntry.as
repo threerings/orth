@@ -7,10 +7,11 @@ package com.threerings.orth.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+
+import com.threerings.util.Joiner;
+
 import com.threerings.orth.data.FriendEntry_Status;
 import com.threerings.orth.data.PlayerEntry;
-import com.threerings.util.Joiner;
-import com.threerings.util.StringUtil;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
