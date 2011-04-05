@@ -78,15 +78,6 @@ public class RoomController extends SceneController
     /** Logging facilities. */
     protected static const log :Log = Log.getLog(RoomController);
 
-    /** Command to issue to toggle the chat display. */
-    public static const TOGGLE_CHAT_HIDE :String = "ToggleChatHide";
-
-    /** Command to toggle the channel occupant list display */
-    public static const TOGGLE_OCC_LIST :String = "ToggleOccList";
-
-    /** Command to edit preferences. */
-    public static const CHAT_PREFS :String = "ChatPrefs";
-
     /** Command to display a simplified menu for muting/etc a member. */
     public static const POP_MEMBER_MENU :String = "PopMemberMenu";
 
@@ -922,31 +913,6 @@ public class RoomController extends SceneController
     }
 
     /**
-     * Handles the TOGGLE_CHAT_HIDE command.
-     */
-    public function handleToggleChatHide () :void
-    {
-        Prefs.setShowingChatHistory(!Prefs.getShowingChatHistory());
-    }
-
-    /**
-     * Handles the TOGGLE_OCC_LIST command.
-     */
-    public function handleToggleOccList () :void
-    {
-        Prefs.setShowingOccupantList(!Prefs.getShowingOccupantList());
-    }
-
-    /**
-     * Handles CHAT_PREFS.
-     */
-    public function handleChatPrefs () :void
-    {
-        // ORTH TODO: Punted
-        // new ChatPrefsDialog(_wctx);
-    }
-
-    /**
      * Handles the POP_CHANNEL_MENU command.
      */
     public function handlePopChannelMenu (trigger :Button) :void
@@ -954,18 +920,8 @@ public class RoomController extends SceneController
         const me :PlayerObject = _octx.getPlayerObject();
 
         var menuData :Array = [];
-        menuData.push({ label: Msgs.GENERAL.get("b.chatPrefs"), command: CHAT_PREFS });
-
         menuData.push({ label: Msgs.GENERAL.get("b.clearChat"),
             callback: _chatDir.clearDisplays });
-        CommandMenu.addSeparator(menuData);
-
-        menuData.push({ command: TOGGLE_CHAT_HIDE, label: Msgs.GENERAL.get(
-                    Prefs.getShowingChatHistory() ? "b.hide_chat" : "b.show_chat") });
-
-        menuData.push({ command: TOGGLE_OCC_LIST, label: Msgs.GENERAL.get(
-            Prefs.getShowingOccupantList() ? "b.hide_occ_list" : "b.show_occ_list") });
-
         CommandMenu.addSeparator(menuData);
 
         // slap your friends in a menu

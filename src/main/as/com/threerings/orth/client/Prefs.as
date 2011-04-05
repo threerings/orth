@@ -8,7 +8,6 @@ import flash.media.SoundMixer;
 import flash.media.SoundTransform;
 
 import com.threerings.util.Config;
-import com.threerings.util.NamedValueEvent;
 import com.threerings.util.StringUtil;
 
 /**
@@ -35,12 +34,6 @@ public class Prefs
     public static const SESSION_TOKEN :String = "sessionTok";
     public static const MACHINE_IDENT :String = "machIdent";
     public static const VOLUME :String = "volume";
-    public static const CHAT_FONT_SIZE :String = "chatFontSize";
-    public static const CHAT_DECAY :String = "chatDecay";
-    public static const CHAT_FILTER :String = "chatFilter";
-    public static const CHAT_HISTORY :String = "chatHistory";
-    public static const OCCUPANT_LIST :String = "occupantList";
-    public static const LOG_TO_CHAT :String = "logToChat";
     public static const PARTY_GROUP :String = "partyGroup";
     public static const AUTOSHOW_PREFIX :String = "autoShow_";
     public static const ROOM_ZOOM :String = "roomZoom";
@@ -51,25 +44,8 @@ public class Prefs
 
     /** List of cookies (that the user may see and clear). */
     public static const ALL_KEYS :Array = [
-        VOLUME, CHAT_FONT_SIZE, CHAT_DECAY, CHAT_FILTER, CHAT_HISTORY, OCCUPANT_LIST,
-        LOG_TO_CHAT, PARTY_GROUP,ROOM_ZOOM, IGNORED_TUTORIAL_IDS, TUTORIAL_PROGRESS_PREFIX,
+        VOLUME, PARTY_GROUP,ROOM_ZOOM, IGNORED_TUTORIAL_IDS, TUTORIAL_PROGRESS_PREFIX,
         AUTOSHOW_PREFIX ];
-
-    public static const CHAT_FONT_SIZE_MIN :int = 10;
-    public static const CHAT_FONT_SIZE_MAX :int = 24;
-
-    /**
-     * Set the build time. Return true if it's changed. Should only be done on non-embedded clients.
-     */
-    public static function setBuildTime (buildTime :String) :Boolean
-    {
-        var lastBuild :String = (_config.getValue("lastBuild", null) as String);
-        if (lastBuild != buildTime) {
-            _config.setValue("lastBuild", buildTime);
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Effect the global sound volume.
@@ -125,88 +101,6 @@ public class Prefs
     public static function setRoomZoom (value :String) :void
     {
         _config.setValue(ROOM_ZOOM, value);
-    }
-
-    /**
-     * Get the preferred chat font size.
-     * Default value: 14.
-     */
-    public static function getChatFontSize () :int
-    {
-        return (_config.getValue(CHAT_FONT_SIZE, 14) as int);
-    }
-
-    /**
-     * Set the user's new preferred chat size.
-     */
-    public static function setChatFontSize (newSize :int) :void
-    {
-        _config.setValue(CHAT_FONT_SIZE, newSize);
-    }
-
-    /**
-     * Get the value of the chat decay setting, which specifies how long
-     * chat should remain before fading out.
-     *
-     * @return an integer: 0 = fast, 1 = medium (default), 2 = slow.
-     */
-    public static function getChatDecay () :int
-    {
-        // in embedded mode (when configs don't persist, we default to fast chat clearing)
-        return (_config.getValue(CHAT_DECAY, _config.isPersisting() ? 1 : 0) as int);
-    }
-
-    /**
-     * Set the new chat decay value.
-     */
-    public static function setChatDecay (value :int) :void
-    {
-        _config.setValue(CHAT_DECAY, value);
-    }
-
-    /**
-     * Return the chat filtration level, as a constant from
-     * com.threerings.crowd.chat.client.CurseFilter.
-     */
-    public static function getChatFilterLevel () :int
-    {
-        // 2 == CurseFilter.VERNACULAR, which is a bitch to import and
-        // the subclass doesn't have it.
-        return (_config.getValue(CHAT_FILTER, 2) as int);
-    }
-
-    /**
-     * Set the chat filtration level.
-     */
-    public static function setChatFilterLevel (lvl :int) :void
-    {
-        _config.setValue(CHAT_FILTER, lvl);
-    }
-
-    /**
-     * Returns whether chat history is on or off.
-     */
-    public static function getShowingChatHistory () :Boolean
-    {
-        return (_config.getValue(CHAT_HISTORY, false) as Boolean);
-    }
-
-    public static function setShowingChatHistory (showing :Boolean) :void
-    {
-        _config.setValue(CHAT_HISTORY, showing);
-    }
-
-    /**
-     * Returns whether to display the channel occupant list or not.
-     */
-    public static function getShowingOccupantList () :Boolean
-    {
-        return (_config.getValue(OCCUPANT_LIST, false) as Boolean);
-    }
-
-    public static function setShowingOccupantList (showing :Boolean) :void
-    {
-        _config.setValue(OCCUPANT_LIST, showing);
     }
 
     public static function getPartyGroup () :int

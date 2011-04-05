@@ -90,7 +90,6 @@ public class OrthController extends Controller
         _topPanel.contextMenu = menu;
 
         _musicPlayer.setVolume(0.25);
-        Prefs.setChatDecay(2); // slow
     }
 
     /**
