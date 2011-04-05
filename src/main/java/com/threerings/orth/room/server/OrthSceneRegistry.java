@@ -3,8 +3,6 @@
 
 package com.threerings.orth.room.server;
 
-import static com.threerings.orth.Log.log;
-
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -12,20 +10,17 @@ import com.google.inject.Singleton;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
-import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
+import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.server.LocusMaterializer;
+import com.threerings.orth.locus.server.LocusRegistry;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.room.data.ActorObject;
-import com.threerings.orth.room.data.HostedRoom;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
-import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.server.OrthDeploymentConfig;
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.peer.data.NodeObject;
-import com.threerings.presents.peer.data.NodeObject.Lock;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 import com.threerings.whirled.client.SceneService.SceneMoveListener;
@@ -40,10 +35,24 @@ import com.threerings.whirled.spot.server.SpotSceneRegistry;
 public class OrthSceneRegistry extends SpotSceneRegistry
     implements OrthSceneProvider, LocusMaterializer
 {
-    @Inject public OrthSceneRegistry (InvocationManager invmgr)
+    @Inject public OrthSceneRegistry (InvocationManager invmgr, Injector injector)
     {
         super(invmgr);
         invmgr.registerProvider(this, OrthSceneMarshaller.class, SceneCodes.WHIRLED_GROUP);
+        _locusReg = new LocusRegistry(OrthNodeObject.HOSTED_ROOMS) {
+            @Override protected void hostLocus (final Locus locus,
+                    final ResultListener<HostedLocus> rl) {
+                resolveScene(locus.getId(), new ResolutionListener() {
+                    @Override public void sceneWasResolved (SceneManager scmgr) {
+                        rl.requestCompleted(new HostedLocus(locus, getHost(), getPorts()));
+                    }
+                    @Override public void sceneFailedToResolve (int sceneId, Exception reason) {
+                        rl.requestFailed(reason);
+                    }
+                });
+            }
+        };
+        injector.injectMembers(_locusReg);
     }
 
     // from interface OrthSceneProvider
@@ -61,95 +70,12 @@ public class OrthSceneRegistry extends SpotSceneRegistry
                 _locman, mover, version, portalId, destLoc, listener));
     }
 
-    @Override
-    public void materializeLocus (ClientObject caller, Locus locus,
-        final LocusMaterializationListener listener)
+    @Override public void materializeLocus (ClientObject caller, Locus locus,
+        LocusMaterializationListener listener)
     {
-        final RoomLocus rlocus = (RoomLocus)locus;
-        if (materializeExistingRoom(listener, rlocus)) {
-             return;
-        }
-
-        // ORTH TODO: At this point we know the locus needs to be hosted. For now, we will
-        // resolve it locally, but what should really happen here is that the nodes should
-        // all be queried to see which room peer is the least loaded and the request should
-        // be punted to there.
-
-        final NodeObject.Lock lock = new NodeObject.Lock("RoomLocus", rlocus);
-        _peerMan.acquireLock(lock, new LocusLockListener(listener, lock, rlocus));
+        _locusReg.materializeLocus(caller, locus, listener);
     }
 
-    protected class LocusLockListener
-        implements ResultListener<String>
-    {
-        protected LocusLockListener (LocusMaterializationListener listener, Lock lock,
-                RoomLocus locus) {
-            _listener = listener;
-            _lock = lock;
-            _locus = locus;
-        }
-
-        @Override public void requestCompleted (String nodeName) {
-            if (_peerMan.getNodeObject().nodeName.equals(nodeName)) {
-                log.info("Got RoomLocus lock", "locus", _locus);
-                hostLocus();
-
-            } else {
-                // we didn't get the lock, so let's see what happened by re-checking
-                if (!materializeExistingRoom(_listener, _locus)) {
-                    log.warning("Couldn't get lock and couldn't find created locus on other node!",
-                        "locus", _locus, "nodeName", nodeName);
-                    _listener.requestFailed("Whacked Out Node");
-                }
-            }
-
-        }
-
-        protected void hostLocus ()
-        {
-            try {
-                resolveScene(_locus.sceneId, new ResolutionListener() {
-                    @Override public void sceneWasResolved (SceneManager scmgr) {
-                        HostedRoom hosted = new HostedRoom(_locus, getHost(), getPorts());
-                        ((OrthNodeObject)_peerMan.getNodeObject()).addToHostedRooms(hosted);
-                        System.out.println("SENDING NEW: " + hosted);
-                        _listener.locusMaterialized(hosted);
-                        _peerMan.releaseLock(_lock, new ResultListener.NOOP<String>());
-                    }
-
-                    @Override public void sceneFailedToResolve (int sceneId, Exception reason) {
-                        log.warning("Couldn't resolve roomlocus scene! Fffffffffff...", "sceneId", sceneId,
-                            reason);
-                        _peerMan.releaseLock(_lock, new ResultListener.NOOP<String>());
-                    }
-                });
-
-            } catch (RuntimeException re) {
-                _peerMan.releaseLock(_lock, new ResultListener.NOOP<String>());
-                throw re;
-            }
-        }
-
-        @Override
-        public void requestFailed (Exception cause) {
-            log.warning("Couldn't get room locus lock!", "locus", _locus, cause);
-        }
-
-        protected final LocusMaterializationListener _listener;
-        protected final Lock _lock;
-        protected final RoomLocus _locus;
-    }
-
-    protected boolean materializeExistingRoom (LocusMaterializationListener listener,
-        RoomLocus locus)
-    {
-        HostedLocus hosted = _peerMan.findHostedRoom(locus);
-        if (hosted != null) {
-            System.out.println("SENDING EXISTING " + hosted);
-            listener.locusMaterialized(hosted);
-        }
-        return hosted != null;
-    }
     public String getHost ()
     {
         return _depConf.getRoomHost();
@@ -165,6 +91,9 @@ public class OrthSceneRegistry extends SpotSceneRegistry
     {
         return getClass().getSimpleName();
     }
+
+    /** Our locus registry. */
+    protected LocusRegistry _locusReg;
 
     // our dependencies
     @Inject protected Injector _injector;

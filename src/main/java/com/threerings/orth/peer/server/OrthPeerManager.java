@@ -23,6 +23,7 @@ import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.locus.data.HostedLocus;
+import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.room.data.RoomLocus;
@@ -75,16 +76,25 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     /**
-     * Returns the node name of the peer that is hosting the specified place, or null if no peer
+     * Returns the node name of the peer that is hosting the specified locus, or null if no peer
      * has published that they are hosting the place.
      */
-    public HostedLocus findHostedRoom (final RoomLocus place)
+    public HostedLocus findHostedLocus (final String dsetName, final Locus locus)
     {
         return lookupNodeDatum(new Function<NodeObject, HostedLocus>() {
             public HostedLocus apply (NodeObject nodeobj) {
-                return ((OrthNodeObject) nodeobj).hostedRooms.get(place);
+                return ((OrthNodeObject) nodeobj).<HostedLocus>getSet(dsetName).get(locus.getId());
             }
         });
+    }
+
+    /**
+     * Returns the node name of the peer that is hosting the specified room, or null if no peer
+     * has published that they are hosting the place.
+     */
+    public HostedLocus findHostedRoom (RoomLocus locus)
+    {
+        return findHostedLocus(OrthNodeObject.HOSTED_ROOMS, locus);
     }
 
     /**

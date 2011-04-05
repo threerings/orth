@@ -5,11 +5,11 @@ package com.threerings.orth.peer.data;
 
 import javax.annotation.Generated;
 
+import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.data.MemberParty;
 import com.threerings.orth.party.data.PartyInfo;
 import com.threerings.orth.party.data.PartySummary;
 import com.threerings.orth.party.data.PeerPartyMarshaller;
-import com.threerings.orth.room.data.HostedRoom;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.util.ActionScript;
@@ -37,13 +37,17 @@ public class OrthNodeObject extends NodeObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String MEMBER_PARTIES = "memberParties";
 
+    /** The field name of the <code>hostedGuilds</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String HOSTED_GUILDS = "hostedGuilds";
+
     /** The field name of the <code>peerPartyService</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String PEER_PARTY_SERVICE = "peerPartyService";
     // AUTO-GENERATED: FIELDS END
 
     /** Contains info on all places hosted by this server. */
-    public DSet<HostedRoom> hostedRooms = DSet.newDSet();
+    public DSet<HostedLocus> hostedRooms = DSet.newDSet();
 
     /** Contains the immutable summaries for all parties on this node. */
     public DSet<PartySummary> hostedParties = DSet.newDSet();
@@ -53,6 +57,9 @@ public class OrthNodeObject extends NodeObject
 
     /** Contains the current partyId of all members partying on this server. */
     public DSet<MemberParty> memberParties = DSet.newDSet();
+
+    /** Contains the guilds hosted by this server. */
+    public DSet<HostedLocus> hostedGuilds = DSet.newDSet();
 
     /** Handles party communication between peers. */
     public PeerPartyMarshaller peerPartyService;
@@ -64,7 +71,7 @@ public class OrthNodeObject extends NodeObject
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void addToHostedRooms (HostedRoom elem)
+    public void addToHostedRooms (HostedLocus elem)
     {
         requestEntryAdd(HOSTED_ROOMS, hostedRooms, elem);
     }
@@ -86,7 +93,7 @@ public class OrthNodeObject extends NodeObject
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void updateHostedRooms (HostedRoom elem)
+    public void updateHostedRooms (HostedLocus elem)
     {
         requestEntryUpdate(HOSTED_ROOMS, hostedRooms, elem);
     }
@@ -102,10 +109,10 @@ public class OrthNodeObject extends NodeObject
      * value change when they received the attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setHostedRooms (DSet<HostedRoom> value)
+    public void setHostedRooms (DSet<HostedLocus> value)
     {
         requestAttributeChange(HOSTED_ROOMS, value, this.hostedRooms);
-        DSet<HostedRoom> clone = (value == null) ? null : value.clone();
+        DSet<HostedLocus> clone = (value == null) ? null : value.clone();
         this.hostedRooms = clone;
     }
 
@@ -260,6 +267,57 @@ public class OrthNodeObject extends NodeObject
         requestAttributeChange(MEMBER_PARTIES, value, this.memberParties);
         DSet<MemberParty> clone = (value == null) ? null : value.clone();
         this.memberParties = clone;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>hostedGuilds</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void addToHostedGuilds (HostedLocus elem)
+    {
+        requestEntryAdd(HOSTED_GUILDS, hostedGuilds, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>hostedGuilds</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void removeFromHostedGuilds (Comparable<?> key)
+    {
+        requestEntryRemove(HOSTED_GUILDS, hostedGuilds, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>hostedGuilds</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void updateHostedGuilds (HostedLocus elem)
+    {
+        requestEntryUpdate(HOSTED_GUILDS, hostedGuilds, elem);
+    }
+
+    /**
+     * Requests that the <code>hostedGuilds</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setHostedGuilds (DSet<HostedLocus> value)
+    {
+        requestAttributeChange(HOSTED_GUILDS, value, this.hostedGuilds);
+        DSet<HostedLocus> clone = (value == null) ? null : value.clone();
+        this.hostedGuilds = clone;
     }
 
     /**
