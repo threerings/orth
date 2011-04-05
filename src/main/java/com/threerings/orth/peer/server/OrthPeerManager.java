@@ -5,8 +5,6 @@ package com.threerings.orth.peer.server;
 
 import java.util.Map;
 
-import com.google.inject.Inject;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
@@ -22,7 +20,6 @@ import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.aether.server.PlayerSessionLocator;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.locus.data.HostedLocus;
@@ -286,8 +283,6 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     protected OrthNodeObject _onobj;
-
-    @Inject protected PlayerSessionLocator _locator;
 
     protected final Map<Class<?>, Observation<?>> _observations = Maps.newHashMap();
 }
