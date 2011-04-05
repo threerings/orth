@@ -479,11 +479,6 @@ public class RoomController extends SceneController
             return undefined;
         }
 
-        // then avoid any chat glyphs that are clickable
-        if (_comicOverlay.hasClickableGlyphsAtPoint(stageX, stageY)) {
-            return undefined;
-        }
-
         // we search from last-drawn to first drawn to get the topmost...
         for (var dex :int = _roomView.numChildren - 1; dex >= 0; dex--) {
             // see if this child represents a RoomElement
