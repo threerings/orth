@@ -51,5 +51,5 @@ public abstract class PlayerNodeRequest extends NodeRequest
     protected abstract void execute (PlayerObject player, ResultListener listener);
 
     protected AetherAuthName _targetPlayer;
-    @Inject transient protected PlayerLocator _playerLocator;
+    @Inject transient protected PlayerSessionLocator _playerLocator;
 }

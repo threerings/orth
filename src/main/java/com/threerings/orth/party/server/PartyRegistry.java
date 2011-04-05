@@ -35,7 +35,7 @@ import com.threerings.presents.server.InvocationManager;
 import com.threerings.crowd.server.BodyManager;
 import com.threerings.crowd.server.PlaceRegistry;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.aether.server.PlayerLocator;
+import com.threerings.orth.aether.server.PlayerSessionLocator;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.party.data.PartyBoardMarshaller;
@@ -384,7 +384,7 @@ public class PartyRegistry
     @Inject protected BodyManager _bodyMan;
     @Inject protected Injector _injector;
     @Inject protected InvocationManager _invmgr;
-    @Inject protected PlayerLocator _playerLocator;
+    @Inject protected PlayerSessionLocator _playerLocator;
     @Inject protected OrthPeerManager _peerMgr;
     //@Inject protected NotificationManager _notifyMan;
     @Inject protected PlaceRegistry _placeReg;

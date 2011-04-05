@@ -17,7 +17,7 @@ import com.threerings.presents.server.InvocationManager;
 import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.aether.server.PlayerLocator;
+import com.threerings.orth.aether.server.PlayerSessionLocator;
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.data.Tell;
@@ -70,7 +70,7 @@ public class ChatManager
             }});
     }
 
-    @Inject protected PlayerLocator _locator;
+    @Inject protected PlayerSessionLocator _locator;
     @Inject protected InvocationManager _invMgr;
     @Inject protected PeerManager _peerMgr;
 }

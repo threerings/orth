@@ -11,7 +11,7 @@ import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.aether.server.PlayerLocator;
+import com.threerings.orth.aether.server.PlayerSessionLocator;
 
 @Singleton @EventThread
 public class PlayerManager
@@ -35,5 +35,5 @@ public class PlayerManager
     }
 
     @Inject protected ClientManager _clmgr;
-    @Inject protected PlayerLocator _locator;
+    @Inject protected PlayerSessionLocator _locator;
 }

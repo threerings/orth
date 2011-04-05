@@ -51,5 +51,5 @@ public abstract class PlayerNodeAction extends PeerManager.NodeAction
     protected int _playerId;
 
     /** Used to look up player objects. */
-    @Inject protected transient PlayerLocator _locator;
+    @Inject protected transient PlayerSessionLocator _locator;
 }

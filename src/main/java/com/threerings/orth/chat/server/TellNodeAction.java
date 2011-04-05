@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.aether.server.PlayerLocator;
+import com.threerings.orth.aether.server.PlayerSessionLocator;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.presents.client.InvocationService.ResultListener;
@@ -50,5 +50,5 @@ public class TellNodeAction extends PeerManager.NodeRequest
     protected Tell _tell;
 
     @Inject protected transient ClientManager _clMgr;
-    @Inject protected transient PlayerLocator _locator;
+    @Inject protected transient PlayerSessionLocator _locator;
 }

@@ -173,7 +173,7 @@ public class AetherManager
 
     @Inject protected NotificationManager _notifyMan;
     @Inject protected PlayerNodeActions _actions;
-    @Inject protected PlayerLocator _locator;
+    @Inject protected PlayerSessionLocator _locator;
     @Inject protected OrthPeerManager _peermgr;
     @Inject protected FriendManager _friendMgr;
 }

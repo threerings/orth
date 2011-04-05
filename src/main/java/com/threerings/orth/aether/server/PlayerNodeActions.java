@@ -169,7 +169,7 @@ public class PlayerNodeActions
         protected List<Integer> _friends;
 
         /** Used to look up player objects. */
-        @Inject protected transient PlayerLocator _locator;
+        @Inject protected transient PlayerSessionLocator _locator;
     }
 
     protected static class FriendEntryUpdate extends AllFriendsAction

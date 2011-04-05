@@ -4,7 +4,7 @@
 package com.threerings.orth.chat.server;
 
 import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.aether.server.PlayerLocator;
+import com.threerings.orth.aether.server.PlayerSessionLocator;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.server.SpeakProvider;
@@ -23,7 +23,7 @@ import com.threerings.presents.server.InvocationException;
 public class OrthSpeakProvider
     implements SpeakProvider
 {
-    public OrthSpeakProvider (SpeakObject obj, PlayerLocator locator)
+    public OrthSpeakProvider (SpeakObject obj, PlayerSessionLocator locator)
     {
         _speakObj = obj;
         _locator = locator;
@@ -41,5 +41,5 @@ public class OrthSpeakProvider
     }
 
     protected SpeakObject _speakObj;
-    protected PlayerLocator _locator;
+    protected PlayerSessionLocator _locator;
 }

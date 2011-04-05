@@ -6,8 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Objects;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.SetMultimap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -32,6 +33,7 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.peer.server.NodeRequestsListener;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.PresentsSession;
 import com.threerings.util.Resulting;
 
 /**
@@ -48,20 +50,21 @@ public class FriendManager implements Lifecycle.InitComponent
     @Override
     public void init ()
     {
+        _locator.addObserver(new PlayerSessionLocator.Observer() {
+            @Override public void playerLoggedIn (PresentsSession session, PlayerObject plobj) {
+                initFriends(plobj);
+            }
+
+            @Override public void playerWillLogout (PresentsSession session, PlayerObject plobj) {
+                shutdownFriends(plobj);
+            }
+        });
         _aetherMgr.addObserver(new OrthPeerManager.FarSeeingObserver<PlayerName>() {
             @Override public void loggedOn (String node, PlayerName member) {
-                boolean local = Objects.equal(_peermgr.getNodeObject().nodeName, node);
-                if (local) {
-                    initFriends(member.getId());
-                }
-                notifyFriends(member.getId(), true);
+                notifyFriends(member.getId(), FriendEntry.Status.ONLINE);
             }
             @Override public void loggedOff (String node, PlayerName member) {
-                boolean local = Objects.equal(_peermgr.getNodeObject().nodeName, node);
-                if (local) {
-                    shutdownFriends(member.getId());
-                }
-                notifyFriends(member.getId(), false);
+                notifyFriends(member.getId(), FriendEntry.Status.OFFLINE);
             }
         });
     }
@@ -108,6 +111,7 @@ public class FriendManager implements Lifecycle.InitComponent
         // forward this acceptance to the server the other player is on
         _peermgr.invokeNodeRequest(new PlayerNodeRequest(senderId) {
             @Inject transient OrthPeerManager peermgr;
+            @Inject transient FriendManager friendmgr;
             @Override protected void execute (PlayerObject sender, ResultListener listener) {
                 PlayerLocal local = sender.getLocal(PlayerLocal.class);
                 if (local.pendingFriendRequests.remove(acceptingPlayerId) == null) {
@@ -118,7 +122,14 @@ public class FriendManager implements Lifecycle.InitComponent
                 }
 
                 // add the friend!
-                addFriend(sender, peermgr.locatePlayer(acceptingPlayerId));
+                OrthClientInfo other = peermgr.locatePlayer(acceptingPlayerId);
+                if (other == null) {
+                    log.warning("Edge case, accepting friend logged off before sender received " +
+                        "notification of friendship", "senderId", senderId,
+                        "acceptingPlayerId", acceptingPlayerId);
+                } else {
+                    friendmgr.addNewFriend(sender, other);
+                }
 
                 // finished, go back to the original peer
                 listener.requestProcessed(null);
@@ -126,7 +137,7 @@ public class FriendManager implements Lifecycle.InitComponent
         }, new NodeRequestsListener<Void>() {
             @Override public void requestsProcessed (NodeRequestsResult<Void> result) {
                 // all clear, add the friend!
-                addFriend(acceptingPlayer, _peermgr.locatePlayer(senderId));
+                addNewFriend(acceptingPlayer, _peermgr.locatePlayer(senderId));
 
                 // persist: friends4evah
                 _invoker.postRunnable(new Runnable() {
@@ -147,13 +158,10 @@ public class FriendManager implements Lifecycle.InitComponent
     /**
      * Sets up the members friends and adds to friend tracking.
      */
-    protected void initFriends (final int memberId)
+    protected void initFriends (final PlayerObject player)
     {
-        final PlayerObject player = _locator.lookupPlayer(memberId);
-        if (player == null) {
-            log.warning("Expected the player to be resolved by now", "memberId", memberId);
-            return;
-        }
+        log.debug("Strarting resolution of friends dset", "player", player);
+
         if (player.friends.size() != 0) {
             log.warning("Friends already? Something is very wrong.", "player", player.who());
             return;
@@ -204,6 +212,12 @@ public class FriendManager implements Lifecycle.InitComponent
         // this is inefficient but very very rare
         for (FriendEntry entry : player.friends) {
             friends.remove(entry);
+            friends.add(entry);
+        }
+
+        // set up the reverse listening map
+        for (FriendEntry entry : friends) {
+            _notifyMap.put(entry.name.getId(), player);
         }
 
         // set the friends
@@ -211,16 +225,42 @@ public class FriendManager implements Lifecycle.InitComponent
 
         // clear out the holding buffer
         player.getLocal(PlayerLocal.class).unresolvedFriendIds = null;
+
+        log.debug("Finished resolution of friends dset", "player", player);
     }
 
-    protected void shutdownFriends (int memberId)
+    protected void shutdownFriends (PlayerObject player)
     {
-        // TODO
+        log.debug("Removing friend notifications", "player", player);
+
+        for (FriendEntry entry : player.friends) {
+            _notifyMap.remove(entry.name.getId(), player);
+        }
     }
 
-    protected void notifyFriends (int memberId, boolean online)
+    protected void notifyFriends (int playerId, FriendEntry.Status status)
     {
-        // TODO
+        log.debug("Notifying friends", "playerId", playerId, "status", status);
+
+        Integer boxedPlayerId = playerId;
+        for (PlayerObject friend : _notifyMap.get(playerId)) {
+            FriendEntry entry = friend.friends.get(boxedPlayerId);
+            if (entry == null) {
+                continue;
+            }
+            entry = entry.clone();
+            entry.status = status;
+            friend.updateFriends(entry);
+        }
+    }
+
+    protected void addNewFriend (PlayerObject player, OrthClientInfo other)
+    {
+        if (other == null) {
+            return;
+        }
+        player.addToFriends(toFriendEntry(other));
+        _notifyMap.put(other.playerName.getId(), player);
     }
 
     protected static FriendEntry toFriendEntry (OrthClientInfo info)
@@ -228,16 +268,12 @@ public class FriendManager implements Lifecycle.InitComponent
         return FriendEntry.fromPlayerName(info.playerName, FriendEntry.Status.ONLINE);
     }
 
-    protected static void addFriend (PlayerObject player, OrthClientInfo other)
-    {
-        if (other == null) {
-            return;
-        }
-        player.addToFriends(toFriendEntry(other));
-    }
+    /** Mapping of local and remote player ids to friend ids logged into this server. */
+    protected SetMultimap<Integer, PlayerObject> _notifyMap = HashMultimap.create();
 
+    // dependencies
     @Inject protected AetherManager _aetherMgr;
-    @Inject protected PlayerLocator _locator;
+    @Inject protected PlayerSessionLocator _locator;
     @Inject protected OrthPeerManager _peermgr;
     @Inject protected OrthPlayerRepository _playerrepo;
     @Inject protected RelationshipRepository _friendrepo;
