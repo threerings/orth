@@ -59,6 +59,16 @@ public class FriendEntry extends PlayerEntry
         this.statusMessage = statusMessage;
     }
 
+    /** Copies this friend entry. */
+    public FriendEntry clone ()
+    {
+        try {
+            return (FriendEntry)super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(e);
+        }
+    }
+
     @Override
     public String toString ()
     {
