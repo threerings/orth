@@ -535,18 +535,6 @@ public class RoomObjectController extends RoomController
             ident, key, data, _octx.resultListener(resultHandler));
     }
 
-    // documentation inherited
-    override protected function keyEvent (event :KeyboardEvent) :void
-    {
-        if (event.keyCode == Keyboard.F6) {
-            _comicOverlay.setClickableGlyphs(event.type == KeyboardEvent.KEY_DOWN);
-            event.updateAfterEvent();
-            return;
-        }
-
-        super.keyEvent(event);
-    }
-
     /**
      * Find a user's SocializerInfo by their memberId.
      */
