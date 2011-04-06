@@ -47,6 +47,11 @@ public class HostedLocus extends SimpleStreamableObject
 
 // GENERATED STREAMING END
 
+    public function getKey () :Object
+    {
+        return locus.getId();
+    }
+
 // GENERATED CLASSFINISH START
 }
 }

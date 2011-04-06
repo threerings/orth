@@ -36,6 +36,13 @@ public class Locus extends SimpleStreamableObject
 
 // GENERATED STREAMING END
 
+    /**
+     * Gets a unique identifier for this locus, used as a dset key.
+     */
+    public function getId () :int
+    {
+        throw new Error("abstract");
+    }
 // GENERATED CLASSFINISH START
 }
 }

@@ -16,6 +16,13 @@ import com.threerings.orth.locus.data.Locus;
 public class GuildLocus extends Locus
 {
 // GENERATED CLASSDECL END
+    public function GuildLocus (guildId :int=0)
+    {
+        // TODO: this guild stuff needs a supporting module, credentials, bootstrap etc.
+        super(null);
+        this.guildId = guildId;
+    }
+
 
 // GENERATED STREAMING START
     public var guildId :int;
@@ -34,6 +41,10 @@ public class GuildLocus extends Locus
 
 // GENERATED STREAMING END
 
+    override public function getId () :int
+    {
+        return guildId;
+    }
 // GENERATED CLASSFINISH START
 }
 }

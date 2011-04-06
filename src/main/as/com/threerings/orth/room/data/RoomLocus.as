@@ -53,6 +53,10 @@ public class RoomLocus extends Locus
 
 // GENERATED STREAMING END
 
+    override public function getId () :int
+    {
+        return sceneId;
+    }
 // GENERATED CLASSFINISH START
 }
 }

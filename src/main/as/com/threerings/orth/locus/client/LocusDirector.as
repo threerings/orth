@@ -20,7 +20,6 @@ import com.threerings.orth.locus.client.LocusService_LocusMaterializationListene
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusMarshaller;
-import com.threerings.orth.room.data.HostedRoom;
 
 /**
  * Handles moving around in the virtual locus.
@@ -33,7 +32,6 @@ public class LocusDirector extends BasicDirector
 
     // statically reference classes we require
     LocusMarshaller;
-    HostedRoom;
 
     public function LocusDirector ()
     {
