@@ -17,7 +17,6 @@ import com.threerings.orth.room.client.RoomModule;
 
 // GENERATED CLASSDECL START
 public class RoomLocus extends Locus
-    implements Comparable
 {
 // GENERATED CLASSDECL END
 

@@ -50,7 +50,6 @@ import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.OrthPlaceBox;
 import com.threerings.orth.client.OrthResourceFactory;
-import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.MediaDescSize;
