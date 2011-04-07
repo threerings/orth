@@ -16,4 +16,17 @@ public abstract class Nodelet extends SimpleStreamableObject
     /** The unique integer identifying this nodelet. Note the ids are only unique within the
      * scope of the concrete implementing type. */
     public abstract int getId ();
+
+    @Override // from Object
+    public int hashCode ()
+    {
+        return getId();
+    }
+
+    @Override // from Object
+    public boolean equals (Object obj)
+    {
+        return getClass().isInstance(obj) &&
+            getClass().cast(obj).getId() == getId();
+    }
 }
