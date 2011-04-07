@@ -17,9 +17,9 @@ import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.LocusService;
 import com.threerings.orth.locus.client.LocusService_LocusMaterializationListener;
-import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusMarshaller;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 
 /**
  * Handles moving around in the virtual locus.
@@ -80,7 +80,7 @@ public class LocusDirector extends BasicDirector
     }
 
     // from Java LocusService_PlaceResolutionListener
-    public function locusMaterialized (hosted :HostedLocus) :void
+    public function locusMaterialized (hosted :HostedNodelet) :void
     {
         // note our peer
         _pendingPeer = hosted.host;

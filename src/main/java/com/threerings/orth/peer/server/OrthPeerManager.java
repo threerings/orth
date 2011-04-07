@@ -22,8 +22,8 @@ import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.locus.data.HostedLocus;
-import com.threerings.orth.locus.data.Locus;
+import com.threerings.orth.nodelet.data.HostedNodelet;
+import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.room.data.RoomLocus;
@@ -76,14 +76,15 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     /**
-     * Returns the node name of the peer that is hosting the specified locus, or null if no peer
-     * has published that they are hosting the place.
+     * Returns the node name of the peer that is hosting the specified nodelet, or null if no peer
+     * has published that they are hosting it.
      */
-    public HostedLocus findHostedLocus (final String dsetName, final Locus locus)
+    public HostedNodelet findHostedNodelet (final String dsetName, final Nodelet nodelet)
     {
-        return lookupNodeDatum(new Function<NodeObject, HostedLocus>() {
-            public HostedLocus apply (NodeObject nodeobj) {
-                return ((OrthNodeObject) nodeobj).<HostedLocus>getSet(dsetName).get(locus.getId());
+        return lookupNodeDatum(new Function<NodeObject, HostedNodelet>() {
+            public HostedNodelet apply (NodeObject nodeobj) {
+                return ((OrthNodeObject) nodeobj)
+                    .<HostedNodelet>getSet(dsetName).get(nodelet.getId());
             }
         });
     }
@@ -92,9 +93,9 @@ public abstract class OrthPeerManager extends PeerManager
      * Returns the node name of the peer that is hosting the specified room, or null if no peer
      * has published that they are hosting the place.
      */
-    public HostedLocus findHostedRoom (RoomLocus locus)
+    public HostedNodelet findHostedRoom (RoomLocus locus)
     {
-        return findHostedLocus(OrthNodeObject.HOSTED_ROOMS, locus);
+        return findHostedNodelet(OrthNodeObject.HOSTED_ROOMS, locus);
     }
 
     /**

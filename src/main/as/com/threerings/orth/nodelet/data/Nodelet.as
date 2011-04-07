@@ -3,26 +3,18 @@
 // $Id$
 
 
-package com.threerings.orth.locus.data {
+package com.threerings.orth.nodelet.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-
-import com.threerings.orth.nodelet.data.Nodelet;
+import com.threerings.io.SimpleStreamableObject;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class Locus extends Nodelet
+public class Nodelet extends SimpleStreamableObject
 {
 // GENERATED CLASSDECL END
-
-    public var moduleClass :Class;
-
-    public function Locus (moduleClass :Class)
-    {
-        this.moduleClass = moduleClass;
-    }
 
 // GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void
@@ -37,6 +29,13 @@ public class Locus extends Nodelet
 
 // GENERATED STREAMING END
 
+    /**
+     * Gets a unique identifier for this locus, used as a dset key.
+     */
+    public function getId () :int
+    {
+        throw new Error("abstract");
+    }
 // GENERATED CLASSFINISH START
 }
 }

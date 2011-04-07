@@ -6,13 +6,18 @@ package com.threerings.orth.locus.server;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import com.samskivert.util.ResultListener;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusMarshaller;
+import com.threerings.orth.nodelet.data.HostedNodelet;
+import com.threerings.orth.nodelet.data.Nodelet;
+import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
@@ -22,21 +27,49 @@ public class LocusManager
     implements LocusProvider
 {
     @Inject
-    public LocusManager (InvocationManager invmgr, Map<Class<?>, LocusMaterializer> _materializers)
+    public LocusManager (InvocationManager invmgr, Map<Class<?>, LocusMaterializer> materializers)
     {
         invmgr.registerProvider(this, LocusMarshaller.class, OrthCodes.LOCUS_GROUP);
+        for (Map.Entry<Class<?>, LocusMaterializer> entry : materializers.entrySet()) {
+            _registries.put(entry.getKey(), new LocusRegistry(entry.getValue()));
+        }
     }
 
     @Override
     public void materializeLocus (ClientObject caller, Locus locus,
-        LocusMaterializationListener listener)
+            final LocusMaterializationListener listener)
         throws InvocationException
     {
-        LocusMaterializer materializer = _materializers.get(locus.getClass());
-        Preconditions.checkNotNull(materializer, "No materializer for locus '%s' of class '%s'",
+        LocusRegistry reg = _registries.get(locus.getClass());
+        Preconditions.checkNotNull(reg, "No registry for locus '%s' of class '%s'",
             locus, locus.getClass());
-        materializer.materializeLocus(caller, locus, listener);
+        reg.materialize(caller, locus, new ResultListener<HostedNodelet>() {
+            @Override public void requestCompleted (HostedNodelet locus) {
+                listener.locusMaterialized(locus);
+            }
+
+            @Override public void requestFailed (Exception cause) {
+                listener.requestFailed(cause.getMessage());
+            }
+        });
     }
 
-    @Inject protected Map<Class<?>, LocusMaterializer> _materializers;
+    protected static class LocusRegistry extends NodeletRegistry
+    {
+        public LocusRegistry (LocusMaterializer materializer)
+        {
+            super(materializer.getDSetName());
+        }
+
+        @Override
+        protected void host (ClientObject caller, Nodelet nodelet,
+            ResultListener<HostedNodelet> listener)
+        {
+            _materializer.materializeLocus(caller, (Locus)nodelet, listener);
+        }
+
+        protected LocusMaterializer _materializer;
+    }
+
+    protected Map<Class<?>, LocusRegistry> _registries = Maps.newHashMap();
 }

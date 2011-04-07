@@ -3,7 +3,7 @@
 // $Id$
 
 
-package com.threerings.orth.locus.data {
+package com.threerings.orth.nodelet.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
@@ -12,18 +12,18 @@ import com.threerings.io.TypedArray;
 
 import com.threerings.presents.dobj.DSet_Entry;
 
-import com.threerings.orth.locus.data.Locus;
+import com.threerings.orth.nodelet.data.Nodelet;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class HostedLocus extends SimpleStreamableObject
+public class HostedNodelet extends SimpleStreamableObject
     implements DSet_Entry
 {
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
-    public var locus :Locus;
+    public var nodelet :Nodelet;
 
     public var host :String;
 
@@ -32,7 +32,7 @@ public class HostedLocus extends SimpleStreamableObject
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        locus = ins.readObject(Locus);
+        nodelet = ins.readObject(Nodelet);
         host = ins.readField(String);
         ports = ins.readField(TypedArray.getJavaType(int));
     }
@@ -40,7 +40,7 @@ public class HostedLocus extends SimpleStreamableObject
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeObject(locus);
+        out.writeObject(nodelet);
         out.writeField(host);
         out.writeField(ports);
     }
@@ -49,9 +49,8 @@ public class HostedLocus extends SimpleStreamableObject
 
     public function getKey () :Object
     {
-        return locus.getId();
+        return nodelet.getId();
     }
-
 // GENERATED CLASSFINISH START
 }
 }

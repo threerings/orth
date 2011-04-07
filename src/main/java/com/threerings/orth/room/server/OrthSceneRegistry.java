@@ -9,11 +9,9 @@ import com.google.inject.Singleton;
 
 import com.samskivert.util.ResultListener;
 
-import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.locus.data.Locus;
-import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.server.LocusMaterializer;
-import com.threerings.orth.locus.server.LocusRegistry;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.room.data.ActorObject;
@@ -39,20 +37,6 @@ public class OrthSceneRegistry extends SpotSceneRegistry
     {
         super(invmgr);
         invmgr.registerProvider(this, OrthSceneMarshaller.class, SceneCodes.WHIRLED_GROUP);
-        _locusReg = new LocusRegistry(OrthNodeObject.HOSTED_ROOMS) {
-            @Override protected void hostLocus (final Locus locus,
-                    final ResultListener<HostedLocus> rl) {
-                resolveScene(locus.getId(), new ResolutionListener() {
-                    @Override public void sceneWasResolved (SceneManager scmgr) {
-                        rl.requestCompleted(new HostedLocus(locus, getHost(), getPorts()));
-                    }
-                    @Override public void sceneFailedToResolve (int sceneId, Exception reason) {
-                        rl.requestFailed(reason);
-                    }
-                });
-            }
-        };
-        injector.injectMembers(_locusReg);
     }
 
     // from interface OrthSceneProvider
@@ -70,10 +54,24 @@ public class OrthSceneRegistry extends SpotSceneRegistry
                 _locman, mover, version, portalId, destLoc, listener));
     }
 
-    @Override public void materializeLocus (ClientObject caller, Locus locus,
-        LocusMaterializationListener listener)
+    @Override
+    public void materializeLocus (ClientObject caller, final Locus locus,
+            final ResultListener<HostedNodelet> rl)
     {
-        _locusReg.materializeLocus(caller, locus, listener);
+        resolveScene(locus.getId(), new ResolutionListener() {
+            @Override public void sceneWasResolved (SceneManager scmgr) {
+                rl.requestCompleted(new HostedNodelet(locus, getHost(), getPorts()));
+            }
+            @Override public void sceneFailedToResolve (int sceneId, Exception reason) {
+                rl.requestFailed(reason);
+            }
+        });
+    }
+
+    @Override
+    public String getDSetName ()
+    {
+        return OrthNodeObject.HOSTED_ROOMS;
     }
 
     public String getHost ()
@@ -91,9 +89,6 @@ public class OrthSceneRegistry extends SpotSceneRegistry
     {
         return getClass().getSimpleName();
     }
-
-    /** Our locus registry. */
-    protected LocusRegistry _locusReg;
 
     // our dependencies
     @Inject protected Injector _injector;

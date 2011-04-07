@@ -15,7 +15,7 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.locus.data.HostedLocus;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.notify.data.GenericNotification;
 import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.party.data.MemberParty;
@@ -377,9 +377,9 @@ public class PartyManager
     protected void updateStatus ()
     {
         // TODO(bruno): This assumes the party is in a room. Can we make that assumption here?
-        HostedLocus room = _peerMgr.findHostedRoom(new RoomLocus(_partyObj.sceneId));
+        HostedNodelet room = _peerMgr.findHostedRoom(new RoomLocus(_partyObj.sceneId));
         if (room != null) {
-            setStatus("" + ((RoomLocus)room.locus).sceneId, PartyCodes.STATUS_TYPE_SCENE);
+            setStatus("" + ((RoomLocus)room.nodelet).sceneId, PartyCodes.STATUS_TYPE_SCENE);
         } else {
             // we see this, we can investigate
             setStatus("unknown: " + _partyObj.sceneId, PartyCodes.STATUS_TYPE_USER);

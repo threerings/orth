@@ -5,7 +5,7 @@ package com.threerings.orth.peer.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.locus.data.HostedLocus;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.MemberParty;
 import com.threerings.orth.party.data.PartyInfo;
 import com.threerings.orth.party.data.PartySummary;
@@ -47,7 +47,7 @@ public class OrthNodeObject extends NodeObject
     // AUTO-GENERATED: FIELDS END
 
     /** Contains info on all places hosted by this server. */
-    public DSet<HostedLocus> hostedRooms = DSet.newDSet();
+    public DSet<HostedNodelet> hostedRooms = DSet.newDSet();
 
     /** Contains the immutable summaries for all parties on this node. */
     public DSet<PartySummary> hostedParties = DSet.newDSet();
@@ -59,7 +59,7 @@ public class OrthNodeObject extends NodeObject
     public DSet<MemberParty> memberParties = DSet.newDSet();
 
     /** Contains the guilds hosted by this server. */
-    public DSet<HostedLocus> hostedGuilds = DSet.newDSet();
+    public DSet<HostedNodelet> hostedGuilds = DSet.newDSet();
 
     /** Handles party communication between peers. */
     public PeerPartyMarshaller peerPartyService;
@@ -71,7 +71,7 @@ public class OrthNodeObject extends NodeObject
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void addToHostedRooms (HostedLocus elem)
+    public void addToHostedRooms (HostedNodelet elem)
     {
         requestEntryAdd(HOSTED_ROOMS, hostedRooms, elem);
     }
@@ -93,7 +93,7 @@ public class OrthNodeObject extends NodeObject
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void updateHostedRooms (HostedLocus elem)
+    public void updateHostedRooms (HostedNodelet elem)
     {
         requestEntryUpdate(HOSTED_ROOMS, hostedRooms, elem);
     }
@@ -109,10 +109,10 @@ public class OrthNodeObject extends NodeObject
      * value change when they received the attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setHostedRooms (DSet<HostedLocus> value)
+    public void setHostedRooms (DSet<HostedNodelet> value)
     {
         requestAttributeChange(HOSTED_ROOMS, value, this.hostedRooms);
-        DSet<HostedLocus> clone = (value == null) ? null : value.clone();
+        DSet<HostedNodelet> clone = (value == null) ? null : value.clone();
         this.hostedRooms = clone;
     }
 
@@ -275,7 +275,7 @@ public class OrthNodeObject extends NodeObject
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void addToHostedGuilds (HostedLocus elem)
+    public void addToHostedGuilds (HostedNodelet elem)
     {
         requestEntryAdd(HOSTED_GUILDS, hostedGuilds, elem);
     }
@@ -297,7 +297,7 @@ public class OrthNodeObject extends NodeObject
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void updateHostedGuilds (HostedLocus elem)
+    public void updateHostedGuilds (HostedNodelet elem)
     {
         requestEntryUpdate(HOSTED_GUILDS, hostedGuilds, elem);
     }
@@ -313,10 +313,10 @@ public class OrthNodeObject extends NodeObject
      * value change when they received the attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setHostedGuilds (DSet<HostedLocus> value)
+    public void setHostedGuilds (DSet<HostedNodelet> value)
     {
         requestAttributeChange(HOSTED_GUILDS, value, this.hostedGuilds);
-        DSet<HostedLocus> clone = (value == null) ? null : value.clone();
+        DSet<HostedNodelet> clone = (value == null) ? null : value.clone();
         this.hostedGuilds = clone;
     }
 

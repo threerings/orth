@@ -1,21 +1,21 @@
 //
 // $Id$
 
-package com.threerings.orth.locus.data;
+package com.threerings.orth.nodelet.data;
 
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.presents.dobj.DSet;
 
-public final class HostedLocus extends SimpleStreamableObject
+public final class HostedNodelet extends SimpleStreamableObject
     implements DSet.Entry
 {
-    public Locus locus;
+    public Nodelet nodelet;
     public String host;
     public int[] ports;
 
-    public HostedLocus (Locus locus, String host, int[] ports)
+    public HostedNodelet (Nodelet nodelet, String host, int[] ports)
     {
-        this.locus = locus;
+        this.nodelet = nodelet;
         this.host = host;
         this.ports = ports;
     }
@@ -23,6 +23,6 @@ public final class HostedLocus extends SimpleStreamableObject
     @Override
     public Comparable<?> getKey ()
     {
-        return locus.getId();
+        return nodelet.getId();
     }
 }

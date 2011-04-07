@@ -6,6 +6,7 @@ package com.threerings.orth.locus.data;
 import javax.annotation.Generated;
 
 import com.threerings.orth.locus.client.LocusService;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.presents.data.InvocationMarshaller;
 
 /**
@@ -31,7 +32,7 @@ public class LocusMarshaller extends InvocationMarshaller
         public static final int LOCUS_MATERIALIZED = 1;
 
         // from interface LocusMaterializationMarshaller
-        public void locusMaterialized (HostedLocus arg1)
+        public void locusMaterialized (HostedNodelet arg1)
         {
             sendResponse(LOCUS_MATERIALIZED, new Object[] { arg1 });
         }
@@ -42,7 +43,7 @@ public class LocusMarshaller extends InvocationMarshaller
             switch (methodId) {
             case LOCUS_MATERIALIZED:
                 ((LocusMaterializationListener)listener).locusMaterialized(
-                    (HostedLocus)args[0]);
+                    (HostedNodelet)args[0]);
                 return;
 
             default:
