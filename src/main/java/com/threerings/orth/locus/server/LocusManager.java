@@ -8,6 +8,7 @@ import java.util.Map;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 import com.samskivert.util.ResultListener;
@@ -27,11 +28,14 @@ public class LocusManager
     implements LocusProvider
 {
     @Inject
-    public LocusManager (InvocationManager invmgr, Map<Class<?>, LocusMaterializer> materializers)
+    public LocusManager (InvocationManager invmgr, Injector injector,
+            Map<Class<?>, LocusMaterializer> materializers)
     {
         invmgr.registerProvider(this, LocusMarshaller.class, OrthCodes.LOCUS_GROUP);
         for (Map.Entry<Class<?>, LocusMaterializer> entry : materializers.entrySet()) {
-            _registries.put(entry.getKey(), new LocusRegistry(entry.getValue()));
+            LocusRegistry reg = new LocusRegistry(entry.getValue());
+            injector.injectMembers(reg);
+            _registries.put(entry.getKey(), reg);
         }
     }
 
@@ -59,6 +63,7 @@ public class LocusManager
         public LocusRegistry (LocusMaterializer materializer)
         {
             super(materializer.getDSetName());
+            _materializer = materializer;
         }
 
         @Override
