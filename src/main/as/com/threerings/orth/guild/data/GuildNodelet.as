@@ -7,22 +7,13 @@ package com.threerings.orth.guild.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-
-import com.threerings.orth.locus.data.Locus;
-
+import com.threerings.orth.nodelet.data.Nodelet;
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class GuildLocus extends Locus
+public class GuildNodelet extends Nodelet
 {
 // GENERATED CLASSDECL END
-    public function GuildLocus (guildId :int=0)
-    {
-        // TODO: this guild stuff needs a supporting module, credentials, bootstrap etc.
-        super(null);
-        this.guildId = guildId;
-    }
-
 
 // GENERATED STREAMING START
     public var guildId :int;
@@ -41,10 +32,6 @@ public class GuildLocus extends Locus
 
 // GENERATED STREAMING END
 
-    override public function getId () :int
-    {
-        return guildId;
-    }
 // GENERATED CLASSFINISH START
 }
 }

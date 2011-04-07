@@ -1,12 +1,12 @@
 package com.threerings.orth.guild.data;
 
-import com.threerings.orth.locus.data.Locus;
+import com.threerings.orth.nodelet.data.Nodelet;
 
-public class GuildLocus extends Locus
+public class GuildNodelet extends Nodelet
 {
     public int guildId;
 
-    public GuildLocus (int guildId)
+    public GuildNodelet (int guildId)
     {
         this.guildId = guildId;
     }
