@@ -7,16 +7,16 @@ package com.threerings.orth.party.data {
 
 import org.osflash.signals.Signal;
 
-import com.threerings.crowd.data.BodyObject;
-
 import com.threerings.io.ObjectInputStream;
+
+import com.threerings.presents.data.ClientObject;
 
 import com.threerings.orth.aether.data.VizPlayerName;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class PartierObject extends BodyObject
+public class PartierObject extends ClientObject
 {
 // GENERATED CLASSDECL END
 

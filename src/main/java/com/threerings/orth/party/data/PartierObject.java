@@ -5,16 +5,14 @@ package com.threerings.orth.party.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.util.Name;
-
-import com.threerings.crowd.data.BodyObject;
+import com.threerings.presents.data.ClientObject;
 
 import com.threerings.orth.aether.data.VizPlayerName;
 
 /**
  * Contains information on a party player logged into the server.
  */
-public class PartierObject extends BodyObject
+public class PartierObject extends ClientObject
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>playerName</code> field. */
@@ -38,12 +36,6 @@ public class PartierObject extends BodyObject
     public int getPlayerId ()
     {
         return playerName.getId();
-    }
-
-    @Override // from BodyObject
-    public Name getVisibleName ()
-    {
-        return playerName;
     }
 
     // AUTO-GENERATED: METHODS START
