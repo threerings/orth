@@ -18,7 +18,7 @@ import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusMarshaller;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
-import com.threerings.orth.nodelet.server.NodeletRegistry;
+import com.threerings.orth.nodelet.server.NodeletHoster;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
@@ -33,7 +33,7 @@ public class LocusManager
     {
         invmgr.registerProvider(this, LocusMarshaller.class, OrthCodes.LOCUS_GROUP);
         for (Map.Entry<Class<?>, LocusMaterializer> entry : materializers.entrySet()) {
-            LocusRegistry reg = new LocusRegistry(entry.getValue());
+            LocusHoster reg = new LocusHoster(entry.getValue());
             injector.injectMembers(reg);
             _registries.put(entry.getKey(), reg);
         }
@@ -44,10 +44,10 @@ public class LocusManager
             final LocusMaterializationListener listener)
         throws InvocationException
     {
-        LocusRegistry reg = _registries.get(locus.getClass());
-        Preconditions.checkNotNull(reg, "No registry for locus '%s' of class '%s'",
+        LocusHoster hoster = _registries.get(locus.getClass());
+        Preconditions.checkNotNull(hoster, "No hoster for locus '%s' of class '%s'",
             locus, locus.getClass());
-        reg.materialize(caller, locus, new ResultListener<HostedNodelet>() {
+        hoster.resolveHosting(caller, locus, new ResultListener<HostedNodelet>() {
             @Override public void requestCompleted (HostedNodelet locus) {
                 listener.locusMaterialized(locus);
             }
@@ -58,9 +58,9 @@ public class LocusManager
         });
     }
 
-    protected static class LocusRegistry extends NodeletRegistry
+    protected static class LocusHoster extends NodeletHoster
     {
-        public LocusRegistry (LocusMaterializer materializer)
+        public LocusHoster (LocusMaterializer materializer)
         {
             super(materializer.getDSetName());
             _materializer = materializer;
@@ -76,5 +76,5 @@ public class LocusManager
         protected LocusMaterializer _materializer;
     }
 
-    protected Map<Class<?>, LocusRegistry> _registries = Maps.newHashMap();
+    protected Map<Class<?>, LocusHoster> _registries = Maps.newHashMap();
 }
