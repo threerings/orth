@@ -10,13 +10,11 @@ import com.threerings.orth.data.TokenCredentials;
  */
 public class PartyCredentials extends TokenCredentials
 {
-    /** The party that the authenticating user wishes to join. */
-    public int partyId;
-
-    @Override // from TokenCredentials
-    protected void toString (StringBuilder buf)
+    /**
+     * Gets the party id the player wants to access.
+     */
+    public int getPartyId ()
     {
-        super.toString(buf);
-        buf.append(", partyId=").append(partyId);
+        return objectId;
     }
 }

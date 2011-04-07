@@ -18,22 +18,25 @@ public class PartyCredentials extends TokenCredentials
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
-    public var partyId :int;
-
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        partyId = ins.readInt();
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeInt(partyId);
     }
 
 // GENERATED STREAMING END
 
+    /**
+     * Gets the party id the player wants to access.
+     */
+    public function set partyId (id :int) :void
+    {
+        objectId = id;
+    }
 // GENERATED CLASSFINISH START
 }
 }
