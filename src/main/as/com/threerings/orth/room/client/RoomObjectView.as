@@ -31,7 +31,6 @@ import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.orth.chat.client.ChatInfoProvider;
 import com.threerings.orth.client.LoadingWatcher;
-import com.threerings.orth.client.Prefs;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
@@ -85,22 +84,6 @@ public class RoomObjectView extends RoomView
     {
         super.setPlaceSize(unscaledWidth, unscaledHeight);
         updateEditingOverlay();
-    }
-
-    // from Zoomable, via RoomView
-    override public function getZoom () :String
-    {
-        if (_zoom == null) {
-            _zoom = Prefs.getRoomZoom();
-        }
-        return super.getZoom();
-    }
-
-    // from Zoomable, via RoomView
-    override public function setZoom (zoom :String) :void
-    {
-        Prefs.setRoomZoom(zoom);
-        super.setZoom(zoom);
     }
 
     /**

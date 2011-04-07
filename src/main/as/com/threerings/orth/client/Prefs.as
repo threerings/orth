@@ -36,7 +36,6 @@ public class Prefs
     public static const VOLUME :String = "volume";
     public static const PARTY_GROUP :String = "partyGroup";
     public static const AUTOSHOW_PREFIX :String = "autoShow_";
-    public static const ROOM_ZOOM :String = "roomZoom";
     public static const IGNORED_TUTORIAL_IDS :String = "ignoredTutIds";
     public static const TUTORIAL_PROGRESS_PREFIX :String = "tutProgress_";
 
@@ -44,7 +43,7 @@ public class Prefs
 
     /** List of cookies (that the user may see and clear). */
     public static const ALL_KEYS :Array = [
-        VOLUME, PARTY_GROUP,ROOM_ZOOM, IGNORED_TUTORIAL_IDS, TUTORIAL_PROGRESS_PREFIX,
+        VOLUME, PARTY_GROUP, IGNORED_TUTORIAL_IDS, TUTORIAL_PROGRESS_PREFIX,
         AUTOSHOW_PREFIX ];
 
     /**
@@ -85,22 +84,6 @@ public class Prefs
     {
         _config.setValue(VOLUME, vol);
         useSoundVolume();
-    }
-
-    /**
-     * Returns the last set value for the room zoom or null if not set.
-     */
-    public static function getRoomZoom () :String
-    {
-        return _config.getValue(ROOM_ZOOM, null) as String;
-    }
-
-    /**
-     * Sets the room zoom default.
-     */
-    public static function setRoomZoom (value :String) :void
-    {
-        _config.setValue(ROOM_ZOOM, value);
     }
 
     public static function getPartyGroup () :int
