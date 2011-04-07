@@ -28,7 +28,7 @@ public final class FriendEntry_Status extends Enum
     }
 
     /**
-     * Gets the FriendEntry_Status instance that corresponds to the specified string.
+     * Gets the FriendEntry_Status enum that corresponds to the specified string.
      * If no such value exists, an ArgumentError will be thrown.
      */
     public static function valueOf (name :String) :FriendEntry_Status
