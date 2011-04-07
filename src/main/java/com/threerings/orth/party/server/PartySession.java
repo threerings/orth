@@ -28,7 +28,7 @@ public class PartySession extends PresentsSession
         _partierObj = (PartierObject) _clobj;
         // TODO(bruno): OrthObjectAccess
         //_partierObj.setAccessController(OrthObjectAccess.USER);
-        _partierObj.setPartyId(((PartyCredentials)_areq.getCredentials()).partyId);
+        _partierObj.setPartyId(((PartyCredentials)_areq.getCredentials()).getPartyId());
     }
 
     @Override // from PresentsSession
@@ -53,7 +53,7 @@ public class PartySession extends PresentsSession
 
         // fill in the oid
         PartyBootstrapData pdata = (PartyBootstrapData)data;
-        int partyId = ((PartyCredentials)_areq.getCredentials()).partyId;
+        int partyId = ((PartyCredentials)_areq.getCredentials()).getPartyId();
         PartyManager pmgr = _partyReg.getPartyManager(partyId);
         if (pmgr != null) {
             pdata.partyOid = pmgr.getPartyObject().getOid();
