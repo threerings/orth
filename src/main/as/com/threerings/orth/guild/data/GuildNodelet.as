@@ -7,7 +7,9 @@ package com.threerings.orth.guild.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+
 import com.threerings.orth.nodelet.data.Nodelet;
+
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
