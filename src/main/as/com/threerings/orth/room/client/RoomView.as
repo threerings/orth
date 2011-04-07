@@ -240,7 +240,8 @@ public class RoomView extends Sprite
         _layout.updateScreenLocation(sprite, sprite.getLayoutHotSpot());
 
         if (sprite == _bg && _scene.getSceneType() == DecorCodes.FIXED_IMAGE) {
-            sprite.viz.x += getScrollOffset();
+            sprite.viz.x += getScrollOffset().x;
+            sprite.viz.y += getScrollOffset().y;
         }
 
         // if we moved the _centerSprite, possibly update the scroll position
@@ -349,10 +350,9 @@ public class RoomView extends Sprite
     /**
      * Get the current scroll value.
      */
-    public function getScrollOffset () :Number
+    public function getScrollOffset () :Point
     {
-        var r :Rectangle = scrollRect;
-        return (r == null) ? 0 : r.x;
+        return (scrollRect != null) ? scrollRect.topLeft : new Point(0, 0);
     }
 
     /**
@@ -377,7 +377,7 @@ public class RoomView extends Sprite
     public function getScrollSize () :Rectangle
     {
         // figure the upper left in decor pixels, taking into account scroll offset
-        var topLeft :Point = new Point(getScrollOffset(), 0);
+        var topLeft :Point = getScrollOffset();
 
         // and the lower right, possibly cut off by the width of the underlying scene
         var farX :int = getScrollOffset() + _actualWidth / scaleX;
@@ -834,27 +834,48 @@ public class RoomView extends Sprite
         var newX :Number = centerX - (_actualWidth / scaleX)/2;
         newX = Math.min(_scene.getWidth() - rect.width, Math.max(0, newX));
 
-        if (_jumpScroll) {
-            rect.x = newX;
+        var newY :Number = 0;
 
-        } else if (Math.abs(rect.x - newX) > MAX_AUTO_SCROLL) {
-            if (newX > rect.x) {
-                rect.x += MAX_AUTO_SCROLL;
-            } else {
-                rect.x -= MAX_AUTO_SCROLL;
-            }
-            addEventListener(Event.ENTER_FRAME, tick);
+        if (_jumpScroll) {
+            log.info("scrollView: jumpScroll", "rect", rect, "newX", newX, "newY", newY);
+            rect.x = newX;
+            rect.y = newY;
 
         } else {
-            rect.x = newX;
-            removeEventListener(Event.ENTER_FRAME, tick);
-            _jumpScroll = true;
+            var dX :Number = newX - rect.x;
+            var dY :Number = newY - rect.y;
+
+            log.info("scrollView: glide", "rect", rect, "newX", newX, "newY", newY,
+                "maxabs", Math.max(Math.abs(dX), Math.abs(dY)));
+
+            if (Math.max(Math.abs(dX), Math.abs(dY)) > MAX_AUTO_SCROLL) {
+                addEventListener(Event.ENTER_FRAME, tick);
+
+            } else {
+                removeEventListener(Event.ENTER_FRAME, tick);
+                _jumpScroll = true;
+            }
+
+            rect.x += limit(dX, MAX_AUTO_SCROLL);
+            rect.y += limit(dY, MAX_AUTO_SCROLL);
         }
 
         // assign the new scrolling rectangle
         scrollRect = rect;
         _suppressAutoScroll = true;
     }
+
+    protected function limit (n :Number, max :Number) :Number
+    {
+        if (n < -max) {
+            return -max;
+        }
+        if (n > max) {
+            return max;
+        }
+        return n;
+    }
+
 
     protected function tick (event :Event) :void
     {

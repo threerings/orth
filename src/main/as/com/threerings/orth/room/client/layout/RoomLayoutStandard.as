@@ -214,7 +214,9 @@ public class RoomLayoutStandard implements RoomLayout
                 // z=1 to mean zero offset
                 // and z=0 to mean 50% negative offset
                 // these conditions are satisfied by (1 - 3/(z+2))
-                offset.x -= _parentView.getScrollOffset() * (1 - 3/(z+2));;
+                var scroll :Point = _parentView.getScrollOffset();
+                offset.x -= scroll.x * (1 - 3/(z+2));
+                offset.y -= scroll.y * (1 - 3/(z+2));
             }
 
             // finally fall through deliberately
