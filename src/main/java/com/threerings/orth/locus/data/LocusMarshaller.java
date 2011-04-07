@@ -7,7 +7,6 @@ import javax.annotation.Generated;
 
 import com.threerings.orth.locus.client.LocusService;
 import com.threerings.presents.data.InvocationMarshaller;
-import com.threerings.presents.dobj.InvocationResponseEvent;
 
 /**
  * Provides the implementation of the {@link LocusService} interface

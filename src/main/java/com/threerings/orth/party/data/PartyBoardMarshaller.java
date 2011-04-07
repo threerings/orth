@@ -8,7 +8,6 @@ import javax.annotation.Generated;
 import com.threerings.orth.party.client.PartyBoardService;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
-import com.threerings.presents.dobj.InvocationResponseEvent;
 
 /**
  * Provides the implementation of the {@link PartyBoardService} interface
