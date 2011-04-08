@@ -2,8 +2,6 @@ package com.threerings.orth.guild.server.persist;
 
 import java.util.List;
 
-import com.google.inject.Singleton;
-
 import com.threerings.orth.guild.data.GuildRank;
 
 /**
