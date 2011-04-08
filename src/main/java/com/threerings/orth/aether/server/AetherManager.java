@@ -172,6 +172,7 @@ public class AetherManager
     public void createGuild (ClientObject caller, String arg1, InvocationListener arg2)
         throws InvocationException
     {
+        arg2.requestFailed("e.not_implemented");
     }
 
     /** Observers of aether logins throughout the cluster. */
