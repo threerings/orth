@@ -9,6 +9,7 @@ import com.google.inject.Singleton;
 
 import com.samskivert.util.ResultListener;
 
+import com.threerings.orth.data.AuthName;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.server.LocusMaterializer;
 import com.threerings.orth.nodelet.data.HostedNodelet;
@@ -55,7 +56,7 @@ public class OrthSceneRegistry extends SpotSceneRegistry
     }
 
     @Override
-    public void materializeLocus (ClientObject caller, final Locus locus,
+    public void materializeLocus (AuthName caller, final Locus locus,
             final ResultListener<HostedNodelet> rl)
     {
         resolveScene(locus.getId(), new ResolutionListener() {

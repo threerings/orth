@@ -12,6 +12,8 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 import com.samskivert.util.ResultListener;
+
+import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.locus.data.Locus;
@@ -67,8 +69,8 @@ public class LocusManager
         }
 
         @Override
-        protected void host (ClientObject caller, Nodelet nodelet,
-            ResultListener<HostedNodelet> listener)
+        protected void host (AuthName caller, Nodelet nodelet,
+                ResultListener<HostedNodelet> listener)
         {
             _materializer.materializeLocus(caller, (Locus)nodelet, listener);
         }
