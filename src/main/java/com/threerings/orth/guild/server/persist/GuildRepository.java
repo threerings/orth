@@ -9,7 +9,6 @@ import com.threerings.orth.guild.data.GuildRank;
 /**
  * Database abstraction for access to guilds.
  */
-@Singleton
 public interface GuildRepository
 {
     /**
@@ -25,7 +24,7 @@ public interface GuildRepository
     /**
      * Gets the members of the guild with the given guild id.
      */
-    List<GuildMemberRecord> getGuildMembers (int guildId);
+    List<? extends GuildMemberRecord> getGuildMembers (int guildId);
 
     /**
      * Creates a new guild with the given name and first officer.
