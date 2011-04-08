@@ -21,4 +21,8 @@ public interface OrthDeploymentConfig
     String getPartyHost ();
 
     int getPartyPort ();
+
+    String getGuildHost ();
+
+    int[] getGuildPorts ();
 }
