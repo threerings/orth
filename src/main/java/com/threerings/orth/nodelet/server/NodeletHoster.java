@@ -4,9 +4,6 @@ import com.google.inject.Inject;
 
 import com.samskivert.util.ResultListener;
 
-import com.threerings.io.Streamable;
-import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
