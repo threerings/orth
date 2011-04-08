@@ -35,6 +35,11 @@ public class GuildRegistry extends NodeletRegistry
         super(OrthNodeObject.HOSTED_GUILDS, config.getGuildHost(), config.getGuildPorts(), injector);
     }
 
+    /**
+     * Attempts to create a new guild and find a host for it. Upon success, the officer's
+     * {@code guild} member will be updated to the new hosted location and the result listener
+     * notified.
+     */
     public void createAndHostGuild (final String name, final PlayerObject officer,
             final ResultListener<HostedNodelet> rl)
     {
