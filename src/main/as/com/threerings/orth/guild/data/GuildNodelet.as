@@ -34,6 +34,10 @@ public class GuildNodelet extends Nodelet
 
 // GENERATED STREAMING END
 
+    override public function getId () :int
+    {
+        return guildId;
+    }
 // GENERATED CLASSFINISH START
 }
 }
