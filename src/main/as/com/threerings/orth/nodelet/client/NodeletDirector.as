@@ -23,8 +23,17 @@ import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.data.NodeletBootstrapData;
 
+/**
+ * Connects to a nodelet on the server and provides methods, taking care of the generic
+ * interfacing with presents. Subclasses are expected to provide more specific features.
+ * TODO: this is designed mainly with guilds in mind; make more generic
+ */
 public class NodeletDirector extends BasicDirector
 {
+    /**
+     * Creates a new nodelet director using the given dsetName. The dsetName corresponds to one
+     * of the DSet<HostedNodelet> members on the server's PeerNodeObject.
+     */
     public function NodeletDirector (dsetName :String)
     {
         super(new Context(createClient()));
@@ -44,16 +53,41 @@ public class NodeletDirector extends BasicDirector
         refreshPlayer();
     }
 
-    public function createClient () :Client
+    /**
+     * Creates the client to use in making this nodelet connection. By default creates a vanilla
+     * presents client.
+     */
+    protected function createClient () :Client
     {
         return new Client();
     }
 
+    /**
+     * Called whenever the aether player object is changed. It is expected that nodelet
+     * directors will want to respond to this in some way. Typically, subclasses should
+     * have an override something like this:
+     * <listing version="3.0">
+     *     override protected function refreshPlayer () :void
+     *     {
+     *         if (_plobj != null) {
+     *             // clean up associated with _plobbj
+     *         }
+     *         super.refreshPlayer();
+     *         if (_plobj != null) {
+     *             // start using _plobj
+     *         }
+     *     }
+     * </listing>
+     */
     protected function refreshPlayer () :void
     {
         _plobj = _octx.getPlayerObject();
     }
 
+    /**
+     * Logs off the current nodelet connection and connects to the given one. When the new
+     * nodelet DObject is available, objectAvailable will be called.
+     */
     protected function connect (nodelet :HostedNodelet) :void
     {
         // TODO: avoid churn if some of the old data is applicable to the new nodelet
@@ -81,35 +115,52 @@ public class NodeletDirector extends BasicDirector
         _nodelet = nodelet;
     }
 
+    /**
+     * Disconnects from the current nodelet, if any.
+     */
     protected function disconnect () :void
     {
         connect(null);
     }
 
+    /**
+     * Gets the auth token to use in the TokenCredentials for connecting to the nodelet.
+     */
     protected function getAuthToken () :String
     {
         return AetherAuthResponseData(_octx.getClient().getAuthResponseData()).sessionToken;
     }
 
+    // from BasicDirector
     override protected function clientObjectUpdated (client :Client) :void
     {
-        if (_sub != null) {
-            _sub.unsubscribe(_ctx.getDObjectManager());
-            _sub = null;
-        }
-
+        // subscribe to the new object, if we have it in the bootstrap data
         var nbd :NodeletBootstrapData = NodeletBootstrapData(client.getBootstrapData());
         if (nbd.targetOid != 0) {
+            // unsubscribe from the old nodelet, if any
+            if (_sub != null) {
+                _sub.unsubscribe(_ctx.getDObjectManager());
+                _sub = null;
+            }
+
             _sub = new SafeSubscriber(nbd.targetOid, objectAvailable, objectFailed);
             _sub.subscribe(client.getDObjectManager());
         }
+
+        // TODO: other non-bootstrap based oid? Maybe subclasses will do that
     }
 
+    /**
+     * Called when the nodelet dobject subscription failed.
+     */
     protected function objectFailed (oid :int, error :ObjectAccessError) :void
     {
         log.error("Subscription failed", "oid", oid, error);
     }
 
+    /**
+     * Called when the nodelet DObject subscription has finished and the object is ready.
+     */
     protected function objectAvailable (obj :DObject) :void
     {
         _dobj = obj;
@@ -126,7 +177,7 @@ public class NodeletDirector extends BasicDirector
     //protected var _service :NodeletService;
     protected var _dsetName :String;
     protected var _plobj :PlayerObject;
-    protected var _nodelet :HostedNodelet;
+    protected var _nodelet :HostedNodelet; // TODO: may be better not to keep this around
     protected var _sub :SafeSubscriber;
     protected var _dobj :DObject;
 

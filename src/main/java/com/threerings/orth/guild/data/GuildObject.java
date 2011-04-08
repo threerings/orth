@@ -5,6 +5,11 @@ import com.threerings.orth.data.PlayerEntry;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
+/**
+ * Object corresponding to a player guild (a.k.a. universe in the emerging design). Guilds are
+ * hosted by a peer using the nodelet system. Clients instantiate a new connection to access guild
+ * information.
+ */
 public class GuildObject extends DObject
 {
     // AUTO-GENERATED: FIELDS START
