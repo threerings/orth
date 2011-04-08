@@ -109,6 +109,9 @@ public abstract class NodeletHoster
         return _dsetName + "Lock";
     }
 
+    /**
+     * Host the given nodelet locally and provide the listener with the result.
+     */
     protected abstract void host (AuthName caller, Nodelet nodelet,
             ResultListener<HostedNodelet> listener);
 

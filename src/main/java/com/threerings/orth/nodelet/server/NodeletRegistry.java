@@ -4,6 +4,7 @@ import static com.threerings.orth.Log.log;
 
 import java.util.Map;
 
+import com.google.common.base.Functions;
 import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -12,16 +13,6 @@ import com.google.inject.Injector;
 import com.samskivert.util.Logger;
 import com.samskivert.util.ResultListener;
 
-import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.data.OrthAuthCodes;
-import com.threerings.orth.data.TokenCredentials;
-import com.threerings.orth.nodelet.data.HostedNodelet;
-import com.threerings.orth.nodelet.data.Nodelet;
-import com.threerings.orth.nodelet.data.NodeletAuthName;
-import com.threerings.orth.nodelet.data.NodeletBootstrapData;
-import com.threerings.orth.server.persist.OrthPlayerRecord;
-import com.threerings.orth.server.persist.OrthPlayerRepository;
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.net.AuthRequest;
 import com.threerings.presents.net.AuthResponse;
@@ -37,6 +28,18 @@ import com.threerings.presents.server.SessionFactory;
 import com.threerings.presents.server.net.AuthingConnection;
 import com.threerings.presents.server.net.PresentsConnectionManager;
 import com.threerings.util.Name;
+import com.threerings.util.Resulting;
+
+import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.data.AuthName;
+import com.threerings.orth.data.OrthAuthCodes;
+import com.threerings.orth.data.TokenCredentials;
+import com.threerings.orth.nodelet.data.HostedNodelet;
+import com.threerings.orth.nodelet.data.Nodelet;
+import com.threerings.orth.nodelet.data.NodeletAuthName;
+import com.threerings.orth.nodelet.data.NodeletBootstrapData;
+import com.threerings.orth.server.persist.OrthPlayerRecord;
+import com.threerings.orth.server.persist.OrthPlayerRepository;
 
 /**
  * Main entry point for serving various types of nodelets. Abstraction goals:
@@ -46,9 +49,21 @@ import com.threerings.util.Name;
  */
 public abstract class NodeletRegistry extends NodeletHoster
 {
-    public NodeletRegistry (String dsetName, Injector injector)
+    /**
+     * Creates a new nodelet registry that will handle all connections with a matching
+     * {@link TokenCredentials} instance and provide hosting logic for the associated nodelet type.
+     * @param dsetName the name of the DSet in {@link OrthNodeObject} that will contain the
+     *        {@link HostedNodelet} instances. Also matches the {@link TokenCredentials#subsystemId}.
+     * @param hostName the name we use if this server is chosen to host a nodelet
+     * @param ports the ports we use if this server is chosed to host a nodelet
+     * @param injector access to globals
+     * TODO: isolate the subsystem id and the dset name into an orth-level enum
+     */
+    public NodeletRegistry (String dsetName, String hostName, int[] ports, Injector injector)
     {
         super(dsetName);
+        _host = hostName;
+        _ports = ports;
 
         injector.getInstance(PresentsConnectionManager.class)
                 .addChainedAuthenticator(new ChainedAuthenticator() {
@@ -84,6 +99,9 @@ public abstract class NodeletRegistry extends NodeletHoster
         });
     }
 
+    /**
+     * Checks if the incoming connection is configured to access this registry.
+     */
     protected boolean validateCredentials (AuthRequest authReq)
     {
         Credentials creds = authReq.getCredentials();
@@ -94,6 +112,9 @@ public abstract class NodeletRegistry extends NodeletHoster
         return Objects.equal(tokenCreds.subsystemId, _dsetName);
     }
 
+    /**
+     * Checks that the given auth name was created by this registry.
+     */
     protected boolean validateAuthName (Name name)
     {
         if (!(name instanceof NodeletAuthName)) {
@@ -104,15 +125,15 @@ public abstract class NodeletRegistry extends NodeletHoster
         return (nname.getDSetName().equals(_dsetName));
     }
 
-    protected void host (ClientObject caller, Nodelet nodelet,
-            ResultListener<HostedNodelet> listener)
+    @Override // from NodeletHoster
+    protected void host (AuthName caller, Nodelet nodelet, ResultListener<HostedNodelet> listener)
     {
         DObject obj = null;
         NodeletManager mgr = null;
         try {
             obj = _omgr.registerObject(createSharedObject(nodelet));
             mgr = _injector.getInstance(_managerClass);
-            mgr.init(obj);
+            mgr.init(nodelet, obj);
 
         } catch (Exception e) {
             log.warning("Problem hosting nodelet", e);
@@ -129,25 +150,41 @@ public abstract class NodeletRegistry extends NodeletHoster
         }
 
         _mgrs.put(nodelet.getId(), mgr);
-        //_invoker.
+
+        HostedNodelet hosted = new HostedNodelet(nodelet, _host, _ports);
+        if (!mgr.prepare(new Resulting<Void>(listener, Functions.constant(hosted)))) {
+            listener.requestCompleted(hosted);
+        };
     }
 
-    protected void withCredsClass(Class<? extends TokenCredentials> credentialsClass)
+    /**
+     * Override the credentials class used.
+     */
+    protected void setCredsClass(Class<? extends TokenCredentials> credentialsClass)
     {
         _credentialsClass = credentialsClass;
     }
 
-    protected void withResolverClass(Class<? extends Resolver> resolverClass)
+    /**
+     * Override the client resolver class.
+     */
+    protected void setResolverClass(Class<? extends Resolver> resolverClass)
     {
         _resolverClass = resolverClass;
     }
 
-    protected void withSessionClass(Class<? extends Session> sessionClass)
+    /**
+     * Override the session class.
+     */
+    protected void setSessionClass(Class<? extends Session> sessionClass)
     {
         _sessionClass = sessionClass;
     }
 
-    protected void withManagerClass(Class<? extends NodeletManager> mgrClass)
+    /**
+     * Override the manager class.
+     */
+    protected void setManagerClass(Class<? extends NodeletManager> mgrClass)
     {
         _managerClass = mgrClass;
     }
@@ -177,14 +214,21 @@ public abstract class NodeletRegistry extends NodeletHoster
         }
     }
 
+    /**
+     * Creates the DObject corresponding to this nodeley. This is called early in the hosting
+     * process and should just created the correct type of object.
+     */
     protected abstract DObject createSharedObject (Nodelet nodelet);
+
+    protected String _host;
+    protected int[] _ports;
+
+    protected Map<Integer, NodeletManager> _mgrs = Maps.newHashMap();
 
     protected Class<? extends TokenCredentials> _credentialsClass = TokenCredentials.class;
     protected Class<? extends Resolver> _resolverClass = Resolver.class;
     protected Class<? extends Session> _sessionClass = Session.class;
     protected Class<? extends NodeletManager> _managerClass = NodeletManager.class;
-
-    protected Map<Integer, NodeletManager> _mgrs = Maps.newHashMap();
 
     // dependencies
     @Inject protected PresentsDObjectMgr _omgr;
