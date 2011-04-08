@@ -7,7 +7,7 @@ import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.presents.dobj.DSet;
 
 public class PlayerEntry
-    implements /* IsSerializable, */ DSet.Entry
+    implements /* IsSerializable, */ DSet.Entry, Cloneable
 {
     /** The display name of the friend. */
     public VizPlayerName name;
