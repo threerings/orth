@@ -8,49 +8,49 @@ import com.threerings.presents.dobj.DSet;
 public class GuildObject extends DObject
 {
     // AUTO-GENERATED: FIELDS START
-    /** The field name of the <code>players</code> field. */
+    /** The field name of the <code>members</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String PLAYERS = "players";
+    public static final String MEMBERS = "members";
     // AUTO-GENERATED: FIELDS END
 
-    public DSet<PlayerEntry> players;
+    public DSet<PlayerEntry> members;
 
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the specified entry be added to the
-     * <code>players</code> set. The set will not change until the event is
+     * <code>members</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void addToPlayers (PlayerEntry elem)
+    public void addToMembers (PlayerEntry elem)
     {
-        requestEntryAdd(PLAYERS, players, elem);
+        requestEntryAdd(MEMBERS, members, elem);
     }
 
     /**
      * Requests that the entry matching the supplied key be removed from
-     * the <code>players</code> set. The set will not change until the
+     * the <code>members</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void removeFromPlayers (Comparable<?> key)
+    public void removeFromMembers (Comparable<?> key)
     {
-        requestEntryRemove(PLAYERS, players, key);
+        requestEntryRemove(MEMBERS, members, key);
     }
 
     /**
      * Requests that the specified entry be updated in the
-     * <code>players</code> set. The set will not change until the event is
+     * <code>members</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void updatePlayers (PlayerEntry elem)
+    public void updateMembers (PlayerEntry elem)
     {
-        requestEntryUpdate(PLAYERS, players, elem);
+        requestEntryUpdate(MEMBERS, members, elem);
     }
 
     /**
-     * Requests that the <code>players</code> field be set to the
+     * Requests that the <code>members</code> field be set to the
      * specified value. Generally one only adds, updates and removes
      * entries of a distributed set, but certain situations call for a
      * complete replacement of the set value. The local value will be
@@ -60,11 +60,11 @@ public class GuildObject extends DObject
      * value change when they received the attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setPlayers (DSet<PlayerEntry> value)
+    public void setMembers (DSet<PlayerEntry> value)
     {
-        requestAttributeChange(PLAYERS, value, this.players);
+        requestAttributeChange(MEMBERS, value, this.members);
         DSet<PlayerEntry> clone = (value == null) ? null : value.clone();
-        this.players = clone;
+        this.members = clone;
     }
     // AUTO-GENERATED: METHODS END
 }

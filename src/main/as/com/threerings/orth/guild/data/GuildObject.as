@@ -21,19 +21,19 @@ public class GuildObject extends DObject
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
-    public var players :DSet;
+    public var members :DSet;
 
-    public var playersChanged :Signal = new Signal(DSet, DSet);
-    public var playersEntryAdded :Signal = new Signal(DSet_Entry);
-    public var playersEntryRemoved :Signal = new Signal(DSet_Entry);
-    public var playersEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
+    public var membersChanged :Signal = new Signal(DSet, DSet);
+    public var membersEntryAdded :Signal = new Signal(DSet_Entry);
+    public var membersEntryRemoved :Signal = new Signal(DSet_Entry);
+    public var membersEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
 
-    public static const PLAYERS :String = "players";
+    public static const MEMBERS :String = "members";
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        players = ins.readObject(DSet);
+        members = ins.readObject(DSet);
     }
 
     public function GuildObject ()
@@ -77,8 +77,8 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
-            case "players":
-                signal = _obj.playersChanged;
+            case "members":
+                signal = _obj.membersChanged;
                 break;
             default:
                 return;
@@ -90,8 +90,8 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
-            case "players":
-                signal = _obj.playersEntryAdded;
+            case "members":
+                signal = _obj.membersEntryAdded;
                 break;
             default:
                 return;
@@ -103,8 +103,8 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
-            case "players":
-                signal = _obj.playersEntryRemoved;
+            case "members":
+                signal = _obj.membersEntryRemoved;
                 break;
             default:
                 return;
@@ -116,8 +116,8 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
-            case "players":
-                signal = _obj.playersEntryUpdated;
+            case "members":
+                signal = _obj.membersEntryUpdated;
                 break;
             default:
                 return;

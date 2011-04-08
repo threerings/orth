@@ -1,5 +1,6 @@
 package com.threerings.orth.guild.server;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
@@ -15,7 +16,7 @@ import com.threerings.presents.dobj.DObject;
 public class GuildRegistry extends NodeletRegistry
     implements Lifecycle.InitComponent
 {
-    public GuildRegistry (Injector injector)
+    @Inject public GuildRegistry (Injector injector)
     {
         super(OrthNodeObject.HOSTED_GUILDS, injector);
     }

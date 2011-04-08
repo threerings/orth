@@ -1,8 +1,18 @@
 package com.threerings.orth.nodelet.client
 {
+import flashx.funk.ioc.inject;
+
 import as3isolib.data.Node;
 
-import com.threerings.orth.aether.client.AetherClient;
+import com.threerings.util.Log;
+
+import com.threerings.presents.client.BasicDirector;
+import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ClientEvent;
+import com.threerings.presents.dobj.DObject;
+import com.threerings.presents.dobj.ObjectAccessError;
+import com.threerings.presents.util.SafeSubscriber;
+
 import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.OrthContext;
@@ -12,15 +22,6 @@ import com.threerings.orth.data.TokenCredentials;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.data.NodeletBootstrapData;
-import com.threerings.presents.client.BasicDirector;
-import com.threerings.presents.client.Client;
-import com.threerings.presents.client.ClientEvent;
-import com.threerings.presents.dobj.DObject;
-import com.threerings.presents.dobj.ObjectAccessError;
-import com.threerings.presents.util.SafeSubscriber;
-import com.threerings.util.Log;
-
-import flashx.funk.ioc.inject;
 
 public class NodeletDirector extends BasicDirector
 {
@@ -32,9 +33,13 @@ public class NodeletDirector extends BasicDirector
         PolicyLoader.registerClient(_ctx.getClient(), _config.policyPort);
         _ctx.getClient().setVersion(_config.version);
 
-        _octx.getClient().addEventListener(ClientEvent.CLIENT_DID_LOGON, refreshPlayer);
-        _octx.getClient().addEventListener(ClientEvent.CLIENT_DID_LOGOFF, refreshPlayer);
-        _octx.getClient().addEventListener(ClientEvent.CLIENT_OBJECT_CHANGED, refreshPlayer);
+        function doRefresh (..._) :void {
+            refreshPlayer();
+        }
+
+        _octx.getClient().addEventListener(ClientEvent.CLIENT_DID_LOGON, doRefresh);
+        _octx.getClient().addEventListener(ClientEvent.CLIENT_DID_LOGOFF, doRefresh);
+        _octx.getClient().addEventListener(ClientEvent.CLIENT_OBJECT_CHANGED, doRefresh);
 
         refreshPlayer();
     }
