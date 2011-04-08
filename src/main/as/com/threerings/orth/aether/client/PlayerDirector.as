@@ -49,6 +49,11 @@ public class PlayerDirector extends BasicDirector
         _psvc.acceptFriendshipRequest(friendId, _octx.listener());
     }
 
+    public function createGuild (name :String) :void
+    {
+        _psvc.createGuild(name, _octx.listener());
+    }
+
     // documentation inherited
     override public function clientDidLogon (event :ClientEvent) :void
     {

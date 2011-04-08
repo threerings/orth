@@ -34,6 +34,7 @@ import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.guild.client.GuildDirector;
 import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.ui.PathMediaDesc;
 
@@ -79,6 +80,8 @@ public class OrthController extends Controller
     /** Command to respond to a request to follow another player. */
     public static const RESPOND_FOLLOW :String = "RespondFollow";
 
+    /** Command to create a new guild. */
+    public static const CREATE_GUILD :String = "CreateGuild";
 
     public function OrthController ()
     {
@@ -330,6 +333,7 @@ public class OrthController extends Controller
 
     protected const _partyDir :PartyDirector = inject(PartyDirector);
     protected const _playerDir :PlayerDirector = inject(PlayerDirector);
+    protected const _guildDir :GuildDirector = inject(GuildDirector);
 
     /** The URL prefix for 'command' URLs, that post CommendEvents. */
     protected static const COMMAND_URL :String = "command://";
