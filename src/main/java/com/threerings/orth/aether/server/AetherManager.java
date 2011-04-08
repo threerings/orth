@@ -19,12 +19,17 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
+import com.threerings.util.Resulting;
 
 import com.threerings.orth.aether.data.AetherAuthName;
+import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.guild.data.GuildCodes;
+import com.threerings.orth.guild.server.GuildRegistry;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
@@ -33,7 +38,7 @@ import com.threerings.orth.peer.server.OrthPeerManager;
  */
 @Singleton @EventThread
 public class AetherManager
-    implements PlayerProvider, Lifecycle.InitComponent
+    implements PlayerProvider, Lifecycle.InitComponent, AetherCodes
 {
     @Inject public AetherManager (Injector injector)
     {
@@ -169,10 +174,19 @@ public class AetherManager
     }
 
     @Override
-    public void createGuild (ClientObject caller, String arg1, InvocationListener arg2)
+    public void createGuild (ClientObject caller, String name, InvocationListener lner)
         throws InvocationException
     {
-        arg2.requestFailed("e.not_implemented");
+        // TODO: permissions and money
+        PlayerObject player = (PlayerObject)caller;
+        if (player.guild != null) {
+            throw new InvocationException(GuildCodes.E_PLAYER_ALREADY_IN_GUILD);
+        }
+        if (name.length() == 0) {
+            throw new InvocationException(E_INTERNAL_ERROR);
+        }
+
+        _guildReg.createAndHostGuild(name, player, new Resulting<HostedNodelet>(lner));
     }
 
     /** Observers of aether logins throughout the cluster. */
@@ -183,4 +197,5 @@ public class AetherManager
     @Inject protected PlayerSessionLocator _locator;
     @Inject protected OrthPeerManager _peermgr;
     @Inject protected FriendManager _friendMgr;
+    @Inject protected GuildRegistry _guildReg;
 }
