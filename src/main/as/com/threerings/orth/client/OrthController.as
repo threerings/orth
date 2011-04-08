@@ -173,6 +173,14 @@ public class OrthController extends Controller
     }
 
     /**
+     * Handles CREATE_GUILD.
+     */
+    public function handleCreateGuild (name :String) :void
+    {
+        _playerDir.createGuild(name);
+    }
+
+    /**
      * Handles INVITE_TO_PARTY.
      */
     public function handleInviteToParty (playerId :int) :void
