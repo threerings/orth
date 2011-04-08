@@ -168,6 +168,12 @@ public class AetherManager
         _friendMgr.acceptFriendshipRequest(caller, senderId, listener);
     }
 
+    @Override
+    public void createGuild (ClientObject caller, String arg1, InvocationListener arg2)
+        throws InvocationException
+    {
+    }
+
     /** Observers of aether logins throughout the cluster. */
     protected ObserverList<OrthPeerManager.FarSeeingObserver<PlayerName>> _observers;
 
