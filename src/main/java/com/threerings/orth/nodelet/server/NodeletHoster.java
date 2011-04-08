@@ -4,6 +4,10 @@ import com.google.inject.Inject;
 
 import com.samskivert.util.ResultListener;
 
+import com.threerings.io.Streamable;
+import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.data.AuthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.peer.data.OrthNodeObject;
@@ -59,7 +63,7 @@ public abstract class NodeletHoster
 
             protected void hostNodelet () {
                 try {
-                    host(caller, nodelet, new ResultListener<HostedNodelet>() {
+                    host((AuthName)caller.username, nodelet, new ResultListener<HostedNodelet>() {
                         @Override public void requestCompleted (HostedNodelet result) {
                             OrthNodeObject node = ((OrthNodeObject)_peerMan.getNodeObject());
                             node.addToSet(_dsetName, result);
@@ -108,8 +112,8 @@ public abstract class NodeletHoster
         return _dsetName + "Lock";
     }
 
-    protected abstract void host (
-        ClientObject caller, Nodelet nodelet, ResultListener<HostedNodelet> listener);
+    protected abstract void host (AuthName caller, Nodelet nodelet,
+            ResultListener<HostedNodelet> listener);
 
     /** The name of the det governing our hosted nodelet instances in the OrthNodeObject. */
     protected String _dsetName;
