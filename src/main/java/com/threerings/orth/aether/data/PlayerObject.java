@@ -42,6 +42,10 @@ public class PlayerObject extends ClientObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String PARTY_ID = "partyId";
 
+    /** The field name of the <code>guildId</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String GUILD_ID = "guildId";
+
     /** The field name of the <code>guild</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String GUILD = "guild";
@@ -67,7 +71,11 @@ public class PlayerObject extends ClientObject
      * Used to signal the PartyDirector. */
     public int partyId;
 
-    /** The guild that this player belongs to. */
+    /** The id of the guild this player belongs to, or zero if they belong to no guild. */
+    public int guildId;
+
+    /** The hosted guild. This may be null if the player is not in a guild or if the guild has
+     * not yet been hosted on any server. */
     public HostedNodelet guild;
 
     /**
@@ -265,6 +273,23 @@ public class PlayerObject extends ClientObject
         requestAttributeChange(
             PARTY_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.partyId = value;
+    }
+
+    /**
+     * Requests that the <code>guildId</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setGuildId (int value)
+    {
+        int ovalue = this.guildId;
+        requestAttributeChange(
+            GUILD_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.guildId = value;
     }
 
     /**

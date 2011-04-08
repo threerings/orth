@@ -39,6 +39,8 @@ public class PlayerObject extends ClientObject
 
     public var partyId :int;
 
+    public var guildId :int;
+
     public var guild :HostedNodelet;
 
     public var playerNameChanged :Signal = new Signal(VizPlayerName, VizPlayerName);
@@ -52,6 +54,7 @@ public class PlayerObject extends ClientObject
     public var friendsEntryRemoved :Signal = new Signal(DSet_Entry);
     public var friendsEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
     public var partyIdChanged :Signal = new Signal(int, int);
+    public var guildIdChanged :Signal = new Signal(int, int);
     public var guildChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
 
     public static const PLAYER_NAME :String = "playerName";
@@ -64,6 +67,8 @@ public class PlayerObject extends ClientObject
 
     public static const PARTY_ID :String = "partyId";
 
+    public static const GUILD_ID :String = "guildId";
+
     public static const GUILD :String = "guild";
 
     override public function readObject (ins :ObjectInputStream) :void
@@ -74,6 +79,7 @@ public class PlayerObject extends ClientObject
         followers = ins.readObject(DSet);
         friends = ins.readObject(DSet);
         partyId = ins.readInt();
+        guildId = ins.readInt();
         guild = ins.readObject(HostedNodelet);
     }
 
@@ -166,6 +172,9 @@ class Signaller
                 break;
             case "partyId":
                 signal = _obj.partyIdChanged;
+                break;
+            case "guildId":
+                signal = _obj.guildIdChanged;
                 break;
             case "guild":
                 signal = _obj.guildChanged;

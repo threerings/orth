@@ -53,7 +53,13 @@ public class GuildRegistry extends NodeletRegistry
                 host((AuthName)officer.username, new GuildNodelet(result.getGuildId()),
                         new Resulting<HostedNodelet>(rl) {
                     @Override public void requestCompleted (HostedNodelet result) {
-                        officer.setGuild(result); // Whoo, all done!
+                        officer.startTransaction();
+                        try {
+                            officer.setGuild(result); // Whoo, all done!
+                            officer.setGuildId(result.nodelet.getId());
+                        } finally {
+                            officer.commitTransaction();
+                        }
                         super.requestCompleted(result);
                     }
                 });

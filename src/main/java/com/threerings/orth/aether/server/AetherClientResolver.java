@@ -8,12 +8,20 @@ import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 import com.threerings.crowd.server.CrowdClientResolver;
+import com.threerings.presents.data.ClientObject;
+import com.threerings.util.Resulting;
+
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.data.AuthName;
+import com.threerings.orth.guild.data.GuildNodelet;
+import com.threerings.orth.guild.server.GuildRegistry;
+import com.threerings.orth.guild.server.persist.GuildRepository;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.server.persist.OrthPlayerRecord;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
-import com.threerings.presents.data.ClientObject;
+
+import static com.threerings.orth.Log.log;
 
 /**
  * Performs resolution of aether clients.
@@ -55,6 +63,26 @@ public class AetherClientResolver extends CrowdClientResolver
         // load the friend ids, these will get fully resolved later
         plobj.getLocal(PlayerLocal.class).unresolvedFriendIds = Sets.newHashSet(
             _friendRepo.getFriendIds(playerId));
+
+        // set the guild id
+        plobj.guildId = _guildRepo.getGuildId(playerId);
+    }
+
+    @Override // from ClientResolver
+    protected void finishResolution (ClientObject clobj)
+    {
+        super.finishResolution(clobj);
+
+        final PlayerObject plobj = (PlayerObject)clobj;
+        if (plobj.guildId != 0) {
+            _guildReg.resolveHosting(clobj, new GuildNodelet(plobj.guildId),
+                new Resulting<HostedNodelet>("HostedNodelet for guild", log,
+                        "player", plobj.who(), "guildId", plobj.guildId) {
+                    @Override public void requestCompleted (HostedNodelet result) {
+                        plobj.setGuild(result);
+                    }
+            });
+        }
     }
 
     protected OrthPlayerRecord _playerRec;
@@ -62,4 +90,6 @@ public class AetherClientResolver extends CrowdClientResolver
     // dependencies
     @Inject protected OrthPlayerRepository _playerRepo;
     @Inject protected RelationshipRepository _friendRepo;
+    @Inject protected GuildRegistry _guildReg;
+    @Inject protected GuildRepository _guildRepo;
 }
