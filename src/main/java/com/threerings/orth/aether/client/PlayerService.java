@@ -54,4 +54,11 @@ public interface PlayerService extends InvocationService
      * Set the avatar in use by this user.
      */
     void setAvatar (int avatarId, ConfirmListener listener);
+
+    /**
+     * Creates a new guild if this player doesn't already have one. If the guild creation is
+     * successful, the {@link PlayerObject#guild} member will be set. Otherwise, the listener
+     * will be notified of the failure.
+     */
+    void createGuild (String name, InvocationListener listener);
 }

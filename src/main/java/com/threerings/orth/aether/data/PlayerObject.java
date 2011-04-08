@@ -12,6 +12,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthPlayer;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.PartySummary;
 
 /**
@@ -40,6 +41,10 @@ public class PlayerObject extends ClientObject
     /** The field name of the <code>partyId</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String PARTY_ID = "partyId";
+
+    /** The field name of the <code>guild</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String GUILD = "guild";
     // AUTO-GENERATED: FIELDS END
 
     /** A message sent by the server to denote a notification to be displayed.
@@ -61,6 +66,9 @@ public class PlayerObject extends ClientObject
     /** The player's current partyId, or 0 if they're not in a party.
      * Used to signal the PartyDirector. */
     public int partyId;
+
+    /** The guild that this player belongs to. */
+    public HostedNodelet guild;
 
     /**
      * Convenience method for returning this player's unique id.
@@ -257,6 +265,23 @@ public class PlayerObject extends ClientObject
         requestAttributeChange(
             PARTY_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.partyId = value;
+    }
+
+    /**
+     * Requests that the <code>guild</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setGuild (HostedNodelet value)
+    {
+        HostedNodelet ovalue = this.guild;
+        requestAttributeChange(
+            GUILD, value, ovalue);
+        this.guild = value;
     }
     // AUTO-GENERATED: METHODS END
 

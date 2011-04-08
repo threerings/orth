@@ -18,6 +18,7 @@ import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.data.OrthPlayer;
 import com.threerings.orth.data.PlayerEntry;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 
 // GENERATED PREAMBLE END
 
@@ -38,6 +39,8 @@ public class PlayerObject extends ClientObject
 
     public var partyId :int;
 
+    public var guild :HostedNodelet;
+
     public var playerNameChanged :Signal = new Signal(VizPlayerName, VizPlayerName);
     public var followingChanged :Signal = new Signal(PlayerName, PlayerName);
     public var followersChanged :Signal = new Signal(DSet, DSet);
@@ -49,6 +52,7 @@ public class PlayerObject extends ClientObject
     public var friendsEntryRemoved :Signal = new Signal(DSet_Entry);
     public var friendsEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
     public var partyIdChanged :Signal = new Signal(int, int);
+    public var guildChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
 
     public static const PLAYER_NAME :String = "playerName";
 
@@ -60,6 +64,8 @@ public class PlayerObject extends ClientObject
 
     public static const PARTY_ID :String = "partyId";
 
+    public static const GUILD :String = "guild";
+
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
@@ -68,6 +74,7 @@ public class PlayerObject extends ClientObject
         followers = ins.readObject(DSet);
         friends = ins.readObject(DSet);
         partyId = ins.readInt();
+        guild = ins.readObject(HostedNodelet);
     }
 
     public function PlayerObject ()
@@ -159,6 +166,9 @@ class Signaller
                 break;
             case "partyId":
                 signal = _obj.partyIdChanged;
+                break;
+            case "guild":
+                signal = _obj.guildChanged;
                 break;
             default:
                 return;

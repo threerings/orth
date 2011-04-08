@@ -12,6 +12,7 @@ import com.google.inject.multibindings.MapBinder;
 import com.threerings.crowd.server.CrowdServer;
 import com.threerings.orth.aether.server.AetherManager;
 import com.threerings.orth.chat.server.ChatManager;
+import com.threerings.orth.guild.server.GuildRegistry;
 import com.threerings.orth.locus.server.LocusManager;
 import com.threerings.orth.locus.server.LocusMaterializer;
 import com.threerings.orth.party.server.PartyRegistry;
@@ -77,4 +78,5 @@ public class OrthServer extends CrowdServer
     @Inject protected ChatManager _chatMgr;
     @Inject protected OrthSceneRegistry _sceneReg;
     @Inject protected PartyRegistry _partyReg;
+    @Inject protected GuildRegistry _guildReg;
 }
