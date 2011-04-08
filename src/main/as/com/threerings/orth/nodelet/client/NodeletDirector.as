@@ -21,6 +21,7 @@ import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.data.TokenCredentials;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
+import com.threerings.orth.nodelet.data.NodeletAuthName;
 import com.threerings.orth.nodelet.data.NodeletBootstrapData;
 
 /**
@@ -30,6 +31,8 @@ import com.threerings.orth.nodelet.data.NodeletBootstrapData;
  */
 public class NodeletDirector extends BasicDirector
 {
+    NodeletAuthName;
+
     /**
      * Creates a new nodelet director using the given dsetName. The dsetName corresponds to one
      * of the DSet<HostedNodelet> members on the server's PeerNodeObject.
@@ -92,7 +95,9 @@ public class NodeletDirector extends BasicDirector
     {
         // TODO: avoid churn if some of the old data is applicable to the new nodelet
         if (_sub != null) {
-            _sub.unsubscribe(_ctx.getDObjectManager());
+            if (_ctx.getDObjectManager() != null) {
+                _sub.unsubscribe(_ctx.getDObjectManager());
+            }
             _sub = null;
             _nodelet = null;
         }
@@ -110,6 +115,7 @@ public class NodeletDirector extends BasicDirector
         creds.objectId = nodelet.nodelet.getId();
         creds.sessionToken = getAuthToken();
         _ctx.getClient().setCredentials(creds);
+        _ctx.getClient().setServer(nodelet.host, nodelet.ports);
         _ctx.getClient().logon();
 
         _nodelet = nodelet;

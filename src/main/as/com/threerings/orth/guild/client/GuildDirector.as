@@ -9,6 +9,7 @@ import com.threerings.presents.dobj.ChangeListener;
 import com.threerings.presents.dobj.DObject;
 
 import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
 import com.threerings.orth.nodelet.client.NodeletDirector;
 
@@ -19,6 +20,8 @@ import com.threerings.orth.nodelet.client.NodeletDirector;
 public class GuildDirector extends NodeletDirector
     implements AttributeChangeListener
 {
+    GuildNodelet;
+
     /**
      * Creates a new guild director.
      */
