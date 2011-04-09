@@ -16,10 +16,12 @@ import com.samskivert.util.Invoker;
 import com.samskivert.util.Lifecycle;
 
 import com.threerings.orth.aether.data.AetherCodes;
+import com.threerings.orth.aether.data.FriendMarshaller;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.data.FriendEntry;
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.notify.data.FriendInviteNotification;
 import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.peer.data.OrthClientInfo;
@@ -32,6 +34,7 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.peer.server.NodeRequestsListener;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.PresentsSession;
 import com.threerings.util.Resulting;
 
@@ -39,11 +42,15 @@ import com.threerings.util.Resulting;
  * Manages {@link PlayerObject#friends} and friend-related request for the local server.
  */
 @Singleton
-public class FriendManager implements Lifecycle.InitComponent
+public class FriendManager implements Lifecycle.InitComponent, FriendProvider
 {
     @Inject public FriendManager (Injector injector)
     {
         injector.getInstance(Lifecycle.class).addComponent(this);
+
+        // register our bootstrap invocation service
+        injector.getInstance(InvocationManager.class).registerProvider(
+            this, FriendMarshaller.class, OrthCodes.AETHER_GROUP);
     }
 
     @Override
@@ -84,7 +91,7 @@ public class FriendManager implements Lifecycle.InitComponent
         pending.put(targetId, now);
 
         // ok, notify the other player, wherever they are
-        _peermgr.invokeNodeRequest(new PlayerNodeRequest(targetId) {
+        _peerMgr.invokeNodeRequest(new PlayerNodeRequest(targetId) {
             @Inject transient NotificationManager notMgr;
             @Override protected void execute (PlayerObject target, ResultListener listener) {
                 notMgr.notify(target, new FriendInviteNotification(player.getPlayerName()));
@@ -108,7 +115,7 @@ public class FriendManager implements Lifecycle.InitComponent
         final int acceptingPlayerId = acceptingPlayer.getPlayerId();
 
         // forward this acceptance to the server the other player is on
-        _peermgr.invokeNodeRequest(new PlayerNodeRequest(senderId) {
+        _peerMgr.invokeNodeRequest(new PlayerNodeRequest(senderId) {
             @Inject transient OrthPeerManager peermgr;
             @Inject transient FriendManager friendmgr;
             @Override protected void execute (PlayerObject sender, ResultListener listener) {
@@ -136,12 +143,12 @@ public class FriendManager implements Lifecycle.InitComponent
         }, new NodeRequestsListener<Void>() {
             @Override public void requestsProcessed (NodeRequestsResult<Void> result) {
                 // all clear, add the friend!
-                addNewFriend(acceptingPlayer, _peermgr.locatePlayer(senderId));
+                addNewFriend(acceptingPlayer, _peerMgr.locatePlayer(senderId));
 
                 // persist: friends4evah
                 _invoker.postRunnable(new Runnable() {
                    @Override public void run () {
-                       _friendrepo.addFriendship(acceptingPlayerId, senderId);
+                       _friendRepo.addFriendship(acceptingPlayerId, senderId);
                    }
                    @Override public String toString () {
                        return "Add friends";
@@ -161,8 +168,7 @@ public class FriendManager implements Lifecycle.InitComponent
     {
         log.debug("Strarting resolution of friends dset", "player", player);
 
-//CWG-JD I just added DSet.isEmpty to match collections and make code like this a little cleaner
-        if (player.friends.size() != 0) {
+        if (!player.friends.isEmpty()) {
             log.warning("Friends already? Something is very wrong.", "player", player.who());
             return;
         }
@@ -171,15 +177,15 @@ public class FriendManager implements Lifecycle.InitComponent
         final List<FriendEntry> friends = Lists.newArrayListWithCapacity(
             local.unresolvedFriendIds.size());
         for (Integer friendId : local.unresolvedFriendIds) {
-            OrthClientInfo clientInfo = _peermgr.locatePlayer(friendId);
+            OrthClientInfo clientInfo = _peerMgr.locatePlayer(friendId);
             if (clientInfo != null) {
                 friends.add(toFriendEntry(clientInfo));
                 local.unresolvedFriendIds.remove(friendId);
             }
         }
 
-        if (local.unresolvedFriendIds.size() == 0) {
-            initFriends2(player, friends);
+        if (local.unresolvedFriendIds.isEmpty()) {
+            updateFriends(player, friends);
             return;
         }
 
@@ -187,7 +193,7 @@ public class FriendManager implements Lifecycle.InitComponent
         _invoker.postUnit(new Resulting<Map<Integer, String>>("Load offline friend names") {
             @Override public Map<Integer, String> invokePersist () throws Exception {
                 // if this fails, we will be in a pretty bad state
-                return _playerrepo.resolvePlayerNames(local.unresolvedFriendIds);
+                return _playerRepo.resolvePlayerNames(local.unresolvedFriendIds);
             }
 
             @Override public void requestCompleted (Map<Integer, String> result) {
@@ -200,24 +206,18 @@ public class FriendManager implements Lifecycle.InitComponent
                 for (Map.Entry<Integer, String> pair : result.entrySet()) {
                     friends.add(FriendEntry.offline(pair.getKey(), pair.getValue()));
                 }
-                initFriends2(player, friends);
+                updateFriends(player, friends);
             }
         });
     }
 
-//CWG-JD I'm not a big fan of numerically increasing names for staggered operations like this. It
-//doesn't tell you anything about what the split up methods do. initFriends could be resolveFriends
-//and this method could be publishResolvedFriends or something like that.
-    protected void initFriends2 (PlayerObject player, List<FriendEntry> friends)
+    protected void updateFriends (PlayerObject player, List<FriendEntry> friends)
     {
-        // the player may have had some friends come online already, replace the ones in our list
-        // this is inefficient but very very rare
+        // the player may have had some friends come online already while we were off in invoker
+        // land. Replace the ones in the invoker list since the status should be more up to
         for (FriendEntry entry : player.friends) {
-//CWG-JD This replaces an existing entry instance with an offline status with a new one with an
-//online status? If so, it could use documentation of that. Calling remove and then add with the
-//same object looks kinda insane :)
-            friends.remove(entry);
-            friends.add(entry);
+            friends.remove(entry.getKey()); // out with the resolved
+            friends.add(entry); // in with the recently online
         }
 
         // set up the reverse listening map
@@ -248,6 +248,8 @@ public class FriendManager implements Lifecycle.InitComponent
         log.debug("Notifying friends", "playerId", playerId, "status", status);
 
 //CWG-JD Why manually box this? For efficiency? The JVM will take care of that for you.
+//JD-CWG Yes... I didn't know the JVM would figure out that playerId doesn't change. Do I need
+//to mark it final to take advantage of the optim?
         Integer boxedPlayerId = playerId;
         for (PlayerObject friend : _notifyMap.get(playerId)) {
             FriendEntry entry = friend.friends.get(boxedPlayerId);
@@ -280,10 +282,9 @@ public class FriendManager implements Lifecycle.InitComponent
     // dependencies
     @Inject protected AetherManager _aetherMgr;
     @Inject protected PlayerSessionLocator _locator;
-//CWG-JD We're camel-case people on who, so _peerMgr, _playerRepo, and _friendRepo.
-    @Inject protected OrthPeerManager _peermgr;
-    @Inject protected OrthPlayerRepository _playerrepo;
-    @Inject protected RelationshipRepository _friendrepo;
+    @Inject protected OrthPeerManager _peerMgr;
+    @Inject protected OrthPlayerRepository _playerRepo;
+    @Inject protected RelationshipRepository _friendRepo;
     @Inject protected @MainInvoker Invoker _invoker;
 
     protected static final long MIN_FRIEND_REQUEST_PERIOD = 60 * 1000L;

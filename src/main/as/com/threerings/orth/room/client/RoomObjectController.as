@@ -263,7 +263,7 @@ public class RoomObjectController extends RoomController
             avItems.push({ label: av.getName, enabled: !av.equals(us.avatar),
                 iconObject: MediaWrapper.createView(
                     av.getThumbnailMedia(), MediaDescSize.QUARTER_THUMBNAIL_SIZE),
-                callback: _playerDir.setAvatar, arg: av.getIdent().getItem() });
+                callback: _aetherDir.setAvatar, arg: av.getIdent().getItem() });
         }
 
         // return a menu item for changing their avatar

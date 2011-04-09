@@ -39,7 +39,7 @@ import com.threerings.util.Map;
 import com.threerings.util.Maps;
 import com.threerings.util.ObjectMarshaller;
 
-import com.threerings.orth.aether.client.PlayerDirector;
+import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.chat.client.ComicOverlay;
@@ -1241,7 +1241,7 @@ public class RoomController extends SceneController
     protected const _rsrc :OrthResourceFactory = inject(OrthResourceFactory);
 
 
-    protected const _playerDir :PlayerDirector = inject(PlayerDirector);
+    protected const _aetherDir :AetherDirector = inject(AetherDirector);
     protected const _locusDir :LocusDirector = inject(LocusDirector);
     protected const _sceneDir :OrthSceneDirector = inject(SceneDirector);
     protected const _spotDir :SpotSceneDirector = inject(SpotSceneDirector);

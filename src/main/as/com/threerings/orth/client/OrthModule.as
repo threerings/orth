@@ -10,7 +10,7 @@ import com.threerings.util.Log;
 import com.threerings.util.MessageManager;
 
 import com.threerings.orth.aether.client.AetherClient;
-import com.threerings.orth.aether.client.PlayerDirector;
+import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.guild.client.GuildDirector;
@@ -41,7 +41,7 @@ public class OrthModule extends BindingModule
         // some managers and controllers
         bind(MessageManager).asSingleton();
         bind(OrthController).asSingleton();
-        bind(PlayerDirector).asSingleton();
+        bind(AetherDirector).asSingleton();
         bind(OrthChatDirector).asSingleton();
         bind(PartyDirector).asSingleton();
         bind(GuildDirector).asSingleton();
@@ -75,7 +75,7 @@ public class OrthModule extends BindingModule
     {
         // instantiate directors and controllers
         getInstance(OrthChatDirector);
-        getInstance(PlayerDirector);
+        getInstance(AetherDirector);
         getInstance(OrthController);
         getInstance(PartyDirector);
         getInstance(NotificationDirector);

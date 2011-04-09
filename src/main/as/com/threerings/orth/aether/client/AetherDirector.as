@@ -20,11 +20,11 @@ import com.threerings.orth.room.data.RoomLocus;
 /**
  * Handles player-oriented requests.
  */
-public class PlayerDirector extends BasicDirector
+public class AetherDirector extends BasicDirector
 {
     public const log :Log = Log.getLog(this);
 
-    public function PlayerDirector ()
+    public function AetherDirector ()
     {
         super(_octx);
 
@@ -41,12 +41,12 @@ public class PlayerDirector extends BasicDirector
 
     public function inviteFriend (playerId :int) :void
     {
-        _psvc.requestFriendship(playerId, _octx.listener());
+        _fsvc.requestFriendship(playerId, _octx.listener());
     }
 
     public function acceptFriendInvite (friendId :int) :void
     {
-        _psvc.acceptFriendshipRequest(friendId, _octx.listener());
+        _fsvc.acceptFriendshipRequest(friendId, _octx.listener());
     }
 
     public function createGuild (name :String) :void
@@ -83,6 +83,7 @@ public class PlayerDirector extends BasicDirector
 
         // TODO: move more of the functions we use into a LocusService
         _psvc = (client.requireService(PlayerService) as PlayerService);
+        _fsvc = (client.requireService(FriendService) as FriendService);
     }
 
     protected function memberMessageReceived (event :MessageEvent) :void
@@ -99,6 +100,7 @@ public class PlayerDirector extends BasicDirector
     protected const _octx :OrthContext = inject(OrthContext);
 
     protected var _psvc :PlayerService;
+    protected var _fsvc :FriendService;
 
     protected var _followingNotifier :FollowingNotifier;
     protected var _followListener :MessageAdapter = new MessageAdapter(memberMessageReceived);

@@ -157,24 +157,11 @@ public class AetherManager
         // final PlayerObject user = (PlayerObject) caller;
     }
 
-    @Override
-    public void requestFriendship (ClientObject caller, final int targetId,
-        final InvocationListener listener)
-        throws InvocationException
-    {
 //CWG-JD That AetherManager is just rerouting these makes me feel like there should be a
 //FriendService that FriendManager implements.
-        _friendMgr.requestFriendship(caller, targetId, listener);
-    }
-
-    @Override
-    public void acceptFriendshipRequest (
-        ClientObject caller, final int senderId, final InvocationListener listener)
-        throws InvocationException
-    {
-        _friendMgr.acceptFriendshipRequest(caller, senderId, listener);
-    }
-
+//JD-CWG Okay, I think this code needs some clarification. The organization currently makes it look
+//like Player = Aether so anything handled in aether can be added to PayerService. Anyway, moved
+//to FriendService
     @Override
     public void createGuild (ClientObject caller, String name, InvocationListener lner)
         throws InvocationException

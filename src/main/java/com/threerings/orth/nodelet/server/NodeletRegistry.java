@@ -57,7 +57,7 @@ public abstract class NodeletRegistry extends NodeletHoster
      * @param hostName the name we use if this server is chosen to host a nodelet
      * @param ports the ports we use if this server is chosed to host a nodelet
      * @param injector access to globals
-     * TODO: isolate the subsystem id and the dset name into an orth-level enum
+     * TODO: isolate the subsystem id and the dset name into an orth-level wrapper
      */
     public NodeletRegistry (String dsetName, String hostName, int[] ports, Injector injector)
     {
@@ -66,6 +66,9 @@ public abstract class NodeletRegistry extends NodeletHoster
         _ports = ports;
 
 //CWG-JD Why use an Injector to get these rather than taking them in the constructor?
+//JD-CWG It reduces irrelevant dependencies and unnecessary coupling in the subclass, I often do
+//it for abstract classes. I see it as equivalent to the member injection since those are invisible
+//and subclasses need not be concerned with them.
         injector.getInstance(PresentsConnectionManager.class)
                 .addChainedAuthenticator(new ChainedAuthenticator() {
 
