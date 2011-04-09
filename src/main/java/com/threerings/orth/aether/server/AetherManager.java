@@ -162,6 +162,8 @@ public class AetherManager
         final InvocationListener listener)
         throws InvocationException
     {
+//CWG-JD That AetherManager is just rerouting these makes me feel like there should be a
+//FriendService that FriendManager implements.
         _friendMgr.requestFriendship(caller, targetId, listener);
     }
 

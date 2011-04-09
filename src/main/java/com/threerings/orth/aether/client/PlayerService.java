@@ -48,6 +48,8 @@ public interface PlayerService extends InvocationService
      * request will fail. Othwerise, the request should succeed and both players will have their
      * {@link PlayerObject#friends} updated.
      */
+//CWG-JD I can understand requestFriendship not going through if someone is offline, but why not
+//allow a sent request to be accepted after signoff?
     void acceptFriendshipRequest (int senderId, InvocationListener listener);
 
     /**

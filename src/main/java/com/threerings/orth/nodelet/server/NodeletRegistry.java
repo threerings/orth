@@ -65,6 +65,7 @@ public abstract class NodeletRegistry extends NodeletHoster
         _host = hostName;
         _ports = ports;
 
+//CWG-JD Why use an Injector to get these rather than taking them in the constructor?
         injector.getInstance(PresentsConnectionManager.class)
                 .addChainedAuthenticator(new ChainedAuthenticator() {
 
@@ -215,7 +216,7 @@ public abstract class NodeletRegistry extends NodeletHoster
     }
 
     /**
-     * Creates the DObject corresponding to this nodeley. This is called early in the hosting
+     * Creates the DObject corresponding to this nodelet. This is called early in the hosting
      * process and should just created the correct type of object.
      */
     protected abstract DObject createSharedObject (Nodelet nodelet);

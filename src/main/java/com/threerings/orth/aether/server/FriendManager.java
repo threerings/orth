@@ -2,7 +2,6 @@ package com.threerings.orth.aether.server;
 
 import static com.threerings.orth.Log.log;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -162,6 +161,7 @@ public class FriendManager implements Lifecycle.InitComponent
     {
         log.debug("Strarting resolution of friends dset", "player", player);
 
+//CWG-JD I just added DSet.isEmpty to match collections and make code like this a little cleaner
         if (player.friends.size() != 0) {
             log.warning("Friends already? Something is very wrong.", "player", player.who());
             return;
@@ -170,8 +170,7 @@ public class FriendManager implements Lifecycle.InitComponent
         final PlayerLocal local = player.getLocal(PlayerLocal.class);
         final List<FriendEntry> friends = Lists.newArrayListWithCapacity(
             local.unresolvedFriendIds.size());
-        for (Iterator<Integer> iter = local.unresolvedFriendIds.iterator(); iter.hasNext(); ) {
-            Integer friendId = iter.next();
+        for (Integer friendId : local.unresolvedFriendIds) {
             OrthClientInfo clientInfo = _peermgr.locatePlayer(friendId);
             if (clientInfo != null) {
                 friends.add(toFriendEntry(clientInfo));
@@ -206,11 +205,17 @@ public class FriendManager implements Lifecycle.InitComponent
         });
     }
 
+//CWG-JD I'm not a big fan of numerically increasing names for staggered operations like this. It
+//doesn't tell you anything about what the split up methods do. initFriends could be resolveFriends
+//and this method could be publishResolvedFriends or something like that.
     protected void initFriends2 (PlayerObject player, List<FriendEntry> friends)
     {
         // the player may have had some friends come online already, replace the ones in our list
         // this is inefficient but very very rare
         for (FriendEntry entry : player.friends) {
+//CWG-JD This replaces an existing entry instance with an offline status with a new one with an
+//online status? If so, it could use documentation of that. Calling remove and then add with the
+//same object looks kinda insane :)
             friends.remove(entry);
             friends.add(entry);
         }
@@ -242,6 +247,7 @@ public class FriendManager implements Lifecycle.InitComponent
     {
         log.debug("Notifying friends", "playerId", playerId, "status", status);
 
+//CWG-JD Why manually box this? For efficiency? The JVM will take care of that for you.
         Integer boxedPlayerId = playerId;
         for (PlayerObject friend : _notifyMap.get(playerId)) {
             FriendEntry entry = friend.friends.get(boxedPlayerId);
@@ -274,6 +280,7 @@ public class FriendManager implements Lifecycle.InitComponent
     // dependencies
     @Inject protected AetherManager _aetherMgr;
     @Inject protected PlayerSessionLocator _locator;
+//CWG-JD We're camel-case people on who, so _peerMgr, _playerRepo, and _friendRepo.
     @Inject protected OrthPeerManager _peermgr;
     @Inject protected OrthPlayerRepository _playerrepo;
     @Inject protected RelationshipRepository _friendrepo;
