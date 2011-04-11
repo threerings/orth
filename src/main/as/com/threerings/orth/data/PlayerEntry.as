@@ -8,7 +8,6 @@ package com.threerings.orth.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
-import com.threerings.util.Cloneable;
 import com.threerings.util.Hashable;
 
 import com.threerings.presents.dobj.DSet_Entry;
@@ -17,11 +16,9 @@ import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.data.OrthName;
 
 // GENERATED PREAMBLE END
-// GENERATED CLASSDECL START
-public class PlayerEntry implements DSet_Entry, Cloneable
+// GENERATED CLASSDECL DISABLED
+public class PlayerEntry implements DSet_Entry
 {
-// GENERATED CLASSDECL END
-
     /**
      * A sort function that may be used for PlayerEntrys
      */
