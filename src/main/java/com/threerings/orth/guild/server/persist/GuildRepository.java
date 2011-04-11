@@ -22,7 +22,7 @@ public interface GuildRepository
     /**
      * Gets the members of the guild with the given guild id.
      */
-    List<? extends GuildMemberRecord> getGuildMembers (int guildId);
+    List<GuildMemberRecord> getGuildMembers (int guildId);
 
     /**
      * Creates a new guild with the given name and first officer.
