@@ -18,11 +18,10 @@ public class FriendEntry extends PlayerEntry
         OFFLINE, ONLINE
     }
 
-    /** Whether this friend is online.
-     * TODO: should this be in the superclass? */
+    /** The status of the friend's connection. */
     public Status status;
 
-    /** This player's current status. */
+    /** The player's self-designated status (not yet implemented). */
     public String statusMessage;
 
     /**
