@@ -19,6 +19,7 @@ import com.threerings.presents.dobj.DSet_Entry;
 public class GuildObject extends DObject
 {
 // GENERATED CLASSDECL END
+    GuildMemberEntry;
 
 // GENERATED STREAMING START
     public var name :String;
