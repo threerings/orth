@@ -5,6 +5,7 @@ package com.threerings.orth.guild.server.persist;
 
 import java.util.Date;
 
+import com.google.common.base.Function;
 import com.threerings.orth.guild.data.GuildRank;
 
 /**
@@ -12,6 +13,14 @@ import com.threerings.orth.guild.data.GuildRank;
  */
 public interface GuildMemberRecord
 {
+    /** Function to extract the player id from a guild member record. */
+    public static final Function<GuildMemberRecord, Integer> TO_PLAYER_ID =
+            new Function<GuildMemberRecord, Integer>() {
+        public Integer apply (GuildMemberRecord gmrec) {
+            return gmrec.getPlayerId();
+        }
+    };
+
     /**
      * Gets the id of the player that belongs to the guild.
      */

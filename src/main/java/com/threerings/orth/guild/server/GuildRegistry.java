@@ -7,6 +7,10 @@ import com.google.inject.Singleton;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.presents.annotation.MainInvoker;
+import com.threerings.presents.dobj.DObject;
+import com.threerings.util.Resulting;
+
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.guild.data.GuildNodelet;
@@ -18,9 +22,6 @@ import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.server.OrthDeploymentConfig;
-import com.threerings.presents.annotation.MainInvoker;
-import com.threerings.presents.dobj.DObject;
-import com.threerings.util.Resulting;
 
 import static com.threerings.orth.Log.log;
 
@@ -33,6 +34,7 @@ public class GuildRegistry extends NodeletRegistry
     @Inject public GuildRegistry (Injector injector, OrthDeploymentConfig config)
     {
         super(OrthNodeObject.HOSTED_GUILDS, config.getGuildHost(), config.getGuildPorts(), injector);
+        setManagerClass(GuildManager.class);
     }
 
     /**

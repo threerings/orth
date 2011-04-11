@@ -21,18 +21,24 @@ public class GuildObject extends DObject
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
+    public var name :String;
+
     public var members :DSet;
 
+    public var nameChanged :Signal = new Signal(String, String);
     public var membersChanged :Signal = new Signal(DSet, DSet);
     public var membersEntryAdded :Signal = new Signal(DSet_Entry);
     public var membersEntryRemoved :Signal = new Signal(DSet_Entry);
     public var membersEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
+
+    public static const NAME :String = "name";
 
     public static const MEMBERS :String = "members";
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
+        name = ins.readField(String);
         members = ins.readObject(DSet);
     }
 
@@ -77,6 +83,9 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
+            case "name":
+                signal = _obj.nameChanged;
+                break;
             case "members":
                 signal = _obj.membersChanged;
                 break;
