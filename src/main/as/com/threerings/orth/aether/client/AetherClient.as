@@ -14,8 +14,8 @@ import com.threerings.presents.net.BootstrapData;
 
 import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.AetherCredentials;
-import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.FriendMarshaller;
+import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.chat.data.TellMarshaller;
 import com.threerings.orth.client.OrthDeploymentConfig;
