@@ -31,7 +31,7 @@ import com.threerings.orth.server.persist.OrthPlayerRepository;
 public class GuildManager extends NodeletManager
 {
     @Override
-    public boolean prepare (ResultListener<Void> rl)
+    public boolean prepare (final ResultListener<Void> rl)
     {
         _invoker.postUnit(new Resulting<Iterable<GuildMemberEntry>>("Loading guild") {
             GuildRecord guild;
@@ -58,6 +58,7 @@ public class GuildManager extends NodeletManager
             @Override public void requestCompleted (Iterable<GuildMemberEntry> result) {
                 _guildObj.setName(guild.getName());
                 _guildObj.setMembers(DSet.newDSet(result));
+                rl.requestCompleted(null);
             }
         });
         return true;
