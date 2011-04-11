@@ -25,6 +25,9 @@ import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
 
+/**
+ * Manages a {@link GuildObject} on the server.
+ */
 public class GuildManager extends NodeletManager
 {
     @Override
