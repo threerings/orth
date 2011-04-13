@@ -1,6 +1,6 @@
 package com.threerings.orth.nodelet.server;
 
-import com.threerings.orth.nodelet.data.Nodelet;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.presents.dobj.DObject;
 
 /**
@@ -12,7 +12,7 @@ public class NodeletManager
     /**
      * Initializes the manager with the given object.
      */
-    public void init (Nodelet nodelet, DObject obj)
+    public void init (HostedNodelet nodelet, DObject obj)
     {
         _nodelet = nodelet;
         _sharedObject = obj;
@@ -38,7 +38,7 @@ public class NodeletManager
     /**
      * Gets the nodelet whose object we manage.
      */
-    public Nodelet getNodelet ()
+    public HostedNodelet getNodelet ()
     {
         return _nodelet;
     }
@@ -51,6 +51,6 @@ public class NodeletManager
         return _sharedObject;
     }
 
-    protected Nodelet _nodelet;
+    protected HostedNodelet _nodelet;
     protected DObject _sharedObject;
 }

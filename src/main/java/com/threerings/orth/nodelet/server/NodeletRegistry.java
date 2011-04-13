@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.common.base.Functions;
 import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -13,15 +14,22 @@ import com.google.inject.Injector;
 import com.samskivert.util.Logger;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.InvocationCodes;
+import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.net.AuthRequest;
 import com.threerings.presents.net.AuthResponse;
 import com.threerings.presents.net.AuthResponseData;
 import com.threerings.presents.net.BootstrapData;
 import com.threerings.presents.net.Credentials;
+import com.threerings.presents.peer.data.NodeObject;
+import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.ChainedAuthenticator;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.ClientResolver;
+import com.threerings.presents.server.InvocationManager;
+import com.threerings.presents.server.InvocationProvider;
 import com.threerings.presents.server.PresentsDObjectMgr;
 import com.threerings.presents.server.PresentsSession;
 import com.threerings.presents.server.SessionFactory;
@@ -30,6 +38,7 @@ import com.threerings.presents.server.net.PresentsConnectionManager;
 import com.threerings.util.Name;
 import com.threerings.util.Resulting;
 
+import com.threerings.io.Streamable;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthAuthCodes;
@@ -38,6 +47,7 @@ import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.data.NodeletAuthName;
 import com.threerings.orth.nodelet.data.NodeletBootstrapData;
+import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.OrthPlayerRecord;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
 
@@ -45,10 +55,29 @@ import com.threerings.orth.server.persist.OrthPlayerRepository;
  * Main entry point for serving various types of nodelets. Abstraction goals:
  * <ul><li>Passthrough authentication using an aether session on an arbitrary peer.</li>
  * <li>Resolution of client and session</li>
- * <li>Instantiation of the hosted DObject</li></ul>
+ * <li>Instantiation of the hosted DObject</li>
+ * <li>Service registration</li>
+ * <li>Cross-peer interaction with nodelets</li></ul>
  */
 public abstract class NodeletRegistry extends NodeletHoster
 {
+    /**
+     * Abstracts all the peer-jockeying necessary to execute a peer request on a different server
+     * related to a specific node. Beware implementations of this class must be serialized and sent
+     * between peers. Anonymous inner classes are typically used but may NOT refer to the outer
+     * class instance (or its members).
+     * @param <T> the type to be returned from the request, must also be streamable
+     */
+    public interface Request<T> extends Streamable.Closure
+    {
+        /**
+         * Executes the request on the server hosting the nodelet. The manager is the one assigned
+         * to the shared object for the nodelet. Notifies the result listener when the request is
+         * complete.
+         */
+        public abstract void execute (NodeletManager manager, ResultListener<T> rl);
+    }
+
     /**
      * Creates a new nodelet registry that will handle all connections with a matching
      * {@link TokenCredentials} instance and provide hosting logic for the associated nodelet type.
@@ -101,6 +130,52 @@ public abstract class NodeletRegistry extends NodeletHoster
                 return validateAuthName(username) ? _resolverClass : null;
             }
         });
+
+        injector.getInstance(OrthPeerManager.class).addRegistry(_dsetName, this);
+    }
+
+    /**
+     * Invokes the given request on the nodelet of the given id and notifies the listener of the
+     * result when the request has completed. A failure is reported if the nodelet is not currently
+     * hosted, or if the request crashes or fails when executed remotely.
+     */
+    public <T> void invokeRequest (final int nodeletId, final Request<T> request,
+            final ResultListener<T> lner)
+    {
+        HostedNodelet nodelet = _peerMan.findHostedNodelet(_dsetName, nodeletId);
+        if (nodelet == null) {
+            lner.requestFailed(new Exception("Nodelet not hosted: " + _dsetName + ", " + nodeletId));
+            return;
+        }
+
+        final String dsetName = _dsetName;
+        _peerMan.invokeNodeRequest(nodelet.host, new PeerManager.NodeRequest() {
+            @Override public boolean isApplicable (NodeObject nodeobj) {
+                return nodeobj.getSet(dsetName).containsKey(nodeletId);
+            }
+
+            @Override protected void execute (InvocationService.ResultListener rl) {
+                NodeletRegistry reg = peerMan.getRegistry(dsetName);
+                NodeletManager mgr = reg.getManager(nodeletId);
+                if (mgr == null) {
+                    // this could happen in theory if the nodelet was just about to unhost as the
+                    // request was sent
+                    rl.requestFailed(InvocationCodes.INTERNAL_ERROR);
+                    return;
+                }
+                try {
+                    request.execute(mgr, new Resulting<T>(rl));
+                } catch (Throwable t) {
+                    rl.requestFailed(t.getMessage());
+                }
+            }
+            @Inject transient OrthPeerManager peerMan;
+        }, new Resulting<T>(lner));
+    }
+
+    public NodeletManager getManager (int nodeletId)
+    {
+        return _mgrs.get(nodeletId);
     }
 
     /**
@@ -132,31 +207,38 @@ public abstract class NodeletRegistry extends NodeletHoster
     @Override // from NodeletHoster
     protected void host (AuthName caller, Nodelet nodelet, ResultListener<HostedNodelet> listener)
     {
-        DObject obj = null;
-        NodeletManager mgr = null;
+        HostedNodelet hosted = new HostedNodelet(nodelet, _host, _ports);
+
+        DObject registeredObj = null;
+        NodeletManager inittedMgr = null;
         try {
-            obj = _omgr.registerObject(createSharedObject(nodelet));
-            mgr = _injector.getInstance(_managerClass);
-            mgr.init(nodelet, obj);
+            DObject obj = createSharedObject(nodelet);
+            NodeletManager mgr = _injector.getInstance(_managerClass);
+            if (_serviceField != null) {
+                obj.getClass().getField(_serviceField).set(obj, _invMgr.registerProvider(
+                    (InvocationProvider)mgr, _serviceClass));
+            }
+            registeredObj = _omgr.registerObject(obj);
+            mgr.init(hosted, obj);
+            inittedMgr = mgr;
 
         } catch (Exception e) {
             log.warning("Problem hosting nodelet", e);
             listener.requestFailed(e);
 
             // kill the object and manager we created
-            if (mgr != null) {
-                mgr.shutdown();
+            if (inittedMgr != null) {
+                inittedMgr.shutdown();
             }
-            if (obj != null) {
-                _omgr.destroyObject(obj.getOid());
+            if (registeredObj != null) {
+                _omgr.destroyObject(registeredObj.getOid());
             }
             return;
         }
 
-        _mgrs.put(nodelet.getId(), mgr);
+        _mgrs.put(nodelet.getId(), inittedMgr);
 
-        HostedNodelet hosted = new HostedNodelet(nodelet, _host, _ports);
-        if (!mgr.prepare(new Resulting<Void>(listener, Functions.constant(hosted)))) {
+        if (!inittedMgr.prepare(new Resulting<Void>(listener, Functions.constant(hosted)))) {
             listener.requestCompleted(hosted);
         };
     }
@@ -191,6 +273,22 @@ public abstract class NodeletRegistry extends NodeletHoster
     protected void setManagerClass(Class<? extends NodeletManager> mgrClass)
     {
         _managerClass = mgrClass;
+    }
+
+    /**
+     * Override the manager class and automatically poke the service in the shared objects when
+     * they are created.
+     * @param serviceField the name of the field in the shared object that will receive the service.
+     *        For example, {@code GuildObject.GUILD_SERVICE}.
+     * @param serviceClass the class to instantiate and add to the shared object
+     */
+    protected <T extends NodeletManager & InvocationProvider> void setManagerClass(
+            Class<T> mgrClass, String serviceField,
+            Class<? extends InvocationMarshaller> serviceClass)
+    {
+        _managerClass = mgrClass;
+        _serviceField = Preconditions.checkNotNull(serviceField);
+        _serviceClass = Preconditions.checkNotNull(serviceClass);
     }
 
     protected static class Resolver extends ClientResolver
@@ -233,9 +331,12 @@ public abstract class NodeletRegistry extends NodeletHoster
     protected Class<? extends Resolver> _resolverClass = Resolver.class;
     protected Class<? extends Session> _sessionClass = Session.class;
     protected Class<? extends NodeletManager> _managerClass = NodeletManager.class;
+    protected String _serviceField;
+    protected Class<? extends InvocationMarshaller> _serviceClass;
 
     // dependencies
     @Inject protected PresentsDObjectMgr _omgr;
     @Inject protected OrthPlayerRepository _playerRepo;
     @Inject protected Injector _injector;
+    @Inject protected InvocationManager _invMgr;
 }
