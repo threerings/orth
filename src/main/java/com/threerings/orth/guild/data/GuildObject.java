@@ -1,6 +1,8 @@
 package com.threerings.orth.guild.data;
 
 import javax.annotation.Generated;
+
+import com.threerings.orth.guild.client.GuildService;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
@@ -19,6 +21,10 @@ public class GuildObject extends DObject
     /** The field name of the <code>members</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String MEMBERS = "members";
+
+    /** The field name of the <code>guildService</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String GUILD_SERVICE = "guildService";
     // AUTO-GENERATED: FIELDS END
 
     /** The name of the guild. */
@@ -26,6 +32,9 @@ public class GuildObject extends DObject
 
     /** The guild members. */
     public DSet<GuildMemberEntry> members = DSet.newDSet();
+
+    /** The guild service. */
+    public GuildService guildService;
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -94,6 +103,23 @@ public class GuildObject extends DObject
         requestAttributeChange(MEMBERS, value, this.members);
         DSet<GuildMemberEntry> clone = (value == null) ? null : value.clone();
         this.members = clone;
+    }
+
+    /**
+     * Requests that the <code>guildService</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setGuildService (GuildService value)
+    {
+        GuildService ovalue = this.guildService;
+        requestAttributeChange(
+            GUILD_SERVICE, value, ovalue);
+        this.guildService = value;
     }
     // AUTO-GENERATED: METHODS END
 }

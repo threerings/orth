@@ -13,6 +13,8 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 
+import com.threerings.orth.guild.client.GuildService;
+
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
@@ -20,27 +22,34 @@ public class GuildObject extends DObject
 {
 // GENERATED CLASSDECL END
     GuildMemberEntry;
+    GuildMarshaller;
 
 // GENERATED STREAMING START
     public var name :String;
 
     public var members :DSet;
 
+    public var guildService :GuildService;
+
     public var nameChanged :Signal = new Signal(String, String);
     public var membersChanged :Signal = new Signal(DSet, DSet);
     public var membersEntryAdded :Signal = new Signal(DSet_Entry);
     public var membersEntryRemoved :Signal = new Signal(DSet_Entry);
     public var membersEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
+    public var guildServiceChanged :Signal = new Signal(GuildService, GuildService);
 
     public static const NAME :String = "name";
 
     public static const MEMBERS :String = "members";
+
+    public static const GUILD_SERVICE :String = "guildService";
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         name = ins.readField(String);
         members = ins.readObject(DSet);
+        guildService = ins.readObject(GuildService);
     }
 
     public function GuildObject ()
@@ -89,6 +98,9 @@ class Signaller
                 break;
             case "members":
                 signal = _obj.membersChanged;
+                break;
+            case "guildService":
+                signal = _obj.guildServiceChanged;
                 break;
             default:
                 return;
