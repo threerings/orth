@@ -17,11 +17,6 @@ import flash.geom.Rectangle;
 public class OrthPlaceBox extends Sprite
     implements LayeredContainer
 {
-    /** The layer priority of the scrolling chat. */
-    public static const LAYER_CHAT_SCROLL :int = 20;
-
-    /** The layer priority of history chat messages. */
-    public static const LAYER_CHAT_HISTORY :int = 35;
 
     public function OrthPlaceBox ()
     {
