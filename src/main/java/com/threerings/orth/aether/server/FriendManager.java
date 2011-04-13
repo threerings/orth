@@ -23,7 +23,6 @@ import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.notify.data.FriendInviteNotification;
-import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
@@ -76,10 +75,10 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     }
 
     public void requestFriendship (ClientObject caller, final int targetId,
-        final InvocationListener listener)
+        InvocationListener listener)
         throws InvocationException
     {
-        final PlayerObject player = (PlayerObject)caller;
+        PlayerObject player = (PlayerObject)caller;
 
         // anti-spam logic
         final Map<Integer, Long> pending = player.getLocal(PlayerLocal.class).pendingFriendRequests;
@@ -91,18 +90,11 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         pending.put(targetId, now);
 
         // ok, notify the other player, wherever they are
-        _peerMgr.invokeNodeRequest(new PlayerNodeRequest(targetId) {
-            @Inject transient NotificationManager notMgr;
-            @Override protected void execute (PlayerObject target, ResultListener listener) {
-                notMgr.notify(target, new FriendInviteNotification(player.getPlayerName()));
-                listener.requestProcessed(null);
-            }
-        }, new NodeRequestsListener<Void>() {
-            @Override public void requestsProcessed (NodeRequestsResult<Void> result) {
-            }
-            @Override public void requestFailed (String cause) {
+        _requests.sendNotification(targetId, new FriendInviteNotification(player.getPlayerName()),
+                new Resulting<Void>(listener) {
+            @Override public void requestFailed (Exception cause) {
                 pending.remove(targetId);
-                listener.requestFailed(cause);
+                super.requestFailed(cause);
             }
         });
     }
@@ -286,6 +278,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     @Inject protected OrthPlayerRepository _playerRepo;
     @Inject protected RelationshipRepository _friendRepo;
     @Inject protected @MainInvoker Invoker _invoker;
+    @Inject protected PlayerNodeRequests _requests;
 
     protected static final long MIN_FRIEND_REQUEST_PERIOD = 60 * 1000L;
 }
