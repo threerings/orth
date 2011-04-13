@@ -65,6 +65,12 @@ public class OrthController extends Controller
     /** Command to accept a previously sent friend invitation. */
     public static const ACCEPT_FRIEND_INVITATION :String = "AcceptFriendInvitation";
 
+    /** Command to invite someone to join a guild. */
+    public static const INVITE_TO_GUILD :String = "InviteToGuild";
+    
+    /** Command to accept a previously sent guild invitation. */
+    public static const ACCEPT_GUILD_INVITATION :String = "AcceptGuildInvitation";
+
     /** Command to create a party. */
     public static const CREATE_PARTY :String = "CreateParty";
 
@@ -170,6 +176,22 @@ public class OrthController extends Controller
     public function handleAcceptFriendInvitation (playerId :int) :void
     {
         _aetherDir.acceptFriendInvite(playerId);
+    }
+
+    /**
+     * Handles INVITE_TO_GUILD.
+     */
+    public function handleInviteToGuild (playerId :int) :void
+    {
+        _guildDir.invite(playerId);
+    }
+
+    /**
+     * Handles ACCEPT_GUILD_INVITATION.
+     */
+    public function handleAcceptGuildInvitation (playerId :int, guildId :int) :void
+    {
+        _aetherDir.acceptGuildInvite(playerId, guildId);
     }
 
     /**
