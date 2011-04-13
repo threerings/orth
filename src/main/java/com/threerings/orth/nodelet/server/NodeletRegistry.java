@@ -3,6 +3,7 @@ package com.threerings.orth.nodelet.server;
 import static com.threerings.orth.Log.log;
 
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.base.Functions;
 import com.google.common.base.Objects;
@@ -28,6 +29,7 @@ import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.ChainedAuthenticator;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.ClientResolver;
+import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.InvocationProvider;
 import com.threerings.presents.server.PresentsDObjectMgr;
@@ -142,14 +144,8 @@ public abstract class NodeletRegistry extends NodeletHoster
     public <T> void invokeRequest (final int nodeletId, final Request<T> request,
             final ResultListener<T> lner)
     {
-        HostedNodelet nodelet = _peerMan.findHostedNodelet(_dsetName, nodeletId);
-        if (nodelet == null) {
-            lner.requestFailed(new Exception("Nodelet not hosted: " + _dsetName + ", " + nodeletId));
-            return;
-        }
-
         final String dsetName = _dsetName;
-        _peerMan.invokeNodeRequest(nodelet.host, new PeerManager.NodeRequest() {
+        PeerManager.NodeRequest req = new PeerManager.NodeRequest() {
             @Override public boolean isApplicable (NodeObject nodeobj) {
                 return nodeobj.getSet(dsetName).containsKey(nodeletId);
             }
@@ -163,14 +159,31 @@ public abstract class NodeletRegistry extends NodeletHoster
                     rl.requestFailed(InvocationCodes.INTERNAL_ERROR);
                     return;
                 }
+                injector.injectMembers(request);
                 try {
                     request.execute(mgr, new Resulting<T>(rl));
                 } catch (Throwable t) {
-                    rl.requestFailed(t.getMessage());
+                    log.warning("Failed to execute nodelet request", "request", request,
+                            "dset", dsetName, "nodeletId", nodeletId);
+                    rl.requestFailed(InvocationCodes.INTERNAL_ERROR);
                 }
             }
             @Inject transient OrthPeerManager peerMan;
-        }, new Resulting<T>(lner));
+            @Inject transient Injector injector;
+        };
+
+        Set<String> nodes = _peerMan.findApplicableNodes(req);
+        if (nodes.isEmpty()) {
+            lner.requestFailed(new Exception("Nodelet not hosted"));
+            return;
+        }
+        if (nodes.size() > 1) {
+            log.warning("Multiple hosts found for nodelet, something is very wrong",
+                "nodeletId", nodeletId, "dset", _dsetName);
+            lner.requestFailed(new InvocationException(InvocationCodes.INTERNAL_ERROR));
+            return;
+        }
+        _peerMan.invokeNodeRequest(nodes.iterator().next(), req, new Resulting<T>(lner));
     }
 
     public NodeletManager getManager (int nodeletId)
