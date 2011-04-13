@@ -4,7 +4,6 @@
 package com.threerings.orth.notify.data;
 
 import com.threerings.io.SimpleStreamableObject;
-import com.threerings.util.ActionScript;
 import com.threerings.util.Name;
 
 /**
@@ -19,12 +18,6 @@ public abstract class Notification extends SimpleStreamableObject
     public static final byte PERSONAL = 2;
     public static final byte BUTTSCRATCHING = 3; // your friends doing things
     public static final byte LOWEST = 4;
-
-    @ActionScript(omit=true)
-    public Notification ()
-    {
-        // nothing special
-    }
 
     /**
      * Get the chat message used to announce this notification, or null.

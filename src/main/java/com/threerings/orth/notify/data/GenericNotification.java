@@ -16,9 +16,6 @@ import com.threerings.orth.notify.data.Notification;
  */
 public class GenericNotification extends Notification
 {
-    /** Suitable for unserialization. */
-    public GenericNotification () {}
-
     /** Normal constructor. */
     public GenericNotification (String msg, byte category)
     {

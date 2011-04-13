@@ -8,10 +8,9 @@ import com.threerings.orth.notify.data.Notification;
 
 public class PartyInviteNotification extends Notification
 {
-    /** Suitable for unserialization. */
-    public PartyInviteNotification () {}
-
-    /** Normal constructor. */
+    /**
+     * Creates a party invitation with the given parameters.
+     */
     public PartyInviteNotification (OrthName inviter, int partyId, String partyName)
     {
         _inviter = inviter;

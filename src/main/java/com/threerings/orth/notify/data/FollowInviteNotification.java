@@ -14,10 +14,6 @@ import com.threerings.orth.notify.data.Notification;
  */
 public class FollowInviteNotification extends Notification
 {
-    public FollowInviteNotification ()
-    {
-    }
-
     @ActionScript(omit=true)
     public FollowInviteNotification (PlayerName inviter)
     {
