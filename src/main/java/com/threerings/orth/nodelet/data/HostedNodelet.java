@@ -20,6 +20,14 @@ public final class HostedNodelet extends SimpleStreamableObject
         this.ports = ports;
     }
 
+    /**
+     * Gets the id of the nodelet being hosted.
+     */
+    public int getId ()
+    {
+        return nodelet.getId();
+    }
+
     @Override
     public Comparable<?> getKey ()
     {
