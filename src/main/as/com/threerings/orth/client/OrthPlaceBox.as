@@ -160,8 +160,8 @@ public class OrthPlaceBox extends Sprite
     {
         var rect :Rectangle = new Rectangle();
         rect.topLeft = INNER_OFFSET;
-        rect.width = _width;
-        rect.height = height;
+        rect.width = _width + INNER_OFFSET.x;
+        rect.height = height + INNER_OFFSET.y;
         this.scrollRect = rect;
     }
 
@@ -176,6 +176,6 @@ public class OrthPlaceBox extends Sprite
     /** The current place view. */
     protected var _mainView :DisplayObject;
 
-    protected static const INNER_OFFSET :Point = new Point(100, 100);
+    protected static const INNER_OFFSET :Point = new Point(10000, 10000);
 }
 }
