@@ -46,6 +46,9 @@ public class OrthModule extends BindingModule
         bind(PartyDirector).asSingleton();
         bind(GuildDirector).asSingleton();
 
+        // we have a simple implementation of LayeredContainer
+        bind(LayeredContainer).to(SimpleLayeredContainer);
+
         // the chat overlay is a singleton
         bind(ComicOverlay).asSingleton();
 

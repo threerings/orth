@@ -1,53 +1,17 @@
 //
-// $Id: LayeredContainer.as 15000 2009-02-24 00:24:42Z mdb $
-
+// $Id$
 package com.threerings.orth.client {
 
-import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.Sprite;
-import flash.geom.Matrix;
-import flash.utils.Dictionary;
 
-import com.threerings.util.Log;
-
-/**
- * Provide an organized way for callers to layer display objects onto one another at
- * different priority levels (which they will have to work out amongst themselves).
- *
- * This is by no means foolproof and calls can easily be made directly to the Container
- * we extend; it's still an improvement on separate pieces of our code base remotely
- * fiddling with rawChildren and competing for the top spot.
- */
-public class LayeredContainer extends Sprite
-    implements Snapshottable
+public interface LayeredContainer extends Snapshottable
 {
-    public const log :Log = Log.getLog(this);
+    function asSprite () :Sprite;
+    
+    function setBaseLayer (base :DisplayObject) :void;
 
-    public function setBaseLayer (base :DisplayObject) :void
-    {
-        clearBaseLayer();
-        addChildAt(_base = base, 0);
-    }
-
-    public function clearBaseLayer () :void
-    {
-        if (_base != null) {
-            removeChild(_base);
-            _base = null;
-        }
-    }
-
-    // from interface Snapshottable
-    public function snapshot (
-        bitmapData :BitmapData, matrix :Matrix, childPredicate :Function = null) :Boolean
-    {
-        return SnapshotUtil.snapshot(this, bitmapData, matrix,
-            // enhance the predicate to avoid snapping the base
-            function (disp :DisplayObject) :Boolean {
-                return (disp != _base) && (childPredicate == null || childPredicate(disp));
-            });
-    }
+    function clearBaseLayer () :void;
 
     /**
      * Adds a display object to overlay the main view as it changes. The lower the layer argument,
@@ -55,55 +19,16 @@ public class LayeredContainer extends Sprite
      * must have a name and it mustn't conflict with any other overlay name. Fortunately if you
      * don't name your display object it will be assigned a unique name.
      */
-    public function addOverlay (overlay :DisplayObject, layer :int) :void
-    {
-        _layers[overlay] = layer;
-
-        // step through the children until we find one whose layer is larger than ours
-        for (var ii :int = 0; ii < numChildren; ii++) {
-            if (getLayer(getChildAt(ii)) > layer) {
-                addChildAt(overlay, ii);
-                return;
-            }
-        }
-
-        // if no such child found, just append
-        addChild(overlay);
-    }
+    function addOverlay (overlay :DisplayObject, layer :int) :void;
 
     /**
      * Removes a previously added overlay.
      */
-    public function removeOverlay (overlay :DisplayObject) :void
-    {
-        delete _layers[overlay];
-
-        // remove this child from the display the hard way
-        for (var ii :int = 0; ii < numChildren; ii++) {
-            var child :DisplayObject = getChildAt(ii);
-            if (child == overlay) {
-                child = removeChildAt(ii);
-                break;
-            }
-        }
-    }
-
-    public function containsOverlay (overlay :DisplayObject) :Boolean
-    {
-        return (overlay in _layers);
-    }
+    function removeOverlay (overlay :DisplayObject) :void;
 
     /**
      * Return the layer of the specified overlay, or 0 if it's not present.
      */
-    public function getLayer (overlay :DisplayObject) :int
-    {
-        return int(_layers[overlay]);
-    }
-
-    /** A mapping of overlays to the numerical layer priority at which they were added. */
-    protected var _layers :Dictionary = new Dictionary(true);
-
-    protected var _base :DisplayObject;
+    function getLayer (overlay :DisplayObject) :int;
 }
 }
