@@ -26,6 +26,7 @@ import com.threerings.orth.notify.data.FriendInviteNotification;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
+import com.threerings.orth.server.util.InviteThrottle;
 import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.client.InvocationService.ResultListener;
@@ -81,19 +82,16 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         PlayerObject player = (PlayerObject)caller;
 
         // anti-spam logic
-        final Map<Integer, Long> pending = player.getLocal(PlayerLocal.class).pendingFriendRequests;
-        Long lastRequest = pending.get(targetId);
-        long now = System.currentTimeMillis();
-        if (lastRequest != null && now - lastRequest < MIN_FRIEND_REQUEST_PERIOD) {
+        final InviteThrottle throttle = player.getLocal(PlayerLocal.class).getInviteThrottle();
+        if (!throttle.allow(targetId)) {
             throw new InvocationException(AetherCodes.FRIEND_REQUEST_ALREADY_SENT);
         }
-        pending.put(targetId, now);
 
         // ok, notify the other player, wherever they are
         _requests.sendNotification(targetId, new FriendInviteNotification(player.getPlayerName()),
                 new Resulting<Void>(listener) {
             @Override public void requestFailed (Exception cause) {
-                pending.remove(targetId);
+                throttle.clear(targetId);
                 super.requestFailed(cause);
             }
         });
@@ -112,7 +110,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
             @Inject transient FriendManager friendmgr;
             @Override protected void execute (PlayerObject sender, ResultListener listener) {
                 PlayerLocal local = sender.getLocal(PlayerLocal.class);
-                if (local.pendingFriendRequests.remove(acceptingPlayerId) == null) {
+                if (!local.getInviteThrottle().clear(acceptingPlayerId)) {
                     log.warning("Uninvited friend acceptance!", "playerId", acceptingPlayerId,
                         "sender", _targetPlayer);
                     listener.requestFailed(AetherCodes.INTERNAL_ERROR);
@@ -279,6 +277,4 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     @Inject protected RelationshipRepository _friendRepo;
     @Inject protected @MainInvoker Invoker _invoker;
     @Inject protected PlayerNodeRequests _requests;
-
-    protected static final long MIN_FRIEND_REQUEST_PERIOD = 60 * 1000L;
 }
