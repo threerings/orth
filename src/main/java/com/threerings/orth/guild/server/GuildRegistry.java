@@ -13,6 +13,7 @@ import com.threerings.util.Resulting;
 
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.AuthName;
+import com.threerings.orth.guild.data.GuildMarshaller;
 import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
 import com.threerings.orth.guild.server.persist.GuildRecord;
@@ -34,7 +35,7 @@ public class GuildRegistry extends NodeletRegistry
     @Inject public GuildRegistry (Injector injector, OrthDeploymentConfig config)
     {
         super(OrthNodeObject.HOSTED_GUILDS, config.getGuildHost(), config.getGuildPorts(), injector);
-        setManagerClass(GuildManager.class);
+        setManagerClass(GuildManager.class, GuildObject.GUILD_SERVICE, GuildMarshaller.class);
     }
 
     /**

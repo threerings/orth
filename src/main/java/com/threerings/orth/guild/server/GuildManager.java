@@ -11,8 +11,11 @@ import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.presents.annotation.MainInvoker;
+import com.threerings.presents.client.InvocationService.InvocationListener;
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
+import com.threerings.presents.server.InvocationException;
 import com.threerings.util.Resulting;
 
 import com.threerings.orth.aether.data.VizPlayerName;
@@ -21,7 +24,7 @@ import com.threerings.orth.guild.data.GuildObject;
 import com.threerings.orth.guild.server.persist.GuildMemberRecord;
 import com.threerings.orth.guild.server.persist.GuildRecord;
 import com.threerings.orth.guild.server.persist.GuildRepository;
-import com.threerings.orth.nodelet.data.Nodelet;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
 
@@ -29,6 +32,7 @@ import com.threerings.orth.server.persist.OrthPlayerRepository;
  * Manages a {@link GuildObject} on the server.
  */
 public class GuildManager extends NodeletManager
+    implements GuildProvider
 {
     @Override
     public boolean prepare (final ResultListener<Void> rl)
@@ -64,10 +68,23 @@ public class GuildManager extends NodeletManager
         return true;
     }
 
-    public void init (Nodelet nodelet, DObject sharedObject)
+    public void init (HostedNodelet nodelet, DObject sharedObject)
     {
         super.init(nodelet, sharedObject);
         _guildObj = ((GuildObject)sharedObject);
+    }
+
+    @Override
+    public void sendInvite (ClientObject caller, int arg1, InvocationListener arg2)
+        throws InvocationException
+    {
+        // TODO
+    }
+
+    public void acceptInvite (int senderId, int newMemberId, ResultListener<Void> rl)
+    {
+        // TODO
+        rl.requestCompleted(null);
     }
 
     protected GuildObject _guildObj;
