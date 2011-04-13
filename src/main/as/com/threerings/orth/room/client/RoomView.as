@@ -837,16 +837,12 @@ public class RoomView extends Sprite
         var newY :Number = 0;
 
         if (_jumpScroll) {
-            log.info("scrollView: jumpScroll", "rect", rect, "newX", newX, "newY", newY);
             rect.x = newX;
             rect.y = newY;
 
         } else {
             var dX :Number = newX - rect.x;
             var dY :Number = newY - rect.y;
-
-            log.info("scrollView: glide", "rect", rect, "newX", newX, "newY", newY,
-                "maxabs", Math.max(Math.abs(dX), Math.abs(dY)));
 
             if (Math.max(Math.abs(dX), Math.abs(dY)) > MAX_AUTO_SCROLL) {
                 addEventListener(Event.ENTER_FRAME, tick);
