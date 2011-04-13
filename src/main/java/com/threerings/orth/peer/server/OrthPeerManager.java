@@ -6,6 +6,7 @@ package com.threerings.orth.peer.server;
 import java.util.Map;
 
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
@@ -24,6 +25,7 @@ import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
+import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.room.data.RoomLocus;
@@ -81,10 +83,19 @@ public abstract class OrthPeerManager extends PeerManager
      */
     public HostedNodelet findHostedNodelet (final String dsetName, final Nodelet nodelet)
     {
+        return findHostedNodelet(dsetName, nodelet.getId());
+    }
+
+    /**
+     * Returns the node name of the peer that is hosting the nodelet with the specified id, or null
+     * if no peer has published that they are hosting it.
+     */
+    public HostedNodelet findHostedNodelet (final String dsetName, final int nodeletId)
+    {
         return lookupNodeDatum(new Function<NodeObject, HostedNodelet>() {
             public HostedNodelet apply (NodeObject nodeobj) {
                 return ((OrthNodeObject) nodeobj)
-                    .<HostedNodelet>getSet(dsetName).get(nodelet.getId());
+                    .<HostedNodelet>getSet(dsetName).get(nodeletId);
             }
         });
     }
@@ -104,6 +115,27 @@ public abstract class OrthPeerManager extends PeerManager
     public OrthClientInfo locatePlayer (int playerId)
     {
         return (OrthClientInfo)locateClient(AetherAuthName.makeKey(playerId));
+    }
+
+    /**
+     * Adds the registry of the specified name to the this peer. This is called by the
+     * {@code NodeletRegistry} constructor. It is an error to add more than one registry with the
+     * same name.
+     */
+    public void addRegistry (String dsetName, NodeletRegistry registry)
+    {
+        Preconditions.checkArgument(!_nodeletRegistries.containsKey(dsetName),
+            "duplicate registries");
+        _nodeletRegistries.put(dsetName, registry);
+    }
+
+    /**
+     * Retrieves the registry for the dset of the given name. This allows registries to be
+     * obtained generically when the concrete type is not known or the instance cannot be injected.
+     */
+    public NodeletRegistry getRegistry (String dsetName)
+    {
+        return _nodeletRegistries.get(dsetName);
     }
 
     /**
@@ -294,6 +326,8 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     protected OrthNodeObject _onobj;
+
+    protected Map<String, NodeletRegistry> _nodeletRegistries = Maps.newHashMap();
 
     protected final Map<Class<?>, Observation<?>> _observations = Maps.newHashMap();
 }
