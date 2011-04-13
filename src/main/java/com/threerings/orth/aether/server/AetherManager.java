@@ -190,12 +190,9 @@ public class AetherManager
         _guildReg.invokeRequest(guildId, new NodeletRegistry.Request<HostedNodelet>() {
             @Override public void execute (NodeletManager manager,
                     ResultListener<HostedNodelet> rl) {
-                log.info("Whoo!", "peer", peerMan.getNodeObject().nodeName, "playerId", playerId);
-                HostedNodelet result = manager.getNodelet();
                 ((GuildManager)manager).acceptInvite(senderId, playerId,
-                        new Resulting<Void>(rl, Functions.constant(result)));
+                        new Resulting<Void>(rl, Functions.constant(manager.getNodelet())));
             }
-            @Inject transient OrthPeerManager peerMan;
 
         }, new Resulting<HostedNodelet>(lner) {
             @Override public void requestCompleted (HostedNodelet result) {
