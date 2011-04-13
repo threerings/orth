@@ -5,12 +5,14 @@ package com.threerings.orth.aether.server;
 
 import static com.threerings.orth.Log.log;
 
+import com.google.common.base.Functions;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList;
+import com.samskivert.util.ResultListener;
 
 import com.threerings.presents.annotation.EventThread;
 import com.threerings.presents.client.InvocationService;
@@ -28,8 +30,11 @@ import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.guild.data.GuildCodes;
+import com.threerings.orth.guild.server.GuildManager;
 import com.threerings.orth.guild.server.GuildRegistry;
 import com.threerings.orth.nodelet.data.HostedNodelet;
+import com.threerings.orth.nodelet.server.NodeletManager;
+import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
@@ -157,11 +162,6 @@ public class AetherManager
         // final PlayerObject user = (PlayerObject) caller;
     }
 
-//CWG-JD That AetherManager is just rerouting these makes me feel like there should be a
-//FriendService that FriendManager implements.
-//JD-CWG Okay, I think this code needs some clarification. The organization currently makes it look
-//like Player = Aether so anything handled in aether can be added to PayerService. Anyway, moved
-//to FriendService
     @Override
     public void createGuild (ClientObject caller, String name, InvocationListener lner)
         throws InvocationException
@@ -176,6 +176,33 @@ public class AetherManager
         }
 
         _guildReg.createAndHostGuild(name, player, new Resulting<HostedNodelet>(lner));
+    }
+
+    @Override
+    public void acceptGuildInvite (ClientObject caller, final int senderId, int guildId,
+            InvocationListener lner)
+        throws InvocationException
+    {
+        final PlayerObject player = (PlayerObject)caller;
+        final int playerId = player.getPlayerId();
+
+        // delegate to the possibly remote guild manager
+        _guildReg.invokeRequest(guildId, new NodeletRegistry.Request<HostedNodelet>() {
+            @Override public void execute (NodeletManager manager,
+                    ResultListener<HostedNodelet> rl) {
+                log.info("Whoo!", "peer", peerMan.getNodeObject().nodeName, "playerId", playerId);
+                HostedNodelet result = manager.getNodelet();
+                ((GuildManager)manager).acceptInvite(senderId, playerId,
+                        new Resulting<Void>(rl, Functions.constant(result)));
+            }
+            @Inject transient OrthPeerManager peerMan;
+
+        }, new Resulting<HostedNodelet>(lner) {
+            @Override public void requestCompleted (HostedNodelet result) {
+                player.setGuildId(result.nodelet.getId());
+                player.setGuild(result);
+            }
+        });
     }
 
     /** Observers of aether logins throughout the cluster. */

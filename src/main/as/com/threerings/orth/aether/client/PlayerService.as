@@ -13,6 +13,9 @@ import com.threerings.presents.client.InvocationService_InvocationListener;
 public interface PlayerService extends InvocationService
 {
     // from Java interface PlayerService
+    function acceptGuildInvite (arg1 :int, arg2 :int, arg3 :InvocationService_InvocationListener) :void;
+
+    // from Java interface PlayerService
     function createGuild (arg1 :String, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface PlayerService

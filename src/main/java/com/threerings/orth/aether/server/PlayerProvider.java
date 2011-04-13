@@ -19,6 +19,12 @@ import com.threerings.presents.server.InvocationProvider;
 public interface PlayerProvider extends InvocationProvider
 {
     /**
+     * Handles a {@link PlayerService#acceptGuildInvite} request.
+     */
+    void acceptGuildInvite (ClientObject caller, int arg1, int arg2, InvocationService.InvocationListener arg3)
+        throws InvocationException;
+
+    /**
      * Handles a {@link PlayerService#createGuild} request.
      */
     void createGuild (ClientObject caller, String arg1, InvocationService.InvocationListener arg2)

@@ -45,4 +45,12 @@ public interface PlayerService extends InvocationService
      * will be notified of the failure.
      */
     void createGuild (String name, InvocationListener listener);
+
+    /**
+     * Accepts a previously sent guild invitation. The sender must be in the guild and must have
+     * sent the invite using {@link com.threerings.orth.guild.client.GuildService#sendInvite()
+     * sendInvite}. The guildId is not technically needed but may help avoid the edge case where
+     * the sender has changed guilds just after sending the invitation.
+     */
+    void acceptGuildInvite (int senderId, int guildId, InvocationListener listener);
 }
