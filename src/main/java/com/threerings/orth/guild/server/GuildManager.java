@@ -19,6 +19,9 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.util.Resulting;
 
 import com.threerings.orth.aether.data.VizPlayerName;
+import com.threerings.orth.aether.server.PlayerNodeRequests;
+import com.threerings.orth.data.AuthName;
+import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildMemberEntry;
 import com.threerings.orth.guild.data.GuildObject;
 import com.threerings.orth.guild.server.persist.GuildMemberRecord;
@@ -26,13 +29,16 @@ import com.threerings.orth.guild.server.persist.GuildRecord;
 import com.threerings.orth.guild.server.persist.GuildRepository;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.server.NodeletManager;
+import com.threerings.orth.notify.data.GuildInviteNotification;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
+
+import static com.threerings.orth.Log.log;
 
 /**
  * Manages a {@link GuildObject} on the server.
  */
 public class GuildManager extends NodeletManager
-    implements GuildProvider
+    implements GuildProvider, GuildCodes
 {
     @Override
     public boolean prepare (final ResultListener<Void> rl)
@@ -75,10 +81,19 @@ public class GuildManager extends NodeletManager
     }
 
     @Override
-    public void sendInvite (ClientObject caller, int arg1, InvocationListener arg2)
+    public void sendInvite (ClientObject caller, int targetId, InvocationListener lner)
         throws InvocationException
     {
-        // TODO
+        int senderId = ((AuthName)caller.username).getId();
+        GuildMemberEntry entry = _guildObj.members.get(senderId);
+        if (entry == null) {
+            log.warning("Non guild member sending invite", "sender", caller.who(),
+                    "senderId", senderId, "targetId", targetId);
+            throw new InvocationException(E_INTERNAL_ERROR);
+        }
+        // TODO: limit by rank
+        _requests.sendNotification(targetId, new GuildInviteNotification(entry.name.toPlayerName(),
+            _guildObj.name, _nodelet.getId()), new Resulting<Void>(lner));
     }
 
     public void acceptInvite (int senderId, int newMemberId, ResultListener<Void> rl)
@@ -92,4 +107,5 @@ public class GuildManager extends NodeletManager
     @Inject protected GuildRepository _guildRepo;
     @Inject protected OrthPlayerRepository _playerRepo;
     @Inject protected @MainInvoker Invoker _invoker;
+    @Inject protected PlayerNodeRequests _requests;
 }
