@@ -2,17 +2,20 @@
 // $Id: PlaceBox.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.client {
-
+import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.InteractiveObject;
-import flash.display.Shape;
+import flash.display.Sprite;
+import flash.geom.Matrix;
 import flash.geom.Point;
+import flash.geom.Rectangle;
 
 /**
  * A component that holds our main view and sets up a mask to ensure that it doesn't render
  * outside the box's bounds.
  */
-public class OrthPlaceBox extends LayeredContainer
+public class OrthPlaceBox extends Sprite
+    implements LayeredContainer
 {
     /** The layer priority of the scrolling chat. */
     public static const LAYER_CHAT_SCROLL :int = 20;
@@ -22,7 +25,25 @@ public class OrthPlaceBox extends LayeredContainer
 
     public function OrthPlaceBox ()
     {
-        addChild(_mask = new Shape());
+        addChild(_layers);
+
+        _layers.x = INNER_OFFSET.x;
+        _layers.y = INNER_OFFSET.y;
+    }
+
+
+    public function asSprite ():Sprite
+    {
+        return this;
+    }
+
+    public function setMainView (view :DisplayObject) :void
+    {
+        // throw an exception now if it's not a display object
+        _layers.setBaseLayer(view);
+        _mainView = view;
+
+        layoutMainView();
     }
 
     public function getMainView () :DisplayObject
@@ -30,33 +51,58 @@ public class OrthPlaceBox extends LayeredContainer
         return _mainView;
     }
 
-    public function setMainView (view :DisplayObject) :void
-    {
-        // throw an exception now if it's not a display object
-        setBaseLayer(view);
-        _mainView = view;
-
-        layoutMainView();
-    }
-
-    override public function addOverlay (overlay :DisplayObject, layer :int) :void
-    {
-        super.addOverlay(overlay, layer);
-
-        // inform the new child of the place size if it implement the layer interface
-        if (overlay is PlaceLayer) {
-            PlaceLayer(overlay).setPlaceSize(width, height);
-        }
-    }
-
     public function clearMainView (view :DisplayObject) :Boolean
     {
         if ((_mainView != null) && (view == null || view == _mainView)) {
-            clearBaseLayer();
+            _layers.clearBaseLayer();
             _mainView = null;
             return true;
         }
         return false;
+    }
+
+    // from LayeredContainer
+    public function addOverlay (overlay :DisplayObject, layer :int) :void
+    {
+        _layers.addOverlay(overlay, layer);
+
+        // inform the new child of the place size if it implement the layer interface
+        if (overlay is PlaceLayer) {
+            PlaceLayer(overlay).setPlaceSize(_layers.width, _layers.height);
+        }
+    }
+
+    // from LayeredContainer
+    public function removeOverlay (overlay :DisplayObject) :void
+    {
+        _layers.removeOverlay(overlay);
+    }
+
+    // from LayeredContainer
+    public function setBaseLayer (base :DisplayObject) :void
+    {
+        setMainView(base);
+    }
+
+    // from LayeredContainer
+    public function clearBaseLayer () :void
+    {
+        if (_mainView != null) {
+            clearMainView(_mainView);
+        }
+    }
+
+    // from LayeredContainer
+    public function getLayer (overlay :DisplayObject) :int
+    {
+        return _layers.getLayer(overlay);
+    }
+
+    // from Snapshottable
+    public function snapshot (bitmapData :BitmapData, matrix :Matrix,
+        childPredicate :Function = null) :Boolean
+    {
+        return _layers.snapshot(bitmapData, matrix, childPredicate);
     }
 
     /**
@@ -65,9 +111,9 @@ public class OrthPlaceBox extends LayeredContainer
      */
     public function overlaysMousePoint (stageX :Number, stageY :Number) :Boolean
     {
-        var stagePoint :Point = new Point(stageX, stageY);
-        for (var ii :int = 0; ii < numChildren; ii ++) {
-            var child :DisplayObject = getChildAt(ii);
+//        var stagePoint :Point = _layers.globalToLocal(new Point(stageX, stageY));
+        for (var ii :int = 0; ii < _layers.numChildren; ii ++) {
+            var child :DisplayObject = _layers.getChildAt(ii);
             if (child == _mainView) {
                 continue;
             }
@@ -85,19 +131,16 @@ public class OrthPlaceBox extends LayeredContainer
     }
 
     /**
-     * This must be called on when our size is changed to allow us update our MainView mask and
-     * resize the MainView itself.
+     * This must be called on when our size is changed to allow us to resize the MainView itself.
      */
     public function setActualSize (width :Number, height :Number) :void
     {
         _width = width;
         _height = height;
 
-        setMasked(this, 0, 0, width, height);
-
         // any PlaceLayer layers get informed of the size change
-        for (var ii :int = 0; ii < numChildren; ii ++) {
-            var child :DisplayObject = getChildAt(ii);
+        for (var ii :int = 0; ii < _layers.numChildren; ii ++) {
+            var child :DisplayObject = _layers.getChildAt(ii);
             if (child == _mainView) {
                 continue; // we'll handle this later
             } else if (child is PlaceLayer) {
@@ -110,33 +153,21 @@ public class OrthPlaceBox extends LayeredContainer
 
     protected function layoutMainView () :void
     {
-        var w :Number = _width;
-        var h :Number = _height;
-
-        _base.x = 0;
-        _base.y = 0;
-
         if (_mainView is PlaceLayer) {
-            PlaceLayer(_mainView).setPlaceSize(w, h);
+            PlaceLayer(_mainView).setPlaceSize(_width, _height);
         }
+
+        updateScrollRect();
     }
 
-    protected function setMasked (
-        disp :DisplayObject, x :Number, y : Number, w :Number, h :Number) :void
+
+    protected function updateScrollRect () :void
     {
-        if (_masked != disp) {
-            if (_masked != null) {
-                _masked.mask = null;
-            }
-            _masked = disp;
-            if (_masked != null) {
-                _masked.mask = _mask;
-            }
-        }
-        _mask.graphics.clear();
-        _mask.graphics.beginFill(0xFFFFFF);
-        _mask.graphics.drawRect(x, y, w, h);
-        _mask.graphics.endFill();
+        var rect :Rectangle = new Rectangle();
+        rect.topLeft = INNER_OFFSET;
+        rect.width = _width;
+        rect.height = height;
+        this.scrollRect = rect;
     }
 
     /** The configured width of the placebox. */
@@ -145,13 +176,11 @@ public class OrthPlaceBox extends LayeredContainer
     /** The configured height of the placebox. */
     protected var _height :Number;
 
-    /** The mask configured on the box or view so that it doesn't overlap outside components. */
-    protected var _mask :Shape = new Shape();
-
-    /** The object currently being masked, either this or _placeView. */
-    protected var _masked :DisplayObject;
+    protected var _layers :SimpleLayeredContainer = new SimpleLayeredContainer();
 
     /** The current place view. */
     protected var _mainView :DisplayObject;
+
+    protected static const INNER_OFFSET :Point = new Point(100, 100);
 }
 }
