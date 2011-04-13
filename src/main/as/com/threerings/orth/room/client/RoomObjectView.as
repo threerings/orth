@@ -345,7 +345,8 @@ public class RoomObjectView extends RoomView
         _ctx.getChatDirector().addChatDisplay(this);
 
         // let the chat overlay know about us so we can be queried for chatter locations
-        _comicOverlay.willEnterPlace(this);
+        // ORTH TODO: implement properly
+        // _comicOverlay.willEnterPlace(this);
 
         // and animate ourselves entering the room (everyone already in the (room will also have
         // seen it)
@@ -367,7 +368,8 @@ public class RoomObjectView extends RoomView
         _ctx.getChatDirector().removeChatSnooper(this);
 
         // tell the comic overlay to forget about us
-        _comicOverlay.didLeavePlace(this);
+        // ORTH TODO: implement properly
+        // _comicOverlay.didLeavePlace(this);
 
         removeAllOccupants();
 
@@ -386,7 +388,8 @@ public class RoomObjectView extends RoomView
     override public function set scrollRect (r :Rectangle) :void
     {
         super.scrollRect = r;
-        _comicOverlay.setScrollRect(r);
+        // ORTH TODO: implement properly
+        // _comicOverlay.setScrollRect(r);
 
         forEachEntity(function (key :Object, sprite :EntitySprite) :void {
             if (sprite is ParallaxSprite) {
@@ -473,7 +476,8 @@ public class RoomObjectView extends RoomView
                 return; // we have no visualization for this kind of occupant, no problem
             }
 
-            occupant.setChatOverlay(_comicOverlay);
+            // ORTH TODO: implement properly
+            // occupant.setChatOverlay(_comicOverlay);
 
             _occupants.put(bodyOid, occupant);
             addSprite(occupant);
@@ -495,7 +499,8 @@ public class RoomObjectView extends RoomView
 
             // place the sprite back into the set of active sprites
             _occupants.put(bodyOid, occupant);
-            occupant.setChatOverlay(_comicOverlay);
+            // ORTH TODO: impmlement properly
+            // occupant.setChatOverlay(_comicOverlay);
             occupant.moveTo(loc, _scene);
         }
     }

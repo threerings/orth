@@ -26,7 +26,6 @@ import com.threerings.util.Maps;
 import com.threerings.util.NamedValueEvent;
 import com.threerings.util.ObjectMarshaller;
 
-import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthPlaceBox;
@@ -45,7 +44,6 @@ import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.entity.data.Walkability;
-import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.layout.RoomLayout;
 import com.threerings.orth.room.client.layout.RoomLayoutFactory;
 import com.threerings.orth.room.data.DecorCodes;
@@ -1127,7 +1125,6 @@ public class RoomView extends Sprite
 
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _mediaDir :MediaDirector = inject(MediaDirector);
-    protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);
     protected const _sceneDir :OrthSceneDirector = inject(OrthSceneDirector);
 
     /** When we first enter the room, we only load the background (if any). */

@@ -2,7 +2,7 @@
 // $Id: RoomController.as 17898 2009-08-24 03:38:13Z ray $
 
 package com.threerings.orth.room.client {
-import flash.display.DisplayObject;
+
 import flash.events.Event;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
@@ -29,7 +29,6 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
 import com.threerings.flex.CommandButton;
 import com.threerings.flex.CommandMenu;
-import com.threerings.flex.PopUpUtil;
 import com.threerings.whirled.client.SceneController;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
@@ -42,7 +41,6 @@ import com.threerings.util.ObjectMarshaller;
 import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.Msgs;
@@ -59,7 +57,6 @@ import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.locus.client.BootablePlaceController;
 import com.threerings.orth.locus.client.LocusController;
 import com.threerings.orth.locus.client.LocusDirector;
-import com.threerings.orth.room.client.RoomElement;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
@@ -1248,7 +1245,6 @@ public class RoomController extends SceneController
 
     protected const _topPanel :TopPanel = inject(TopPanel);
     protected const _controlBar :ControlBar = inject(ControlBar);
-    protected const _comicOverlay :ComicOverlay = inject(ComicOverlay);
 
     /** The menus that we are currently showing. */
     protected var _currentMenus :Array = [];

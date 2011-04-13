@@ -11,7 +11,6 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.AetherDirector;
-import com.threerings.orth.chat.client.ComicOverlay;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.guild.client.GuildDirector;
 import com.threerings.orth.notify.client.NotificationDirector;
@@ -48,9 +47,6 @@ public class OrthModule extends BindingModule
 
         // we have a simple implementation of LayeredContainer
         bind(LayeredContainer).to(SimpleLayeredContainer);
-
-        // the chat overlay is a singleton
-        bind(ComicOverlay).asSingleton();
 
         // as is the placebox
         bind(OrthPlaceBox).asSingleton();
