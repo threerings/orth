@@ -15,7 +15,7 @@ import flash.geom.Rectangle;
  * outside the box's bounds.
  */
 public class OrthPlaceBox extends Sprite
-    implements LayeredContainer
+    implements Snapshottable
 {
     public function OrthPlaceBox ()
     {
@@ -25,11 +25,6 @@ public class OrthPlaceBox extends Sprite
         _layers.y = INNER_OFFSET.y;
     }
 
-
-    public function asSprite ():Sprite
-    {
-        return this;
-    }
 
     public function setMainView (view :DisplayObject) :void
     {
@@ -56,7 +51,7 @@ public class OrthPlaceBox extends Sprite
     }
 
     // from LayeredContainer
-    public function addOverlay (overlay :DisplayObject, layer :int) :void
+    public function addPlaceOverlay (overlay :DisplayObject, layer :int) :void
     {
         _layers.addOverlay(overlay, layer);
 
@@ -64,32 +59,6 @@ public class OrthPlaceBox extends Sprite
         if (overlay is PlaceLayer) {
             PlaceLayer(overlay).setPlaceSize(_layers.width, _layers.height);
         }
-    }
-
-    // from LayeredContainer
-    public function removeOverlay (overlay :DisplayObject) :void
-    {
-        _layers.removeOverlay(overlay);
-    }
-
-    // from LayeredContainer
-    public function setBaseLayer (base :DisplayObject) :void
-    {
-        setMainView(base);
-    }
-
-    // from LayeredContainer
-    public function clearBaseLayer () :void
-    {
-        if (_mainView != null) {
-            clearMainView(_mainView);
-        }
-    }
-
-    // from LayeredContainer
-    public function getLayer (overlay :DisplayObject) :int
-    {
-        return _layers.getLayer(overlay);
     }
 
     // from Snapshottable
