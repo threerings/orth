@@ -17,7 +17,6 @@ import flash.geom.Rectangle;
 public class OrthPlaceBox extends Sprite
     implements LayeredContainer
 {
-
     public function OrthPlaceBox ()
     {
         addChild(_layers);
