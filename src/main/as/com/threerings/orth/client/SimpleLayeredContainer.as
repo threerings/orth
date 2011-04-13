@@ -2,7 +2,6 @@
 // $Id: LayeredContainer.as 15000 2009-02-24 00:24:42Z mdb $
 
 package com.threerings.orth.client {
-import com.threerings.util.Log;
 
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
@@ -14,23 +13,16 @@ import flash.utils.Dictionary;
  * Provide an organized way for callers to layer display objects onto one another at
  * different priority levels (which they will have to work out amongst themselves).
  *
- * This is by no means foolproof and calls can easily be made directly to the Container
+ * This is by no means foolproof and calls can easily be made directly to the Sprite
  * we extend; it's still an improvement on separate pieces of our code base remotely
  * fiddling with rawChildren and competing for the top spot.
  */
 public class SimpleLayeredContainer extends Sprite
     implements LayeredContainer
 {
-    public const log :Log = Log.getLog(this);
-
     public function asSprite () :Sprite
     {
         return this;
-    }
-
-    public function get baseLayer () :DisplayObject
-    {
-        return _base;
     }
 
     public function setBaseLayer (base:DisplayObject):void
@@ -100,6 +92,5 @@ public class SimpleLayeredContainer extends Sprite
 
     /** The base layer against which all other layers are relative. */
     protected var _base :DisplayObject;
-
 }
 }
