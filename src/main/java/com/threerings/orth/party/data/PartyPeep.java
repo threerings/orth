@@ -23,10 +23,4 @@ public class PartyPeep extends PlayerEntry
     	super(name);
         this.joinOrder = joinOrder;
     }
-
-    @Override
-    public String toString ()
-    {
-        return "PartyPeep[" + name + "]";
-    }
 }

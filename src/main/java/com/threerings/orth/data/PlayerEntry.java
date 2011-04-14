@@ -3,10 +3,11 @@
 
 package com.threerings.orth.data;
 
+import com.threerings.io.SimpleStreamableObject;
 import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.presents.dobj.DSet;
 
-public class PlayerEntry
+public class PlayerEntry extends SimpleStreamableObject
     implements /* IsSerializable, */ DSet.Entry, Cloneable
 {
     /** The display name of the friend. */
@@ -39,11 +40,5 @@ public class PlayerEntry
     {
         return (other instanceof PlayerEntry) &&
             (this.name.getId() == ((PlayerEntry)other).name.getId());
-    }
-
-    @Override
-    public String toString ()
-    {
-        return "PlayerEntry[" + name + "]";
     }
 }

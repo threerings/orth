@@ -3,8 +3,6 @@
 
 package com.threerings.orth.data;
 
-import com.samskivert.util.StringUtil;
-
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.VizPlayerName;
 
@@ -66,13 +64,5 @@ public class FriendEntry extends PlayerEntry
         } catch (CloneNotSupportedException e) {
             throw new AssertionError(e);
         }
-    }
-
-    @Override
-    public String toString ()
-    {
-        StringBuilder sb = new StringBuilder("FriendEntry [");
-        StringUtil.fieldsToString(sb, this);
-        return sb.append("]").toString();
     }
 }
