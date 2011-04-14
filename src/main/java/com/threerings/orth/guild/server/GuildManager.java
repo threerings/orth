@@ -90,10 +90,14 @@ public class GuildManager extends NodeletManager
         throws InvocationException
     {
         GuildMemberEntry sender = requireMember(caller);
+        if (sender.rank != GuildRank.OFFICER) {
+            log.warning("Non officer attempting to send guild invite", "sender", sender,
+                "targetId", targetId);
+            throw new InvocationException(INTERNAL_ERROR);
+        }
         if (_guildObj.members.containsKey(targetId)) {
             throw new InvocationException(E_PLAYER_ALREADY_IN_GUILD);
         }
-        // TODO: limit by rank
         if (!getThrottle(sender).allow(targetId)) {
             throw new InvocationException(E_INVITE_ALREADY_SENT);
         }
@@ -122,7 +126,7 @@ public class GuildManager extends NodeletManager
         }
 
         // all in order, ship off to invoker
-        _invoker.postRunnable(new Resulting<Void>("update guild member rank", listener) {
+        _invoker.postUnit(new Resulting<Void>("update guild member rank", listener) {
             @Override public Void invokePersist () throws Exception {
                 _guildRepo.updateMember(_nodelet.getId(), target.getPlayerId(), newRank);
                 return null;
@@ -131,6 +135,39 @@ public class GuildManager extends NodeletManager
                 GuildMemberEntry updated = target.clone();
                 updated.rank = newRank;
                 _guildObj.updateMembers(updated);
+                super.requestCompleted(result);
+            }
+        });
+    }
+
+    @Override
+    public void remove (ClientObject caller, int targetId, InvocationListener listener)
+        throws InvocationException
+    {
+        GuildMemberEntry officer = requireMember(caller);
+        if (officer.rank != GuildRank.OFFICER) {
+            log.warning("Non officer attempting to remove member", "caller", officer,
+                    "targetId", targetId);
+            throw new InvocationException(E_INTERNAL_ERROR);
+        }
+        final GuildMemberEntry target = lookupMember(targetId);
+        if (target == null) {
+            throw new InvocationException(E_INTERNAL_ERROR);
+        }
+        if (target.rank == GuildRank.OFFICER) {
+            log.warning("Illegal remove", "caller", officer, "target", target);
+            throw new InvocationException(E_INTERNAL_ERROR);
+        }
+
+        // all in order, ship off to invoker
+        _invoker.postUnit(new Resulting<Void>("remove guild member", listener) {
+            @Override public Void invokePersist () throws Exception {
+                _guildRepo.removeMember(_nodelet.getId(), target.getPlayerId());
+                return null;
+            }
+            @Override public void requestCompleted (Void result) {
+                _guildObj.removeFromMembers(target.getPlayerId());
+                clearPlayerObjectGuild(target.getPlayerId());
                 super.requestCompleted(result);
             }
         });
