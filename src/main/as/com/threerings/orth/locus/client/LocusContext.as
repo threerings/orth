@@ -14,9 +14,6 @@ import com.threerings.orth.locus.data.Locus;
 public interface LocusContext
     extends PresentsContext
 {
-    /** Will be called immediately following construction; set up dependencies here. */
-    function initDirectors () :void;
-
     /** For convenience, return our current display name. */
     function getMyName () :PlayerName;
 

@@ -36,10 +36,6 @@ public class RoomContext
     {
     }
 
-    public function initDirectors () :void
-    {
-    }
-
     // from PresentsContext
     public function getClient () :Client
     {
