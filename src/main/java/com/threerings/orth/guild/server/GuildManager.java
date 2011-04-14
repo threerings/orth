@@ -31,6 +31,7 @@ import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.notify.data.GuildInviteNotification;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
+import com.threerings.orth.server.util.InviteThrottle;
 
 import static com.threerings.orth.Log.log;
 
@@ -91,7 +92,13 @@ public class GuildManager extends NodeletManager
                     "senderId", senderId, "targetId", targetId);
             throw new InvocationException(E_INTERNAL_ERROR);
         }
+        if (_guildObj.members.containsKey(targetId)) {
+            throw new InvocationException(E_PLAYER_ALREADY_IN_GUILD);
+        }
         // TODO: limit by rank
+        if (!getThrottle(senderId).allow(targetId)) {
+            throw new InvocationException(E_INVITE_ALREADY_SENT);
+        }
         _requests.sendNotification(targetId, new GuildInviteNotification(entry.name.toPlayerName(),
             _guildObj.name, _nodelet.getId()), new Resulting<Void>(lner));
     }
@@ -102,7 +109,20 @@ public class GuildManager extends NodeletManager
         rl.requestCompleted(null);
     }
 
+    protected InviteThrottle getThrottle (int playerId)
+    {
+        if (_invitations == null) {
+            _invitations = Maps.newHashMap();
+        }
+        InviteThrottle throttle = _invitations.get(playerId);
+        if (throttle == null) {
+            _invitations.put(playerId, throttle = new InviteThrottle());
+        }
+        return throttle;
+    }
+
     protected GuildObject _guildObj;
+    protected Map<Integer, InviteThrottle> _invitations;
 
     @Inject protected GuildRepository _guildRepo;
     @Inject protected OrthPlayerRepository _playerRepo;
