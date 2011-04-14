@@ -209,8 +209,9 @@ public abstract class NodeletRegistry extends NodeletHoster
         }
         if (_serviceField != null) {
             try {
-                _invMgr.clearDispatcher((InvocationMarshaller)_serviceField.get(obj));
-            } catch (IllegalAccessException e) {
+                _invMgr.clearDispatcher((InvocationMarshaller)
+                    obj.getClass().getField(_serviceField).get(obj));
+            } catch (Exception e) {
             }
         }
         _omgr.destroyObject(obj.getOid());
@@ -253,8 +254,8 @@ public abstract class NodeletRegistry extends NodeletHoster
             DObject obj = createSharedObject(nodelet);
             NodeletManager mgr = _injector.getInstance(_managerClass);
             if (_serviceField != null) {
-                _serviceField.set(obj, _invMgr.registerProvider((InvocationProvider)mgr,
-                        _serviceClass));
+                obj.getClass().getField(_serviceField).set(obj,
+                    _invMgr.registerProvider((InvocationProvider)mgr, _serviceClass));
             }
             registeredObj = _omgr.registerObject(obj);
             mgr.init(this, hosted, obj);
@@ -335,7 +336,7 @@ public abstract class NodeletRegistry extends NodeletHoster
         Preconditions.checkArgument(field.getType().isAssignableFrom(serviceClass));
 
         _managerClass = mgrClass;
-        _serviceField = field;
+        _serviceField = serviceField;
         _serviceClass = serviceClass;
     }
 
@@ -379,7 +380,7 @@ public abstract class NodeletRegistry extends NodeletHoster
     protected Class<? extends Resolver> _resolverClass = Resolver.class;
     protected Class<? extends Session> _sessionClass = Session.class;
     protected Class<? extends NodeletManager> _managerClass = NodeletManager.class;
-    protected Field _serviceField;
+    protected String _serviceField;
     protected Class<? extends InvocationMarshaller> _serviceClass;
 
     // dependencies
