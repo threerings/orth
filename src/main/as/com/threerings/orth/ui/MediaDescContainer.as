@@ -59,7 +59,7 @@ public class MediaDescContainer extends MediaContainer
         return "MediaDescContainer[desc=" + _desc + "]";
     }
 
-    override protected function handleError (event : ErrorEvent) : void
+    override protected function handleError (event :ErrorEvent) : void
     {
         super.handleError(event);
 

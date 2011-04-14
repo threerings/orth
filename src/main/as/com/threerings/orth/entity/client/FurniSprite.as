@@ -68,7 +68,7 @@ public class FurniSprite extends EntitySprite
     /**
      * Call the provided function when this particular sprite is done loading
      */
-    public function setLoadedCallback (fn:Function):void
+    public function setLoadedCallback (fn :Function):void
     {
         _loadedCallback = fn;
     }
