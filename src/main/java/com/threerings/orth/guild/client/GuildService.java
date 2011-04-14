@@ -30,6 +30,13 @@ public interface GuildService extends InvocationService
     void updateRank (int playerId, GuildRank newRank, InvocationListener listener);
 
     /**
+     * Remove the given member from the guild. This will fail if the caller is not an officer or
+     * if the other player is an officer. On success, the change will be propagated to the {@link
+     * GuildObject#members} set. On failure, the listener will be notified.
+     */
+    void remove (int playerId, InvocationListener listener);
+
+    /**
      * Remove the caller from the guild. This will fail if the caller is the sole officer in the
      * guild. On success, the change will be propagated to the {@link GuildObject#members} set. On
      * failure, the listener will be notified.
