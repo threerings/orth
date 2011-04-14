@@ -32,6 +32,12 @@ public interface GuildProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link GuildService#remove} request.
+     */
+    void remove (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)
+        throws InvocationException;
+
+    /**
      * Handles a {@link GuildService#sendInvite} request.
      */
     void sendInvite (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)

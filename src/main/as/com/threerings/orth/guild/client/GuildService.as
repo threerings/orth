@@ -20,6 +20,9 @@ public interface GuildService extends InvocationService
     function leave (arg1 :InvocationService_InvocationListener) :void;
 
     // from Java interface GuildService
+    function remove (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
+
+    // from Java interface GuildService
     function sendInvite (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface GuildService

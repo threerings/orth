@@ -47,8 +47,21 @@ public class GuildMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #remove} requests. */
+    public static final int REMOVE = 3;
+
+    // from interface GuildService
+    public void remove (int arg1, InvocationService.InvocationListener arg2)
+    {
+        ListenerMarshaller listener2 = new ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(REMOVE, new Object[] {
+            Integer.valueOf(arg1), listener2
+        });
+    }
+
     /** The method id used to dispatch {@link #sendInvite} requests. */
-    public static final int SEND_INVITE = 3;
+    public static final int SEND_INVITE = 4;
 
     // from interface GuildService
     public void sendInvite (int arg1, InvocationService.InvocationListener arg2)
@@ -61,7 +74,7 @@ public class GuildMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #updateRank} requests. */
-    public static final int UPDATE_RANK = 4;
+    public static final int UPDATE_RANK = 5;
 
     // from interface GuildService
     public void updateRank (int arg1, GuildRank arg2, InvocationService.InvocationListener arg3)

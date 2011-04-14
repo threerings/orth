@@ -47,8 +47,21 @@ public class GuildMarshaller extends InvocationMarshaller
         ]);
     }
 
+    /** The method id used to dispatch <code>remove</code> requests. */
+    public static const REMOVE :int = 3;
+
+    // from interface GuildService
+    public function remove (arg1 :int, arg2 :InvocationService_InvocationListener) :void
+    {
+        var listener2 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(REMOVE, [
+            Integer.valueOf(arg1), listener2
+        ]);
+    }
+
     /** The method id used to dispatch <code>sendInvite</code> requests. */
-    public static const SEND_INVITE :int = 3;
+    public static const SEND_INVITE :int = 4;
 
     // from interface GuildService
     public function sendInvite (arg1 :int, arg2 :InvocationService_InvocationListener) :void
@@ -61,7 +74,7 @@ public class GuildMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch <code>updateRank</code> requests. */
-    public static const UPDATE_RANK :int = 4;
+    public static const UPDATE_RANK :int = 5;
 
     // from interface GuildService
     public function updateRank (arg1 :int, arg2 :GuildRank, arg3 :InvocationService_InvocationListener) :void
