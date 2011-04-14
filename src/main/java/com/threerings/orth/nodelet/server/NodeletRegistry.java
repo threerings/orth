@@ -2,7 +2,6 @@ package com.threerings.orth.nodelet.server;
 
 import static com.threerings.orth.Log.log;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 
@@ -326,14 +325,8 @@ public abstract class NodeletRegistry extends NodeletHoster
             Class<T> mgrClass, String serviceField,
             Class<? extends InvocationMarshaller> serviceClass)
     {
-        Field field;
-        try {
-            field = mgrClass.getField(Preconditions.checkNotNull(serviceField));
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
         Preconditions.checkNotNull(serviceClass);
-        Preconditions.checkArgument(field.getType().isAssignableFrom(serviceClass));
+        Preconditions.checkNotNull(serviceField);
 
         _managerClass = mgrClass;
         _serviceField = serviceField;
