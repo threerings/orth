@@ -4,7 +4,9 @@
 package com.threerings.orth.entity.client {
 import flash.display.LoaderInfo;
 import flash.events.Event;
+import flash.events.IOErrorEvent;
 import flash.events.MouseEvent;
+import flash.events.SecurityErrorEvent;
 import flash.geom.Point;
 
 import com.threerings.media.MediaContainer;
@@ -48,7 +50,9 @@ public class FurniSprite extends EntitySprite
         _sprite.addEventListener(MouseEvent.ROLL_OVER, handleMouseHover);
         _sprite.addEventListener(MouseEvent.ROLL_OUT, handleMouseHover);
         _sprite.addEventListener(MediaContainer.LOADER_READY, handleLoaderReady);
-        _sprite.addEventListener(Event.COMPLETE, handleMediaComplete);
+        _sprite.addEventListener(Event.COMPLETE, handleComplete);
+        _sprite.removeEventListener(IOErrorEvent.IO_ERROR, handleError);
+        _sprite.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, handleError);
     }
 
     override public function getDesc () :String
@@ -203,10 +207,18 @@ public class FurniSprite extends EntitySprite
         }
     }
 
-    protected function handleMediaComplete (event:Event):void
+    protected function handleError (event :Event) :void
+    {
+        log.warning("Loading error for entity", "entity", _ident, "event", event);
+        if (_loadedCallback != null) {
+            _loadedCallback(this, false);
+        }
+    }
+
+    protected function handleComplete (event:Event):void
     {
         if (_loadedCallback != null) {
-            _loadedCallback(this);
+            _loadedCallback(this, true);
         }
     }
 

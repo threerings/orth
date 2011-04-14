@@ -432,9 +432,8 @@ public class RoomObjectView extends RoomView
         log.info("Loading backgrounds", "sprites", _bgSprites, "count", _bgSprites.size());
     }
 
-    protected function backgroundSpriteLoaded (sprite :FurniSprite) :void
+    protected function backgroundSpriteLoaded (sprite :FurniSprite, success :Boolean) :void
     {
-        log.info("Background loaded", "sprite", sprite.getEntityIdent());
         _bgSprites.remove(sprite);
         if (_bgSprites.isEmpty()) {
             backgroundFinishedLoading();
