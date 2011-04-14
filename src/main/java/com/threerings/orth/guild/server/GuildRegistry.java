@@ -12,7 +12,6 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.util.Resulting;
 
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.data.AuthName;
 import com.threerings.orth.guild.data.GuildMarshaller;
 import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
@@ -53,7 +52,7 @@ public class GuildRegistry extends NodeletRegistry
             }
 
             @Override public void requestCompleted (GuildRecord result) {
-                host((AuthName)officer.username, new GuildNodelet(result.getGuildId()),
+                resolveHosting(officer, new GuildNodelet(result.getGuildId()),
                         new Resulting<HostedNodelet>(rl) {
                     @Override public void requestCompleted (HostedNodelet result) {
                         officer.startTransaction();
