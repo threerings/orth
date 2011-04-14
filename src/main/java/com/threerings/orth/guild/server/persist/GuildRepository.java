@@ -42,6 +42,7 @@ public interface GuildRepository
 
     /**
      * Removes a member from a guild.
+     * @throws Exception if the member is not in the guild
      */
     void removeMember (int guildId, int playerId);
 
