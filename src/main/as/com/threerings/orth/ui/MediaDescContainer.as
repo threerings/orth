@@ -9,6 +9,8 @@ import com.threerings.util.Util;
 
 import com.threerings.orth.data.MediaDesc;
 
+import flash.events.ErrorEvent;
+
 public class MediaDescContainer extends MediaContainer
 {
     public function MediaDescContainer (desc: MediaDesc = null)
@@ -55,6 +57,13 @@ public class MediaDescContainer extends MediaContainer
     override public function toString () :String
     {
         return "MediaDescContainer[desc=" + _desc + "]";
+    }
+
+    override protected function handleError (event : ErrorEvent) : void
+    {
+        super.handleError(event);
+
+        dispatchEvent(event);
     }
 
     /** Our Media descriptor. */
