@@ -2,6 +2,7 @@ package com.threerings.orth.nodelet.server;
 
 import static com.threerings.orth.Log.log;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 
@@ -192,6 +193,30 @@ public abstract class NodeletRegistry extends NodeletHoster
     }
 
     /**
+     * Calls the {@link NodeletManager#shutdown()} method and performs other cleanup.
+     */
+    public void shutdownManager (NodeletManager manager)
+    {
+        boolean hasMgr = _mgrs.remove(manager.getNodelet().getId()) != null;
+        if (!hasMgr) {
+            throw new RuntimeException("Shutting down a manager twice: " + manager.getNodelet());
+        }
+        DObject obj = manager.getSharedObject();
+        try {
+            manager.shutdown();
+        } catch (Exception e) {
+            log.warning("Manager failed to shutdown", "nodelet", manager.getNodelet());
+        }
+        if (_serviceField != null) {
+            try {
+                _invMgr.clearDispatcher((InvocationMarshaller)_serviceField.get(obj));
+            } catch (IllegalAccessException e) {
+            }
+        }
+        _omgr.destroyObject(obj.getOid());
+    }
+
+    /**
      * Checks if the incoming connection is configured to access this registry.
      */
     protected boolean validateCredentials (AuthRequest authReq)
@@ -228,11 +253,12 @@ public abstract class NodeletRegistry extends NodeletHoster
             DObject obj = createSharedObject(nodelet);
             NodeletManager mgr = _injector.getInstance(_managerClass);
             if (_serviceField != null) {
-                obj.getClass().getField(_serviceField).set(obj, _invMgr.registerProvider(
-                    (InvocationProvider)mgr, _serviceClass));
+                _serviceField.set(obj, _invMgr.registerProvider((InvocationProvider)mgr,
+                        _serviceClass));
             }
             registeredObj = _omgr.registerObject(obj);
-            mgr.init(hosted, obj);
+            mgr.init(this, hosted, obj);
+            mgr.didInit();
             inittedMgr = mgr;
 
         } catch (Exception e) {
@@ -299,9 +325,18 @@ public abstract class NodeletRegistry extends NodeletHoster
             Class<T> mgrClass, String serviceField,
             Class<? extends InvocationMarshaller> serviceClass)
     {
+        Field field;
+        try {
+            field = mgrClass.getField(Preconditions.checkNotNull(serviceField));
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+        Preconditions.checkNotNull(serviceClass);
+        Preconditions.checkArgument(field.getType().isAssignableFrom(serviceClass));
+
         _managerClass = mgrClass;
-        _serviceField = Preconditions.checkNotNull(serviceField);
-        _serviceClass = Preconditions.checkNotNull(serviceClass);
+        _serviceField = field;
+        _serviceClass = serviceClass;
     }
 
     protected static class Resolver extends ClientResolver
@@ -344,7 +379,7 @@ public abstract class NodeletRegistry extends NodeletHoster
     protected Class<? extends Resolver> _resolverClass = Resolver.class;
     protected Class<? extends Session> _sessionClass = Session.class;
     protected Class<? extends NodeletManager> _managerClass = NodeletManager.class;
-    protected String _serviceField;
+    protected Field _serviceField;
     protected Class<? extends InvocationMarshaller> _serviceClass;
 
     // dependencies

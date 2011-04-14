@@ -12,4 +12,7 @@ public interface GuildCodes extends InvocationCodes
 
     /** Error thrown when a player has already been invited. */
     public static final String E_INVITE_ALREADY_SENT = "e.guild_invite_already_sent";
+
+    /** Error thrown when attempting to disband a group with other members. */
+    public static final String E_GUILD_HAS_OTHER_MEMBERS = "e.guild_has_other_members";
 }

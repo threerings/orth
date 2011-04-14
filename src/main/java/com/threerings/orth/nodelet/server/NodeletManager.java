@@ -10,12 +10,21 @@ import com.threerings.presents.dobj.DObject;
 public class NodeletManager
 {
     /**
-     * Initializes the manager with the given object.
+     * Initializes the manager with the given objects. Called by {@code NodeletRegistry} when
+     * setting up the manager.
      */
-    public void init (HostedNodelet nodelet, DObject obj)
+    public void init (NodeletRegistry registry, HostedNodelet nodelet, DObject obj)
     {
+        _registry = registry;
         _nodelet = nodelet;
         _sharedObject = obj;
+    }
+
+    /**
+     * Called by the {@link NodeletRegistry} after {@link #init()}. Does nothing by default.
+     */
+    public void didInit ()
+    {
     }
 
     /**
@@ -29,7 +38,10 @@ public class NodeletManager
     }
 
     /**
-     * Stops managing.
+     * Stops managing. This should <em>only</em> be called by {@link
+     * NodeletRegistry#shutdownManager()}. That method will also take care of destroying the shared
+     * object and clearing the invocation dispatcher for the service. So this method only needs to
+     * clean up its non-generic structures, if any. By default, does nothing.
      */
     public void shutdown ()
     {
@@ -51,6 +63,7 @@ public class NodeletManager
         return _sharedObject;
     }
 
+    protected NodeletRegistry _registry;
     protected HostedNodelet _nodelet;
     protected DObject _sharedObject;
 }

@@ -3,6 +3,7 @@ package com.threerings.orth.guild.server;
 import java.util.Map;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -13,12 +14,13 @@ import com.samskivert.util.ResultListener;
 import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.util.Resulting;
 
+import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.data.VizPlayerName;
+import com.threerings.orth.aether.server.PlayerNodeAction;
 import com.threerings.orth.aether.server.PlayerNodeRequests;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.guild.data.GuildCodes;
@@ -28,7 +30,6 @@ import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.guild.server.persist.GuildMemberRecord;
 import com.threerings.orth.guild.server.persist.GuildRecord;
 import com.threerings.orth.guild.server.persist.GuildRepository;
-import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.notify.data.GuildInviteNotification;
 import com.threerings.orth.peer.data.OrthClientInfo;
@@ -78,10 +79,10 @@ public class GuildManager extends NodeletManager
         return true;
     }
 
-    public void init (HostedNodelet nodelet, DObject sharedObject)
+    @Override
+    public void didInit ()
     {
-        super.init(nodelet, sharedObject);
-        _guildObj = ((GuildObject)sharedObject);
+        _guildObj = ((GuildObject)_sharedObject);
     }
 
     @Override
@@ -98,6 +99,94 @@ public class GuildManager extends NodeletManager
         }
         _requests.sendNotification(targetId, new GuildInviteNotification(sender.name.toPlayerName(),
             _guildObj.name, _nodelet.getId()), new Resulting<Void>(lner));
+    }
+
+    @Override
+    public void updateRank (ClientObject caller, int targetId, final GuildRank newRank,
+            InvocationListener listener)
+        throws InvocationException
+    {
+        GuildMemberEntry officer = requireMember(caller);
+        if (officer.rank != GuildRank.OFFICER) {
+            log.warning("Non officer attempting to update rank", "caller", officer,
+                    "targetId", targetId);
+            throw new InvocationException(E_INTERNAL_ERROR);
+        }
+        final GuildMemberEntry target = lookupMember(targetId);
+        if (target == null) {
+            throw new InvocationException(E_INTERNAL_ERROR);
+        }
+        if (target.rank == GuildRank.OFFICER) {
+            log.warning("Illegal rank update", "caller", officer, "target", target);
+            throw new InvocationException(E_INTERNAL_ERROR);
+        }
+
+        // all in order, ship off to invoker
+        _invoker.postRunnable(new Resulting<Void>("update guild member rank", listener) {
+            @Override public Void invokePersist () throws Exception {
+                _guildRepo.updateMember(_nodelet.getId(), target.getPlayerId(), newRank);
+                return null;
+            }
+            @Override public void requestCompleted (Void result) {
+                GuildMemberEntry updated = target.clone();
+                updated.rank = newRank;
+                _guildObj.updateMembers(updated);
+                super.requestCompleted(result);
+            }
+        });
+    }
+
+    @Override
+    public void leave (ClientObject caller, InvocationListener listener)
+        throws InvocationException
+    {
+        final GuildMemberEntry member = requireMember(caller);
+        if (member.isOfficer()) {
+            boolean hasOtherOfficer = false;
+            for (GuildMemberEntry other : Iterables.filter(_guildObj.members, IS_OFFICER)) {
+                if (!other.equals(member)) {
+                    hasOtherOfficer = true;
+                }
+            }
+            if (!hasOtherOfficer) {
+                throw new InvocationException(E_INTERNAL_ERROR);
+            }
+        }
+
+        _invoker.postUnit(new Resulting<Void>("remove guild member", listener) {
+            @Override public Void invokePersist () throws Exception {
+                _guildRepo.removeMember(_nodelet.getId(), member.getPlayerId());
+                return null;
+            }
+            @Override public void requestCompleted (Void result) {
+                _guildObj.removeFromMembers(member.getKey());
+                clearPlayerObjectGuild(member.getPlayerId());
+                super.requestCompleted(result);
+            }
+        });
+    }
+
+    @Override
+    public void disband (ClientObject caller, InvocationListener listener)
+        throws InvocationException
+    {
+        final GuildMemberEntry member = requireMember(caller);
+        if (_guildObj.members.size() > 1) {
+            throw new InvocationException(E_GUILD_HAS_OTHER_MEMBERS);
+        }
+        _invoker.postUnit(new Resulting<Void>("disband guild", listener) {
+            @Override public Void invokePersist () throws Exception {
+                _guildRepo.removeMember(_nodelet.getId(), member.getPlayerId());
+                _guildRepo.removeEmptyGuild(_nodelet.getId());
+                return null;
+            }
+            @Override public void requestCompleted (Void result) {
+                _guildObj.removeFromMembers(member.getKey());
+                clearPlayerObjectGuild(member.getPlayerId());
+                super.requestCompleted(result);
+                _registry.shutdownManager(GuildManager.this);
+            }
+        });
     }
 
     public void acceptInvite (int senderId, final int newMemberId, ResultListener<Void> rl)
@@ -138,6 +227,21 @@ public class GuildManager extends NodeletManager
         });
     }
 
+    protected void clearPlayerObjectGuild (int playerId)
+    {
+        _peerMan.invokeNodeAction(new PlayerNodeAction(playerId) {
+            @Override protected void execute (PlayerObject player) {
+                player.startTransaction();
+                try {
+                    player.setGuildId(0);
+                    player.setGuild(null);
+                } finally {
+                    player.commitTransaction();
+                }
+            }
+        });
+    }
+
     protected GuildMemberEntry requireMember (ClientObject caller)
         throws InvocationException
     {
@@ -156,7 +260,7 @@ public class GuildManager extends NodeletManager
 
     protected InviteThrottle getThrottle (GuildMemberEntry member)
     {
-        return getThrottle(member.name.getId());
+        return getThrottle(member.getPlayerId());
     }
 
     protected InviteThrottle getThrottle (int playerId)
@@ -173,6 +277,13 @@ public class GuildManager extends NodeletManager
 
     protected GuildObject _guildObj;
     protected Map<Integer, InviteThrottle> _invitations;
+
+    protected static final Predicate<GuildMemberEntry> IS_OFFICER =
+            new Predicate<GuildMemberEntry> () {
+        @Override public boolean apply (GuildMemberEntry entry) {
+            return entry.isOfficer();
+        }
+    };
 
     // dependencies
     @Inject protected GuildRepository _guildRepo;

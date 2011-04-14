@@ -17,6 +17,11 @@ public class PlayerEntry
         this.name = name;
     }
 
+    public int getPlayerId ()
+    {
+        return name.getId();
+    }
+
     // from interface DSet.Entry
     public Comparable<?> getKey ()
     {

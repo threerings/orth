@@ -30,7 +30,8 @@ public interface GuildRepository
     GuildRecord createGuild (String name, int creatorId);
 
     /**
-     * Removes the guild of the given id, if it is empty. Otherwise throws an unchecked exception.
+     * Removes the guild of the given id, if it is empty.
+     * @throws Exception if guild is not empty.
      */
     void removeEmptyGuild (int guildId);
 
@@ -43,4 +44,10 @@ public interface GuildRepository
      * Removes a member from a guild.
      */
     void removeMember (int guildId, int playerId);
+
+    /**
+     * Updates the rank of a member.
+     * @throws Exception if the player is not in the guild.
+     */
+    void updateMember (int guildId, int playerId, GuildRank rank);
 }

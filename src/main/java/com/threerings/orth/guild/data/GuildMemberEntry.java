@@ -15,6 +15,20 @@ public class GuildMemberEntry extends PlayerEntry
         this.rank = rank;
     }
 
+    public GuildMemberEntry clone ()
+    {
+        try {
+            return (GuildMemberEntry)super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    public boolean isOfficer ()
+    {
+        return rank == GuildRank.OFFICER;
+    }
+
     /**
      * Creates a new guild member entry for the given player and status. The photo will be null.
      * TODO: callers of this will need to worry about the photo when those are implemented.

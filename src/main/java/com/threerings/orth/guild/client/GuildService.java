@@ -7,6 +7,7 @@ import com.threerings.presents.client.InvocationService;
 
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.guild.data.GuildObject;
+import com.threerings.orth.guild.data.GuildRank;
 
 /**
  * Services for managing a guild.
@@ -20,4 +21,25 @@ public interface GuildService extends InvocationService
      * of the error.  
      */
     void sendInvite (int playerId, InvocationListener listener);
+
+    /**
+     * Sets the rank of a player to a new value. Only {@link GuildRank#OFFICER} callers are allowed
+     * to update the rank and an officer's rank cannot be changed. On success, the change will be
+     * propagated to the {@link GuildObject#members} set. On failure, the listener will be notified.
+     */
+    void updateRank (int playerId, GuildRank newRank, InvocationListener listener);
+
+    /**
+     * Remove the caller from the guild. This will fail if the caller is the sole officer in the
+     * guild. On success, the change will be propagated to the {@link GuildObject#members} set. On
+     * failure, the listener will be notified.
+     */
+    void leave (InvocationListener listener);
+
+    /**
+     * Delete the guild. This will fail unless the caller is the sole officer in the guild.
+     * On success, the manager will shutdown and the object be destroyed. On failure, the listener
+     * will be notified.
+     */
+    void disband (InvocationListener listener);
 }

@@ -6,6 +6,7 @@ package com.threerings.orth.guild.server;
 import javax.annotation.Generated;
 
 import com.threerings.orth.guild.client.GuildService;
+import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
@@ -19,8 +20,26 @@ import com.threerings.presents.server.InvocationProvider;
 public interface GuildProvider extends InvocationProvider
 {
     /**
+     * Handles a {@link GuildService#disband} request.
+     */
+    void disband (ClientObject caller, InvocationService.InvocationListener arg1)
+        throws InvocationException;
+
+    /**
+     * Handles a {@link GuildService#leave} request.
+     */
+    void leave (ClientObject caller, InvocationService.InvocationListener arg1)
+        throws InvocationException;
+
+    /**
      * Handles a {@link GuildService#sendInvite} request.
      */
     void sendInvite (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)
+        throws InvocationException;
+
+    /**
+     * Handles a {@link GuildService#updateRank} request.
+     */
+    void updateRank (ClientObject caller, int arg1, GuildRank arg2, InvocationService.InvocationListener arg3)
         throws InvocationException;
 }
