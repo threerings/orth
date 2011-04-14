@@ -88,34 +88,28 @@ public class GuildManager extends NodeletManager
     public void sendInvite (ClientObject caller, int targetId, InvocationListener lner)
         throws InvocationException
     {
-        int senderId = ((AuthName)caller.username).getId();
-        GuildMemberEntry entry = _guildObj.members.get(senderId);
-        if (entry == null) {
-            log.warning("Non guild member sending invite", "sender", caller.who(),
-                    "senderId", senderId, "targetId", targetId);
-            throw new InvocationException(E_INTERNAL_ERROR);
-        }
+        GuildMemberEntry sender = requireMember(caller);
         if (_guildObj.members.containsKey(targetId)) {
             throw new InvocationException(E_PLAYER_ALREADY_IN_GUILD);
         }
         // TODO: limit by rank
-        if (!getThrottle(senderId).allow(targetId)) {
+        if (!getThrottle(sender).allow(targetId)) {
             throw new InvocationException(E_INVITE_ALREADY_SENT);
         }
-        _requests.sendNotification(targetId, new GuildInviteNotification(entry.name.toPlayerName(),
+        _requests.sendNotification(targetId, new GuildInviteNotification(sender.name.toPlayerName(),
             _guildObj.name, _nodelet.getId()), new Resulting<Void>(lner));
     }
 
     public void acceptInvite (int senderId, final int newMemberId, ResultListener<Void> rl)
     {
-        GuildMemberEntry entry = _guildObj.members.get(senderId);
-        if (entry == null) {
+        GuildMemberEntry sender = lookupMember(senderId);
+        if (sender == null) {
             log.warning("Invitation accepted from non-guild member", "senderId", senderId,
                 "newMemberId", newMemberId);
             rl.requestFailed(null);
             return;
         }
-        if (!getThrottle(senderId).clear(newMemberId)) {
+        if (!getThrottle(sender).clear(newMemberId)) {
             log.warning("Unsent invitation accepted", "senderId", senderId,
                 "newMemberId", newMemberId);
             rl.requestFailed(null);
@@ -142,6 +136,27 @@ public class GuildManager extends NodeletManager
                 super.requestCompleted(result);
             }
         });
+    }
+
+    protected GuildMemberEntry requireMember (ClientObject caller)
+        throws InvocationException
+    {
+        GuildMemberEntry entry = lookupMember(((AuthName)caller.username).getId());
+        if (entry == null) {
+            log.warning("Non guild member caller", "guild", _nodelet, "caller", caller.who());
+            throw new InvocationException(E_INTERNAL_ERROR);
+        }
+        return entry;
+    }
+
+    protected GuildMemberEntry lookupMember (int playerId)
+    {
+        return _guildObj.members.get(playerId);
+    }
+
+    protected InviteThrottle getThrottle (GuildMemberEntry member)
+    {
+        return getThrottle(member.name.getId());
     }
 
     protected InviteThrottle getThrottle (int playerId)
