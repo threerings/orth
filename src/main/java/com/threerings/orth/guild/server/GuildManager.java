@@ -24,12 +24,15 @@ import com.threerings.orth.data.AuthName;
 import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildMemberEntry;
 import com.threerings.orth.guild.data.GuildObject;
+import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.guild.server.persist.GuildMemberRecord;
 import com.threerings.orth.guild.server.persist.GuildRecord;
 import com.threerings.orth.guild.server.persist.GuildRepository;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.notify.data.GuildInviteNotification;
+import com.threerings.orth.peer.data.OrthClientInfo;
+import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
 import com.threerings.orth.server.util.InviteThrottle;
 
@@ -103,10 +106,42 @@ public class GuildManager extends NodeletManager
             _guildObj.name, _nodelet.getId()), new Resulting<Void>(lner));
     }
 
-    public void acceptInvite (int senderId, int newMemberId, ResultListener<Void> rl)
+    public void acceptInvite (int senderId, final int newMemberId, ResultListener<Void> rl)
     {
-        // TODO
-        rl.requestCompleted(null);
+        GuildMemberEntry entry = _guildObj.members.get(senderId);
+        if (entry == null) {
+            log.warning("Invitation accepted from non-guild member", "senderId", senderId,
+                "newMemberId", newMemberId);
+            rl.requestFailed(null);
+            return;
+        }
+        if (!getThrottle(senderId).clear(newMemberId)) {
+            log.warning("Unsent invitation accepted", "senderId", senderId,
+                "newMemberId", newMemberId);
+            rl.requestFailed(null);
+            return;
+        }
+        OrthClientInfo clinfo = _peerMan.locatePlayer(newMemberId);
+        if (clinfo == null) {
+            // this could happen in theory if the player accepted the guild invite and logged off
+            // immediately. Not worth handling
+            rl.requestFailed(null);
+            return;
+        }
+        final GuildMemberEntry newEntry = GuildMemberEntry.fromPlayerName(clinfo.playerName,
+                GuildRank.MEMBER);
+        // woo! add 'em to the guild
+        _invoker.postUnit(new Resulting<Void>("add guild member", rl) {
+            @Override public Void invokePersist () throws Exception {
+                _guildRepo.addMember(_nodelet.getId(), newMemberId, newEntry.rank);
+                return null;
+            }
+
+            @Override public void requestCompleted (Void result) {
+                _guildObj.addToMembers(newEntry);
+                super.requestCompleted(result);
+            }
+        });
     }
 
     protected InviteThrottle getThrottle (int playerId)
@@ -124,8 +159,10 @@ public class GuildManager extends NodeletManager
     protected GuildObject _guildObj;
     protected Map<Integer, InviteThrottle> _invitations;
 
+    // dependencies
     @Inject protected GuildRepository _guildRepo;
     @Inject protected OrthPlayerRepository _playerRepo;
     @Inject protected @MainInvoker Invoker _invoker;
     @Inject protected PlayerNodeRequests _requests;
+    @Inject protected OrthPeerManager _peerMan;
 }
