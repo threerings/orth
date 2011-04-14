@@ -14,6 +14,7 @@ import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.guild.data.GuildMemberEntry;
 import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
+import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.nodelet.client.NodeletDirector;
 
 /**
@@ -53,6 +54,26 @@ public class GuildDirector extends NodeletDirector
             return;
         }
         _guildObj.guildService.sendInvite(playerId, _octx.listener());
+    }
+
+    public function leave () :void
+    {
+        _guildObj.guildService.leave(_octx.listener());
+    }
+
+    public function disband () :void
+    {
+        _guildObj.guildService.disband(_octx.listener());
+    }
+
+    public function remove (playerId :int) :void
+    {
+        _guildObj.guildService.remove(playerId, _octx.listener());
+    }
+
+    public function setRank (playerId :int, rank :GuildRank) :void
+    {
+        _guildObj.guildService.updateRank(playerId, rank, _octx.listener());
     }
 
     // from NodeletDirector

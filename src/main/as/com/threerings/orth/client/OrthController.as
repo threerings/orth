@@ -35,6 +35,7 @@ import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.guild.client.GuildDirector;
+import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.ui.PathMediaDesc;
 
@@ -70,6 +71,18 @@ public class OrthController extends Controller
     
     /** Command to accept a previously sent guild invitation. */
     public static const ACCEPT_GUILD_INVITATION :String = "AcceptGuildInvitation";
+
+    /** Command to leave the current guild. */
+    public static const LEAVE_GUILD :String = "LeaveGuild";
+
+    /** Command to leave and delete the current guild. */
+    public static const DISBAND_GUILD :String = "DisbandGuild";
+
+    /** Command to remove another player from the current guild. */
+    public static const REMOVE_FROM_GUILD :String = "RemoveFromGuild";
+
+    /** Command to set the rank of another player in the current guild. */
+    public static const SET_GUILD_MEMBER_RANK :String = "SetGuildMemberRank";
 
     /** Command to create a party. */
     public static const CREATE_PARTY :String = "CreateParty";
@@ -192,6 +205,38 @@ public class OrthController extends Controller
     public function handleAcceptGuildInvitation (playerId :int, guildId :int) :void
     {
         _aetherDir.acceptGuildInvite(playerId, guildId);
+    }
+
+    /**
+     * Handles LEAVE_GUILD.
+     */
+    public function handleLeaveGuild () :void
+    {
+        _guildDir.leave();
+    }
+
+    /**
+     * Handles DISBAND_GUILD.
+     */
+    public function handleDisbandGuild () :void
+    {
+        _guildDir.disband();
+    }
+
+    /**
+     * Handles REMOVE_FROM_GUILD.
+     */
+    public function handleRemoveFromGuild (playerId :int) :void
+    {
+        _guildDir.remove(playerId);
+    }
+
+    /**
+     * Handles SET_GUILD_MEMBER_RANK.
+     */
+    public function handleSetGuildMemberRank (playerId :int, rank :GuildRank) :void
+    {
+        _guildDir.setRank(playerId, rank);
     }
 
     /**
