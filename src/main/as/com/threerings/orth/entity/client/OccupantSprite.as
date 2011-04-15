@@ -222,14 +222,6 @@ public class OccupantSprite extends EntitySprite
     }
 
     /**
-     * Configures the overlay used to display this occupant's chat.
-     */
-    public function setChatOverlay (chatOverlay :OccupantChatOverlay) :void
-    {
-        _chatOverlay = chatOverlay;
-    }
-
-    /**
      * Updates this occupant's info.
      */
     public function setOccupantInfo (newInfo :OccupantInfo, extraInfo :Object) :void
@@ -384,9 +376,9 @@ public class OccupantSprite extends EntitySprite
     {
         super.setScreenLocation(x, y, scale);
 
-        if (_chatOverlay != null) {
-            // let our the chat overlay thats carrying our chat bubbles know we moved
-            _chatOverlay.speakerMoved(_occInfo.username, getBubblePosition());
+        if (_sprite.parent is OccupantChatOverlay) {
+            OccupantChatOverlay(_sprite.parent).speakerMoved(
+                _occInfo.username, getBubblePosition());
         }
     }
 
@@ -577,8 +569,8 @@ public class OccupantSprite extends EntitySprite
     }
 
     /**
-     * Arrange any external decorations above our name label.  Will notify the chat overlay
-     * displaying this speaker's bubbles that the bubble location has moved.
+     * Arrange any external decorations above our name label. Will notify our parent, if it's
+     * interested in this speaker's bubbles that the bubble location has moved.
      */
     protected function arrangeDecorations () :void
     {
@@ -608,9 +600,10 @@ public class OccupantSprite extends EntitySprite
     {
         var oldBubblePos :Point = _bubblePosition;
         _bubblePosition = pos;
-        if (_chatOverlay != null && !_bubblePosition.equals(oldBubblePos)) {
+        if (_sprite.parent is OccupantChatOverlay && !_bubblePosition.equals(oldBubblePos)) {
             // notify the overlay that its bubble position for this speaker moved
-            _chatOverlay.speakerMoved(_occInfo.username, getBubblePosition());
+            OccupantChatOverlay(_sprite.parent).speakerMoved(
+                _occInfo.username, getBubblePosition());
         }
     }
 
@@ -666,9 +659,6 @@ public class OccupantSprite extends EntitySprite
 
     /** The move speed, in pixels per second. */
     protected var _moveSpeed :Number = DEFAULT_MOVE_SPEED;
-
-    /** The chat overlay that we notify when we change position. */
-    protected var _chatOverlay :OccupantChatOverlay;
 
     /** Display objects to be shown above the name for this actor,
      * configured by external callers. */

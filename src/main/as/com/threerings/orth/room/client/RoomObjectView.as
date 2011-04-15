@@ -2,6 +2,9 @@
 // $Id: RoomObjectView.as 18642 2009-11-10 22:55:00Z jamie $
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.chat.client.OccupantChatOverlay;
+import com.threerings.util.ObserverList;
+
 import flash.events.Event;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -54,7 +57,7 @@ import com.threerings.orth.room.data.SceneOwnershipUpdate;
  */
 public class RoomObjectView extends RoomView
     implements SetListener, MessageListener, ChatSnooper, ChatDisplay, ChatInfoProvider,
-               MemoryChangedListener
+               MemoryChangedListener, OccupantChatOverlay
 {
     /**
      * Create a roomview.
@@ -289,6 +292,27 @@ public class RoomObjectView extends RoomView
     {
         var sprite :OccupantSprite = getOccupantByName(speaker);
         return (sprite == null) ? null : sprite.getBubblePosition();
+    }
+
+    // from ChatInfoProvider
+    public function addBubbleObserver (observer :OccupantChatOverlay) :void
+    {
+        _bubbleObservers.add(observer);
+    }
+
+    // from ChatInfoProvider
+    public function removeBubbleObserver (observer :OccupantChatOverlay) :void
+    {
+        _bubbleObservers.remove(observer);
+    }
+
+    // from OccupantChatOverlay
+    public function speakerMoved (speaker :Name, pos :Point) :void
+    {
+        // some occupant has moved; relay to our observers
+        _bubbleObservers.apply(function (obs :OccupantChatOverlay) :void {
+           obs.speakerMoved(speaker, pos);
+        });
     }
 
     // from ChatDisplay
@@ -569,7 +593,8 @@ public class RoomObjectView extends RoomView
     /** Monitors and displays loading progress for furni/decor. */
     protected var _loadingWatcher :LoadingWatcher;
 
-    /** The id of the current music being played from the room's playlist. */
-    protected var _musicPlayCount :int = -1; // -1 means nothing is playing
+    /** Objects that want to know when speakers move around. */
+    protected var _bubbleObservers :ObserverList =
+        new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
 }
 }

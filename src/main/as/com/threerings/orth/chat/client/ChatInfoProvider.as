@@ -15,5 +15,15 @@ public interface ChatInfoProvider
      * Null may be returned if the speaker is not known.
      */
     function getBubblePosition (speaker :Name) :Point;
+
+    /**
+     * Register ourselves as interested in bubbling speakers moving about.
+     */
+    function addBubbleObserver (observer :OccupantChatOverlay) :void;
+
+    /**
+     * We retract our interest in bubbling speakers moving about.
+     */
+    function removeBubbleObserver (observer :OccupantChatOverlay) :void;
 }
 }
