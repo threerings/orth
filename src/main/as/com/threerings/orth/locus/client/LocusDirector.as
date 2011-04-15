@@ -40,14 +40,24 @@ public class LocusDirector extends BasicDirector
         _observer = new ClientAdapter(null, locusLogon, null, null, locusFail, locusFail);
     }
 
-    public function addExternalObserver (observer :ClientObserver) :void
+    public function addObserver (observer :LocusObserver) :void
     {
-        _observers.add(observer);
+        _locusObservers.add(observer);
     }
 
-    public function removeExternalObserver (observer :ClientObserver) :void
+    public function removeObserver (observer :LocusObserver) :void
     {
-        _observers.remove(observer);
+        _locusObservers.remove(observer);
+    }
+
+    public function addLocusClientObserver (observer :ClientObserver) :void
+    {
+        _clientObservers.add(observer);
+    }
+
+    public function removeLocusClientObserver (observer :ClientObserver) :void
+    {
+        _clientObservers.remove(observer);
     }
 
     /**
@@ -67,11 +77,19 @@ public class LocusDirector extends BasicDirector
 
         // begin by locating the correct peer
         _lsvc.materializeLocus(_pending, this);
+
+        _locusObservers.apply(function (obs :Object) :void {
+            LocusObserver(obs).locusWillChange(locus);
+        });
     }
 
     // from Java LocusService_PlaceResolutionListener
     public function requestFailed (cause :String) :void
     {
+        _locusObservers.apply(function (obs :Object) :void {
+            LocusObserver(obs).locusChangeFailed(_pending, cause);
+        });
+
         // clear our pending move
         _pending = null;
 
@@ -102,7 +120,7 @@ public class LocusDirector extends BasicDirector
         if (locusClient != null) {
             // first stop listening to the client
             locusClient.removeClientObserver(_observer);
-            _observers.apply(locusClient.removeClientObserver);
+            _clientObservers.apply(locusClient.removeClientObserver);
 
             // the really cut the cord
             locusClient.logoff(false);
@@ -113,7 +131,7 @@ public class LocusDirector extends BasicDirector
 
         // listen to it
         locusClient.addClientObserver(_observer);
-        _observers.apply(locusClient.addClientObserver);
+        _clientObservers.apply(locusClient.addClientObserver);
 
         // and finally log on
         locusClient.logonTo(_pendingPeer, hosted.ports);
@@ -123,6 +141,11 @@ public class LocusDirector extends BasicDirector
     public function locusFail (event :ClientEvent) :void
     {
         log.warning("Locus connection failed", "place", _current, "event", event);
+
+        _locusObservers.apply(function (obs :Object) :void {
+            LocusObserver(obs).locusChangeFailed(_pending, "Locus connection failed");;
+        });
+
         _octx.displayFeedback(OrthCodes.WORLD_MSGS, "Connection failed");
     }
 
@@ -148,6 +171,10 @@ public class LocusDirector extends BasicDirector
 
         // finally go!
         _octx.wctx.go(locus);
+
+        _locusObservers.apply(function (obs :Object) :void {
+            LocusObserver(obs).locusDidChange(locus);
+        });
     }
 
     // from BasicDirector
@@ -168,7 +195,11 @@ public class LocusDirector extends BasicDirector
 
     protected var _lsvc :LocusService;
 
-    protected var _observers :ObserverList = new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
+    protected var _clientObservers :ObserverList =
+        new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
+
+    protected var _locusObservers :ObserverList =
+        new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
 
     protected var _observer :ClientObserver;
 
