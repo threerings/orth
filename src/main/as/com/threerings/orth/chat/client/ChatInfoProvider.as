@@ -19,11 +19,11 @@ public interface ChatInfoProvider
     /**
      * Register ourselves as interested in bubbling speakers moving about.
      */
-    function addBubbleObserver (observer :OccupantChatOverlay) :void;
+    function addBubbleObserver (observer :SpeakerObserver) :void;
 
     /**
      * We retract our interest in bubbling speakers moving about.
      */
-    function removeBubbleObserver (observer :OccupantChatOverlay) :void;
+    function removeBubbleObserver (observer :SpeakerObserver) :void;
 }
 }

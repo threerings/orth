@@ -21,7 +21,7 @@ import com.threerings.util.ArrayUtil;
 import com.threerings.util.Comparators;
 import com.threerings.util.ValueEvent;
 
-import com.threerings.orth.chat.client.OccupantChatOverlay;
+import com.threerings.orth.chat.client.SpeakerObserver;
 import com.threerings.orth.client.WalkAnimation;
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.OrthLocation;
@@ -376,8 +376,8 @@ public class OccupantSprite extends EntitySprite
     {
         super.setScreenLocation(x, y, scale);
 
-        if (_sprite.parent is OccupantChatOverlay) {
-            OccupantChatOverlay(_sprite.parent).speakerMoved(
+        if (_sprite.parent is SpeakerObserver) {
+            SpeakerObserver(_sprite.parent).speakerMoved(
                 _occInfo.username, getBubblePosition());
         }
     }
@@ -600,9 +600,9 @@ public class OccupantSprite extends EntitySprite
     {
         var oldBubblePos :Point = _bubblePosition;
         _bubblePosition = pos;
-        if (_sprite.parent is OccupantChatOverlay && !_bubblePosition.equals(oldBubblePos)) {
+        if (_sprite.parent is SpeakerObserver && !_bubblePosition.equals(oldBubblePos)) {
             // notify the overlay that its bubble position for this speaker moved
-            OccupantChatOverlay(_sprite.parent).speakerMoved(
+            SpeakerObserver(_sprite.parent).speakerMoved(
                 _occInfo.username, getBubblePosition());
         }
     }

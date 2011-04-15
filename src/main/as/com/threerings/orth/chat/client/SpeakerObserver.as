@@ -4,8 +4,8 @@ import flash.geom.Point;
 
 import com.threerings.util.Name;
 
-public interface OccupantChatOverlay
+public interface SpeakerObserver
 {
-    function speakerMoved (speaker:Name, pos:Point):void;
+    function speakerMoved (speaker :Name, pos :Point) :void;
 }
 }

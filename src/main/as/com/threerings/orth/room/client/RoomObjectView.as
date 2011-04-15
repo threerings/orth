@@ -2,7 +2,7 @@
 // $Id: RoomObjectView.as 18642 2009-11-10 22:55:00Z jamie $
 
 package com.threerings.orth.room.client {
-import com.threerings.orth.chat.client.OccupantChatOverlay;
+import com.threerings.orth.chat.client.SpeakerObserver;
 import com.threerings.util.ObserverList;
 
 import flash.events.Event;
@@ -57,7 +57,7 @@ import com.threerings.orth.room.data.SceneOwnershipUpdate;
  */
 public class RoomObjectView extends RoomView
     implements SetListener, MessageListener, ChatSnooper, ChatDisplay, ChatInfoProvider,
-               MemoryChangedListener, OccupantChatOverlay
+               MemoryChangedListener, SpeakerObserver
 {
     /**
      * Create a roomview.
@@ -295,13 +295,13 @@ public class RoomObjectView extends RoomView
     }
 
     // from ChatInfoProvider
-    public function addBubbleObserver (observer :OccupantChatOverlay) :void
+    public function addBubbleObserver (observer :SpeakerObserver) :void
     {
         _bubbleObservers.add(observer);
     }
 
     // from ChatInfoProvider
-    public function removeBubbleObserver (observer :OccupantChatOverlay) :void
+    public function removeBubbleObserver (observer :SpeakerObserver) :void
     {
         _bubbleObservers.remove(observer);
     }
@@ -310,7 +310,7 @@ public class RoomObjectView extends RoomView
     public function speakerMoved (speaker :Name, pos :Point) :void
     {
         // some occupant has moved; relay to our observers
-        _bubbleObservers.apply(function (obs :OccupantChatOverlay) :void {
+        _bubbleObservers.apply(function (obs :SpeakerObserver) :void {
            obs.speakerMoved(speaker, pos);
         });
     }
