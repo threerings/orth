@@ -101,9 +101,9 @@ public class TopPanel extends Sprite
     /**
      * Clear the specified place view, or null to clear any.
      */
-    public function clearMainView (view :DisplayObject = null) :void
+    public function clearMainView () :void
     {
-        if (_placeBox.clearMainView(view)) {
+        if (_placeBox.clearMainView()) {
             setMainView(getBlankPlaceView());
         }
     }

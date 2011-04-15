@@ -45,10 +45,10 @@ public class OrthPlaceBox extends Sprite
         return _mainView;
     }
 
-    public function clearMainView (view :DisplayObject) :Boolean
+    public function clearMainView () :Boolean
     {
         var result :Boolean = false;
-        if ((_mainView != null) && (view == null || view == _mainView)) {
+        if (_mainView != null) {
             _layers.clearBaseLayer();
             _mainView = null;
             result = true;

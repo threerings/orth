@@ -69,13 +69,15 @@ public class RoomContext
     // from CrowdContext
     public function setPlaceView (view :PlaceView) :void
     {
-        _topPanel.setMainView(DisplayObject(view));
+        _topPanel.setMainView(new RoomWindow(RoomView(view)));
     }
 
     // from CrowdContext
     public function clearPlaceView (view :PlaceView) :void
     {
-        _topPanel.clearMainView(DisplayObject(view));
+        if (_topPanel.getMainView() is RoomWindow) {
+            _topPanel.clearMainView();
+        }
     }
 
     // from WhirledContext
