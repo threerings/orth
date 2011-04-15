@@ -984,14 +984,12 @@ public class RoomController extends SceneController
     {
         var menuData :Array = [];
 
-        var roomView :RoomView = _topPanel.getMainView() as RoomView;
-
-        CommandMenu.addTitle(menuData, roomView.getPlaceName());
+        CommandMenu.addTitle(menuData, _roomView.getPlaceName());
 
         CommandMenu.addSeparator(menuData);
         menuData.push({label: Msgs.GENERAL.get("b.editScene"), icon: _rsrc.roomEditIcon,
             command: RoomController.ROOM_EDIT,
-            enabled: roomView.getRoomController().canManageRoom() });
+            enabled: _roomView.getRoomController().canManageRoom() });
 
         menuData.push({ label: Msgs.GENERAL.get("b.snapshot"), icon: _rsrc.snapshotIcon,
             command: doSnapshot });
