@@ -2,6 +2,8 @@
 // $Id: PlaceBox.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.client {
+import com.threerings.util.ObserverList;
+
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.InteractiveObject;
@@ -25,7 +27,6 @@ public class OrthPlaceBox extends Sprite
         _layers.y = INNER_OFFSET.y;
     }
 
-
     public function setMainView (view :DisplayObject) :void
     {
         // throw an exception now if it's not a display object
@@ -33,6 +34,10 @@ public class OrthPlaceBox extends Sprite
         _mainView = view;
 
         layoutMainView();
+
+        _observers.apply(function (obs :PlaceBoxObserver) :void {
+            obs.mainViewDidChange(view);
+        });
     }
 
     public function getMainView () :DisplayObject
@@ -42,12 +47,26 @@ public class OrthPlaceBox extends Sprite
 
     public function clearMainView (view :DisplayObject) :Boolean
     {
+        var result :Boolean = false;
         if ((_mainView != null) && (view == null || view == _mainView)) {
             _layers.clearBaseLayer();
             _mainView = null;
-            return true;
+            result = true;
         }
-        return false;
+        _observers.apply(function (obs :PlaceBoxObserver) :void {
+            obs.mainViewDidChange(null);
+        });
+        return result;
+    }
+
+    public function addObserver (observer :PlaceBoxObserver) :void
+    {
+        _observers.add(observer);
+    }
+
+    public function removeObserver (observer :PlaceBoxObserver) :void
+    {
+        _observers.remove(observer);
     }
 
     // from LayeredContainer
@@ -143,6 +162,8 @@ public class OrthPlaceBox extends Sprite
 
     /** The current place view. */
     protected var _mainView :DisplayObject;
+
+    protected var _observers :ObserverList = new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
 
     protected static const INNER_OFFSET :Point = new Point(10000, 10000);
 }
