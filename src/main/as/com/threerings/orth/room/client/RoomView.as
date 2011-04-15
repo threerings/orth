@@ -2,6 +2,7 @@
 // $Id: RoomView.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.room.client {
+
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.Sprite;
@@ -23,9 +24,12 @@ import com.threerings.util.Iterator;
 import com.threerings.util.Log;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
+import com.threerings.util.Name;
 import com.threerings.util.NamedValueEvent;
 import com.threerings.util.ObjectMarshaller;
 
+import com.threerings.orth.chat.client.ChatInfoProvider;
+import com.threerings.orth.chat.client.SpeakerObserver;
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthPlaceBox;
@@ -52,11 +56,13 @@ import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
 
+import flashx.funk.util.isAbstract;
+
 /**
  * The base room view. Should not contain any RoomObject or other network-specific crap.
  */
 public class RoomView extends Sprite
-    implements OrthPlaceView, ContextMenuProvider, Snapshottable, Zoomable
+    implements OrthPlaceView, ContextMenuProvider, Snapshottable, Zoomable, ChatInfoProvider
 {
     /** Logging facilities. */
     protected static const log :Log = Log.getLog(RoomView);
@@ -191,6 +197,24 @@ public class RoomView extends Sprite
         case FIT_WIDTH: return Msgs.WORLD.get("l.fit_width");
         }
         return _zoom;
+    }
+
+    // from ChatInfoProvider
+    public function getBubblePosition (speaker:Name):Point
+    {
+        return isAbstract();
+    }
+
+    // from ChatInfoProvider
+    public function addBubbleObserver (observer:SpeakerObserver):void
+    {
+        isAbstract();
+    }
+
+    // from ChatInfoProvider
+    public function removeBubbleObserver (observer:SpeakerObserver):void
+    {
+        isAbstract();
     }
 
     /**

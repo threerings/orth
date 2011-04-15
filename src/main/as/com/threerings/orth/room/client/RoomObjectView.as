@@ -32,7 +32,6 @@ import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.dobj.SetListener;
 
-import com.threerings.orth.chat.client.ChatInfoProvider;
 import com.threerings.orth.client.LoadingWatcher;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
@@ -56,7 +55,7 @@ import com.threerings.orth.room.data.SceneOwnershipUpdate;
  * Extends the base roomview with the ability to view a RoomObject, view chat, and edit.
  */
 public class RoomObjectView extends RoomView
-    implements SetListener, MessageListener, ChatSnooper, ChatDisplay, ChatInfoProvider,
+    implements SetListener, MessageListener, ChatSnooper, ChatDisplay,
                MemoryChangedListener, SpeakerObserver
 {
     /**
@@ -82,7 +81,7 @@ public class RoomObjectView extends RoomView
         return (_loadingWatcher != null) && _loadingWatcher.isFinished();
     }
 
-    // from MsoyPlaceView, via RoomView
+    // from OrthPlaceView, via RoomView
     override public function setPlaceSize (unscaledWidth :Number, unscaledHeight :Number) :void
     {
         super.setPlaceSize(unscaledWidth, unscaledHeight);
@@ -288,20 +287,20 @@ public class RoomObjectView extends RoomView
     }
 
     // from ChatInfoProvider
-    public function getBubblePosition (speaker :Name) :Point
+    override public function getBubblePosition (speaker :Name) :Point
     {
         var sprite :OccupantSprite = getOccupantByName(speaker);
         return (sprite == null) ? null : sprite.getBubblePosition();
     }
 
     // from ChatInfoProvider
-    public function addBubbleObserver (observer :SpeakerObserver) :void
+    override public function addBubbleObserver (observer :SpeakerObserver) :void
     {
         _bubbleObservers.add(observer);
     }
 
     // from ChatInfoProvider
-    public function removeBubbleObserver (observer :SpeakerObserver) :void
+    override public function removeBubbleObserver (observer :SpeakerObserver) :void
     {
         _bubbleObservers.remove(observer);
     }
