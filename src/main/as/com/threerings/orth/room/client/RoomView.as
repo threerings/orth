@@ -261,14 +261,8 @@ public class RoomView extends Sprite
     {
         _layout.updateScreenLocation(sprite, sprite.getLayoutHotSpot());
 
-        if (sprite == _bg && _scene.getSceneType() == DecorCodes.FIXED_IMAGE) {
-            sprite.viz.x += getScrollOffset().x;
-            sprite.viz.y += getScrollOffset().y;
-        }
-
         // if we moved the _centerSprite, possibly update the scroll position
-        if (sprite == _centerSprite &&
-                ((sprite != _bg) || _scene.getSceneType() != DecorCodes.FIXED_IMAGE)) {
+        if (sprite == _centerSprite) {
             scrollView();
         }
     }
