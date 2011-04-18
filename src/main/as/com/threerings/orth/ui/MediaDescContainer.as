@@ -3,13 +3,13 @@
 
 package com.threerings.orth.ui {
 
+import flash.events.ErrorEvent;
+
 import com.threerings.media.MediaContainer;
 
 import com.threerings.util.Util;
 
 import com.threerings.orth.data.MediaDesc;
-
-import flash.events.ErrorEvent;
 
 public class MediaDescContainer extends MediaContainer
 {

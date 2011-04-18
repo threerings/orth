@@ -15,14 +15,12 @@ import com.threerings.util.Log;
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.ClientEvent;
 
-import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.ParallaxSprite;
 import com.threerings.orth.entity.client.PetSprite;
-import com.threerings.orth.entity.data.Decor;
 import com.threerings.orth.locus.client.LocusContext;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthRoomObject;
@@ -84,16 +82,6 @@ public class MediaDirector extends BasicDirector
         var sprite :FurniSprite = _module.getInstance(
             furni.isParallax() ? ParallaxSprite : FurniSprite);
         sprite.initFurniSprite(furni);
-        return sprite;
-    }
-
-    /**
-     * Get a Decor sprite for the specified decor data, caching as appropriate.
-     */
-    public function getDecor (decor :Decor) :DecorSprite
-    {
-        var sprite :DecorSprite = _module.getInstance(DecorSprite);
-        sprite.initDecorSprite(decor);
         return sprite;
     }
 

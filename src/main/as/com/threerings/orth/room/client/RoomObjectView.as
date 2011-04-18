@@ -2,9 +2,6 @@
 // $Id: RoomObjectView.as 18642 2009-11-10 22:55:00Z jamie $
 
 package com.threerings.orth.room.client {
-import com.threerings.orth.chat.client.SpeakerObserver;
-import com.threerings.util.ObserverList;
-
 import flash.events.Event;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -21,6 +18,7 @@ import com.threerings.whirled.spot.data.SpotSceneObject;
 
 import com.threerings.util.Map;
 import com.threerings.util.Name;
+import com.threerings.util.ObserverList;
 import com.threerings.util.Predicates;
 import com.threerings.util.Set;
 import com.threerings.util.Sets;
@@ -32,6 +30,7 @@ import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.dobj.SetListener;
 
+import com.threerings.orth.chat.client.SpeakerObserver;
 import com.threerings.orth.client.LoadingWatcher;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
@@ -122,9 +121,6 @@ public class RoomObjectView extends RoomView
         _furni.forEach(function (key :*, sprite :EntitySprite) :void {
             sprite.setEditing(_editing);
         });
-        if (_bg != null) {
-            _bg.setEditing(_editing);
-        }
 
         showBackdropOverlay(_editing);
         updateEditingOverlay();
@@ -163,7 +159,7 @@ public class RoomObjectView extends RoomView
 
         } else if (update is SceneAttrsUpdate) {
             rereadScene(); // re-read our scene
-            updateBackground();
+
         } else if (update is SceneOwnershipUpdate) {
             rereadScene();
         }
@@ -435,12 +431,6 @@ public class RoomObjectView extends RoomView
 
     protected function loadBackgrounds () :void
     {
-        // load the background image first
-        setBackground(_scene.getDecor());
-        // load the decor data we have, even if it's just default values.
-        _bg.setLoadedCallback(backgroundSpriteLoaded);
-        _bgSprites.add(_bg);
-
         _scene.getFurni().forEach(function (data :FurniData, ix :int, arr :Array) :void {
             if (data.loc.z >= 1.0) {
                 updateFurni(data);

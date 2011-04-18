@@ -6,8 +6,6 @@ package com.threerings.orth.room.data;
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.data.SceneUpdate;
 
-import com.threerings.orth.entity.data.DecorData;
-
 /**
  * Encodes a scene update that updates the attributes in the MsoySceneModel.  Note that this
  * contains all attributes, even ones that have not changed.  In other words, a field being null

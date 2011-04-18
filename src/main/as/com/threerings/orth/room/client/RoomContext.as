@@ -2,8 +2,6 @@
 // $Id: $
 
 package com.threerings.orth.room.client {
-import flash.display.DisplayObject;
-
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.chat.client.ChatDirector;

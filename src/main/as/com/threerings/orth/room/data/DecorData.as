@@ -3,19 +3,18 @@
 // $Id$
 
 
-package com.threerings.orth.entity.data {
+package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-
-import com.threerings.orth.entity.data.Decor;
-import com.threerings.orth.entity.data.EntityData;
+import com.threerings.io.SimpleStreamableObject;
+import com.threerings.orth.room.data.Decor;
 import com.threerings.orth.entity.data.Walkability;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class DecorData extends EntityData
+public class DecorData extends SimpleStreamableObject
     implements Decor
 {
 // GENERATED CLASSDECL END

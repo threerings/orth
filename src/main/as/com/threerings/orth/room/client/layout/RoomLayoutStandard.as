@@ -11,9 +11,8 @@ import com.threerings.geom.Vector3;
 import com.threerings.util.Log;
 
 import com.threerings.orth.entity.client.ActorSprite;
-import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.FurniSprite;
-import com.threerings.orth.entity.data.Decor;
+import com.threerings.orth.room.data.Decor;
 import com.threerings.orth.room.client.ClickLocation;
 import com.threerings.orth.room.client.RoomElement;
 import com.threerings.orth.room.client.RoomMetrics;
@@ -289,7 +288,7 @@ public class RoomLayoutStandard implements RoomLayout
         if (element is ActorSprite) {
             return _decor.getActorScale();
         }
-        if ((element is FurniSprite) && !(element is DecorSprite)) {
+        if (element is FurniSprite) {
             return _decor.getFurniScale();
         }
         // other sprites could use furniScale, I suppose..

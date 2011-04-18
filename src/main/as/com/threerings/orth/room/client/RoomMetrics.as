@@ -7,7 +7,7 @@ import flash.geom.Point;
 
 import com.threerings.geom.Vector3;
 
-import com.threerings.orth.entity.data.Decor;
+import com.threerings.orth.room.data.Decor;
 import com.threerings.orth.room.data.OrthLocation;
 
 /**

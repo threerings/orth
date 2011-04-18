@@ -13,7 +13,6 @@ import com.threerings.whirled.spot.data.Portal;
 import com.threerings.whirled.spot.data.SpotScene;
 
 import com.threerings.orth.data.MediaDesc;
-import com.threerings.orth.entity.data.Decor;
 
 public class OrthScene extends SceneImpl
     implements SpotScene
@@ -105,7 +104,7 @@ public class OrthScene extends SceneImpl
     /**
      * Retrieve the decor geometry information.
      */
-    public Decor getDecorInfo ()
+    public DecorData getDecorData ()
     {
         return _orthModel.decor;
     }

@@ -2,8 +2,6 @@
 // $Id: PlaceBox.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.client {
-import com.threerings.util.ObserverList;
-
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.InteractiveObject;
@@ -11,6 +9,8 @@ import flash.display.Sprite;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+
+import com.threerings.util.ObserverList;
 
 /**
  * A component that holds our main view and sets up a mask to ensure that it doesn't render

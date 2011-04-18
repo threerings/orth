@@ -7,7 +7,9 @@ package com.threerings.orth.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+import com.threerings.io.SimpleStreamableObject;
 
+import com.threerings.util.Cloneable;
 import com.threerings.util.Hashable;
 
 import com.threerings.presents.dobj.DSet_Entry;
@@ -16,9 +18,11 @@ import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.data.OrthName;
 
 // GENERATED PREAMBLE END
-// GENERATED CLASSDECL DISABLED
-public class PlayerEntry implements DSet_Entry
+// GENERATED CLASSDECL START
+public class PlayerEntry extends SimpleStreamableObject
+    implements DSet_Entry, Cloneable
 {
+// GENERATED CLASSDECL END
     /**
      * A sort function that may be used for PlayerEntrys
      */
@@ -31,13 +35,15 @@ public class PlayerEntry implements DSet_Entry
 // GENERATED STREAMING START
     public var name :VizPlayerName;
 
-    public function readObject (ins :ObjectInputStream) :void
+    override public function readObject (ins :ObjectInputStream) :void
     {
+        super.readObject(ins);
         name = ins.readObject(VizPlayerName);
     }
 
-    public function writeObject (out :ObjectOutputStream) :void
+    override public function writeObject (out :ObjectOutputStream) :void
     {
+        super.writeObject(out);
         out.writeObject(name);
     }
 
@@ -56,7 +62,7 @@ public class PlayerEntry implements DSet_Entry
             (this.name.getId() == (other as PlayerEntry).name.getId());
     }
 
-    public function toString () :String
+    override public function toString () :String
     {
         return "PlayerEntry[" + name + "]";
     }
@@ -65,6 +71,14 @@ public class PlayerEntry implements DSet_Entry
     public function getKey () :Object
     {
         return this.name.getKey();
+    }
+
+    // from interface Cloneable
+    public function clone () : Object
+    {
+        var entry :PlayerEntry = new PlayerEntry();
+        entry.name = this.name;
+        return entry;
     }
 
 // GENERATED CLASSFINISH START

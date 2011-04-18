@@ -15,7 +15,7 @@ import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.spot.data.Portal;
 
 import com.threerings.orth.data.MediaDesc;
-import com.threerings.orth.entity.data.DecorData;
+
 import static com.threerings.orth.Log.log;
 
 /**

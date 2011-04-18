@@ -1,16 +1,15 @@
 //
 // $Id$
 
-package com.threerings.orth.entity.data;
+package com.threerings.orth.room.data;
 
-import com.threerings.orth.data.MediaDesc;
+import com.threerings.io.SimpleStreamableObject;
+
 import com.threerings.orth.entity.data.Walkability;
-import com.threerings.orth.room.data.EntityIdent;
 
 /**
- * A basic streamable implementation of {@link Decor}.
  */
-public class DecorData extends EntityData
+public class DecorData extends SimpleStreamableObject
     implements Decor
 {
     public byte type;
@@ -28,12 +27,9 @@ public class DecorData extends EntityData
     }
 
     /** Initializing constructor. */
-    public DecorData (String name, MediaDesc media, EntityIdent ident, byte type, short width,
-        short height, short depth, float horizon, float actorScale, float furniScale,
-        Walkability walkability)
+    public DecorData ( byte type, short width, short height, short depth, float horizon,
+        float actorScale, float furniScale, Walkability walkability)
     {
-        super(name, media, ident);
-
         this.type = type;
         this.width = width;
         this.height = height;

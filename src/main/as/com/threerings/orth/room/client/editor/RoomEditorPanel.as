@@ -29,7 +29,7 @@ import com.threerings.util.CommandEvent;
 
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.entity.client.FurniSprite;
-import com.threerings.orth.entity.data.Decor;
+import com.threerings.orth.room.data.Decor;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 import com.threerings.orth.room.client.editor.ui.SkinnableImage;
@@ -134,7 +134,7 @@ public class RoomEditorPanel extends FloatingPanel
     public function setDecor (decor :Decor) :void
     {
         _decorLabel.text = Msgs.EDITING.get("m.decor",
-            decor.getName() || Msgs.EDITING.get("m.none"));
+            null, Msgs.EDITING.get("m.none"));
     }
 
     public function setHomeButtonEnabled (enabled :Boolean) :void

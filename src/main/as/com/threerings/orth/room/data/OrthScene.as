@@ -13,7 +13,6 @@ import com.threerings.util.Cloneable;
 import com.threerings.util.Iterator;
 
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.entity.data.Decor;
 
 public class OrthScene extends SceneImpl
     implements SpotScene, Cloneable
@@ -51,7 +50,7 @@ public class OrthScene extends SceneImpl
      */
     public function getSceneType () :int
     {
-        return _orthModel.decor.getDecorType();
+        return _orthModel.decor.type;
     }
 
     /**
@@ -59,7 +58,7 @@ public class OrthScene extends SceneImpl
      */
     public function getDepth () :int
     {
-        return _orthModel.decor.getDepth();
+        return _orthModel.decor.depth;
     }
 
     /**
@@ -67,12 +66,12 @@ public class OrthScene extends SceneImpl
      */
     public function getWidth () :int
     {
-        return _orthModel.decor.getWidth();
+        return _orthModel.decor.width;
     }
 
     public function getHeight () :int
     {
-        return _orthModel.decor.getHeight();
+        return _orthModel.decor.height;
     }
 
     /**
@@ -81,7 +80,7 @@ public class OrthScene extends SceneImpl
      */
     public function getHorizon () :Number
     {
-        return _orthModel.decor.getHorizon();
+        return _orthModel.decor.horizon;
     }
 
     /**
@@ -95,7 +94,7 @@ public class OrthScene extends SceneImpl
     /**
      * Retrieve the room decor information object.
      */
-    public function getDecor () :Decor
+    public function getDecor () :DecorData
     {
         return _orthModel.decor;
     }

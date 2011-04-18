@@ -5,7 +5,7 @@ package com.threerings.orth.room.client {
 import flash.display.Graphics;
 import flash.geom.Point;
 
-import com.threerings.orth.entity.data.Decor;
+import com.threerings.orth.room.data.Decor;
 import com.threerings.orth.room.data.DecorCodes;
 
 /**

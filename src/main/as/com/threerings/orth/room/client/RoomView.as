@@ -14,6 +14,7 @@ import flash.ui.Mouse;
 import flash.utils.ByteArray;
 
 import flashx.funk.ioc.inject;
+import flashx.funk.util.isAbstract;
 
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.whirled.spot.data.Location;
@@ -41,22 +42,18 @@ import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.client.Zoomable;
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.MediaMimeTypes;
-import com.threerings.orth.entity.client.DecorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
-import com.threerings.orth.entity.data.Decor;
+import com.threerings.orth.room.data.Decor;
 import com.threerings.orth.entity.data.Walkability;
 import com.threerings.orth.room.client.layout.RoomLayout;
 import com.threerings.orth.room.client.layout.RoomLayoutFactory;
-import com.threerings.orth.room.data.DecorCodes;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthScene;
-
-import flashx.funk.util.isAbstract;
 
 /**
  * The base room view. Should not contain any RoomObject or other network-specific crap.
@@ -243,15 +240,9 @@ public class RoomView extends Sprite
             return;
         }
         var sprite :EntitySprite = (hit as EntitySprite);
-        if (sprite == null) {
-            if (_bg == null) {
-                return;
-            } else {
-                sprite = _bg;
-            }
+        if (sprite != null) {
+            populateSpriteContextMenu(sprite, menuItems);
         }
-
-        populateSpriteContextMenu(sprite, menuItems);
     }
 
     /**
@@ -512,30 +503,6 @@ public class RoomView extends Sprite
         removeSprite(sprite);
     }
 
-    /**
-     * Sets the background sprite. If the data value is null, simply removes the old one.
-     */
-    public function setBackground (decor :Decor) :void
-    {
-        if (_bg != null) {
-            removeSprite(_bg);
-            _bg = null;
-        }
-        if (decor != null) {
-            _bg = _mediaDir.getDecor(decor);
-            addSprite(_bg);
-            _bg.setEditing(_editing);
-        }
-    }
-
-    /**
-     * Retrieves the background sprite, if any.
-     */
-    public function getBackground () :DecorSprite
-    {
-        return _bg;
-    }
-
     // documentation inherited from interface PlaceView
     public function willEnterPlace (plobj :PlaceObject) :void
     {
@@ -546,7 +513,6 @@ public class RoomView extends Sprite
     public function didLeavePlace (plobj :PlaceObject) :void
     {
         removeAll(_furni);
-        setBackground(null);
         _scene = null;
 
         Mouse.show(); // re-show the mouse, in case something hid it
@@ -578,13 +544,14 @@ public class RoomView extends Sprite
             return true;
         }
 
-        var from :Point = _layout.metrics.roomToScreen(myLoc.x, myLoc.y, myLoc.z);
-        from = _bg.viz.globalToLocal(from);
-
-        var to :Point = _layout.metrics.roomToScreen(toLoc.x, toLoc.y, toLoc.z);
-        to = _bg.viz.globalToLocal(to);
-
-        return walkability.isPathWalkable(from, to);
+//        var from :Point = _layout.metrics.roomToScreen(myLoc.x, myLoc.y, myLoc.z);
+//        from = _bg.viz.globalToLocal(from);
+//
+//        var to :Point = _layout.metrics.roomToScreen(toLoc.x, toLoc.y, toLoc.z);
+//        to = _bg.viz.globalToLocal(to);
+//
+//        return walkability.isPathWalkable(from, to);
+        return false;
     }
 
     /**
@@ -600,23 +567,6 @@ public class RoomView extends Sprite
     }
 
     /**
-     * Updates the background sprite, in case background data had changed.
-     */
-    public function updateBackground () :void
-    {
-        var decor :Decor = _scene.getDecor();
-        if (_bg != null && decor != null) {
-            dispatchEntityLeft(_bg.getEntityIdent());
-
-            spriteWillUpdate(_bg);
-            _bg.updateFromDecor(decor);
-            spriteDidUpdate(_bg);
-
-            dispatchEntityEntered(_bg.getEntityIdent());
-        }
-    }
-
-    /**
      * Updates background and furniture sprites from their data objects.
      */
     public function updateAllFurni () :void
@@ -627,15 +577,6 @@ public class RoomView extends Sprite
                     updateFurni(furni);
                 }
             }
-        }
-    }
-
-    override public function set scrollRect (r :Rectangle) :void
-    {
-        super.scrollRect = r;
-
-        if (_bg != null && _scene.getSceneType() == DecorCodes.FIXED_IMAGE) {
-            locationUpdated(_bg);
         }
     }
 
@@ -978,9 +919,7 @@ public class RoomView extends Sprite
     protected function setActive (map :Map, active :Boolean) :void
     {
         for each (var sprite :EntitySprite in map.values()) {
-            if (sprite != _bg) {
-                sprite.setActive(active);
-            }
+            sprite.setActive(active);
         }
     }
 
@@ -1047,7 +986,7 @@ public class RoomView extends Sprite
      */
     protected function addSprite (sprite :EntitySprite) :void
     {
-        var index :int = (sprite is DecorSprite) ? 0 : 1;
+        var index :int = 0;
         addChildAt(sprite.viz, index);
         addToEntityMap(sprite);
     }
@@ -1192,9 +1131,6 @@ public class RoomView extends Sprite
 
     /** Helper object that draws a room backdrop with four walls. */
     protected var _backdrop :RoomBackdrop = new RoomBackdrop();
-
-    /** Our background sprite, if any. */
-    protected var _bg :DecorSprite;
 
     /** A map of id -> Furni. */
     protected var _furni :Map = Maps.newMapOf(int);

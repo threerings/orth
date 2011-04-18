@@ -1,13 +1,14 @@
 //
 // $Id$
 
-package com.threerings.orth.entity.data;
+package com.threerings.orth.room.data;
+
+import com.threerings.orth.entity.data.Walkability;
 
 /**
  * Client-side information about the kind of entity that can be the backdrop canvas for a room.
  */
 public interface Decor
-    extends Entity
 {
     float getHorizon ();
 
