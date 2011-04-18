@@ -41,6 +41,11 @@ public class OrthChatDirector extends BasicDirector
         _chatHistory = new HistoryList(this);
     }
 
+    public function get placeObject () :SpeakObject
+    {
+        return _place;
+    }
+
     /** Some code somewhere (e.g. a chat input control) wants us to speak in our room. */
     public function requestPlaceSpeak (msg :String) :void
     {
