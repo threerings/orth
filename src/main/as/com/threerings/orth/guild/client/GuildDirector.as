@@ -36,6 +36,11 @@ public class GuildDirector extends NodeletDirector
         super("hostedGuilds");
     }
 
+    public function getGuildObject () :GuildObject
+    {
+        return _guildObj;
+    }
+
     /**
      * Called when a player attribute is updated.
      */
