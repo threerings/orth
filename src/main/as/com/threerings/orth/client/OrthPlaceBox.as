@@ -80,6 +80,12 @@ public class OrthPlaceBox extends Sprite
         }
     }
 
+    // from LayeredContainer
+    public function removePlaceOverlay (overlay :DisplayObject) :void
+    {
+        _layers.removeOverlay(overlay);
+    }
+
     // from Snapshottable
     public function snapshot (bitmapData :BitmapData, matrix :Matrix,
         childPredicate :Function = null) :Boolean
