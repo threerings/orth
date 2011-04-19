@@ -786,18 +786,6 @@ public class RoomController extends SceneController
                 return;
             }
 
-            if (keyDown) {
-                switch (event.charCode) {
-                case 91: // '['
-                    _roomView.scrollViewBy(-ROOM_SCROLL_INCREMENT);
-                    break;
-
-                case 93: // ']'
-                    _roomView.scrollViewBy(ROOM_SCROLL_INCREMENT);
-                    break;
-                }
-            }
-
         } finally {
             event.updateAfterEvent();
         }
