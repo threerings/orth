@@ -237,7 +237,6 @@ public class RoomView extends Sprite
      */
     public function notifyScroll (offset :Point) :void
     {
-        log.info("New scroll offset set", "offset", offset);
         _scrollOffset = offset;
 
         forEachEntity(function (key :Object, sprite :EntitySprite) :void {
