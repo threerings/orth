@@ -140,8 +140,14 @@ public class RoomController extends SceneController
     // documentation inherited
     override protected function createPlaceView (ctx :CrowdContext) :PlaceView
     {
-        _roomView = new RoomView(_rctx, this);
-        return _roomView;
+        _roomView = createRoomView();
+        _roomWindow = new RoomWindow(_roomView);
+        return _roomWindow;
+    }
+
+    protected function createRoomView () :RoomView
+    {
+        return new RoomView(_rctx, this);
     }
 
     /**
@@ -1238,6 +1244,9 @@ public class RoomController extends SceneController
 
     /** The room view that we're controlling. */
     protected var _roomView :RoomView;
+
+    /** The window onto the view. */
+    protected var _roomWindow :RoomWindow;
 
     /** Contains active throttlers. EntityIdent -> Throttler. */
     protected var _throttlers :Map = Maps.newMapOf(EntityIdent);

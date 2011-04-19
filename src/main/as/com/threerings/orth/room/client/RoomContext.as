@@ -67,7 +67,7 @@ public class RoomContext
     // from CrowdContext
     public function setPlaceView (view :PlaceView) :void
     {
-        _topPanel.setMainView(new RoomWindow(RoomView(view)));
+        _topPanel.setMainView(RoomWindow(view));
     }
 
     // from CrowdContext

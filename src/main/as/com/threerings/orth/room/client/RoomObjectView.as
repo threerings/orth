@@ -80,13 +80,6 @@ public class RoomObjectView extends RoomView
         return (_loadingWatcher != null) && _loadingWatcher.isFinished();
     }
 
-    // from OrthPlaceView, via RoomView
-    override public function setPlaceSize (unscaledWidth :Number, unscaledHeight :Number) :void
-    {
-        super.setPlaceSize(unscaledWidth, unscaledHeight);
-        updateEditingOverlay();
-    }
-
     /**
      * (Re)set our scene to the one the scene director knows about.
      */
@@ -104,12 +97,6 @@ public class RoomObjectView extends RoomView
         return _furni;
     }
 
-    override public function setScene (scene :OrthScene) :void
-    {
-        super.setScene(scene);
-        updateEditingOverlay();
-    }
-
     /**
      * Enable or disable editing.
      */
@@ -122,8 +109,6 @@ public class RoomObjectView extends RoomView
             sprite.setEditing(_editing);
         });
 
-        showBackdropOverlay(_editing);
-        updateEditingOverlay();
         if (!_editing) {
             // definitely update the furni
             updateAllFurni();
@@ -133,19 +118,6 @@ public class RoomObjectView extends RoomView
         if (!_loadAllMedia) {
             _loadAllMedia = true;
             updateAllFurni();
-        }
-    }
-
-    /**
-     * Refreshes the overlay used to draw the room edges in editing mode.
-     */
-    protected function updateEditingOverlay () :void
-    {
-        // if the overlay exists, then we should update it
-        if (_backdropOverlay != null) {
-            _backdrop.drawRoom(
-                _backdropOverlay.graphics, _actualWidth, _actualHeight, true, false, 0.4);
-            _layout.updateScreenLocation(_backdropOverlay);
         }
     }
 
@@ -363,10 +335,6 @@ public class RoomObjectView extends RoomView
         _ctx.getChatDirector().addChatSnooper(this);
         _ctx.getChatDirector().addChatDisplay(this);
 
-        // let the chat overlay know about us so we can be queried for chatter locations
-        // ORTH TODO: implement properly
-        // _comicOverlay.willEnterPlace(this);
-
         // and animate ourselves entering the room (everyone already in the (room will also have
         // seen it)
         portalTraversed(getMyCurrentLocation(), true);
@@ -385,10 +353,6 @@ public class RoomObjectView extends RoomView
         // stop listening for avatar speak action triggers
         _ctx.getChatDirector().removeChatDisplay(this);
         _ctx.getChatDirector().removeChatSnooper(this);
-
-        // tell the comic overlay to forget about us
-        // ORTH TODO: implement properly
-        // _comicOverlay.didLeavePlace(this);
 
         removeAllOccupants();
 

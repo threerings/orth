@@ -57,19 +57,10 @@ import com.threerings.orth.room.data.OrthScene;
  * The base room view. Should not contain any RoomObject or other network-specific crap.
  */
 public class RoomView extends Sprite
-    implements OrthPlaceView, ContextMenuProvider, Snapshottable, Zoomable, ChatInfoProvider
+    implements ContextMenuProvider, Snapshottable, ChatInfoProvider
 {
     /** Logging facilities. */
     protected static const log :Log = Log.getLog(RoomView);
-
-    /** Fixed height of 500 (if available). */
-    public static const LETTERBOX :String = "letter_box";
-
-    /** Scale up or down to consume all height available. */
-    public static const FULL_HEIGHT :String = "full_height";
-
-    /** Fit the width of the room in the width of the view. */
-    public static const FIT_WIDTH :String = "fit_width";
 
     /**
      * Constructor.
@@ -79,9 +70,6 @@ public class RoomView extends Sprite
         _ctx = ctx;
         _ctrl = ctrl;
         _layout = RoomLayoutFactory.createLayout(null, this);
-
-        // listen for preferences changes (for April fool's day setting)
-        Prefs.events.addEventListener(Prefs.PREF_SET, handlePrefsUpdated, false, 0, true);
     }
 
     /**
@@ -100,12 +88,12 @@ public class RoomView extends Sprite
         return _layout;
     }
 
-    // from OrthPlaceView
-    public function setPlaceSize (unscaledWidth :Number, unscaledHeight :Number) :void
+    /**
+     * Returns the metrics object with geometry information from the scene.
+     */
+    public function get metrics () :RoomMetrics
     {
-        _actualWidth = unscaledWidth;
-        _actualHeight = unscaledHeight;
-        relayout();
+        return _layout.metrics;
     }
 
     // from OrthPlaceView
@@ -114,50 +102,11 @@ public class RoomView extends Sprite
         return (_scene != null) ? _scene.getName() : null;
     }
 
-    // from OrthPlaceView
-    public function getSize () :Point
-    {
-        var metrics :RoomMetrics = layout.metrics;
-        return new Point(metrics.sceneWidth * scaleX, metrics.sceneHeight * scaleY);
-    }
-
     // from Snapshottable
     public function snapshot (
         bitmapData :BitmapData, matrix :Matrix, childPredicate :Function = null) :Boolean
     {
         return SnapshotUtil.snapshot(this, bitmapData, matrix, childPredicate);
-    }
-
-    // from Zoomable
-    public function defineZooms () :Array /* of String */
-    {
-        return [ LETTERBOX, FULL_HEIGHT, FIT_WIDTH ];
-    }
-
-    // from Zoomable
-    public function getZoom () :String
-    {
-        if (_zoom == null) {
-            _zoom = defineZooms()[0];
-        }
-        return _zoom;
-    }
-
-    // from Zoomable
-    public function setZoom (zoom :String) :void
-    {
-        _zoom = zoom;
-    }
-
-    // from Zoomable
-    public function translateZoom () :String
-    {
-        switch (getZoom()) {
-        case LETTERBOX: return Msgs.WORLD.get("l.zoom_letterbox");
-        case FULL_HEIGHT: return Msgs.WORLD.get("l.full_height");
-        case FIT_WIDTH: return Msgs.WORLD.get("l.fit_width");
-        }
-        return _zoom;
     }
 
     // from ChatInfoProvider
@@ -304,21 +253,6 @@ public class RoomView extends Sprite
     public function getScrollOffset () :Point
     {
         return _scrollOffset;
-    }
-
-    /**
-     * Get the full boundaries of our scrolling area in scaled (decor pixel) dimensions.
-     * The Rectangle returned may be destructively modified.
-     */
-    public function getScrollBounds () :Rectangle
-    {
-        var r :Rectangle = new Rectangle(0, 0, _actualWidth / scaleX,
-            Math.abs(_actualHeight / scaleY));
-        if (_scene != null) {
-            r.width = Math.min(_scene.getWidth(), r.width);
-            r.height = Math.min(_scene.getHeight(), r.height);
-        }
-        return r;
     }
 
     public function dimAvatars (setDim :Boolean) :void
@@ -623,27 +557,8 @@ public class RoomView extends Sprite
     /**
      * Layout everything.
      */
-    protected function relayout () :void
+    internal function relayout () :void
     {
-        const letterboxHeight :int = 500;
-        var scale :Number;
-        switch (getZoom()) {
-        case LETTERBOX:
-            scale = Math.min(letterboxHeight, _actualHeight) / _layout.metrics.sceneHeight;
-            break;
-        case FULL_HEIGHT:
-            scale = _actualHeight / _layout.metrics.sceneHeight;
-            break;
-        case FIT_WIDTH:
-            scale = Math.min(_actualHeight / _layout.metrics.sceneHeight,
-                             _actualWidth / _layout.metrics.sceneWidth,
-                             letterboxHeight / _layout.metrics.sceneHeight);
-            break;
-        }
-
-        scaleY = scale;
-        scaleX = scale;
-
         relayoutSprites(_furni.values());
         relayoutSprites(_otherSprites);
         relayoutSprites(_occupants.values());
@@ -667,23 +582,6 @@ public class RoomView extends Sprite
     {
         locationUpdated(sprite);
         sprite.roomScaleUpdated();
-    }
-
-    /**
-     * Show or hide the backdrop overlay.
-     */
-    protected function showBackdropOverlay (show :Boolean) :void
-    {
-        if (show == (_backdropOverlay == null)) {
-            if (show) {
-                _backdropOverlay = new BackdropOverlay();
-                addChild(_backdropOverlay);
-
-            } else {
-                removeChild(_backdropOverlay);
-                _backdropOverlay = null;
-            }
-        }
     }
 
     /**
@@ -903,14 +801,8 @@ public class RoomView extends Sprite
     /** The model of the current scene. */
     protected var _scene :OrthScene;
 
-    /** The actual screen width of this component. */
-    protected var _actualWidth :Number;
-
     /** What is the current offset into the RoomView that the player is watching? */
     protected var _scrollOffset :Point = new Point(0, 0);
-
-    /** The actual screen height of this component. */
-    protected var _actualHeight :Number;
 
     /** Object responsible for our spatial layout. */
     protected var _layout :RoomLayout;
@@ -926,13 +818,9 @@ public class RoomView extends Sprite
 
     /** Are we editing the scene? */
     protected var _editing :Boolean = false;
-
-    /** Transparent bitmap on which we can draw the room backdrop.*/
-    protected var _backdropOverlay :BackdropOverlay;
-
-    protected var _zoom :String;
 }
 }
+
 
 import com.threerings.orth.room.client.RoomElementSprite;
 

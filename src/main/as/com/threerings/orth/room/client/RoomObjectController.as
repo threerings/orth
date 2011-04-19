@@ -68,11 +68,9 @@ public class RoomObjectController extends RoomController
     public static const SEND_POSTCARD :String = "SendPostcard";
 
     // documentation inherited
-    override protected function createPlaceView (ctx :CrowdContext) :PlaceView
+    override protected function createRoomView () :RoomView
     {
-        _roomObjectView = new RoomObjectView(_rctx, this);
-        _roomView = _roomObjectView;
-        return _roomObjectView;
+        return _roomObjectView = new RoomObjectView(_rctx, this);
     }
 
     // from interface BootablePlaceController
