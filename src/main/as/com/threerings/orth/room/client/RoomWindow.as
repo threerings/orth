@@ -20,7 +20,10 @@ import com.threerings.orth.client.Zoomable;
 import com.threerings.orth.entity.client.MemberSprite;
 
 /**
- * This class functions as a scrolling viewport onto an actual {@link RoomView}.
+ * This class functions as a scrolling viewport onto an actual {@link RoomView}. To do this, we
+ * place our single child at a ridiculous offset, something like (10000, 10000), and then apply
+ * the same offset to this.scrollRect. This lets us scroll not just within the view, but outside
+ * it as well.
  */
 public class RoomWindow extends FrameSprite
     implements OrthPlaceView, ChatInfoProvider, PlaceLayer, Zoomable
