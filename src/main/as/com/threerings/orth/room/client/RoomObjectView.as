@@ -471,9 +471,6 @@ public class RoomObjectView extends RoomView
                 return; // we have no visualization for this kind of occupant, no problem
             }
 
-            // ORTH TODO: implement properly
-            // occupant.setChatOverlay(_comicOverlay);
-
             _occupants.put(bodyOid, occupant);
             addSprite(occupant);
             dispatchEntityEntered(occupant.getEntityIdent());
@@ -488,8 +485,6 @@ public class RoomObjectView extends RoomView
 
             // place the sprite back into the set of active sprites
             _occupants.put(bodyOid, occupant);
-            // ORTH TODO: impmlement properly
-            // occupant.setChatOverlay(_comicOverlay);
             occupant.moveTo(loc, _scene);
         }
     }
