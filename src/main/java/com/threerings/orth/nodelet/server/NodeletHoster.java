@@ -115,7 +115,7 @@ public abstract class NodeletHoster
     protected abstract void host (AuthName caller, Nodelet nodelet,
             ResultListener<HostedNodelet> listener);
 
-    /** The name of the det governing our hosted nodelet instances in the OrthNodeObject. */
+    /** The name of the dset governing our hosted nodelet instances in the OrthNodeObject. */
     protected String _dsetName;
 
     // dependencies

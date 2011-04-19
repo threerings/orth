@@ -45,7 +45,7 @@ public class OrthSceneRegistry extends SpotSceneRegistry
 
         // a little inline hoster that just uses the scene registry when the job of hosting falls
         // to the local peer
-        _hoster = new NodeletHoster(OrthNodeObject.HOSTED_ROOMS) {
+        injector.injectMembers(_hoster = new NodeletHoster(OrthNodeObject.HOSTED_ROOMS) {
             @Override protected void host (AuthName caller, Nodelet nodelet,
                     final ResultListener<HostedNodelet> listener) {
                 final HostedNodelet room = new HostedNodelet(nodelet, _depConf.getRoomHost(),
@@ -58,7 +58,7 @@ public class OrthSceneRegistry extends SpotSceneRegistry
                         listener.requestFailed(reason);
                     }
                 });
-            }};
+            }});
     }
 
     // from interface OrthSceneProvider
