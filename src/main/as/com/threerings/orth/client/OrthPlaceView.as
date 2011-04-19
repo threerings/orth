@@ -8,20 +8,9 @@ import flash.geom.Point;
 import com.threerings.crowd.client.PlaceView;
 
 /**
- * An expanded PlaceView interface that can be used by views that wish to learn about their actual
- * pixel dimensions.
+ * Currently the Orth-specific {@link PlaceView} does nothing.
  */
 public interface OrthPlaceView extends PlaceView, PlaceLayer
 {
-    /**
-     * Get the place name, or null if none.
-     */
-    function getPlaceName () :String;
-
-    /**
-     * Gets the size of the content for this place view. A point is used as the return
-     * value for convenience. x is width, y is height.
-     */
-    function getSize () :Point;
 }
 }
