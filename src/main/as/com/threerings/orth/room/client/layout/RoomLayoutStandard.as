@@ -225,14 +225,6 @@ public class RoomLayoutStandard implements RoomLayout
             var scale :Number = _metrics.scaleAtDepth(loc.z) * getDecorScale(target);
             target.setScreenLocation(screen.x - offset.x, screen.y - offset.y, scale);
             break;
-
-        case OrthRoomCodes.LAYOUT_FILL:
-            disp.x = 0;
-            disp.y = 0;
-            var r :Rectangle = _parentView.getScrollBounds();
-            disp.width = r.width;
-            disp.height = r.height;
-            break;
         }
 
         adjustZOrder(target);
