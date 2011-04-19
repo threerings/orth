@@ -168,13 +168,11 @@ public class RoomWindow extends FrameSprite
         var scrollTo :Point = new Point(newEdgeX, newEdgeY);
         if (!_jumpX) {
             var dX :Number = newEdgeX - currentScroll.x;
-            scrollTo.x = currentScroll.x + MathUtil.clamp(dX, -MAX_AUTO_SCROLL, MAX_AUTO_SCROLL);
-            _jumpX ||= (Math.abs(dX) <= MAX_AUTO_SCROLL);
+            scrollTo.x = currentScroll.x + easeIn(dX);
         }
         if (!_jumpY) {
             var dY :Number = newEdgeY - currentScroll.y;
-            scrollTo.y = currentScroll.y + MathUtil.clamp(dY, -MAX_AUTO_SCROLL, MAX_AUTO_SCROLL);
-            _jumpY ||= (Math.abs(dY) <= MAX_AUTO_SCROLL);
+            scrollTo.y = currentScroll.y + easeIn(dY);
         }
 
         if (!scrollTo.equals(_lastOffset)) {
@@ -184,6 +182,13 @@ public class RoomWindow extends FrameSprite
         }
 
         setScrollOffset(scrollTo);
+    }
+
+    // let the step adjustment by clamped by the square root of the step distance
+    protected function easeIn (d :Number) :Number
+    {
+        var m :Number = Math.sqrt(Math.abs(d));
+        return MathUtil.clamp(d, -m, m);
     }
 
     protected function getScrollRectangle () :Rectangle
@@ -236,8 +241,5 @@ public class RoomWindow extends FrameSprite
 
     /** The position within this window that we place our child, letting us scroll fully. */
     protected static const SOME_BIG_NUMBER :int = 10000;
-
-    /** The maximum number of pixels to autoscroll per frame. */
-    protected static const MAX_AUTO_SCROLL :int = 15;
 }
 }
