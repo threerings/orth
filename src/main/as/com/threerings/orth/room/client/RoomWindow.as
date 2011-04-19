@@ -34,7 +34,6 @@ public class RoomWindow extends FrameSprite
     /** Fit the width of the room in the width of the view. */
     public static const FIT_WIDTH :String = "fit_width";
 
-
     public function RoomWindow (view :RoomView)
     {
         super(true);
@@ -103,7 +102,7 @@ public class RoomWindow extends FrameSprite
         _height = unscaledHeight;
 
         // TODO: do this bit conditionally
-        setScrollOffset(new Point(0, -unscaledHeight));
+        setScrollOffset(new Point(0, -200));
         _jumpY = false;
 
         relayout();
@@ -168,11 +167,11 @@ public class RoomWindow extends FrameSprite
         var scrollTo :Point = new Point(newEdgeX, newEdgeY);
         if (!_jumpX) {
             var dX :Number = newEdgeX - currentScroll.x;
-            scrollTo.x = currentScroll.x + easeIn(dX);
+            scrollTo.x = currentScroll.x + easeIn(dX, 1.0);
         }
         if (!_jumpY) {
             var dY :Number = newEdgeY - currentScroll.y;
-            scrollTo.y = currentScroll.y + easeIn(dY);
+            scrollTo.y = currentScroll.y + easeIn(dY, 0.3);
         }
 
         if (!scrollTo.equals(_lastOffset)) {
@@ -185,9 +184,9 @@ public class RoomWindow extends FrameSprite
     }
 
     // let the step adjustment by clamped by the square root of the step distance
-    protected function easeIn (d :Number) :Number
+    protected function easeIn (d :Number, pace :Number) :Number
     {
-        var m :Number = Math.sqrt(Math.abs(d));
+        var m :Number = Math.pow(Math.abs(d * pace), 0.25);
         return MathUtil.clamp(d, -m, m);
     }
 
