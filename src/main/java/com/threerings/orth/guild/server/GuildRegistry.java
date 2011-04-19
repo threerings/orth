@@ -33,8 +33,9 @@ public class GuildRegistry extends NodeletRegistry
 {
     @Inject public GuildRegistry (Injector injector, OrthDeploymentConfig config)
     {
-        super(OrthNodeObject.HOSTED_GUILDS, config.getGuildHost(), config.getGuildPorts(), injector);
+        super(GuildNodelet.class, config.getGuildHost(), config.getGuildPorts(), injector);
         setManagerClass(GuildManager.class, GuildObject.GUILD_SERVICE, GuildMarshaller.class);
+        setPeeredHostingStrategy(OrthNodeObject.HOSTED_GUILDS);
     }
 
     /**
@@ -52,7 +53,7 @@ public class GuildRegistry extends NodeletRegistry
             }
 
             @Override public void requestCompleted (GuildRecord result) {
-                resolveHosting(officer, new GuildNodelet(result.getGuildId()),
+                _hoster.resolveHosting(officer, new GuildNodelet(result.getGuildId()),
                         new Resulting<HostedNodelet>(rl) {
                     @Override public void requestCompleted (HostedNodelet result) {
                         officer.startTransaction();
@@ -71,6 +72,16 @@ public class GuildRegistry extends NodeletRegistry
                 rl.requestFailed(cause);
             }
         });
+    }
+
+    /**
+     * Invoke the given guild request on the appropriate guild manager, wherever it may be in the
+     * server cluster. Invokers failure on the listener if there the nodelet is not hosted or there
+     * is an error invoking the request remotely.
+     */
+    public <T> void invokeRemoteRequest (int guildId, Request<T> request, ResultListener<T> lner)
+    {
+        invokeRemoteRequest(OrthNodeObject.HOSTED_GUILDS, guildId, request, lner);
     }
 
     @Override // from NodeletRegistry

@@ -18,13 +18,14 @@ import static com.threerings.orth.Log.log;
  * Implement hosting for nodelets, assuming said hosting is governed by a DSet in
  * OrthNodeObject. Delegates the actual instantiation of a nodelet to a subclass.
  */
-public abstract class NodeletHoster
+public abstract class DSetNodeletHoster
+    implements NodeletRegistry.NodeletHoster
 {
     /**
      * Creates a new nodelet registry governed by the dset with the given name.
      * @see OrthNodeObject
      */
-    public NodeletHoster (String dsetName)
+    public DSetNodeletHoster (String dsetName)
     {
         _dsetName = dsetName;
     }
@@ -60,7 +61,8 @@ public abstract class NodeletHoster
 
             protected void hostNodelet () {
                 try {
-                    host((AuthName)caller.username, nodelet, new ResultListener<HostedNodelet>() {
+                    AuthName user = (AuthName)caller.username;
+                    hostLocally(user, nodelet, new ResultListener<HostedNodelet>() {
                         @Override public void requestCompleted (HostedNodelet result) {
                             OrthNodeObject node = ((OrthNodeObject)_peerMan.getNodeObject());
                             node.addToSet(_dsetName, result);
@@ -112,7 +114,7 @@ public abstract class NodeletHoster
     /**
      * Host the given nodelet locally and provide the listener with the result.
      */
-    protected abstract void host (AuthName caller, Nodelet nodelet,
+    protected abstract void hostLocally (AuthName caller, Nodelet nodelet,
             ResultListener<HostedNodelet> listener);
 
     /** The name of the dset governing our hosted nodelet instances in the OrthNodeObject. */

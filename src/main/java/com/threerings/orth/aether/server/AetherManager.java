@@ -187,7 +187,7 @@ public class AetherManager
         final int playerId = player.getPlayerId();
 
         // delegate to the possibly remote guild manager
-        _guildReg.invokeRequest(guildId, new NodeletRegistry.Request<HostedNodelet>() {
+        _guildReg.invokeRemoteRequest(guildId, new NodeletRegistry.Request<HostedNodelet>() {
             @Override public void execute (NodeletManager manager,
                     ResultListener<HostedNodelet> rl) {
                 ((GuildManager)manager).acceptInvite(senderId, playerId,

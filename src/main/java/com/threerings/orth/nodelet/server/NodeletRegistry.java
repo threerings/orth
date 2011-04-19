@@ -16,6 +16,7 @@ import com.samskivert.util.Logger;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.dobj.DObject;
@@ -49,6 +50,7 @@ import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.data.NodeletAuthName;
 import com.threerings.orth.nodelet.data.NodeletBootstrapData;
+import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.OrthPlayerRecord;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
@@ -59,9 +61,9 @@ import com.threerings.orth.server.persist.OrthPlayerRepository;
  * <li>Resolution of client and session</li>
  * <li>Instantiation of the hosted DObject</li>
  * <li>Service registration</li>
- * <li>Cross-peer interaction with nodelets</li></ul>
+ * <li>Cross-peer interaction with nodelets (this is delegated to a strategy object)</li></ul>
  */
-public abstract class NodeletRegistry extends NodeletHoster
+public abstract class NodeletRegistry
 {
     /**
      * Abstracts all the peer-jockeying necessary to execute a peer request on a different server
@@ -81,6 +83,18 @@ public abstract class NodeletRegistry extends NodeletHoster
     }
 
     /**
+     * Methods for nodelet hosting. That is, the process of finding a server to host a nodelet.
+     */
+    public interface NodeletHoster
+    {
+        /**
+         * Resolves where the given nodelet is hosted.
+         */
+        void resolveHosting (ClientObject caller, Nodelet nodelet,
+                ResultListener<HostedNodelet> listener);
+    }
+
+    /**
      * Creates a new nodelet registry that will handle all connections with a matching
      * {@link TokenCredentials} instance and provide hosting logic for the associated nodelet type.
      * @param dsetName the name of the DSet in {@link OrthNodeObject} that will contain the
@@ -90,11 +104,21 @@ public abstract class NodeletRegistry extends NodeletHoster
      * @param injector access to globals
      * TODO: isolate the subsystem id and the dset name into an orth-level wrapper
      */
-    public NodeletRegistry (String dsetName, String hostName, int[] ports, Injector injector)
+    public NodeletRegistry (Class<? extends Nodelet> nclass, String hostName, int[] ports,
+            Injector injector)
     {
-        super(dsetName);
+        _nodeletClass = nclass;
         _host = hostName;
         _ports = ports;
+
+        // set up a local hosting strategy by default.
+        // Callers can override by calling setPeeredHostingStrategy
+        _hoster = new NodeletRegistry.NodeletHoster() {
+            @Override public void resolveHosting (ClientObject caller, Nodelet nodelet,
+                    ResultListener<HostedNodelet> listener) {
+                listener.requestCompleted(new HostedNodelet(nodelet, _host, _ports));
+            }
+        };
 
 //CWG-JD Why use an Injector to get these rather than taking them in the constructor?
 //JD-CWG It reduces irrelevant dependencies and unnecessary coupling in the subclass, I often do
@@ -118,7 +142,7 @@ public abstract class NodeletRegistry extends NodeletHoster
                     throw new AuthException(OrthAuthCodes.SESSION_EXPIRED);
                 }
                 PlayerName name = player.getPlayerName();
-                conn.setAuthName(new NodeletAuthName(_dsetName, name.toString(), name.getId()));
+                conn.setAuthName(new NodeletAuthName(_nodeletClass, name.toString(), name.getId()));
                 rsp.getData().code = AuthResponseData.SUCCESS;
                 rsp.authdata = NodeletRegistry.this;
             }
@@ -133,25 +157,33 @@ public abstract class NodeletRegistry extends NodeletHoster
             }
         });
 
-        injector.getInstance(OrthPeerManager.class).addRegistry(_dsetName, this);
+        injector.getInstance(OrthPeerManager.class).addRegistry(_nodeletClass, this);
+    }
+
+    public void resolveHosting (ClientObject caller, Nodelet nodelet,
+        ResultListener<HostedNodelet> listener)
+    {
+        _hoster.resolveHosting(caller, nodelet, listener);
     }
 
     /**
-     * Invokes the given request on the nodelet of the given id and notifies the listener of the
-     * result when the request has completed. A failure is reported if the nodelet is not currently
-     * hosted, or if the request crashes or fails when executed remotely.
+     * Invokes the given request on the remote nodelet of the given id and notifies the listener of
+     * the result when the request has completed. A failure is reported if the nodelet is not
+     * currently hosted, or if the request crashes or fails when executed remotely. This method
+     * is protected since it will blow up quite badly if the subclass is not using the peered
+     * hosting strategy.
      */
-    public <T> void invokeRequest (final int nodeletId, final Request<T> request,
-            final ResultListener<T> lner)
+    protected <T> void invokeRemoteRequest (final String dsetName, final int nodeletId,
+            final Request<T> request, final ResultListener<T> lner)
     {
-        final String dsetName = _dsetName;
+        final Class<? extends Nodelet> nclass = _nodeletClass;
         PeerManager.NodeRequest req = new PeerManager.NodeRequest() {
             @Override public boolean isApplicable (NodeObject nodeobj) {
                 return nodeobj.getSet(dsetName).containsKey(nodeletId);
             }
 
             @Override protected void execute (InvocationService.ResultListener rl) {
-                NodeletRegistry reg = peerMan.getRegistry(dsetName);
+                NodeletRegistry reg = peerMan.getRegistry(nclass);
                 NodeletManager mgr = reg.getManager(nodeletId);
                 if (mgr == null) {
                     // this could happen in theory if the nodelet was just about to unhost as the
@@ -179,7 +211,7 @@ public abstract class NodeletRegistry extends NodeletHoster
         }
         if (nodes.size() > 1) {
             log.warning("Multiple hosts found for nodelet, something is very wrong",
-                "nodeletId", nodeletId, "dset", _dsetName);
+                "nodeletId", nodeletId, "class", nclass);
             lner.requestFailed(new InvocationException(InvocationCodes.INTERNAL_ERROR));
             return;
         }
@@ -226,7 +258,7 @@ public abstract class NodeletRegistry extends NodeletHoster
             return false;
         }
         TokenCredentials tokenCreds = (TokenCredentials)creds;
-        return Objects.equal(tokenCreds.subsystemId, _dsetName);
+        return Objects.equal(tokenCreds.subsystemId, _nodeletClass.getSimpleName());
     }
 
     /**
@@ -239,11 +271,11 @@ public abstract class NodeletRegistry extends NodeletHoster
         }
 
         NodeletAuthName nname = (NodeletAuthName)name;
-        return (nname.getDSetName().equals(_dsetName));
+        return (nname.getDiscriminator().equals(_nodeletClass.getSimpleName()));
     }
 
-    @Override // from NodeletHoster
-    protected void host (AuthName caller, Nodelet nodelet, ResultListener<HostedNodelet> listener)
+    protected void hostLocally (AuthName caller, Nodelet nodelet,
+            ResultListener<HostedNodelet> listener)
     {
         HostedNodelet hosted = new HostedNodelet(nodelet, _host, _ports);
 
@@ -279,6 +311,20 @@ public abstract class NodeletRegistry extends NodeletHoster
 
         if (!inittedMgr.prepare(new Resulting<Void>(listener, Functions.constant(hosted)))) {
             listener.requestCompleted(hosted);
+        };
+    }
+
+    /**
+     * Overrides the default "local only" hosting strategy with one that will negotiate the
+     * publishing of nodelets using the peer manager's locking system.
+     */
+    protected void setPeeredHostingStrategy (String dsetName)
+    {
+        _hoster = new DSetNodeletHoster(OrthNodeObject.HOSTED_GUILDS) {
+            @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
+                    ResultListener<HostedNodelet> listener) {
+                NodeletRegistry.this.hostLocally(caller, nodelet, listener);
+            }
         };
     }
 
@@ -364,6 +410,8 @@ public abstract class NodeletRegistry extends NodeletHoster
      */
     protected abstract DObject createSharedObject (Nodelet nodelet);
 
+    protected Class<? extends Nodelet> _nodeletClass;
+    protected NodeletHoster _hoster;
     protected String _host;
     protected int[] _ports;
 
@@ -381,4 +429,5 @@ public abstract class NodeletRegistry extends NodeletHoster
     @Inject protected OrthPlayerRepository _playerRepo;
     @Inject protected Injector _injector;
     @Inject protected InvocationManager _invMgr;
+    @Inject protected OrthPeerManager _peerMan;
 }

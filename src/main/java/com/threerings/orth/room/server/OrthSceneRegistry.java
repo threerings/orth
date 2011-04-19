@@ -15,7 +15,7 @@ import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.server.LocusMaterializer;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
-import com.threerings.orth.nodelet.server.NodeletHoster;
+import com.threerings.orth.nodelet.server.DSetNodeletHoster;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.room.data.ActorObject;
@@ -45,8 +45,8 @@ public class OrthSceneRegistry extends SpotSceneRegistry
 
         // a little inline hoster that just uses the scene registry when the job of hosting falls
         // to the local peer
-        injector.injectMembers(_hoster = new NodeletHoster(OrthNodeObject.HOSTED_ROOMS) {
-            @Override protected void host (AuthName caller, Nodelet nodelet,
+        injector.injectMembers(_hoster = new DSetNodeletHoster(OrthNodeObject.HOSTED_ROOMS) {
+            @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
                     final ResultListener<HostedNodelet> listener) {
                 final HostedNodelet room = new HostedNodelet(nodelet, _depConf.getRoomHost(),
                         _depConf.getRoomPorts());
@@ -71,7 +71,7 @@ public class OrthSceneRegistry extends SpotSceneRegistry
 
         // ORTH TODO: this is where the follow code was; that belongs in WorldManager now
 
-        // ORTH TODO: Should this be a locus materialization?
+        // ORTH TODO: Should this be a locus materialization/nodelet hosting?
         resolveScene(sceneId, new OrthSceneMoveHandler(
                 _locman, mover, version, portalId, destLoc, listener));
     }
@@ -95,7 +95,7 @@ public class OrthSceneRegistry extends SpotSceneRegistry
         return getClass().getSimpleName();
     }
 
-    protected NodeletHoster _hoster;
+    protected DSetNodeletHoster _hoster;
 
     // our dependencies
     @Inject protected Injector _injector;

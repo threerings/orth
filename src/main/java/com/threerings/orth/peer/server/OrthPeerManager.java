@@ -122,20 +122,20 @@ public abstract class OrthPeerManager extends PeerManager
      * {@code NodeletRegistry} constructor. It is an error to add more than one registry with the
      * same name.
      */
-    public void addRegistry (String dsetName, NodeletRegistry registry)
+    public void addRegistry (Class<? extends Nodelet> nodeletClass, NodeletRegistry registry)
     {
-        Preconditions.checkArgument(!_nodeletRegistries.containsKey(dsetName),
+        Preconditions.checkArgument(!_nodeletRegistries.containsKey(nodeletClass),
             "duplicate registries");
-        _nodeletRegistries.put(dsetName, registry);
+        _nodeletRegistries.put(nodeletClass, registry);
     }
 
     /**
      * Retrieves the registry for the dset of the given name. This allows registries to be
      * obtained generically when the concrete type is not known or the instance cannot be injected.
      */
-    public NodeletRegistry getRegistry (String dsetName)
+    public NodeletRegistry getRegistry (Class<? extends Nodelet> nodeletClass)
     {
-        return _nodeletRegistries.get(dsetName);
+        return _nodeletRegistries.get(nodeletClass);
     }
 
     /**
@@ -327,7 +327,7 @@ public abstract class OrthPeerManager extends PeerManager
 
     protected OrthNodeObject _onobj;
 
-    protected Map<String, NodeletRegistry> _nodeletRegistries = Maps.newHashMap();
+    protected Map<Class<? extends Nodelet>, NodeletRegistry> _nodeletRegistries = Maps.newHashMap();
 
     protected final Map<Class<?>, Observation<?>> _observations = Maps.newHashMap();
 }
