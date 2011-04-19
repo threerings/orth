@@ -111,37 +111,9 @@ public class RoomView extends Sprite
     }
 
     // from OrthPlaceView
-    public function setIsShowing (showing :Boolean) :void
-    {
-        _showing = showing;
-    }
-
-    // from OrthPlaceView
-    public function shouldUseChatOverlay () :Boolean
-    {
-        return true;
-    }
-
-    // from OrthPlaceView
     public function getPlaceName () :String
     {
         return (_scene != null) ? _scene.getName() : null;
-    }
-
-    // from OrthPlaceView
-    public function getPlaceLogo () :MediaDesc
-    {
-        return null;
-        // TODO: What might be the right thing to do, in the future, is
-        // just dispatch an event once we know our name/thumbnail, and have TopPanel
-        // capture that and pass it on to the EmbedHeader. That would make things
-        // work in case everything's not fully set-up when the placeview is first shown.
-    }
-
-    // from OrthPlaceView
-    public function isCentered () :Boolean
-    {
-        return true;
     }
 
     // from OrthPlaceView
@@ -149,12 +121,6 @@ public class RoomView extends Sprite
     {
         var metrics :RoomMetrics = layout.metrics;
         return new Point(metrics.sceneWidth * scaleX, metrics.sceneHeight * scaleY);
-    }
-
-    // from OrthPlaceView
-    public function asZoomable () :Zoomable
-    {
-        return this;
     }
 
     // from Snapshottable
@@ -212,14 +178,6 @@ public class RoomView extends Sprite
     public function removeBubbleObserver (observer:SpeakerObserver):void
     {
         isAbstract();
-    }
-
-    /**
-     * Are we actually showing?
-     */
-    public function isShowing () :Boolean
-    {
-        return _showing;
     }
 
     /**
@@ -1110,9 +1068,6 @@ public class RoomView extends Sprite
 
     /** The msoy context. */
     protected var _ctx :RoomContext;
-
-    /** Are we actually showing? */
-    protected var _showing :Boolean = true;
 
     /** The model of the current scene. */
     protected var _scene :OrthScene;

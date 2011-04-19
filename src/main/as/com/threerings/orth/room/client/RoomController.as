@@ -491,7 +491,7 @@ public class RoomController extends SceneController
     protected function checkMouse (event :Event) :void
     {
         // skip if supressed, and freak not out if we're temporarily removed from the stage
-        if (_suppressNormalHovering || _roomView.stage == null || !_roomView.isShowing()) {
+        if (_suppressNormalHovering || _roomView.stage == null) {
             return;
         }
 
