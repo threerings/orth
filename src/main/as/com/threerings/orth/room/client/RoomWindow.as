@@ -51,6 +51,24 @@ public class RoomWindow extends FrameSprite
         return _view;
     }
 
+    public function getScrollRectangle () :Rectangle
+    {
+        var rect :Rectangle = this.scrollRect;
+        return new Rectangle(rect.x - SOME_BIG_NUMBER, rect.y - SOME_BIG_NUMBER, _width, _height);
+    }
+
+    public function setScrollOffset (offset :Point) :void
+    {
+        scrollRect = new Rectangle(
+            offset.x + SOME_BIG_NUMBER, offset.y + SOME_BIG_NUMBER, _width, _height);
+    }
+
+    public function setScrollLock (lockX :Boolean, lockY :Boolean) :void
+    {
+        _jumpX = lockX;
+        _jumpY = lockY;
+    }
+
     // from Zoomable
     public function defineZooms () :Array /* of String */
     {
@@ -101,11 +119,7 @@ public class RoomWindow extends FrameSprite
         _width = unscaledWidth;
         _height = unscaledHeight;
 
-        // TODO: do this bit conditionally
-        setScrollOffset(new Point(0, -200));
-        _jumpY = false;
-
-        relayout();
+        setScrollOffset(new Point(0, 0));
     }
 
     // from ChatInfoProvider
@@ -188,18 +202,6 @@ public class RoomWindow extends FrameSprite
     {
         var m :Number = Math.pow(Math.abs(d * pace), 0.25);
         return MathUtil.clamp(d, -m, m);
-    }
-
-    protected function getScrollRectangle () :Rectangle
-    {
-        var rect :Rectangle = this.scrollRect;
-        return new Rectangle(rect.x - SOME_BIG_NUMBER, rect.y - SOME_BIG_NUMBER, _width, _height);
-    }
-
-    protected function setScrollOffset (offset :Point) :void
-    {
-        scrollRect = new Rectangle(
-            offset.x + SOME_BIG_NUMBER, offset.y + SOME_BIG_NUMBER, _width, _height);
     }
 
     protected function relayout () :void
