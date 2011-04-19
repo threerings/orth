@@ -2,11 +2,11 @@
 // $Id: RoomView.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.entity.client.ParallaxSprite;
 
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.Sprite;
-import flash.events.Event;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -33,14 +33,12 @@ import com.threerings.orth.chat.client.ChatInfoProvider;
 import com.threerings.orth.chat.client.SpeakerObserver;
 import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.OrthPlaceBox;
 import com.threerings.orth.client.OrthPlaceView;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.SnapshotUtil;
 import com.threerings.orth.client.Snapshottable;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.client.Zoomable;
-import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.MediaMimeTypes;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
@@ -209,11 +207,6 @@ public class RoomView extends Sprite
     public function locationUpdated (sprite :EntitySprite) :void
     {
         _layout.updateScreenLocation(sprite, sprite.getLayoutHotSpot());
-
-        // if we moved the _centerSprite, possibly update the scroll position
-        if (sprite == _centerSprite) {
-            scrollView();
-        }
     }
 
     /**
@@ -290,26 +283,19 @@ public class RoomView extends Sprite
     }
 
     /**
-     * Scroll the view by the specified number of pixels.
-     *
-     * @return true if the view is scrollable.
+     * Let this object know at what offset it's currently being viewed; used for e.g. Parallax
+     * adjustments.
      */
-    public function scrollViewBy (xpixels :int) :Boolean
+    public function notifyScroll (offset :Point) :void
     {
-        var rect :Rectangle = scrollRect;
-        if (rect == null) {
-            return false;
-        }
+        log.info("New scroll offset set", "offset", offset);
+        _scrollOffset = offset;
 
-        var bounds :Rectangle = getScrollBounds();
-        rect.x = Math.min(_scene.getWidth() - bounds.width, Math.max(0, rect.x + xpixels));
-        scrollRect = rect;
-
-        // remove any autoscrolling (if tick is not a registered listener this will noop)
-        removeEventListener(Event.ENTER_FRAME, tick);
-        _jumpScroll = false;
-
-        return true;
+        forEachEntity(function (key :Object, sprite :EntitySprite) :void {
+            if (sprite is ParallaxSprite) {
+                relayoutSprite(sprite);
+            }
+        });
     }
 
     /**
@@ -317,7 +303,7 @@ public class RoomView extends Sprite
      */
     public function getScrollOffset () :Point
     {
-        return (scrollRect != null) ? scrollRect.topLeft : new Point(0, 0);
+        return _scrollOffset;
     }
 
     /**
@@ -333,56 +319,6 @@ public class RoomView extends Sprite
             r.height = Math.min(_scene.getHeight(), r.height);
         }
         return r;
-    }
-
-    /**
-     * Get the full boundaries of our scrolling area in unscaled (stage pixel) dimensions.
-     * The Rectangle returned may be destructively modified.
-     */
-    public function getScrollSize () :Rectangle
-    {
-        // figure the upper left in decor pixels, taking into account scroll offset
-        var topLeft :Point = getScrollOffset();
-
-        // and the lower right, possibly cut off by the width of the underlying scene
-        var farX :int = getScrollOffset() + _actualWidth / scaleX;
-        var farY :int = _actualHeight / scaleY;
-        if (_scene != null) {
-            farX = Math.min(_scene.getWidth(), farX);
-            farY = Math.min(_scene.getHeight(), farY);
-        }
-        var bottomRight :Point = new Point(farX, farY);
-
-        // finally convert from decor to placebox coordinates
-        var placeBox :OrthPlaceBox = _topPanel.getPlaceContainer();
-        topLeft = placeBox.globalToLocal(localToGlobal(topLeft));
-        bottomRight = placeBox.globalToLocal(localToGlobal(bottomRight));
-
-        // a last sanity check
-        if (bottomRight == null || topLeft == null) {
-            return null;
-        }
-
-        // and then return the result
-        return new Rectangle(
-            topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
-    }
-
-    /**
-     * Set the sprite we should be following.
-     */
-    public function setCenterSprite (center :EntitySprite) :void
-    {
-        _centerSprite = center;
-        scrollView();
-    }
-
-    /**
-     * Set whether we instantly jump to center, or scroll there.
-     */
-    public function setFastCentering (fastCentering :Boolean) :void
-    {
-        _jumpScroll = fastCentering;
     }
 
     public function dimAvatars (setDim :Boolean) :void
@@ -708,8 +644,6 @@ public class RoomView extends Sprite
         scaleY = scale;
         scaleX = scale;
 
-        configureScrollRect();
-
         relayoutSprites(_furni.values());
         relayoutSprites(_otherSprites);
         relayoutSprites(_occupants.values());
@@ -733,76 +667,6 @@ public class RoomView extends Sprite
     {
         locationUpdated(sprite);
         sprite.roomScaleUpdated();
-    }
-
-    protected function scrollView () :void
-    {
-        if (_centerSprite == null) {
-            return;
-        }
-        var rect :Rectangle = scrollRect;
-        if (rect == null) {
-            return; // return if there's nothing to scroll
-        }
-
-        var centerX :int = _centerSprite.viz.x + _centerSprite.getLayoutHotSpot().x;
-        var newX :Number = centerX - (_actualWidth / scaleX)/2;
-        newX = Math.min(_scene.getWidth() - rect.width, Math.max(0, newX));
-
-        var newY :Number = 0;
-
-        if (_jumpScroll) {
-            rect.x = newX;
-            rect.y = newY;
-
-        } else {
-            var dX :Number = newX - rect.x;
-            var dY :Number = newY - rect.y;
-
-            if (Math.max(Math.abs(dX), Math.abs(dY)) > MAX_AUTO_SCROLL) {
-                addEventListener(Event.ENTER_FRAME, tick);
-
-            } else {
-                removeEventListener(Event.ENTER_FRAME, tick);
-                _jumpScroll = true;
-            }
-
-            rect.x += limit(dX, MAX_AUTO_SCROLL);
-            rect.y += limit(dY, MAX_AUTO_SCROLL);
-        }
-
-        // assign the new scrolling rectangle
-        scrollRect = rect;
-        _suppressAutoScroll = true;
-    }
-
-    protected function limit (n :Number, max :Number) :Number
-    {
-        if (n < -max) {
-            return -max;
-        }
-        if (n > max) {
-            return max;
-        }
-        return n;
-    }
-
-
-    protected function tick (event :Event) :void
-    {
-        if (!_suppressAutoScroll) {
-            if (_centerSprite != null) {
-                scrollView();
-
-            } else {
-                // stop scrolling
-                removeEventListener(Event.ENTER_FRAME, tick);
-            }
-        }
-
-        // and finally, we want ensure it can happen on the next frame if
-        // our avatar doesn't move
-        _suppressAutoScroll = false;
     }
 
     /**
@@ -847,18 +711,6 @@ public class RoomView extends Sprite
     protected function shouldLoadAll () :Boolean
     {
         return _loadAllMedia;
-    }
-
-    /**
-     * Configure the rectangle used to select a portion of the view that's showing.
-     */
-    protected function configureScrollRect () :void
-    {
-        if (_scene != null && _actualWidth >= _scene.getWidth()) {
-            scrollRect = null;
-        } else {
-            scrollRect = getScrollBounds();
-        }
     }
 
     /**
@@ -968,10 +820,6 @@ public class RoomView extends Sprite
         removeFromEntityMap(sprite);
         removeChild(sprite.viz);
         _mediaDir.returnSprite(sprite);
-
-        if (sprite == _centerSprite) {
-            _centerSprite = null;
-        }
     }
 
     /**
@@ -1026,14 +874,6 @@ public class RoomView extends Sprite
         _elements.remove(element.getVisualization());
     }
 
-    /**
-     * Gets the amount of whitespace to leave on the left in right of the room view.
-     */
-    protected function getMargin () :Number
-    {
-        // TODO: return 10 when the width/height assignment code can be fixed in relayout
-        return 0;
-    }
 
     /** Our controller. */
     protected var _ctrl :RoomController;
@@ -1054,17 +894,8 @@ public class RoomView extends Sprite
     /** Maps DisplayObject -> RoomElement */
     protected var _elements :Map = Maps.newMapOf(DisplayObject);
 
-    /** The sprite we should center on. */
-    protected var _centerSprite :EntitySprite;
-
     /** A map of bodyOid -> OccupantSprite for those that we'll remove when they stop moving. */
     protected var _pendingRemovals :Map = Maps.newMapOf(int);
-
-    /** If true, the scrolling should simply jump to the right position. */
-    protected var _jumpScroll :Boolean = true;
-
-    /** True if autoscroll should be supressed for the current frame. */
-    protected var _suppressAutoScroll :Boolean = false;
 
     /** The msoy context. */
     protected var _ctx :RoomContext;
@@ -1075,8 +906,8 @@ public class RoomView extends Sprite
     /** The actual screen width of this component. */
     protected var _actualWidth :Number;
 
-    /** The actual width we had last time we weren't minimized */
-    protected var _fullSizeActualWidth :Number;
+    /** What is the current offset into the RoomView that the player is watching? */
+    protected var _scrollOffset :Point = new Point(0, 0);
 
     /** The actual screen height of this component. */
     protected var _actualHeight :Number;
@@ -1100,9 +931,6 @@ public class RoomView extends Sprite
     protected var _backdropOverlay :BackdropOverlay;
 
     protected var _zoom :String;
-
-    /** The maximum number of pixels to autoscroll per frame. */
-    protected static const MAX_AUTO_SCROLL :int = 15;
 }
 }
 

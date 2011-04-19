@@ -398,23 +398,6 @@ public class RoomObjectView extends RoomView
 
         _loadingWatcher = null;
         FurniSprite.setLoadingWatcher(null);
-
-        // in case we were auto-scrolling, remove the event listener..
-        removeEventListener(Event.ENTER_FRAME, tick);
-    }
-
-    // from RoomView
-    override public function set scrollRect (r :Rectangle) :void
-    {
-        super.scrollRect = r;
-        // ORTH TODO: implement properly
-        // _comicOverlay.setScrollRect(r);
-
-        forEachEntity(function (key :Object, sprite :EntitySprite) :void {
-            if (sprite is ParallaxSprite) {
-                relayoutSprite(sprite);
-            }
-        });
     }
 
     /**
@@ -496,12 +479,6 @@ public class RoomObjectView extends RoomView
             dispatchEntityEntered(occupant.getEntityIdent());
             occupant.setEntering(loc);
             occupant.roomScaleUpdated();
-
-            // if we ever add ourselves, we follow it
-            if (bodyOid == _ctx.getClient().getClientOid()) {
-                setFastCentering(true);
-                setCenterSprite(occupant);
-            }
 
         } else {
             // update the sprite
