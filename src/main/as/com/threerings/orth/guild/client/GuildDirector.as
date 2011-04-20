@@ -31,9 +31,6 @@ public class GuildDirector extends NodeletDirector
      */
     public function GuildDirector()
     {
-        // TODO: this is from OrthNodePeerObject, but should also be exposed on the client...
-        //       but where?
-        super("hostedGuilds");
     }
 
     public function getGuildObject () :GuildObject

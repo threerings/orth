@@ -12,10 +12,9 @@ import com.threerings.orth.nodelet.data.Nodelet;
 
 // GENERATED PREAMBLE END
 
-// GENERATED CLASSDECL START
+// GENERATED CLASSDECL DISABLED
 public class GuildNodelet extends Nodelet
 {
-// GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
     public var guildId :int;

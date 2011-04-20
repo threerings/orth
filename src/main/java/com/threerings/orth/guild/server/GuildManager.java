@@ -25,6 +25,7 @@ import com.threerings.orth.aether.server.PlayerNodeRequests;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildMemberEntry;
+import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
 import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.guild.server.persist.GuildMemberRecord;
@@ -52,9 +53,9 @@ public class GuildManager extends NodeletManager
             GuildRecord guild;
             @Override public Iterable<GuildMemberEntry> invokePersist () throws Exception {
                 // get the data from the db
-                guild = _guildRepo.getGuild(_nodelet.getId());
+                guild = _guildRepo.getGuild(_guildId);
                 Map<Integer, GuildMemberRecord> gmrecs = Maps.uniqueIndex(
-                        _guildRepo.getGuildMembers(_nodelet.getId()),
+                        _guildRepo.getGuildMembers(_guildId),
                         GuildMemberRecord.TO_PLAYER_ID);
                 final Map<Integer, String> playerNames =
                         _playerRepo.resolvePlayerNames(gmrecs.keySet());
@@ -83,6 +84,7 @@ public class GuildManager extends NodeletManager
     public void didInit ()
     {
         _guildObj = ((GuildObject)_sharedObject);
+        _guildId = ((GuildNodelet)_nodelet.nodelet).guildId;
     }
 
     @Override
@@ -102,7 +104,7 @@ public class GuildManager extends NodeletManager
             throw new InvocationException(E_INVITE_ALREADY_SENT);
         }
         _requests.sendNotification(targetId, new GuildInviteNotification(sender.name.toPlayerName(),
-            _guildObj.name, _nodelet.getId()), new Resulting<Void>(lner));
+            _guildObj.name, _guildId), new Resulting<Void>(lner));
     }
 
     @Override
@@ -128,7 +130,7 @@ public class GuildManager extends NodeletManager
         // all in order, ship off to invoker
         _invoker.postUnit(new Resulting<Void>("update guild member rank", listener) {
             @Override public Void invokePersist () throws Exception {
-                _guildRepo.updateMember(_nodelet.getId(), target.getPlayerId(), newRank);
+                _guildRepo.updateMember(_guildId, target.getPlayerId(), newRank);
                 return null;
             }
             @Override public void requestCompleted (Void result) {
@@ -162,7 +164,7 @@ public class GuildManager extends NodeletManager
         // all in order, ship off to invoker
         _invoker.postUnit(new Resulting<Void>("remove guild member", listener) {
             @Override public Void invokePersist () throws Exception {
-                _guildRepo.removeMember(_nodelet.getId(), target.getPlayerId());
+                _guildRepo.removeMember(_guildId, target.getPlayerId());
                 return null;
             }
             @Override public void requestCompleted (Void result) {
@@ -192,7 +194,7 @@ public class GuildManager extends NodeletManager
 
         _invoker.postUnit(new Resulting<Void>("remove guild member", listener) {
             @Override public Void invokePersist () throws Exception {
-                _guildRepo.removeMember(_nodelet.getId(), member.getPlayerId());
+                _guildRepo.removeMember(_guildId, member.getPlayerId());
                 return null;
             }
             @Override public void requestCompleted (Void result) {
@@ -213,8 +215,8 @@ public class GuildManager extends NodeletManager
         }
         _invoker.postUnit(new Resulting<Void>("disband guild", listener) {
             @Override public Void invokePersist () throws Exception {
-                _guildRepo.removeMember(_nodelet.getId(), member.getPlayerId());
-                _guildRepo.removeEmptyGuild(_nodelet.getId());
+                _guildRepo.removeMember(_guildId, member.getPlayerId());
+                _guildRepo.removeEmptyGuild(_guildId);
                 return null;
             }
             @Override public void requestCompleted (Void result) {
@@ -253,7 +255,7 @@ public class GuildManager extends NodeletManager
         // woo! add 'em to the guild
         _invoker.postUnit(new Resulting<Void>("add guild member", rl) {
             @Override public Void invokePersist () throws Exception {
-                _guildRepo.addMember(_nodelet.getId(), newMemberId, newEntry.rank);
+                _guildRepo.addMember(_guildId, newMemberId, newEntry.rank);
                 return null;
             }
 
@@ -313,6 +315,7 @@ public class GuildManager extends NodeletManager
     }
 
     protected GuildObject _guildObj;
+    protected int _guildId;
     protected Map<Integer, InviteThrottle> _invitations;
 
     protected static final Predicate<GuildMemberEntry> IS_OFFICER =

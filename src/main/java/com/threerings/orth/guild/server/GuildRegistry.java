@@ -59,7 +59,7 @@ public class GuildRegistry extends NodeletRegistry
                         officer.startTransaction();
                         try {
                             officer.setGuild(result); // Whoo, all done!
-                            officer.setGuildId(result.nodelet.getId());
+                            officer.setGuildId(((GuildNodelet)result.nodelet).guildId);
                         } finally {
                             officer.commitTransaction();
                         }
@@ -81,7 +81,7 @@ public class GuildRegistry extends NodeletRegistry
      */
     public <T> void invokeRemoteRequest (int guildId, Request<T> request, ResultListener<T> lner)
     {
-        invokeRemoteRequest(OrthNodeObject.HOSTED_GUILDS, guildId, request, lner);
+        super.invokeRemoteRequest(new GuildNodelet(guildId), request, lner);
     }
 
     @Override // from NodeletRegistry
