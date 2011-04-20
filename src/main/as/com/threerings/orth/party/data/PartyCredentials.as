@@ -35,7 +35,7 @@ public class PartyCredentials extends TokenCredentials
      */
     public function set partyId (id :int) :void
     {
-        objectId = id;
+        object = id;
     }
 // GENERATED CLASSFINISH START
 }

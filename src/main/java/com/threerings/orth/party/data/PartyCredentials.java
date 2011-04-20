@@ -15,6 +15,6 @@ public class PartyCredentials extends TokenCredentials
      */
     public int getPartyId ()
     {
-        return objectId;
+        return (Integer)object;
     }
 }
