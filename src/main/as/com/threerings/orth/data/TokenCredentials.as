@@ -17,7 +17,7 @@ public class TokenCredentials extends Credentials
 {
 // GENERATED CLASSDECL END
 
-    public function TokenCredentials (token :String = null)
+    public function TokenCredentials (token :String = null, object :Object = null)
     {
         this.sessionToken = token;
     }
