@@ -23,9 +23,6 @@ public final class HostedNodelet extends SimpleStreamableObject
     @Override
     public Comparable<?> getKey ()
     {
-        if (nodelet instanceof Nodelet.Publishable) {
-            return ((Nodelet.Publishable)nodelet).getKey();
-        }
-        throw new AssertionError("DSet has an inappropriate nodelet?");
+        return nodelet.requireKey();
     }
 }
