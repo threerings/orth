@@ -30,6 +30,7 @@ import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.guild.data.GuildCodes;
+import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.server.GuildManager;
 import com.threerings.orth.guild.server.GuildRegistry;
 import com.threerings.orth.nodelet.data.HostedNodelet;
@@ -196,7 +197,7 @@ public class AetherManager
 
         }, new Resulting<HostedNodelet>(lner) {
             @Override public void requestCompleted (HostedNodelet result) {
-                player.setGuildId(result.nodelet.getId());
+                player.setGuildId(((GuildNodelet)result.nodelet).guildId);
                 player.setGuild(result);
             }
         });

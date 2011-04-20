@@ -78,24 +78,15 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     /**
-     * Returns the node name of the peer that is hosting the specified nodelet, or null if no peer
-     * has published that they are hosting it.
-     */
-    public HostedNodelet findHostedNodelet (final String dsetName, final Nodelet nodelet)
-    {
-        return findHostedNodelet(dsetName, nodelet.getId());
-    }
-
-    /**
      * Returns the node name of the peer that is hosting the nodelet with the specified id, or null
      * if no peer has published that they are hosting it.
      */
-    public HostedNodelet findHostedNodelet (final String dsetName, final int nodeletId)
+    public HostedNodelet findHostedNodelet (final String dsetName, Nodelet nodelet)
     {
+        final Comparable<?> key = nodelet.requireKey();
         return lookupNodeDatum(new Function<NodeObject, HostedNodelet>() {
             public HostedNodelet apply (NodeObject nodeobj) {
-                return ((OrthNodeObject) nodeobj)
-                    .<HostedNodelet>getSet(dsetName).get(nodeletId);
+                return ((OrthNodeObject) nodeobj).<HostedNodelet>getSet(dsetName).get(key);
             }
         });
     }
