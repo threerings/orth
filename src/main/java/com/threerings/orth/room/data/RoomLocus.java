@@ -13,9 +13,4 @@ public class RoomLocus extends Locus
     {
         this.sceneId = sceneId;
     }
-
-    public int getId ()
-    {
-        return sceneId;
-    }
 }

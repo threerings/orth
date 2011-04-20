@@ -21,6 +21,7 @@ import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
+import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.server.OrthDeploymentConfig;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
@@ -45,12 +46,13 @@ public class OrthSceneRegistry extends SpotSceneRegistry
 
         // a little inline hoster that just uses the scene registry when the job of hosting falls
         // to the local peer
-        injector.injectMembers(_hoster = new DSetNodeletHoster(OrthNodeObject.HOSTED_ROOMS) {
+        injector.injectMembers(_hoster = new DSetNodeletHoster(
+                OrthNodeObject.HOSTED_ROOMS, RoomLocus.class) {
             @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
                     final ResultListener<HostedNodelet> listener) {
                 final HostedNodelet room = new HostedNodelet(nodelet, _depConf.getRoomHost(),
                         _depConf.getRoomPorts());
-                resolveScene(nodelet.getId(), new ResolutionListener() {
+                resolveScene(((RoomLocus)nodelet).sceneId, new ResolutionListener() {
                     @Override public void sceneWasResolved (SceneManager scmgr) {
                         listener.requestCompleted(room);
                     }
