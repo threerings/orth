@@ -1,6 +1,7 @@
 //
 // $Id$
 package com.threerings.orth.room.client {
+import com.threerings.util.Log;
 
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -54,6 +55,16 @@ public class RoomWindow extends FrameSprite
         return _view;
     }
 
+    // from PlaceLayer
+    public function setPlaceSize (unscaledWidth :Number, unscaledHeight :Number) :void
+    {
+        _width = unscaledWidth;
+        _height = unscaledHeight;
+
+        setScrollOffset(new Point(0, 0));
+        relayout();
+    }
+
     public function getScrollRectangle () :Rectangle
     {
         var rect :Rectangle = this.scrollRect;
@@ -91,6 +102,7 @@ public class RoomWindow extends FrameSprite
     public function setZoom (zoom :String) :void
     {
         _zoom = zoom;
+        relayout();
     }
 
     // from Zoomable
@@ -116,15 +128,6 @@ public class RoomWindow extends FrameSprite
         _view.didLeavePlace(plobj);
     }
 
-    // from PlaceLayer
-    public function setPlaceSize (unscaledWidth :Number, unscaledHeight :Number) :void
-    {
-        _width = unscaledWidth;
-        _height = unscaledHeight;
-
-        setScrollOffset(new Point(0, 0));
-    }
-
     // from ChatInfoProvider
     public function getBubblePosition (speaker :Name) :Point
     {
@@ -147,7 +150,7 @@ public class RoomWindow extends FrameSprite
      * Get the full boundaries of our scrolling area in scaled (decor pixel) dimensions.
      * The Rectangle returned may be destructively modified.
      */
-    public function getScrollBounds () :Rectangle
+    public function getWindowBounds () :Rectangle
     {
         var r :Rectangle = new Rectangle(0, 0, _width / scaleX, _height / scaleY);
         if (_view.getScene() != null) {
@@ -166,7 +169,7 @@ public class RoomWindow extends FrameSprite
         }
 
         // fetch the basic geometry of our view
-        var scrollBounds :Rectangle = getScrollBounds();
+        var scrollBounds :Rectangle = getWindowBounds();
 
         // where do we ideally want the center of the viewport to be?
         var targetCenterX :int = me.viz.x + me.getLayoutHotSpot().x;
@@ -243,7 +246,7 @@ public class RoomWindow extends FrameSprite
 
     protected var _lastOffset :Point = new Point(0, 0);
 
-    /** The position within this window that we place our child, letting us scroll fully. */
+    /** The position within this window where we place our child, letting us scroll fully. */
     protected static const SOME_BIG_NUMBER :int = 10000;
 }
 }
