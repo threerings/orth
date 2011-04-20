@@ -2,13 +2,13 @@
 // $Id: PlaceBox.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.client {
+import com.threerings.util.Log;
+
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.InteractiveObject;
 import flash.display.Sprite;
 import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
 
 import com.threerings.util.ObserverList;
 
@@ -22,9 +22,6 @@ public class OrthPlaceBox extends Sprite
     public function OrthPlaceBox ()
     {
         addChild(_layers);
-
-        _layers.x = INNER_OFFSET.x;
-        _layers.y = INNER_OFFSET.y;
     }
 
     public function setMainView (view :DisplayObject) :void
@@ -76,7 +73,7 @@ public class OrthPlaceBox extends Sprite
 
         // inform the new child of the place size if it implement the layer interface
         if (overlay is PlaceLayer) {
-            PlaceLayer(overlay).setPlaceSize(_layers.width, _layers.height);
+            PlaceLayer(overlay).setPlaceSize(_width, _height);
         }
     }
 
@@ -132,7 +129,7 @@ public class OrthPlaceBox extends Sprite
             if (child == _mainView) {
                 continue; // we'll handle this later
             } else if (child is PlaceLayer) {
-                PlaceLayer(child).setPlaceSize(width, height);
+                PlaceLayer(child).setPlaceSize(_width, _height);
             }
         }
 
@@ -144,18 +141,6 @@ public class OrthPlaceBox extends Sprite
         if (_mainView is PlaceLayer) {
             PlaceLayer(_mainView).setPlaceSize(_width, _height);
         }
-
-        updateScrollRect();
-    }
-
-
-    protected function updateScrollRect () :void
-    {
-        var rect :Rectangle = new Rectangle();
-        rect.topLeft = INNER_OFFSET;
-        rect.width = _width + INNER_OFFSET.x;
-        rect.height = height + INNER_OFFSET.y;
-        this.scrollRect = rect;
     }
 
     /** The configured width of the placebox. */
@@ -170,7 +155,5 @@ public class OrthPlaceBox extends Sprite
     protected var _mainView :DisplayObject;
 
     protected var _observers :ObserverList = new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
-
-    protected static const INNER_OFFSET :Point = new Point(10000, 10000);
 }
 }
