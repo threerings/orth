@@ -11,4 +11,10 @@ public class GuildNodelet extends Nodelet
     {
         this.guildId = guildId;
     }
+
+    @Override
+    public Comparable<?> getKey ()
+    {
+        return guildId;
+    }
 }

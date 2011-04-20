@@ -28,7 +28,7 @@ public abstract class DSetNodeletHoster
      */
     public DSetNodeletHoster (String dsetName, Class<? extends Nodelet> nclass)
     {
-        Preconditions.checkArgument(nclass.isAssignableFrom(Nodelet.Publishable.class));
+        Preconditions.checkArgument(Nodelet.Publishable.class.isAssignableFrom(nclass));
         _dsetName = dsetName;
         _nodeletClass = nclass;
     }
