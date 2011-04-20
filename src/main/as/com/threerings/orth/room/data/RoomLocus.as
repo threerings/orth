@@ -15,11 +15,9 @@ import com.threerings.orth.room.client.RoomModule;
 
 // GENERATED PREAMBLE END
 
-// GENERATED CLASSDECL START
+// GENERATED CLASSDECL DISABLED
 public class RoomLocus extends Locus
 {
-// GENERATED CLASSDECL END
-
     public function RoomLocus (sceneId :int=0, loc :OrthLocation=null)
     {
         super(RoomModule);
