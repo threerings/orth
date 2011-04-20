@@ -35,7 +35,7 @@ public class GuildRegistry extends NodeletRegistry
     {
         super(GuildNodelet.class, config.getGuildHost(), config.getGuildPorts(), injector);
         setManagerClass(GuildManager.class, GuildObject.GUILD_SERVICE, GuildMarshaller.class);
-        setPeeredHostingStrategy(OrthNodeObject.HOSTED_GUILDS);
+        setPeeredHostingStrategy(OrthNodeObject.HOSTED_GUILDS, injector);
     }
 
     /**

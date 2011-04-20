@@ -322,14 +322,15 @@ public abstract class NodeletRegistry
      * Overrides the default "local only" hosting strategy with one that will negotiate the
      * publishing of nodelets using the peer manager's locking system.
      */
-    protected void setPeeredHostingStrategy (String dsetName)
+    protected void setPeeredHostingStrategy (String dsetName, Injector injector)
     {
-        _hoster = new DSetNodeletHoster(dsetName, _nodeletClass) {
+        // cannot use the member injector because we want this to be callable from subclass ctor 
+        injector.injectMembers(_hoster = new DSetNodeletHoster(dsetName, _nodeletClass) {
             @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
                     ResultListener<HostedNodelet> listener) {
                 NodeletRegistry.this.hostLocally(caller, nodelet, listener);
             }
-        };
+        });
     }
 
     /**
