@@ -173,18 +173,21 @@ public abstract class NodeletRegistry
      * is protected since it will blow up quite badly if the subclass is not using the peered
      * hosting strategy.
      */
-    protected <T> void invokeRemoteRequest (final String dsetName, final int nodeletId,
+    protected <T> void invokeRemoteRequest (final Nodelet nodelet,
             final Request<T> request, final ResultListener<T> lner)
     {
+        Preconditions.checkArgument(_hoster instanceof DSetNodeletHoster);
+        final String dsetName = ((DSetNodeletHoster)_hoster).getDSetName();
+        final Comparable<?> key = nodelet.requireKey();
         final Class<? extends Nodelet> nclass = _nodeletClass;
         PeerManager.NodeRequest req = new PeerManager.NodeRequest() {
             @Override public boolean isApplicable (NodeObject nodeobj) {
-                return nodeobj.getSet(dsetName).containsKey(nodeletId);
+                return nodeobj.getSet(dsetName).containsKey(key);
             }
 
             @Override protected void execute (InvocationService.ResultListener rl) {
                 NodeletRegistry reg = peerMan.getRegistry(nclass);
-                NodeletManager mgr = reg.getManager(nodeletId);
+                NodeletManager mgr = reg.getManager(nodelet);
                 if (mgr == null) {
                     // this could happen in theory if the nodelet was just about to unhost as the
                     // request was sent
@@ -196,7 +199,7 @@ public abstract class NodeletRegistry
                     request.execute(mgr, new Resulting<T>(rl));
                 } catch (Throwable t) {
                     log.warning("Failed to execute nodelet request", "request", request,
-                            "dset", dsetName, "nodeletId", nodeletId);
+                            "dset", dsetName, "nodelet", nodelet);
                     rl.requestFailed(InvocationCodes.INTERNAL_ERROR);
                 }
             }
@@ -211,16 +214,16 @@ public abstract class NodeletRegistry
         }
         if (nodes.size() > 1) {
             log.warning("Multiple hosts found for nodelet, something is very wrong",
-                "nodeletId", nodeletId, "class", nclass);
+                "nodelet", nodelet, "class", nclass);
             lner.requestFailed(new InvocationException(InvocationCodes.INTERNAL_ERROR));
             return;
         }
         _peerMan.invokeNodeRequest(nodes.iterator().next(), req, new Resulting<T>(lner));
     }
 
-    public NodeletManager getManager (int nodeletId)
+    public NodeletManager getManager (Nodelet nodelet)
     {
-        return _mgrs.get(nodeletId);
+        return _mgrs.get(nodelet);
     }
 
     /**
@@ -228,7 +231,7 @@ public abstract class NodeletRegistry
      */
     public void shutdownManager (NodeletManager manager)
     {
-        boolean hasMgr = _mgrs.remove(manager.getNodelet().getId()) != null;
+        boolean hasMgr = _mgrs.remove(manager.getNodelet()) != null;
         if (!hasMgr) {
             throw new RuntimeException("Shutting down a manager twice: " + manager.getNodelet());
         }
@@ -258,7 +261,8 @@ public abstract class NodeletRegistry
             return false;
         }
         TokenCredentials tokenCreds = (TokenCredentials)creds;
-        return Objects.equal(tokenCreds.subsystemId, _nodeletClass.getSimpleName());
+        return tokenCreds.object != null && Objects.equal(
+            tokenCreds.object.getClass(), _nodeletClass);
     }
 
     /**
@@ -307,7 +311,7 @@ public abstract class NodeletRegistry
             return;
         }
 
-        _mgrs.put(nodelet.getId(), inittedMgr);
+        _mgrs.put(nodelet, inittedMgr);
 
         if (!inittedMgr.prepare(new Resulting<Void>(listener, Functions.constant(hosted)))) {
             listener.requestCompleted(hosted);
@@ -320,7 +324,7 @@ public abstract class NodeletRegistry
      */
     protected void setPeeredHostingStrategy (String dsetName)
     {
-        _hoster = new DSetNodeletHoster(OrthNodeObject.HOSTED_GUILDS) {
+        _hoster = new DSetNodeletHoster(dsetName, _nodeletClass) {
             @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
                     ResultListener<HostedNodelet> listener) {
                 NodeletRegistry.this.hostLocally(caller, nodelet, listener);
@@ -395,10 +399,10 @@ public abstract class NodeletRegistry
         protected void populateBootstrapData (BootstrapData data)
         {
             super.populateBootstrapData(data);
-            int nodeletId = ((TokenCredentials)_areq.getCredentials()).objectId;
-            NodeletManager mgr = ((NodeletRegistry)_authdata)._mgrs.get(nodeletId);
+            Object nodelet = ((TokenCredentials)_areq.getCredentials()).object;
+            NodeletManager mgr = ((NodeletRegistry)_authdata)._mgrs.get((Nodelet)nodelet);
             if (mgr == null) {
-                throw new RuntimeException(Logger.format("Manager not found", "nodelet", nodeletId));
+                throw new RuntimeException(Logger.format("Manager not found", "nodelet", nodelet));
             }
             ((NodeletBootstrapData)data).targetOid = mgr.getSharedObject().getOid();
         }
@@ -415,7 +419,7 @@ public abstract class NodeletRegistry
     protected String _host;
     protected int[] _ports;
 
-    protected Map<Integer, NodeletManager> _mgrs = Maps.newHashMap();
+    protected Map<Nodelet, NodeletManager> _mgrs = Maps.newHashMap();
 
     protected Class<? extends TokenCredentials> _credentialsClass = TokenCredentials.class;
     protected Class<? extends Resolver> _resolverClass = Resolver.class;

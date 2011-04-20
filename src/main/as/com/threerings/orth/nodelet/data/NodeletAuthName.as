@@ -21,16 +21,16 @@ public class NodeletAuthName extends AuthName
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        _dsetName = ins.readField(String);
+        _discriminator = ins.readField(String);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeField(_dsetName);
+        out.writeField(_discriminator);
     }
 
-    protected var _dsetName :String;
+    protected var _discriminator :String;
 // GENERATED STREAMING END
 
 // GENERATED CLASSFINISH START

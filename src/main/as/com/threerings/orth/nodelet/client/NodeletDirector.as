@@ -37,10 +37,9 @@ public class NodeletDirector extends BasicDirector
      * Creates a new nodelet director using the given dsetName. The dsetName corresponds to one
      * of the DSet<HostedNodelet> members on the server's PeerNodeObject.
      */
-    public function NodeletDirector (dsetName :String)
+    public function NodeletDirector ()
     {
         super(new Context(createClient()));
-        _dsetName = dsetName;
 
         PolicyLoader.registerClient(_ctx.getClient(), _config.policyPort);
         _ctx.getClient().setVersion(_config.version);
@@ -111,8 +110,7 @@ public class NodeletDirector extends BasicDirector
         }
 
         var creds :TokenCredentials = new TokenCredentials();
-        creds.subsystemId = _dsetName;
-        creds.objectId = nodelet.nodelet.getId();
+        creds.object = nodelet.nodelet;
         creds.sessionToken = getAuthToken();
         _ctx.getClient().setCredentials(creds);
         _ctx.getClient().setServer(nodelet.host, nodelet.ports);
@@ -181,7 +179,6 @@ public class NodeletDirector extends BasicDirector
 
     // TODO: service
     //protected var _service :NodeletService;
-    protected var _dsetName :String;
     protected var _plobj :PlayerObject;
     protected var _nodelet :HostedNodelet; // TODO: may be better not to keep this around
     protected var _sub :SafeSubscriber;

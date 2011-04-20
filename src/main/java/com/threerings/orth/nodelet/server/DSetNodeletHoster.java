@@ -1,5 +1,6 @@
 package com.threerings.orth.nodelet.server;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 
 import com.samskivert.util.ResultListener;
@@ -25,14 +26,23 @@ public abstract class DSetNodeletHoster
      * Creates a new nodelet registry governed by the dset with the given name.
      * @see OrthNodeObject
      */
-    public DSetNodeletHoster (String dsetName)
+    public DSetNodeletHoster (String dsetName, Class<? extends Nodelet> nclass)
     {
+        Preconditions.checkArgument(nclass.isAssignableFrom(Nodelet.Publishable.class));
         _dsetName = dsetName;
+        _nodeletClass = nclass;
+    }
+
+    public String getDSetName ()
+    {
+        return _dsetName;
     }
 
     public void resolveHosting (final ClientObject caller, final Nodelet nodelet,
             final ResultListener<HostedNodelet> listener)
     {
+        Preconditions.checkArgument(_nodeletClass.isInstance(nodelet));
+
         if (hostExisting(nodelet, listener)) {
              return;
         }
@@ -42,7 +52,7 @@ public abstract class DSetNodeletHoster
         // all be queried to see which peer is the least loaded and the request should
         // be punted to there.
 
-        final NodeObject.Lock lock = new NodeObject.Lock(getLockName(), nodelet.getId());
+        final NodeObject.Lock lock = new NodeObject.Lock(getLockName(), nodelet.requireKey());
         _peerMan.acquireLock(lock, new ResultListener<String>() {
             @Override public void requestCompleted (String nodeName) {
                 if (_peerMan.getNodeObject().nodeName.equals(nodeName)) {
@@ -119,6 +129,7 @@ public abstract class DSetNodeletHoster
 
     /** The name of the dset governing our hosted nodelet instances in the OrthNodeObject. */
     protected String _dsetName;
+    protected Class<? extends Nodelet> _nodeletClass;
 
     // dependencies
     @Inject protected OrthPeerManager _peerMan;

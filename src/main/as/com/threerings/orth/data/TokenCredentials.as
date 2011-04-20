@@ -25,24 +25,20 @@ public class TokenCredentials extends Credentials
 // GENERATED STREAMING START
     public var sessionToken :String;
 
-    public var subsystemId :String;
-
-    public var objectId :int;
+    public var object :Object;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         sessionToken = ins.readField(String);
-        subsystemId = ins.readField(String);
-        objectId = ins.readInt();
+        object = ins.readObject(Object);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
         out.writeField(sessionToken);
-        out.writeField(subsystemId);
-        out.writeInt(objectId);
+        out.writeObject(object);
     }
 
 // GENERATED STREAMING END
