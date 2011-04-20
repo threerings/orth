@@ -4,7 +4,6 @@
 package com.threerings.orth.room.client.layout {
 import flash.display.DisplayObject;
 import flash.geom.Point;
-import flash.geom.Rectangle;
 
 import com.threerings.geom.Vector3;
 
@@ -12,11 +11,11 @@ import com.threerings.util.Log;
 
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.FurniSprite;
-import com.threerings.orth.room.data.Decor;
 import com.threerings.orth.room.client.ClickLocation;
 import com.threerings.orth.room.client.RoomElement;
 import com.threerings.orth.room.client.RoomMetrics;
 import com.threerings.orth.room.client.RoomView;
+import com.threerings.orth.room.data.Decor;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomCodes;
 

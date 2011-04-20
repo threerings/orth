@@ -4,7 +4,6 @@
 package com.threerings.orth.room.client {
 import flash.events.Event;
 import flash.geom.Point;
-import flash.geom.Rectangle;
 import flash.utils.ByteArray;
 
 import com.threerings.crowd.chat.client.ChatDisplay;
@@ -36,7 +35,6 @@ import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
-import com.threerings.orth.entity.client.ParallaxSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;

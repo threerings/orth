@@ -8,8 +8,9 @@ package com.threerings.orth.room.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
-import com.threerings.orth.room.data.Decor;
+
 import com.threerings.orth.entity.data.Walkability;
+import com.threerings.orth.room.data.Decor;
 
 // GENERATED PREAMBLE END
 

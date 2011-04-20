@@ -29,10 +29,10 @@ import com.threerings.util.CommandEvent;
 
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.entity.client.FurniSprite;
-import com.threerings.orth.room.data.Decor;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.editor.ui.FloatingPanel;
 import com.threerings.orth.room.client.editor.ui.SkinnableImage;
+import com.threerings.orth.room.data.Decor;
 import com.threerings.orth.room.data.FurniData;
 
 /**

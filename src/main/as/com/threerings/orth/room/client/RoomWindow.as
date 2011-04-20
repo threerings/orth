@@ -1,22 +1,20 @@
 //
 // $Id$
 package com.threerings.orth.room.client {
-import com.threerings.util.Log;
-
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
+import com.threerings.crowd.data.PlaceObject;
 import com.threerings.display.FrameSprite;
+
 import com.threerings.util.MathUtil;
 import com.threerings.util.Name;
-
-import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.orth.chat.client.ChatInfoProvider;
 import com.threerings.orth.chat.client.SpeakerObserver;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.PlaceLayer;
 import com.threerings.orth.client.OrthPlaceView;
+import com.threerings.orth.client.PlaceLayer;
 import com.threerings.orth.client.Zoomable;
 import com.threerings.orth.entity.client.MemberSprite;
 

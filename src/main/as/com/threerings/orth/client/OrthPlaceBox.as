@@ -2,8 +2,6 @@
 // $Id: PlaceBox.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.client {
-import com.threerings.util.Log;
-
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.InteractiveObject;

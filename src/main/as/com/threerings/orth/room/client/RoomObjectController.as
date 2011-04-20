@@ -12,10 +12,8 @@ import flash.utils.ByteArray;
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
-import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.util.CrowdContext;
 import com.threerings.flex.CommandMenu;
 import com.threerings.whirled.data.SceneUpdate;
 

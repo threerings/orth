@@ -3,8 +3,6 @@
 
 package com.threerings.orth.client {
 
-import flash.geom.Point;
-
 import com.threerings.crowd.client.PlaceView;
 
 /**

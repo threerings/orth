@@ -2,14 +2,11 @@
 // $Id: RoomView.as 18849 2009-12-14 20:14:44Z ray $
 
 package com.threerings.orth.room.client {
-import com.threerings.orth.entity.client.ParallaxSprite;
-
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.geom.Matrix;
 import flash.geom.Point;
-import flash.geom.Rectangle;
 import flash.ui.Mouse;
 import flash.utils.ByteArray;
 
@@ -32,22 +29,21 @@ import com.threerings.util.ObjectMarshaller;
 import com.threerings.orth.chat.client.ChatInfoProvider;
 import com.threerings.orth.chat.client.SpeakerObserver;
 import com.threerings.orth.client.ContextMenuProvider;
-import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthPlaceView;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.SnapshotUtil;
 import com.threerings.orth.client.Snapshottable;
 import com.threerings.orth.client.TopPanel;
-import com.threerings.orth.client.Zoomable;
 import com.threerings.orth.data.MediaMimeTypes;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
-import com.threerings.orth.room.data.Decor;
+import com.threerings.orth.entity.client.ParallaxSprite;
 import com.threerings.orth.entity.data.Walkability;
 import com.threerings.orth.room.client.layout.RoomLayout;
 import com.threerings.orth.room.client.layout.RoomLayoutFactory;
+import com.threerings.orth.room.data.Decor;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
