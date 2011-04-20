@@ -340,7 +340,7 @@ public class RoomObjectView extends RoomView
         // hide until our background is loaded
         this.visible = false;
 
-        loadBackgrounds();
+        preloadFurni();
     }
 
     // from RoomView
@@ -374,26 +374,24 @@ public class RoomObjectView extends RoomView
         return null;
     }
 
-    protected function loadBackgrounds () :void
+    protected function preloadFurni () :void
     {
         _scene.getFurni().forEach(function (data :FurniData, ix :int, arr :Array) :void {
-            if (data.loc.z >= 1.0) {
-                updateFurni(data);
-                var sprite :FurniSprite = (_furni.get(data.id) as FurniSprite);
-                if (sprite != null) {
-                    // should always be true
-                    sprite.setLoadedCallback(backgroundSpriteLoaded);
-                    _bgSprites.add(sprite);
-                }
+            updateFurni(data);
+            var sprite :FurniSprite = (_furni.get(data.id) as FurniSprite);
+            if (sprite != null) {
+                // should always be true
+                sprite.setLoadedCallback(furniSpritePreloaded);
+                _furniSprites.add(sprite);
             }
         });
-        log.info("Loading backgrounds", "sprites", _bgSprites, "count", _bgSprites.size());
+        log.info("Preloading backgrounds", "sprites", _furniSprites, "count", _furniSprites.size());
     }
 
-    protected function backgroundSpriteLoaded (sprite :FurniSprite, success :Boolean) :void
+    protected function furniSpritePreloaded (sprite :FurniSprite, success :Boolean) :void
     {
-        _bgSprites.remove(sprite);
-        if (_bgSprites.isEmpty()) {
+        _furniSprites.remove(sprite);
+        if (_furniSprites.isEmpty()) {
             backgroundFinishedLoading();
         }
     }
@@ -511,7 +509,7 @@ public class RoomObjectView extends RoomView
     protected var _roomObj :OrthRoomObject;
 
     /** The background sprites to load before we do the rest. */
-    protected var _bgSprites :Set = Sets.newSetOf(FurniSprite);
+    protected var _furniSprites :Set = Sets.newSetOf(FurniSprite);
 
     /** Monitors and displays loading progress for furni/decor. */
     protected var _loadingWatcher :LoadingWatcher;
