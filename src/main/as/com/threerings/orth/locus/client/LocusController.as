@@ -37,23 +37,12 @@ public class LocusController extends Controller
     public function LocusController ()
     {
         _client.addServiceGroup(CrowdCodes.CROWD_GROUP);
-        _client.addEventListener(ClientEvent.CLIENT_FAILED_TO_LOGON,
-            function (event :ClientEvent) :void {
-                // ORTH TODO: how do we let implementors do something nice here?
-                //        _topPanel.setMainView(new DisconnectedPanel(
-                //                _client, event.getCause().message, reconnectClient));
-            });
-        _client.addEventListener(ClientEvent.CLIENT_CONNECTION_FAILED, function (..._) :void {
-            _logoffMessage = "m.lost_connection";
-            });
-        _client.addEventListener(ClientEvent.CLIENT_DID_LOGOFF, clientDidLogoff);
 
         // create a timer to poll mouse position and track timing
         _idleTimer = new Timer(1000);
         _idleTimer.addEventListener(TimerEvent.TIMER, handlePollIdleMouse);
 
         setControlledPanel(_topPanel.root);
-        _stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown, false, int.MAX_VALUE);
     }
 
     /**
@@ -62,17 +51,6 @@ public class LocusController extends Controller
     public function isIdle () :Boolean
     {
         return _idle;
-    }
-
-    public function clientDidLogoff (event :ClientEvent) :void
-    {
-        log.info("clientDidLogoff()", "event", event, "client", _client);
-        if (_logoffMessage != null) {
-            // ORTH TODO: how do we let implementors do something nice here?
-            _logoffMessage = null;
-        } else {
-            _topPanel.clearMainView();
-        }
     }
 
     /**
@@ -93,23 +71,6 @@ public class LocusController extends Controller
         if (_controlledPanel != null) {
             _idleTimer.start();
             resetIdleTracking();
-        }
-    }
-
-    /**
-     * Handles global key events.
-     */
-    protected function handleKeyDown (event :KeyboardEvent) :void
-    {
-        resetIdleTracking(event);
-
-        // We check every keyboard event, see if it's a "word" character,
-        // and then if it's not going somewhere reasonable, route it to chat.
-        var c :int = event.charCode;
-        if (c != 0 && !event.ctrlKey && !event.altKey &&
-                // these are the ascii values for '/', a -> z,  A -> Z
-                (c == 47 || (c >= 97 && c <= 122) || (c >= 65 && c <= 90))) {
-            checkChatFocus();
         }
     }
 
@@ -142,28 +103,9 @@ public class LocusController extends Controller
         }
     }
 
-    /**
-     * Try to assign focus to the chat entry field if it seems like we should.
-     */
-    protected function checkChatFocus (... ignored) :void
-    {
-        try {
-            var focus :Object = _stage.focus;
-            if (!(focus is TextField) && !(focus is ChatCantStealFocus)) {
-                ChatControl.grabFocus();
-            }
-        } catch (err :Error) {
-            log.warning("Couldn't focus chat", err);
-        }
-    }
-
     protected const _client :LocusClient = inject(LocusClient);
 
-    protected const _stage :Stage = inject(Stage);
     protected const _topPanel :TopPanel = inject(TopPanel);
-
-    /** A special logoff message to use when we disconnect. */
-    protected var _logoffMessage :String;
 
     /** Whether we think we're idle or not. */
     protected var _idle :Boolean;
