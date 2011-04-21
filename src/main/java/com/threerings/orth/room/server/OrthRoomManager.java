@@ -309,7 +309,6 @@ public class OrthRoomManager extends SpotSceneManager
             _orthObj.setName(mscene.getName());
             _orthObj.setOwner(mscene.getOwner());
             _orthObj.setAccessControl(mscene.getAccessControl());
-            _orthObj.setMusic(mscene.getMusic());
 
             if (_extras.memories != null) {
                 addMemoriesToRoom(_extras.memories);

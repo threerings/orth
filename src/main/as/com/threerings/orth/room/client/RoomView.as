@@ -508,22 +508,6 @@ public class RoomView extends Sprite
     }
 
     /**
-     * Get the current music's metadata, suitable for dispatching to entities.
-     */
-    public function getMusicId3 () :Object
-    {
-        return null; // see subclasses
-    }
-
-    /**
-     * Get the current music's ownerId, or 0.
-     */
-    public function getMusicOwner () :int
-    {
-        return 0; // see subclasses
-    }
-
-    /**
      * Populate the context menu for a sprite.
      */
     protected function populateSpriteContextMenu (sprite :EntitySprite, menuItems :Array) :void

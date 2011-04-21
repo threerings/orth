@@ -49,9 +49,6 @@ public class OrthSceneModel extends SceneModel
     /** The name of the owner, either a MemberName or GroupName. */
     public Name ownerName;
 
-    /** The music mediadesc for this scene. */
-    public MediaDesc music;
-
     /** The furniture in the scene. */
     public FurniData[] furnis = new FurniData[0];
 

@@ -412,16 +412,6 @@ public class EntitySprite
         }
     }
 
-    public function processMusicStartStop (started :Boolean) :void
-    {
-        callUserCode("musicStartStop_v1", started);
-    }
-
-    public function processMusicId3 (metadata :Object) :void
-    {
-        callUserCode("musicId3_v1", metadata);
-    }
-
     /**
      * Called when an action or message to received for this sprite.
      */

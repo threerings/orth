@@ -38,8 +38,6 @@ public class OrthRoomObject extends SpotSceneObject
 
     public var accessControl :int;
 
-    public var music :MediaDesc;
-
     public var orthRoomService :OrthRoomMarshaller;
 
     public var orthSpeakService :SpeakMarshaller;
@@ -49,7 +47,6 @@ public class OrthRoomObject extends SpotSceneObject
     public var nameChanged :Signal = new Signal(String, String);
     public var ownerChanged :Signal = new Signal(Name, Name);
     public var accessControlChanged :Signal = new Signal(int, int);
-    public var musicChanged :Signal = new Signal(MediaDesc, MediaDesc);
     public var orthRoomServiceChanged :Signal = new Signal(OrthRoomMarshaller, OrthRoomMarshaller);
     public var orthSpeakServiceChanged :Signal = new Signal(SpeakMarshaller, SpeakMarshaller);
     public var memoriesChanged :Signal = new Signal(DSet, DSet);
@@ -63,8 +60,6 @@ public class OrthRoomObject extends SpotSceneObject
 
     public static const ACCESS_CONTROL :String = "accessControl";
 
-    public static const MUSIC :String = "music";
-
     public static const ORTH_ROOM_SERVICE :String = "orthRoomService";
 
     public static const ORTH_SPEAK_SERVICE :String = "orthSpeakService";
@@ -77,7 +72,6 @@ public class OrthRoomObject extends SpotSceneObject
         name = ins.readField(String);
         owner = ins.readObject(Name);
         accessControl = ins.readByte();
-        music = ins.readObject(MediaDesc);
         orthRoomService = ins.readObject(OrthRoomMarshaller);
         orthSpeakService = ins.readObject(SpeakMarshaller);
         memories = ins.readObject(DSet);
@@ -144,9 +138,6 @@ class Signaller
                 break;
             case "accessControl":
                 signal = _obj.accessControlChanged;
-                break;
-            case "music":
-                signal = _obj.musicChanged;
                 break;
             case "orthRoomService":
                 signal = _obj.orthRoomServiceChanged;

@@ -147,33 +147,6 @@ public class ControlEvent extends Event
     public static const ENTITY_LEFT :String = "entityLeft";
 
     /**
-     * An event dispatched when some music starts playing.
-     * </br><b>name</b> - unused
-     * </br><b>value</b> - unused
-     *
-     * @eventType musicStarted
-     */
-    public static const MUSIC_STARTED :String = "musicStarted";
-
-    /**
-     * An event that may be dispatched soon after music starts playing.
-     * </br><b>name</b> - unused
-     * </br><b>value</b> - an Object from which id3 tags may be read.
-     *
-     * @eventType musicId3
-     */
-    public static const MUSIC_ID3 :String = "musicId3";
-
-    /**
-     * An event dispatched when some music stops playing.
-     * </br><b>name</b> - unused
-     * </br><b>value</b> - unused
-     *
-     * @eventType musicStopped
-     */
-    public static const MUSIC_STOPPED :String = "musicStopped";
-
-    /**
      * Retrieve the event target, which will be the Control instance that
      * dispatched this event.
      */

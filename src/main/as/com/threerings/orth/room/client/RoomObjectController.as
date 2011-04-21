@@ -174,11 +174,6 @@ public class RoomObjectController extends RoomController
     public function backgroundFinishedLoading () :void
     {
         _module.getInstance(DoorTargetEditController).updateLocation();
-
-        // play any background music
-        if (_roomObj.music != null) {
-            _orthCtrl.handlePlayMusic(_roomObj.music);
-        }
     }
 
     /**

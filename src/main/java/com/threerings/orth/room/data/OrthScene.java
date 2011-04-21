@@ -141,14 +141,6 @@ public class OrthScene extends SceneImpl
         return _orthModel.getNextFurniId(aboveId);
     }
 
-    /**
-     * Returns the music for the scene.
-     */
-    public MediaDesc getMusic ()
-    {
-        return _orthModel.music;
-    }
-
     // from SpotScene
     public void addPortal (Portal portal)
     {

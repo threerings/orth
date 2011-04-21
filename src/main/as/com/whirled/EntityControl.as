@@ -88,34 +88,6 @@ import flash.utils.Timer;
 [Event(name="entityMoved", type="com.whirled.ControlEvent")]
 
 /**
- * Dispatched when music starts playing in the room. If the current user can hear it,
- * id3 data *may* be available shortly after this event. The sequence of events goes like this:
- * MUSIC_STARTED, 0 or more MUSIC_ID3 tags, MUSIC_STOPPED. Note however that you may not get
- * a MUSIC_STARTED event if the music starts playing prior to your entity initializing. Calling
- * getMusicOwnerId() can tell you definitively if there is music currently playing.
- *
- * @eventType com.whirled.ControlEvent.MUSIC_STARTED
- */
-[Event(name="musicStarted", type="com.whirled.ControlEvent")]
-
-/**
- * Dispatched when id3 data is found in the currently playing song. Apparently many mp3
- * files contain both 2.* id3 data, near the beginning of the file, and 1.* data, found at
- * the end, and so flash dispatches each set of data as it finds it. And we just pass
- * it along to you.
- *
- * @eventType com.whirled.ControlEvent.MUSIC_ID3
- */
-[Event(name="musicId3", type="com.whirled.ControlEvent")]
-
-/**
- * Dispatched when music stops playing in the room. @see #event:MUSIC_STARTED
- *
- * @eventType com.whirled.ControlEvent.MUSIC_STOPPED
- */
-[Event(name="musicStopped", type="com.whirled.ControlEvent")]
-
-/**
  * Handles services that are available to all entities in a room. This includes dispatching
  * trigger events and maintaining memory.
  */
@@ -380,26 +352,6 @@ public class EntityControl extends AbstractControl
     }
 
     /**
-     * Get the id3 metadata of the currently playing music.
-     * This will be an Object roughly in the format of flash.media.Id3Info, except
-     * that only the "raw" names of id3 tags are supported.
-     * http://www.id3.org
-     */
-    public function getMusicId3 () :Object
-    {
-        return callHostCode("getMusicId3_v1");
-    }
-
-    /**
-     * Get the playerId of the owner of the currently playing music, aka the player who added it
-     * to the playlist, or 0 if there is no music currently playing.
-     */
-    public function getMusicOwnerId () :int
-    {
-        return callHostCode("getMusicOwner_v1");
-    }
-
-    /**
      * Enumerates the ids of all entities in this room.
      *
      * @param type an optional filter to restrict the results to a particular type of entity.
@@ -618,9 +570,6 @@ public class EntityControl extends AbstractControl
         o["hasConfigPanel_v1"] = hasConfigPanel_v1;
         o["getConfigPanel_v1"] = getConfigPanel_v1;
 
-        o["musicStartStop_v1"] = musicStartStop_v1;
-        o["musicId3_v1"] = musicId3_v1;
-
         o["entityEntered_v1"] = entityEntered_v1;
         o["entityLeft_v1"] = entityLeft_v1;
         o["entityMoved_v2"] = entityMoved_v2;
@@ -780,18 +729,6 @@ public class EntityControl extends AbstractControl
         if (_hasControl) {
             dispatchCtrlEvent(ControlEvent.CHAT_RECEIVED, entityId, message);
         }
-    }
-
-    /** @private */
-    protected function musicStartStop_v1 (started :Boolean, ... rest) :void
-    {
-        dispatchCtrlEvent(started ? ControlEvent.MUSIC_STARTED : ControlEvent.MUSIC_STOPPED);
-    }
-
-    /** @private */
-    protected function musicId3_v1 (id3 :Object) :void
-    {
-        dispatchCtrlEvent(ControlEvent.MUSIC_ID3, null, id3);
     }
 
     /**
