@@ -3,27 +3,20 @@
 
 package com.threerings.orth.locus.client {
 import flash.display.DisplayObject;
-import flash.display.Stage;
 import flash.events.Event;
 import flash.events.IEventDispatcher;
-import flash.events.KeyboardEvent;
 import flash.events.TimerEvent;
 import flash.geom.Point;
-import flash.text.TextField;
 import flash.utils.Timer;
 import flash.utils.getTimer;
 
 import flashx.funk.ioc.inject;
 
-import com.threerings.crowd.chat.client.ChatCantStealFocus;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.data.CrowdCodes;
-import com.threerings.flex.ChatControl;
 
 import com.threerings.util.Controller;
 import com.threerings.util.Log;
-
-import com.threerings.presents.client.ClientEvent;
 
 import com.threerings.orth.client.TopPanel;
 
