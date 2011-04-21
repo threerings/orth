@@ -10,7 +10,6 @@ import flash.events.KeyboardEvent;
 import flash.events.TimerEvent;
 import flash.geom.Point;
 import flash.text.TextField;
-import flash.ui.Keyboard;
 import flash.utils.Timer;
 import flash.utils.getTimer;
 
@@ -26,13 +25,16 @@ import com.threerings.util.Log;
 
 import com.threerings.presents.client.ClientEvent;
 
-import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.TopPanel;
 
 /**
  * A persistent controller for the top UI element; this is not torn down and reconstructed
  * as we move about the locus. It is a companion to OrthController that handles the directly
  * locus-related activities.
+ *
+ * TODO: It's only halfway useful to have an observation mechanism that reports only at the
+ * point of materialization, not when the movement actually completes. Suggest we add a callback
+ * to LocusContext.go().
  */
 public class LocusController extends Controller
 {
