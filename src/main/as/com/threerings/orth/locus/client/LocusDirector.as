@@ -22,8 +22,11 @@ import com.threerings.orth.locus.data.LocusMarshaller;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 
 /**
- * Handles moving around in the virtual locus.
+ * Handles moving around between loci.
  *
+ * TODO: It's only halfway useful to have an observation mechanism that reports only at the
+ * point of materialization, not when the movement actually completes. Suggest we add a callback
+ * to LocusContext.go().
  */
 public class LocusDirector extends BasicDirector
     implements LocusService_LocusMaterializationListener
