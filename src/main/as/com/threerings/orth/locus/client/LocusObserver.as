@@ -18,7 +18,12 @@ public interface LocusObserver
     function locusWillChange (locus :Locus) :void;
 
     /**
-     * Called when we have switched to a new locus.
+     * Called when we have switched to a new locus. Note: this only means the materialization
+     * stage has completed and {@link LocusContext#go} has been called. Beyond that, there is
+     * typically an implementation-specific process by which the player actually ends up in a
+     * place.
+     *
+     * An alternate observation approach might be through {@OrthPlaceBox}.
      *
      * @param place the place object that represents the new locus or null if we have switched to
      * no locus.
