@@ -19,12 +19,15 @@ import com.threerings.orth.aether.data.PlayerMarshaller;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.chat.data.TellMarshaller;
 import com.threerings.orth.client.OrthDeploymentConfig;
+import com.threerings.orth.client.OrthModule;
 import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.data.AuthName;
 
 public class AetherClient extends Client
 {
+    public static const MODULE_PROP_NAME :String = "module";
+    
     // reference classes that would otherwise not be linked in
     AuthName;
     PlayerObject;
@@ -86,7 +89,16 @@ public class AetherClient extends Client
         super.gotClientObject(clobj);
     }
 
+    override protected function buildClientProps ():Object
+    {
+        var props :Object = super.buildClientProps();
+        props[MODULE_PROP_NAME] = _module;
+        return props;
+    }
+
     protected var _plobj :PlayerObject;
+
+    protected const _module :OrthModule = inject(OrthModule);
 
     private static const log :Log = Log.getLog(AetherClient);
 }

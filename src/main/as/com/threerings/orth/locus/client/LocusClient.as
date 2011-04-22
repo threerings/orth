@@ -2,6 +2,8 @@
 // $Id: $
 package com.threerings.orth.locus.client
 {
+import com.threerings.orth.aether.client.AetherClient;
+
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.client.CrowdClient;
@@ -47,6 +49,14 @@ public class LocusClient extends CrowdClient
         throw new Error("abstract");
     }
 
+    override protected function buildClientProps ():Object
+    {
+        var props :Object = super.buildClientProps();
+        props[AetherClient.MODULE_PROP_NAME] = _module;
+        return props;
+    }
+
+    protected const _module :LocusModule = inject(LocusModule);
     protected const _config :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 }
 }
