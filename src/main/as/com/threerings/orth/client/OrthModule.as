@@ -25,13 +25,8 @@ import com.threerings.orth.room.client.editor.RoomEditorController;
  */
 public class OrthModule extends BindingModule
 {
-    /** A reference to the singleton OrthModule instance. */
-    public static var instance :OrthModule;
-
     public function OrthModule (stage :Stage)
     {
-        OrthModule.instance = this;
-
         // bind this module
         bind(OrthModule).toInstance(this);
 
