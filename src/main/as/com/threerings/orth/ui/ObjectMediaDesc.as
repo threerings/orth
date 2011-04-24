@@ -14,7 +14,7 @@ import com.threerings.orth.data.MediaDesc;
 public interface ObjectMediaDesc extends MediaDesc
 {
     /**
-     * Returns the path of the URL that references this media.
+     * Returns the actual {@link DisplayObject} instance referenced by this descriptor.
      */
     function getMediaObject () :DisplayObject;
 }
