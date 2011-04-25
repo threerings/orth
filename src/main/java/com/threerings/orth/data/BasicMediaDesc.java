@@ -17,15 +17,9 @@ public abstract class BasicMediaDesc extends SimpleStreamableObject
     {
     }
 
-    protected BasicMediaDesc (byte mimeType, byte constraint)
+    protected BasicMediaDesc (byte mimeType)
     {
         _mimeType = mimeType;
-        _constraint = constraint;
-    }
-
-    public void setConstraint (byte constraint)
-    {
-        _constraint = constraint;
     }
 
     public byte getMimeType ()
@@ -33,11 +27,5 @@ public abstract class BasicMediaDesc extends SimpleStreamableObject
         return _mimeType;
     }
 
-    public byte getConstraint ()
-    {
-        return _constraint;
-    }
-
     protected byte _mimeType;
-    protected byte _constraint;
 }

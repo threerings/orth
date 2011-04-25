@@ -31,12 +31,7 @@ public abstract class MediaDescFactory
         return make (URL.substring(0, ix), MediaMimeTypes.suffixToMimeType(URL));
     }
 
-    public MediaDesc make (String URL, byte mimeType)
-    {
-        return make (URL, mimeType, MediaDesc.NOT_CONSTRAINED);
-    }
-
-    public abstract MediaDesc make (String URL, byte mimeType, byte constraint);
+    public abstract MediaDesc make (String URL, byte mimeType);
 
     protected static MediaDescFactory _self;
 }

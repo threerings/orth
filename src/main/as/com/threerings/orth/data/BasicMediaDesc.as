@@ -27,11 +27,6 @@ public class BasicMediaDesc extends SimpleStreamableObject
         return _mimeType;
     }
 
-    public function getConstraint () :int
-    {
-        return _constraint;
-    }
-
     public function equals (other :Object) :Boolean
     {
         return isAbstract();
@@ -42,18 +37,15 @@ public class BasicMediaDesc extends SimpleStreamableObject
     {
         super.readObject(ins);
         _mimeType = ins.readByte();
-        _constraint = ins.readByte();
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
         out.writeByte(_mimeType);
-        out.writeByte(_constraint);
     }
 
     protected var _mimeType :int;
-    protected var _constraint :int;
 // GENERATED STREAMING END
 
 // GENERATED CLASSFINISH START

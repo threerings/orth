@@ -15,10 +15,5 @@ public interface MediaDesc
      * Returns the mime type of this media.
      */
     function getMimeType () :int;
-
-    /**
-     * Returns the constraint on this media, if any.
-     */
-    function getConstraint () :int;
 }
 }
