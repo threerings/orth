@@ -19,7 +19,6 @@ import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.data.SpeakObject;
-import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
 
 // GENERATED PREAMBLE END

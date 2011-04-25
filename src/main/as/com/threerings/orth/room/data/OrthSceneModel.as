@@ -20,7 +20,6 @@ import com.threerings.util.Maps;
 import com.threerings.util.Name;
 import com.threerings.util.Short;
 
-import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.room.data.DecorData;
 import com.threerings.orth.room.data.OrthLocation;
 

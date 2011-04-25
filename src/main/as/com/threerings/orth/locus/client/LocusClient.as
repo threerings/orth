@@ -2,8 +2,6 @@
 // $Id: $
 package com.threerings.orth.locus.client
 {
-import com.threerings.orth.aether.client.AetherClient;
-
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.client.CrowdClient;
@@ -14,6 +12,7 @@ import com.threerings.util.Log;
 
 import com.threerings.presents.net.Credentials;
 
+import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 

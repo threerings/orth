@@ -8,13 +8,10 @@ import flash.events.ContextMenuEvent;
 import flash.events.IEventDispatcher;
 import flash.events.TextEvent;
 import flash.geom.Point;
-import flash.system.Capabilities;
 import flash.ui.ContextMenu;
 import flash.utils.Dictionary;
 
 import flashx.funk.ioc.inject;
-
-import com.threerings.media.Mp3AudioPlayer;
 
 import com.threerings.util.CommandEvent;
 import com.threerings.util.Controller;
@@ -32,12 +29,10 @@ import com.threerings.orth.client.ContextMenuProvider;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.TopPanel;
-import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.guild.client.GuildDirector;
 import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.party.client.PartyDirector;
-import com.threerings.orth.ui.PathMediaDesc;
 
 public class OrthController extends Controller
 {
