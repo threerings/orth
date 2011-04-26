@@ -2,6 +2,7 @@
 // $Id: ControlBackend.as 15921 2009-04-08 17:58:15Z ray $
 
 package com.threerings.orth.client {
+import com.threerings.orth.room.client.RoomContext;
 
 import flash.events.EventDispatcher;
 
@@ -61,7 +62,6 @@ public class ControlBackend
         _sharedEvents.removeEventListener("controlConnect", handleUserCodeConnect);
         _sharedEvents = null;
         _props = null;
-        _ctx = null;
     }
 
     /**
@@ -130,14 +130,8 @@ public class ControlBackend
      */
     protected function startTransaction_v1 () :void
     {
-        // _ctx may be null in the avatarviewer, places like that
-        if (_ctx != null) {
-            _ctx.getClient().getInvocationDirector().startTransaction();
-            // if there is a world context, start a transaction there too
-            if (_ctx.wctx != null) {
-                _ctx.wctx.getClient().getInvocationDirector().startTransaction();
-            }
-        }
+        _octx.getClient().getInvocationDirector().startTransaction();
+        _rctx.getClient().getInvocationDirector().startTransaction();
     }
 
     /**
@@ -145,16 +139,12 @@ public class ControlBackend
      */
     protected function commitTransaction_v1 () :void
     {
-        if (_ctx != null) { // _ctx may be null in the avatarviewer, places like that
-            _ctx.getClient().getInvocationDirector().commitTransaction();
-            if (_ctx.wctx != null) {
-                _ctx.wctx.getClient().getInvocationDirector().startTransaction();
-            }
-        }
+        _octx.getClient().getInvocationDirector().commitTransaction();
+        _rctx.getClient().getInvocationDirector().commitTransaction();
     }
 
-    /** The giver of life. */
-    protected var _ctx :OrthContext = inject(OrthContext);
+    protected const _octx :OrthContext = inject(OrthContext);
+    protected const _rctx :RoomContext = inject(RoomContext);
 
     /** Properties populated by usercode. */
     protected var _props :Object;
