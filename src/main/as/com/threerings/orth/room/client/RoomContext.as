@@ -88,6 +88,12 @@ public class RoomContext
         return (body != null) ? body.name : null;
     }
 
+    /** Return a fully casted socializer object, or null if we're not logged on. */
+    public function getSocializerObject () :SocializerObject
+    {
+        return _client.getClientObject() as SocializerObject;
+    }
+
     // from LocusContext
     public function getLocusClient () :LocusClient
     {
@@ -105,12 +111,6 @@ public class RoomContext
     public function getSpotSceneDirector () :SpotSceneDirector
     {
         return _module.getInstance(SpotSceneDirector);
-    }
-
-    /** Return a fully casted socializer object, or null if we're not logged on. */
-    public function getSocializerObject () :SocializerObject
-    {
-        return _client.getClientObject() as SocializerObject;
     }
 
     protected const _module :Module = inject(Module);
