@@ -18,14 +18,13 @@ import com.threerings.orth.room.client.RoomModule;
 // GENERATED CLASSDECL DISABLED
 public class RoomLocus extends Locus
 {
+    public var loc :OrthLocation;
+
     public function RoomLocus (sceneId :int=0, loc :OrthLocation=null)
     {
-        super(RoomModule);
         this.sceneId = sceneId;
         this.loc = loc;
     }
-
-    public var loc :OrthLocation;
 
     public function compareTo (other:Object):int
     {

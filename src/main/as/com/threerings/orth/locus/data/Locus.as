@@ -10,19 +10,14 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.nodelet.data.Nodelet;
 
+import flashx.funk.util.isAbstract;
+
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
 public class Locus extends Nodelet
 {
 // GENERATED CLASSDECL END
-
-    public var moduleClass :Class;
-
-    public function Locus (moduleClass :Class)
-    {
-        this.moduleClass = moduleClass;
-    }
 
 // GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void

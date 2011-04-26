@@ -1,4 +1,7 @@
 package com.threerings.orth.locus.client {
+import com.threerings.util.Map;
+import com.threerings.util.Maps;
+
 import flash.utils.getQualifiedClassName;
 
 import flashx.funk.ioc.inject;
@@ -15,8 +18,6 @@ import com.threerings.presents.client.ClientObserver;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.locus.client.LocusService;
-import com.threerings.orth.locus.client.LocusService_LocusMaterializationListener;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusMarshaller;
 import com.threerings.orth.nodelet.data.HostedNodelet;
@@ -41,6 +42,15 @@ public class LocusDirector extends BasicDirector
         super(_octx);
 
         _observer = new ClientAdapter(null, locusLogon, null, null, locusFail, locusFail);
+    }
+
+    /**
+     * Inform Orth that a {@link Locus} of the given concrete class shall be initialized
+     * through the provided {@link AbstractLocusModule} class.
+     */
+    public function addBinding (locusClass :Class, moduleClass :Class) :void
+    {
+        _bindings.put(getQualifiedClassName(locusClass), moduleClass);
     }
 
     public function addObserver (observer :LocusObserver) :void
@@ -111,7 +121,11 @@ public class LocusDirector extends BasicDirector
         // if we're switching place types, we need to instantiate a new locus system
         if (locusClient == null || _current == null ||
             getQualifiedClassName(_pending) != getQualifiedClassName(_current)) {
-            _octx.setupLocus(_pending.moduleClass);
+            var moduleClass :Class = _bindings.get(getQualifiedClassName(_pending));
+            if (moduleClass == null) {
+                throw new Error("Aii! Unknown locus subclass: " + moduleClass);
+            }
+            _octx.setupLocus(moduleClass);
 
         } else if (locusClient.isConnected() && _pendingPeer == _currentPeer) {
             // this is the special case where we're already on the right peer
@@ -197,6 +211,8 @@ public class LocusDirector extends BasicDirector
     protected var _octx :OrthContext = inject(OrthContext);
 
     protected var _lsvc :LocusService;
+
+    protected var _bindings :Map = Maps.newMapOf(Class);
 
     protected var _clientObservers :ObserverList =
         new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);

@@ -7,6 +7,7 @@ import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
+import com.threerings.util.Log;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.client.persist.SceneRepository;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
@@ -45,10 +46,11 @@ public class RoomModule extends AbstractLocusModule
         var locDir :LocationDirector = new OrthLocationDirector(rCtx);
         bind(LocationDirector).toInstance(locDir);
 
-        var scDir :SceneDirector = _chainMod.getInstance(OrthSceneDirector);
+        bind(SceneDirector).to(OrthSceneDirector);
+        var scDir :SceneDirector = _chainMod.inject(newSceneDirector);
         bind(OrthSceneDirector).toInstance(scDir);
-        bind(SceneDirector).toInstance(scDir);
 
+        Log.getLog(this).info("RoomModule creating SpotSceneDirector");
         bind(SpotSceneDirector).toInstance(new SpotSceneDirector(rCtx, locDir, scDir));
 
         // these rely on LocationDirector, so let's bind them after
@@ -57,6 +59,16 @@ public class RoomModule extends AbstractLocusModule
 
         bind(ChatDirector).toInstance(new ChatDirector(
             rCtx, _chainMod.getInstance(MessageManager), OrthCodes.CHAT_MSGS));
+    }
+
+    /**
+     * Create a new OrthSceneDirector; for subclasses to override.
+     * TODO: Figure out how to do this with injection bindings in spite of the crazy race
+     * conditions that made this approach necessary(?) in the first place.
+     */
+    protected function newSceneDirector () :OrthSceneDirector
+    {
+        return new OrthSceneDirector();
     }
 
     override protected function getLocusContextClass () :Class

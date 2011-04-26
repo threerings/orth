@@ -21,7 +21,6 @@ import com.threerings.orth.locus.client.LocusClient;
 import com.threerings.orth.locus.client.LocusContext;
 import com.threerings.orth.locus.client.LocusModule;
 import com.threerings.orth.locus.data.Locus;
-import com.threerings.orth.room.client.FakeChatDirector;
 import com.threerings.orth.room.data.SocializerObject;
 
 /**

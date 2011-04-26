@@ -2,6 +2,10 @@
 // $Id$
 
 package com.threerings.orth.client {
+import com.threerings.orth.locus.client.LocusDirector;
+import com.threerings.orth.room.client.RoomModule;
+import com.threerings.orth.room.data.RoomLocus;
+
 import flash.display.Stage;
 
 import flashx.funk.ioc.BindingModule;
@@ -37,8 +41,9 @@ public class OrthModule extends BindingModule
         bind(OrthContext).asSingleton();
         bind(AetherClient).asSingleton();
 
-        // some managers and controllers
+        // various singletons
         bind(MessageManager).asSingleton();
+        bind(LocusDirector).asSingleton();
         bind(OrthController).asSingleton();
         bind(AetherDirector).asSingleton();
         bind(OrthChatDirector).asSingleton();
@@ -72,6 +77,9 @@ public class OrthModule extends BindingModule
 
     protected function didInit () :void
     {
+        // let the locus system know how to instantiate the room subsystem
+        getInstance(LocusDirector).addBinding(RoomLocus, RoomModule);
+
         // instantiate directors and controllers
         getInstance(OrthChatDirector);
         getInstance(AetherDirector);
@@ -79,6 +87,7 @@ public class OrthModule extends BindingModule
         getInstance(PartyDirector);
         getInstance(NotificationDirector);
         getInstance(GuildDirector);
+
     }
 
     private static const log :Log = Log.getLog(OrthModule);
