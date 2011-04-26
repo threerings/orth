@@ -68,27 +68,18 @@ public class OrthContext
     }
 
     /**
-     * Return a reference to the current {@link LocusContext}, or null if the player is
-     * not currently in a location.
-     */
-    public function get wctx () :LocusContext
-    {
-        return _wctx;
-    }
-
-    /**
      * Instantiate a new {@link AbstractLocusModule} and use it to fire up a {@link LocusContext}
      * of the correct concrete subtype, which in turn will instantiate all the necessary
      * infrastructure.
      */
-    public function setupLocus (moduleClass :Class) :void
+    public function setupLocus (moduleClass :Class) :LocusContext
     {
         // instantiate the correct LocusModule subclass
         var wMod :AbstractLocusModule = new moduleClass();
 
         // and use it to bring the correct LocusContext subclass to life
         log.info("Initializing new LocusContext", "module", moduleClass);;
-        _wctx = wMod.init(_module);
+        return wMod.init(_module);
     }
 
     /**
@@ -169,8 +160,6 @@ public class OrthContext
 
     protected const _client :AetherClient = inject(AetherClient);
     protected const _module :OrthModule = inject(OrthModule);
-
-    protected var _wctx :LocusContext;
 
     protected static const log :Log = Log.getLog(OrthContext);
 }

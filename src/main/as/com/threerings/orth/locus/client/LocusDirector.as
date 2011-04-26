@@ -1,4 +1,5 @@
 package com.threerings.orth.locus.client {
+import com.threerings.util.ClassUtil;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
 
@@ -50,7 +51,10 @@ public class LocusDirector extends BasicDirector
      */
     public function addBinding (locusClass :Class, moduleClass :Class) :void
     {
-        _bindings.put(getQualifiedClassName(locusClass), moduleClass);
+        log.info("Instantiating Locus subsystem", "moduleClass", moduleClass);
+        var ctx :LocusContext = _octx.setupLocus(moduleClass);
+
+        _contexts.put(getQualifiedClassName(locusClass), ctx);
     }
 
     public function addObserver (observer :LocusObserver) :void
@@ -110,31 +114,32 @@ public class LocusDirector extends BasicDirector
         _octx.displayFeedback(OrthCodes.WORLD_MSGS, cause);
     }
 
+    protected var _currentCtx :LocusContext;
+
     // from Java LocusService_PlaceResolutionListener
     public function locusMaterialized (hosted :HostedNodelet) :void
     {
         // note our peer
         _pendingPeer = hosted.host;
 
-        var locusClient :LocusClient = (_octx.wctx != null) ? _octx.wctx.getLocusClient() : null;
+        // look up the destination context (aka fail early)
+        var pendingCtx :LocusContext = _contexts.get(getQualifiedClassName(_pending));
+        if (pendingCtx == null) {
+            throw new Error("Aii! Unknown Locus type: " + getQualifiedClassName(_pending));
+        }
 
-        // if we're switching place types, we need to instantiate a new locus system
-        if (locusClient == null || _current == null ||
-            getQualifiedClassName(_pending) != getQualifiedClassName(_current)) {
-            var moduleClass :Class = _bindings.get(getQualifiedClassName(_pending));
-            if (moduleClass == null) {
-                throw new Error("Aii! Unknown locus subclass: " + moduleClass);
-            }
-            _octx.setupLocus(moduleClass);
+        var locusClient :LocusClient;
 
-        } else if (locusClient.isConnected() && _pendingPeer == _currentPeer) {
-            // this is the special case where we're already on the right peer
+        // is this the very special case where we're already on the right peer?
+        if (_currentCtx != null && ClassUtil.isSameClass(_pending, _current) &&
+            _currentCtx.getClient().isConnected() && _pendingPeer == _currentPeer) {
             gotoPendingPlace();
             return;
         }
 
-        // otherwise, we need to log out
-        if (locusClient != null) {
+        // if not we probably need to log out
+        if (_currentCtx != null) {
+            locusClient = _currentCtx.getLocusClient();
             // first stop listening to the client
             locusClient.removeClientObserver(_observer);
             _clientObservers.apply(locusClient.removeClientObserver);
@@ -143,12 +148,15 @@ public class LocusDirector extends BasicDirector
             locusClient.logoff(false);
         }
 
-        // make sure we're manipulating the right client henceforth
-        locusClient = _octx.wctx.getLocusClient();
+        // now grab the (possibly) new client
+        locusClient = pendingCtx.getLocusClient();
 
         // listen to it
         locusClient.addClientObserver(_observer);
         _clientObservers.apply(locusClient.addClientObserver);
+
+        // switch to the new context
+        _currentCtx = pendingCtx;
 
         // and finally log on
         locusClient.logonTo(_pendingPeer, hosted.ports);
@@ -174,7 +182,7 @@ public class LocusDirector extends BasicDirector
 
     protected function gotoPendingPlace () :void
     {
-        Preconditions.checkNotNull(_octx.wctx,
+        Preconditions.checkNotNull(_currentCtx,
             "We logged onto a locus server but the locus context is gone!");
 
         // we successfully logged on; hand control over to the locus implementation
@@ -187,7 +195,7 @@ public class LocusDirector extends BasicDirector
         _pending = null;
 
         // finally go!
-        _octx.wctx.go(locus);
+        _currentCtx.go(locus);
 
         _locusObservers.apply(function (obs :Object) :void {
             LocusObserver(obs).locusDidChange(locus);
@@ -212,7 +220,7 @@ public class LocusDirector extends BasicDirector
 
     protected var _lsvc :LocusService;
 
-    protected var _bindings :Map = Maps.newMapOf(Class);
+    protected var _contexts :Map = Maps.newMapOf(Class);
 
     protected var _clientObservers :ObserverList =
         new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
