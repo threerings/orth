@@ -2,6 +2,8 @@
 // $Id: MemberSprite.as 19627 2010-11-24 16:02:41Z zell $
 
 package com.threerings.orth.entity.client {
+import com.threerings.orth.room.client.RoomContext;
+
 import flash.display.DisplayObject;
 import flash.geom.Rectangle;
 
@@ -9,7 +11,6 @@ import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.util.CommandEvent;
 
-import com.threerings.orth.locus.client.LocusContext;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.SocializerInfo;
 
@@ -62,7 +63,7 @@ public class MemberSprite extends ActorSprite
     override public function isImportant () :Boolean
     {
         // our own sprite is more important than the others
-        return _module.getInstance(LocusContext).getMyName().equals(_occInfo.username);
+        return _module.getInstance(RoomContext).getMyName().equals(_occInfo.username);
     }
 
     // from OccupantSprite

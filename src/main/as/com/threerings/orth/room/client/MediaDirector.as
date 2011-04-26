@@ -21,7 +21,6 @@ import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.ParallaxSprite;
 import com.threerings.orth.entity.client.PetSprite;
-import com.threerings.orth.locus.client.LocusContext;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.PetInfo;
@@ -34,7 +33,7 @@ public class MediaDirector extends BasicDirector
 {
     public static const log :Log = Log.getLog(MediaDirector);
 
-    public function MediaDirector (ctx :LocusContext, locDir :LocationDirector)
+    public function MediaDirector (ctx :RoomContext, locDir :LocationDirector)
     {
         super(ctx);
 
@@ -130,7 +129,7 @@ public class MediaDirector extends BasicDirector
     protected const _module :Module = inject(Module);
 
     /** A casted copy of the context. */
-    protected var _wctx :LocusContext;
+    protected var _wctx :RoomContext;
 
     /** Our very own avatar: avoid loading and unloading it. */
     protected var _ourAvatar :MemberSprite;

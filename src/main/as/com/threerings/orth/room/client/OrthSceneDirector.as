@@ -14,10 +14,8 @@ import com.threerings.util.Log;
 
 import com.threerings.presents.client.Client;
 
-import com.threerings.orth.locus.client.LocusContext;
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.locus.data.Locus;
-import com.threerings.orth.room.client.OrthPendingData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
@@ -37,7 +35,7 @@ public class OrthSceneDirector extends SceneDirector
 
     public function OrthSceneDirector ()
     {
-        super(inject(LocusContext), inject(LocationDirector),
+        super(inject(RoomContext), inject(LocationDirector),
             inject(SceneRepository), new OrthSceneFactory());
     }
 

@@ -17,7 +17,7 @@ import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 
 /**
- * A client for connection to a locus server. This class will autologon upon creation.
+ * A client for connection to a locus server.
  */
 public class LocusClient extends CrowdClient
 {
@@ -28,6 +28,11 @@ public class LocusClient extends CrowdClient
 
         // configure our version
         setVersion(_config.version);
+    }
+
+    public function initWithModule (mod :LocusModule) : void
+    {
+        _module = mod;
     }
 
     public function logonTo (host :String, ports :TypedArray) :void
@@ -55,7 +60,8 @@ public class LocusClient extends CrowdClient
         return props;
     }
 
-    protected const _module :LocusModule = inject(LocusModule);
+    protected var _module :LocusModule;
+
     protected const _config :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 }
 }

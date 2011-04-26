@@ -2,6 +2,8 @@
 // $Id: $
 
 package com.threerings.orth.room.client {
+
+import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.chat.client.ChatDirector;
@@ -19,7 +21,6 @@ import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.locus.client.LocusClient;
 import com.threerings.orth.locus.client.LocusContext;
-import com.threerings.orth.locus.client.LocusModule;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.room.data.SocializerObject;
 
@@ -29,10 +30,6 @@ import com.threerings.orth.room.data.SocializerObject;
 public class RoomContext
     implements WhirledContext, LocusContext
 {
-    public function RoomContext ()
-    {
-    }
-
     // from PresentsContext
     public function getClient () :Client
     {
@@ -116,8 +113,8 @@ public class RoomContext
         return _client.getClientObject() as SocializerObject;
     }
 
-    protected const _client :LocusClient = inject(LocusClient);
+    protected const _module :Module = inject(Module);
+    protected const _client :RoomClient = inject(RoomClient);
     protected const _topPanel :TopPanel = inject(TopPanel);
-    protected const _module :LocusModule = inject(LocusModule);
 }
 }

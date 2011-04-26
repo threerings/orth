@@ -1,6 +1,5 @@
 //
 // $Id$
-// Cabbage
 
 package com.threerings.orth.locus.client {
 
@@ -13,33 +12,31 @@ public class AbstractLocusModule extends BindingModule
 {
     public function AbstractLocusModule ()
     {
-        // bind the context
-        bind(LocusContext).to(getLocusContextClass()).asSingleton();
-
         // the locus controller
         bind(LocusController).asSingleton();
     }
 
-    final public function init (oMod :OrthModule) :LocusModule
+    final public function init (oMod :OrthModule) :LocusContext
     {
         // create the two-pronged injection scope
         _chainMod = new LocusChainModule(oMod,  this);
-        bind(LocusModule).toInstance(_chainMod);
+
+        var ctx :LocusContext;
 
         // and instantiate the context in that scope (and much of the locus layer with it)
-        var ctx :LocusContext = _chainMod.getInstance(LocusContext);
-
         _chainMod.inject(function () :void {
+            ctx = createContext();
+            ctx.getLocusClient().initWithModule(_chainMod);
             doLocusBinds(ctx);
         });
 
         // force the instantiation of LocusController early
         _chainMod.getInstance(LocusController);
 
-        return _chainMod;
+        return ctx;
     }
 
-    protected /* abstract */ function getLocusContextClass () :Class
+    protected function createContext () :LocusContext
     {
         return isAbstract();
     }

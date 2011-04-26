@@ -7,7 +7,6 @@ import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
-import com.threerings.util.Log;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.client.persist.SceneRepository;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
@@ -16,21 +15,21 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.AbstractLocusModule;
-import com.threerings.orth.locus.client.LocusClient;
 import com.threerings.orth.locus.client.LocusContext;
-import com.threerings.orth.room.client.FakeChatDirector;
 
 public class RoomModule extends AbstractLocusModule
 {
     public function RoomModule ()
     {
         // set up simple bindings in the constructor
-        bind(LocusClient).to(RoomClient).asSingleton();
+        bind(RoomClient).asSingleton();
     }
 
     override protected function doLocusBinds (ctx :LocusContext) :void
     {
         var rCtx :RoomContext = RoomContext(ctx);
+        bind(RoomContext).toInstance(ctx);
+        bind(RoomModule).toInstance(_chainMod);
 
         // mark our fake chat director as a singleton
         bind(FakeChatDirector).asSingleton();
@@ -50,7 +49,6 @@ public class RoomModule extends AbstractLocusModule
         var scDir :SceneDirector = _chainMod.inject(newSceneDirector);
         bind(OrthSceneDirector).toInstance(scDir);
 
-        Log.getLog(this).info("RoomModule creating SpotSceneDirector");
         bind(SpotSceneDirector).toInstance(new SpotSceneDirector(rCtx, locDir, scDir));
 
         // these rely on LocationDirector, so let's bind them after
@@ -71,9 +69,9 @@ public class RoomModule extends AbstractLocusModule
         return new OrthSceneDirector();
     }
 
-    override protected function getLocusContextClass () :Class
+    override protected function createContext () :LocusContext
     {
-        return RoomContext;
+        return new RoomContext();
     }
 }
 }

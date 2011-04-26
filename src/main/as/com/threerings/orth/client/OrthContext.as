@@ -86,11 +86,9 @@ public class OrthContext
         // instantiate the correct LocusModule subclass
         var wMod :AbstractLocusModule = new moduleClass();
 
-        var cMod :LocusModule = wMod.init(_module);
-
-        // and finally use it to bring the correct LocusContext subclass to life
-        log.info("Initializing new LocusContext", "mod", cMod);
-        _wctx = cMod.getInstance(LocusContext);
+        // and use it to bring the correct LocusContext subclass to life
+        log.info("Initializing new LocusContext", "module", moduleClass);;
+        _wctx = wMod.init(_module);
     }
 
     /**
