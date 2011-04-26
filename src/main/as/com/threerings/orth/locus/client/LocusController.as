@@ -29,8 +29,6 @@ public class LocusController extends Controller
 {
     public function LocusController ()
     {
-        _client.addServiceGroup(CrowdCodes.CROWD_GROUP);
-
         // create a timer to poll mouse position and track timing
         _idleTimer = new Timer(1000);
         _idleTimer.addEventListener(TimerEvent.TIMER, handlePollIdleMouse);
@@ -90,13 +88,9 @@ public class LocusController extends Controller
     {
         if (nowIdle != _idle) {
             _idle = nowIdle;
-// ORTH TODO: this call will need to go over the aether client, where there certainly
-// is no BodyService; we will implement our own support.
-//            BodyService(_client.requireService(BodyService)).setIdle(nowIdle);
+            // TODO: send a setIdle() over the Aether connection?
         }
     }
-
-    protected const _client :LocusClient = inject(LocusClient);
 
     protected const _topPanel :TopPanel = inject(TopPanel);
 
