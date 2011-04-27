@@ -2,7 +2,6 @@
 // $Id: RoomObjectView.as 18642 2009-11-10 22:55:00Z jamie $
 
 package com.threerings.orth.room.client {
-import flash.events.Event;
 import flash.geom.Point;
 import flash.utils.ByteArray;
 
@@ -46,7 +45,6 @@ import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.SceneAttrsUpdate;
-import com.threerings.orth.room.data.SceneOwnershipUpdate;
 
 /**
  * Extends the base roomview with the ability to view a RoomObject, view chat, and edit.
@@ -128,11 +126,8 @@ public class RoomObjectView extends RoomView
 
         } else if (update is SceneAttrsUpdate) {
             rereadScene(); // re-read our scene
-
-        } else if (update is SceneOwnershipUpdate) {
-            rereadScene();
         }
-
+        
         // this will take care of anything added
         updateAllFurni();
     }

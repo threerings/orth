@@ -54,7 +54,6 @@ public class SceneAttrsUpdate extends SceneUpdate
 
         var mmodel :OrthSceneModel = (model as OrthSceneModel);
         mmodel.name = name;
-        mmodel.accessControl = accessControl;
         mmodel.decor = decor;
         mmodel.entrance = entrance;
     }

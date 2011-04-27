@@ -16,9 +16,6 @@ public class SceneAttrsUpdate extends SceneUpdate
     /** The new name. */
     public String name;
 
-    /** New access control info. */
-    public byte accessControl;
-
     /** Full description of the new decor. */
     public DecorData decor;
 
@@ -32,7 +29,6 @@ public class SceneAttrsUpdate extends SceneUpdate
 
         OrthSceneModel mmodel = (OrthSceneModel) model;
         mmodel.name = name;
-        mmodel.accessControl = accessControl;
         mmodel.decor = decor;
         mmodel.entrance = entrance;
     }

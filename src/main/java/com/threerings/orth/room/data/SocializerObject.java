@@ -76,21 +76,7 @@ public class SocializerObject extends ActorObject
     public boolean canEnterScene (
         int sceneId, int ownerId, byte ownerType, byte accessControl, Set<Integer> friendIds)
     {
-        boolean hasRights = false;
-        int playerId = name.getId();
-
-        if (ownerType == OrthSceneModel.OWNER_TYPE_MEMBER) {
-            switch (accessControl) {
-            case OrthSceneModel.ACCESS_EVERYONE: hasRights = true; break;
-            case OrthSceneModel.ACCESS_OWNER_ONLY: hasRights = (playerId == ownerId); break;
-            case OrthSceneModel.ACCESS_OWNER_AND_FRIENDS:
-                hasRights = (playerId == ownerId) ||
-                   ((friendIds != null) && friendIds.contains(ownerId));
-                break;
-            }
-        }
-
-        return hasRights;
+        return true;
     }
 
     // from OrthPlayerBody

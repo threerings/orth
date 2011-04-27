@@ -5,20 +5,14 @@ package com.threerings.orth.room.client.editor {
 
 import flash.events.Event;
 
-import flashx.funk.ioc.inject;
-
 import mx.containers.HBox;
 import mx.controls.TextInput;
-import mx.controls.ToggleButtonBar;
 import mx.events.FlexEvent;
-import mx.events.ItemClickEvent;
 
 import com.threerings.flex.CommandButton;
 
 import com.threerings.util.Log;
 
-import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneModel;
@@ -38,7 +32,6 @@ public class RoomPanel extends BasePanel
 
         if (_controller.scene != null) {
             _name.text = _controller.scene.getName();
-            updateAccessButtons();
             this.enabled = true; // override base changes
         }
     }
@@ -66,10 +59,6 @@ public class RoomPanel extends BasePanel
         _name.maxChars = OrthSceneModel.MAX_NAME_LENGTH;
         box.addChild(_name);
 
-        _buttonbar = new ToggleButtonBar();
-        _buttonbar.styleName = "roomEditAccessButtons";
-        box.addChild(_buttonbar);
-
         addChild(makeApplyButtons());
     }
 
@@ -78,7 +67,6 @@ public class RoomPanel extends BasePanel
     {
         super.childrenCreated();
 
-        _buttonbar.addEventListener(ItemClickEvent.ITEM_CLICK, applyHandler);
         _name.addEventListener(Event.CHANGE, changedHandler);
         _name.addEventListener(FlexEvent.ENTER, applyHandler);
     }
@@ -89,12 +77,11 @@ public class RoomPanel extends BasePanel
         super.applyChanges();
 
         var model :OrthSceneModel = _controller.scene.getSceneModel() as OrthSceneModel;
-        if (_name.text != model.name || _buttonbar.selectedIndex != model.accessControl) {
+        if (_name.text != model.name) {
             // configure an update
             var newscene :OrthScene = _controller.scene.clone() as OrthScene;
             var newmodel :OrthSceneModel = newscene.getSceneModel() as OrthSceneModel;
             newmodel.name = (isRoomNameValid() ? _name.text : model.name);
-            newmodel.accessControl = _buttonbar.selectedIndex;
             _controller.updateScene(_controller.scene, newscene);
         }
     }
@@ -117,40 +104,9 @@ public class RoomPanel extends BasePanel
             _name.text.length < 255;
     }
 
-    protected function updateAccessButtons () :void
-    {
-        if (_controller.scene == null) {
-            return; // nothing to do
-        }
-
-        var model :OrthSceneModel = _controller.scene.getSceneModel() as OrthSceneModel;
-        if (_buttonbar.dataProvider == null) {
-            var defs :Array = new Array();
-            for each (var ii :int in ACCESSES) {
-                var tip :String = Msgs.EDITING.get("m.access_" + model.ownerType + "_" + ii);
-                defs.push({ id: ii, icon: ICONS[ii], toolTip: tip });
-            }
-            _buttonbar.dataProvider = defs;
-        }
-        _buttonbar.selectedIndex = model.accessControl;
-    }
-
     private const log :Log = Log.getLog(this);
 
     protected var _name :TextInput;
-    protected var _buttonbar :ToggleButtonBar;
     protected var _homeButton :CommandButton;
-
-    protected const ACCESSES :Array = [
-        OrthSceneModel.ACCESS_EVERYONE,
-        OrthSceneModel.ACCESS_OWNER_AND_FRIENDS,
-        OrthSceneModel.ACCESS_OWNER_ONLY
-    ];
-
-    protected const ICONS :Array = [
-        inject(OrthResourceFactory).edButtonAccessEveryone,
-        inject(OrthResourceFactory).edButtonAccessOwnerAndFriends,
-        inject(OrthResourceFactory).edButtonAccessOwnerOnly
-    ];
 }
 }

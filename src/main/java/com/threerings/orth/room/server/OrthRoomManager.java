@@ -307,9 +307,6 @@ public class OrthRoomManager extends SpotSceneManager
         try {
             // if we have memories for the items in our room, add'em to the room object
             _orthObj.setName(mscene.getName());
-            _orthObj.setOwner(mscene.getOwner());
-            _orthObj.setAccessControl(mscene.getAccessControl());
-
             if (_extras.memories != null) {
                 addMemoriesToRoom(_extras.memories);
             }

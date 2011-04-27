@@ -23,32 +23,6 @@ import static com.threerings.orth.Log.log;
  */
 public class OrthSceneModel extends SceneModel
 {
-    /** Constant for Member room owners **/
-    public static final byte OWNER_TYPE_MEMBER = 1;
-
-    /** Access control constant, denotes that anyone can enter this scene. */
-    public static final byte ACCESS_EVERYONE = 0;
-
-    /** Access control constant, denotes that only the scene owner and friends
-     *  (or group manager and members, in case of a group scene) can enter this scene. */
-    public static final byte ACCESS_OWNER_AND_FRIENDS = 1;
-
-    /** Access control constant, denotes that only the scene owner (or group manager,
-     *  in case of a group scene) can enter this scene. */
-    public static final byte ACCESS_OWNER_ONLY = 2;
-
-    /** Access control, as one of the ACCESS constants. Limits who can enter the scene. */
-    public byte accessControl;
-
-    /** The type of owner that owns this scene. */
-    public byte ownerType;
-
-    /** The id of the owner of this scene, interpreted using ownerType. */
-    public int ownerId;
-
-    /** The name of the owner, either a MemberName or GroupName. */
-    public Name ownerName;
-
     /** The furniture in the scene. */
     public FurniData[] furnis = new FurniData[0];
 

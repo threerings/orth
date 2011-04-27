@@ -17,46 +17,17 @@ import com.threerings.util.ArrayUtil;
 import com.threerings.util.Iterator;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
-import com.threerings.util.Name;
 import com.threerings.util.Short;
-
-import com.threerings.orth.room.data.DecorData;
-import com.threerings.orth.room.data.OrthLocation;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
 public class OrthSceneModel extends SceneModel
 {
 // GENERATED CLASSDECL END
-    /** Constant for Member room owners **/
-    public static const OWNER_TYPE_MEMBER :int = 1;
-
-    /** Constant for Group room owners **/
-    public static const OWNER_TYPE_GROUP :int = 2;
-
-    /** Access control constant, denotes that anyone can enter this scene. */
-    public static const ACCESS_EVERYONE :int = 0;
-
-    /** Access control constant, denotes that only the scene owner and friends
-     *  (or group manager and members, in case of a group scene) can enter this scene. */
-    public static const ACCESS_OWNER_AND_FRIENDS :int = 1;
-
-    /** Access control constant, denotes that only the scene owner (or group manager,
-     *  in case of a group scene) can enter this scene. */
-    public static const ACCESS_OWNER_ONLY :int = 2;
-
     /** The maximum length of a room name. */
     public static const MAX_NAME_LENGTH :int = 80;
 
 // GENERATED STREAMING START
-    public var accessControl :int;
-
-    public var ownerType :int;
-
-    public var ownerId :int;
-
-    public var ownerName :Name;
-
     public var furnis :TypedArray;
 
     public var entrance :OrthLocation;
@@ -66,10 +37,6 @@ public class OrthSceneModel extends SceneModel
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        accessControl = ins.readByte();
-        ownerType = ins.readByte();
-        ownerId = ins.readInt();
-        ownerName = ins.readObject(Name);
         furnis = ins.readObject(TypedArray);
         entrance = ins.readObject(OrthLocation);
         decor = ins.readObject(DecorData);
@@ -78,10 +45,6 @@ public class OrthSceneModel extends SceneModel
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeByte(accessControl);
-        out.writeByte(ownerType);
-        out.writeInt(ownerId);
-        out.writeObject(ownerName);
         out.writeObject(furnis);
         out.writeObject(entrance);
         out.writeObject(decor);
@@ -218,10 +181,6 @@ public class OrthSceneModel extends SceneModel
     override public function clone () :Object
     {
         var model :OrthSceneModel = (super.clone() as OrthSceneModel);
-        model.accessControl = accessControl;
-        model.ownerType = ownerType;
-        model.ownerId = ownerId;
-        model.ownerName = ownerName;
         model.furnis = (furnis.clone() as TypedArray);
         model.entrance = (entrance.clone() as OrthLocation);
         model.decor = decor;

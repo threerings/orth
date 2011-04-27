@@ -6,13 +6,10 @@ package com.threerings.orth.room.data;
 import java.util.Iterator;
 
 import com.threerings.crowd.data.PlaceConfig;
-import com.threerings.util.Name;
 import com.threerings.whirled.data.SceneImpl;
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.spot.data.Portal;
 import com.threerings.whirled.spot.data.SpotScene;
-
-import com.threerings.orth.data.MediaDesc;
 
 public class OrthScene extends SceneImpl
     implements SpotScene
@@ -26,38 +23,6 @@ public class OrthScene extends SceneImpl
     public OrthScene ()
     {
         super();
-    }
-
-    /**
-     * Returns the owner id for the scene.
-     */
-    public int getOwnerId ()
-    {
-        return _orthModel.ownerId;
-    }
-
-    /**
-     * Returns the name of the owner of this scene (MemberName or GroupName).
-     */
-    public Name getOwner ()
-    {
-        return _orthModel.ownerName;
-    }
-
-    /**
-     * Returns the owner type for the scene.
-     */
-    public byte getOwnerType ()
-    {
-        return _orthModel.ownerType;
-    }
-
-    /**
-     * Returns the access control for the scene.
-     */
-    public byte getAccessControl ()
-    {
-        return _orthModel.accessControl;
     }
 
     /**
