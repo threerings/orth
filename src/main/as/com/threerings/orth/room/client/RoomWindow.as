@@ -38,7 +38,7 @@ public class RoomWindow extends FrameSprite
 
     public function RoomWindow (view :RoomView)
     {
-        super(true);
+        super(false);
         _view = view;
 
         this.addChild(view);
