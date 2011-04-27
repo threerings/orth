@@ -334,7 +334,7 @@ public class RoomObjectView extends RoomView
         // hide until our background is loaded
         this.visible = false;
 
-        preloadFurni();
+        backgroundFinishedLoading();
     }
 
     // from RoomView
@@ -366,28 +366,6 @@ public class RoomObjectView extends RoomView
 //            return getOccupantByName(UserMessage(msg).getSpeakerDisplayName());
 //        }
         return null;
-    }
-
-    protected function preloadFurni () :void
-    {
-        _scene.getFurni().forEach(function (data :FurniData, ix :int, arr :Array) :void {
-            updateFurni(data);
-            var sprite :FurniSprite = (_furni.get(data.id) as FurniSprite);
-            if (sprite != null) {
-                // should always be true
-                sprite.setLoadedCallback(furniSpritePreloaded);
-                _furniSprites.add(sprite);
-            }
-        });
-        log.info("Preloading backgrounds", "sprites", _furniSprites, "count", _furniSprites.size());
-    }
-
-    protected function furniSpritePreloaded (sprite :FurniSprite, success :Boolean) :void
-    {
-        _furniSprites.remove(sprite);
-        if (_furniSprites.isEmpty()) {
-            backgroundFinishedLoading();
-        }
     }
 
     override protected function backgroundFinishedLoading () :void
@@ -501,9 +479,6 @@ public class RoomObjectView extends RoomView
 
     /** The transitory properties of the current scene. */
     protected var _roomObj :OrthRoomObject;
-
-    /** The background sprites to load before we do the rest. */
-    protected var _furniSprites :Set = Sets.newSetOf(FurniSprite);
 
     /** Monitors and displays loading progress for furni/decor. */
     protected var _loadingWatcher :LoadingWatcher;
