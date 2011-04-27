@@ -35,11 +35,11 @@ public class FurniData extends SimpleStreamableObject
 
     public var layoutInfo :int;
 
-    public var scaleX :Number;
+    public var scaleX :Number = 1;
 
-    public var scaleY :Number;
+    public var scaleY :Number = 1;
 
-    public var rotation :Number;
+    public var rotation :Number = 0;
 
     public var hotSpotX :int;
 
