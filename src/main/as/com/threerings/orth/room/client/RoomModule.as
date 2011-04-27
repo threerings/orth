@@ -23,6 +23,12 @@ public class RoomModule extends AbstractLocusModule
     {
         // set up simple bindings in the constructor
         bind(RoomClient).asSingleton();
+
+        // mark our fake chat director as a singleton
+        bind(FakeChatDirector).asSingleton();
+
+        // the SceneDirector needs a binding for SceneRepository
+        bind(SceneRepository).to(NullSceneRepository).asSingleton();
     }
 
     override protected function doLocusBinds (ctx :LocusContext) :void
@@ -31,16 +37,11 @@ public class RoomModule extends AbstractLocusModule
         bind(RoomContext).toInstance(ctx);
         bind(RoomModule).toInstance(_chainMod);
 
-        // mark our fake chat director as a singleton
-        bind(FakeChatDirector).asSingleton();
         // instantiate it, so that it may register its services early
         _chainMod.getInstance(FakeChatDirector);
 
         // instantiate and bind the directors that need explicit instantiation
         bind(MuteDirector).toInstance(new MuteDirector(rCtx));
-
-        // the SceneDirector needs a binding for SceneRepository
-        bind(SceneRepository).to(NullSceneRepository).asSingleton();
 
         var locDir :LocationDirector = new OrthLocationDirector(rCtx);
         bind(LocationDirector).toInstance(locDir);
