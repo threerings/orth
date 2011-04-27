@@ -33,7 +33,7 @@ import com.threerings.whirled.server.SceneManager;
 import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
 /**
- * Handles some custom Whirled scene traversal business.
+ * Handles some custom Orth scene traversal business.
  */
 @Singleton
 public class OrthSceneRegistry extends SpotSceneRegistry

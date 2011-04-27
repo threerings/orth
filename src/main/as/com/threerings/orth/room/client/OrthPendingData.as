@@ -8,7 +8,7 @@ import com.threerings.whirled.client.PendingData;
 import com.threerings.orth.room.data.OrthLocation;
 
 /**
- * Extends our pending scene data with Whirled specific bits.
+ * Extends our pending scene data with Orth specific bits.
  */
 public class OrthPendingData extends PendingData
 {

@@ -1,5 +1,5 @@
 //
-// $Id: MsoySceneDirector.as 18370 2009-10-13 22:43:55Z jamie $
+// $Id: OrthSceneDirector.as 18370 2009-10-13 22:43:55Z jamie $
 
 package com.threerings.orth.room.client {
 import flashx.funk.ioc.inject;
@@ -23,7 +23,7 @@ import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.room.data.RoomLocus;
 
 /**
- * Handles custom scene traversal and extra bits for Whirled.
+ * Handles custom scene traversal and extra bits for Orth.
  */
 public class OrthSceneDirector extends SceneDirector
     implements SceneService_SceneMoveListener
