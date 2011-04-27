@@ -2,8 +2,6 @@
 // $Id: ControlBackend.as 15921 2009-04-08 17:58:15Z ray $
 
 package com.threerings.orth.client {
-import com.threerings.orth.room.client.RoomContext;
-
 import flash.events.EventDispatcher;
 
 import flashx.funk.ioc.inject;
@@ -11,6 +9,7 @@ import flashx.funk.ioc.inject;
 import com.threerings.util.Log;
 
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.room.client.RoomContext;
 
 /**
  * The base class for communicating with MsoyControl instances

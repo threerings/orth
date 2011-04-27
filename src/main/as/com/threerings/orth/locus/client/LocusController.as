@@ -13,7 +13,6 @@ import flash.utils.getTimer;
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.chat.data.ChatCodes;
-import com.threerings.crowd.data.CrowdCodes;
 
 import com.threerings.util.Controller;
 import com.threerings.util.Log;

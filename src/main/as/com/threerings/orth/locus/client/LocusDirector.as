@@ -1,13 +1,12 @@
 package com.threerings.orth.locus.client {
-import com.threerings.util.ClassUtil;
-import com.threerings.util.Map;
-import com.threerings.util.Maps;
-
 import flash.utils.getQualifiedClassName;
 
 import flashx.funk.ioc.inject;
 
+import com.threerings.util.ClassUtil;
 import com.threerings.util.Log;
+import com.threerings.util.Map;
+import com.threerings.util.Maps;
 import com.threerings.util.ObserverList;
 import com.threerings.util.Preconditions;
 

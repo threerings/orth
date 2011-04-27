@@ -19,7 +19,6 @@ import com.threerings.util.Name;
 import com.threerings.util.ObserverList;
 import com.threerings.util.Predicates;
 import com.threerings.util.Set;
-import com.threerings.util.Sets;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
@@ -37,7 +36,6 @@ import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.PetSprite;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
-import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.FurniUpdate_Remove;
 import com.threerings.orth.room.data.MemoryChangedListener;
 import com.threerings.orth.room.data.OrthLocation;

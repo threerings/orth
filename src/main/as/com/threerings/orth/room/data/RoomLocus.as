@@ -11,7 +11,6 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.util.Comparable;
 
 import com.threerings.orth.locus.data.Locus;
-import com.threerings.orth.room.client.RoomModule;
 
 // GENERATED PREAMBLE END
 

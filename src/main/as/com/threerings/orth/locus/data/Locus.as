@@ -10,8 +10,6 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.nodelet.data.Nodelet;
 
-import flashx.funk.util.isAbstract;
-
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
