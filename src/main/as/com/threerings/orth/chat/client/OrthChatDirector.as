@@ -18,7 +18,7 @@ import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.client.ConfirmAdapter;
-import com.threerings.presents.client.InvocationAdapter;
+import com.threerings.presents.client.InvocationDirector;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
@@ -32,13 +32,15 @@ import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 
 public class OrthChatDirector extends BasicDirector
-    implements MessageListener
+    implements MessageListener, TellReceiver
 {
     public function OrthChatDirector ()
     {
         super(inject(OrthContext));
 
         _chatHistory = new HistoryList(this);
+
+        _ctx.getClient().getInvocationDirector().registerReceiver(new TellDecoder(this));
     }
 
     public function get placeObject () :SpeakObject
@@ -46,26 +48,19 @@ public class OrthChatDirector extends BasicDirector
         return _place;
     }
 
-    /** Some code somewhere (e.g. a chat input control) wants us to speak in our room. */
-    public function requestPlaceSpeak (msg :String) :void
-    {
-        // if we're nowhere, ignore silently
-        if (_place == null) {
-            log.warning("Eek! We're nowhere and we're trying to speak!");
-            return;
-        }
-
-        // else invoke
-        _place.getSpeakService().speak(msg, new InvocationAdapter(function (cause :String) :void {
-            log.error("Speak request failed", "cause", cause);
-        }));
-
-    }
-
     public function requestSendTell (memberId :int, msg :String) :void
     {
         _tellService.sendTell(memberId, msg, new ConfirmAdapter(null,
             function (cause :String) :void { log.warning("Tell failed!", "reason", cause); }));
+    }
+
+    public function receiveTell (tell :Tell) :void
+    {
+        var msg :UserMessage = new UserMessage();
+        msg.speaker = tell.from;
+        msg.mode = ChatCodes.DEFAULT_MODE;
+        msg.setClientInfo(Msgs.CHAT.xlate(tell.message), ChatCodes.USER_CHAT_TYPE);
+        dispatchPreparedMessage(msg);
     }
 
     public function getHistoryList () :HistoryList
@@ -144,7 +139,6 @@ public class OrthChatDirector extends BasicDirector
     // from MessageListener
     public function messageReceived (event :MessageEvent) :void
     {
-        var msg :UserMessage = new UserMessage();
 
         // ORTH TODO: for now, we have our own Tell and Speak objects from our rewrite,
         // but the ChatMessage-based approach of the rendering code (from Whirled). When
@@ -153,14 +147,10 @@ public class OrthChatDirector extends BasicDirector
         // little silly to create near-exact duplicates of lots of useful data classes.
         // We should decide to go one way or another rather than "convert" here.
         var value :Object = event.getArgs()[0];
-        if (OrthChatCodes.TELL_MSG_TYPE == event.getName()) {
-            var tell :Tell = Tell(value);
-            msg.speaker = tell.from;
-            msg.mode = ChatCodes.DEFAULT_MODE;
-            msg.setClientInfo(Msgs.CHAT.xlate(tell.message), ChatCodes.USER_CHAT_TYPE);
-
-        } else if (OrthChatCodes.SPEAK_MSG_TYPE == event.getName()) {
+        if (OrthChatCodes.SPEAK_MSG_TYPE == event.getName()) {
             var speak :Speak = Speak(value);
+
+            var msg :UserMessage = new UserMessage();
             msg.speaker = speak.from;
             msg.mode = ChatCodes.DEFAULT_MODE;
             msg.setClientInfo(Msgs.CHAT.xlate(speak.message), ChatCodes.PLACE_CHAT_TYPE);
@@ -168,7 +158,6 @@ public class OrthChatDirector extends BasicDirector
             log.warning("Got unhandled message type", "eventName", event.getName(), "event", event);
             return;
         }
-
 
         dispatchPreparedMessage(msg);
     }

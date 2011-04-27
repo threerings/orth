@@ -6,6 +6,8 @@ package com.threerings.orth.chat.server;
 import com.google.inject.Inject;
 
 import com.threerings.crowd.chat.data.ChatCodes;
+
+import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerSessionLocator;
 import com.threerings.orth.chat.data.OrthChatCodes;
@@ -37,8 +39,7 @@ public class TellNodeAction extends PeerManager.NodeRequest
     {
         ClientObject clobj = _clMgr.getClientObject(_to);
         if (clobj != null) {
-            PlayerObject player = _locator.forClient(clobj);
-            player.postMessage(OrthChatCodes.TELL_MSG_TYPE, _tell);
+            TellSender.receiveTell(clobj, _tell);
             listener.requestProcessed(null);
         } else {
             // either something is quite wrong or we were just unlucky with the timing

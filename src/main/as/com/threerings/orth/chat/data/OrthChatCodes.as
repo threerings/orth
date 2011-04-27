@@ -7,9 +7,6 @@ import com.threerings.presents.data.InvocationCodes;
 
 public class OrthChatCodes extends InvocationCodes
 {
-    /** The type of tell messages sent on a {@link SpeakObject}. */
-    public static const TELL_MSG_TYPE :String = "tellMsg";
-
     /** The type of speak messages sent on a {@link SpeakObject}. */
     public static const SPEAK_MSG_TYPE :String = "speakMsg";
 
