@@ -25,6 +25,13 @@ import com.threerings.orth.room.data.OrthLocation;
 public class FurniData extends SimpleStreamableObject
 {
 // GENERATED CLASSDECL END
+    public function FurniData ()
+    {
+        scaleX = 1;
+        scaleY = 1;
+        rotation = 0;
+    }
+    
 // GENERATED STREAMING START
     public var id :int;
 
@@ -36,11 +43,11 @@ public class FurniData extends SimpleStreamableObject
 
     public var layoutInfo :int;
 
-    public var scaleX :Number = 1;
+    public var scaleX :Number;
 
-    public var scaleY :Number = 1;
+    public var scaleY :Number;
 
-    public var rotation :Number = 0;
+    public var rotation :Number;
 
     public var hotSpotX :int;
 
