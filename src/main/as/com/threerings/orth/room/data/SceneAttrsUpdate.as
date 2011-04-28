@@ -22,8 +22,6 @@ public class SceneAttrsUpdate extends SceneUpdate
 // GENERATED STREAMING START
     public var name :String;
 
-    public var accessControl :int;
-
     public var decor :DecorData;
 
     public var entrance :OrthLocation;
@@ -32,7 +30,6 @@ public class SceneAttrsUpdate extends SceneUpdate
     {
         super.readObject(ins);
         name = ins.readField(String);
-        accessControl = ins.readByte();
         decor = ins.readObject(DecorData);
         entrance = ins.readObject(OrthLocation);
     }
@@ -41,7 +38,6 @@ public class SceneAttrsUpdate extends SceneUpdate
     {
         super.writeObject(out);
         out.writeField(name);
-        out.writeByte(accessControl);
         out.writeObject(decor);
         out.writeObject(entrance);
     }
