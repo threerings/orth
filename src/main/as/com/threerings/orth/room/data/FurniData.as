@@ -10,6 +10,7 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.util.ClassUtil;
+import com.threerings.util.Joiner;
 import com.threerings.util.Util;
 
 import com.threerings.presents.dobj.DSet_Entry;
@@ -210,6 +211,11 @@ public class FurniData extends SimpleStreamableObject
             (this.hotSpotY == that.hotSpotY) &&
             (this.actionType == that.actionType) &&
             Util.equals(this.actionData, that.actionData);
+    }
+
+    override public function toString () :String
+    {
+        return Joiner.simpleToString(this);
     }
 
     /**
