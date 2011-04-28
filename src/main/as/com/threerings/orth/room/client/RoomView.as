@@ -4,9 +4,7 @@
 package com.threerings.orth.room.client {
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
-import flash.display.Loader;
 import flash.display.Sprite;
-import flash.events.Event;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.ui.Mouse;
@@ -626,22 +624,6 @@ public class RoomView extends Sprite
     protected function addFurni (furni :FurniData) :FurniSprite
     {
         var sprite :FurniSprite = _mediaDir.getFurni(furni);
-
-        // TEMP -- hackery for cacheAsBitmap performance testing
-        if (false) {
-            trace("RoomView::Adding furni", furni);
-            if (sprite.viz.getMedia() is Loader) {
-                if (sprite.viz.isContentInitialized()) {
-                    Loader(sprite.viz.getMedia()).content.cacheAsBitmap = true;
-                } else {
-                    sprite.viz.getMedia().addEventListener(Event.COMPLETE, function (e :Event) :void {
-                        var loader :Loader = e.target as Loader;
-                        loader.content.cacheAsBitmap = true;
-                    });
-                }
-            }
-        }
-
         addSprite(sprite);
         sprite.setLocation(furni.loc);
         sprite.roomScaleUpdated();
