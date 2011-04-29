@@ -73,12 +73,5 @@ public class RoomLayoutTopdown extends RoomLayoutStandard
 
         adjustZOrder(target);
     }
-
-    // from interface RoomLayout
-    public override function recommendedChatHeight () :Number
-    {
-        // horizon doesn't matter - just fill up the lower quarter
-        return 0.25;
-    }
 }
 }

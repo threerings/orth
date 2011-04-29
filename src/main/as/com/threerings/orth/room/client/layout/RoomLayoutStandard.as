@@ -177,13 +177,6 @@ public class RoomLayoutStandard implements RoomLayout
     }
 
     // from interface RoomLayout
-    public function recommendedChatHeight () :Number
-    {
-        return Math.min(MIN_CHAT_HEIGHT,
-                        _metrics.roomToScreen(0, RoomMetrics.LEFT_BOTTOM_FAR.y, 0).y);
-    }
-
-    // from interface RoomLayout
     public function updateScreenLocation (target :RoomElement, offset :Point = null) :void
     {
         var disp :DisplayObject = target.getVisualization();

@@ -71,12 +71,5 @@ public class RoomLayoutFlatworld extends RoomLayoutStandard
         // z ordering can still be used for layering
         adjustZOrder(target);
     }
-
-    // from interface RoomLayout
-    override public function recommendedChatHeight () :Number
-    {
-        // horizon doesn't matter - just fill up the lower quarter
-        return 0.25;
-    }
 }
 }

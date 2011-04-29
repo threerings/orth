@@ -126,14 +126,5 @@ public interface RoomLayout {
      *        the object left and up by the specified x and y amounts.
      */
     function updateScreenLocation (target :RoomElement, offset :Point = null) :void;
-
-    /**
-     * Finds a recommended height of the chat overlay, in room units.
-     *
-     * TODO: depending on what we do with subtitles, this should either be renamed to
-     * recommendedSubtitleHeight(), or should be nixed altogether
-     */
-    function recommendedChatHeight () :Number;
-
 }
 }
