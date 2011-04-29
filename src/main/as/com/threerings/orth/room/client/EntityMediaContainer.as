@@ -2,7 +2,6 @@
 // $Id: MsoyMediaContainer.as 19763 2010-12-08 03:07:58Z zell $
 
 package com.threerings.orth.room.client {
-import flash.events.IEventDispatcher;
 
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.ui.MediaDescContainer;
@@ -14,17 +13,6 @@ public class EntityMediaContainer extends MediaDescContainer
     {
         super(desc);
         _suppressHitTestPoint = suppressHitTestPoint;
-    }
-
-    public function setSuppressHitTestPoint (suppress :Boolean) :void
-    {
-        _suppressHitTestPoint = suppress;
-    }
-
-    public function setMaxContentDimensions (width :int, height :int) :void
-    {
-        _maxWidth = width;
-        _maxHeight = height;
     }
 
     // documentation inherited
@@ -80,11 +68,6 @@ public class EntityMediaContainer extends MediaDescContainer
         return _h;
     }
 
-    protected function handleUncaughtErrors (event :*) :void
-    {
-        log.info("Uncaught Error", "media", _desc, event);
-    }
-
     protected var _suppressHitTestPoint :Boolean;
 
     protected var _maxWidth :int = int.MAX_VALUE;
@@ -95,7 +78,5 @@ public class EntityMediaContainer extends MediaDescContainer
 
     /** The media scale to use when we are not blocked. */
     protected var _spriteMediaScaleY :Number = 1.0;
-
-    protected var _bridge :IEventDispatcher;
 }
 }
