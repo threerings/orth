@@ -371,7 +371,6 @@ public class RoomObjectView extends RoomView
 
     protected function preloadFurni () :void
     {
-        log.info("Preloading backgrounds...");
         _scene.getFurni().forEach(function (data :FurniData, ix :int, arr :Array) :void {
             updateFurni(data);
             var sprite :FurniSprite = (_furni.get(data.id) as FurniSprite);
@@ -385,7 +384,6 @@ public class RoomObjectView extends RoomView
     protected function furniSpritePreloaded (sprite :FurniSprite) :void
     {
         _furniSprites.remove(sprite);
-        log.info("FurniSprite removed", "sprite", sprite, "remaining", _furniSprites);
         if (_furniSprites.isEmpty()) {
             backgroundFinishedLoading();
         }
