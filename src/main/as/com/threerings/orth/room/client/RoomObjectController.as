@@ -6,7 +6,6 @@ package com.threerings.orth.room.client {
 import flash.events.Event;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
-import flash.ui.Keyboard;
 import flash.utils.ByteArray;
 
 import flashx.funk.ioc.Module;
@@ -14,10 +13,8 @@ import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.flex.CommandMenu;
 import com.threerings.whirled.data.SceneUpdate;
 
-import com.threerings.util.ArrayUtil;
 import com.threerings.util.ObjectMarshaller;
 import com.threerings.util.ValueEvent;
 
@@ -28,14 +25,8 @@ import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.TopPanel;
-import com.threerings.orth.data.MediaDescSize;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.entity.client.ActorSprite;
-import com.threerings.orth.entity.client.MemberSprite;
-import com.threerings.orth.entity.client.PetSprite;
-import com.threerings.orth.entity.data.Avatar;
-import com.threerings.orth.entity.data.PetOrders;
 import com.threerings.orth.locus.client.BootablePlaceController;
 import com.threerings.orth.room.client.editor.DoorTargetEditController;
 import com.threerings.orth.room.client.editor.RoomEditorController;
@@ -48,11 +39,7 @@ import com.threerings.orth.room.data.FurniData;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
-import com.threerings.orth.room.data.PetInfo;
-import com.threerings.orth.room.data.PetName;
 import com.threerings.orth.room.data.SocializerInfo;
-import com.threerings.orth.room.data.SocializerObject;
-import com.threerings.orth.ui.MediaWrapper;
 
 /**
  * Manages the various interactions that take place in a room scene.
@@ -84,31 +71,6 @@ public class RoomObjectController extends RoomController
     {
         var info :OccupantInfo = _roomObj.getOccupantInfo(name);
         return (info != null);
-    }
-
-    /**
-     * Add to the specified menu, any room/avatar related menu items.
-     */
-    public function addAvatarMenuItems (name :PlayerName, menuItems :Array) :void
-    {
-        const occInfo :SocializerInfo = _roomObj.getOccupantInfo(name) as SocializerInfo;
-        if (occInfo == null) {
-            return;
-        }
-
-        const us :SocializerObject = _rctx.getSocializerObject();
-        const avatar :MemberSprite = _roomObjectView.getOccupant(occInfo.bodyOid) as MemberSprite;
-        // avatar may be null if not yet loaded. We check below..
-
-        // then add our custom menu items
-        if (occInfo.bodyOid == us.getOid()) {
-            // if we're not a guest add a menu for changing avatars
-            menuItems.push(createChangeAvatarMenu(us, true));
-            // add our custom menu items (avatar actions and states)
-            if (avatar != null) {
-                addSelfMenuItems(avatar, menuItems, true);
-            }
-        }
     }
 
     /**
@@ -219,96 +181,6 @@ public class RoomObjectController extends RoomController
             log.warning("Clicked on unhandled furni action type",
                "actionType", furni.actionType, "actionData", furni.actionData);
         }
-    }
-
-    /**
-     * Handles AVATAR_CLICKED.
-     */
-    override public function handleAvatarClicked (avatar :MemberSprite) :void
-    {
-        // ORTH TODO: this freezes the client
-        return;
-
-        var occInfo :SocializerInfo = (avatar.getActorInfo() as SocializerInfo);
-        if (occInfo == null) {
-            log.info("Clicked on non-SocializerInfo sprite", "info", avatar.getActorInfo());
-            return;
-        }
-
-        var menuItems :Array = [];
-        _locusCtrl.addMemberMenuItems(occInfo.username as PlayerName, menuItems);
-        popActorMenu(avatar, menuItems);
-    }
-
-    /**
-     * Create the menu item that allows a user to change their own avatar.
-     */
-    protected function createChangeAvatarMenu (us :SocializerObject, canControl :Boolean) :Object
-    {
-        var avItems :Array = [];
-        var avatars :Array = (us.avatarCache != null) ? us.avatarCache.toArray() : [];
-        ArrayUtil.sort(avatars);
-
-        for (var ii :int = 0; ii < avatars.length; ii++) {
-            var av :Avatar = avatars[ii] as Avatar;
-            avItems.push({ label: av.getName, enabled: !av.equals(us.avatar),
-                iconObject: MediaWrapper.createView(
-                    av.getThumbnailMedia(), MediaDescSize.QUARTER_THUMBNAIL_SIZE),
-                callback: _aetherDir.setAvatar, arg: av.getIdent().getItem() });
-        }
-
-        // return a menu item for changing their avatar
-        return { label: Msgs.GENERAL.get("b.change_avatar"), children: avItems,
-            enabled: canControl };
-    }
-
-    /**
-     * Handles PET_CLICKED.
-     */
-    override public function handlePetClicked (pet :ActorSprite) :void
-    {
-        var occInfo :PetInfo = (pet.getActorInfo() as PetInfo);
-        if (occInfo == null) {
-            log.warning("Pet has unexpected ActorInfo", "info", pet.getActorInfo());
-            return;
-        }
-
-        const memObj :SocializerObject = _rctx.getSocializerObject();
-        const isPetOwner :Boolean = (PetSprite(pet).getOwnerId() == memObj.getPlayerName().getId());
-        const petId :int = occInfo.getEntityIdent().getItem();
-
-        var menuItems :Array = [];
-
-        addPetMenuItems(PetName(occInfo.username), menuItems);
-
-        if (isPetOwner) {
-            CommandMenu.addSeparator(menuItems);
-            var isWalking :Boolean = (memObj.walkingId != 0);
-            menuItems.push(
-            { label: Msgs.GENERAL.get("b.order_pet_stay"),
-              command: ORDER_PET, arg: [ petId, PetOrders.ORDER_STAY ], enabled: canManageRoom() },
-            { label: Msgs.GENERAL.get("b.order_pet_follow"),
-              command: ORDER_PET, arg: [ petId, PetOrders.ORDER_FOLLOW ], enabled: !isWalking },
-            { label: Msgs.GENERAL.get("b.order_pet_go_home"),
-              command: ORDER_PET, arg: [ petId, PetOrders.ORDER_GO_HOME ] });
-        }
-        if (isPetOwner || canManageRoom()) {
-            CommandMenu.addSeparator(menuItems);
-            // and any old room manager can put the pet to sleep
-            menuItems.push({ label: Msgs.GENERAL.get("b.order_pet_sleep"),
-                command: ORDER_PET, arg: [ petId, PetOrders.ORDER_SLEEP ] });
-        }
-
-        popActorMenu(pet, menuItems);
-    }
-
-    /**
-     * Handles ORDER_PET.
-     */
-    override public function handleOrderPet (petId :int, command :int) :void
-    {
-        var svc :PetService = (_rctx.getClient().requireService(PetService) as PetService);
-        svc.orderPet(petId, command, _octx.confirmListener("m.pet_ordered" + command));
     }
 
     override public function getEnvironment () :String
