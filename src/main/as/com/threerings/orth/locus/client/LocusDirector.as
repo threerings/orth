@@ -50,7 +50,7 @@ public class LocusDirector extends BasicDirector
      */
     public function addBinding (locusClass :Class, moduleClass :Class) :void
     {
-        log.info("Instantiating Locus subsystem", "moduleClass", moduleClass);
+        log.debug("Instantiating Locus subsystem", "moduleClass", moduleClass);
         var ctx :LocusContext = _octx.setupLocus(moduleClass);
 
         _contexts.put(getQualifiedClassName(locusClass), ctx);
