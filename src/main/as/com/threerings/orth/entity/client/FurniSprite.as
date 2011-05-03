@@ -37,6 +37,13 @@ public class FurniSprite extends EntitySprite
     {
         _furni = furni;
 
+        _sprite.addEventListener(MouseEvent.ROLL_OVER, handleMouseHover);
+        _sprite.addEventListener(MouseEvent.ROLL_OUT, handleMouseHover);
+        _sprite.addEventListener(MediaContainer.LOADER_READY, handleLoaderReady);
+        _sprite.addEventListener(MediaContainer.DID_SHOW_NEW_MEDIA, loadingStopped);
+        _sprite.removeEventListener(IOErrorEvent.IO_ERROR, loadingStopped);
+        _sprite.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, loadingStopped);
+
         // configure our media and item
         setEntityIdent(furni.item);
         _sprite.setSpriteMediaScale(furni.scaleX, furni.scaleY);
@@ -46,13 +53,6 @@ public class FurniSprite extends EntitySprite
         if (_furni.hotSpotX > 0 || _furni.hotSpotY > 0) {
             _hotSpot = new Point(_furni.hotSpotX, _furni.hotSpotY);
         }
-
-        _sprite.addEventListener(MouseEvent.ROLL_OVER, handleMouseHover);
-        _sprite.addEventListener(MouseEvent.ROLL_OUT, handleMouseHover);
-        _sprite.addEventListener(MediaContainer.LOADER_READY, handleLoaderReady);
-        _sprite.addEventListener(Event.COMPLETE, handleComplete);
-        _sprite.removeEventListener(IOErrorEvent.IO_ERROR, handleError);
-        _sprite.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, handleError);
     }
 
     override public function getDesc () :String
@@ -71,6 +71,9 @@ public class FurniSprite extends EntitySprite
     public function setLoadedCallback (fn :Function):void
     {
         _loadedCallback = fn;
+        if (_complete) {
+            _loadedCallback(this);
+        }
     }
 
     /** Can this sprite be removed from the room? */
@@ -207,18 +210,12 @@ public class FurniSprite extends EntitySprite
         }
     }
 
-    protected function handleError (event :Event) :void
+    protected function loadingStopped (event :Event):void
     {
-        log.warning("Loading error for entity", "entity", _ident, "event", event);
+        _complete = true;
         if (_loadedCallback != null) {
-            _loadedCallback(this, false);
-        }
-    }
-
-    protected function handleComplete (event:Event):void
-    {
-        if (_loadedCallback != null) {
-            _loadedCallback(this, true);
+            _loadedCallback(this);
+            _loadedCallback = null;
         }
     }
 
@@ -245,6 +242,9 @@ public class FurniSprite extends EntitySprite
 
     /** A function we call when we've finished loading. */
     protected var _loadedCallback:Function;
+
+    /** Remember if loading completed (or failed). */
+    protected var _complete :Boolean;
 
     /** The watcher for loading progress. */
     protected static var _loadingWatcher :LoadingWatcher;

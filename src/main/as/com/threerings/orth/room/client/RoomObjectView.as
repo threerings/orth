@@ -2,6 +2,9 @@
 // $Id: RoomObjectView.as 18642 2009-11-10 22:55:00Z jamie $
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.room.data.FurniData;
+import com.threerings.util.Sets;
+
 import flash.geom.Point;
 import flash.utils.ByteArray;
 
@@ -332,7 +335,7 @@ public class RoomObjectView extends RoomView
         // hide until our background is loaded
         this.visible = false;
 
-        backgroundFinishedLoading();
+        preloadFurni();
     }
 
     // from RoomView
@@ -364,6 +367,28 @@ public class RoomObjectView extends RoomView
 //            return getOccupantByName(UserMessage(msg).getSpeakerDisplayName());
 //        }
         return null;
+    }
+
+    protected function preloadFurni () :void
+    {
+        log.info("Preloading backgrounds...");
+        _scene.getFurni().forEach(function (data :FurniData, ix :int, arr :Array) :void {
+            updateFurni(data);
+            var sprite :FurniSprite = (_furni.get(data.id) as FurniSprite);
+            if (sprite != null) {
+                _furniSprites.add(sprite);
+                sprite.setLoadedCallback(furniSpritePreloaded);
+            }
+        });
+    }
+
+    protected function furniSpritePreloaded (sprite :FurniSprite) :void
+    {
+        _furniSprites.remove(sprite);
+        log.info("FurniSprite removed", "sprite", sprite, "remaining", _furniSprites);
+        if (_furniSprites.isEmpty()) {
+            backgroundFinishedLoading();
+        }
     }
 
     override protected function backgroundFinishedLoading () :void
@@ -477,6 +502,9 @@ public class RoomObjectView extends RoomView
 
     /** The transitory properties of the current scene. */
     protected var _roomObj :OrthRoomObject;
+
+    /** The background sprites to load before we do the rest. */
+    protected var _furniSprites :Set = Sets.newSetOf(FurniSprite);
 
     /** Monitors and displays loading progress for furni/decor. */
     protected var _loadingWatcher :LoadingWatcher;
