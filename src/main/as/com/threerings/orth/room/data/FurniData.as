@@ -265,7 +265,7 @@ public class FurniData extends SimpleStreamableObject
 
     protected static const NOSCALE_FLAG :int = (1 << 0);
     protected static const PARALLAX_FLAG :int = (1 << 1);
-    protected static const STATIC_FLAG :int = (1 << 1);
+    protected static const STATIC_FLAG :int = (1 << 2);
 
 // GENERATED CLASSFINISH START
 }
