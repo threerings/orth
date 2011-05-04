@@ -45,6 +45,37 @@ public class LocusDirector extends BasicDirector
     }
 
     /**
+     * The locus we most recently moved into. The {@link Locus} superclass itself contains no
+     * interesting information; specific subclass inspection is needed to find out details.
+     *
+     * This value may be null, if we've yet to log in, disconnected, or we are in mid-move.
+     */
+    public function get currentLocus () :Locus
+    {
+        return _current;
+    }
+
+    /**
+     * The currently active {@link LocusContext}.
+     *
+     * This value may be null, if we've yet to log in, disconnected, or we are in mid-move.
+     */
+    public function get currentContext () :LocusContext
+    {
+        return _currentCtx;
+    }
+
+    /**
+     * The hostname of the locus peer we're currently logged into.
+     * 
+     * This value may be null, if we've yet to log in, disconnected, or we are in mid-move.
+     */
+    public function get currentPeer () :String
+    {
+        return _currentPeer;
+    }
+
+    /**
      * Inform Orth that a {@link Locus} of the given concrete class shall be initialized
      * through the provided {@link AbstractLocusModule} class.
      */
