@@ -39,6 +39,9 @@ public class OrthController extends Controller
     /** Command to log us on. */
     public static const LOGON :String = "Logon";
 
+    /** Command to log us off. */
+    public static const LOGOFF :String = "Logoff";
+
     /** Command to display sign-up info for guests (TODO: not implemented). */
     public static const SHOW_SIGN_UP :String = "ShowSignUp";
 
@@ -60,7 +63,7 @@ public class OrthController extends Controller
 
     /** Command to invite someone to join a guild. */
     public static const INVITE_TO_GUILD :String = "InviteToGuild";
-    
+
     /** Command to accept a previously sent guild invitation. */
     public static const ACCEPT_GUILD_INVITATION :String = "AcceptGuildInvitation";
 
@@ -113,6 +116,16 @@ public class OrthController extends Controller
         DelayUtil.delayFrame(function () :void {
             log.info("Logging on", "creds", creds, "version", _depCon.version);
             _client.logonWithCredentials(creds);
+        });
+    }
+
+    /**
+     * Handles the LOGOFF command.
+     */
+    public function handleLogoff () :void
+    {
+        DelayUtil.delayFrame(function () :void {
+            _client.logoff(true);
         });
     }
 
