@@ -9,5 +9,7 @@ public interface BootablePlaceController
      * Can the local user boot people from this place?
      */
     function canBoot () :Boolean;
+
+    function bootPlayer (playerId :int) :void;
 }
 }

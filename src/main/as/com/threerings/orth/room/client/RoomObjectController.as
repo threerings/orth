@@ -50,7 +50,6 @@ public class RoomObjectController extends RoomController
     /** Some commands */
     public static const EDIT_DOOR :String = "EditDoor";
     public static const PUBLISH_ROOM :String = "PublishRoom";
-    public static const SEND_POSTCARD :String = "SendPostcard";
 
     // documentation inherited
     override protected function createRoomView () :RoomView
@@ -62,6 +61,11 @@ public class RoomObjectController extends RoomController
     public function canBoot () :Boolean
     {
         return canManageRoom();
+    }
+
+    public function bootPlayer (playerId :int) :void
+    {
+        // This requires a service invocation, and must be implemented by a concrete subclass.
     }
 
     /**

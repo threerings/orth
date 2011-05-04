@@ -805,16 +805,6 @@ public class RoomController extends SceneController
         _locDir.moveTo(placeOid);
     }
 
-    /**
-     * Handles booting a user.
-     */
-    public function handleBootFromPlace (memberId :int) :void
-    {
-        log.warning("BOOT_FROM_PLACE not implemented.");
-    }
-
-
-
     protected function doSnapshot () :void
     {
         // ORTH TODO
