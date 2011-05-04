@@ -43,10 +43,8 @@ public class AbstractControl extends EventDispatcher
         var events :EventDispatcher;
 
         if (disp.root.loaderInfo.sameDomain) {
-            trace("CONTROL:: Using the sprite itself as EventDispatcher.");
             events = disp;
         } else {
-            trace("CONTROL:: Using LoaderInfo as EventDispatcher.");
 
             events = disp.root.loaderInfo.sharedEvents;
             // set up the unload event to propagate
