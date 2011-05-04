@@ -31,7 +31,7 @@ public class FurniData extends SimpleStreamableObject
         scaleY = 1;
         rotation = 0;
     }
-    
+
 // GENERATED STREAMING START
     public var id :int;
 
@@ -110,7 +110,7 @@ public class FurniData extends SimpleStreamableObject
     }
 
     /**
-     * Set whether or not this furni doesn't scale.
+     * Set whether or not this furni is a parallax scrolling element.
      */
     public function setParallax (parallax :Boolean) :void
     {
@@ -118,11 +118,29 @@ public class FurniData extends SimpleStreamableObject
     }
 
     /**
-     * Is this furniture non-scaling?
+     * Is this furniture a parallax scrolling element?
      */
     public function isParallax () :Boolean
     {
         return isLayoutInfo(PARALLAX_FLAG);
+    }
+
+    /**
+     * Set whether or not this furni is a static scrolling element.
+     * This is only useful for live content, i.e. SWF's.
+     */
+    public function setStatic (static :Boolean) :void
+    {
+        setLayoutInfo(STATIC_FLAG, static);
+    }
+
+    /**
+     * Is this furniture a static scrolling element?
+     * This is only useful for live content, i.e. SWF's.
+     */
+    public function isStatic () :Boolean
+    {
+        return isLayoutInfo(STATIC_FLAG);
     }
 
     // from DSet_Entry
@@ -247,6 +265,7 @@ public class FurniData extends SimpleStreamableObject
 
     protected static const NOSCALE_FLAG :int = (1 << 0);
     protected static const PARALLAX_FLAG :int = (1 << 1);
+    protected static const STATIC_FLAG :int = (1 << 1);
 
 // GENERATED CLASSFINISH START
 }

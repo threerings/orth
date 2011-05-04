@@ -81,11 +81,29 @@ public class FurniData extends SimpleStreamableObject
     }
 
     /**
-     * Is this furniture non-scaling?
+     * Is this furniture a parallax element?
      */
     public boolean isParallax ()
     {
         return isLayoutInfo(PARALLAX_FLAG);
+    }
+
+    /**
+     * Set whether or not this furni is a static element, i.e. it does not animate.
+     * This is only useful for live content, i.e. SWF's.
+     */
+    public void setStatic (boolean isStatic)
+    {
+        setLayoutInfo(STATIC_FLAG, isStatic);
+    }
+
+    /**
+     * Is this furniture non-static?
+     * This is only useful for live content, i.e. SWF's.
+     */
+    public boolean isStatic ()
+    {
+        return isLayoutInfo(STATIC_FLAG);
     }
 
     /**
@@ -162,4 +180,5 @@ public class FurniData extends SimpleStreamableObject
 
     protected static final int NOSCALE_FLAG = (1 << 0);
     protected static final int PARALLAX_FLAG = (1 << 1);
+    protected static final int STATIC_FLAG = (1 << 2);
 }
