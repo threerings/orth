@@ -2,6 +2,8 @@
 // Orth - a package of MMO services: rooms, parties, guilds, and more!
 // Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.chat.client {
+import com.threerings.orth.aether.data.PlayerName;
+
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.chat.client.ChatDisplay;
@@ -34,6 +36,25 @@ import com.threerings.orth.data.OrthCodes;
 public class OrthChatDirector extends BasicDirector
     implements MessageListener, TellReceiver
 {
+    public static function buildTellMessage (from :PlayerName, text :String) :UserMessage
+    {
+        return buildMessage(from, text, ChatCodes.USER_CHAT_TYPE);
+    }
+
+    public static function buildSpeakMessage (from :PlayerName, text :String) :UserMessage
+    {
+        return buildMessage(from, text, ChatCodes.PLACE_CHAT_TYPE);
+    }
+
+    public static function buildMessage (from :PlayerName, text :String, type :String) :UserMessage
+    {
+        var msg :UserMessage = new UserMessage();
+        msg.speaker = from;
+        msg.mode = ChatCodes.DEFAULT_MODE;
+        msg.setClientInfo(Msgs.CHAT.xlate(text), type);
+        return msg;
+    }
+
     public function OrthChatDirector ()
     {
         super(inject(OrthContext));
@@ -56,11 +77,7 @@ public class OrthChatDirector extends BasicDirector
 
     public function receiveTell (tell :Tell) :void
     {
-        var msg :UserMessage = new UserMessage();
-        msg.speaker = tell.from;
-        msg.mode = ChatCodes.DEFAULT_MODE;
-        msg.setClientInfo(Msgs.CHAT.xlate(tell.message), ChatCodes.USER_CHAT_TYPE);
-        dispatchPreparedMessage(msg);
+        dispatchPreparedMessage(buildTellMessage(tell.from, tell.message));
     }
 
     public function getHistoryList () :HistoryList
@@ -148,18 +165,12 @@ public class OrthChatDirector extends BasicDirector
         // We should decide to go one way or another rather than "convert" here.
         var value :Object = event.getArgs()[0];
         if (OrthChatCodes.SPEAK_MSG_TYPE == event.getName()) {
-            var speak :Speak = Speak(value);
+            dispatchPreparedMessage(buildSpeakMessage(Speak(value).from, Speak(value).message));
 
-            var msg :UserMessage = new UserMessage();
-            msg.speaker = speak.from;
-            msg.mode = ChatCodes.DEFAULT_MODE;
-            msg.setClientInfo(Msgs.CHAT.xlate(speak.message), ChatCodes.PLACE_CHAT_TYPE);
         } else {
             log.warning("Got unhandled message type", "eventName", event.getName(), "event", event);
             return;
         }
-
-        dispatchPreparedMessage(msg);
     }
 
     // from BasicDirector
