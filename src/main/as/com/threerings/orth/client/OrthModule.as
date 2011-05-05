@@ -59,9 +59,6 @@ public class OrthModule extends BindingModule
         bind(RoomEditorController).asSingleton();
         bind(DoorTargetEditController).asSingleton();
 
-        // UI elements
-        bind(ControlBar).asSingleton();
-
         // narya bits
         bind(MessageManager).asSingleton();
     }

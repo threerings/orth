@@ -38,13 +38,10 @@ public class TopPanel extends Sprite
     /** An event dispatched when our location owner changes. */
     public static const LOCATION_OWNER_CHANGED :String = "locationOwnerChanged";
 
-    public static const CLIENT_WIDTH :int = 1024;
-    public static const CLIENT_HEIGHT :int = 560;
-
-    public function TopPanel ()
+    public function TopPanel (panelWidth :Number, panelHeight :Number)
     {
-        _width = CLIENT_WIDTH;
-        _height = CLIENT_HEIGHT + _controlBar.getBarHeight();
+        _width = panelWidth;
+        _height = panelHeight;
 
         // configure the stage
         _stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -54,9 +51,8 @@ public class TopPanel extends Sprite
         this.scrollRect = new Rectangle(0, 0, _width, _height);
 
         this.addChild(_placeBox);
-        this.addChild(_controlBar.asSprite());
 
-        configureUI(_placeBox, _controlBar.asSprite());
+        configureUI(_placeBox);
 
         _stage.addEventListener(Event.RESIZE, function (event :Event) :void {
             needsLayout();
@@ -107,30 +103,24 @@ public class TopPanel extends Sprite
      */
     public function getMainAreaBounds () :Rectangle
     {
-        return new Rectangle(0, 0, _width, CLIENT_HEIGHT);
+        return new Rectangle(0, 0, _width, _height);
     }
 
-    protected function configureUI (placeBox :DisplayObject, controlBar :DisplayObject) :void
+    protected function configureUI (placeBox :DisplayObject) :void
     {
         isAbstract();
     }
 
     protected function needsLayout () :void
     {
-        _width = CLIENT_WIDTH;
-        _height = CLIENT_HEIGHT + _controlBar.getBarHeight();
-
-        doLayout(_placeBox, _controlBar);
+        doLayout(_placeBox);
     }
 
-    protected function doLayout (placeBox :OrthPlaceBox, controlBar :ControlBar) :void
+    protected function doLayout (placeBox :OrthPlaceBox) :void
     {
-        placeBox.setActualSize(_width, CLIENT_HEIGHT);
+        placeBox.setActualSize(_width, _height);
         placeBox.x = 0;
         placeBox.y = 0;
-
-        controlBar.asSprite().x = 0;
-        controlBar.asSprite().y = CLIENT_HEIGHT;
     }
 
     /**
@@ -147,7 +137,6 @@ public class TopPanel extends Sprite
 
     protected const _stage :Stage = inject(Stage);
     protected const _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
-    protected const _controlBar :ControlBar = inject(ControlBar);
     protected const _depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 
     protected var _width :Number

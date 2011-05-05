@@ -34,7 +34,6 @@ import com.threerings.util.ObjectMarshaller;
 import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.chat.client.OrthChatDirector;
-import com.threerings.orth.client.ControlBar;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.OrthPlaceBox;
@@ -841,7 +840,6 @@ public class RoomController extends SceneController
     protected const _spotDir :SpotSceneDirector = inject(SpotSceneDirector);
 
     protected const _topPanel :TopPanel = inject(TopPanel);
-    protected const _controlBar :ControlBar = inject(ControlBar);
 
     /** The room view that we're controlling. */
     protected var _roomView :RoomView;
