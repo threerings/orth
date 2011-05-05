@@ -1,6 +1,6 @@
 //
-// $Id: PrimaryPlace.as 17833 2009-08-14 23:34:17Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.data {
 
 import com.threerings.util.Name;

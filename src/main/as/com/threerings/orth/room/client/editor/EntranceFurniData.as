@@ -1,6 +1,6 @@
 //
-// $Id: EntranceFurniData.as 14149 2008-12-31 18:13:55Z mdb $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client.editor {
 
 import com.threerings.orth.room.data.EntityIdent;

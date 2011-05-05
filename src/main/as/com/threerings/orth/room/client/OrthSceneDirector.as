@@ -1,6 +1,6 @@
 //
-// $Id: OrthSceneDirector.as 18370 2009-10-13 22:43:55Z jamie $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client {
 import flashx.funk.ioc.inject;
 

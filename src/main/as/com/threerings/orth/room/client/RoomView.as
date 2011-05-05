@@ -1,6 +1,6 @@
 //
-// $Id: RoomView.as 18849 2009-12-14 20:14:44Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client {
 import flash.display.BitmapData;
 import flash.display.DisplayObject;

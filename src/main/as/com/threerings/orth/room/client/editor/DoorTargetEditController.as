@@ -1,6 +1,6 @@
 //
-// $Id: DoorTargetEditController.as 18321 2009-10-09 23:04:55Z jamie $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client.editor {
 
 import flashx.funk.ioc.inject;

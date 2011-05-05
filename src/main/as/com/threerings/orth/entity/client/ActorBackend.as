@@ -1,6 +1,6 @@
 //
-// $Id: ActorBackend.as 14404 2009-01-16 21:58:17Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.entity.client {
 
 public class ActorBackend extends EntityBackend

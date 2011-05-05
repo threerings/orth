@@ -1,6 +1,6 @@
 //
-// $Id: FloatingPanel.as 18332 2009-10-11 16:43:21Z jamie $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client.editor.ui {
 
 import flash.display.DisplayObject;

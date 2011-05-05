@@ -1,6 +1,6 @@
 //
-// $Id: ControlBackend.as 15921 2009-04-08 17:58:15Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.client {
 import flash.events.EventDispatcher;
 

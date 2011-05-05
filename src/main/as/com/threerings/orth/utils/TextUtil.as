@@ -1,6 +1,6 @@
 //
-// $Id: TextUtil.as 16580 2009-05-13 02:06:45Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.utils {
 
 import flash.text.TextField;

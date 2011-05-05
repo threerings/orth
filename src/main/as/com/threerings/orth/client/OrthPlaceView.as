@@ -1,6 +1,6 @@
 //
-// $Id: MsoyPlaceView.as 19431 2010-10-22 22:08:36Z zell $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.client {
 
 import com.threerings.crowd.client.PlaceView;

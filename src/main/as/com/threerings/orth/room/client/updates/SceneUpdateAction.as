@@ -1,6 +1,6 @@
 //
-// $Id: SceneUpdateAction.as 18597 2009-11-05 21:10:56Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client.updates {
 import com.threerings.whirled.data.SceneUpdate;
 

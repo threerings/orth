@@ -1,6 +1,6 @@
 //
-// $Id: OrthScene.as 18599 2009-11-05 21:48:58Z jamie $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.data {
 import flash.errors.IllegalOperationError;
 

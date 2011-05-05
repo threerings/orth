@@ -1,6 +1,6 @@
 //
-// $Id: FurniUpdate_Change.as 10500 2008-08-07 19:14:38Z mdb $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.data {
 
 /**

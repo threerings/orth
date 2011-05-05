@@ -1,6 +1,6 @@
 //
-// $Id: PartyContext.as 16175 2009-04-23 20:56:15Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.party.client {
 
 import com.threerings.presents.util.PresentsContext;

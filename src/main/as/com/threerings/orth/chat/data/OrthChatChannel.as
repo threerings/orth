@@ -1,6 +1,6 @@
 //
-// $Id: MsoyChatChannel.as 19627 2010-11-24 16:02:41Z zell $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.chat.data {
 
 import com.threerings.crowd.chat.data.ChatChannel;

@@ -1,6 +1,6 @@
 //
-// $Id: ItemUsedDialog.as 14724 2009-02-09 00:56:09Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client.editor {
 
 import com.threerings.flex.FlexUtil;

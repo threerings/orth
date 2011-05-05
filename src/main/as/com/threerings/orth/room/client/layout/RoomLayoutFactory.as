@@ -1,6 +1,6 @@
 //
-// $Id: RoomLayoutFactory.as 14311 2009-01-09 19:46:49Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client.layout {
 import com.threerings.orth.room.client.RoomView;
 import com.threerings.orth.room.data.Decor;

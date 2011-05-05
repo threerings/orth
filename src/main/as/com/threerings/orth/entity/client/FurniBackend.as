@@ -1,6 +1,6 @@
 //
-// $Id: FurniBackend.as 18542 2009-10-29 22:29:47Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.entity.client {
 
 import flashx.funk.ioc.inject;

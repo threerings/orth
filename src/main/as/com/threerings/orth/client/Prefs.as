@@ -1,6 +1,6 @@
 //
-// $Id: Prefs.as 18850 2009-12-14 20:27:03Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.client {
 
 import flash.events.EventDispatcher;

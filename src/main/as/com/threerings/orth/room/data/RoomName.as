@@ -1,6 +1,6 @@
 //
-// $Id: RoomName.as 9356 2008-06-03 01:51:42Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;

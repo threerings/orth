@@ -1,6 +1,6 @@
 //
-// $Id: HistoryList.as 17836 2009-08-15 00:07:09Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.chat.client {
 
 import com.threerings.crowd.chat.client.ChatDisplay;

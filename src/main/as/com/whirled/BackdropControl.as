@@ -1,8 +1,6 @@
 //
-// $Id: BackdropControl.as 9242 2009-04-24 00:36:13Z mdb $
-//
-// Copyright (c) 2007-2009 Three Rings Design, Inc. Please do not redistribute.
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.whirled {
 
 import flash.display.DisplayObject;

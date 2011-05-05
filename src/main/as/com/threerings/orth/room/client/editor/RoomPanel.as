@@ -1,6 +1,6 @@
 //
-// $Id: RoomPanel.as 18260 2009-10-05 19:21:11Z jamie $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client.editor {
 
 import flash.events.Event;

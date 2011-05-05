@@ -1,6 +1,6 @@
 //
-// $Id: MsoyMediaContainer.as 19763 2010-12-08 03:07:58Z zell $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client {
 
 import com.threerings.orth.data.MediaDesc;

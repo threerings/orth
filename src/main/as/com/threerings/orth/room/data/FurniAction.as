@@ -1,6 +1,6 @@
 //
-// $Id: ActorInfo.java 16914 2009-05-27 05:54:19Z mdb $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.data {
 
 import com.threerings.util.ByteEnum;

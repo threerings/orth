@@ -1,6 +1,6 @@
 //
-// $Id: SkinnableImage.as 8845 2008-04-15 17:08:32Z nathan $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client.editor.ui {
 
 import flash.display.DisplayObject;

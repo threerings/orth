@@ -1,6 +1,6 @@
 //
-// $Id: MsoyMediaContainer.as 19632 2010-11-26 16:25:14Z zell $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.ui {
 
 import flash.events.ErrorEvent;

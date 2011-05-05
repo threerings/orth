@@ -1,6 +1,6 @@
 //
-// $Id: NotificationDirector.as 19250 2010-06-25 15:15:17Z zell $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.notify.client {
 import flashx.funk.ioc.inject;
 

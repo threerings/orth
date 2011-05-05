@@ -1,6 +1,6 @@
 //
-// $Id: BootablePlaceController.as 9285 2008-05-28 01:56:04Z ray $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.locus.client {
 
 public interface BootablePlaceController

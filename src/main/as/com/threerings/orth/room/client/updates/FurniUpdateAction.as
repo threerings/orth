@@ -1,6 +1,6 @@
 //
-// $Id: FurniUpdateAction.as 11811 2008-09-18 01:27:51Z mdb $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client.updates {
 
 import com.threerings.whirled.data.SceneUpdate;

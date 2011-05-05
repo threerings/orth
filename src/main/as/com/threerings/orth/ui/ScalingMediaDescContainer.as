@@ -1,6 +1,6 @@
 //
-// $Id: ScalingMsoyMediaContainer.as 19431 2010-10-22 22:08:36Z zell $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.ui {
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.MediaDescSize;

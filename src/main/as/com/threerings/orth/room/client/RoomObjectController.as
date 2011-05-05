@@ -1,6 +1,6 @@
 //
-// $Id: RoomObjectController.as 19189 2010-05-26 19:37:09Z zell $
-
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.room.client {
 
 import flash.events.Event;
