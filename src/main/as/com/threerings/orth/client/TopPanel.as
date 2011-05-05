@@ -53,13 +53,6 @@ public class TopPanel extends Sprite
         // clip all drawing to our client bounds
         this.scrollRect = new Rectangle(0, 0, _width, _height);
 
-        // var stretch :Sprite = new Sprite();
-        // stretch.alpha = 0.2;
-        // stretch.graphics.beginFill(0xFF5511);
-        // stretch.graphics.drawRect(0, 0, _width, _height);
-        // stretch.graphics.endFill();
-        // this.addChild(stretch);
-
         this.addChild(_placeBox);
         this.addChild(_controlBar.asSprite());
 
