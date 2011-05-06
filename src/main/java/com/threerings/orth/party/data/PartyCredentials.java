@@ -11,11 +11,13 @@ import com.threerings.orth.data.TokenCredentials;
  */
 public class PartyCredentials extends TokenCredentials
 {
+    public int partyId;
+
     /**
      * Gets the party id the player wants to access.
      */
     public int getPartyId ()
     {
-        return (Integer)object;
+        return partyId;
     }
 }

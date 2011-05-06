@@ -54,7 +54,7 @@ import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.data.NodeletAuthName;
 import com.threerings.orth.nodelet.data.NodeletBootstrapData;
-import com.threerings.orth.peer.data.OrthNodeObject;
+import com.threerings.orth.nodelet.data.NodeletCredentials;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.OrthPlayerRecord;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
@@ -100,13 +100,12 @@ public abstract class NodeletRegistry
 
     /**
      * Creates a new nodelet registry that will handle all connections with a matching
-     * {@link TokenCredentials} instance and provide hosting logic for the associated nodelet type.
-     * @param dsetName the name of the DSet in {@link OrthNodeObject} that will contain the
-     *        {@link HostedNodelet} instances. Also matches the {@link TokenCredentials#subsystemId}.
+     * {@link NodeletCredentials} instance and provide hosting logic for the associated nodelet
+     * type.
+     * @param nclass the kind of nodelet this regsitry registers
      * @param hostName the name we use if this server is chosen to host a nodelet
-     * @param ports the ports we use if this server is chosed to host a nodelet
+     * @param ports the ports we use if this server is chosen to host a nodelet
      * @param injector access to globals
-     * TODO: isolate the subsystem id and the dset name into an orth-level wrapper
      */
     public NodeletRegistry (Class<? extends Nodelet> nclass, String hostName, int[] ports,
             Injector injector)
@@ -264,9 +263,9 @@ public abstract class NodeletRegistry
         if (!_credentialsClass.isInstance(creds)) {
             return false;
         }
-        TokenCredentials tokenCreds = (TokenCredentials)creds;
-        return tokenCreds.object != null && Objects.equal(
-            tokenCreds.object.getClass(), _nodeletClass);
+        NodeletCredentials nodeletCreds = (NodeletCredentials)creds;
+        return nodeletCreds.object != null && Objects.equal(
+            nodeletCreds.object.getClass(), _nodeletClass);
     }
 
     /**
@@ -328,7 +327,7 @@ public abstract class NodeletRegistry
      */
     protected void setPeeredHostingStrategy (String dsetName, Injector injector)
     {
-        // cannot use the member injector because we want this to be callable from subclass ctor 
+        // cannot use the member injector because we want this to be callable from subclass ctor
         injector.injectMembers(_hoster = new DSetNodeletHoster(dsetName, _nodeletClass) {
             @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
                     ResultListener<HostedNodelet> listener) {
@@ -340,7 +339,7 @@ public abstract class NodeletRegistry
     /**
      * Override the credentials class used.
      */
-    protected void setCredsClass(Class<? extends TokenCredentials> credentialsClass)
+    protected void setCredsClass(Class<? extends NodeletCredentials> credentialsClass)
     {
         _credentialsClass = credentialsClass;
     }
@@ -404,7 +403,7 @@ public abstract class NodeletRegistry
         protected void populateBootstrapData (BootstrapData data)
         {
             super.populateBootstrapData(data);
-            Object nodelet = ((TokenCredentials)_areq.getCredentials()).object;
+            Object nodelet = ((NodeletCredentials)_areq.getCredentials()).object;
             NodeletManager mgr = ((NodeletRegistry)_authdata)._mgrs.get((Nodelet)nodelet);
             if (mgr == null) {
                 throw new RuntimeException(Logger.format("Manager not found", "nodelet", nodelet));
@@ -426,7 +425,7 @@ public abstract class NodeletRegistry
 
     protected Map<Nodelet, NodeletManager> _mgrs = Maps.newHashMap();
 
-    protected Class<? extends TokenCredentials> _credentialsClass = TokenCredentials.class;
+    protected Class<? extends NodeletCredentials> _credentialsClass = NodeletCredentials.class;
     protected Class<? extends Resolver> _resolverClass = Resolver.class;
     protected Class<? extends Session> _sessionClass = Session.class;
     protected Class<? extends NodeletManager> _managerClass = NodeletManager.class;

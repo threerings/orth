@@ -14,10 +14,6 @@ public class TokenCredentials extends Credentials
     /** A session token that identifies a user without requiring username or password. */
     public String sessionToken;
 
-    /** An optional reference to a server object address. This is for use by orth subsystems as
-     * they see fit. If null, the subsystem does not use it. */
-    public Object object;
-
     @Override // from Object
     public String toString ()
     {
@@ -29,8 +25,5 @@ public class TokenCredentials extends Credentials
     protected void toString (StringBuilder buf)
     {
         buf.append(", token=").append(sessionToken);
-        if (object != null) {
-            buf.append(", object=").append(object);
-        }
     }
 }

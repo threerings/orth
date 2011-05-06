@@ -3,38 +3,33 @@
 // Orth - a package of MMO services: rooms, parties, guilds, and more!
 // Copyright 2010-2011 Three Rings Design, Inc.
 
-package com.threerings.orth.data {
+package com.threerings.orth.nodelet.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
-import com.threerings.presents.net.Credentials;
+import com.threerings.orth.data.TokenCredentials;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class TokenCredentials extends Credentials
+public class NodeletCredentials extends TokenCredentials
 {
 // GENERATED CLASSDECL END
 
-    public function TokenCredentials (token :String = null)
-    {
-        this.sessionToken = token;
-    }
-
 // GENERATED STREAMING START
-    public var sessionToken :String;
+    public var object :Object;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        sessionToken = ins.readField(String);
+        object = ins.readObject(Object);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeField(sessionToken);
+        out.writeObject(object);
     }
 
 // GENERATED STREAMING END

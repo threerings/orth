@@ -22,11 +22,11 @@ import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
-import com.threerings.orth.data.TokenCredentials;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.data.NodeletAuthName;
 import com.threerings.orth.nodelet.data.NodeletBootstrapData;
+import com.threerings.orth.nodelet.data.NodeletCredentials;
 
 /**
  * Connects to a nodelet on the server and provides methods, taking care of the generic
@@ -113,7 +113,7 @@ public class NodeletDirector extends BasicDirector
             return;
         }
 
-        var creds :TokenCredentials = new TokenCredentials();
+        var creds :NodeletCredentials = new NodeletCredentials();
         creds.object = nodelet.nodelet;
         creds.sessionToken = getAuthToken();
         _ctx.getClient().setCredentials(creds);
