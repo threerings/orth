@@ -240,8 +240,7 @@ public class OrthController extends Controller
      */
     public function handleInviteToParty (playerId :int) :void
     {
-        // ORTH TODO
-        //         _partyDir.inviteMember(playerId);
+        _partyDir.invitePlayer(playerId);
     }
 
     /**
