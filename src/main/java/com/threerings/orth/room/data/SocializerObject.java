@@ -4,23 +4,17 @@
 
 package com.threerings.orth.room.data;
 
-import javax.annotation.Generated;
 import java.util.Set;
+
+import javax.annotation.Generated;
 
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
-
-import com.threerings.presents.dobj.DSet;
-import com.threerings.util.Name;
-
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.OrthPlayer;
 import com.threerings.orth.entity.data.Avatar;
-import com.threerings.orth.room.data.ActorObject;
-import com.threerings.orth.room.data.EntityIdent;
-import com.threerings.orth.room.data.OrthSceneModel;
-import com.threerings.orth.room.data.RoomPlace;
-import com.threerings.orth.room.data.SocializerInfo;
+import com.threerings.presents.dobj.DSet;
+import com.threerings.util.Name;
 
 /**
  * Represents an Orth player's in-room incarnation.

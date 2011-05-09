@@ -7,11 +7,7 @@ package com.threerings.orth.chat.server;
 import com.google.inject.Inject;
 
 import com.threerings.crowd.chat.data.ChatCodes;
-
-import com.threerings.orth.Log;
-import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerSessionLocator;
-import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.data.ClientObject;
