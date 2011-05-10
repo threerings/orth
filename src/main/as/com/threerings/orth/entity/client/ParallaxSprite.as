@@ -30,8 +30,7 @@ public class ParallaxSprite extends FurniSprite
     override protected function calculateHotspot (
         contentWidth :Number, contentHeight :Number) :Point
     {
-        // we anchor in the lower left, not the lower middle
-        return new Point(0, 0);
+        return new Point(0, Math.min(contentHeight, _sprite.getMaxContentHeight()));
     }
 
     override public function capturesMouse () :Boolean
