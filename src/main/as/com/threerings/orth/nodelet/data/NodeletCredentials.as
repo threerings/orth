@@ -9,6 +9,7 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.data.TokenCredentials;
+import com.threerings.orth.nodelet.data.Nodelet;
 
 // GENERATED PREAMBLE END
 
@@ -18,18 +19,18 @@ public class NodeletCredentials extends TokenCredentials
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
-    public var object :Object;
+    public var nodelet :Nodelet;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        object = ins.readObject(Object);
+        nodelet = ins.readObject(Nodelet);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeObject(object);
+        out.writeObject(nodelet);
     }
 
 // GENERATED STREAMING END

@@ -114,7 +114,7 @@ public class NodeletDirector extends BasicDirector
         }
 
         var creds :NodeletCredentials = new NodeletCredentials();
-        creds.object = nodelet.nodelet;
+        creds.nodelet = nodelet.nodelet;
         creds.sessionToken = getAuthToken();
         _ctx.getClient().setCredentials(creds);
         _ctx.getClient().setServer(nodelet.host, nodelet.ports);

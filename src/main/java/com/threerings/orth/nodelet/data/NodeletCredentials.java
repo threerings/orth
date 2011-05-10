@@ -2,17 +2,22 @@ package com.threerings.orth.nodelet.data;
 
 import com.threerings.orth.data.TokenCredentials;
 
+/**
+ * Credentials for logging into a nodelet server. When the server receives a nodelet credentials
+ * from a login attempt, the class of the {@link #nodelet} will be used to determine which
+ * {@link NodeletRegistry} to use in managing the connection.
+ * <p>Note that locus systems manage their own authentication and so do not use this.</p>
+ */
 public class NodeletCredentials extends TokenCredentials
 {
-    /** An optional reference to a server object address. This is for use by orth subsystems as
-     * they see fit. If null, the subsystem does not use it. */
-    public Object object;
+    /** The nodelet that the client is attempting to access. */
+    public Nodelet nodelet;
 
     protected void toString (StringBuilder buf)
     {
         super.toString(buf);
-        if (object != null) {
-            buf.append(", object=").append(object);
+        if (nodelet != null) {
+            buf.append(", nodelet=").append(nodelet);
         }
     }
 }

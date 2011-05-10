@@ -264,8 +264,8 @@ public abstract class NodeletRegistry
             return false;
         }
         NodeletCredentials nodeletCreds = (NodeletCredentials)creds;
-        return nodeletCreds.object != null && Objects.equal(
-            nodeletCreds.object.getClass(), _nodeletClass);
+        return nodeletCreds.nodelet != null && Objects.equal(
+            nodeletCreds.nodelet.getClass(), _nodeletClass);
     }
 
     /**
@@ -403,8 +403,8 @@ public abstract class NodeletRegistry
         protected void populateBootstrapData (BootstrapData data)
         {
             super.populateBootstrapData(data);
-            Object nodelet = ((NodeletCredentials)_areq.getCredentials()).object;
-            NodeletManager mgr = ((NodeletRegistry)_authdata)._mgrs.get((Nodelet)nodelet);
+            Nodelet nodelet = ((NodeletCredentials)_areq.getCredentials()).nodelet;
+            NodeletManager mgr = ((NodeletRegistry)_authdata)._mgrs.get(nodelet);
             if (mgr == null) {
                 throw new RuntimeException(Logger.format("Manager not found", "nodelet", nodelet));
             }
