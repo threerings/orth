@@ -41,7 +41,7 @@ public class FurniSprite extends EntitySprite
         _sprite.addEventListener(MouseEvent.ROLL_OVER, handleMouseHover);
         _sprite.addEventListener(MouseEvent.ROLL_OUT, handleMouseHover);
         _sprite.addEventListener(MediaContainer.LOADER_READY, handleLoaderReady);
-        _sprite.addEventListener(MediaContainer.DID_SHOW_NEW_MEDIA, loadingStopped);
+        _sprite.addEventListener(Event.COMPLETE, loadingStopped);
         _sprite.removeEventListener(IOErrorEvent.IO_ERROR, loadingStopped);
         _sprite.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, loadingStopped);
 
