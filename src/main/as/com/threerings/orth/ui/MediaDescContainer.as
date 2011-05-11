@@ -12,6 +12,8 @@ import com.threerings.util.Util;
 
 import com.threerings.orth.data.MediaDesc;
 
+import flash.events.Event;
+
 public class MediaDescContainer extends MediaContainer
 {
     public function MediaDescContainer (desc: MediaDesc = null)
@@ -40,6 +42,9 @@ public class MediaDescContainer extends MediaContainer
             super.setMedia(PathMediaDesc(desc).getMediaPath());
         } else if (desc is ObjectMediaDesc) {
             super.setMediaObject(ObjectMediaDesc(desc).getMediaObject());
+
+            // dispatch an artificial COMPLETE event; should really be in MediaContainer
+            dispatchEvent(new Event(Event.COMPLETE));
         } else {
             throw new Error("Unknown media type: " + desc);
         }
