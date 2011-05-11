@@ -129,7 +129,7 @@ public class RoomObjectView extends RoomView
         } else if (update is SceneAttrsUpdate) {
             rereadScene(); // re-read our scene
         }
-        
+
         // this will take care of anything added
         updateAllFurni();
     }
@@ -333,9 +333,10 @@ public class RoomObjectView extends RoomView
         // seen it)
         portalTraversed(getMyCurrentLocation(), true);
 
-        // hide until our background is loaded
+        // hide until our furni sprites are loaded
         this.visible = false;
 
+        // start loading them
         preloadFurni();
     }
 
@@ -372,20 +373,23 @@ public class RoomObjectView extends RoomView
 
     protected function preloadFurni () :void
     {
+        _furniDatas = Sets.newSetOf(FurniData, _scene.getFurni());
         _scene.getFurni().forEach(function (data :FurniData, ix :int, arr :Array) :void {
             updateFurni(data);
             var sprite :FurniSprite = (_furni.get(data.id) as FurniSprite);
             if (sprite != null) {
-                _furniSprites.add(sprite);
                 sprite.setLoadedCallback(furniSpritePreloaded);
+            } else {
+                // shouldn't really be happening...
+                _furniDatas.remove(data);
             }
         });
     }
 
     protected function furniSpritePreloaded (sprite :FurniSprite) :void
     {
-        _furniSprites.remove(sprite);
-        if (_furniSprites.isEmpty()) {
+        _furniDatas.remove(sprite.getFurniData());
+        if (_furniDatas.isEmpty()) {
             backgroundFinishedLoading();
         }
     }
@@ -502,8 +506,8 @@ public class RoomObjectView extends RoomView
     /** The transitory properties of the current scene. */
     protected var _roomObj :OrthRoomObject;
 
-    /** The background sprites to load before we do the rest. */
-    protected var _furniSprites :Set = Sets.newSetOf(FurniSprite);
+    /** The furni to load before we unveil ourselves. */
+    protected var _furniDatas :Set;
 
     /** Monitors and displays loading progress for furni/decor. */
     protected var _loadingWatcher :LoadingWatcher;
