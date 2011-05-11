@@ -142,6 +142,11 @@ public class FurniData extends SimpleStreamableObject
         return isLayoutInfo(STATIC_FLAG);
     }
 
+    override public function toString () :String
+    {
+        return "FurniData[id=" + id + ", item=" + item + "]";
+    }
+
     // from DSet_Entry
     public function getKey () :Object
     {
@@ -235,11 +240,6 @@ public class FurniData extends SimpleStreamableObject
             (this.hotSpotY == that.hotSpotY) &&
             (this.actionType == that.actionType) &&
             Util.equals(this.actionData, that.actionData);
-    }
-
-    override public function toString () :String
-    {
-        return Joiner.simpleToString(this);
     }
 
     /**
