@@ -4,19 +4,16 @@
 
 package com.threerings.orth.room.data;
 
+import static com.threerings.orth.Log.log;
+
 import javax.annotation.Generated;
-
-import com.threerings.util.Name;
-
-import com.threerings.presents.dobj.DObject;
-import com.threerings.presents.dobj.DSet;
-import com.threerings.whirled.spot.data.SpotSceneObject;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.data.SpeakObject;
-import com.threerings.orth.data.MediaDesc;
-
-import static com.threerings.orth.Log.log;
+import com.threerings.presents.dobj.DObject;
+import com.threerings.presents.dobj.DSet;
+import com.threerings.util.Name;
+import com.threerings.whirled.spot.data.SpotSceneObject;
 
 public class OrthRoomObject extends SpotSceneObject
     implements SpeakObject
