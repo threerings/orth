@@ -24,13 +24,6 @@ public class RoomLocus extends Locus
         this.loc = loc;
     }
 
-    public function compareTo (other:Object):int
-    {
-        // ORTH TODO: nothing on the AS client actually uses our Comparableness, but there's
-        // no way for us to say we don't want the generated streamable not to be Comparable
-        throw new Error("Loci aren't comparable in AS");
-    }
-
 // GENERATED STREAMING START
     public var sceneId :int;
 
