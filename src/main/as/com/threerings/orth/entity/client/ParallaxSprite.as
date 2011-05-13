@@ -3,6 +3,7 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.entity.client {
+import com.threerings.orth.client.OrthContext;
 
 import flash.geom.Point;
 
@@ -30,7 +31,7 @@ public class ParallaxSprite extends FurniSprite
     override protected function calculateHotspot (
         contentWidth :Number, contentHeight :Number) :Point
     {
-        return new Point(0, Math.min(contentHeight, _sprite.getMaxContentHeight()));
+        return new Point(0, 0);
     }
 
     override public function capturesMouse () :Boolean
