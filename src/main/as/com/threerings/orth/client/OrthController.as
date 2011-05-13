@@ -3,6 +3,8 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.client {
+import com.threerings.orth.locus.client.LocusDirector;
+import com.threerings.orth.locus.data.Locus;
 
 import flash.display.DisplayObject;
 import flash.display.Stage;
@@ -27,10 +29,6 @@ import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.aether.client.PlayerService;
 import com.threerings.orth.aether.data.AetherCredentials;
-import com.threerings.orth.client.ContextMenuProvider;
-import com.threerings.orth.client.OrthContext;
-import com.threerings.orth.client.OrthDeploymentConfig;
-import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.guild.client.GuildDirector;
 import com.threerings.orth.guild.data.GuildRank;
@@ -44,8 +42,8 @@ public class OrthController extends Controller
     /** Command to log us off. */
     public static const LOGOFF :String = "Logoff";
 
-    /** Command to display sign-up info for guests (TODO: not implemented). */
-    public static const SHOW_SIGN_UP :String = "ShowSignUp";
+    /** Command to move to a certain locus. */
+    public static const GO_LOCUS :String = "GoLocus";
 
     /** Command to show an (external) URL. */
     public static const VIEW_URL :String = "ViewUrl";
@@ -129,6 +127,14 @@ public class OrthController extends Controller
         DelayUtil.delayFrame(function () :void {
             _client.logoff(true);
         });
+    }
+
+    /**
+     * Handles the GO_LOCUS command.
+     */
+    public function handleGoLocus (locus :Locus) :void
+    {
+        _locusDir.moveTo(locus);
     }
 
     /**
@@ -387,6 +393,7 @@ public class OrthController extends Controller
     protected const _depCon :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 
     protected const _partyDir :PartyDirector = inject(PartyDirector);
+    protected const _locusDir :LocusDirector = inject(LocusDirector);
     protected const _aetherDir :AetherDirector = inject(AetherDirector);
     protected const _guildDir :GuildDirector = inject(GuildDirector);
 
