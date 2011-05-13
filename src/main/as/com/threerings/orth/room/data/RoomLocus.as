@@ -7,8 +7,6 @@ package com.threerings.orth.room.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
-import com.threerings.util.Comparable;
-
 import com.threerings.orth.locus.data.Locus;
 
 // GENERATED PREAMBLE END

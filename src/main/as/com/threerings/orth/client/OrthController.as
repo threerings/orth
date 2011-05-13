@@ -3,9 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.client {
-import com.threerings.orth.locus.client.LocusDirector;
-import com.threerings.orth.locus.data.Locus;
-
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.events.ContextMenuEvent;
@@ -32,6 +29,8 @@ import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.guild.client.GuildDirector;
 import com.threerings.orth.guild.data.GuildRank;
+import com.threerings.orth.locus.client.LocusDirector;
+import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.party.client.PartyDirector;
 
 public class OrthController extends Controller

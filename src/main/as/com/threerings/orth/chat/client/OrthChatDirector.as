@@ -3,8 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.chat.client {
-import com.threerings.orth.aether.data.PlayerName;
-
 import flashx.funk.ioc.inject;
 
 import com.threerings.crowd.chat.client.ChatDisplay;
@@ -26,6 +24,7 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakObject;

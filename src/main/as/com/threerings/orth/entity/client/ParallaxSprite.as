@@ -3,8 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.entity.client {
-import com.threerings.orth.client.OrthContext;
-
 import flash.geom.Point;
 
 import com.threerings.orth.room.data.OrthRoomCodes;
