@@ -3,12 +3,13 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.client {
-
 import flash.events.EventDispatcher;
 import flash.media.SoundMixer;
 import flash.media.SoundTransform;
 
 import com.threerings.util.Config;
+import com.threerings.util.Log;
+import com.threerings.util.Preconditions;
 import com.threerings.util.StringUtil;
 
 /**
@@ -48,53 +49,59 @@ public class Prefs
         AUTOSHOW_PREFIX ];
 
     /**
-     * Effect the global sound volume.
+     * Creates our backing Config object using path for persistent local storage. Must be called
+     * before any other Prefs methods are called.
      */
-    public static function useSoundVolume () :void
+    public static function init (path :String) :void
     {
-        // set up the global sound transform
-        SoundMixer.soundTransform = new SoundTransform(getSoundVolume());
+        if (_config != null) {
+            log.warning("Prefs.init called a second time. Ignoring.", "path", path, new Error());
+            return;
+        }
+        _config = new Config(path);
+        _config.addEventListener(Config.CONFIG_VALUE_SET, events.dispatchEvent);
+        useSoundVolume();
     }
 
     public static function getUsername () :String
     {
-        return (_config.getValue(USERNAME, "") as String);
+        return (getConfig().getValue(USERNAME, "") as String);
     }
 
     public static function setUsername (username :String) :void
     {
-        _config.setValue(USERNAME, username);
+        getConfig().setValue(USERNAME, username);
     }
 
     public static function getMachineIdent () :String
     {
-        return (_config.getValue(MACHINE_IDENT, "") as String);
+        return (getConfig().getValue(MACHINE_IDENT, "") as String);
     }
 
     public static function setMachineIdent (ident :String) :void
     {
-        _config.setValue(MACHINE_IDENT, ident);
+        getConfig().setValue(MACHINE_IDENT, ident);
     }
 
     public static function getSoundVolume () :Number
     {
-        return (_config.getValue(VOLUME, 1) as Number);
+        return (getConfig().getValue(VOLUME, 1) as Number);
     }
 
     public static function setSoundVolume (vol :Number) :void
     {
-        _config.setValue(VOLUME, vol);
+        getConfig().setValue(VOLUME, vol);
         useSoundVolume();
     }
 
     public static function getPartyGroup () :int
     {
-        return (_config.getValue(PARTY_GROUP, 0) as int);
+        return (getConfig().getValue(PARTY_GROUP, 0) as int);
     }
 
     public static function setPartyGroup (groupId :int) :void
     {
-        _config.setValue(PARTY_GROUP, groupId);
+        getConfig().setValue(PARTY_GROUP, groupId);
     }
 
     public static function isTutorialIgnored (id :String) :Boolean
@@ -109,12 +116,12 @@ public class Prefs
 
     public static function getTutorialProgress (id :String) :int
     {
-        return _config.getValue(TUTORIAL_PROGRESS_PREFIX + id, 0) as int;
+        return getConfig().getValue(TUTORIAL_PROGRESS_PREFIX + id, 0) as int;
     }
 
     public static function setTutorialProgress (id :String, progress :int) :void
     {
-        _config.setValue(TUTORIAL_PROGRESS_PREFIX + id, progress);
+        getConfig().setValue(TUTORIAL_PROGRESS_PREFIX + id, progress);
     }
 
     /**
@@ -123,7 +130,7 @@ public class Prefs
      */
     public static function getAutoshow (dialogName :String) :Boolean
     {
-        return Boolean(_config.getValue(AUTOSHOW_PREFIX + dialogName, true));
+        return Boolean(getConfig().getValue(AUTOSHOW_PREFIX + dialogName, true));
     }
 
     /**
@@ -132,7 +139,7 @@ public class Prefs
      */
     public static function setAutoshow (dialogName :String, show :Boolean) :void
     {
-        _config.setValue(AUTOSHOW_PREFIX + dialogName, show);
+        getConfig().setValue(AUTOSHOW_PREFIX + dialogName, show);
     }
 
     /**
@@ -154,9 +161,9 @@ public class Prefs
         switch (name) {
         case AUTOSHOW_PREFIX:
         case TUTORIAL_PROGRESS_PREFIX:
-            for each (var key :String in _config.getPropertyNames()) {
+            for each (var key :String in getConfig().getPropertyNames()) {
                 if (StringUtil.startsWith(key, name)) {
-                    values.push([key, _config.getValue(key, null)]);
+                    values.push([key, getConfig().getValue(key, null)]);
                 }
             }
             break;
@@ -164,7 +171,7 @@ public class Prefs
             pushSetElements(getIgnoredTutorialIds());
             break;
         default:
-            var value :Object = _config.getValue(name, null);
+            var value :Object = getConfig().getValue(name, null);
             if (value != null) {
                 values.push([name, value]);
             }
@@ -187,15 +194,15 @@ public class Prefs
                 break;
             case AUTOSHOW_PREFIX:
             case TUTORIAL_PROGRESS_PREFIX:
-                for each (var key :String in _config.getPropertyNames()) {
+                for each (var key :String in getConfig().getPropertyNames()) {
                     if (StringUtil.startsWith(key, name)) {
-                        _config.remove(key);
+                        getConfig().remove(key);
                         ++count;
                     }
                 }
                 break;
             default:
-                _config.remove(name);
+                getConfig().remove(name);
                 ++count;
                 break;
             }
@@ -207,36 +214,32 @@ public class Prefs
         return count;
     }
 
+    protected static function useSoundVolume () :void
+    {
+        // set up the global sound transform
+        SoundMixer.soundTransform = new SoundTransform(getSoundVolume());
+    }
+
     protected static function getIgnoredTutorialIds () :StringSet
     {
         if (_ignoredTutorialIds == null) {
-            _ignoredTutorialIds = new StringSet(_config, IGNORED_TUTORIAL_IDS);
+            _ignoredTutorialIds = new StringSet(getConfig(), IGNORED_TUTORIAL_IDS);
         }
         return _ignoredTutorialIds;
     }
 
-    /** The path of our config object. */
-    protected static const CONFIG_PATH :String = "rsrc/config/msoy";
+    protected static function getConfig () :Config
+    {
+        Preconditions.checkNotNull(_config, "Prefs.init must be called before Prefs is used");
+        return _config;
+    }
 
     /** A set of tutorial item ids that have been ignored. */
     protected static var _ignoredTutorialIds :StringSet;
 
-    /** Our config object. */
-    protected static var _config :Config = new Config(null);
-
-    protected static var _machineConfig :Config = new Config(CONFIG_PATH);
-
-    /**
-    * A static initializer.
-    */
-    private static function staticInit () :void
-    {
-        // route events
-        _config.addEventListener(Config.CONFIG_VALUE_SET, events.dispatchEvent);
-        _machineConfig.addEventListener(Config.CONFIG_VALUE_SET, events.dispatchEvent);
-    }
-
-    staticInit();
+    /** Our config object. Access should go through getConfig. */
+    protected static var _config :Config;
+    private static const log :Log = Log.getLog(Prefs);
 }
 }
 
