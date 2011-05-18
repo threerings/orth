@@ -4,6 +4,8 @@
 
 package com.threerings.orth.client {
 
+import com.threerings.util.StageLifetime;
+import com.threerings.util.Util;
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.display.Stage;
@@ -39,14 +41,16 @@ public class TopPanel extends Sprite
     /** An event dispatched when our location owner changes. */
     public static const LOCATION_OWNER_CHANGED :String = "locationOwnerChanged";
 
-    public function TopPanel (panelWidth :Number, panelHeight :Number)
+    public function TopPanel (trackStageSize :Boolean = true)
     {
-        _width = panelWidth;
-        _height = panelHeight;
+        _trackStageSize = trackStageSize;
 
         // configure the stage
         _stage.scaleMode = StageScaleMode.NO_SCALE;
         _stage.align = StageAlign.TOP_LEFT;
+
+        _width = _stage.stageWidth;
+        _height = _stage.stageHeight;
 
         // clip all drawing to our client bounds
         this.scrollRect = new Rectangle(0, 0, _width, _height);
@@ -55,7 +59,12 @@ public class TopPanel extends Sprite
 
         configureUI(_placeBox);
 
+
         _stage.addEventListener(Event.RESIZE, function (event :Event) :void {
+            if (_trackStageSize) {
+                _width = _stage.stageWidth;
+                _height = _stage.stageHeight;
+            }
             needsLayout();
         });
 
@@ -130,9 +139,16 @@ public class TopPanel extends Sprite
     protected function getBlankPlaceView () :DisplayObject
     {
         var canvas :Sprite = new Sprite();
-        canvas.graphics.beginFill(0x000000);
-        canvas.graphics.drawRect(0, 0, _width, _height);
-        canvas.graphics.endFill();
+        function fill () :void {
+            canvas.graphics.beginFill(0x000000);
+            canvas.graphics.drawRect(0, 0, _width, _height);
+            canvas.graphics.endFill();
+        }
+        if (_trackStageSize) {
+            StageLifetime.listenForSizeChange(canvas, Util.adapt(fill));
+        } else {
+            fill();
+        }
         return canvas;
     }
 
@@ -140,6 +156,7 @@ public class TopPanel extends Sprite
     protected const _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
     protected const _depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 
+    protected var _trackStageSize :Boolean;
     protected var _width :Number
     protected var _height :Number;
 }
