@@ -4,18 +4,20 @@
 
 package com.threerings.orth.client {
 
-import com.threerings.util.StageLifetime;
-import com.threerings.util.Util;
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.display.Stage;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
+import flash.geom.Point;
 import flash.geom.Rectangle;
 
 import flashx.funk.ioc.inject;
 import flashx.funk.util.isAbstract;
+
+import com.threerings.util.StageLifetime;
+import com.threerings.util.ValueEvent;
 
 /**
  * Dispatched when the name of our current location changes. The value supplied will be a string
@@ -33,6 +35,16 @@ import flashx.funk.util.isAbstract;
  */
 [Event(name="locationOwnerChanged", type="com.threerings.util.ValueEvent")]
 
+/**
+ * Dispatched when the width and height of the top panel changes. Note that this is a distinct
+ * concept from DisplayObject width and height since we store separate members so that the place
+ * box and layers can update accordingly. The value is a Point object with x = width and
+ * y = height.
+ *
+ * @eventType com.threerings.msoy.client.TopPanel.SIZE_CHANGED
+ */
+[Event(name="sizeChanged", type="com.threerings.util.ValueEvent")]
+
 public class TopPanel extends Sprite
 {
     /** An event dispatched when our location name changes. */
@@ -41,6 +53,16 @@ public class TopPanel extends Sprite
     /** An event dispatched when our location owner changes. */
     public static const LOCATION_OWNER_CHANGED :String = "locationOwnerChanged";
 
+    /** An event dispatched when our size changes. */
+    public static const SIZE_CHANGED :String = "sizeChanged";
+
+    /**
+     * Creates a new top panel. Initially the size of the top panel is set to the stage size.
+     * Subclasses can change this later using setSize.
+     * @param trackStageSize if set, then whenever the stage size changes, the top panel will set
+     * its size to the new stage size.
+     * @see flash.events.Event#RESIZE
+     */
     public function TopPanel (trackStageSize :Boolean = true)
     {
         _trackStageSize = trackStageSize;
@@ -49,21 +71,15 @@ public class TopPanel extends Sprite
         _stage.scaleMode = StageScaleMode.NO_SCALE;
         _stage.align = StageAlign.TOP_LEFT;
 
-        _width = _stage.stageWidth;
-        _height = _stage.stageHeight;
-
-        // clip all drawing to our client bounds
-        this.scrollRect = new Rectangle(0, 0, _width, _height);
-
         this.addChild(_placeBox);
+
+        setSize(_stage.stageWidth, _stage.stageHeight);
 
         configureUI(_placeBox);
 
-
         _stage.addEventListener(Event.RESIZE, function (event :Event) :void {
             if (_trackStageSize) {
-                _width = _stage.stageWidth;
-                _height = _stage.stageHeight;
+                setSize(_stage.stageWidth, _stage.stageHeight);
             }
             needsLayout();
         });
@@ -116,6 +132,40 @@ public class TopPanel extends Sprite
         return new Rectangle(0, 0, _width, _height);
     }
 
+    /**
+     * Guarantees that the given listener function will be notified with a SIZE_CHANGED ValueEvent
+     * any time the given display object is added to the stage (including now if it is already on)
+     * or the top panel size changes.
+     * @see TopPanel#SIZE_CHANGED
+     */
+    public function trackSize (disp :DisplayObject, listener :Function) :void
+    {
+        StageLifetime.listen(disp, function (_:*) :void {
+            addEventListener(SIZE_CHANGED, listener);
+            listener(makeSizeChangedEvent());
+        }, function (_:*) :void {
+            removeEventListener(SIZE_CHANGED, listener);
+        }, true);
+    }
+
+    protected function setSize (w :Number, h :Number) :void
+    {
+        _width = w;
+        _height = h;
+
+        // clip all drawing to our client bounds
+        scrollRect = new Rectangle(0, 0, w, h);
+
+        needsLayout();
+
+        dispatchEvent(makeSizeChangedEvent());
+    }
+
+    protected function makeSizeChangedEvent () :ValueEvent
+    {
+        return new ValueEvent(SIZE_CHANGED, new Point(_width, _height));
+    }
+
     protected function configureUI (placeBox :DisplayObject) :void
     {
         isAbstract();
@@ -139,16 +189,12 @@ public class TopPanel extends Sprite
     protected function getBlankPlaceView () :DisplayObject
     {
         var canvas :Sprite = new Sprite();
-        function fill () :void {
+        trackSize(canvas, function (e :ValueEvent) :void {
+            canvas.graphics.clear();
             canvas.graphics.beginFill(0x000000);
-            canvas.graphics.drawRect(0, 0, _width, _height);
+            canvas.graphics.drawRect(0, 0, e.value.x, e.value.y);
             canvas.graphics.endFill();
-        }
-        if (_trackStageSize) {
-            StageLifetime.listenForSizeChange(canvas, Util.adapt(fill));
-        } else {
-            fill();
-        }
+        });
         return canvas;
     }
 
