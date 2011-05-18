@@ -65,16 +65,18 @@ public class RoomWindow extends FrameSprite
         relayout();
     }
 
-    public function getScrollRectangle () :Rectangle
+    public function getScrollOffset () :Point
     {
         var rect :Rectangle = this.scrollRect;
-        return new Rectangle(rect.x - SOME_BIG_NUMBER, rect.y - SOME_BIG_NUMBER, _width, _height);
+        return new Point(rect.x - SOME_BIG_NUMBER, rect.y - SOME_BIG_NUMBER);
     }
 
     public function setScrollOffset (offset :Point) :void
     {
-        scrollRect = new Rectangle(
-            offset.x + SOME_BIG_NUMBER, offset.y + SOME_BIG_NUMBER, _width, _height);
+        var r :Rectangle = getWindowBounds();
+        r.x = offset.x + SOME_BIG_NUMBER;
+        r.y = offset.y + SOME_BIG_NUMBER;
+        scrollRect = r;
     }
 
     public function setScrollLock (lockX :Boolean, lockY :Boolean) :void
@@ -183,7 +185,7 @@ public class RoomWindow extends FrameSprite
         // for now, our only Y urge is to not have any offset at all
         var newEdgeY :Number = 0;
 
-        var currentScroll :Point = getScrollRectangle().topLeft;
+        var currentScroll :Point = getScrollOffset();
         var scrollTo :Point = new Point(newEdgeX, newEdgeY);
         if (!_jumpX) {
             var dX :Number = newEdgeX - currentScroll.x;
