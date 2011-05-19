@@ -19,8 +19,6 @@ import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerSessionLocator;
-import com.threerings.orth.chat.data.SpeakMarshaller;
-import com.threerings.orth.chat.data.SpeakObject;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.chat.data.TellMarshaller;
 import com.threerings.orth.data.OrthCodes;
@@ -32,17 +30,6 @@ public class ChatManager
     public void init ()
     {
         _invMgr.registerProvider(this, TellMarshaller.class, OrthCodes.AETHER_GROUP);
-    }
-
-    /**
-     * Called when a new {@link SpeakObject} comes into existence and needs speaking to
-     * work through it. The returned provider
-     */
-    public SpeakMarshaller registerSpeakObject (SpeakObject speakObj)
-    {
-        SpeakProvider provider = new OrthSpeakProvider(speakObj, _locator);
-
-        return _invMgr.registerProvider(provider, SpeakMarshaller.class);
     }
 
     // from TellProvider

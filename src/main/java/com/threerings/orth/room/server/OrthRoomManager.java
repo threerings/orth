@@ -21,7 +21,10 @@ import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.Place;
 import com.threerings.crowd.data.PlaceObject;
+import com.threerings.orth.aether.server.PlayerSessionLocator;
+import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.server.ChatManager;
+import com.threerings.orth.chat.server.OrthSpeakProvider;
 import com.threerings.orth.room.client.OrthRoomService;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityIdent;
@@ -300,8 +303,10 @@ public class OrthRoomManager extends SpotSceneManager
         _orthObj.setOrthRoomService(addProvider(this, OrthRoomMarshaller.class));
         _orthObj.addListener(_roomListener);
 
+
         // add the Orth speak service for this room
-        _orthObj.orthSpeakService = _chatMgr.registerSpeakObject(_orthObj);
+        _orthObj.orthSpeakService =
+            addProvider(new OrthSpeakProvider(_orthObj, _locator), SpeakMarshaller.class);
 
         OrthScene mscene = (OrthScene) _scene;
         _orthObj.startTransaction();
@@ -491,6 +496,7 @@ public class OrthRoomManager extends SpotSceneManager
     /** Listens to the room object. */
     protected RoomListener _roomListener = new RoomListener();
 
+    @Inject protected PlayerSessionLocator _locator;
     @Inject protected MemoryRepository _memSupply;
     @Inject protected PeerManager _peerMgr;
     @Inject protected ChatManager _chatMgr;
