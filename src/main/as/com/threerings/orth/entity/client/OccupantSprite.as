@@ -173,7 +173,7 @@ public class OccupantSprite extends EntitySprite
      */
     public function getBubblePosition () :Point
     {
-        return _sprite.localToGlobal(_bubblePosition);
+        return _extras.localToGlobal(_bubblePosition);
     }
 
     /**
@@ -566,7 +566,7 @@ public class OccupantSprite extends EntitySprite
         // little in Whirled, and we've decided we don't care. Avatars with hidden names are cool,
         // and you can still click on the avatar to do whatever you need to do.
         // Also, the room's occupant list can be used to act on other avatars.
-        _label.y = (baseY - _label.height) / _extras.scaleY;
+        _label.y = baseY / _extras.scaleY - _label.height;
     }
 
     /**
@@ -577,7 +577,8 @@ public class OccupantSprite extends EntitySprite
     {
         // note: may overflow the media area..
         var hotSpot :Point = getMediaHotSpot();
-        var hotX :Number = Math.abs(_sprite.getMediaScaleX() * _locScale) * hotSpot.x;
+        var hotX :Number = Math.abs(_sprite.getMediaScaleX() * _locScale) *
+            hotSpot.x / _extras.scaleX;
 
         var baseY :Number = _label.y; // we depend on recheckLabel()
         if (_decorations != null) {
