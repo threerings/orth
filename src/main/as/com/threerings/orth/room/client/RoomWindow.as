@@ -47,6 +47,7 @@ public class RoomWindow extends FrameSprite
         view.x = SOME_BIG_NUMBER;
         view.y = SOME_BIG_NUMBER;
 
+        setScrollOffset(new Point(0, 0));
         setZoom(FULL_HEIGHT);
     }
 
@@ -61,7 +62,6 @@ public class RoomWindow extends FrameSprite
         _width = unscaledWidth;
         _height = unscaledHeight;
 
-        setScrollOffset(new Point(0, 0));
         relayout();
     }
 
