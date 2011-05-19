@@ -3,7 +3,7 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.room.client {
-
+import flash.display.Stage;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
 import flash.events.MouseEvent;
@@ -16,6 +16,7 @@ import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.whirled.data.SceneUpdate;
 
+import com.threerings.util.F;
 import com.threerings.util.ObjectMarshaller;
 import com.threerings.util.ValueEvent;
 
@@ -277,8 +278,13 @@ public class RoomObjectController extends RoomController
 
         _roomView.addEventListener(MouseEvent.CLICK, mouseClicked);
         _roomView.addEventListener(Event.ENTER_FRAME, checkMouse, false, int.MIN_VALUE);
-        _roomView.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyEvent);
-        _roomView.stage.addEventListener(KeyboardEvent.KEY_UP, keyEvent);
+        var stage :Stage = _roomView.stage;
+        stage.addEventListener(KeyboardEvent.KEY_DOWN, keyEvent);
+        stage.addEventListener(KeyboardEvent.KEY_UP, keyEvent);
+        _roomView.addEventListener(Event.REMOVED_FROM_STAGE, F.justOnce(function () :void {
+            stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyEvent);
+            stage.removeEventListener(KeyboardEvent.KEY_UP, keyEvent);
+        }));
     }
 
     // documentation inherited
@@ -294,8 +300,6 @@ public class RoomObjectController extends RoomController
 
         _roomView.removeEventListener(MouseEvent.CLICK, mouseClicked);
         _roomView.removeEventListener(Event.ENTER_FRAME, checkMouse);
-        _roomView.stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyEvent);
-        _roomView.stage.removeEventListener(KeyboardEvent.KEY_UP, keyEvent);
 
         _roomView.removeElement(_walkTarget);
         _roomView.removeElement(_flyTarget);

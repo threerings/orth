@@ -3,6 +3,7 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.locus.client {
+import flash.display.Sprite;
 import flash.utils.getQualifiedClassName;
 
 import flashx.funk.ioc.inject;
@@ -21,6 +22,7 @@ import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.client.ClientObserver;
 
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusMarshaller;
@@ -71,7 +73,7 @@ public class LocusDirector extends BasicDirector
 
     /**
      * The hostname of the locus peer we're currently logged into.
-     * 
+     *
      * This value may be null, if we've yet to log in, disconnected, or we are in mid-move.
      */
     public function get currentPeer () :String
@@ -126,6 +128,10 @@ public class LocusDirector extends BasicDirector
         // remember where we're going
         _pending = locus;
 
+        // Clear the current view out since it's no longer active.
+        // TODO - add a spinner for when locus materialization takes a while
+        _top.setMainView(new Sprite());
+
         // begin by locating the correct peer
         _lsvc.materializeLocus(_pending, this);
 
@@ -147,8 +153,6 @@ public class LocusDirector extends BasicDirector
         log.warning("Place resolution request failed", "cause", cause);
         _octx.displayFeedback(OrthCodes.WORLD_MSGS, cause);
     }
-
-    protected var _currentCtx :LocusContext;
 
     // from Java LocusService_PlaceResolutionListener
     public function locusMaterialized (hosted :HostedNodelet) :void
@@ -250,7 +254,10 @@ public class LocusDirector extends BasicDirector
         _lsvc = LocusService(client.requireService(LocusService));
     }
 
+    protected var _currentCtx :LocusContext;
+
     protected var _octx :OrthContext = inject(OrthContext);
+    protected var _top :TopPanel = inject(TopPanel);
 
     protected var _lsvc :LocusService;
 
