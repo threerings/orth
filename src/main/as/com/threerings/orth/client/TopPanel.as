@@ -80,8 +80,9 @@ public class TopPanel extends Sprite
         _stage.addEventListener(Event.RESIZE, function (event :Event) :void {
             if (_trackStageSize) {
                 setSize(_stage.stageWidth, _stage.stageHeight);
+            } else {
+                needsLayout();
             }
-            needsLayout();
         });
 
         setMainView(getBlankPlaceView());
