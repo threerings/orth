@@ -141,6 +141,17 @@ public class RoomObjectView extends RoomView
         return (getOccupant(_ctx.getClient().getClientOid()) as MemberSprite);
     }
 
+    public override function notifyScroll (offset :Point) :void
+    {
+        super.notifyScroll(offset);
+
+        // all speakers have effectively moved here because the bubble positions are reported in
+        // global coordinates
+        for each (var occSprite :OccupantSprite in _occupants.values()) {
+            speakerMoved(occSprite.getOccupantInfo().username, occSprite.getBubblePosition());
+        }
+    }
+
     /**
      * A convenience function to get the specified occupant sprite, even if it's on the way out the
      * door.
