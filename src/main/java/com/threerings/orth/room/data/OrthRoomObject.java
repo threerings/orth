@@ -9,14 +9,13 @@ import static com.threerings.orth.Log.log;
 import javax.annotation.Generated;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
-import com.threerings.orth.chat.data.SpeakObject;
-import com.threerings.presents.dobj.DObject;
+import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.util.Name;
 import com.threerings.whirled.spot.data.SpotSceneObject;
 
 public class OrthRoomObject extends SpotSceneObject
-    implements SpeakObject
+    implements SpeakRouter
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>name</code> field. */
@@ -61,23 +60,6 @@ public class OrthRoomObject extends SpotSceneObject
 
     /** Contains the memories for all entities in this room. */
     public DSet<EntityMemories> memories = DSet.newDSet();
-
-    public OrthRoomObject ()
-    {
-        super();
-    }
-
-    // from SpeakObject
-    public DObject asDObject ()
-    {
-        return this;
-    }
-
-    // from Speakobject
-    public SpeakMarshaller getSpeakService ()
-    {
-        return orthSpeakService;
-    }
 
     // AUTO-GENERATED: METHODS START
     /**

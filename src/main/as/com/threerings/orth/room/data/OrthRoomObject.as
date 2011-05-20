@@ -17,13 +17,13 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
-import com.threerings.orth.chat.data.SpeakObject;
+import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
 public class OrthRoomObject extends SpotSceneObject
-    implements SpeakObject
+    implements SpeakRouter
 {
 // GENERATED CLASSDECL END
 
@@ -81,14 +81,14 @@ public class OrthRoomObject extends SpotSceneObject
     }
 // GENERATED STREAMING END
 
-    // from SpeakObject
-    public function asDObject () :DObject
+    // from SpeakRouter
+    public function get speakObject () :DObject
     {
         return this;
     }
 
-    // from SpeakObject
-    public function getSpeakService () :SpeakMarshaller
+    // from SpeakRouter
+    public function get speakMarshaller () :SpeakMarshaller
     {
         return orthSpeakService;
     }

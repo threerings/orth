@@ -27,7 +27,7 @@ import com.threerings.presents.dobj.MessageListener;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
-import com.threerings.orth.chat.data.SpeakObject;
+import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
@@ -64,7 +64,7 @@ public class OrthChatDirector extends BasicDirector
         _ctx.getClient().getInvocationDirector().registerReceiver(new TellDecoder(this));
     }
 
-    public function get placeObject () :SpeakObject
+    public function get placeObject () :SpeakRouter
     {
         return _place;
     }
@@ -128,7 +128,7 @@ public class OrthChatDirector extends BasicDirector
         });
     }
 
-    public function enteredLocation (place :SpeakObject) :void
+    public function enteredLocation (place :SpeakRouter) :void
     {
         // nix our old location if we have one
         if (_place != null) {
@@ -136,14 +136,14 @@ public class OrthChatDirector extends BasicDirector
         }
 
         _place = place;
-        place.asDObject().addListener(this);
+        place.speakObject.addListener(this);
     }
 
-    public function leftLocation (place :SpeakObject) :void
+    public function leftLocation (place :SpeakRouter) :void
     {
         // if this is our current place chat, then stop listening to it
         if (place == _place) {
-            _place.asDObject().removeListener(this);
+            _place.speakObject.removeListener(this);
             _place = null;
         }
     }
@@ -208,7 +208,7 @@ public class OrthChatDirector extends BasicDirector
     }
 
     protected var _clobj :ClientObject;
-    protected var _place :SpeakObject;
+    protected var _place :SpeakRouter;
     protected var _chatHistory :HistoryList;
     protected var _tellService :TellService;
 

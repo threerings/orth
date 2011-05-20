@@ -21,10 +21,12 @@ import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.Place;
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.orth.aether.server.PlayerSessionLocator;
+import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.chat.data.OrthChatCodes;
+import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakMarshaller;
-import com.threerings.orth.chat.server.ChatManager;
-import com.threerings.orth.chat.server.OrthSpeakProvider;
+import com.threerings.orth.chat.server.SpeakProvider;
+import com.threerings.orth.data.OrthPlayer;
 import com.threerings.orth.room.client.OrthRoomService;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityIdent;
@@ -38,6 +40,7 @@ import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.RoomPlace;
 
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.peer.server.PeerManager;
@@ -59,7 +62,7 @@ import static com.threerings.orth.Log.log;
  * This class relies on {@link MemoryRepository} having been previously bound.
  */
 public class OrthRoomManager extends SpotSceneManager
-    implements OrthRoomProvider
+    implements OrthRoomProvider, SpeakProvider
 {
     public OrthRoomManager ()
     {
@@ -80,6 +83,15 @@ public class OrthRoomManager extends SpotSceneManager
 
         // dispatch this as a simple MessageEvent
         _plobj.postMessage(OrthRoomCodes.SPRITE_MESSAGE, item, name, arg, isAction);
+    }
+
+    @Override
+    public void speak (ClientObject caller, String msg, InvocationListener arg2)
+        throws InvocationException
+    {
+        PlayerName name = ((OrthPlayer)caller).getPlayerName();
+
+        _plobj.postMessage(OrthChatCodes.SPEAK_MSG_TYPE, new Speak(name, msg));
     }
 
     @Override
@@ -305,8 +317,7 @@ public class OrthRoomManager extends SpotSceneManager
 
 
         // add the Orth speak service for this room
-        _orthObj.orthSpeakService =
-            addProvider(new OrthSpeakProvider(_orthObj, _locator), SpeakMarshaller.class);
+        _orthObj.orthSpeakService = addProvider(this, SpeakMarshaller.class);
 
         OrthScene mscene = (OrthScene) _scene;
         _orthObj.startTransaction();
@@ -496,8 +507,6 @@ public class OrthRoomManager extends SpotSceneManager
     /** Listens to the room object. */
     protected RoomListener _roomListener = new RoomListener();
 
-    @Inject protected PlayerSessionLocator _locator;
     @Inject protected MemoryRepository _memSupply;
     @Inject protected PeerManager _peerMgr;
-    @Inject protected ChatManager _chatMgr;
 }
