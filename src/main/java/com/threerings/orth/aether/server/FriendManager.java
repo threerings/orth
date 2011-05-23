@@ -241,12 +241,8 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     {
         log.debug("Notifying friends", "playerId", playerId, "status", status);
 
-//CWG-JD Why manually box this? For efficiency? The JVM will take care of that for you.
-//JD-CWG Yes... I didn't know the JVM would figure out that playerId doesn't change. Do I need
-//to mark it final to take advantage of the optim?
-        Integer boxedPlayerId = playerId;
         for (PlayerObject friend : _notifyMap.get(playerId)) {
-            FriendEntry entry = friend.friends.get(boxedPlayerId);
+            FriendEntry entry = friend.friends.get(playerId);
             if (entry == null) {
                 continue;
             }

@@ -123,10 +123,6 @@ public abstract class NodeletRegistry
             }
         };
 
-//CWG-JD Why use an Injector to get these rather than taking them in the constructor?
-//JD-CWG It reduces irrelevant dependencies and unnecessary coupling in the subclass, I often do
-//it for abstract classes. I see it as equivalent to the member injection since those are invisible
-//and subclasses need not be concerned with them.
         injector.getInstance(PresentsConnectionManager.class)
                 .addChainedAuthenticator(new ChainedAuthenticator() {
 

@@ -27,9 +27,5 @@ public interface FriendService
      * request will fail. Othwerise, the request should succeed and both players will have their
      * {@link PlayerObject#friends} updated.
      */
-//CWG-JD I can understand requestFriendship not going through if someone is offline, but why not
-//allow a sent request to be accepted after signoff?
-//JD-CWG Because otherwise it isn't possible to tell if the sender actually sent the request. The
-//fact that a request was sent is not in the database.
     void acceptFriendshipRequest (int senderId, InvocationListener listener);
 }
