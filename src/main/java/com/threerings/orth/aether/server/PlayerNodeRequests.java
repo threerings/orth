@@ -6,6 +6,7 @@ package com.threerings.orth.aether.server;
 
 import java.util.Set;
 
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -50,18 +51,17 @@ public class PlayerNodeRequests
     public <T> void invokeOnPlayerNode (NodeRequest request, ResultListener<T> lner)
     {
         Set<String> nodes = _peerMan.findApplicableNodes(request);
-        int size = nodes.size();
-        if (size != 1) {
-            lner.requestFailed(new Exception(size == 0 ?
-                    "e.player_not_found" : "e.internal_error"));
-            if (size > 1) {
-                log.warning("Player request target is on multiple nodes, dropping",
-                    "request", request, "nodes", nodes);
-            }
-            return;
+        if (nodes.size() == 1) {
+            _peerMan.invokeNodeRequest(Iterables.getOnlyElement(nodes), request,
+                new Resulting<T>(lner));
+        } else if (nodes.isEmpty()) {
+            lner.requestFailed(new Exception("e.player_not_found"));
+        } else {
+            lner.requestFailed(new Exception("e.internal_error"));
+            log.warning("Player request target is on multiple nodes, dropping",
+                "request", request, "nodes", nodes);
         }
 
-        _peerMan.invokeNodeRequest(nodes.iterator().next(), request, new Resulting<T>(lner));
     }
 
     @Inject protected OrthPeerManager _peerMan;
