@@ -6,22 +6,20 @@ package com.threerings.orth.chat.server;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.internal.Iterables;
 
-import com.threerings.presents.client.InvocationService.ConfirmListener;
-import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.peer.server.NodeRequestsListener;
-import com.threerings.presents.peer.server.PeerManager;
-import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.server.InvocationManager;
-
-import com.threerings.orth.Log;
-import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.server.PlayerNodeRequest;
+import com.threerings.orth.aether.server.PlayerNodeRequests;
 import com.threerings.orth.aether.server.PlayerSessionLocator;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.chat.data.TellMarshaller;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.presents.client.InvocationService.ConfirmListener;
+import com.threerings.presents.client.InvocationService.ResultListener;
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.InvocationManager;
+import com.threerings.util.Resulting;
 
 @Singleton
 public class ChatManager
@@ -33,32 +31,30 @@ public class ChatManager
     }
 
     // from TellProvider
-    public void sendTell (ClientObject caller, int playerId, String msg,
-            final ConfirmListener listener)
+    public void sendTell (ClientObject caller, int playerId, String msg, ConfirmListener listener)
         throws InvocationException
     {
         PlayerObject from = _locator.forClient(caller);
 
-        Tell tell = new Tell(from.playerName, msg);
+        _playerNode.invokeOnPlayerNode(new TellRequest(playerId, new Tell(from.playerName, msg)),
+            new Resulting<Void>(listener));
+    }
 
-        _peerMgr.invokeNodeRequest(new TellNodeAction(AetherAuthName.makeKey(playerId), tell),
-            new NodeRequestsListener<Void>() {
+    protected static class TellRequest extends PlayerNodeRequest {
+        protected TellRequest (int targetPlayerId, Tell tell) {
+            super(targetPlayerId);
+            _tell = tell;
+        }
 
-            @Override public void requestFailed (String cause) {
-                Log.log.warning("Tell request failed", "cause", cause);
-                listener.requestFailed(cause);
-            }
+        @Override protected void execute (PlayerObject player, ResultListener listener) {
+            TellSender.receiveTell(player, _tell);
+            listener.requestProcessed(null);
+        }
 
-            @Override public void requestsProcessed (NodeRequestsResult<Void> result) {
-                if (!result.getNodeErrors().values().isEmpty()) {
-                    listener.requestFailed(Iterables.getOnlyElement(result.getNodeErrors().values()));
-                } else {
-                    listener.requestProcessed();
-                }
-            }});
+        protected Tell _tell;
     }
 
     @Inject protected PlayerSessionLocator _locator;
     @Inject protected InvocationManager _invMgr;
-    @Inject protected PeerManager _peerMgr;
+    @Inject protected PlayerNodeRequests _playerNode;
 }
