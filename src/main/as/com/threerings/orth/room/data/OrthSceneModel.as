@@ -1,6 +1,8 @@
+// GENERATED PREAMBLE START
 //
 // Orth - a package of MMO services: rooms, parties, guilds, and more!
 // Copyright 2010-2011 Three Rings Design, Inc.
+
 
 package com.threerings.orth.room.data {
 
@@ -17,6 +19,9 @@ import com.threerings.util.Iterator;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
 import com.threerings.util.Short;
+
+import com.threerings.orth.room.data.DecorData;
+import com.threerings.orth.room.data.OrthLocation;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START

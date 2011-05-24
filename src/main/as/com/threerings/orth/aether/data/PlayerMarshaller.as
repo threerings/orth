@@ -57,7 +57,6 @@ public class PlayerMarshaller extends InvocationMarshaller
     public function dispatchDeferredNotifications () :void
     {
         sendRequest(DISPATCH_DEFERRED_NOTIFICATIONS, [
-            
         ]);
     }
 
