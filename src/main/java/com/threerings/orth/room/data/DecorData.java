@@ -20,6 +20,7 @@ public class DecorData extends SimpleStreamableObject
     public float horizon;
     public float actorScale;
     public float furniScale;
+    public boolean hideWalls;
     public Walkability walkability;
 
     /** Deserializing constructor. */

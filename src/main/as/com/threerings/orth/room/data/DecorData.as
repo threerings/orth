@@ -36,6 +36,8 @@ public class DecorData extends SimpleStreamableObject
 
     public var furniScale :Number;
 
+    public var hideWalls :Boolean;
+
     public var walkability :Walkability;
 
     override public function readObject (ins :ObjectInputStream) :void
@@ -48,6 +50,7 @@ public class DecorData extends SimpleStreamableObject
         horizon = ins.readFloat();
         actorScale = ins.readFloat();
         furniScale = ins.readFloat();
+        hideWalls = ins.readBoolean();
         walkability = ins.readObject(Walkability);
     }
 
@@ -61,6 +64,7 @@ public class DecorData extends SimpleStreamableObject
         out.writeFloat(horizon);
         out.writeFloat(actorScale);
         out.writeFloat(furniScale);
+        out.writeBoolean(hideWalls);
         out.writeObject(walkability);
     }
 
@@ -103,7 +107,7 @@ public class DecorData extends SimpleStreamableObject
 
     // from Decor
     public function doHideWalls () :Boolean {
-        return false;
+        return hideWalls;
     }
 
     // from Decor
