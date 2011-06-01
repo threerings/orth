@@ -24,6 +24,7 @@ import com.threerings.util.StringUtil;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.AetherDirector;
+import com.threerings.orth.aether.client.FriendDirector;
 import com.threerings.orth.aether.client.PlayerService;
 import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.orth.data.OrthCodes;
@@ -173,7 +174,7 @@ public class OrthController extends Controller
      */
     public function handleInviteFriend (playerId :int) :void
     {
-        _aetherDir.inviteFriend(playerId);
+        _friendDir.inviteFriend(playerId);
     }
 
     /**
@@ -181,7 +182,7 @@ public class OrthController extends Controller
      */
     public function handleAcceptFriendInvitation (playerId :int) :void
     {
-        _aetherDir.acceptFriendInvite(playerId);
+        _friendDir.acceptFriendInvite(playerId);
     }
 
     /**
@@ -394,6 +395,7 @@ public class OrthController extends Controller
     protected const _partyDir :PartyDirector = inject(PartyDirector);
     protected const _locusDir :LocusDirector = inject(LocusDirector);
     protected const _aetherDir :AetherDirector = inject(AetherDirector);
+    protected const _friendDir :FriendDirector = inject(FriendDirector);
     protected const _guildDir :GuildDirector = inject(GuildDirector);
 
     /** The URL prefix for 'command' URLs, that post CommendEvents. */

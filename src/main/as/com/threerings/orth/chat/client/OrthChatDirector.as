@@ -57,7 +57,7 @@ public class OrthChatDirector extends BasicDirector
 
     public function OrthChatDirector ()
     {
-        super(inject(OrthContext));
+        super(_octx);
 
         _chatHistory = new HistoryList(this);
 
@@ -69,10 +69,11 @@ public class OrthChatDirector extends BasicDirector
         return _place;
     }
 
-    public function requestSendTell (memberId :int, msg :String) :void
+    public function requestSendTell (memberId :int, msg :String) :UserMessage
     {
         _tellService.sendTell(memberId, msg, new ConfirmAdapter(null,
             function (cause :String) :void { log.warning("Tell failed!", "reason", cause); }));
+        return buildTellMessage(_octx.getMyName(), msg);
     }
 
     public function receiveTell (tell :Tell) :void
@@ -216,6 +217,7 @@ public class OrthChatDirector extends BasicDirector
     protected var _displays :ObserverList = new ObserverList();
 
     protected const _msgMgr :MessageManager = inject(MessageManager);
+    protected const _octx :OrthContext = inject(OrthContext);
 
     private static const log :Log = Log.getLog(OrthChatDirector);
 }

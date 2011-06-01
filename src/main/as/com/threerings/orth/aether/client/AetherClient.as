@@ -3,7 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.aether.client {
-
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
@@ -24,6 +23,7 @@ import com.threerings.orth.client.OrthModule;
 import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.data.AuthName;
+import com.threerings.orth.data.OrthCodes;
 
 public class AetherClient extends Client
 {
@@ -47,6 +47,8 @@ public class AetherClient extends Client
         PolicyLoader.registerClient(this, depConf.policyPort);
         // configure our version
         setVersion(depConf.version);
+        addServiceGroup(OrthCodes.AETHER_GROUP);
+
     }
 
     public function getPlayerObject () :PlayerObject

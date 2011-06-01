@@ -8,7 +8,6 @@ import static com.threerings.orth.Log.log;
 
 import java.util.List;
 import java.util.Map;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.SetMultimap;
@@ -26,7 +25,6 @@ import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.notify.data.FriendInviteNotification;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
@@ -92,13 +90,27 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }
 
         // ok, notify the other player, wherever they are
-        _requests.sendNotification(targetId, new FriendInviteNotification(player.getPlayerName()),
-                new Resulting<Void>(listener) {
+        _requests.invokeOnPlayerNode(new FriendRequest(targetId, player.getPlayerName()),
+            new Resulting<Void>(listener) {
             @Override public void requestFailed (Exception cause) {
                 throttle.clear(targetId);
                 super.requestFailed(cause);
             }
         });
+    }
+
+    protected static class FriendRequest extends PlayerNodeRequest {
+        protected FriendRequest (int targetPlayerId, PlayerName requester) {
+            super(targetPlayerId);
+            _requester = requester;
+        }
+
+        @Override protected void execute (PlayerObject player, ResultListener listener) {
+            FriendSender.friendshipRequested(player, _requester);
+            listener.requestProcessed(null);
+        }
+
+        protected PlayerName _requester;
     }
 
     public void acceptFriendshipRequest (

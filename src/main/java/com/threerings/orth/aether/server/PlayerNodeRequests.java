@@ -61,7 +61,6 @@ public class PlayerNodeRequests
             log.warning("Player request target is on multiple nodes, dropping",
                 "request", request, "nodes", nodes);
         }
-
     }
 
     @Inject protected OrthPeerManager _peerMan;

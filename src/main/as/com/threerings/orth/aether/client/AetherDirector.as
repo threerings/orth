@@ -40,16 +40,6 @@ public class AetherDirector extends BasicDirector
         _psvc.setAvatar(avatarId, _octx.confirmListener());
     }
 
-    public function inviteFriend (playerId :int) :void
-    {
-        _fsvc.requestFriendship(playerId, _octx.listener());
-    }
-
-    public function acceptFriendInvite (friendId :int) :void
-    {
-        _fsvc.acceptFriendshipRequest(friendId, _octx.listener());
-    }
-
     public function acceptGuildInvite (senderId :int, guildId :int) :void
     {
         _psvc.acceptGuildInvite(senderId, guildId, _octx.listener());
@@ -77,19 +67,9 @@ public class AetherDirector extends BasicDirector
     }
 
     // from BasicDirector
-    override protected function registerServices (client :Client) :void
-    {
-        client.addServiceGroup(OrthCodes.AETHER_GROUP);
-    }
-
-    // from BasicDirector
     override protected function fetchServices (client :Client) :void
     {
-        super.fetchServices(client);
-
-        // TODO: move more of the functions we use into a LocusService
         _psvc = (client.requireService(PlayerService) as PlayerService);
-        _fsvc = (client.requireService(FriendService) as FriendService);
     }
 
     protected function memberMessageReceived (event :MessageEvent) :void
@@ -106,7 +86,6 @@ public class AetherDirector extends BasicDirector
     protected const _octx :OrthContext = inject(OrthContext);
 
     protected var _psvc :PlayerService;
-    protected var _fsvc :FriendService;
 
     protected var _followingNotifier :FollowingNotifier;
     protected var _followListener :MessageAdapter = new MessageAdapter(memberMessageReceived);
