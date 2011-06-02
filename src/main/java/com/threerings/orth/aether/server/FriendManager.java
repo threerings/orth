@@ -81,7 +81,8 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         InvocationListener listener)
         throws InvocationException
     {
-        PlayerObject player = (PlayerObject)caller;
+        PlayerObject player = ((PlayerObject)caller);
+        final PlayerName playerName = player.getPlayerName();
 
         // anti-spam logic
         final InviteThrottle throttle = player.getLocal(PlayerLocal.class).getInviteThrottle();
@@ -90,27 +91,17 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }
 
         // ok, notify the other player, wherever they are
-        _requests.invokeOnPlayerNode(new FriendRequest(targetId, player.getPlayerName()),
-            new Resulting<Void>(listener) {
+        _requests.invokeOnPlayerNode(new PlayerNodeRequest(targetId) {
+            @Override protected void execute (PlayerObject target, ResultListener listener) {
+                FriendSender.friendshipRequested(target, playerName);
+                listener.requestProcessed(null);
+            }
+        }, new Resulting<Void>(listener) {
             @Override public void requestFailed (Exception cause) {
                 throttle.clear(targetId);
                 super.requestFailed(cause);
             }
         });
-    }
-
-    protected static class FriendRequest extends PlayerNodeRequest {
-        protected FriendRequest (int targetPlayerId, PlayerName requester) {
-            super(targetPlayerId);
-            _requester = requester;
-        }
-
-        @Override protected void execute (PlayerObject player, ResultListener listener) {
-            FriendSender.friendshipRequested(player, _requester);
-            listener.requestProcessed(null);
-        }
-
-        protected PlayerName _requester;
     }
 
     public void acceptFriendshipRequest (
