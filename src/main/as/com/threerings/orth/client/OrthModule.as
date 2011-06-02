@@ -3,7 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.client {
-import com.threerings.orth.aether.client.FriendDirector;
 import flash.display.Stage;
 
 import flashx.funk.ioc.BindingModule;
@@ -13,6 +12,7 @@ import com.threerings.util.MessageManager;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.AetherDirector;
+import com.threerings.orth.aether.client.FriendDirector;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.guild.client.GuildDirector;
 import com.threerings.orth.locus.client.LocusDirector;

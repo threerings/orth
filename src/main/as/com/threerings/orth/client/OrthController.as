@@ -3,7 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.client {
-import com.threerings.orth.aether.data.PlayerName;
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.events.ContextMenuEvent;
@@ -26,8 +25,8 @@ import com.threerings.util.StringUtil;
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.aether.client.FriendDirector;
-import com.threerings.orth.aether.client.PlayerService;
 import com.threerings.orth.aether.data.AetherCredentials;
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.guild.client.GuildDirector;
 import com.threerings.orth.guild.data.GuildRank;
@@ -91,9 +90,6 @@ public class OrthController extends Controller
 
     /** Command to request detailed info on a party. */
     public static const GET_PARTY_DETAIL :String = "GetPartyDetail";
-
-    /** Command to respond to a request to follow another player. */
-    public static const RESPOND_FOLLOW :String = "RespondFollow";
 
     /** Command to create a new guild. */
     public static const CREATE_GUILD :String = "CreateGuild";
@@ -273,35 +269,6 @@ public class OrthController extends Controller
     {
         // ORTH TODO
         //         _partyDir.getPartyDetail(partyId);
-    }
-
-    /**
-     * Handles RESPOND_FOLLOW.
-     * Arg can be 0 to stop us from following anyone
-     */
-    public function handleRespondFollow (playerId :int) :void
-    {
-        PlayerService(_client.requireService(PlayerService)).
-            followPlayer(playerId, _octx.listener());
-    }
-
-    /**
-     * Sends an invitation to the specified member to follow us.
-     */
-    public function inviteFollow (memId :int) :void
-    {
-        PlayerService(_client.requireService(PlayerService)).
-            inviteToFollow(memId, _octx.listener());
-    }
-
-    /**
-     * Tells the server we no longer want someone following us. If target playerId is 0, all
-     * our followers are ditched.
-     */
-    public function ditchFollower (memId :int = 0) :void
-    {
-        PlayerService(_client.requireService(PlayerService)).
-            ditchFollower(memId, _octx.listener());
     }
 
     override protected function setControlledPanel (panel :IEventDispatcher) :void
