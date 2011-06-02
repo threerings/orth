@@ -18,6 +18,18 @@ public class FriendSender extends InvocationSender
 {
     /**
      * Issues a notification that will result in a call to {@link
+     * FriendReceiver#friendshipAccepted} on a client.
+     */
+    public static void friendshipAccepted (
+        ClientObject target, PlayerName arg1)
+    {
+        sendNotification(
+            target, FriendDecoder.RECEIVER_CODE, FriendDecoder.FRIENDSHIP_ACCEPTED,
+            new Object[] { arg1 });
+    }
+
+    /**
+     * Issues a notification that will result in a call to {@link
      * FriendReceiver#friendshipRequested} on a client.
      */
     public static void friendshipRequested (

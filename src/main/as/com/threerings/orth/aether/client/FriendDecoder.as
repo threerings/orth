@@ -16,9 +16,13 @@ public class FriendDecoder extends InvocationDecoder
     /** The generated hash code used to identify this receiver class. */
     public static const RECEIVER_CODE :String = "bd7ab9871632a7a369ba754e139f8908";
 
+    /** The method id used to dispatch {@link FriendReceiver#friendshipAccepted}
+     * notifications. */
+    public static const FRIENDSHIP_ACCEPTED :int = 1;
+
     /** The method id used to dispatch {@link FriendReceiver#friendshipRequested}
      * notifications. */
-    public static const FRIENDSHIP_REQUESTED :int = 1;
+    public static const FRIENDSHIP_REQUESTED :int = 2;
 
     /**
      * Creates a decoder that may be registered to dispatch invocation
@@ -37,6 +41,12 @@ public class FriendDecoder extends InvocationDecoder
     public override function dispatchNotification (methodId :int, args :Array) :void
     {
         switch (methodId) {
+        case FRIENDSHIP_ACCEPTED:
+            FriendReceiver(receiver).friendshipAccepted(
+                (args[0] as PlayerName)
+            );
+            return;
+
         case FRIENDSHIP_REQUESTED:
             FriendReceiver(receiver).friendshipRequested(
                 (args[0] as PlayerName)

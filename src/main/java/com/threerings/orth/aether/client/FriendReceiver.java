@@ -7,4 +7,6 @@ public interface FriendReceiver
     extends InvocationReceiver
 {
     void friendshipRequested (PlayerName source);
+
+    void friendshipAccepted (PlayerName acceptor);
 }

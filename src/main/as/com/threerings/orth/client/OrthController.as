@@ -3,6 +3,7 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.client {
+import com.threerings.orth.aether.data.PlayerName;
 import flash.display.DisplayObject;
 import flash.display.Stage;
 import flash.events.ContextMenuEvent;
@@ -172,9 +173,9 @@ public class OrthController extends Controller
     /**
      * Handles INVITE_FRIEND.
      */
-    public function handleInviteFriend (playerId :int) :void
+    public function handleInviteFriend (invitee :PlayerName) :void
     {
-        _friendDir.inviteFriend(playerId);
+        _friendDir.inviteFriend(invitee);
     }
 
     /**

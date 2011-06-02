@@ -15,9 +15,13 @@ public class FriendDecoder extends InvocationDecoder
     /** The generated hash code used to identify this receiver class. */
     public static final String RECEIVER_CODE = "bd7ab9871632a7a369ba754e139f8908";
 
+    /** The method id used to dispatch {@link FriendReceiver#friendshipAccepted}
+     * notifications. */
+    public static final int FRIENDSHIP_ACCEPTED = 1;
+
     /** The method id used to dispatch {@link FriendReceiver#friendshipRequested}
      * notifications. */
-    public static final int FRIENDSHIP_REQUESTED = 1;
+    public static final int FRIENDSHIP_REQUESTED = 2;
 
     /**
      * Creates a decoder that may be registered to dispatch invocation
@@ -38,6 +42,12 @@ public class FriendDecoder extends InvocationDecoder
     public void dispatchNotification (int methodId, Object[] args)
     {
         switch (methodId) {
+        case FRIENDSHIP_ACCEPTED:
+            ((FriendReceiver)receiver).friendshipAccepted(
+                (PlayerName)args[0]
+            );
+            return;
+
         case FRIENDSHIP_REQUESTED:
             ((FriendReceiver)receiver).friendshipRequested(
                 (PlayerName)args[0]

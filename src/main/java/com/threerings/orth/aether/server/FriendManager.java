@@ -118,7 +118,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         throws InvocationException
     {
         final PlayerObject acceptingPlayer = (PlayerObject)caller;
-        final int acceptingPlayerId = acceptingPlayer.getPlayerId();
+        final PlayerName acceptingPlayerName = acceptingPlayer.playerName;
 
         // forward this acceptance to the server the other player is on
         _peerMgr.invokeNodeRequest(new PlayerNodeRequest(senderId) {
@@ -126,22 +126,24 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
             @Inject transient FriendManager friendmgr;
             @Override protected void execute (PlayerObject sender, ResultListener listener) {
                 PlayerLocal local = sender.getLocal(PlayerLocal.class);
-                if (!local.getInviteThrottle().clear(acceptingPlayerId)) {
-                    log.warning("Uninvited friend acceptance!", "playerId", acceptingPlayerId,
+                if (!local.getInviteThrottle().clear(acceptingPlayerName.getId())) {
+                    log.warning("Uninvited friend acceptance!", "player", acceptingPlayerName,
                         "sender", _targetPlayer);
                     listener.requestFailed(AetherCodes.INTERNAL_ERROR);
                     return;
                 }
 
                 // add the friend!
-                OrthClientInfo other = peermgr.locatePlayer(acceptingPlayerId);
+                OrthClientInfo other = peermgr.locatePlayer(acceptingPlayerName.getId());
                 if (other == null) {
                     log.warning("Edge case, accepting friend logged off before sender received " +
                         "notification of friendship", "senderId", senderId,
-                        "acceptingPlayerId", acceptingPlayerId);
+                        "acceptingPlayer", acceptingPlayerName);
                 } else {
                     friendmgr.addNewFriend(sender, other);
+                    FriendSender.friendshipAccepted(sender, acceptingPlayerName);
                 }
+
 
                 // finished, go back to the original peer
                 listener.requestProcessed(null);
@@ -154,7 +156,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 // persist: friends4evah
                 _invoker.postRunnable(new Runnable() {
                    @Override public void run () {
-                       _friendRepo.addFriendship(acceptingPlayerId, senderId);
+                       _friendRepo.addFriendship(acceptingPlayer.getPlayerId(), senderId);
                    }
                    @Override public String toString () {
                        return "Add friends";

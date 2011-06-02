@@ -15,7 +15,9 @@ import com.threerings.orth.client.OrthContext;
 
 public class FriendDirector implements FriendReceiver
 {
-    public const onFriendshipRequested :Signal = new Signal(PlayerName);
+    public const onRequestReceived :Signal = new Signal(PlayerName);
+    public const onRequestSent :Signal = new Signal(PlayerName);
+    public const onSentRequestAccepted :Signal = new Signal(PlayerName);
 
     public function FriendDirector ()
     {
@@ -28,12 +30,18 @@ public class FriendDirector implements FriendReceiver
 
     public function friendshipRequested (requester :PlayerName) :void
     {
-        onFriendshipRequested.dispatch(requester);
+        onRequestReceived.dispatch(requester);
     }
 
-    public function inviteFriend (playerId :int) :void
+    public function friendshipAccepted (acceptor :PlayerName) :void
     {
-        _fsvc.requestFriendship(playerId, _octx.listener());
+        onSentRequestAccepted.dispatch(acceptor);
+    }
+
+    public function inviteFriend (invitee :PlayerName) :void
+    {
+        _fsvc.requestFriendship(invitee.getId(), _octx.listener());
+        onRequestSent.dispatch(invitee);
     }
 
     public function acceptFriendInvite (friendId :int) :void

@@ -11,6 +11,9 @@ import com.threerings.orth.aether.data.PlayerName;
 public interface FriendReceiver extends InvocationReceiver
 {
     // from Java interface FriendReceiver
+    function friendshipAccepted (arg1 :PlayerName) :void;
+
+    // from Java interface FriendReceiver
     function friendshipRequested (arg1 :PlayerName) :void;
 }
 }

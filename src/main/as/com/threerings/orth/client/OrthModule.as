@@ -3,6 +3,7 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.client {
+import com.threerings.orth.aether.client.FriendDirector;
 import flash.display.Stage;
 
 import flashx.funk.ioc.BindingModule;
@@ -46,6 +47,7 @@ public class OrthModule extends BindingModule
         bind(LocusDirector).asSingleton();
         bind(OrthController).asSingleton();
         bind(AetherDirector).asSingleton();
+        bind(FriendDirector).asSingleton();
         bind(OrthChatDirector).asSingleton();
         bind(PartyDirector).asSingleton();
         bind(GuildDirector).asSingleton();
