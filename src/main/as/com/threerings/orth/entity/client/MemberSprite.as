@@ -113,7 +113,7 @@ public class MemberSprite extends ActorSprite
     {
         switch (name) {
         case "member_id":
-            return (_occInfo as SocializerInfo).getPlayerId();
+            return (_occInfo as SocializerInfo).id;
 
         default:
             return super.getSpecialProperty(name);

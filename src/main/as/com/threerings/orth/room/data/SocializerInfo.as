@@ -23,9 +23,9 @@ public class SocializerInfo extends ActorInfo
     /**
      * Get the player id for this user, or 0 if they're a guest.
      */
-    public function getPlayerId () :int
+    public function get id () :int
     {
-        return (username as PlayerName).getId();
+        return (username as PlayerName).id;
     }
 
     /**

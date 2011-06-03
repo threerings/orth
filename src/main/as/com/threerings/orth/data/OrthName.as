@@ -42,7 +42,7 @@ public class OrthName extends Name
     /**
      * Return the memberId of this user, or 0 if they're a guest.
      */
-    public function getId () :int
+    public function get id () :int
     {
         return _id;
     }

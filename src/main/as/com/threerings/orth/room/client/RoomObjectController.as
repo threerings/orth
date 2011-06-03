@@ -414,7 +414,7 @@ public class RoomObjectController extends RoomController
     {
         for each (var obj :Object in _roomObj.occupantInfo.toArray()) {
             var info :SocializerInfo = obj as SocializerInfo;
-            if (info != null && info.getPlayerId() == memberId) {
+            if (info != null && info.id == memberId) {
                 return info;
             }
         }

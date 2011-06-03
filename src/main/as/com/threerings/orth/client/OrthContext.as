@@ -101,7 +101,7 @@ public class OrthContext
     public function getMyId () :int
     {
         var player :PlayerObject = getPlayerObject();
-        return (player != null) ? player.playerName.getId() : 0;
+        return (player != null) ? player.playerName.id : 0;
     }
 
     // from OrthContext

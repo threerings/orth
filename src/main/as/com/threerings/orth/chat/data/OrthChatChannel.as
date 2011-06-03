@@ -167,7 +167,7 @@ public class OrthChatChannel extends ChatChannel
     protected static function getId (name :Name) :String
     {
         if (name is OrthName) {
-            return "" + (name as OrthName).getId();
+            return "" + OrthName(name).id;
 
         } else if (name is RoomName) {
             return "" + (name as RoomName).getSceneId();

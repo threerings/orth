@@ -130,7 +130,7 @@ public class RoomController extends SceneController
     public function getEntityInstanceId () :int
     {
         var name :PlayerName = _rctx.getMyName();
-        return (name != null) ? name.getId() : 0;
+        return (name != null) ? name.id : 0;
     }
 
     /**
@@ -139,7 +139,7 @@ public class RoomController extends SceneController
     public function getViewerName (instanceId :int = 0) :String
     {
         var name :PlayerName = _rctx.getMyName();
-        if (instanceId == 0 || instanceId == name.getId()) {
+        if (instanceId == 0 || instanceId == name.id) {
             return name.toString();
         }
         return null;

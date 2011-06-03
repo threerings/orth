@@ -12,9 +12,12 @@ import com.threerings.presents.client.ClientEvent;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.data.FriendEntry;
 
 public class FriendDirector implements FriendReceiver
 {
+    FriendEntry;
+
     public const onRequestReceived :Signal = new Signal(PlayerName);
     public const onRequestSent :Signal = new Signal(PlayerName);
     public const onSentRequestAccepted :Signal = new Signal(PlayerName);
@@ -40,7 +43,7 @@ public class FriendDirector implements FriendReceiver
 
     public function inviteFriend (invitee :PlayerName) :void
     {
-        _fsvc.requestFriendship(invitee.getId(), _octx.listener());
+        _fsvc.requestFriendship(invitee.id, _octx.listener());
         onRequestSent.dispatch(invitee);
     }
 

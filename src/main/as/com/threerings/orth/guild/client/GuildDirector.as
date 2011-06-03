@@ -114,7 +114,7 @@ public class GuildDirector extends NodeletDirector
 
     protected function memberAdded (entry :GuildMemberEntry) :void
     {
-        if (entry.name.getId() == _octx.getMyId()) {
+        if (entry.name.id == _octx.getMyId()) {
             // the server should already have added us prior to subscription
             log.warning("Local player added to guild, weird");
         }
@@ -122,14 +122,14 @@ public class GuildDirector extends NodeletDirector
 
     protected function memberRemoved (entry :GuildMemberEntry) :void
     {
-        if (entry.name.getId() == _octx.getMyId()) {
+        if (entry.name.id == _octx.getMyId()) {
             log.warning("Local player removed from guild, weird");
         }
     }
 
     protected function memberUpdated (entry :GuildMemberEntry, old :GuildMemberEntry) :void
     {
-        if (entry.name.getId() == _octx.getMyId()) {
+        if (entry.name.id == _octx.getMyId()) {
             if (old.rank != entry.rank) {
                 localPlayerRankChanged();
             }

@@ -48,13 +48,6 @@ public class OrthController extends Controller
     /** Command to show an (external) URL. */
     public static const VIEW_URL :String = "ViewUrl";
 
-    /** Command to complain about a member. */
-    public static const COMPLAIN_MEMBER :String = "ComplainMember";
-
-    /** Command to visit a member's current location */
-    // ORTH TODO: NOT IMPLEMENTED
-    public static const VISIT_MEMBER :String = "VisitMember";
-
     /** Command to invite someone to be a friend. */
     public static const INVITE_FRIEND :String = "InviteFriend";
 
@@ -156,14 +149,6 @@ public class OrthController extends Controller
         _octx.displayFeedback(OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
 
         return false;
-    }
-
-    /**
-     * Handles the COMPLAIN_MEMBER command.
-     */
-    public function handleComplainMember (playerId :int, username :String) :void
-    {
-        log.warning("COMPLAIN_MEMBER not implemented.");
     }
 
     /**

@@ -111,7 +111,7 @@ public class PlayerObject extends ClientObject
      */
     public function getPlayerId () :int
     {
-        return playerName.getId();
+        return playerName.id;
     }
 
     public function self () :DObject

@@ -60,7 +60,7 @@ public class PlayerEntry extends SimpleStreamableObject
     public function equals (other :Object) :Boolean
     {
         return (other is PlayerEntry) &&
-            (this.name.getId() == (other as PlayerEntry).name.getId());
+            (this.name.id == (other as PlayerEntry).name.id);
     }
 
     override public function toString () :String
