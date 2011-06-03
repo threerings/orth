@@ -12,7 +12,6 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.FriendEntry;
-import com.threerings.orth.data.OrthPlayer;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.PartySummary;
 
@@ -20,7 +19,6 @@ import com.threerings.orth.party.data.PartySummary;
  * The core distributed object representing the location-agnostic aspect of an Orth player.
  */
 public class PlayerObject extends ClientObject
-    implements OrthPlayer
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>playerName</code> field. */

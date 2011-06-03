@@ -73,7 +73,7 @@ public class OrthChatDirector extends BasicDirector
     {
         _tellService.sendTell(memberId, msg, new ConfirmAdapter(null,
             function (cause :String) :void { log.warning("Tell failed!", "reason", cause); }));
-        return buildTellMessage(_octx.getMyName(), msg);
+        return buildTellMessage(_octx.myName, msg);
     }
 
     public function receiveTell (tell :Tell) :void

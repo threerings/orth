@@ -86,21 +86,21 @@ public class OrthContext
     /**
      * Returns our connected {@link PlayerObject}, or null if we are not logged on.
      */
-    public function getPlayerObject () :PlayerObject
+    public function get playerObject () :PlayerObject
     {
         return (_client != null) ? _client.getPlayerObject() : null;
     }
 
     /** For convenience, return our current display name. */
-    public function getMyName () :PlayerName
+    public function get myName () :PlayerName
     {
-        var player :PlayerObject = getPlayerObject();
+        var player :PlayerObject = playerObject;
         return (player != null) ? player.playerName : null;
     }
 
-    public function getMyId () :int
+    public function get myId () :int
     {
-        var player :PlayerObject = getPlayerObject();
+        var player :PlayerObject = playerObject;
         return (player != null) ? player.playerName.id : 0;
     }
 

@@ -10,12 +10,10 @@ import org.osflash.signals.Signal;
 
 import com.threerings.io.ObjectInputStream;
 
-import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.data.OrthPlayer;
 import com.threerings.orth.entity.data.Avatar;
 import com.threerings.orth.room.data.ActorObject;
 
@@ -23,7 +21,6 @@ import com.threerings.orth.room.data.ActorObject;
 
 // GENERATED CLASSDECL START
 public class SocializerObject extends ActorObject
-    implements OrthPlayer
 {
 // GENERATED CLASSDECL END
 
@@ -67,16 +64,6 @@ public class SocializerObject extends ActorObject
     }
 // GENERATED STREAMING END
 
-    // from OrthPlayerBody
-    public function self () :DObject
-    {
-        return this;
-    }
-
-    public function getPlayerName () :PlayerName
-    {
-        return name;
-    }
 
 // GENERATED CLASSFINISH START
 }

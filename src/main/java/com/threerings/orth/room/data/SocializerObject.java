@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.data.OrthPlayer;
 import com.threerings.orth.entity.data.Avatar;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.util.Name;
@@ -20,7 +19,6 @@ import com.threerings.util.Name;
  * Represents an Orth player's in-room incarnation.
  */
 public class SocializerObject extends ActorObject
-    implements OrthPlayer
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>name</code> field. */
@@ -72,29 +70,6 @@ public class SocializerObject extends ActorObject
         int sceneId, int ownerId, byte ownerType, byte accessControl, Set<Integer> friendIds)
     {
         return true;
-    }
-
-    // from OrthPlayerBody
-    public SocializerObject self ()
-    {
-        return this;
-    }
-
-    // from OrthPlayerBody
-    public RoomPlace getPlace ()
-    {
-        return (RoomPlace) location;
-    }
-
-    // from OrthPlayer
-    public PlayerName getPlayerName ()
-    {
-        return name;
-    }
-
-    public int getPlayerId ()
-    {
-        return name.getId();
     }
 
     @Override // from BodyObject

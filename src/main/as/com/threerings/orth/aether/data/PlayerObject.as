@@ -11,13 +11,11 @@ import org.osflash.signals.Signal;
 import com.threerings.io.ObjectInputStream;
 
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.VizPlayerName;
-import com.threerings.orth.data.OrthPlayer;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 
@@ -25,7 +23,6 @@ import com.threerings.orth.nodelet.data.HostedNodelet;
 
 // GENERATED CLASSDECL START
 public class PlayerObject extends ClientObject
-    implements OrthPlayer
 {
 // GENERATED CLASSDECL END
 
@@ -109,19 +106,9 @@ public class PlayerObject extends ClientObject
     /**
      * Get our unique integer reference.
      */
-    public function getPlayerId () :int
+    public function get id () :int
     {
         return playerName.id;
-    }
-
-    public function self () :DObject
-    {
-        return this;
-    }
-
-    public function getPlayerName () :PlayerName
-    {
-        return playerName;
     }
 
 // GENERATED CLASSFINISH START

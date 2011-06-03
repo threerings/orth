@@ -26,7 +26,6 @@ import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.server.SpeakProvider;
-import com.threerings.orth.data.OrthPlayer;
 import com.threerings.orth.room.client.OrthRoomService;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityIdent;
@@ -38,6 +37,7 @@ import com.threerings.orth.room.data.OrthRoomMarshaller;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.RoomPlace;
+import com.threerings.orth.room.data.SocializerObject;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService.InvocationListener;
@@ -89,7 +89,7 @@ public class OrthRoomManager extends SpotSceneManager
     public void speak (ClientObject caller, String msg, InvocationListener arg2)
         throws InvocationException
     {
-        PlayerName name = ((OrthPlayer)caller).getPlayerName();
+        PlayerName name = ((SocializerObject)caller).name;
 
         _plobj.postMessage(OrthChatCodes.SPEAK_MSG_TYPE, new Speak(name, msg));
     }

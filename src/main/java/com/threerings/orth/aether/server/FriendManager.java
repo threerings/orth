@@ -82,7 +82,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         throws InvocationException
     {
         PlayerObject player = ((PlayerObject)caller);
-        final PlayerName playerName = player.getPlayerName();
+        final PlayerName playerName = player.playerName;
 
         // anti-spam logic
         final InviteThrottle throttle = player.getLocal(PlayerLocal.class).getInviteThrottle();

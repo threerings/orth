@@ -124,7 +124,7 @@ public class PartyDirector extends BasicDirector
 
     public function isPartyLeader () :Boolean
     {
-        return (_partyObj != null) && (_partyObj.leaderId == _octx.getMyId());
+        return (_partyObj != null) && (_partyObj.leaderId == _octx.myId);
     }
 
     /**
@@ -441,8 +441,8 @@ public class PartyDirector extends BasicDirector
     {
         super.clientObjectUpdated(client);
 
-        if (_octx.getPlayerObject() != null) {
-            var assignedPartyId :int = _octx.getPlayerObject().partyId;
+        if (_octx.playerObject != null) {
+            var assignedPartyId :int = _octx.playerObject.partyId;
             if (assignedPartyId != 0) {
                 // join it!
                 DelayUtil.delayFrame(joinParty, [ assignedPartyId ]);

@@ -216,13 +216,9 @@ public class RoomObjectController extends RoomController
     override public function canManageRoom (
         memberId :int = 0, allowSupport :Boolean = true) :Boolean
     {
-        var me :PlayerObject = _octx.getPlayerObject();
-        if (memberId == 0 || (memberId == me.getPlayerId())) { // self
-            return (_scene != null && _scene.canManage(me, allowSupport));
-
-        } else { // others
-            return false;
-        }
+        var me :PlayerObject = _octx.playerObject;
+        return (memberId == 0 || memberId == me.id) && _scene != null &&
+            _scene.canManage(me, allowSupport);
     }
 
     /**

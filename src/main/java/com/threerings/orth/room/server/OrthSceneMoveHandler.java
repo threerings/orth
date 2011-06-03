@@ -82,7 +82,7 @@ public class OrthSceneMoveHandler extends SceneMoveHandler
                     new SceneMoveAdapter());
 
             } catch (InvocationException ie) {
-                log.warning("Pet follow failed", "memberId", _memobj.getPlayerId(),
+                log.warning("Pet follow failed", "memberId", _memobj.name.getId(),
                     "sceneId", scene.getId(), ie);
             }
         }
