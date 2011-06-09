@@ -22,4 +22,14 @@ public class RoomLocus extends Locus
     {
         return sceneId;
     }
+
+    @Override public int hashCode ()
+    {
+        return sceneId;
+    }
+
+    @Override public boolean equals (Object other)
+    {
+        return (other instanceof RoomLocus) && sceneId == ((RoomLocus) other).sceneId;
+    }
 }
