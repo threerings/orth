@@ -10,6 +10,8 @@ import com.google.inject.Singleton;
 
 import com.samskivert.util.ResultListener;
 
+import com.threerings.crowd.server.LocationManager;
+
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.locus.data.Locus;
@@ -31,18 +33,18 @@ import com.threerings.util.Resulting;
 import com.threerings.whirled.client.SceneService.SceneMoveListener;
 import com.threerings.whirled.data.SceneCodes;
 import com.threerings.whirled.server.SceneManager;
+import com.threerings.whirled.server.SceneRegistry.ResolutionListener;
 import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
 /**
  * Handles some custom Orth scene traversal business.
  */
 @Singleton
-public class OrthSceneRegistry extends SpotSceneRegistry
+public class OrthSceneRegistry
     implements OrthSceneProvider, LocusMaterializer
 {
     @Inject public OrthSceneRegistry (InvocationManager invmgr, Injector injector)
     {
-        super(invmgr);
         invmgr.registerProvider(this, OrthSceneMarshaller.class, SceneCodes.WHIRLED_GROUP);
 
         // a little inline hoster that just uses the scene registry when the job of hosting falls
@@ -53,7 +55,7 @@ public class OrthSceneRegistry extends SpotSceneRegistry
                     final ResultListener<HostedNodelet> listener) {
                 final HostedNodelet room = new HostedNodelet(nodelet, _depConf.getRoomHost(),
                         _depConf.getRoomPorts());
-                resolveScene(((RoomLocus)nodelet).sceneId, new ResolutionListener() {
+                _sceneReg.resolveScene(((RoomLocus) nodelet).sceneId, new ResolutionListener() {
                     @Override public void sceneWasResolved (SceneManager scmgr) {
                         listener.requestCompleted(room);
                     }
@@ -72,10 +74,8 @@ public class OrthSceneRegistry extends SpotSceneRegistry
     {
         final ActorObject mover = (ActorObject) caller;
 
-        // ORTH TODO: this is where the follow code was; that belongs in WorldManager now
-
         // ORTH TODO: Should this be a locus materialization/nodelet hosting?
-        resolveScene(sceneId, new OrthSceneMoveHandler(
+        _sceneReg.resolveScene(sceneId, new OrthSceneMoveHandler(
                 _locman, mover, version, portalId, destLoc, listener));
     }
 
@@ -104,4 +104,6 @@ public class OrthSceneRegistry extends SpotSceneRegistry
     @Inject protected Injector _injector;
     @Inject protected OrthPeerManager _peerMan;
     @Inject protected OrthDeploymentConfig _depConf;
+    @Inject protected LocationManager _locman;
+    @Inject protected SpotSceneRegistry _sceneReg;
 }

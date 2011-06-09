@@ -44,9 +44,6 @@ public class OrthServer extends CrowdServer
             // room
             bind(MemoryRepository.class).to(AmnesiacMemorySupply.class);
 
-            // whirled
-            bind(SceneRegistry.class).to(OrthSceneRegistry.class);
-
             // presents
             bind(PeerManager.class).to(OrthPeerManager.class);
 
