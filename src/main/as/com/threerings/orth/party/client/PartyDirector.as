@@ -12,7 +12,6 @@ import mx.core.UIComponent;
 
 import org.osflash.signals.Signal;
 
-import com.threerings.flex.CommandMenu;
 import com.threerings.whirled.data.Scene;
 
 import com.threerings.util.DelayUtil;

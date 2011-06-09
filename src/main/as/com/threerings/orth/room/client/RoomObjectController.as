@@ -30,8 +30,6 @@ import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.locus.client.BootablePlaceController;
-import com.threerings.orth.room.client.editor.DoorTargetEditController;
-import com.threerings.orth.room.client.editor.RoomEditorController;
 import com.threerings.orth.room.client.updates.UpdateAction;
 import com.threerings.orth.room.client.updates.UpdateStack;
 import com.threerings.orth.room.data.ActorInfo;
@@ -50,7 +48,6 @@ public class RoomObjectController extends RoomController
     implements BootablePlaceController
 {
     /** Some commands */
-    public static const EDIT_DOOR :String = "EditDoor";
     public static const PUBLISH_ROOM :String = "PublishRoom";
 
     // documentation inherited
@@ -112,58 +109,11 @@ public class RoomObjectController extends RoomController
     }
 
     /**
-     * Returns true if we are in edit mode, false if not.
-     */
-    public function isRoomEditing () :Boolean
-    {
-        return (_editor != null) && _editor.isEditing();
-    }
-
-    /**
-     * Handles EDIT_DOOR.
-     */
-    public function handleEditDoor (furniData :FurniData) :void
-    {
-        if (isRoomEditing()) {
-            cancelRoomEditing();
-        }
-
-        var handleResult :Function = function (result :Object) :void {
-            _module.getInstance(DoorTargetEditController).start(furniData);
-        };
-        _roomObj.orthRoomService.editRoom(_octx.resultListener(
-                handleResult, OrthCodes.EDITING_MSGS));
-    }
-
-    /**
      * A callback from the RoomObjectView to let us know that we may want to take a
      * step with door editing.
      */
     public function backgroundFinishedLoading () :void
     {
-        _module.getInstance(DoorTargetEditController).updateLocation();
-    }
-
-    /**
-     * Handle the ROOM_EDIT command.
-     */
-    public function handleRoomEdit () :void
-    {
-        if (!canManageRoom()) {
-            return;
-        }
-
-        // TODO: debounce the button, since we're round-trippin' to the server..
-        if (isRoomEditing()) {
-            cancelRoomEditing();
-            return;
-        }
-
-        var handleResult :Function = function (result :Object) :void {
-            beginRoomEditing();
-        };
-        _roomObj.orthRoomService.editRoom(_octx.resultListener(
-                handleResult, OrthCodes.EDITING_MSGS));
     }
 
     /**
@@ -219,14 +169,6 @@ public class RoomObjectController extends RoomController
         var me :PlayerObject = _octx.playerObject;
         return (memberId == 0 || memberId == me.id) && _scene != null &&
             _scene.canManage(me, allowSupport);
-    }
-
-    /**
-     * End editing the room.
-     */
-    public function cancelRoomEditing () :void
-    {
-        _editor.endEditing();
     }
 
     /**
@@ -287,9 +229,6 @@ public class RoomObjectController extends RoomController
     override public function didLeavePlace (plobj :PlaceObject) :void
     {
         _updates.reset();
-        if (isRoomEditing()) {
-            cancelRoomEditing();
-        }
 
         _rctx.getChatDirector().unregisterCommandHandler(Msgs.CHAT, "action");
         _rctx.getChatDirector().unregisterCommandHandler(Msgs.CHAT, "state");
@@ -312,42 +251,11 @@ public class RoomObjectController extends RoomController
     }
 
     /**
-     * Begins editing the room.
-     */
-    protected function beginRoomEditing () :void
-    {
-        _walkTarget.visible = false;
-        _flyTarget.visible = false;
-
-        // this function will be called when the edit panel is closing
-        var wrapupFn :Function = function () :void {
-            _editor = null;
-        }
-
-        _editor = _module.getInstance(RoomEditorController);
-        _editor.initRoomEditorController(_roomObjectView);
-        _editor.startEditing(wrapupFn);
-        _editor.updateUndoStatus(_updates.length != 0);
-    }
-
-    /**
      * Sends a room update to the server.
      */
     protected function updateRoom (update :SceneUpdate) :void
     {
         _roomObj.orthRoomService.updateRoom(update, _octx.listener(OrthCodes.EDITING_MSGS));
-    }
-
-    override protected function checkMouse2 (
-        grabAll :Boolean, allowMovement :Boolean, setHitter :Function) :void
-    {
-        grabAll = isRoomEditing();
-        if (grabAll) {
-            allowMovement = _editor.isMovementEnabled();
-            setHitter = _editor.mouseOverSprite;
-        }
-
-        super.checkMouse2(grabAll, allowMovement, setHitter);
     }
 
     override protected function requestAvatarMove (newLoc :OrthLocation) :void
@@ -438,9 +346,6 @@ public class RoomObjectController extends RoomController
         super.sceneUpdated(update);
 
         _roomObjectView.processUpdate(update);
-        if (_editor != null) {
-            _editor.processUpdate(update);
-        }
     }
 
     protected function reportLocationName () :void
@@ -476,8 +381,6 @@ public class RoomObjectController extends RoomController
 
     /** A flag to indicate that the room editor should be opened when the view is un-minimized */
     protected var _openEditor :Boolean = false;
-
-    protected var _editor :RoomEditorController;
 
     /** Listens for room attribute changes. */
     protected var _roomAttrListener :AttributeChangeAdapter =

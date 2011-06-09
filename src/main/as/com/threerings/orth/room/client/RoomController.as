@@ -76,9 +76,6 @@ public class RoomController extends SceneController
 
     public static const ORDER_PET :String = "OrderPet";
 
-    /** Opens up a new toolbar and a new room editor. */
-    public static const ROOM_EDIT :String = "RoomEdit";
-
     public static const MAX_ENCODED_MESSAGE_LENGTH :int = 1024;
 
     // documentation inherited

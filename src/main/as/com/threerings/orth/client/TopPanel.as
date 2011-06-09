@@ -89,8 +89,8 @@ public class TopPanel extends Sprite
     }
 
     /**
-     * Get the flex container that is holding the PlaceView. This is useful if you want to overlay
-     * things over the placeview or register to receive flex-specific events.
+     * Get the sprite that is holding the PlaceView. This is useful if you want to overlay
+     * things over the placeview.
      */
     public function getPlaceContainer () :OrthPlaceBox
     {

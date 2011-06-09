@@ -19,8 +19,6 @@ import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.room.client.RoomModule;
-import com.threerings.orth.room.client.editor.DoorTargetEditController;
-import com.threerings.orth.room.client.editor.RoomEditorController;
 import com.threerings.orth.room.data.RoomLocus;
 
 /**
@@ -57,10 +55,6 @@ public class OrthModule extends BindingModule
 
         // as is the placebox
         bind(OrthPlaceBox).asSingleton();
-
-        // editor bits
-        bind(RoomEditorController).asSingleton();
-        bind(DoorTargetEditController).asSingleton();
 
         // narya bits
         bind(MessageManager).asSingleton();
