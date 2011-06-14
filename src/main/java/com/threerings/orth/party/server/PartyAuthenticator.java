@@ -26,12 +26,6 @@ import com.threerings.orth.server.persist.OrthPlayerRepository;
 @Singleton
 public class PartyAuthenticator extends ChainedAuthenticator
 {
-    // fiddling to work around a circular dependency
-    public void init (PartyRegistry partyReg)
-    {
-        _partyReg = partyReg;
-    }
-
     @Override
     public boolean shouldHandleConnection (AuthingConnection conn)
     {
@@ -51,9 +45,6 @@ public class PartyAuthenticator extends ChainedAuthenticator
         conn.setAuthName(new PartyAuthName(name.toString(), name.getId()));
         rsp.getData().code = AuthResponseData.SUCCESS;
     }
-
-
-    protected PartyRegistry _partyReg;
 
     @Inject protected OrthPlayerRepository _playerRepo;
 }

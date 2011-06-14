@@ -33,6 +33,7 @@ import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.party.client.PartyDirector;
+import com.threerings.orth.party.data.PartyObjectAddress;
 
 public class OrthController extends Controller
 {
@@ -239,9 +240,9 @@ public class OrthController extends Controller
     /**
      * Handles the JOIN_PARTY command.
      */
-    public function handleJoinParty (partyId :int) :void
+    public function handleJoinParty (address :PartyObjectAddress) :void
     {
-        _partyDir.joinParty(partyId);
+        _partyDir.joinParty(address);
     }
 
     override protected function setControlledPanel (panel :IEventDispatcher) :void

@@ -32,10 +32,6 @@ public class PartyObject extends DObject
     public static const NOTIFICATION :String = "notification";
 
 // GENERATED STREAMING START
-    public var id :int;
-
-    public var name :String;
-
     public var peeps :DSet;
 
     public var leaderId :int;
@@ -52,8 +48,6 @@ public class PartyObject extends DObject
 
     public var partyService :PartyMarshaller;
 
-    public var idChanged :Signal = new Signal(int, int);
-    public var nameChanged :Signal = new Signal(String, String);
     public var peepsChanged :Signal = new Signal(DSet, DSet);
     public var peepsEntryAdded :Signal = new Signal(DSet_Entry);
     public var peepsEntryRemoved :Signal = new Signal(DSet_Entry);
@@ -65,10 +59,6 @@ public class PartyObject extends DObject
     public var recruitmentChanged :Signal = new Signal(int, int);
     public var disbandChanged :Signal = new Signal(Boolean, Boolean);
     public var partyServiceChanged :Signal = new Signal(PartyMarshaller, PartyMarshaller);
-
-    public static const ID :String = "id";
-
-    public static const NAME :String = "name";
 
     public static const PEEPS :String = "peeps";
 
@@ -89,8 +79,6 @@ public class PartyObject extends DObject
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        id = ins.readInt();
-        name = ins.readField(String);
         peeps = ins.readObject(DSet);
         leaderId = ins.readInt();
         sceneId = ins.readInt();
@@ -151,12 +139,6 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
-            case "id":
-                signal = _obj.idChanged;
-                break;
-            case "name":
-                signal = _obj.nameChanged;
-                break;
             case "peeps":
                 signal = _obj.peepsChanged;
                 break;

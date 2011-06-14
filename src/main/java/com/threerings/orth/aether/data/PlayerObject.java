@@ -13,7 +13,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.nodelet.data.HostedNodelet;
-import com.threerings.orth.party.data.PartySummary;
+import com.threerings.orth.party.data.PartyObjectAddress;
 
 /**
  * The core distributed object representing the location-agnostic aspect of an Orth player.
@@ -37,9 +37,9 @@ public class PlayerObject extends ClientObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String FRIENDS = "friends";
 
-    /** The field name of the <code>partyId</code> field. */
+    /** The field name of the <code>party</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String PARTY_ID = "partyId";
+    public static final String PARTY = "party";
 
     /** The field name of the <code>guildId</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -66,9 +66,9 @@ public class PlayerObject extends ClientObject
     /** The online friends of this player. */
     public DSet<FriendEntry> friends = new DSet<FriendEntry>();
 
-    /** The player's current partyId, or 0 if they're not in a party.
+    /** The player's current party, or null if they're not in a party.
      * Used to signal the PartyDirector. */
-    public int partyId;
+    public PartyObjectAddress party;
 
     /** The id of the guild this player belongs to, or zero if they belong to no guild. */
     public int guildId;
@@ -104,20 +104,6 @@ public class PlayerObject extends ClientObject
     public boolean isOnlineFriend (int memberId)
     {
         return friends.containsKey(memberId);
-    }
-
-    public PartySummary getParty ()
-    {
-        return _party;
-    }
-
-    public void setParty (PartySummary summary)
-    {
-        _party = summary;
-        int newPartyId = (summary == null) ? 0 : summary.id;
-        if (newPartyId != partyId) {
-            setPartyId(newPartyId); // avoid generating an extra event when we cross nodes
-        }
     }
 
     // AUTO-GENERATED: METHODS START
@@ -258,7 +244,7 @@ public class PlayerObject extends ClientObject
     }
 
     /**
-     * Requests that the <code>partyId</code> field be set to the
+     * Requests that the <code>party</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
@@ -266,12 +252,12 @@ public class PlayerObject extends ClientObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setPartyId (int value)
+    public void setParty (PartyObjectAddress value)
     {
-        int ovalue = this.partyId;
+        PartyObjectAddress ovalue = this.party;
         requestAttributeChange(
-            PARTY_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
-        this.partyId = value;
+            PARTY, value, ovalue);
+        this.party = value;
     }
 
     /**
@@ -308,7 +294,4 @@ public class PlayerObject extends ClientObject
         this.guild = value;
     }
     // AUTO-GENERATED: METHODS END
-
-    /** The user's party summary. Only needed on the server. */
-    protected transient PartySummary _party;
 }

@@ -24,20 +24,20 @@ public class PartierObject extends ClientObject
 // GENERATED STREAMING START
     public var playerName :VizPlayerName;
 
-    public var partyId :int;
+    public var partyOid :int;
 
     public var playerNameChanged :Signal = new Signal(VizPlayerName, VizPlayerName);
-    public var partyIdChanged :Signal = new Signal(int, int);
+    public var partyOidChanged :Signal = new Signal(int, int);
 
     public static const PLAYER_NAME :String = "playerName";
 
-    public static const PARTY_ID :String = "partyId";
+    public static const PARTY_OID :String = "partyOid";
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         playerName = ins.readObject(VizPlayerName);
-        partyId = ins.readInt();
+        partyOid = ins.readInt();
     }
 
     public function PartierObject ()
@@ -84,8 +84,8 @@ class Signaller
             case "playerName":
                 signal = _obj.playerNameChanged;
                 break;
-            case "partyId":
-                signal = _obj.partyIdChanged;
+            case "partyOid":
+                signal = _obj.partyOidChanged;
                 break;
             default:
                 return;

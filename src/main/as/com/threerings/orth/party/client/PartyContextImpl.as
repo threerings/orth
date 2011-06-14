@@ -3,7 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.party.client {
-
 import flashx.funk.ioc.Module;
 
 import com.threerings.presents.client.Client;
@@ -14,9 +13,9 @@ import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
-import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyCredentials;
+import com.threerings.orth.party.data.PartyObjectAddress;
 
 /**
  * Provides an implementation of the PartyContext.
@@ -31,22 +30,21 @@ public class PartyContextImpl implements PartyContext
     }
 
     /**
-     * Configures our client with the supplied party hostname and port and logs on.
+     * Connects to the given party
      */
-    public function connect (partyId :int, hostname :String, port :int) :void
+    public function connect (address :PartyObjectAddress) :void
     {
         var pcreds :PartyCredentials = new PartyCredentials();
         pcreds.sessionToken = AetherAuthResponseData(
             _module.getInstance(AetherClient).getAuthResponseData()).sessionToken;
-        pcreds.partyId = partyId;
+        pcreds.partyId = address.oid;
 
         var depConf :OrthDeploymentConfig = _module.getInstance(OrthDeploymentConfig);
         PolicyLoader.registerClient(_client, depConf.policyPort);
 
         // configure our client and logon
-        _client.addServiceGroup(OrthCodes.PARTY_GROUP);
         _client.setVersion(depConf.version);
-        _client.setServer(hostname, [ port ]);
+        _client.setServer(address.hostName, [ address.port ]);
         _client.setCredentials(pcreds);
         _client.logon();
     }

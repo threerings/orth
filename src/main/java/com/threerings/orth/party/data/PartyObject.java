@@ -15,14 +15,6 @@ public class PartyObject extends DObject
     implements Cloneable
 {
     // AUTO-GENERATED: FIELDS START
-    /** The field name of the <code>id</code> field. */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String ID = "id";
-
-    /** The field name of the <code>name</code> field. */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String NAME = "name";
-
     /** The field name of the <code>peeps</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String PEEPS = "peeps";
@@ -60,12 +52,6 @@ public class PartyObject extends DObject
      * Format: [ Notification ]. */
     public static final String NOTIFICATION = "notification";
 
-    /** This party's guid. */
-    public int id;
-
-    /** The name of this party. */
-    public String name;
-
     /** The list of people in this party. */
     public DSet<PartyPeep> peeps = DSet.newDSet();
 
@@ -94,40 +80,6 @@ public class PartyObject extends DObject
 //    public SpeakMarshaller speakService;
 
     // AUTO-GENERATED: METHODS START
-    /**
-     * Requests that the <code>id</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setId (int value)
-    {
-        int ovalue = this.id;
-        requestAttributeChange(
-            ID, Integer.valueOf(value), Integer.valueOf(ovalue));
-        this.id = value;
-    }
-
-    /**
-     * Requests that the <code>name</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setName (String value)
-    {
-        String ovalue = this.name;
-        requestAttributeChange(
-            NAME, value, ovalue);
-        this.name = value;
-    }
-
     /**
      * Requests that the specified entry be added to the
      * <code>peeps</code> set. The set will not change until the event is

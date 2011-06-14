@@ -11,22 +11,8 @@ import com.threerings.presents.client.InvocationService;
  */
 public interface PartyRegistryService extends InvocationService
 {
-    /** Provides a response to {@link #createParty} and {@link #locateParty}. */
-    public static interface JoinListener extends InvocationListener
-    {
-        /**
-         * Reports the connection info for the Whirled node that is hosting the requested party.
-         */
-        void foundParty (int partyId, String hostname, int port);
-    }
-
     /**
-     * Locates the specified party in the wide-Whirled.
+     * Creates a new party with the requester as its leader. Sends a PartyObjectAddress back.
      */
-    void locateParty (int partyId, JoinListener jl);
-
-    /**
-     * Creates a new party with the requester as its leader.
-     */
-    void createParty (String name, boolean inviteAllFriends, JoinListener jl);
+    void createParty (String name, boolean inviteAllFriends, ResultListener rl);
 }

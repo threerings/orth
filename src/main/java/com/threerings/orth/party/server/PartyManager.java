@@ -22,7 +22,6 @@ import com.threerings.orth.party.data.MemberParty;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
-import com.threerings.orth.party.data.PartyInfo;
 import com.threerings.orth.party.data.PartyMarshaller;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
@@ -57,29 +56,19 @@ public class PartyManager
     public void init (PartyObject partyObj, int creatorId)
     {
         _partyObj = partyObj;
-        _summary = new PartySummary(_partyObj.id, _partyObj.name);
         _partyObj.setAccessController(new PartyAccessController(this));
 
-        OrthNodeObject nodeObj = _peerMgr.getOrthNodeObject();
-        nodeObj.startTransaction();
+        // in the middle of that, update the party object (and status), which will
+        // also publish a partyInfo to the node object in this transaction
+        _partyObj.startTransaction();
         try {
-            nodeObj.addToHostedParties(_summary);
-
-            // in the middle of that, update the party object (and status), which will
-            // also publish a partyInfo to the node object in this transaction
-            _partyObj.startTransaction();
-            try {
-                _partyObj.setPartyService(_invMgr.registerProvider(this, PartyMarshaller.class));
-    //            _partyObj.setSpeakService(_invMgr.registerDispatcher(
-    //                new SpeakDispatcher(new SpeakHandler(_partyObj, this))));
-                updateStatus();
-            } finally {
-                _partyObj.commitTransaction();
-            }
+            _partyObj.setPartyService(_invMgr.registerProvider(this, PartyMarshaller.class));
+            // _partyObj.setSpeakService(_invMgr.registerDispatcher(
+            // new SpeakDispatcher(new SpeakHandler(_partyObj, this))));
+            updateStatus();
         } finally {
-            nodeObj.commitTransaction();
+            _partyObj.commitTransaction();
         }
-
         // "invite" the creator
         _invitedIds.add(creatorId);
     }
@@ -96,8 +85,6 @@ public class PartyManager
         OrthNodeObject nodeObj = _peerMgr.getOrthNodeObject();
         nodeObj.startTransaction();
         try {
-            nodeObj.removeFromHostedParties(_partyObj.id);
-            nodeObj.removeFromPartyInfos(_partyObj.id);
             // clear the party info from all remaining players' player objects
             for (PartyPeep peep : _partyObj.peeps) {
                 indicatePlayerPartying(peep.name.getId(), false);
@@ -110,9 +97,7 @@ public class PartyManager
         // _invMgr.clearDispatcher(_partyObj.speakService);
         _omgr.destroyObject(_partyObj.getOid());
 
-        _partyReg.partyWasRemoved(_partyObj.id);
         _partyObj = null;
-        _lastInfo = null;
         _summary = null;
     }
 
@@ -161,7 +146,6 @@ public class PartyManager
         if (!_partyObj.peeps.containsKey(playerId)) {
             _partyObj.addToPeeps(new PartyPeep(partier.playerName, nextJoinOrder()));
         }
-        updatePartyInfo();
     }
 
     public void inviteAllFriends (PlayerObject inviter)
@@ -249,7 +233,6 @@ public class PartyManager
     {
         requireLeader(caller);
         _partyObj.setRecruitment(recruitment);
-        updatePartyInfo();
     }
 
     // from interface PartyProvider
@@ -326,7 +309,6 @@ public class PartyManager
         } finally {
             _partyObj.commitTransaction();
         }
-        updatePartyInfo();
         return true;
     }
 
@@ -335,11 +317,11 @@ public class PartyManager
         OrthNodeObject nodeObj = _peerMgr.getOrthNodeObject();
 
         if (set) {
-            MemberParty mp = new MemberParty(playerId, _partyObj.id);
+            MemberParty mp = new MemberParty(playerId, _partyObj.getOid());
             MemberParty omp = nodeObj.memberParties.get(mp.playerId);
             if (omp == null) {
                 nodeObj.addToMemberParties(mp); // normal case
-            } else if (omp.partyId != mp.partyId) {
+            } else if (omp.partyOid != mp.partyOid) {
                 log.warning("Wha? Replacing stale MemberParty", "mp", mp, "omp", omp);
                 nodeObj.updateMemberParties(mp);
             }
@@ -349,9 +331,6 @@ public class PartyManager
         } else {
             nodeObj.removeFromMemberParties(playerId);
         }
-
-        // tell the registry about this one directly
-        _partyReg.updateUserParty(playerId, set ? _partyObj.id : 0, nodeObj);
 
         // and, if they're no longer partying, end their session
         if (!set) {
@@ -388,7 +367,6 @@ public class PartyManager
             } finally {
                 _partyObj.commitTransaction();
             }
-            updatePartyInfo();
         }
     }
 
@@ -424,35 +402,12 @@ public class PartyManager
         return newLeader;
     }
 
-    /**
-     * Update the partyInfo we have currently published in the node object.
-     */
-    protected void updatePartyInfo ()
-    {
-        PartyInfo newInfo = new PartyInfo(_partyObj.id, _partyObj.leaderId, _partyObj.status,
-            _partyObj.statusType, _partyObj.peeps.size(), _partyObj.recruitment);
-        OrthNodeObject nodeObj = _peerMgr.getOrthNodeObject();
-        if (nodeObj.partyInfos.containsKey(_partyObj.id)) {
-            nodeObj.updatePartyInfos(newInfo);
-        } else {
-            nodeObj.addToPartyInfos(newInfo);
-        }
-        // notify the current node (other nodes will be notified by OrthPeerNode)
-        if (_lastInfo != null) {
-            _partyReg.partyInfoChanged(_lastInfo, newInfo);
-        }
-        _lastInfo = newInfo;
-    }
-
     protected PartyObject _partyObj;
     protected PartySummary _summary;
-    protected PartyInfo _lastInfo;
     protected Set<Integer> _invitedIds = Sets.newHashSet();
 
     @Inject protected ClientManager _clmgr;
     @Inject protected InvocationManager _invMgr;
     @Inject protected OrthPeerManager _peerMgr;
-    //@Inject protected NotificationManager _notifyMgr;
-    @Inject protected PartyRegistry _partyReg;
     @Inject protected RootDObjectManager _omgr;
 }

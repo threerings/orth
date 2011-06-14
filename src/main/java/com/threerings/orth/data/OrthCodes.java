@@ -15,7 +15,6 @@ public interface OrthCodes extends InvocationCodes
     public static final String AETHER_GROUP = "orth.aether";
     public static final String WORLD_GROUP = "orth.world";
     public static final String LOCUS_GROUP = "orth.locus";
-    public static final String PARTY_GROUP = "orth.party";
     public static final String ROOM_GROUP = "orth.room";
 
     /** The translation message bundle for our general client bits. */

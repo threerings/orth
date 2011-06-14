@@ -23,20 +23,20 @@ public class MemberParty extends SimpleStreamableObject
 // GENERATED STREAMING START
     public var playerId :int;
 
-    public var partyId :int;
+    public var partyOid :int;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         playerId = ins.readInt();
-        partyId = ins.readInt();
+        partyOid = ins.readInt();
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
         out.writeInt(playerId);
-        out.writeInt(partyId);
+        out.writeInt(partyOid);
     }
 
 // GENERATED STREAMING END

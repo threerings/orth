@@ -5,6 +5,7 @@
 package com.threerings.orth.party.client {
 
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.client.InvocationService_ResultListener;
 
 /**
  * An ActionScript version of the Java PartyRegistryService interface.
@@ -12,9 +13,6 @@ import com.threerings.presents.client.InvocationService;
 public interface PartyRegistryService extends InvocationService
 {
     // from Java interface PartyRegistryService
-    function createParty (arg1 :String, arg2 :Boolean, arg3 :PartyRegistryService_JoinListener) :void;
-
-    // from Java interface PartyRegistryService
-    function locateParty (arg1 :int, arg2 :PartyRegistryService_JoinListener) :void;
+    function createParty (arg1 :String, arg2 :Boolean, arg3 :InvocationService_ResultListener) :void;
 }
 }

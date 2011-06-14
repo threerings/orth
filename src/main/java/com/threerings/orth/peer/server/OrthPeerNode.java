@@ -49,10 +49,6 @@ public class OrthPeerNode extends PeerNode
 //                _partyReg.updateUserParty(
 //                    memParty.memberId, memParty.partyId, (OrthNodeObject)nodeobj);
 
-            } else if (OrthNodeObject.PARTY_INFOS.equals(name)) {
-// ORTH TODO
-//                _partyReg.partyInfoChanged(
-//                    (PartyInfo)event.getOldEntry(), (PartyInfo)event.getEntry());
             }
         }
 

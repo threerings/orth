@@ -17,12 +17,12 @@ public class MemberParty extends SimpleStreamableObject
     public int playerId;
 
     /** Their party id. */
-    public int partyId;
+    public int partyOid;
 
-    public MemberParty (int playerId, int partyId)
+    public MemberParty (int playerId, int partyOid)
     {
         this.playerId = playerId;
-        this.partyId = partyId;
+        this.partyOid = partyOid;
     }
 
     // from DSet.Entry
