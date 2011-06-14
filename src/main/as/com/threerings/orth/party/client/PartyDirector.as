@@ -8,8 +8,6 @@ import flash.utils.Dictionary;
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
-import mx.core.UIComponent;
-
 import org.osflash.signals.Signal;
 
 import com.threerings.whirled.data.Scene;
@@ -29,18 +27,17 @@ import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.ObjectAccessError;
 import com.threerings.presents.util.SafeSubscriber;
 
-import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.party.data.PartyAuthName;
-import com.threerings.orth.party.data.PartyBoardMarshaller;
 import com.threerings.orth.party.data.PartyBootstrapData;
 import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
+import com.threerings.orth.party.data.PartyRegistryMarshaller;
 import com.threerings.orth.room.data.RoomLocus;
 
 /**
@@ -49,7 +46,7 @@ import com.threerings.orth.room.data.RoomLocus;
 public class PartyDirector extends BasicDirector
 {
     // Hard reference some classes
-    PartyBoardMarshaller;
+    PartyRegistryMarshaller;
     PartyAuthName;
     PartyObject;
 
@@ -57,31 +54,6 @@ public class PartyDirector extends BasicDirector
 
     public const partyJoined :Signal = new Signal();
     public const partyLeft :Signal = new Signal();
-
-    /**
-     * Format the specified Label or TextInput to have the right status.
-     * Fucking Flex has no interface implemented by both.
-     */
-    public static function formatStatus (label :UIComponent, status :String, statusType :int) :void
-    {
-        var color :uint;
-        switch (statusType) {
-        default:
-            color = 0x22668d;
-            break;
-
-        case PartyCodes.STATUS_TYPE_LOBBY:
-            color = 0x426733;
-            break;
-
-        case PartyCodes.STATUS_TYPE_USER:
-            color = 0x666666;
-            break;
-        }
-        label.setStyle("color", color);
-        label.setStyle("disabledColor", color);
-        Object(label).text = Msgs.PARTY.get("m.status_" + statusType, status);
-    }
 
     public function PartyDirector ()
     {
@@ -127,15 +99,6 @@ public class PartyDirector extends BasicDirector
     public function getPartyObject () :PartyObject
     {
         return _partyObj;
-    }
-
-    /**
-     * Get the party board.
-     */
-    public function getPartyBoard (
-        resultHandler :Function, mode :int = PartyCodes.BOARD_NORMAL) :void
-    {
-        _pbsvc.getPartyBoard(mode, _octx.resultListener(resultHandler, OrthCodes.PARTY_MSGS));
     }
 
     /**
@@ -364,7 +327,7 @@ public class PartyDirector extends BasicDirector
     {
         super.fetchServices(client);
 
-        _pbsvc = (client.requireService(PartyBoardService) as PartyBoardService);
+        _pbsvc = (client.requireService(PartyRegistryService) as PartyRegistryService);
     }
 
     protected var _module :Module = inject(Module);
@@ -374,7 +337,7 @@ public class PartyDirector extends BasicDirector
 
     protected var _octx :OrthContext = inject(OrthContext);
 
-    protected var _pbsvc :PartyBoardService;
+    protected var _pbsvc :PartyRegistryService;
 
     protected var _pctx :PartyContextImpl;
     protected var _partyObj :PartyObject;
@@ -389,10 +352,10 @@ public class PartyDirector extends BasicDirector
 
 import com.threerings.presents.client.InvocationAdapter;
 
-import com.threerings.orth.party.client.PartyBoardService_JoinListener;
+import com.threerings.orth.party.client.PartyRegistryService_JoinListener;
 
 class JoinAdapter extends InvocationAdapter
-    implements PartyBoardService_JoinListener
+    implements PartyRegistryService_JoinListener
 {
     public function JoinAdapter (foundFunc :Function, failedFunc :Function)
     {

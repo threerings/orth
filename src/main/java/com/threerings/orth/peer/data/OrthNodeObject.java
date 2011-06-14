@@ -10,7 +10,6 @@ import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.MemberParty;
 import com.threerings.orth.party.data.PartyInfo;
 import com.threerings.orth.party.data.PartySummary;
-import com.threerings.orth.party.data.PeerPartyMarshaller;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.util.ActionScript;
@@ -41,10 +40,6 @@ public class OrthNodeObject extends NodeObject
     /** The field name of the <code>hostedGuilds</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String HOSTED_GUILDS = "hostedGuilds";
-
-    /** The field name of the <code>peerPartyService</code> field. */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String PEER_PARTY_SERVICE = "peerPartyService";
     // AUTO-GENERATED: FIELDS END
 
     /** Contains info on all places hosted by this server. */
@@ -61,9 +56,6 @@ public class OrthNodeObject extends NodeObject
 
     /** Contains the guilds hosted by this server. */
     public DSet<HostedNodelet> hostedGuilds = DSet.newDSet();
-
-    /** Handles party communication between peers. */
-    public PeerPartyMarshaller peerPartyService;
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -319,23 +311,6 @@ public class OrthNodeObject extends NodeObject
         requestAttributeChange(HOSTED_GUILDS, value, this.hostedGuilds);
         DSet<HostedNodelet> clone = (value == null) ? null : value.clone();
         this.hostedGuilds = clone;
-    }
-
-    /**
-     * Requests that the <code>peerPartyService</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setPeerPartyService (PeerPartyMarshaller value)
-    {
-        PeerPartyMarshaller ovalue = this.peerPartyService;
-        requestAttributeChange(
-            PEER_PARTY_SERVICE, value, ovalue);
-        this.peerPartyService = value;
     }
     // AUTO-GENERATED: METHODS END
 }

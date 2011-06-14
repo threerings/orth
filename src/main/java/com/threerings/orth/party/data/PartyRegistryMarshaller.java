@@ -6,24 +6,23 @@ package com.threerings.orth.party.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.party.client.PartyBoardService;
-import com.threerings.presents.client.InvocationService;
+import com.threerings.orth.party.client.PartyRegistryService;
 import com.threerings.presents.data.InvocationMarshaller;
 
 /**
- * Provides the implementation of the {@link PartyBoardService} interface
+ * Provides the implementation of the {@link PartyRegistryService} interface
  * that marshalls the arguments and delivers the request to the provider
  * on the server. Also provides an implementation of the response listener
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
-           comments="Derived from PartyBoardService.java.")
-public class PartyBoardMarshaller extends InvocationMarshaller
-    implements PartyBoardService
+           comments="Derived from PartyRegistryService.java.")
+public class PartyRegistryMarshaller extends InvocationMarshaller
+    implements PartyRegistryService
 {
     /**
-     * Marshalls results to implementations of {@code PartyBoardService.JoinListener}.
+     * Marshalls results to implementations of {@code PartyRegistryService.JoinListener}.
      */
     public static class JoinMarshaller extends ListenerMarshaller
         implements JoinListener
@@ -57,49 +56,23 @@ public class PartyBoardMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #createParty} requests. */
     public static final int CREATE_PARTY = 1;
 
-    // from interface PartyBoardService
-    public void createParty (String arg1, boolean arg2, PartyBoardService.JoinListener arg3)
+    // from interface PartyRegistryService
+    public void createParty (String arg1, boolean arg2, PartyRegistryService.JoinListener arg3)
     {
-        PartyBoardMarshaller.JoinMarshaller listener3 = new PartyBoardMarshaller.JoinMarshaller();
+        PartyRegistryMarshaller.JoinMarshaller listener3 = new PartyRegistryMarshaller.JoinMarshaller();
         listener3.listener = arg3;
         sendRequest(CREATE_PARTY, new Object[] {
             arg1, Boolean.valueOf(arg2), listener3
         });
     }
 
-    /** The method id used to dispatch {@link #getPartyBoard} requests. */
-    public static final int GET_PARTY_BOARD = 2;
-
-    // from interface PartyBoardService
-    public void getPartyBoard (byte arg1, InvocationService.ResultListener arg2)
-    {
-        InvocationMarshaller.ResultMarshaller listener2 = new InvocationMarshaller.ResultMarshaller();
-        listener2.listener = arg2;
-        sendRequest(GET_PARTY_BOARD, new Object[] {
-            Byte.valueOf(arg1), listener2
-        });
-    }
-
-    /** The method id used to dispatch {@link #getPartyDetail} requests. */
-    public static final int GET_PARTY_DETAIL = 3;
-
-    // from interface PartyBoardService
-    public void getPartyDetail (int arg1, InvocationService.ResultListener arg2)
-    {
-        InvocationMarshaller.ResultMarshaller listener2 = new InvocationMarshaller.ResultMarshaller();
-        listener2.listener = arg2;
-        sendRequest(GET_PARTY_DETAIL, new Object[] {
-            Integer.valueOf(arg1), listener2
-        });
-    }
-
     /** The method id used to dispatch {@link #locateParty} requests. */
-    public static final int LOCATE_PARTY = 4;
+    public static final int LOCATE_PARTY = 2;
 
-    // from interface PartyBoardService
-    public void locateParty (int arg1, PartyBoardService.JoinListener arg2)
+    // from interface PartyRegistryService
+    public void locateParty (int arg1, PartyRegistryService.JoinListener arg2)
     {
-        PartyBoardMarshaller.JoinMarshaller listener2 = new PartyBoardMarshaller.JoinMarshaller();
+        PartyRegistryMarshaller.JoinMarshaller listener2 = new PartyRegistryMarshaller.JoinMarshaller();
         listener2.listener = arg2;
         sendRequest(LOCATE_PARTY, new Object[] {
             Integer.valueOf(arg1), listener2

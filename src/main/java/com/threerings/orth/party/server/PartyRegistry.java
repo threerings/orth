@@ -4,25 +4,17 @@
 
 package com.threerings.orth.party.server;
 
-import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
-import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.Invoker;
-import com.samskivert.util.QuickSort;
 import com.samskivert.util.StringUtil;
-import com.samskivert.util.Tuple;
-
 import com.threerings.presents.annotation.MainInvoker;
-import com.threerings.presents.client.Client;
-import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.dobj.RootDObjectManager;
@@ -36,23 +28,19 @@ import com.threerings.presents.server.InvocationManager;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerSessionLocator;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.data.OrthName;
-import com.threerings.orth.party.data.PartyBoardMarshaller;
 import com.threerings.orth.server.OrthDeploymentConfig;
 
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
-import com.threerings.orth.party.client.PartyBoardService;
+import com.threerings.orth.party.client.PartyRegistryService;
 import com.threerings.orth.party.data.PartyAuthName;
-import com.threerings.orth.party.data.PartyBoardInfo;
 import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyCredentials;
 import com.threerings.orth.party.data.PartyInfo;
 import com.threerings.orth.party.data.PartyObject;
+import com.threerings.orth.party.data.PartyRegistryMarshaller;
 import com.threerings.orth.party.data.PartySummary;
-import com.threerings.orth.party.data.PeerPartyMarshaller;
-
 import static com.threerings.orth.Log.log;
 
 /**
@@ -62,44 +50,17 @@ import static com.threerings.orth.Log.log;
  */
 @Singleton
 public class PartyRegistry
-    implements PartyBoardProvider, PeerPartyProvider
+    implements PartyRegistryProvider
 {
     @Inject public PartyRegistry (InvocationManager invmgr, PresentsConnectionManager conmgr,
                                   ClientManager clmgr, PartyAuthenticator partyAuthor)
     {
-        invmgr.registerProvider(this, PartyBoardMarshaller.class, OrthCodes.PARTY_GROUP);
+        invmgr.registerProvider(this, PartyRegistryMarshaller.class, OrthCodes.PARTY_GROUP);
         partyAuthor.init(this); // fiddling to work around a circular dependency
         conmgr.addChainedAuthenticator(partyAuthor);
         clmgr.addSessionFactory(SessionFactory.newSessionFactory(
                                     PartyCredentials.class, PartySession.class,
                                     PartyAuthName.class, PartyClientResolver.class));
-    }
-
-    /**
-     * Called to initialize the PartyRegistry after server startup.
-     */
-    public void init ()
-    {
-        _peerMgr.getOrthNodeObject().setPeerPartyService(
-            _invmgr.registerProvider(this, PeerPartyMarshaller.class));
-    }
-
-    /**
-     * Return the size of the specified user's party, or 0 if they're not in a party.
-     */
-    public int lookupPartyPopulation (PlayerObject user)
-    {
-        PartySummary party = user.getParty();
-        return (party == null) ? 0 : lookupPartyPopulation(party.id);
-    }
-
-    /**
-     * Can be called to return the current size of any party, even one not hosted on this node.
-     */
-    public int lookupPartyPopulation (int partyId)
-    {
-        PartyInfo info = lookupPartyInfo(partyId);
-        return (info == null) ? 0 : info.population;
     }
 
     /**
@@ -111,19 +72,7 @@ public class PartyRegistry
     }
 
     /**
-     * Called on the server that hosts the passed-in player, not necessarily on the server
-     * hosting the party.
-     */
-    public void issueInvite (PlayerObject player, OrthName inviter, int partyId, String partyName)
-    {
-        // TODO(bruno): Wire up notifications
-        //_notifyMan.notify(player, new PartyInviteNotification(inviter, partyId, partyName));
-    }
-
-    /**
-     * Called when a user's party id changes. Happens in two places:
-     * - from PartyManager, when the party is hosted on this node.
-     * - from OrthPeerNode, for parties hosted on other nodes.
+     * Called when a user's party id changes.
      */
     public void updateUserParty (int playerId, int partyId, OrthNodeObject nodeObj)
     {
@@ -154,24 +103,8 @@ public class PartyRegistry
         }
     }
 
-    /**
-     * Requests that the supplied player pre-join the specified party. If the method returns
-     * normally, the player will have been added to the specified party.
-     *
-     * @throws InvocationException if the party cannot be joined for some reason.
-     */
-    public void preJoinParty (OrthName name, int partyId)
-        throws InvocationException
-    {
-        PartyManager mgr = _parties.get(partyId);
-        if (mgr == null) {
-            throw new InvocationException(PartyCodes.E_NO_SUCH_PARTY);
-        }
-        mgr.addPlayer(name);
-    }
-
     // from PartyBoardProvider
-    public void locateParty (ClientObject co, final int partyId, PartyBoardService.JoinListener jl)
+    public void locateParty (ClientObject co, final int partyId, PartyRegistryService.JoinListener jl)
         throws InvocationException
     {
         String pnode = _peerMgr.lookupNodeDatum(new Function<NodeObject, String>() {
@@ -187,41 +120,8 @@ public class PartyRegistry
     }
 
     // from PartyBoardProvider
-    public void getPartyBoard (
-        ClientObject caller, final byte mode, final InvocationService.ResultListener rl)
-        throws InvocationException
-    {
-        final PlayerObject player = (PlayerObject)caller;
-
-        final List<PartyBoardInfo> list = Lists.newArrayList();
-        for (OrthNodeObject nodeObj : _peerMgr.getOrthNodeObjects()) {
-            for (PartyInfo info : nodeObj.partyInfos) {
-                if ((info.population >= PartyCodes.MAX_PARTY_SIZE) ||
-                    (info.recruitment == PartyCodes.RECRUITMENT_CLOSED)) {
-                    continue; // skip: too big, or closed
-                }
-                if ((mode == PartyCodes.BOARD_AWAITING_PLAYERS) &&
-                    (info.statusType != PartyCodes.STATUS_TYPE_LOBBY)) {
-                    continue; // skip: we want only boards awaiting players.
-                }
-                PartySummary summary = nodeObj.hostedParties.get(info.id);
-                PartyBoardInfo boardInfo = new PartyBoardInfo(summary, info);
-                boardInfo.computeScore(player);
-                list.add(boardInfo);
-            }
-        }
-
-        // sort and prune
-        // Note: perhaps create a data structure that only saves the top N items and rolls
-        // the rest off.
-        QuickSort.sort(list);
-        CollectionUtil.limit(list, PARTIES_PER_BOARD);
-        rl.requestProcessed(list);
-    }
-
-    // from PartyBoardProvider
     public void createParty (ClientObject caller, String name, boolean inviteAllFriends,
-        PartyBoardService.JoinListener jl)
+        PartyRegistryService.JoinListener jl)
         throws InvocationException
     {
         PlayerObject player = (PlayerObject)caller;
@@ -248,34 +148,6 @@ public class PartyRegistry
 
         if (inviteAllFriends) {
             mgr.inviteAllFriends(player);
-        }
-    }
-
-    // from PartyBoardProvider & PeerPartyProvider
-    public void getPartyDetail (ClientObject caller, final int partyId,
-                                final InvocationService.ResultListener rl)
-        throws InvocationException
-    {
-        // see if we can handle it locally
-        PartyManager mgr = _parties.get(partyId);
-        if (mgr != null) {
-            rl.requestProcessed(mgr.getPartyDetail());
-            return;
-        }
-
-        // otherwise ship it off to the node that handles it
-        int sent = _peerMgr.invokeOnNodes(new Function<Tuple<Client,NodeObject>,Boolean>() {
-            public Boolean apply (Tuple<Client,NodeObject> clinode) {
-                OrthNodeObject mnode = (OrthNodeObject)clinode.right;
-                if (!mnode.hostedParties.containsKey(partyId)) {
-                    return false;
-                }
-                mnode.peerPartyService.getPartyDetail(partyId, rl);
-                return true;
-            }
-        });
-        if (sent == 0) {
-            throw new InvocationException(PartyCodes.E_NO_SUCH_PARTY);
         }
     }
 

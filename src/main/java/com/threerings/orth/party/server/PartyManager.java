@@ -8,7 +8,6 @@ import static com.threerings.orth.Log.log;
 
 import java.util.Set;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -23,7 +22,6 @@ import com.threerings.orth.party.data.MemberParty;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
-import com.threerings.orth.party.data.PartyDetail;
 import com.threerings.orth.party.data.PartyInfo;
 import com.threerings.orth.party.data.PartyMarshaller;
 import com.threerings.orth.party.data.PartyObject;
@@ -54,14 +52,6 @@ public class PartyManager
     public PartyObject getPartyObject ()
     {
         return _partyObj;
-    }
-
-    /**
-     * Get the party detail.
-     */
-    public PartyDetail getPartyDetail ()
-    {
-        return new PartyDetail(_summary, _lastInfo, Lists.newArrayList(_partyObj.peeps));
     }
 
     public void init (PartyObject partyObj, int creatorId)

@@ -50,11 +50,6 @@ public class PartyAuthenticator extends ChainedAuthenticator
         PlayerName name = player.getPlayerName();
         conn.setAuthName(new PartyAuthName(name.toString(), name.getId()));
         rsp.getData().code = AuthResponseData.SUCCESS;
-
-        // TODO(bruno): Enable
-        //_partyReg.preJoinParty(
-        //    new OrthName(player.getPlayerName(), player.getPlayerId()),
-        //    creds.partyId);
     }
 
 

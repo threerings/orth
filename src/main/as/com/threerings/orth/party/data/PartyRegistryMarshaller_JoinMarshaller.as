@@ -6,12 +6,12 @@ package com.threerings.orth.party.data {
 
 import com.threerings.presents.data.InvocationMarshaller_ListenerMarshaller;
 
-import com.threerings.orth.party.client.PartyBoardService_JoinListener;
+import com.threerings.orth.party.client.PartyRegistryService_JoinListener;
 
 /**
- * Marshalls instances of the PartyBoardService_JoinMarshaller interface.
+ * Marshalls instances of the PartyRegistryService_JoinMarshaller interface.
  */
-public class PartyBoardMarshaller_JoinMarshaller
+public class PartyRegistryMarshaller_JoinMarshaller
     extends InvocationMarshaller_ListenerMarshaller
 {
     /** The method id used to dispatch <code>foundParty</code> responses. */
@@ -22,7 +22,7 @@ public class PartyBoardMarshaller_JoinMarshaller
     {
         switch (methodId) {
         case FOUND_PARTY:
-            (listener as PartyBoardService_JoinListener).foundParty(
+            (listener as PartyRegistryService_JoinListener).foundParty(
                 (args[0] as int), (args[1] as String), (args[2] as int));
             return;
 
