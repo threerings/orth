@@ -14,12 +14,6 @@ public class PartyDetail extends PartyBoardInfo
     /** The people in this party. */
     public List<PartyPeep> peeps;
 
-    /** Suitable for unserialization. */
-    public PartyDetail () {}
-
-    /**
-     * Construct a party detail.
-     */
     public PartyDetail (PartySummary summary, PartyInfo info, List<PartyPeep> peeps)
     {
         super(summary, info);

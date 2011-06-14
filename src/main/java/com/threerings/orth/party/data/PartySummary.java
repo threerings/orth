@@ -6,7 +6,6 @@ package com.threerings.orth.party.data;
 
 import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.orth.data.MediaDesc;
 import com.threerings.presents.dobj.DSet;
 
 /**
@@ -19,23 +18,13 @@ public class PartySummary extends SimpleStreamableObject
     /** The party id. */
     public int id;
 
-    /** The current name of the party. */
+    /** The name of the party. */
     public String name;
 
-    /** The party's icon */
-    public MediaDesc icon;
-
-    /** Suitable for unserialization. */
-    public PartySummary ()
-    {
-    }
-
-    /** Create a PartySummary. */
-    public PartySummary (int id, String name, MediaDesc icon)
+    public PartySummary (int id, String name)
     {
         this.id = id;
         this.name = name;
-        this.icon = icon;
     }
 
     // from DSet.Entry

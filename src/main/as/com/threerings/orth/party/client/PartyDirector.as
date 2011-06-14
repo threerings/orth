@@ -23,7 +23,6 @@ import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientAdapter;
 import com.threerings.presents.client.ClientEvent;
-import com.threerings.presents.client.ResultAdapter;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.EventAdapter;
 import com.threerings.presents.dobj.MessageEvent;
@@ -40,7 +39,6 @@ import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyBoardMarshaller;
 import com.threerings.orth.party.data.PartyBootstrapData;
 import com.threerings.orth.party.data.PartyCodes;
-import com.threerings.orth.party.data.PartyDetail;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.room.data.RoomLocus;
@@ -126,40 +124,6 @@ public class PartyDirector extends BasicDirector
         return (_partyObj != null) && (_partyObj.leaderId == _octx.myId);
     }
 
-    /**
-     * Create either a party board popup, or a party popup if we're already in a party.
-     */
-    //public function createAppropriatePartyPanel () :FloatingPanel
-    //{
-    //    if (_partyObj != null) {
-    //        var panel :PartyPanel = new PartyPanel(_partyObj);
-    //        return panel;
-    //    }
-    //    return new PartyBoardPanel();
-    //}
-
-    // TODO(bruno): UI
-    public function popPeepMenu (peep :PartyPeep, partyId :int) :void
-    {
-        //var menuItems :Array = [];
-
-        ////_orthCtrl.addMemberMenuItems(peep.name, menuItems, false);
-
-        //if (_partyObj != null && partyId == _partyObj.id) {
-        //    const peepId :int = peep.name.getId();
-        //    const ourId :int = _octx.getMyId();
-        //    if (_partyObj.leaderId == ourId && peepId != ourId) {
-        //        CommandMenu.addSeparator(menuItems);
-        //        menuItems.push({ label: Msgs.PARTY.get("b.boot"),
-        //                         callback: bootPlayer, arg: peep.name.getId() });
-        //        menuItems.push({ label: Msgs.PARTY.get("b.assign_leader"),
-        //                         callback: assignLeader, arg: peep.name.getId() });
-        //    }
-        //}
-
-        //CommandMenu.createMenu(menuItems, _topPanel).popUpAtMouse();
-    }
-
     public function getPartyObject () :PartyObject
     {
         return _partyObj;
@@ -175,38 +139,12 @@ public class PartyDirector extends BasicDirector
     }
 
     /**
-     * Request info on the specified party. Results will be displayed in a popup.
-     */
-    public function getPartyDetail (partyId :int) :void
-    {
-        if (Boolean(_detailRequests[partyId])) {
-            return; // suppress requests that are already outstanding
-        }
-        _detailRequests[partyId] = true;
-        var handleFailure :Function = function (error :String) :void {
-            delete _detailRequests[partyId];
-            _octx.displayFeedback(OrthCodes.PARTY_MSGS, error);
-        };
-        _pbsvc.getPartyDetail(partyId, new ResultAdapter(gotPartyDetail, handleFailure));
-    }
-
-    /**
      * Create a new party.
      */
     public function createParty (name :String, inviteAllFriends :Boolean) :void
     {
-        var handleSuccess :Function = function (partyId :int, host :String, port :int) :void {
-            connectParty(partyId, host, port);
-        };
-        var handleFailure :Function = function (error :String) :void {
-            // TODO(bruno)
-            //_octx.displayFeedback(OrthCodes.PARTY_MSGS, error);
-            //// re-open...
-            //var panel :CreatePartyPanel = new CreatePartyPanel();
-            //panel.open();
-            //panel.init(name, inviteAllFriends);
-        };
-        _pbsvc.createParty(name, inviteAllFriends, new JoinAdapter(handleSuccess, handleFailure));
+        _pbsvc.createParty(name, inviteAllFriends, new JoinAdapter(connectParty,
+            _octx.chatErrHandler(OrthCodes.PARTY_MSGS)));
     }
 
     /**
@@ -223,9 +161,7 @@ public class PartyDirector extends BasicDirector
 
         // first we have to find out what node is hosting the party in question
         _pbsvc.locateParty(id,
-            new JoinAdapter(connectParty, function (cause :String) :void {
-                _octx.displayFeedback(OrthCodes.PARTY_MSGS, cause);
-            }));
+            new JoinAdapter(connectParty, _octx.chatErrHandler(OrthCodes.PARTY_MSGS)));
     }
 
     /**
@@ -333,9 +269,6 @@ public class PartyDirector extends BasicDirector
 
     protected function connectParty (partyId :int, hostname :String, port :int) :void
     {
-        // we are joining a party- close all detail panels
-        closeAllDetailPanels();
-
         // create a new party session and connect to our party host node
         _pctx = new PartyContextImpl(_module);
         _pctx.getClient().addClientObserver(new ClientAdapter(
@@ -360,37 +293,6 @@ public class PartyDirector extends BasicDirector
 
         // we might need to warp to the party location
         checkFollowScene();
-    }
-
-    /**
-     * Callback for a getPartyDetail request.
-     */
-    protected function gotPartyDetail (detail :PartyDetail) :void
-    {
-        // stop tracking that we have an outstanding request
-        delete _detailRequests[detail.info.id];
-
-        // close any previous detail panel for this party
-        //var panel :PartyDetailPanel = _detailPanels[detail.info.id] as PartyDetailPanel;
-        //if (panel != null) {
-        //    panel.close();
-        //}
-
-        //// pop open the new one
-        //panel = new PartyDetailPanel(detail);
-        //_detailPanels[detail.info.id] = panel;
-        //panel.addCloseCallback(function () :void {
-        //    delete _detailPanels[detail.info.id];
-        //});
-        //panel.open();
-    }
-
-    protected function closeAllDetailPanels () :void
-    {
-        // TODO(bruno): UI
-        //for each (var panel :PartyDetailPanel in Util.values(_detailPanels)) {
-        //    panel.close();
-        //}
     }
 
     /**

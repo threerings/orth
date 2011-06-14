@@ -220,19 +220,35 @@ public class PartyRegistry
     }
 
     // from PartyBoardProvider
-    public void createParty (
-        ClientObject caller, final String name, final boolean inviteAllFriends,
-        final PartyBoardService.JoinListener jl)
+    public void createParty (ClientObject caller, String name, boolean inviteAllFriends,
+        PartyBoardService.JoinListener jl)
         throws InvocationException
     {
-        final PlayerObject player = (PlayerObject)caller;
+        PlayerObject player = (PlayerObject)caller;
 
         if (player.partyId != 0) {
             // TODO: possibly a better error? Surely this will be blocked on the client
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
 
-        finishCreateParty(player, name, inviteAllFriends, jl);
+        // set up the new PartyObject
+        PartyObject pobj = new PartyObject();
+        pobj.id = getNextPartyId();
+        pobj.name = StringUtil.truncate(name, PartyCodes.MAX_NAME_LENGTH);
+        pobj.leaderId = player.getPlayerId();
+        pobj.disband = true;
+        _omgr.registerObject(pobj);
+
+        PartyManager mgr = _injector.getInstance(PartyManager.class);
+        mgr.init(pobj, player.getPlayerId());
+
+        jl.foundParty(pobj.id, _depConf.getPartyHost(), _depConf.getPartyPort());
+
+        _parties.put(pobj.id, mgr);
+
+        if (inviteAllFriends) {
+            mgr.inviteAllFriends(player);
+        }
     }
 
     // from PartyBoardProvider & PeerPartyProvider
@@ -269,63 +285,6 @@ public class PartyRegistry
     void partyWasRemoved (int partyId)
     {
         _parties.remove(partyId);
-    }
-
-    /**
-     * Finish creating a new party.
-     */
-    protected void finishCreateParty (PlayerObject player, String name,
-        boolean inviteAllFriends, PartyBoardService.JoinListener jl)
-    {
-        PartyObject pobj = null;
-        PartyManager mgr = null;
-        try {
-            // set up the new PartyObject
-            pobj = _omgr.registerObject(new PartyObject());
-            pobj.id = getNextPartyId();
-            pobj.name = StringUtil.truncate(name, PartyCodes.MAX_NAME_LENGTH);
-
-            // TODO: Hackily use the static default group icon until we figure out how best
-            // TODO: to eliminate the icon from the UI
-            // TODO(bruno): ^^^^
-            //pobj.icon = new StaticMediaDesc(MediaMimeTypes.IMAGE_PNG, "photo", "group_logo",
-            //    // we know that we're 66x60
-            //    MediaDesc.HALF_VERTICALLY_CONSTRAINED);
-
-            pobj.leaderId = player.getPlayerId();
-            pobj.disband = true;
-
-            // create the PartyManager and add the player
-            mgr = _injector.getInstance(PartyManager.class);
-            mgr.init(pobj, player.getPlayerId());
-            mgr.addPlayer(player.playerName);
-
-            jl.foundParty(pobj.id, _depConf.getPartyHost(), _depConf.getPartyPort());
-
-        } catch (Exception e) {
-            log.warning("Problem creating party", e);
-            if (e instanceof InvocationException) {
-                jl.requestFailed(e.getMessage());
-            } else {
-                jl.requestFailed(InvocationCodes.E_INTERNAL_ERROR);
-            }
-
-            // kill the party object we created
-            if (mgr != null) {
-                mgr.shutdown();
-            }
-            if (pobj != null) {
-                _omgr.destroyObject(pobj.getOid());
-            }
-            return;
-        }
-
-        // if we made it here, then register the party
-        _parties.put(pobj.id, mgr);
-
-        if (inviteAllFriends) {
-            mgr.inviteAllFriends(player);
-        }
     }
 
     protected void updateUserParty (PlayerObject userObj, PartySummary party)

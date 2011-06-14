@@ -66,22 +66,6 @@ public class MemberSprite extends ActorSprite
         return _module.getInstance(RoomContext).getMyName().equals(_occInfo.username);
     }
 
-    // from OccupantSprite
-    override public function setOccupantInfo (newInfo :OccupantInfo, extraInfo :Object) :void
-    {
-        super.setOccupantInfo(newInfo, extraInfo);
-
-        // take care of setting up or changing our PartyIcon
-        var newId :int = (newInfo as SocializerInfo).getPartyId();
-        if (_partyIcon != null && (_partyIcon.id != newId)) {
-            _partyIcon.shutdown();
-            _partyIcon = null;
-        }
-        if (_partyIcon == null && newId != 0) {
-            _partyIcon = new PartyIcon(this, newId, extraInfo);
-        }
-    }
-
     // from ActorSprite
     override public function getDesc () :String
     {
@@ -229,64 +213,5 @@ public class MemberSprite extends ActorSprite
 
     /** A decoration added when we've idled out. */
     protected var _idleIcon :DisplayObject;
-
-    /** A decoration used when we're in a party. */
-    protected var _partyIcon :PartyIcon;
 }
-}
-
-import flash.geom.Rectangle;
-
-import com.threerings.util.Log;
-
-import com.threerings.orth.client.OrthController;
-import com.threerings.orth.data.MediaDescSize;
-import com.threerings.orth.entity.client.EntitySprite;
-import com.threerings.orth.entity.client.MemberSprite;
-import com.threerings.orth.entity.client.OccupantSprite;
-import com.threerings.orth.party.data.PartySummary;
-import com.threerings.orth.ui.GlowSprite;
-import com.threerings.orth.ui.ScalingMediaDescContainer;
-
-class PartyIcon extends GlowSprite
-{
-    /** The party id. */
-    public var id :int;
-
-    public function PartyIcon (host :MemberSprite, partyId :int, extraInfo :Object)
-    {
-        _host = host;
-        id = partyId;
-
-        var summ :PartySummary = extraInfo.parties.get(partyId) as PartySummary;
-        if (summ == null) {
-            Log.getLog(this).warning("Ohnoez, couldn't set up PartyIcon.");
-            return;
-        }
-
-        _icon = ScalingMediaDescContainer.createView(
-            summ.icon, MediaDescSize.QUARTER_THUMBNAIL_SIZE);
-        _icon.x = _icon.maxW / -2; // position with 0 at center
-        addChild(_icon);
-
-        init(EntitySprite.OTHER_HOVER, OrthController.GET_PARTY_DETAIL, summ.id);
-
-        var width :int = _icon.maxW;
-        var height :int = _icon.maxH
-        // specify our bounds explicitly, as our width is centered at 0.
-        _host.addDecoration(this, {
-              toolTip: summ.name,
-              weight: OccupantSprite.DEC_WEIGHT_PARTY,
-              bounds: new Rectangle(width/-2, 0, width, height)
-        });
-    }
-
-    public function shutdown () :void
-    {
-        _icon.shutdown();
-        _host.removeDecoration(this);
-    }
-
-    protected var _host :MemberSprite;
-    protected var _icon :ScalingMediaDescContainer;
 }

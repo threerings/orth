@@ -10,10 +10,9 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.data.MediaDesc;
 
 public class PartyObject extends DObject
-    implements /*SpeakObject,*/ Cloneable
+    implements Cloneable
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>id</code> field. */
@@ -23,10 +22,6 @@ public class PartyObject extends DObject
     /** The field name of the <code>name</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String NAME = "name";
-
-    /** The field name of the <code>icon</code> field. */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String ICON = "icon";
 
     /** The field name of the <code>peeps</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -71,9 +66,6 @@ public class PartyObject extends DObject
     /** The name of this party. */
     public String name;
 
-    /** The icon for this party. */
-    public MediaDesc icon;
-
     /** The list of people in this party. */
     public DSet<PartyPeep> peeps = DSet.newDSet();
 
@@ -93,7 +85,7 @@ public class PartyObject extends DObject
     public byte recruitment;
 
     /** Do we disband when the leader leaves? */
-    public boolean disband;
+    public boolean disband = true;
 
     /** The service for doing things on this party. */
     public PartyMarshaller partyService;
@@ -134,23 +126,6 @@ public class PartyObject extends DObject
         requestAttributeChange(
             NAME, value, ovalue);
         this.name = value;
-    }
-
-    /**
-     * Requests that the <code>icon</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setIcon (MediaDesc value)
-    {
-        MediaDesc ovalue = this.icon;
-        requestAttributeChange(
-            ICON, value, ovalue);
-        this.icon = value;
     }
 
     /**

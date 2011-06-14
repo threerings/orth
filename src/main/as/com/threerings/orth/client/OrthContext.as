@@ -143,7 +143,7 @@ public class OrthContext
     /**
      * Create an error handling function for use with InvocationService listener adapters.
      */
-    public function chatErrHandler (bundle :String, errWrap :String, logArgs :Array) :Function
+    public function chatErrHandler (bundle :String, errWrap :String=null, ...logArgs) :Function
     {
         return function (cause :String) :void {
             var args :Array = logArgs.concat("cause", cause); // make a copy, we're reentrant

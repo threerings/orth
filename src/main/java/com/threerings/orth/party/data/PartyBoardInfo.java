@@ -22,11 +22,6 @@ public class PartyBoardInfo extends SimpleStreamableObject
     /** The mutable info. */
     public PartyInfo info;
 
-    /** Mister Unserializable. */
-    public PartyBoardInfo ()
-    {
-    }
-
     public PartyBoardInfo (PartySummary summary, PartyInfo info)
     {
         this.summary = summary;

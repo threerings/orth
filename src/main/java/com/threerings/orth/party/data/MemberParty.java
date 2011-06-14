@@ -19,14 +19,6 @@ public class MemberParty extends SimpleStreamableObject
     /** Their party id. */
     public int partyId;
 
-    /** Suitable for deserialization. */
-    public MemberParty ()
-    {
-    }
-
-    /**
-     * Constructor.
-     */
     public MemberParty (int playerId, int partyId)
     {
         this.playerId = playerId;

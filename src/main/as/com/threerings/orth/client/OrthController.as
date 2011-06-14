@@ -81,9 +81,6 @@ public class OrthController extends Controller
     /** Command to invite a member to the current party. */
     public static const INVITE_TO_PARTY :String = "InviteToParty";
 
-    /** Command to request detailed info on a party. */
-    public static const GET_PARTY_DETAIL :String = "GetPartyDetail";
-
     /** Command to create a new guild. */
     public static const CREATE_GUILD :String = "CreateGuild";
 
@@ -245,15 +242,6 @@ public class OrthController extends Controller
     public function handleJoinParty (partyId :int) :void
     {
         _partyDir.joinParty(partyId);
-    }
-
-    /**
-     * Handles the GET_PARTY_DETAIL command.
-     */
-    public function handleGetPartyDetail (partyId :int) :void
-    {
-        // ORTH TODO
-        //         _partyDir.getPartyDetail(partyId);
     }
 
     override protected function setControlledPanel (panel :IEventDispatcher) :void

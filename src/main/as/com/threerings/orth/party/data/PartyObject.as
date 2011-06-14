@@ -17,7 +17,6 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 
-import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.party.data.PartyMarshaller;
 
 // GENERATED PREAMBLE END
@@ -37,8 +36,6 @@ public class PartyObject extends DObject
 
     public var name :String;
 
-    public var icon :MediaDesc;
-
     public var peeps :DSet;
 
     public var leaderId :int;
@@ -57,7 +54,6 @@ public class PartyObject extends DObject
 
     public var idChanged :Signal = new Signal(int, int);
     public var nameChanged :Signal = new Signal(String, String);
-    public var iconChanged :Signal = new Signal(MediaDesc, MediaDesc);
     public var peepsChanged :Signal = new Signal(DSet, DSet);
     public var peepsEntryAdded :Signal = new Signal(DSet_Entry);
     public var peepsEntryRemoved :Signal = new Signal(DSet_Entry);
@@ -73,8 +69,6 @@ public class PartyObject extends DObject
     public static const ID :String = "id";
 
     public static const NAME :String = "name";
-
-    public static const ICON :String = "icon";
 
     public static const PEEPS :String = "peeps";
 
@@ -97,7 +91,6 @@ public class PartyObject extends DObject
         super.readObject(ins);
         id = ins.readInt();
         name = ins.readField(String);
-        icon = ins.readObject(MediaDesc);
         peeps = ins.readObject(DSet);
         leaderId = ins.readInt();
         sceneId = ins.readInt();
@@ -163,9 +156,6 @@ class Signaller
                 break;
             case "name":
                 signal = _obj.nameChanged;
-                break;
-            case "icon":
-                signal = _obj.iconChanged;
                 break;
             case "peeps":
                 signal = _obj.peepsChanged;

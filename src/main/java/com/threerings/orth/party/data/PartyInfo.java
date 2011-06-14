@@ -36,11 +36,6 @@ public class PartyInfo extends SimpleStreamableObject
     /** The current recruitment status of this party. */
     public byte recruitment;
 
-    /** Suitable for unserialization. */
-    public PartyInfo ()
-    {
-    }
-
     /** Create a PartyInfo. */
     public PartyInfo (
         int id, int leaderId, String status, byte statusType, int population, byte recruitment)

@@ -67,7 +67,7 @@ public class PartyManager
     public void init (PartyObject partyObj, int creatorId)
     {
         _partyObj = partyObj;
-        _summary = new PartySummary(_partyObj.id, _partyObj.name, _partyObj.icon);
+        _summary = new PartySummary(_partyObj.id, _partyObj.name);
         _partyObj.setAccessController(new PartyAccessController(this));
 
         OrthNodeObject nodeObj = _peerMgr.getOrthNodeObject();

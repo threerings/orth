@@ -32,10 +32,6 @@ public class PartyAuthenticator extends ChainedAuthenticator
         _partyReg = partyReg;
     }
 
-    public PartyAuthenticator ()
-    {
-    }
-
     @Override
     public boolean shouldHandleConnection (AuthingConnection conn)
     {
