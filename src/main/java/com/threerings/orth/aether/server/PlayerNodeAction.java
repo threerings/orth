@@ -24,10 +24,6 @@ public abstract class PlayerNodeAction extends PeerManager.NodeAction
         _playerId = playerId;
     }
 
-    public PlayerNodeAction ()
-    {
-    }
-
     @Override // from PeerManager.NodeAction
     public boolean isApplicable (NodeObject nodeobj)
     {

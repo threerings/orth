@@ -16,6 +16,7 @@ import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.presents.annotation.MainInvoker;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
@@ -25,7 +26,7 @@ import com.threerings.util.Resulting;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.aether.server.PlayerNodeAction;
-import com.threerings.orth.aether.server.PlayerNodeRequests;
+import com.threerings.orth.aether.server.PlayerNodeRequest;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildMemberEntry;
@@ -37,6 +38,8 @@ import com.threerings.orth.guild.server.persist.GuildRecord;
 import com.threerings.orth.guild.server.persist.GuildRepository;
 import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.notify.data.GuildInviteNotification;
+import com.threerings.orth.notify.data.Notification;
+import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
@@ -107,8 +110,17 @@ public class GuildManager extends NodeletManager
         if (!getThrottle(sender).allow(targetId)) {
             throw new InvocationException(E_INVITE_ALREADY_SENT);
         }
-        _requests.sendNotification(targetId, new GuildInviteNotification(sender.name.toPlayerName(),
-            _guildObj.name, _guildId), new Resulting<Void>(lner));
+        final Notification notification = new GuildInviteNotification(sender.name.toPlayerName(),
+            _guildObj.name, _guildId);
+        _peerMan.invokeSingleNodeRequest(new PlayerNodeRequest(targetId) {
+            @Inject transient NotificationManager notMgr;
+
+            @Override protected void execute (PlayerObject target,
+                InvocationService.ResultListener listener) {
+                notMgr.notify(target, notification);
+                listener.requestProcessed(null);
+            }
+        }, new Resulting<Void>(lner));
     }
 
     @Override
@@ -333,6 +345,5 @@ public class GuildManager extends NodeletManager
     @Inject protected GuildRepository _guildRepo;
     @Inject protected OrthPlayerRepository _playerRepo;
     @Inject protected @MainInvoker Invoker _invoker;
-    @Inject protected PlayerNodeRequests _requests;
     @Inject protected OrthPeerManager _peerMan;
 }

@@ -9,11 +9,12 @@ import com.google.inject.Singleton;
 
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerNodeRequest;
-import com.threerings.orth.aether.server.PlayerNodeRequests;
 import com.threerings.orth.aether.server.PlayerSessionLocator;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.chat.data.TellMarshaller;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.peer.server.OrthPeerManager;
+
 import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.data.ClientObject;
@@ -36,7 +37,7 @@ public class ChatManager
     {
         PlayerObject from = _locator.forClient(caller);
 
-        _playerNode.invokeOnPlayerNode(new TellRequest(playerId, new Tell(from.playerName, msg)),
+        _peerMgr.invokeSingleNodeRequest(new TellRequest(playerId, new Tell(from.playerName, msg)),
             new Resulting<Void>(listener));
     }
 
@@ -56,5 +57,5 @@ public class ChatManager
 
     @Inject protected PlayerSessionLocator _locator;
     @Inject protected InvocationManager _invMgr;
-    @Inject protected PlayerNodeRequests _playerNode;
+    @Inject protected OrthPeerManager _peerMgr;
 }

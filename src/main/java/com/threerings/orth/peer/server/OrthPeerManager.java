@@ -5,6 +5,7 @@
 package com.threerings.orth.peer.server;
 
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
@@ -13,11 +14,15 @@ import com.google.common.collect.Maps;
 
 import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList;
+import com.samskivert.util.ResultListener;
+
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerNode;
 import com.threerings.presents.peer.server.PeerManager;
+import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.orth.aether.data.AetherAuthName;
@@ -30,6 +35,9 @@ import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.room.data.RoomLocus;
+import com.threerings.util.Resulting;
+
+import static com.threerings.orth.Log.log;
 
 /**
  * Extends CrowdPeerManager with functionality needed for Orth and its intended uses.
@@ -128,6 +136,43 @@ public abstract class OrthPeerManager extends PeerManager
     public NodeletRegistry getRegistry (Class<? extends Nodelet> nodeletClass)
     {
         return _nodeletRegistries.get(nodeletClass);
+    }
+
+    /**
+     * Invokes the given request on exactly one node, failing if none or more than one is found.
+     */
+    public <T> void invokeSingleNodeRequest (NodeRequest request, ResultListener<T> lner)
+    {
+        Set<String> nodes = findApplicableNodes(request);
+        if (nodes.size() == 1) {
+            invokeNodeRequest(Iterables.getOnlyElement(nodes), request,
+                new Resulting<T>(lner));
+        } else if (nodes.isEmpty()) {
+            lner.requestFailed(new Exception("e.player_not_found"));
+        } else {
+            lner.requestFailed(new Exception("e.internal_error"));
+            log.warning("Player request target is on multiple nodes, dropping",
+                "request", request, "nodes", nodes);
+        }
+    }
+
+    /**
+     * Invokes the given action on exactly one node.
+     *
+     * @throws InvocationException if zero or more than one applicable node is found.
+     */
+    public <T> void invokeSingleNodeAction (NodeAction action) throws InvocationException
+    {
+        Set<String> nodes = findApplicableNodes(action);
+        if (nodes.size() == 1) {
+            invokeNodeAction(Iterables.getOnlyElement(nodes), action);
+            return;
+        } else if (nodes.isEmpty()) {
+            log.warning("Action target not found", "action", action, "nodes", nodes);
+        } else {
+            log.warning("Action target on multiple nodes", "action", action, "nodes", nodes);
+        }
+        throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
     }
 
     /**

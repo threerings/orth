@@ -107,7 +107,6 @@ public class AetherManager
     protected ObserverList<OrthPeerManager.FarSeeingObserver<PlayerName>> _observers;
 
     @Inject protected NotificationManager _notifyMan;
-    @Inject protected PlayerNodeActions _actions;
     @Inject protected PlayerSessionLocator _locator;
     @Inject protected OrthPeerManager _peermgr;
     @Inject protected FriendManager _friendMgr;

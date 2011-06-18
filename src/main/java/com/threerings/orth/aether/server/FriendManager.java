@@ -91,7 +91,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }
 
         // ok, notify the other player, wherever they are
-        _requests.invokeOnPlayerNode(new PlayerNodeRequest(targetId) {
+        _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(targetId) {
             @Override protected void execute (PlayerObject target, ResultListener listener) {
                 FriendSender.friendshipRequested(target, playerName);
                 listener.requestProcessed(null);
@@ -281,5 +281,4 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     @Inject protected OrthPlayerRepository _playerRepo;
     @Inject protected RelationshipRepository _friendRepo;
     @Inject protected @MainInvoker Invoker _invoker;
-    @Inject protected PlayerNodeRequests _requests;
 }
