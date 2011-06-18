@@ -49,8 +49,6 @@ public class PartyDirector extends BasicDirector
     PartyAuthName;
     PartyObject;
 
-    public const log :Log = Log.getLog(this);
-
     public const partyJoined :Signal = new Signal();
     public const partyLeft :Signal = new Signal();
 
@@ -316,6 +314,8 @@ public class PartyDirector extends BasicDirector
     protected var _detailPanels :Dictionary = new Dictionary();
 
     protected var _partyListener :EventAdapter;
+
+    private static const log :Log = Log.getLog(PartyDirector);
 }
 }
 
