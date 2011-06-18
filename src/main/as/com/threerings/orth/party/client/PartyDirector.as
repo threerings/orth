@@ -98,8 +98,8 @@ public class PartyDirector extends BasicDirector
      */
     public function createParty (name :String, inviteAllFriends :Boolean) :void
     {
-        _pbsvc.createParty(name, inviteAllFriends, _octx.resultListener(connectParty,
-            OrthCodes.PARTY_MSGS));
+        _pbsvc.createParty(name, inviteAllFriends,
+            _octx.resultListener(connectParty, OrthCodes.PARTY_MSGS));
     }
 
     /**
@@ -204,7 +204,7 @@ public class PartyDirector extends BasicDirector
     protected function connectParty (address :PartyObjectAddress) :void
     {
         // create a new party session and connect to our party host node
-        _pctx = new PartyContextImpl(_module);
+        _pctx = new PartyContext(_module);
         var client :Client = _pctx.getClient();
         client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
             _safeSubscriber = new SafeSubscriber(address.oid, gotPartyObject, subscribeFailed);
@@ -306,7 +306,7 @@ public class PartyDirector extends BasicDirector
 
     protected var _pbsvc :PartyRegistryService;
 
-    protected var _pctx :PartyContextImpl;
+    protected var _pctx :PartyContext;
     protected var _partyObj :PartyObject;
     protected var _safeSubscriber :SafeSubscriber;
 
