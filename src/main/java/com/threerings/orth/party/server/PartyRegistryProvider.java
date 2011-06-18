@@ -22,6 +22,6 @@ public interface PartyRegistryProvider extends InvocationProvider
     /**
      * Handles a {@link PartyRegistryService#createParty} request.
      */
-    void createParty (ClientObject caller, String arg1, boolean arg2, InvocationService.ResultListener arg3)
+    void createParty (ClientObject caller, InvocationService.ResultListener arg1)
         throws InvocationException;
 }

@@ -4,8 +4,6 @@
 
 package com.threerings.orth.party.data {
 
-import com.threerings.util.langBoolean;
-
 import com.threerings.presents.client.InvocationService_ResultListener;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.data.InvocationMarshaller_ResultMarshaller;
@@ -26,12 +24,12 @@ public class PartyRegistryMarshaller extends InvocationMarshaller
     public static const CREATE_PARTY :int = 1;
 
     // from interface PartyRegistryService
-    public function createParty (arg1 :String, arg2 :Boolean, arg3 :InvocationService_ResultListener) :void
+    public function createParty (arg1 :InvocationService_ResultListener) :void
     {
-        var listener3 :InvocationMarshaller_ResultMarshaller = new InvocationMarshaller_ResultMarshaller();
-        listener3.listener = arg3;
+        var listener1 :InvocationMarshaller_ResultMarshaller = new InvocationMarshaller_ResultMarshaller();
+        listener1.listener = arg1;
         sendRequest(CREATE_PARTY, [
-            arg1, langBoolean.valueOf(arg2), listener3
+            listener1
         ]);
     }
 }

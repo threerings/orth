@@ -14,5 +14,5 @@ public interface PartyRegistryService extends InvocationService
     /**
      * Creates a new party with the requester as its leader. Sends a PartyObjectAddress back.
      */
-    void createParty (String name, boolean inviteAllFriends, ResultListener rl);
+    void createParty (ResultListener rl);
 }

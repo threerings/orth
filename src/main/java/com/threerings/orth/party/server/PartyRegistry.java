@@ -29,8 +29,7 @@ import com.threerings.orth.party.data.PartyObjectAddress;
 import com.threerings.orth.party.data.PartyRegistryMarshaller;
 
 /**
- * The PartyRegistry manages all the PartyManagers on a single node. It handles PartyBoard
- * requests coming from a user's world connection. Once a user is in a party, they talk
+ * The PartyRegistry creates PartyManagers on a single node. Once a user is in a party, they talk
  * to their PartyManager via their party connection.
  */
 @Singleton
@@ -47,14 +46,12 @@ public class PartyRegistry
                                     PartyAuthName.class, PartyClientResolver.class));
     }
 
-    public void createParty (ClientObject caller, String name, boolean inviteAllFriends,
-        ResultListener rl)
+    public void createParty (ClientObject caller, ResultListener rl)
         throws InvocationException
     {
         PlayerObject player = (PlayerObject)caller;
 
         if (player.party != null) {
-            // TODO: possibly a better error? Surely this will be blocked on the client
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
 
@@ -68,10 +65,6 @@ public class PartyRegistry
         mgr.init(pobj, player.getPlayerId());
 
         rl.requestProcessed(new PartyObjectAddress(_depConf.getPartyHost(), _depConf.getPartyPort(), pobj.getOid()));
-
-        if (inviteAllFriends) {
-            mgr.inviteAllFriends(player);
-        }
     }
 
     @Inject protected OrthDeploymentConfig _depConf;

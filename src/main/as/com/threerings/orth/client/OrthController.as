@@ -73,9 +73,6 @@ public class OrthController extends Controller
     /** Command to set the rank of another player in the current guild. */
     public static const SET_GUILD_MEMBER_RANK :String = "SetGuildMemberRank";
 
-    /** Command to create a party. */
-    public static const CREATE_PARTY :String = "CreateParty";
-
     /** Command to join a party. */
     public static const JOIN_PARTY :String = "JoinParty";
 
@@ -227,14 +224,6 @@ public class OrthController extends Controller
     public function handleInviteToParty (playerId :int) :void
     {
         _partyDir.invitePlayer(playerId);
-    }
-
-    /**
-     * Handles the CREATE_PARTY command.
-     */
-    public function handleCreateParty (name :String, inviteAllFriends :Boolean) :void
-    {
-        _partyDir.createParty(name, inviteAllFriends);
     }
 
     /**

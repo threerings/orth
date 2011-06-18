@@ -96,10 +96,9 @@ public class PartyDirector extends BasicDirector
     /**
      * Create a new party.
      */
-    public function createParty (name :String, inviteAllFriends :Boolean) :void
+    public function createParty () :void
     {
-        _pbsvc.createParty(name, inviteAllFriends,
-            _octx.resultListener(connectParty, OrthCodes.PARTY_MSGS));
+        _pbsvc.createParty(_octx.resultListener(connectParty, OrthCodes.PARTY_MSGS));
     }
 
     /**

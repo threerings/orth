@@ -13,6 +13,6 @@ import com.threerings.presents.client.InvocationService_ResultListener;
 public interface PartyRegistryService extends InvocationService
 {
     // from Java interface PartyRegistryService
-    function createParty (arg1 :String, arg2 :Boolean, arg3 :InvocationService_ResultListener) :void;
+    function createParty (arg1 :InvocationService_ResultListener) :void;
 }
 }

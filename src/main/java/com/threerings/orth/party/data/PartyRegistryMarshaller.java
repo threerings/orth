@@ -26,12 +26,12 @@ public class PartyRegistryMarshaller extends InvocationMarshaller
     public static final int CREATE_PARTY = 1;
 
     // from interface PartyRegistryService
-    public void createParty (String arg1, boolean arg2, InvocationService.ResultListener arg3)
+    public void createParty (InvocationService.ResultListener arg1)
     {
-        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
-        listener3.listener = arg3;
+        InvocationMarshaller.ResultMarshaller listener1 = new InvocationMarshaller.ResultMarshaller();
+        listener1.listener = arg1;
         sendRequest(CREATE_PARTY, new Object[] {
-            arg1, Boolean.valueOf(arg2), listener3
+            listener1
         });
     }
 }

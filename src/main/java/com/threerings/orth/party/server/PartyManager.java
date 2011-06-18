@@ -13,7 +13,6 @@ import com.google.inject.Inject;
 
 import com.samskivert.util.StringUtil;
 
-import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.notify.data.GenericNotification;
@@ -146,12 +145,6 @@ public class PartyManager
         if (!_partyObj.peeps.containsKey(playerId)) {
             _partyObj.addToPeeps(new PartyPeep(partier.playerName, nextJoinOrder()));
         }
-    }
-
-    public void inviteAllFriends (PlayerObject inviter)
-    {
-        // TODO(bruno):
-        //PlayerNodeActions.inviteAllFriendsToParty(inviter, _partyObj.id, _partyObj.name);
     }
 
     // from interface PartyProvider
