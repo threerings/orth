@@ -18,7 +18,7 @@ import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.display.FilterUtil;
 import com.threerings.media.MediaContainer;
 
-import com.threerings.util.ArrayUtil;
+import com.threerings.util.Arrays;
 import com.threerings.util.Comparators;
 import com.threerings.util.ValueEvent;
 
@@ -116,7 +116,7 @@ public class OccupantSprite extends EntitySprite
 
         // add the new decoration and stabley sort the list
         _decorations.push(constraints);
-        ArrayUtil.stableSort(_decorations, DECORATION_SORT);
+        Arrays.stableSort(_decorations, DECORATION_SORT);
 
         // add it and lay it out
         _extras.addChild(dec);

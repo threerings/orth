@@ -14,7 +14,7 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.TypedArray;
 
 import com.threerings.util.ArrayIterator;
-import com.threerings.util.ArrayUtil;
+import com.threerings.util.Arrays;
 import com.threerings.util.Iterator;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
@@ -76,7 +76,7 @@ public class OrthSceneModel extends SceneModel
      */
     public function removeFurni (furni :FurniData) :void
     {
-        ArrayUtil.removeFirst(furnis, furni);
+        Arrays.removeFirst(furnis, furni);
         invalidatePortalInfo(furni);
     }
 

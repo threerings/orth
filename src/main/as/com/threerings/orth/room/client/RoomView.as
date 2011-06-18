@@ -18,7 +18,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.whirled.spot.data.Location;
 import com.threerings.whirled.spot.data.Portal;
 
-import com.threerings.util.ArrayUtil;
+import com.threerings.util.Arrays;
 import com.threerings.util.Iterator;
 import com.threerings.util.Log;
 import com.threerings.util.Map;
@@ -323,7 +323,7 @@ public class RoomView extends Sprite
      */
     public function removeOtherSprite (sprite :EntitySprite) :void
     {
-        ArrayUtil.removeAll(_otherSprites, sprite);
+        Arrays.removeAll(_otherSprites, sprite);
         removeSprite(sprite);
     }
 
