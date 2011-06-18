@@ -62,9 +62,11 @@ public class PartyRegistry
         _omgr.registerObject(pobj);
 
         PartyManager mgr = _injector.getInstance(PartyManager.class);
-        mgr.init(pobj, player.getPlayerId());
+        PartyObjectAddress addr =
+            new PartyObjectAddress(_depConf.getPartyHost(), _depConf.getPartyPort(), pobj.getOid());
+        mgr.init(pobj, player.getPlayerId(), addr);
 
-        rl.requestProcessed(new PartyObjectAddress(_depConf.getPartyHost(), _depConf.getPartyPort(), pobj.getOid()));
+        rl.requestProcessed(addr);
     }
 
     @Inject protected OrthDeploymentConfig _depConf;

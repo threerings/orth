@@ -13,6 +13,9 @@ import com.google.inject.Inject;
 
 import com.samskivert.util.StringUtil;
 
+import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.server.PlayerNodeAction;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.notify.data.GenericNotification;
@@ -23,6 +26,7 @@ import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyMarshaller;
 import com.threerings.orth.party.data.PartyObject;
+import com.threerings.orth.party.data.PartyObjectAddress;
 import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.party.data.PartySummary;
 import com.threerings.orth.peer.data.OrthNodeObject;
@@ -52,8 +56,10 @@ public class PartyManager
         return _partyObj;
     }
 
-    public void init (PartyObject partyObj, int creatorId)
+    public void init (PartyObject partyObj, int creatorId, PartyObjectAddress addr)
     {
+        _addr = addr;
+
         _partyObj = partyObj;
         _partyObj.setAccessController(new PartyAccessController(this));
 
@@ -249,10 +255,14 @@ public class PartyManager
         }
         // add them to the invited set
         _invitedIds.add(playerId);
-        // send them a notification
-        //PlayerNodeActions.sendNotification(playerId, createInvite(inviter));
-        //PlayerNodeActions.inviteToParty(
-        //    playerId, inviter.playerName.toPlayerName(), _partyObj.id, _partyObj.name);
+
+        final PlayerName inviterName = inviter.playerName.toPlayerName();
+        final PartyObjectAddress address = _addr;
+        _peerMgr.invokeSingleNodeAction(new PlayerNodeAction(playerId) {
+            @Override protected void execute (PlayerObject plobj) {
+                PartyRegistrySender.receiveInvitation(plobj, inviterName, address);
+            }
+        });
     }
 
     protected PartierObject requireLeader (ClientObject client)
@@ -395,6 +405,7 @@ public class PartyManager
         return newLeader;
     }
 
+    protected PartyObjectAddress _addr;
     protected PartyObject _partyObj;
     protected PartySummary _summary;
     protected Set<Integer> _invitedIds = Sets.newHashSet();

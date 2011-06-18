@@ -3,8 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.party.client {
-import flash.utils.Dictionary;
-
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
@@ -17,20 +15,24 @@ import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Util;
 
-import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
+import com.threerings.presents.client.ResultAdapter;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.EventAdapter;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.ObjectAccessError;
 import com.threerings.presents.util.SafeSubscriber;
 
+import com.threerings.orth.aether.client.AetherClient;
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.orth.notify.data.Notification;
+import com.threerings.orth.party.client.PartyRegistryDecoder;
+import com.threerings.orth.party.client.PartyRegistryReceiver;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyObject;
@@ -42,21 +44,34 @@ import com.threerings.orth.room.data.RoomLocus;
 /**
  * Manages party stuff on the client.
  */
-public class PartyDirector extends BasicDirector
+public class PartyDirector implements PartyRegistryReceiver
 {
     // Hard reference some classes
     PartyRegistryMarshaller;
     PartyAuthName;
     PartyObject;
 
+    public const invitationReceived :Signal = new Signal(PlayerName);
     public const partyJoined :Signal = new Signal();
+    public const partyJoinFailed :Signal = new Signal(String);// signals the cause
     public const partyLeft :Signal = new Signal();
 
     public function PartyDirector ()
     {
-        super(_octx);
-
+        const client :Client = inject(AetherClient);
+        client.getInvocationDirector().registerReceiver(new PartyRegistryDecoder(this));
+        client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
+            _pbsvc = client.requireService(PartyRegistryService);
+            if (_octx.playerObject.party != null) {
+                DelayUtil.delayFrame(joinParty, [ _octx.playerObject.party ]); // Join it!
+            }
+        });
         _notDir.notificationName = PartyObject.NOTIFICATION;
+    }
+
+    public function receiveInvitation (inviter :PlayerName, location :PartyObjectAddress) :void
+    {
+        invitationReceived.dispatch(inviter);
     }
 
     /**
@@ -98,7 +113,7 @@ public class PartyDirector extends BasicDirector
      */
     public function createParty () :void
     {
-        _pbsvc.createParty(_octx.resultListener(connectParty, OrthCodes.PARTY_MSGS));
+        _pbsvc.createParty(new ResultAdapter(connectParty, partyJoinFailed.dispatch));
     }
 
     /**
@@ -161,16 +176,17 @@ public class PartyDirector extends BasicDirector
 
     public function invitePlayer (memberId :int) :void
     {
-        _partyObj.partyService.invitePlayer(memberId, _octx.listener(OrthCodes.PARTY_MSGS));
-    }
-
-    // from BasicDirector
-    override public function clientDidLogoff (event :ClientEvent) :void
-    {
-        super.clientDidLogoff(event);
-
-        if (!event.isSwitchingServers()) {
-            clearParty();
+        if (isInParty()) {
+            _partyObj.partyService.invitePlayer(memberId, _octx.listener(OrthCodes.PARTY_MSGS));
+        } else {
+            createParty();
+            function onJoin (..._) :void {
+                partyJoinFailed.remove(onJoinFailed);
+                invitePlayer(memberId);
+            }
+            function onJoinFailed (..._) :void { partyJoined.remove(onJoin); }
+            partyJoined.addOnce(onJoin);
+            partyJoinFailed.addOnce(onJoinFailed);
         }
     }
 
@@ -212,6 +228,7 @@ public class PartyDirector extends BasicDirector
         client.addEventListener(ClientEvent.CLIENT_FAILED_TO_LOGON,
             function (event :ClientEvent) :void {
                 log.warning("Failed to logon to party server", "cause", event.getCause());
+                partyJoinFailed.dispatch(event.getCause().message);
                 _octx.displayFeedback(OrthCodes.PARTY_MSGS, event.getCause().message);
         });
         client.addEventListener(ClientEvent.CLIENT_CONNECTION_FAILED, partyConnectFailed);
@@ -242,6 +259,7 @@ public class PartyDirector extends BasicDirector
     protected function subscribeFailed (oid :int, cause :ObjectAccessError) :void
     {
         log.warning("Party subscription failed", "cause", cause);
+        partyJoinFailed.dispatch(cause.message);
         clearParty();
     }
 
@@ -278,24 +296,6 @@ public class PartyDirector extends BasicDirector
         //}
     }
 
-    // from BasicDirector
-    override protected function clientObjectUpdated (client :Client) :void
-    {
-        super.clientObjectUpdated(client);
-
-        if (_octx.playerObject != null && _octx.playerObject.party != null) {
-            DelayUtil.delayFrame(joinParty, [ _octx.playerObject.party ]); // Join it!
-        }
-    }
-
-    // from BasicDirector
-    override protected function fetchServices (client :Client) :void
-    {
-        super.fetchServices(client);
-
-        _pbsvc = client.requireService(PartyRegistryService);
-    }
-
     protected var _module :Module = inject(Module);
 
     protected var _notDir :NotificationDirector = inject(NotificationDirector);
@@ -309,32 +309,8 @@ public class PartyDirector extends BasicDirector
     protected var _partyObj :PartyObject;
     protected var _safeSubscriber :SafeSubscriber;
 
-    protected var _detailRequests :Dictionary = new Dictionary();
-    protected var _detailPanels :Dictionary = new Dictionary();
-
     protected var _partyListener :EventAdapter;
 
     private static const log :Log = Log.getLog(PartyDirector);
 }
-}
-
-import com.threerings.presents.client.InvocationAdapter;
-
-import com.threerings.orth.party.client.PartyRegistryService_JoinListener;
-
-class JoinAdapter extends InvocationAdapter
-    implements PartyRegistryService_JoinListener
-{
-    public function JoinAdapter (foundFunc :Function, failedFunc :Function)
-    {
-        super(failedFunc);
-        _foundFunc = foundFunc;
-    }
-
-    public function foundParty (partyId :int, hostname :String, port :int) :void
-    {
-        _foundFunc(partyId, hostname, port);
-    }
-
-    protected var _foundFunc :Function;
 }

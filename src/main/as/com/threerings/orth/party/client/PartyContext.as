@@ -14,6 +14,7 @@ import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
+import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyCredentials;
 import com.threerings.orth.party.data.PartyObjectAddress;
 
@@ -22,6 +23,7 @@ import com.threerings.orth.party.data.PartyObjectAddress;
  */
 public class PartyContext implements PresentsContext
 {
+    PartierObject
     public function PartyContext (module :Module)
     {
         _module = module;
