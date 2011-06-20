@@ -206,12 +206,6 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     @Override // from PeerManager
-    protected Class<? extends PeerNode> getPeerNodeClass ()
-    {
-        return OrthPeerNode.class;
-    }
-
-    @Override // from PeerManager
     protected void clearClientInfo (PresentsSession client, ClientInfo info)
     {
         super.clearClientInfo(client, info);

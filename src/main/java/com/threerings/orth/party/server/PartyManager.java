@@ -4,8 +4,6 @@
 
 package com.threerings.orth.party.server;
 
-import static com.threerings.orth.Log.log;
-
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -16,7 +14,6 @@ import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerNodeAction;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.party.data.MemberParty;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
@@ -80,7 +77,7 @@ public class PartyManager
         try {
             // clear the party info from all remaining players' player objects
             for (PartyPeep peep : _partyObj.peeps) {
-                indicatePlayerPartying(peep.name.getId(), false);
+                endPartierSession(peep.name.getId());
             }
         } finally {
             nodeObj.commitTransaction();
@@ -126,9 +123,6 @@ public class PartyManager
 
         // clear their invites to this party, if any
         _invitedIds.remove(playerId);
-
-        // update player's party info via a node action
-        indicatePlayerPartying(playerId, true);
 
         // Crap, we used to do this in addPlayer, but they could never actually enter the party
         // and leave it hosed. The downside of doing it this way is that we could approve
@@ -258,8 +252,7 @@ public class PartyManager
             return true;
         }
 
-        // clear the party info from this player's player object
-        indicatePlayerPartying(playerId, false);
+        endPartierSession(playerId);
 
         _partyObj.startTransaction();
         try {
@@ -274,32 +267,11 @@ public class PartyManager
         return true;
     }
 
-    protected void indicatePlayerPartying (int playerId, boolean set)
+    protected void endPartierSession (int playerId)
     {
-        OrthNodeObject nodeObj = _peerMgr.getOrthNodeObject();
-
-        if (set) {
-            MemberParty mp = new MemberParty(playerId, _partyObj.getOid());
-            MemberParty omp = nodeObj.memberParties.get(mp.playerId);
-            if (omp == null) {
-                nodeObj.addToMemberParties(mp); // normal case
-            } else if (omp.partyOid != mp.partyOid) {
-                log.warning("Wha? Replacing stale MemberParty", "mp", mp, "omp", omp);
-                nodeObj.updateMemberParties(mp);
-            }
-            // otherwise: no need to update anything. This can happen in normal circumstances
-            // when a user logs in over themselves
-
-        } else {
-            nodeObj.removeFromMemberParties(playerId);
-        }
-
-        // and, if they're no longer partying, end their session
-        if (!set) {
-            PartySession session = (PartySession) _clmgr.getClient(PartyAuthName.makeKey(playerId));
-            if (session != null) {
-                session.endSession();
-            }
+        PartySession session = (PartySession)_clmgr.getClient(PartyAuthName.makeKey(playerId));
+        if (session != null) {
+            session.endSession();
         }
     }
 
