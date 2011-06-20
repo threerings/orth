@@ -9,10 +9,6 @@ import com.threerings.orth.aether.data.PlayerName;
 
 public class Tell extends SimpleStreamableObject
 {
-    public Tell ()
-    {
-    }
-
     public Tell (PlayerName from, String message)
     {
         _from = from;

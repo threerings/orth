@@ -8,21 +8,27 @@ package com.threerings.orth.party.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.comms.data.SourcedComm;
+import com.threerings.orth.data.ModuleStreamable;
+import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.party.data.PartyObjectAddress;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class PartyInvite extends SimpleStreamableObject
+public class PartyInvite extends ModuleStreamable
     implements SourcedComm
 {
 // GENERATED CLASSDECL END
 
     public function get source() :PlayerName { return _source; }
+
+    public function onAccepted () :void
+    {
+        _module.getInstance(PartyDirector).joinParty(address);
+    }
 
 // GENERATED STREAMING START
     public var address :PartyObjectAddress;

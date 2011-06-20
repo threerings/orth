@@ -8,8 +8,6 @@ import flashx.funk.ioc.inject;
 
 import org.osflash.signals.Signal;
 
-import com.threerings.io.Streamable;
-
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.comms.data.CommDecoder;
 import com.threerings.orth.comms.data.CommReceiver;

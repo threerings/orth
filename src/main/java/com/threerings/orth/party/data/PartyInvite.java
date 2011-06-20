@@ -1,10 +1,10 @@
 package com.threerings.orth.party.data;
 
-import com.threerings.io.SimpleStreamableObject;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.comms.data.SourcedComm;
+import com.threerings.orth.data.ModuleStreamable;
 
-public class PartyInvite extends SimpleStreamableObject
+public class PartyInvite extends ModuleStreamable
     implements SourcedComm
 {
     public PartyObjectAddress address;
