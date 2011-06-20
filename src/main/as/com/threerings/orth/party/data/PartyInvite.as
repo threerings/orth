@@ -4,41 +4,44 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 
-package com.threerings.orth.notify.data {
+package com.threerings.orth.party.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.orth.data.OrthName;
-import com.threerings.orth.notify.data.Notification;
+import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.comms.data.SourcedComm;
+import com.threerings.orth.party.data.PartyObjectAddress;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class PartyInviteNotification extends Notification
+public class PartyInvite extends SimpleStreamableObject
+    implements SourcedComm
 {
 // GENERATED CLASSDECL END
 
+    public function get source() :PlayerName { return _source; }
+
 // GENERATED STREAMING START
+    public var address :PartyObjectAddress;
+
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        _inviter = ins.readObject(OrthName);
-        _partyId = ins.readInt();
-        _partyName = ins.readField(String);
+        address = ins.readObject(PartyObjectAddress);
+        _source = ins.readObject(PlayerName);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeObject(_inviter);
-        out.writeInt(_partyId);
-        out.writeField(_partyName);
+        out.writeObject(address);
+        out.writeObject(_source);
     }
 
-    protected var _inviter :OrthName;
-    protected var _partyId :int;
-    protected var _partyName :String;
+    protected var _source :PlayerName;
 // GENERATED STREAMING END
 
 // GENERATED CLASSFINISH START

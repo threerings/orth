@@ -24,10 +24,9 @@ import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.LocusDirector;
-import com.threerings.orth.party.client.PartyRegistryDecoder;
-import com.threerings.orth.party.client.PartyRegistryReceiver;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
+import com.threerings.orth.party.data.PartyInvite;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyObjectAddress;
 import com.threerings.orth.party.data.PartyRegistryMarshaller;
@@ -35,12 +34,13 @@ import com.threerings.orth.party.data.PartyRegistryMarshaller;
 /**
  * Manages party stuff on the client.
  */
-public class PartyDirector implements PartyRegistryReceiver
+public class PartyDirector
 {
     // Hard reference some classes
     PartyRegistryMarshaller;
     PartyAuthName;
     PartyObject;
+    PartyInvite;
 
     public const invitationReceived :Signal = new Signal(PlayerName);
     public const partyJoined :Signal = new Signal();
@@ -50,18 +50,12 @@ public class PartyDirector implements PartyRegistryReceiver
     public function PartyDirector ()
     {
         const client :Client = inject(AetherClient);
-        client.getInvocationDirector().registerReceiver(new PartyRegistryDecoder(this));
         client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
             _prsvc = client.requireService(PartyRegistryService);
             if (_octx.playerObject.party != null) {
                 DelayUtil.delayFrame(joinParty, [ _octx.playerObject.party ]); // Join it!
             }
         });
-    }
-
-    public function receiveInvitation (inviter :PlayerName, location :PartyObjectAddress) :void
-    {
-        invitationReceived.dispatch(inviter);
     }
 
     /**

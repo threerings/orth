@@ -14,6 +14,7 @@ import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.aether.client.FriendDirector;
 import com.threerings.orth.chat.client.OrthChatDirector;
+import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.guild.client.GuildDirector;
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.notify.client.NotificationDirector;
@@ -49,6 +50,7 @@ public class OrthModule extends BindingModule
         bind(OrthChatDirector).asSingleton();
         bind(PartyDirector).asSingleton();
         bind(GuildDirector).asSingleton();
+        bind(CommsDirector).asSingleton();
 
         // we have a simple implementation of LayeredContainer
         bind(LayeredContainer).to(SimpleLayeredContainer);

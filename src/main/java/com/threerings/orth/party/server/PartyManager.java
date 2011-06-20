@@ -13,10 +13,12 @@ import com.samskivert.util.StringUtil;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerNodeAction;
+import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.OrthName;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
+import com.threerings.orth.party.data.PartyInvite;
 import com.threerings.orth.party.data.PartyMarshaller;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyObjectAddress;
@@ -216,11 +218,10 @@ public class PartyManager
         // add them to the invited set
         _invitedIds.add(playerId);
 
-        final PlayerName inviterName = inviter.playerName.toPlayerName();
-        final PartyObjectAddress address = addr;
+        final PartyInvite invite = new PartyInvite(inviter.playerName.toPlayerName(), addr);
         _peerMgr.invokeSingleNodeAction(new PlayerNodeAction(playerId) {
             @Override protected void execute (PlayerObject plobj) {
-                PartyRegistrySender.receiveInvitation(plobj, inviterName, address);
+                CommSender.receiveComm(plobj, invite);
             }
         });
     }

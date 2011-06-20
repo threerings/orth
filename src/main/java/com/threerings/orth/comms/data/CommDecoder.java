@@ -2,29 +2,27 @@
 // Orth - a package of MMO services: rooms, parties, guilds, and more!
 // Copyright 2010-2011 Three Rings Design, Inc.
 
-package com.threerings.orth.party.client;
+package com.threerings.orth.comms.data;
 
-import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.party.data.PartyObjectAddress;
 import com.threerings.presents.client.InvocationDecoder;
 
 /**
- * Dispatches calls to a {@link PartyRegistryReceiver} instance.
+ * Dispatches calls to a {@link CommReceiver} instance.
  */
-public class PartyRegistryDecoder extends InvocationDecoder
+public class CommDecoder extends InvocationDecoder
 {
     /** The generated hash code used to identify this receiver class. */
-    public static final String RECEIVER_CODE = "05c7a764db18158562a2bd55d300956b";
+    public static final String RECEIVER_CODE = "4083f6b0ef0854b1c54c9fb77d43601f";
 
-    /** The method id used to dispatch {@link PartyRegistryReceiver#receiveInvitation}
+    /** The method id used to dispatch {@link CommReceiver#receiveComm}
      * notifications. */
-    public static final int RECEIVE_INVITATION = 1;
+    public static final int RECEIVE_COMM = 1;
 
     /**
      * Creates a decoder that may be registered to dispatch invocation
      * service notifications to the specified receiver.
      */
-    public PartyRegistryDecoder (PartyRegistryReceiver receiver)
+    public CommDecoder (CommReceiver receiver)
     {
         this.receiver = receiver;
     }
@@ -39,9 +37,9 @@ public class PartyRegistryDecoder extends InvocationDecoder
     public void dispatchNotification (int methodId, Object[] args)
     {
         switch (methodId) {
-        case RECEIVE_INVITATION:
-            ((PartyRegistryReceiver)receiver).receiveInvitation(
-                (PlayerName)args[0], (PartyObjectAddress)args[1]
+        case RECEIVE_COMM:
+            ((CommReceiver)receiver).receiveComm(
+                args[0]
             );
             return;
 

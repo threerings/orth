@@ -23,7 +23,7 @@ import com.threerings.orth.party.data.PartyObjectAddress;
  */
 public class PartyContext implements PresentsContext
 {
-    PartierObject
+    PartierObject;
 
     /**
      * Connects to the given party
