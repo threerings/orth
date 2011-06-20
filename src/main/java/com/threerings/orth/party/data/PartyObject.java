@@ -23,10 +23,6 @@ public class PartyObject extends DObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String LEADER_ID = "leaderId";
 
-    /** The field name of the <code>sceneId</code> field. */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String SCENE_ID = "sceneId";
-
     /** The field name of the <code>status</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String STATUS = "status";
@@ -48,18 +44,11 @@ public class PartyObject extends DObject
     public static final String PARTY_SERVICE = "partyService";
     // AUTO-GENERATED: FIELDS END
 
-    /** A message sent to indicate a notification that should be dispatched to all partiers.
-     * Format: [ Notification ]. */
-    public static final String NOTIFICATION = "notification";
-
     /** The list of people in this party. */
     public DSet<PartyPeep> peeps = DSet.newDSet();
 
     /** The player ID of the current leader. */
     public int leaderId;
-
-    /** The current location of the party. */
-    public int sceneId;
 
     /** Customizable flavor text. */
     public String status;
@@ -75,9 +64,6 @@ public class PartyObject extends DObject
 
     /** The service for doing things on this party. */
     public PartyMarshaller partyService;
-
-//    /** Speaking on this party object. */
-//    public SpeakMarshaller speakService;
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -146,23 +132,6 @@ public class PartyObject extends DObject
         requestAttributeChange(
             LEADER_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.leaderId = value;
-    }
-
-    /**
-     * Requests that the <code>sceneId</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setSceneId (int value)
-    {
-        int ovalue = this.sceneId;
-        requestAttributeChange(
-            SCENE_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
-        this.sceneId = value;
     }
 
     /**

@@ -8,8 +8,6 @@ import flashx.funk.ioc.inject;
 
 import org.osflash.signals.Signal;
 
-import com.threerings.whirled.data.Scene;
-
 import com.threerings.util.DelayUtil;
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
@@ -18,9 +16,6 @@ import com.threerings.util.Util;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.client.ResultAdapter;
-import com.threerings.presents.dobj.AttributeChangedEvent;
-import com.threerings.presents.dobj.EventAdapter;
-import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.ObjectAccessError;
 import com.threerings.presents.util.SafeSubscriber;
 
@@ -29,17 +24,13 @@ import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.LocusDirector;
-import com.threerings.orth.notify.client.NotificationDirector;
-import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.party.client.PartyRegistryDecoder;
 import com.threerings.orth.party.client.PartyRegistryReceiver;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyObjectAddress;
-import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.party.data.PartyRegistryMarshaller;
-import com.threerings.orth.room.data.RoomLocus;
 
 /**
  * Manages party stuff on the client.
@@ -61,12 +52,11 @@ public class PartyDirector implements PartyRegistryReceiver
         const client :Client = inject(AetherClient);
         client.getInvocationDirector().registerReceiver(new PartyRegistryDecoder(this));
         client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
-            _pbsvc = client.requireService(PartyRegistryService);
+            _prsvc = client.requireService(PartyRegistryService);
             if (_octx.playerObject.party != null) {
                 DelayUtil.delayFrame(joinParty, [ _octx.playerObject.party ]); // Join it!
             }
         });
-        _notDir.notificationName = PartyObject.NOTIFICATION;
     }
 
     public function receiveInvitation (inviter :PlayerName, location :PartyObjectAddress) :void
@@ -113,7 +103,7 @@ public class PartyDirector implements PartyRegistryReceiver
      */
     public function createParty () :void
     {
-        _pbsvc.createParty(new ResultAdapter(connectParty, partyJoinFailed.dispatch));
+        _prsvc.createParty(new ResultAdapter(connectParty, partyJoinFailed.dispatch));
     }
 
     /**
@@ -135,8 +125,7 @@ public class PartyDirector implements PartyRegistryReceiver
             _safeSubscriber = null;
         }
         if (_partyObj != null) {
-            _partyObj.removeListener(_partyListener);
-            _partyListener = null;
+            _partyObj.destroyed.remove(clearParty);
             _partyObj = null;
             partyLeft.dispatch();
         }
@@ -190,13 +179,6 @@ public class PartyDirector implements PartyRegistryReceiver
         }
     }
 
-    protected function checkFollowScene () :void
-    {
-        if (_partyObj.sceneId != 0) {
-            _locusDir.moveTo(new RoomLocus(_partyObj.sceneId));
-        }
-    }
-
     protected function partyConnectFailed (event :ClientEvent) :void
     {
         var cause :Error = event.getCause();
@@ -204,10 +186,11 @@ public class PartyDirector implements PartyRegistryReceiver
 
         // we need to clear out our party stuff manually since everything was dropped
         _safeSubscriber = null;
-        _partyListener = null;
+        if (_partyObj != null) {
+            partyLeft.dispatch();
+        }
         _partyObj = null;
         _pctx = null;
-        clearParty(); // clear the rest
 
         // report via locus chat that we lost our party connection
         if (cause != null) {
@@ -241,16 +224,9 @@ public class PartyDirector implements PartyRegistryReceiver
     protected function gotPartyObject (obj :PartyObject) :void
     {
         _partyObj = obj;
-        _partyListener = new EventAdapter();
-        _partyListener.attributeChanged = partyAttrChanged;
-        _partyListener.messageReceived = partyMsgReceived;
-        _partyListener.objectDestroyed = Util.adapt(clearParty);
-        _partyObj.addListener(_partyListener);
+        _partyObj.destroyed.add(clearParty);
 
         partyJoined.dispatch();
-
-        // we might need to warp to the party location
-        checkFollowScene();
     }
 
     /**
@@ -263,53 +239,17 @@ public class PartyDirector implements PartyRegistryReceiver
         clearParty();
     }
 
-    /**
-     * Handles changes on the party object.
-     */
-    protected function partyAttrChanged (event :AttributeChangedEvent) :void
-    {
-        switch (event.getName()) {
-        case PartyObject.SCENE_ID:
-            checkFollowScene();
-            break;
-
-        case PartyObject.LEADER_ID:
-            var newLeader :PartyPeep = _partyObj.peeps.get(event.getValue()) as PartyPeep;
-            if (newLeader != null) {
-                _notDir.addGenericNotification(
-                    MessageBundle.tcompose("m.party_leader", newLeader.name.toString()),
-                    Notification.PERSONAL);
-            }
-            break;
-        }
-    }
-
-    /**
-     * Handles messages on the party object.
-     */
-    protected function partyMsgReceived (event :MessageEvent) :void
-    {
-        //switch (event.getName()) {
-        //case PartyObject.NOTIFICATION:
-        //    _notDir.addNotification(Notification(event.getArgs()[0]));
-        //    break;
-        //}
-    }
-
     protected var _module :Module = inject(Module);
 
-    protected var _notDir :NotificationDirector = inject(NotificationDirector);
     protected var _locusDir :LocusDirector = inject(LocusDirector);
 
     protected var _octx :OrthContext = inject(OrthContext);
 
-    protected var _pbsvc :PartyRegistryService;
+    protected var _prsvc :PartyRegistryService;
 
     protected var _pctx :PartyContext;
     protected var _partyObj :PartyObject;
     protected var _safeSubscriber :SafeSubscriber;
-
-    protected var _partyListener :EventAdapter;
 
     private static const log :Log = Log.getLog(PartyDirector);
 }

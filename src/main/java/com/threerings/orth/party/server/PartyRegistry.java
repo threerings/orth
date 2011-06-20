@@ -4,6 +4,7 @@
 
 package com.threerings.orth.party.server;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -11,21 +12,16 @@ import com.google.inject.Singleton;
 import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
-import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.SessionFactory;
 import com.threerings.presents.server.net.PresentsConnectionManager;
-import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.server.OrthDeploymentConfig;
-
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCredentials;
-import com.threerings.orth.party.data.PartyObject;
-import com.threerings.orth.party.data.PartyObjectAddress;
 import com.threerings.orth.party.data.PartyRegistryMarshaller;
 
 /**
@@ -49,27 +45,19 @@ public class PartyRegistry
     public void createParty (ClientObject caller, ResultListener rl)
         throws InvocationException
     {
-        PlayerObject player = (PlayerObject)caller;
+        final PlayerObject player = (PlayerObject)caller;
 
         if (player.party != null) {
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
+        PartyManager mgr = _injector.createChildInjector(new AbstractModule() {
+            @Override protected void configure () {
+                bind(PlayerObject.class).toInstance(player);
 
-        // set up the new PartyObject
-        PartyObject pobj = new PartyObject();
-        pobj.leaderId = player.getPlayerId();
-        pobj.disband = true;
-        _omgr.registerObject(pobj);
-
-        PartyManager mgr = _injector.getInstance(PartyManager.class);
-        PartyObjectAddress addr =
-            new PartyObjectAddress(_depConf.getPartyHost(), _depConf.getPartyPort(), pobj.getOid());
-        mgr.init(pobj, player.getPlayerId(), addr);
-
-        rl.requestProcessed(addr);
+            }
+        }).getInstance(PartyManager.class);
+        rl.requestProcessed(mgr.addr);
     }
 
-    @Inject protected OrthDeploymentConfig _depConf;
     @Inject protected Injector _injector;
-    @Inject protected RootDObjectManager _omgr;
 }

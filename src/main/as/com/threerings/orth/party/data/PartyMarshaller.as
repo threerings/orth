@@ -63,21 +63,8 @@ public class PartyMarshaller extends InvocationMarshaller
         ]);
     }
 
-    /** The method id used to dispatch <code>moveParty</code> requests. */
-    public static const MOVE_PARTY :int = 4;
-
-    // from interface PartyService
-    public function moveParty (arg1 :int, arg2 :InvocationService_InvocationListener) :void
-    {
-        var listener2 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
-        listener2.listener = arg2;
-        sendRequest(MOVE_PARTY, [
-            Integer.valueOf(arg1), listener2
-        ]);
-    }
-
     /** The method id used to dispatch <code>updateDisband</code> requests. */
-    public static const UPDATE_DISBAND :int = 5;
+    public static const UPDATE_DISBAND :int = 4;
 
     // from interface PartyService
     public function updateDisband (arg1 :Boolean, arg2 :InvocationService_InvocationListener) :void
@@ -90,7 +77,7 @@ public class PartyMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch <code>updateRecruitment</code> requests. */
-    public static const UPDATE_RECRUITMENT :int = 6;
+    public static const UPDATE_RECRUITMENT :int = 5;
 
     // from interface PartyService
     public function updateRecruitment (arg1 :int, arg2 :InvocationService_InvocationListener) :void
@@ -103,7 +90,7 @@ public class PartyMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch <code>updateStatus</code> requests. */
-    public static const UPDATE_STATUS :int = 7;
+    public static const UPDATE_STATUS :int = 6;
 
     // from interface PartyService
     public function updateStatus (arg1 :String, arg2 :InvocationService_InvocationListener) :void

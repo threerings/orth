@@ -27,16 +27,10 @@ public class PartyObject extends DObject
 {
 // GENERATED CLASSDECL END
 
-    /** A message sent to indicate a notification that should be dispatched to all partiers.
-     * Format: [ Notification ]. */
-    public static const NOTIFICATION :String = "notification";
-
 // GENERATED STREAMING START
     public var peeps :DSet;
 
     public var leaderId :int;
-
-    public var sceneId :int;
 
     public var status :String;
 
@@ -53,7 +47,6 @@ public class PartyObject extends DObject
     public var peepsEntryRemoved :Signal = new Signal(DSet_Entry);
     public var peepsEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
     public var leaderIdChanged :Signal = new Signal(int, int);
-    public var sceneIdChanged :Signal = new Signal(int, int);
     public var statusChanged :Signal = new Signal(String, String);
     public var statusTypeChanged :Signal = new Signal(int, int);
     public var recruitmentChanged :Signal = new Signal(int, int);
@@ -63,8 +56,6 @@ public class PartyObject extends DObject
     public static const PEEPS :String = "peeps";
 
     public static const LEADER_ID :String = "leaderId";
-
-    public static const SCENE_ID :String = "sceneId";
 
     public static const STATUS :String = "status";
 
@@ -81,7 +72,6 @@ public class PartyObject extends DObject
         super.readObject(ins);
         peeps = ins.readObject(DSet);
         leaderId = ins.readInt();
-        sceneId = ins.readInt();
         status = ins.readField(String);
         statusType = ins.readByte();
         recruitment = ins.readByte();
@@ -144,9 +134,6 @@ class Signaller
                 break;
             case "leaderId":
                 signal = _obj.leaderIdChanged;
-                break;
-            case "sceneId":
-                signal = _obj.sceneIdChanged;
                 break;
             case "status":
                 signal = _obj.statusChanged;

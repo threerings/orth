@@ -10,16 +10,12 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-
 import com.samskivert.util.StringUtil;
 
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerNodeAction;
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.nodelet.data.HostedNodelet;
-import com.threerings.orth.notify.data.GenericNotification;
-import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.party.data.MemberParty;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyAuthName;
@@ -28,10 +24,10 @@ import com.threerings.orth.party.data.PartyMarshaller;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyObjectAddress;
 import com.threerings.orth.party.data.PartyPeep;
-import com.threerings.orth.party.data.PartySummary;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
-import com.threerings.orth.room.data.RoomLocus;
+import com.threerings.orth.server.OrthDeploymentConfig;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
@@ -46,36 +42,28 @@ import com.threerings.presents.server.InvocationManager;
  * Manages a particular party, living on a single node.
  */
 public class PartyManager
-    implements /* SpeakHandler.SpeakerValidator, */ PartyProvider
+    implements PartyProvider
 {
-    /**
-     * Returns our party distributed object.
-     */
-    public PartyObject getPartyObject ()
-    {
-        return _partyObj;
-    }
+    public final PartyObjectAddress addr;
 
-    public void init (PartyObject partyObj, int creatorId, PartyObjectAddress addr)
+    @Inject public PartyManager (RootDObjectManager omgr, InvocationManager invMgr,
+            OrthDeploymentConfig conf, PlayerObject creator)
     {
-        _addr = addr;
+        _omgr = omgr;
+        _invMgr = invMgr;
 
-        _partyObj = partyObj;
+        // set up the new PartyObject
+        _partyObj = new PartyObject();
+        _partyObj.leaderId = creator.getPlayerId();
+        _partyObj.disband = true;
         _partyObj.setAccessController(new PartyAccessController(this));
+        _partyObj.setPartyService(_invMgr.registerProvider(this, PartyMarshaller.class));
+        _omgr.registerObject(_partyObj);
 
-        // in the middle of that, update the party object (and status), which will
-        // also publish a partyInfo to the node object in this transaction
-        _partyObj.startTransaction();
-        try {
-            _partyObj.setPartyService(_invMgr.registerProvider(this, PartyMarshaller.class));
-            // _partyObj.setSpeakService(_invMgr.registerDispatcher(
-            // new SpeakDispatcher(new SpeakHandler(_partyObj, this))));
-            updateStatus();
-        } finally {
-            _partyObj.commitTransaction();
-        }
+        addr = new PartyObjectAddress(conf.getPartyHost(), conf.getPartyPort(), _partyObj.getOid());
+
         // "invite" the creator
-        _invitedIds.add(creatorId);
+        _invitedIds.add(_partyObj.leaderId);
     }
 
     /**
@@ -83,7 +71,7 @@ public class PartyManager
      */
     public void shutdown ()
     {
-        if (_partyObj == null) {
+        if (!_partyObj.isActive()) {
             return; // already shut down
         }
 
@@ -102,8 +90,6 @@ public class PartyManager
         // _invMgr.clearDispatcher(_partyObj.speakService);
         _omgr.destroyObject(_partyObj.getOid());
 
-        _partyObj = null;
-        _summary = null;
     }
 
     /**
@@ -163,26 +149,6 @@ public class PartyManager
             // TODO(bruno):
             //PlayerNodeActions.sendNotification(playerId,
             //    new GenericNotification("m.party_booted", Notification.PERSONAL));
-        }
-    }
-
-    // from interface PartyProvider
-    public void moveParty (
-        ClientObject caller, int sceneId, InvocationService.InvocationListener il)
-        throws InvocationException
-    {
-        requireLeader(caller);
-        if (_partyObj.sceneId == sceneId) {
-            return; // NOOP!
-        }
-
-        // update the party's location
-        _partyObj.startTransaction();
-        try {
-            _partyObj.setSceneId(sceneId);
-            updateStatus();
-        } finally {
-            _partyObj.commitTransaction();
         }
     }
 
@@ -257,7 +223,7 @@ public class PartyManager
         _invitedIds.add(playerId);
 
         final PlayerName inviterName = inviter.playerName.toPlayerName();
-        final PartyObjectAddress address = _addr;
+        final PartyObjectAddress address = addr;
         _peerMgr.invokeSingleNodeAction(new PlayerNodeAction(playerId) {
             @Override protected void execute (PlayerObject plobj) {
                 PartyRegistrySender.receiveInvitation(plobj, inviterName, address);
@@ -287,14 +253,7 @@ public class PartyManager
         }
 
         // if they're the last one, just kill the party
-        if (_partyObj.peeps.size() == 1) {
-            shutdown();
-            return true;
-        }
-
-        if ((_partyObj.leaderId == playerId) && _partyObj.disband) {
-            _partyObj.postMessage(PartyObject.NOTIFICATION,
-                new GenericNotification("m.party_disbanded", Notification.PERSONAL));
+        if (_partyObj.peeps.size() == 1 || (_partyObj.leaderId == playerId && _partyObj.disband)) {
             shutdown();
             return true;
         }
@@ -344,21 +303,6 @@ public class PartyManager
         }
     }
 
-    /**
-     * Automatically update the status of the party based on the current scene/party.
-     */
-    protected void updateStatus ()
-    {
-        // TODO(bruno): This assumes the party is in a room. Can we make that assumption here?
-        HostedNodelet room = _peerMgr.findHostedRoom(new RoomLocus(_partyObj.sceneId));
-        if (room != null) {
-            setStatus("" + ((RoomLocus)room.nodelet).sceneId, PartyCodes.STATUS_TYPE_SCENE);
-        } else {
-            // we see this, we can investigate
-            setStatus("unknown: " + _partyObj.sceneId, PartyCodes.STATUS_TYPE_USER);
-        }
-    }
-
     protected void setStatus (String status, byte statusType)
     {
         if (_partyObj.status == null || !_partyObj.status.equals(status) ||
@@ -405,13 +349,11 @@ public class PartyManager
         return newLeader;
     }
 
-    protected PartyObjectAddress _addr;
-    protected PartyObject _partyObj;
-    protected PartySummary _summary;
-    protected Set<Integer> _invitedIds = Sets.newHashSet();
+    protected final Set<Integer> _invitedIds = Sets.newHashSet();
+    protected final InvocationManager _invMgr;
+    protected final RootDObjectManager _omgr;
+    protected final PartyObject _partyObj;
 
     @Inject protected ClientManager _clmgr;
-    @Inject protected InvocationManager _invMgr;
     @Inject protected OrthPeerManager _peerMgr;
-    @Inject protected RootDObjectManager _omgr;
 }
