@@ -28,7 +28,7 @@ import com.threerings.orth.data.OrthCodes;
 public class AetherClient extends Client
 {
     public static const MODULE_PROP_NAME :String = "module";
-    
+
     // reference classes that would otherwise not be linked in
     AuthName;
     PlayerObject;
@@ -68,6 +68,12 @@ public class AetherClient extends Client
         setCredentials(creds);
         logon();
         return true;
+    }
+
+    /** Returns the authentication token for this client if it's connected. */
+    public function get sessionToken () :String
+    {
+       return AetherAuthResponseData(getAuthResponseData()).sessionToken;
     }
 
     // from Client

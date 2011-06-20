@@ -56,6 +56,11 @@ public class OrthContext
     {
     }
 
+    public function get aetherClient () :AetherClient
+    {
+        return _client;
+    }
+
     // from PresentsContext
     public function getClient () :Client
     {

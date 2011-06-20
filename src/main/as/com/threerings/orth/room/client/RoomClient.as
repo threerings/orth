@@ -8,7 +8,6 @@ import flashx.funk.ioc.inject;
 import com.threerings.presents.net.Credentials;
 
 import com.threerings.orth.aether.client.AetherClient;
-import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.entity.data.AvatarData;
 import com.threerings.orth.entity.data.MediaWalkability;
 import com.threerings.orth.locus.client.LocusClient;
@@ -28,16 +27,9 @@ public class RoomClient extends LocusClient
     AvatarData;
     MediaWalkability;
 
-    public function RoomClient ()
-    {
-        super();
-    }
-
     override protected function buildCredentials () :Credentials
     {
-        var aRsp :AetherAuthResponseData = AetherAuthResponseData(_aClient.getAuthResponseData());
-
-        return new RoomCredentials(aRsp.sessionToken);
+        return new RoomCredentials(_aClient.sessionToken);
     }
 
     // this is the *aether* client

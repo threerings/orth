@@ -5,13 +5,13 @@
 package com.threerings.orth.party.client {
 
 import flashx.funk.ioc.Module;
+import flashx.funk.ioc.inject;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.util.PresentsContext;
 
 import com.threerings.orth.aether.client.AetherClient;
-import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.party.data.PartierObject;
@@ -24,26 +24,20 @@ import com.threerings.orth.party.data.PartyObjectAddress;
 public class PartyContext implements PresentsContext
 {
     PartierObject
-    public function PartyContext (module :Module)
-    {
-        _module = module;
-    }
 
     /**
      * Connects to the given party
      */
     public function connect (address :PartyObjectAddress) :void
     {
-        var pcreds :PartyCredentials = new PartyCredentials();
-        pcreds.sessionToken = AetherAuthResponseData(
-                _module.getInstance(AetherClient).getAuthResponseData()).sessionToken;
+        const pcreds :PartyCredentials = new PartyCredentials();
+        pcreds.sessionToken = _module.getInstance(AetherClient).sessionToken;
         pcreds.partyId = address.oid;
 
-        var depConf :OrthDeploymentConfig = _module.getInstance(OrthDeploymentConfig);
-        PolicyLoader.registerClient(_client, depConf.policyPort);
+        PolicyLoader.registerClient(_client, _depConf.policyPort);
 
         // configure our client and logon
-        _client.setVersion(depConf.version);
+        _client.setVersion(_depConf.version);
         _client.setServer(address.hostName, [ address.port ]);
         _client.setCredentials(pcreds);
         _client.logon();
@@ -61,7 +55,8 @@ public class PartyContext implements PresentsContext
         return _client.getDObjectManager();
     }
 
-    protected var _module :Module;
+    protected const _module :Module = inject(Module);
+    protected const _depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
     protected const _client :Client = new Client();
 }
 }

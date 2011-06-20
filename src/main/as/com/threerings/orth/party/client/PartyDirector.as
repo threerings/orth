@@ -202,7 +202,7 @@ public class PartyDirector implements PartyRegistryReceiver
     protected function connectParty (address :PartyObjectAddress) :void
     {
         // create a new party session and connect to our party host node
-        _pctx = new PartyContext(_module);
+        _pctx = _module.getInstance(PartyContext);
         var client :Client = _pctx.getClient();
         client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
             _safeSubscriber = new SafeSubscriber(address.oid, gotPartyObject, subscribeFailed);
@@ -239,14 +239,11 @@ public class PartyDirector implements PartyRegistryReceiver
         clearParty();
     }
 
-    protected var _module :Module = inject(Module);
-
-    protected var _locusDir :LocusDirector = inject(LocusDirector);
-
-    protected var _octx :OrthContext = inject(OrthContext);
+    protected const _module :Module = inject(Module);
+    protected const _locusDir :LocusDirector = inject(LocusDirector);
+    protected const _octx :OrthContext = inject(OrthContext);
 
     protected var _prsvc :PartyRegistryService;
-
     protected var _pctx :PartyContext;
     protected var _partyObj :PartyObject;
     protected var _safeSubscriber :SafeSubscriber;

@@ -17,7 +17,6 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.ObjectAccessError;
 import com.threerings.presents.util.SafeSubscriber;
 
-import com.threerings.orth.aether.data.AetherAuthResponseData;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
@@ -115,7 +114,7 @@ public class NodeletDirector extends BasicDirector
 
         var creds :NodeletCredentials = new NodeletCredentials();
         creds.nodelet = nodelet.nodelet;
-        creds.sessionToken = getAuthToken();
+        creds.sessionToken = _octx.aetherClient.sessionToken;
         _ctx.getClient().setCredentials(creds);
         _ctx.getClient().setServer(nodelet.host, nodelet.ports);
         _ctx.getClient().logon();
@@ -129,14 +128,6 @@ public class NodeletDirector extends BasicDirector
     protected function disconnect () :void
     {
         connect(null);
-    }
-
-    /**
-     * Gets the auth token to use in the TokenCredentials for connecting to the nodelet.
-     */
-    protected function getAuthToken () :String
-    {
-        return AetherAuthResponseData(_octx.getClient().getAuthResponseData()).sessionToken;
     }
 
     // from BasicDirector
