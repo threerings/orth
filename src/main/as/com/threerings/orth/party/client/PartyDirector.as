@@ -9,6 +9,7 @@ import flashx.funk.ioc.inject;
 import org.osflash.signals.Signal;
 
 import com.threerings.util.DelayUtil;
+import com.threerings.util.F;
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Util;
@@ -20,7 +21,6 @@ import com.threerings.presents.dobj.ObjectAccessError;
 import com.threerings.presents.util.SafeSubscriber;
 
 import com.threerings.orth.aether.client.AetherClient;
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.LocusDirector;
@@ -42,9 +42,7 @@ public class PartyDirector
     PartyObject;
     PartyInvite;
 
-    public const invitationReceived :Signal = new Signal(PlayerName);
     public const partyJoined :Signal = new Signal();
-    public const partyJoinFailed :Signal = new Signal(String);// signals the cause
     public const partyLeft :Signal = new Signal();
 
     public function PartyDirector ()
@@ -97,7 +95,7 @@ public class PartyDirector
      */
     public function createParty () :void
     {
-        _prsvc.createParty(new ResultAdapter(connectParty, partyJoinFailed.dispatch));
+        _prsvc.createParty(new ResultAdapter(connectParty, onJoinFailed));
     }
 
     /**
@@ -163,14 +161,14 @@ public class PartyDirector
             _partyObj.partyService.invitePlayer(memberId, _octx.listener(OrthCodes.PARTY_MSGS));
         } else {
             createParty();
-            function onJoin (..._) :void {
-                partyJoinFailed.remove(onJoinFailed);
-                invitePlayer(memberId);
-            }
-            function onJoinFailed (..._) :void { partyJoined.remove(onJoin); }
-            partyJoined.addOnce(onJoin);
-            partyJoinFailed.addOnce(onJoinFailed);
+            _onJoin = F.callback(invitePlayer, memberId);
+            partyJoined.addOnce(_onJoin);
         }
+    }
+
+    protected function onJoinFailed () :void
+    {
+            partyJoined.remove(_onJoin);
     }
 
     protected function partyConnectFailed (event :ClientEvent) :void
@@ -205,7 +203,7 @@ public class PartyDirector
         client.addEventListener(ClientEvent.CLIENT_FAILED_TO_LOGON,
             function (event :ClientEvent) :void {
                 log.warning("Failed to logon to party server", "cause", event.getCause());
-                partyJoinFailed.dispatch(event.getCause().message);
+                onJoinFailed();
                 _octx.displayFeedback(OrthCodes.PARTY_MSGS, event.getCause().message);
         });
         client.addEventListener(ClientEvent.CLIENT_CONNECTION_FAILED, partyConnectFailed);
@@ -229,7 +227,7 @@ public class PartyDirector
     protected function subscribeFailed (oid :int, cause :ObjectAccessError) :void
     {
         log.warning("Party subscription failed", "cause", cause);
-        partyJoinFailed.dispatch(cause.message);
+        onJoinFailed();
         clearParty();
     }
 
@@ -241,6 +239,7 @@ public class PartyDirector
     protected var _pctx :PartyContext;
     protected var _partyObj :PartyObject;
     protected var _safeSubscriber :SafeSubscriber;
+    protected var _onJoin :Function;
 
     private static const log :Log = Log.getLog(PartyDirector);
 }
