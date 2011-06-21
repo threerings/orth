@@ -8,9 +8,9 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+
 import com.samskivert.util.StringUtil;
 
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerNodeAction;
 import com.threerings.orth.comms.data.CommSender;
@@ -26,7 +26,6 @@ import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.OrthDeploymentConfig;
-
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
@@ -56,7 +55,7 @@ public class PartyManager
         _partyObj.leaderId = creator.getPlayerId();
         _partyObj.disband = true;
         _partyObj.setAccessController(new PartyAccessController(this));
-        _partyObj.setPartyService(_invMgr.registerProvider(this, PartyMarshaller.class));
+        _partyObj.partyService = _invMgr.registerProvider(this, PartyMarshaller.class);
         _omgr.registerObject(_partyObj);
 
         addr = new PartyObjectAddress(conf.getPartyHost(), conf.getPartyPort(), _partyObj.getOid());
