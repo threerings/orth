@@ -14,7 +14,6 @@ import com.threerings.crowd.server.LocationManager;
 
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
-import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.server.LocusMaterializer;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
@@ -41,7 +40,7 @@ import com.threerings.whirled.spot.server.SpotSceneRegistry;
  */
 @Singleton
 public class OrthSceneRegistry
-    implements OrthSceneProvider, LocusMaterializer
+    implements OrthSceneProvider, LocusMaterializer<RoomLocus>
 {
     @Inject public OrthSceneRegistry (InvocationManager invmgr, Injector injector)
     {
@@ -80,7 +79,7 @@ public class OrthSceneRegistry
     }
 
     @Override
-    public void materializeLocus (ClientObject caller, final Locus locus,
+    public void materializeLocus (ClientObject caller, final RoomLocus locus,
         final LocusMaterializationListener listener)
     {
         // we re-route materialization via NodeletHoster so that we first get the lock and publish

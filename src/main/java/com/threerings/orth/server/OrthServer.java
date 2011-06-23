@@ -39,7 +39,7 @@ public class OrthServer extends CrowdServer
         @Override protected void configure () {
             super.configure();
             _materializers = MapBinder.newMapBinder(binder(),  new TypeLiteral<Class<?>>() {},
-                new TypeLiteral<LocusMaterializer>() {});
+                new TypeLiteral<LocusMaterializer<?>>() {});
 
             // room
             bind(MemoryRepository.class).to(AmnesiacMemorySupply.class);
@@ -50,7 +50,7 @@ public class OrthServer extends CrowdServer
             _materializers.addBinding(RoomLocus.class).to(OrthSceneRegistry.class);
         }
 
-        protected MapBinder<Class<?>, LocusMaterializer> _materializers;
+        protected MapBinder<Class<?>, LocusMaterializer<?>> _materializers;
     }
 
     @Override

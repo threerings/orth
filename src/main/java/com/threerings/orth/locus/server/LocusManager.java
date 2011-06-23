@@ -31,14 +31,24 @@ public class LocusManager
 
     @Override
     public void materializeLocus (ClientObject caller, Locus locus,
-            final LocusMaterializationListener listener)
+           LocusMaterializationListener listener)
         throws InvocationException
     {
-        LocusMaterializer materializer = _materializers.get(locus.getClass());
+        specializedMaterializeLocus(caller, locus, listener);
+    }
+
+    // We can't provide the generic type in materializeLocus as its signature has to match
+    // LocusProvider's, and LocusProvider can't be generated with the generic type. That means we
+    // need this specialization method to make the call to materializer valid.
+    protected <L extends Locus> void specializedMaterializeLocus (ClientObject caller, L locus,
+        LocusMaterializationListener listener)
+    {
+        @SuppressWarnings("unchecked")
+        LocusMaterializer<L> materializer = (LocusMaterializer<L>)_materializers.get(locus.getClass());
         Preconditions.checkNotNull(materializer, "No materializer for locus '%s' of class '%s'",
             locus, locus.getClass());
         materializer.materializeLocus(caller, locus, listener);
     }
 
-    @Inject protected Map<Class<?>, LocusMaterializer> _materializers;
+    @Inject protected Map<Class<?>, LocusMaterializer<?>> _materializers;
 }
