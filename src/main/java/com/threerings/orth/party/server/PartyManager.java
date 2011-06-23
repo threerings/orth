@@ -77,9 +77,7 @@ public class PartyManager
             endPartierSession(peep.name.getId());
         }
         _invMgr.clearDispatcher(_partyObj.partyService);
-        // _invMgr.clearDispatcher(_partyObj.speakService);
         _omgr.destroyObject(_partyObj.getOid());
-
     }
 
     /**
@@ -88,13 +86,14 @@ public class PartyManager
     public void clientSubscribed (final PartierObject partier)
     {
         final int playerId = partier.getPlayerId();
+        final PartyObjectAddress closureAddr = addr;
 
         // clear their invites to this party, if any
         _partyObj.invitedIds.remove(playerId);
 
         _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(playerId) {
             @Override protected void execute (PlayerObject player, InvocationService.ResultListener listener) {
-                player.setParty(addr);
+                player.setParty(closureAddr);
                 listener.requestProcessed(null);
             }
         }, new ResultListener<Void>(){
