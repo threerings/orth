@@ -53,7 +53,6 @@ public class PartyRegistry
         PartyManager mgr = _injector.createChildInjector(new AbstractModule() {
             @Override protected void configure () {
                 bind(PlayerObject.class).toInstance(player);
-
             }
         }).getInstance(PartyManager.class);
         rl.requestProcessed(mgr.addr);

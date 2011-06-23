@@ -28,11 +28,11 @@ public class PartyAccessController implements AccessController
         if (sub instanceof ProxySubscriber) {
             PartierObject partier = (PartierObject)((ProxySubscriber)sub).getClientObject();
             PartyObject party = (PartyObject)object;
-            boolean maySubscribe = (partier.partyOid == party.getOid());
-            if (maySubscribe) {
+            if (partier.partyOid == party.getOid() && party.mayJoin(partier.playerName)) {
                 _mgr.clientSubscribed(partier);
+                return true;
             }
-            return maySubscribe;
+            return false;
         }
 
         // else: server

@@ -4,7 +4,11 @@
 
 package com.threerings.orth.party.data;
 
+import java.util.Set;
+
 import javax.annotation.Generated;
+
+import com.google.common.collect.Sets;
 
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
@@ -14,6 +18,8 @@ import com.threerings.orth.data.OrthName;
 public class PartyObject extends DObject
     implements Cloneable
 {
+    public transient final Set<Integer> invitedIds = Sets.newHashSet();
+
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>peeps</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -220,37 +226,15 @@ public class PartyObject extends DObject
     }
     // AUTO-GENERATED: METHODS END
 
-//    // from SpeakObject
-//    public void applyToListeners (ListenerOp op)
-//    {
-//        for (PartyPeep peep : peeps) {
-//            op.apply(peep.name);
-//        }
-//    }
-
     /**
      * May the specified player join this party? Note that you may join a party
      * you can't even see on the party board.
      *
-     * @return the reason for failure, or null if joinage may proceed.
      */
-    public String mayJoin (OrthName player, boolean hasLeaderInvite)
+    public boolean mayJoin (OrthName player)
     {
-        if (peeps.size() >= PartyCodes.MAX_PARTY_SIZE) {
-            return PartyCodes.E_PARTY_FULL;
-        }
-        if (hasLeaderInvite) {
-            return null;
-        }
-
-        switch (recruitment) {
-        case PartyCodes.RECRUITMENT_OPEN:
-            return null;
-
-        default:
-        case PartyCodes.RECRUITMENT_CLOSED:
-            return PartyCodes.E_PARTY_CLOSED;
-        }
+        return peeps.size() < PartyCodes.MAX_PARTY_SIZE &&
+            (invitedIds.contains(player.getId()) || recruitment == PartyCodes.RECRUITMENT_OPEN);
     }
 
     @Override
@@ -260,7 +244,6 @@ public class PartyObject extends DObject
             PartyObject that = (PartyObject)super.clone();
             that.peeps = this.peeps.clone();
             that.partyService = null;
-//            that.speakService = null;
             return that;
 
         } catch (CloneNotSupportedException cnse) {

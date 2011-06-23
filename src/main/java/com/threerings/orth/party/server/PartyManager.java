@@ -4,17 +4,16 @@
 
 package com.threerings.orth.party.server;
 
-import java.util.Set;
-
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
+import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerNodeAction;
+import com.threerings.orth.aether.server.PlayerNodeRequest;
 import com.threerings.orth.comms.data.CommSender;
-import com.threerings.orth.data.OrthName;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
@@ -23,7 +22,6 @@ import com.threerings.orth.party.data.PartyMarshaller;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyObjectAddress;
 import com.threerings.orth.party.data.PartyPeep;
-import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.OrthDeploymentConfig;
 import com.threerings.presents.client.InvocationService;
@@ -35,6 +33,7 @@ import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
+import com.threerings.util.Resulting;
 
 /**
  * Manages a particular party, living on a single node.
@@ -61,7 +60,7 @@ public class PartyManager
         addr = new PartyObjectAddress(conf.getPartyHost(), conf.getPartyPort(), _partyObj.getOid());
 
         // "invite" the creator
-        _invitedIds.add(_partyObj.leaderId);
+        _partyObj.invitedIds.add(_partyObj.leaderId);
     }
 
     /**
@@ -73,17 +72,10 @@ public class PartyManager
             return; // already shut down
         }
 
-        OrthNodeObject nodeObj = _peerMgr.getOrthNodeObject();
-        nodeObj.startTransaction();
-        try {
-            // clear the party info from all remaining players' player objects
-            for (PartyPeep peep : _partyObj.peeps) {
-                endPartierSession(peep.name.getId());
-            }
-        } finally {
-            nodeObj.commitTransaction();
+        // clear the party info from all remaining players' player objects
+        for (PartyPeep peep : _partyObj.peeps) {
+            endPartierSession(peep.name.getId());
         }
-
         _invMgr.clearDispatcher(_partyObj.partyService);
         // _invMgr.clearDispatcher(_partyObj.speakService);
         _omgr.destroyObject(_partyObj.getOid());
@@ -91,47 +83,39 @@ public class PartyManager
     }
 
     /**
-     * Add the specified player to the party. Called from the PartyRegistry, which also takes care
-     * of filling-in the partyId in the PlayerObject. If the method returns normally, the player
-     * will have been added to the party.
-     *
-     * @throws InvocationException if the player is not allowed into the party for some reason.
-     */
-    public void addPlayer (OrthName name)
-        throws InvocationException
-    {
-        // TODO: now that we don't modify the _partyObj here, we could simplify the PartyRegistry
-        // to not register the dobj until the user successfully joins.
-
-        String snub = _partyObj.mayJoin(name, _invitedIds.contains(name.getId()));
-        if (snub != null) {
-            throw new InvocationException(snub);
-        }
-    }
-
-    /**
      * Called from the access controller when subscription is approved for the specified player.
      */
-    public void clientSubscribed (PartierObject partier)
+    public void clientSubscribed (final PartierObject partier)
     {
         final int playerId = partier.getPlayerId();
-        // listen for them to die
-        partier.addListener(new ObjectDeathListener() {
-            public void objectDestroyed (ObjectDestroyedEvent event) {
-                removePlayer(playerId);
-            }
-        });
 
         // clear their invites to this party, if any
-        _invitedIds.remove(playerId);
+        _partyObj.invitedIds.remove(playerId);
 
-        // Crap, we used to do this in addPlayer, but they could never actually enter the party
-        // and leave it hosed. The downside of doing it this way is that we could approve
-        // more than MAX_PLAYERS to join the party...
-        // The user may already be in the party if they arrived from another node.
-        if (!_partyObj.peeps.containsKey(playerId)) {
-            _partyObj.addToPeeps(new PartyPeep(partier.playerName, nextJoinOrder()));
-        }
+        _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(playerId) {
+            @Override protected void execute (PlayerObject player, InvocationService.ResultListener listener) {
+                player.setParty(addr);
+                listener.requestProcessed(null);
+            }
+        }, new ResultListener<Void>(){
+            @Override public void requestCompleted (Void result) {
+                // listen for them to die
+                partier.addListener(new ObjectDeathListener() {
+                    public void objectDestroyed (ObjectDestroyedEvent event) {
+                        removePlayer(playerId);
+                    }
+                });
+
+                // Crap, we used to do this in addPlayer, but they could never actually enter the
+                // party and leave it hosed. The downside of doing it this way is that we could approve
+                // more than MAX_PLAYERS to join the party...
+                _partyObj.addToPeeps(new PartyPeep(partier.playerName, nextJoinOrder()));
+            }
+
+            @Override public void requestFailed (Exception cause) {
+                // TODO - notify the client that we done fucked up
+                endPartierSession(playerId);
+            }});
     }
 
     // from interface PartyProvider
@@ -215,7 +199,7 @@ public class PartyManager
             throw new InvocationException(PartyCodes.E_CANT_INVITE_CLOSED);
         }
         // add them to the invited set
-        _invitedIds.add(playerId);
+        _partyObj.invitedIds.add(playerId);
 
         final PartyInvite invite = new PartyInvite(inviter.playerName.toPlayerName(), addr);
         _peerMgr.invokeSingleNodeAction(new PlayerNodeAction(playerId) {
@@ -242,9 +226,7 @@ public class PartyManager
     protected boolean removePlayer (int playerId)
     {
         // make sure we're still alive and they're actually in
-        if (_partyObj == null || !_partyObj.peeps.containsKey(playerId)) {
-            return false;
-        }
+        if (_partyObj == null || !_partyObj.peeps.containsKey(playerId)) { return false; }
 
         // if they're the last one, just kill the party
         if (_partyObj.peeps.size() == 1 || (_partyObj.leaderId == playerId && _partyObj.disband)) {
@@ -269,6 +251,12 @@ public class PartyManager
 
     protected void endPartierSession (int playerId)
     {
+        _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(playerId) {
+            @Override protected void execute (PlayerObject pl, InvocationService.ResultListener rl) {
+                pl.setParty(null);
+                rl.requestProcessed(null);
+            }
+        }, new Resulting<Void>("PartyClearer", Log.log, "playerId", playerId));
         PartySession session = (PartySession)_clmgr.getClient(PartyAuthName.makeKey(playerId));
         if (session != null) {
             session.endSession();
@@ -321,7 +309,6 @@ public class PartyManager
         return newLeader;
     }
 
-    protected final Set<Integer> _invitedIds = Sets.newHashSet();
     protected final InvocationManager _invMgr;
     protected final RootDObjectManager _omgr;
     protected final PartyObject _partyObj;
