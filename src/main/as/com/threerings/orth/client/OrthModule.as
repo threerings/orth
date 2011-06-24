@@ -4,6 +4,7 @@
 
 package com.threerings.orth.client {
 import flash.display.Stage;
+import flashx.funk.ioc.Module;
 
 import flashx.funk.ioc.BindingModule;
 
@@ -32,34 +33,32 @@ public class OrthModule extends BindingModule
     public function OrthModule (stage :Stage)
     {
         // bind this module
+        bind(Module).to(OrthModule);
         bind(OrthModule).toInstance(this);
 
         // a handy stage reference
         bind(Stage).toInstance(stage);
 
-        // our context and client
-        bind(OrthContext).asSingleton();
+        // Singletons, A-Z
         bind(AetherClient).asSingleton();
-
-        // various singletons
-        bind(MessageManager).asSingleton();
-        bind(LocusDirector).asSingleton();
-        bind(OrthController).asSingleton();
         bind(AetherDirector).asSingleton();
-        bind(FriendDirector).asSingleton();
-        bind(OrthChatDirector).asSingleton();
-        bind(PartyDirector).asSingleton();
-        bind(GuildDirector).asSingleton();
         bind(CommsDirector).asSingleton();
+        bind(FriendDirector).asSingleton();
+        bind(GuildDirector).asSingleton();
+        bind(LocusDirector).asSingleton();
+        bind(MessageManager).asSingleton();
+        bind(NotificationDirector).asSingleton();
+        bind(OrthChatDirector).asSingleton();
+        bind(OrthContext).asSingleton();
+        bind(OrthController).asSingleton();
+        bind(OrthPlaceBox).asSingleton();
+        bind(PartyDirector).asSingleton();
+        bind(TopPanel).asSingleton();
 
         // we have a simple implementation of LayeredContainer
         bind(LayeredContainer).to(SimpleLayeredContainer);
 
         // as is the placebox
-        bind(OrthPlaceBox).asSingleton();
-
-        // narya bits
-        bind(MessageManager).asSingleton();
     }
 
     public function init () :void
