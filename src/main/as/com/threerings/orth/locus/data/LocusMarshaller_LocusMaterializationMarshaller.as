@@ -7,7 +7,6 @@ package com.threerings.orth.locus.data {
 import com.threerings.presents.data.InvocationMarshaller_ListenerMarshaller;
 
 import com.threerings.orth.locus.client.LocusService_LocusMaterializationListener;
-import com.threerings.orth.nodelet.data.HostedNodelet;
 
 /**
  * Marshalls instances of the LocusService_LocusMaterializationMarshaller interface.
@@ -24,7 +23,7 @@ public class LocusMarshaller_LocusMaterializationMarshaller
         switch (methodId) {
         case LOCUS_MATERIALIZED:
             (listener as LocusService_LocusMaterializationListener).locusMaterialized(
-                (args[0] as HostedNodelet));
+                (args[0] as HostedLocus));
             return;
 
         default:

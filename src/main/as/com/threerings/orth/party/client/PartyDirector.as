@@ -168,7 +168,7 @@ public class PartyDirector
 
     protected function onJoinFailed () :void
     {
-            partyJoined.remove(_onJoin);
+        partyJoined.remove(_onJoin);
     }
 
     protected function partyConnectFailed (event :ClientEvent) :void

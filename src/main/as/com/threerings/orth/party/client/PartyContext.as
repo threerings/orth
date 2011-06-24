@@ -38,7 +38,7 @@ public class PartyContext implements PresentsContext
 
         // configure our client and logon
         _client.setVersion(_depConf.version);
-        _client.setServer(address.hostName, [ address.port ]);
+        _client.setServer(address.host, address.ports);
         _client.setCredentials(pcreds);
         _client.logon();
     }

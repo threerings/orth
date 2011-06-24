@@ -4,8 +4,8 @@
 
 package com.threerings.orth.locus.client;
 
+import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
-import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.presents.client.InvocationService;
 
 public interface LocusService
@@ -13,7 +13,7 @@ public interface LocusService
 {
     interface LocusMaterializationListener extends InvocationListener
     {
-        void locusMaterialized (HostedNodelet locus);
+        void locusMaterialized (HostedLocus locus);
     }
 
     void materializeLocus (Locus locus, LocusMaterializationListener listener);

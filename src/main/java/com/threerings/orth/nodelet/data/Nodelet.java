@@ -15,52 +15,17 @@ import com.threerings.io.SimpleStreamableObject;
  */
 public abstract class Nodelet extends SimpleStreamableObject
 {
-    /**
-     * Defines the key for publishing a nodelet. 
-     */
-    public interface Publishable
-    {
-        /**
-         * Gets the key of the nodelet.
-         */
-        Comparable<?> getKey ();
-    }
-
-    // subclasses should override this, but this fallback works for Publishable nodelets
     public boolean equals (Object other)
     {
-        if (this instanceof Publishable) {
-            return other != null && other.getClass() == getClass() &&
-                ((Publishable)this).getKey().equals(((Publishable)other).getKey());
-        }
-        return super.equals(other);
+        return other != null && other.getClass() == getClass()
+            && getKey().equals(((Nodelet)other).getKey());
     }
 
-    // subclasses should override this, but this fallback works for Publishable nodelets
     public int hashCode ()
     {
-        if (this instanceof Publishable) {
-            return ((Publishable)this).getKey().hashCode();
-        }
-        return super.hashCode();
+        return getKey().hashCode();
     }
 
-    /**
-     * Returns the key if this nodelet is {@link #Publishable}, otherwise null.
-     */
-    public Comparable<?> getPublishableKey ()
-    {
-        if (this instanceof Publishable) {
-            return ((Publishable)this).getKey();
-        }
-        return null;
-    }
+    public abstract Comparable<?> getKey ();
 
-    /**
-     * Returns the key if this nodelet is {@link #Publishable}, otherwise fails to cast.
-     */
-    public Comparable<?> requireKey ()
-    {
-        return ((Publishable)this).getKey();
-    }
 }

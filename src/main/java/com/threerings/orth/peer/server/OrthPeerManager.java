@@ -92,7 +92,7 @@ public abstract class OrthPeerManager extends PeerManager
      */
     public HostedNodelet findHostedNodelet (final String dsetName, Nodelet nodelet)
     {
-        final Comparable<?> key = nodelet.requireKey();
+        final Comparable<?> key = nodelet.getKey();
         return lookupNodeDatum(new Function<NodeObject, HostedNodelet>() {
             public HostedNodelet apply (NodeObject nodeobj) {
                 return ((OrthNodeObject) nodeobj).<HostedNodelet>getSet(dsetName).get(key);

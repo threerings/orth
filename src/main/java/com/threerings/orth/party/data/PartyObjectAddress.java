@@ -1,17 +1,14 @@
 package com.threerings.orth.party.data;
 
-import com.threerings.io.SimpleStreamableObject;
+import com.threerings.orth.data.ServerAddress;
 
-public class PartyObjectAddress extends SimpleStreamableObject
+public class PartyObjectAddress extends ServerAddress
 {
-    public final String hostName;
-
-    public final int port, oid;
+    public int oid;
 
     public PartyObjectAddress (String hostName, int port, int oid)
     {
-        this.hostName = hostName;
-        this.port = port;
+        super(hostName, new int[] {port});
         this.oid = oid;
     }
 }

@@ -32,7 +32,6 @@ public abstract class DSetNodeletHoster
      */
     public DSetNodeletHoster (String dsetName, Class<? extends Nodelet> nclass)
     {
-        Preconditions.checkArgument(Nodelet.Publishable.class.isAssignableFrom(nclass));
         _dsetName = dsetName;
         _nodeletClass = nclass;
     }
@@ -56,13 +55,13 @@ public abstract class DSetNodeletHoster
         // all be queried to see which peer is the least loaded and the request should
         // be punted to there.
 
-        final NodeObject.Lock lock = new NodeObject.Lock(getLockName(), nodelet.requireKey());
+        final NodeObject.Lock lock = new NodeObject.Lock(getLockName(), nodelet.getKey());
         _peerMan.acquireLock(lock, new ResultListener<String>() {
             @Override public void requestCompleted (String nodeName) {
                 if (_peerMan.getNodeObject().nodeName.equals(nodeName)) {
                     log.info("Got nodelet", "nodelet", nodelet);
                     hostNodelet();
-    
+
                 } else {
                     // we didn't get the lock, so let's see what happened by re-checking
                     if (!hostExisting(nodelet, listener)) {

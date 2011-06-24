@@ -1,9 +1,8 @@
-// GENERATED PREAMBLE START
 //
 // Orth - a package of MMO services: rooms, parties, guilds, and more!
 // Copyright 2010-2011 Three Rings Design, Inc.
 
-
+// GENERATED PREAMBLE START
 package com.threerings.orth.party.data {
 
 import org.osflash.signals.Signal;
@@ -17,6 +16,7 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 
+import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.PartyMarshaller;
 
 // GENERATED PREAMBLE END
@@ -42,6 +42,8 @@ public class PartyObject extends DObject
 
     public var partyService :PartyMarshaller;
 
+    public var nodelet :HostedNodelet;
+
     public var peepsChanged :Signal = new Signal(DSet, DSet);
     public var peepsEntryAdded :Signal = new Signal(DSet_Entry);
     public var peepsEntryRemoved :Signal = new Signal(DSet_Entry);
@@ -52,6 +54,7 @@ public class PartyObject extends DObject
     public var recruitmentChanged :Signal = new Signal(int, int);
     public var disbandChanged :Signal = new Signal(Boolean, Boolean);
     public var partyServiceChanged :Signal = new Signal(PartyMarshaller, PartyMarshaller);
+    public var nodeletChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
 
     public static const PEEPS :String = "peeps";
 
@@ -67,6 +70,8 @@ public class PartyObject extends DObject
 
     public static const PARTY_SERVICE :String = "partyService";
 
+    public static const NODELET :String = "nodelet";
+
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
@@ -77,6 +82,7 @@ public class PartyObject extends DObject
         recruitment = ins.readByte();
         disband = ins.readBoolean();
         partyService = ins.readObject(PartyMarshaller);
+        nodelet = ins.readObject(HostedNodelet);
     }
 
     public function PartyObject ()
@@ -149,6 +155,9 @@ class Signaller
                 break;
             case "partyService":
                 signal = _obj.partyServiceChanged;
+                break;
+            case "nodelet":
+                signal = _obj.nodeletChanged;
                 break;
             default:
                 return;

@@ -177,7 +177,7 @@ public abstract class NodeletRegistry
     {
         Preconditions.checkArgument(_hoster instanceof DSetNodeletHoster);
         final String dsetName = ((DSetNodeletHoster)_hoster).getDSetName();
-        final Comparable<?> key = nodelet.requireKey();
+        final Comparable<?> key = nodelet.getKey();
         final Class<? extends Nodelet> nclass = _nodeletClass;
         PeerManager.NodeRequest req = new PeerManager.NodeRequest() {
             @Override public boolean isApplicable (NodeObject nodeobj) {

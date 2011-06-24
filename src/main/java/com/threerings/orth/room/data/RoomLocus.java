@@ -7,8 +7,8 @@ package com.threerings.orth.room.data;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.nodelet.data.Nodelet;
 
-public class RoomLocus extends Locus
-    implements Nodelet.Publishable
+public class RoomLocus extends Nodelet
+    implements Locus
 {
     public int sceneId;
 

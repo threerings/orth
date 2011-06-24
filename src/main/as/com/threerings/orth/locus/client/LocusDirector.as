@@ -4,6 +4,7 @@
 
 package com.threerings.orth.locus.client {
 import flash.display.Sprite;
+import com.threerings.orth.locus.data.HostedLocus;
 import flash.utils.getQualifiedClassName;
 
 import flashx.funk.ioc.inject;
@@ -155,7 +156,7 @@ public class LocusDirector extends BasicDirector
     }
 
     // from Java LocusService_PlaceResolutionListener
-    public function locusMaterialized (hosted :HostedNodelet) :void
+    public function locusMaterialized (hosted :HostedLocus) :void
     {
         // note our peer
         _pendingPeer = hosted.host;

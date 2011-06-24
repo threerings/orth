@@ -3,47 +3,36 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 // GENERATED PREAMBLE START
-package com.threerings.orth.chat.data {
+package com.threerings.orth.locus.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.data.ServerAddress;
+import com.threerings.orth.locus.data.Locus;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class Tell extends SimpleStreamableObject
+public class HostedLocus extends ServerAddress
 {
 // GENERATED CLASSDECL END
-    public function get from () :PlayerName
-    {
-        return _from;
-    }
-
-    public function get message () :String
-    {
-        return _message;
-    }
 
 // GENERATED STREAMING START
+    public var locus :Locus;
+
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        _from = ins.readObject(PlayerName);
-        _message = ins.readField(String);
+        locus = ins.readObject(Locus);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeObject(_from);
-        out.writeField(_message);
+        out.writeObject(locus);
     }
 
-    protected var _from :PlayerName;
-    protected var _message :String;
 // GENERATED STREAMING END
 
 // GENERATED CLASSFINISH START

@@ -14,6 +14,7 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.data.OrthName;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 
 public class PartyObject extends DObject
     implements Cloneable
@@ -48,6 +49,10 @@ public class PartyObject extends DObject
     /** The field name of the <code>partyService</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String PARTY_SERVICE = "partyService";
+
+    /** The field name of the <code>nodelet</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String NODELET = "nodelet";
     // AUTO-GENERATED: FIELDS END
 
     /** The list of people in this party. */
@@ -70,6 +75,9 @@ public class PartyObject extends DObject
 
     /** The service for doing things on this party. */
     public PartyMarshaller partyService;
+
+    /** The shared nodelet the party is in, or null if they're in disparate locations */
+    public HostedNodelet nodelet;
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -223,6 +231,23 @@ public class PartyObject extends DObject
         requestAttributeChange(
             PARTY_SERVICE, value, ovalue);
         this.partyService = value;
+    }
+
+    /**
+     * Requests that the <code>nodelet</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setNodelet (HostedNodelet value)
+    {
+        HostedNodelet ovalue = this.nodelet;
+        requestAttributeChange(
+            NODELET, value, ovalue);
+        this.nodelet = value;
     }
     // AUTO-GENERATED: METHODS END
 

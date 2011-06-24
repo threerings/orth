@@ -4,12 +4,12 @@
 
 package com.threerings.orth.locus.data;
 
-import com.threerings.orth.nodelet.data.Nodelet;
+import com.threerings.io.Streamable;
 
 /**
  * The base type for a specification of a place, used both to instruct the Orth system to
- * host/instantiate the place and for a peer to announce it's hosting it.
+ * host/instantiate the place.
  */
-public abstract class Locus extends Nodelet
+public interface Locus extends Streamable
 {
 }

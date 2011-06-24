@@ -11,9 +11,9 @@ import com.google.inject.Singleton;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.crowd.server.LocationManager;
-
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
+import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.server.LocusMaterializer;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
@@ -85,8 +85,8 @@ public class OrthSceneRegistry
         // we re-route materialization via NodeletHoster so that we first get the lock and publish
         // the fact that we are hosting this scene
         _hoster.resolveHosting(caller, locus, new Resulting<HostedNodelet> (listener) {
-            @Override public void requestCompleted (final HostedNodelet result) {
-                listener.locusMaterialized(result);
+            @Override public void requestCompleted (HostedNodelet result) {
+                listener.locusMaterialized(new HostedLocus(locus, result.host, result.ports));
             }
         });
     }

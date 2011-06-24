@@ -1,9 +1,8 @@
-// GENERATED PREAMBLE START
 //
 // Orth - a package of MMO services: rooms, parties, guilds, and more!
 // Copyright 2010-2011 Three Rings Design, Inc.
 
-
+// GENERATED PREAMBLE START
 package com.threerings.orth.guild.data {
 
 import org.osflash.signals.Signal;
