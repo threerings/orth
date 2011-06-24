@@ -6,6 +6,8 @@ package com.threerings.orth.party.client;
 
 import com.threerings.presents.client.InvocationService;
 
+import com.threerings.orth.locus.data.HostedLocus;
+
 /**
  * Provides services to people in a party.
  */
@@ -28,4 +30,7 @@ public interface PartyService extends InvocationService
 
     /** Invites a specific player to this party. */
     void invitePlayer (int playerId, InvocationListener il);
+
+    /** Moves the entire party to the given locus. Move to null to let partiers roam freely. */
+    void moveParty(HostedLocus locus, InvocationListener il);
 }

@@ -16,7 +16,7 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 
-import com.threerings.orth.nodelet.data.HostedNodelet;
+import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.data.PartyMarshaller;
 
 // GENERATED PREAMBLE END
@@ -42,7 +42,7 @@ public class PartyObject extends DObject
 
     public var partyService :PartyMarshaller;
 
-    public var nodelet :HostedNodelet;
+    public var locus :HostedLocus;
 
     public var peepsChanged :Signal = new Signal(DSet, DSet);
     public var peepsEntryAdded :Signal = new Signal(DSet_Entry);
@@ -54,7 +54,7 @@ public class PartyObject extends DObject
     public var recruitmentChanged :Signal = new Signal(int, int);
     public var disbandChanged :Signal = new Signal(Boolean, Boolean);
     public var partyServiceChanged :Signal = new Signal(PartyMarshaller, PartyMarshaller);
-    public var nodeletChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
+    public var locusChanged :Signal = new Signal(HostedLocus, HostedLocus);
 
     public static const PEEPS :String = "peeps";
 
@@ -70,7 +70,7 @@ public class PartyObject extends DObject
 
     public static const PARTY_SERVICE :String = "partyService";
 
-    public static const NODELET :String = "nodelet";
+    public static const LOCUS :String = "locus";
 
     override public function readObject (ins :ObjectInputStream) :void
     {
@@ -82,7 +82,7 @@ public class PartyObject extends DObject
         recruitment = ins.readByte();
         disband = ins.readBoolean();
         partyService = ins.readObject(PartyMarshaller);
-        nodelet = ins.readObject(HostedNodelet);
+        locus = ins.readObject(HostedLocus);
     }
 
     public function PartyObject ()
@@ -156,8 +156,8 @@ class Signaller
             case "partyService":
                 signal = _obj.partyServiceChanged;
                 break;
-            case "nodelet":
-                signal = _obj.nodeletChanged;
+            case "locus":
+                signal = _obj.locusChanged;
                 break;
             default:
                 return;

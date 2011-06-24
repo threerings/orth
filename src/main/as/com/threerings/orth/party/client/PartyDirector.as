@@ -24,6 +24,8 @@ import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.LocusDirector;
+import com.threerings.orth.locus.data.HostedLocus;
+import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyInvite;
@@ -155,6 +157,13 @@ public class PartyDirector
         _partyObj.partyService.bootPlayer(memberId, _octx.listener(OrthCodes.PARTY_MSGS));
     }
 
+    public function moveParty (locus :HostedLocus) :void
+    {
+        _partyObj.partyService.moveParty(locus, _octx.listener(OrthCodes.PARTY_MSGS));
+
+    }
+
+
     public function invitePlayer (memberId :int) :void
     {
         if (isInParty()) {
@@ -218,6 +227,8 @@ public class PartyDirector
         _partyObj = obj;
         _partyObj.destroyed.add(clearParty);
 
+        _partyObj.locusChanged.add(locusChanged);
+
         partyJoined.dispatch();
     }
 
@@ -229,6 +240,12 @@ public class PartyDirector
         log.warning("Party subscription failed", "cause", cause);
         onJoinFailed();
         clearParty();
+    }
+
+    public function locusChanged (newLocus :HostedLocus) :void
+    {
+        if (newLocus == null) { return; }
+        _locusDir.moveToHostedLocus(newLocus);
     }
 
     protected const _module :Module = inject(Module);

@@ -14,7 +14,7 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.data.OrthName;
-import com.threerings.orth.nodelet.data.HostedNodelet;
+import com.threerings.orth.locus.data.HostedLocus;
 
 public class PartyObject extends DObject
     implements Cloneable
@@ -50,9 +50,9 @@ public class PartyObject extends DObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String PARTY_SERVICE = "partyService";
 
-    /** The field name of the <code>nodelet</code> field. */
+    /** The field name of the <code>locus</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String NODELET = "nodelet";
+    public static final String LOCUS = "locus";
     // AUTO-GENERATED: FIELDS END
 
     /** The list of people in this party. */
@@ -76,8 +76,8 @@ public class PartyObject extends DObject
     /** The service for doing things on this party. */
     public PartyMarshaller partyService;
 
-    /** The shared nodelet the party is in, or null if they're in disparate locations */
-    public HostedNodelet nodelet;
+    /** The shared locus the party is in, or null if they're in disparate locations */
+    public HostedLocus locus;
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -234,7 +234,7 @@ public class PartyObject extends DObject
     }
 
     /**
-     * Requests that the <code>nodelet</code> field be set to the
+     * Requests that the <code>locus</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
@@ -242,12 +242,12 @@ public class PartyObject extends DObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setNodelet (HostedNodelet value)
+    public void setLocus (HostedLocus value)
     {
-        HostedNodelet ovalue = this.nodelet;
+        HostedLocus ovalue = this.locus;
         requestAttributeChange(
-            NODELET, value, ovalue);
-        this.nodelet = value;
+            LOCUS, value, ovalue);
+        this.locus = value;
     }
     // AUTO-GENERATED: METHODS END
 

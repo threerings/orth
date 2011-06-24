@@ -4,17 +4,16 @@
 
 package com.threerings.orth.locus.client {
 import flash.display.Sprite;
-import com.threerings.orth.locus.data.HostedLocus;
 import flash.utils.getQualifiedClassName;
 
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.ClassUtil;
+import com.threerings.util.F;
 import com.threerings.util.Log;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
 import com.threerings.util.ObserverList;
-import com.threerings.util.Preconditions;
 
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
@@ -25,9 +24,9 @@ import com.threerings.presents.client.ClientObserver;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusMarshaller;
-import com.threerings.orth.nodelet.data.HostedNodelet;
 
 /**
  * Handles moving around between loci.
@@ -48,18 +47,18 @@ public class LocusDirector extends BasicDirector
     {
         super(_octx);
 
-        _observer = new ClientAdapter(null, locusLogon, null, null, locusFail, locusFail);
+        _observer = new ClientAdapter(null, gotoConnecting, null, null, locusFail, locusFail);
     }
 
     /**
-     * The locus we most recently moved into. The {@link Locus} superclass itself contains no
+     * The locus we're in. The {@link Locus} superclass itself contains no
      * interesting information; specific subclass inspection is needed to find out details.
      *
      * This value may be null, if we've yet to log in, disconnected, or we are in mid-move.
      */
-    public function get currentLocus () :Locus
+    public function get locus () :Locus
     {
-        return _current;
+        return _connected == null ? null : _connected.locus;
     }
 
     /**
@@ -67,19 +66,19 @@ public class LocusDirector extends BasicDirector
      *
      * This value may be null, if we've yet to log in, disconnected, or we are in mid-move.
      */
-    public function get currentContext () :LocusContext
+    public function get context () :LocusContext
     {
-        return _currentCtx;
+        return _connected == null ? null : getCtx(_connected);
     }
 
     /**
-     * The hostname of the locus peer we're currently logged into.
+     * Our current connection
      *
      * This value may be null, if we've yet to log in, disconnected, or we are in mid-move.
      */
-    public function get currentPeer () :String
+    public function get hostedLocus () :HostedLocus
     {
-        return _currentPeer;
+        return _connected;
     }
 
     /**
@@ -117,39 +116,54 @@ public class LocusDirector extends BasicDirector
     /**
      * Request a move.
      */
-    public function moveTo (locus :Locus) :void
+    public function moveToLocus (dest :Locus) :void
     {
-        if (_pending != null) {
+        var self :LocusDirector = this;
+        performMove(dest, function (..._) :void {
+            _materializing = dest;
+            _lsvc.materializeLocus(_materializing, self)
+        });
+    }
+
+    public function moveToHostedLocus (dest :HostedLocus) :void
+    {
+        performMove(dest.locus, F.callback(locusMaterialized, dest));
+    }
+
+    protected function performMove (dest :Locus, mover :Function) :void
+    {
+        if (_materializing != null || _connecting != null) {
             // this might be a bit too hard-ass, but they *can* always restart their client...
             log.warning("Refusing to move while we're already in mid-move",
-                "desired", locus, "pending", _pending);
+                    "desired", dest, "materializing", _materializing, "connecting", _connecting);
+            return;
+        } else if (!_contexts.containsKey(getQualifiedClassName(dest))) {
+            log.warning("Aii! Unknown locus type",
+                "dest", dest, "class", getQualifiedClassName(dest));
+            return;
+        } else if (locus == dest) {
+            log.warning("Already at dest?", "locus", locus, "dest", dest);
             return;
         }
-
-        // remember where we're going
-        _pending = locus;
 
         // Clear the current view out since it's no longer active.
         // TODO - add a spinner for when locus materialization takes a while
         _top.setMainView(new Sprite());
 
-        // begin by locating the correct peer
-        _lsvc.materializeLocus(_pending, this);
+        mover();
 
-        _locusObservers.apply(function (obs :Object) :void {
-            LocusObserver(obs).locusWillChange(locus);
-        });
+        _locusObservers.apply(function (obs :LocusObserver) :void { obs.locusWillChange(dest); });
     }
 
     // from Java LocusService_PlaceResolutionListener
     public function requestFailed (cause :String) :void
     {
         _locusObservers.apply(function (obs :Object) :void {
-            LocusObserver(obs).locusChangeFailed(_pending, cause);
+            LocusObserver(obs).locusChangeFailed(_materializing, cause);
         });
 
         // clear our pending move
-        _pending = null;
+        _materializing = null;
 
         log.warning("Place resolution request failed", "cause", cause);
         _octx.displayFeedback(OrthCodes.WORLD_MSGS, cause);
@@ -158,87 +172,73 @@ public class LocusDirector extends BasicDirector
     // from Java LocusService_PlaceResolutionListener
     public function locusMaterialized (hosted :HostedLocus) :void
     {
-        // note our peer
-        _pendingPeer = hosted.host;
+        _connecting = hosted;
+        _materializing = null;
 
-        // look up the destination context (aka fail early)
-        var pendingCtx :LocusContext = _contexts.get(getQualifiedClassName(_pending));
-        if (pendingCtx == null) {
-            throw new Error("Aii! Unknown Locus type: " + getQualifiedClassName(_pending));
-        }
-
-        var locusClient :LocusClient;
-
-        // is this the very special case where we're already on the right peer?
-        if (_currentCtx != null && ClassUtil.isSameClass(_pending, _current) &&
-            _currentCtx.getClient().isConnected() && _pendingPeer == _currentPeer) {
-            gotoPendingPlace();
+        // Are we already on the right peer?
+        if (locus != null && ClassUtil.isSameClass(_connecting.locus, locus) &&
+            _connecting.host == _connected.host) {
+            gotoConnecting();
             return;
         }
 
         // if not we probably need to log out
-        if (_currentCtx != null) {
-            locusClient = _currentCtx.getLocusClient();
+        if (_connected != null) {
+            const connectedClient :LocusClient = context.getLocusClient();
             // first stop listening to the client
-            locusClient.removeClientObserver(_observer);
-            _clientObservers.apply(locusClient.removeClientObserver);
+            connectedClient.removeClientObserver(_observer);
+            _clientObservers.apply(connectedClient.removeClientObserver);
+            _connected = null;
 
             // the really cut the cord
-            locusClient.logoff(false);
+            connectedClient.logoff(false);
         }
 
         // now grab the (possibly) new client
-        locusClient = pendingCtx.getLocusClient();
+        const connectingClient :LocusClient = getCtx(_connecting).getLocusClient();
 
         // listen to it
-        locusClient.addClientObserver(_observer);
-        _clientObservers.apply(locusClient.addClientObserver);
-
-        // switch to the new context
-        _currentCtx = pendingCtx;
+        connectingClient.addClientObserver(_observer);
+        _clientObservers.apply(connectingClient.addClientObserver);
 
         // and finally log on
-        locusClient.logonTo(_pendingPeer, hosted.ports);
+        connectingClient.logonTo(_connecting.host, _connecting.ports);
     }
 
     // called if our connection to the locus server fails or we fail to login
     public function locusFail (event :ClientEvent) :void
     {
-        log.warning("Locus connection failed", "place", _current, "event", event);
+        log.warning("Locus connection failed",
+            "connected", _connected, "connecting", _connecting, "event", event);
 
-        _locusObservers.apply(function (obs :Object) :void {
-            LocusObserver(obs).locusChangeFailed(_pending, "Locus connection failed");;
-        });
+        if (_connecting != null) {
+            _locusObservers.apply(function (obs :Object) :void {
+                LocusObserver(obs).locusChangeFailed(_connecting.locus, "Locus connection failed");
+            });
+        }
 
+        _connecting = null;
+        _connected = null;
         _octx.displayFeedback(OrthCodes.WORLD_MSGS, "Connection failed");
     }
 
-    protected function locusLogon (event :ClientEvent) :void
+    protected function gotoConnecting (..._) :void
     {
-        _currentPeer = _pendingPeer;
-        gotoPendingPlace();
-    }
-
-    protected function gotoPendingPlace () :void
-    {
-        Preconditions.checkNotNull(_currentCtx,
-            "We logged onto a locus server but the locus context is gone!");
-
         // we successfully logged on; hand control over to the locus implementation
-        _current = _pending;
-
-        // squirrel this away before we reset our class members
-        var locus :Locus = _pending;
-
-        _pendingPeer = null;
-        _pending = null;
+        _connected = _connecting;
+        _connecting = null;
 
         // finally go!
-        _currentCtx.go(locus);
+        context.go(locus);
 
         _locusObservers.apply(function (obs :Object) :void {
             LocusObserver(obs).locusDidChange(locus);
         });
+    }
+
+    protected function getCtx (hosted :HostedLocus) :LocusContext
+    {
+        return _contexts.get(getQualifiedClassName(hosted.locus));
     }
 
     // from BasicDirector
@@ -255,27 +255,26 @@ public class LocusDirector extends BasicDirector
         _lsvc = LocusService(client.requireService(LocusService));
     }
 
-    protected var _currentCtx :LocusContext;
 
-    protected var _octx :OrthContext = inject(OrthContext);
-    protected var _top :TopPanel = inject(TopPanel);
+    protected const _octx :OrthContext = inject(OrthContext);
+    protected const _top :TopPanel = inject(TopPanel);
 
     protected var _lsvc :LocusService;
 
-    protected var _contexts :Map = Maps.newMapOf(Class);
+    protected const _contexts :Map = Maps.newMapOf(Class);
 
-    protected var _clientObservers :ObserverList =
+    protected const _clientObservers :ObserverList =
         new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
 
-    protected var _locusObservers :ObserverList =
+    protected const _locusObservers :ObserverList =
         new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
 
     protected var _observer :ClientObserver;
 
-    protected var _current :Locus;
-    protected var _currentPeer :String;
+    protected var _connected :HostedLocus;
 
-    protected var _pending :Locus;
-    protected var _pendingPeer :String;
+    protected var _connecting :HostedLocus;
+
+    protected var _materializing :Locus;
 }
 }

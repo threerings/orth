@@ -63,7 +63,7 @@ public class OrthSceneDirector extends SceneDirector
             return false;
         }
 
-        _locusDir.moveTo(new RoomLocus(dest.targetSceneId, dest.dest));
+        _locusDir.moveToLocus(new RoomLocus(dest.targetSceneId, dest.dest));
         return true;
     }
 

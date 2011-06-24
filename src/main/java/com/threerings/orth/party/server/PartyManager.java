@@ -14,6 +14,7 @@ import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerNodeAction;
 import com.threerings.orth.aether.server.PlayerNodeRequest;
 import com.threerings.orth.comms.data.CommSender;
+import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
@@ -206,6 +207,15 @@ public class PartyManager
                 CommSender.receiveComm(plobj, invite);
             }
         });
+    }
+
+    @Override
+    public void moveParty (ClientObject client, HostedLocus locus,
+        InvocationService.InvocationListener listener)
+        throws InvocationException
+    {
+        requireLeader(client);
+        _partyObj.setLocus(locus);
     }
 
     protected PartierObject requireLeader (ClientObject client)

@@ -119,7 +119,7 @@ public class OrthController extends Controller
      */
     public function handleGoLocus (locus :Locus) :void
     {
-        _locusDir.moveTo(locus);
+        _locusDir.moveToLocus(locus);
     }
 
     /**
