@@ -38,8 +38,6 @@ import com.threerings.orth.locus.data.LocusMarshaller;
 public class LocusDirector extends BasicDirector
     implements LocusService_LocusMaterializationListener
 {
-    public const log :Log = Log.getLog(this);
-
     // statically reference classes we require
     LocusMarshaller;
 
@@ -276,5 +274,7 @@ public class LocusDirector extends BasicDirector
     protected var _connecting :HostedLocus;
 
     protected var _materializing :Locus;
+
+    private static const log :Log = Log.getLog(LocusDirector);
 }
 }

@@ -5,8 +5,6 @@
 package com.threerings.orth.aether.client {
 import flashx.funk.ioc.inject;
 
-import com.threerings.util.Log;
-
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 
@@ -17,8 +15,6 @@ import com.threerings.orth.client.OrthContext;
  */
 public class AetherDirector
 {
-    public const log :Log = Log.getLog(this);
-
     public function AetherDirector ()
     {
         const client :Client = inject(AetherClient);
