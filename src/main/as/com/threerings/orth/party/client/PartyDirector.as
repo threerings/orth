@@ -160,9 +160,7 @@ public class PartyDirector
     public function moveParty (locus :HostedLocus) :void
     {
         _partyObj.partyService.moveParty(locus, _octx.listener(OrthCodes.PARTY_MSGS));
-
     }
-
 
     public function invitePlayer (memberId :int) :void
     {
@@ -228,6 +226,7 @@ public class PartyDirector
         _partyObj.destroyed.add(clearParty);
 
         _partyObj.locusChanged.add(locusChanged);
+        locusChanged(_partyObj.locus);
 
         partyJoined.dispatch();
     }

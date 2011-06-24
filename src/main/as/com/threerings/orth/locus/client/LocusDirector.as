@@ -8,6 +8,8 @@ import flash.utils.getQualifiedClassName;
 
 import flashx.funk.ioc.inject;
 
+import org.osflash.signals.Signal;
+
 import com.threerings.util.ClassUtil;
 import com.threerings.util.F;
 import com.threerings.util.Log;
@@ -40,6 +42,27 @@ public class LocusDirector extends BasicDirector
 {
     // statically reference classes we require
     LocusMarshaller;
+
+    /**
+     * Called when we've initiated a locus change.
+     */
+    public const locusWillChange :Signal = new Signal(Locus);
+
+    /**
+     * Called when we have switched to a new locus. Note: this only means we've connected
+     * to the locus server and {@link LocusContext#go} has been called. Beyond that, there is
+     * typically an implementation-specific process by which the player actually ends up in a
+     * place.
+     *
+     * An alternate observation approach might be through {@OrthPlaceBox}.
+     */
+    public const locusDidChange :Signal = new Signal(Locus);
+
+    /**
+     * This is called locus change request is rejected by the server or fails for some other reason.
+     */
+    public const locusChangeFailed :Signal = new Signal(Locus, String);
+
 
     public function LocusDirector ()
     {
@@ -91,16 +114,6 @@ public class LocusDirector extends BasicDirector
         _contexts.put(getQualifiedClassName(locusClass), ctx);
     }
 
-    public function addObserver (observer :LocusObserver) :void
-    {
-        _locusObservers.add(observer);
-    }
-
-    public function removeObserver (observer :LocusObserver) :void
-    {
-        _locusObservers.remove(observer);
-    }
-
     public function addLocusClientObserver (observer :ClientObserver) :void
     {
         _clientObservers.add(observer);
@@ -150,15 +163,13 @@ public class LocusDirector extends BasicDirector
 
         mover();
 
-        _locusObservers.apply(function (obs :LocusObserver) :void { obs.locusWillChange(dest); });
+        locusWillChange.dispatch(dest);
     }
 
     // from Java LocusService_PlaceResolutionListener
     public function requestFailed (cause :String) :void
     {
-        _locusObservers.apply(function (obs :Object) :void {
-            LocusObserver(obs).locusChangeFailed(_materializing, cause);
-        });
+        locusChangeFailed.dispatch(_materializing, cause);
 
         // clear our pending move
         _materializing = null;
@@ -210,9 +221,7 @@ public class LocusDirector extends BasicDirector
             "connected", _connected, "connecting", _connecting, "event", event);
 
         if (_connecting != null) {
-            _locusObservers.apply(function (obs :Object) :void {
-                LocusObserver(obs).locusChangeFailed(_connecting.locus, "Locus connection failed");
-            });
+            locusChangeFailed.dispatch(_connecting.locus, "Locus connection failed");
         }
 
         _connecting = null;
@@ -229,9 +238,7 @@ public class LocusDirector extends BasicDirector
         // finally go!
         context.go(locus);
 
-        _locusObservers.apply(function (obs :Object) :void {
-            LocusObserver(obs).locusDidChange(locus);
-        });
+        locusDidChange.dispatch(locus);
     }
 
     protected function getCtx (hosted :HostedLocus) :LocusContext
@@ -262,9 +269,6 @@ public class LocusDirector extends BasicDirector
     protected const _contexts :Map = Maps.newMapOf(Class);
 
     protected const _clientObservers :ObserverList =
-        new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
-
-    protected const _locusObservers :ObserverList =
         new ObserverList(ObserverList.SAFE_IN_ORDER_NOTIFY);
 
     protected var _observer :ClientObserver;
