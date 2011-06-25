@@ -51,7 +51,7 @@ public class MediaDirector extends BasicDirector
     public function getSprite (occInfo :OccupantInfo, extraInfo :Object) :OccupantSprite
     {
         if (occInfo is SocializerInfo) {
-            var isOurs :Boolean = _wctx.getMyName().equals(occInfo.username);
+            var isOurs :Boolean = _wctx.myName.equals(occInfo.username);
             if (isOurs && _ourAvatar != null) {
                 _ourAvatar.setOccupantInfo(occInfo, extraInfo);
                 return _ourAvatar;

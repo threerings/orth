@@ -10,33 +10,14 @@
 
 package com.threerings.orth.locus.data {
 
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
+import com.threerings.io.Streamable;
 
-import com.threerings.orth.nodelet.data.Nodelet;
+import com.threerings.util.Equalable;
 
 // GENERATED PREAMBLE END
 
-// GENERATED CLASSDECL START
-public class Locus extends Nodelet
+public interface Locus extends Streamable, Equalable
 {
-// GENERATED CLASSDECL END
-
-// GENERATED STREAMING START
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-    }
-
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        super.writeObject(out);
-    }
-
-// GENERATED STREAMING END
-
-// GENERATED CLASSFINISH START
 }
 }
-// GENERATED CLASSFINISH END
 

@@ -4,9 +4,9 @@
 
 package com.threerings.orth.client {
 import flash.display.Stage;
-import flashx.funk.ioc.Module;
 
 import flashx.funk.ioc.BindingModule;
+import flashx.funk.ioc.Module;
 
 import com.threerings.util.Log;
 import com.threerings.util.MessageManager;

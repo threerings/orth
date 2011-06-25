@@ -56,7 +56,7 @@ public class LocusDirector extends BasicDirector
      *
      * An alternate observation approach might be through {@OrthPlaceBox}.
      */
-    public const locusDidChange :Signal = new Signal(Locus);
+    public const locusDidChange :Signal = new Signal(HostedLocus);
 
     /**
      * This is called locus change request is rejected by the server or fails for some other reason.
@@ -152,7 +152,7 @@ public class LocusDirector extends BasicDirector
             log.warning("Aii! Unknown locus type",
                 "dest", dest, "class", getQualifiedClassName(dest));
             return;
-        } else if (locus == dest) {
+        } else if (dest.equals(locus)) {
             log.warning("Already at dest?", "locus", locus, "dest", dest);
             return;
         }
@@ -193,7 +193,7 @@ public class LocusDirector extends BasicDirector
 
         // if not we probably need to log out
         if (_connected != null) {
-            const connectedClient :LocusClient = context.getLocusClient();
+            const connectedClient :LocusClient = context.locusClient;
             // first stop listening to the client
             connectedClient.removeClientObserver(_observer);
             _clientObservers.apply(connectedClient.removeClientObserver);
@@ -204,7 +204,7 @@ public class LocusDirector extends BasicDirector
         }
 
         // now grab the (possibly) new client
-        const connectingClient :LocusClient = getCtx(_connecting).getLocusClient();
+        const connectingClient :LocusClient = getCtx(_connecting).locusClient;
 
         // listen to it
         connectingClient.addClientObserver(_observer);
@@ -238,7 +238,7 @@ public class LocusDirector extends BasicDirector
         // finally go!
         context.go(locus);
 
-        locusDidChange.dispatch(locus);
+        locusDidChange.dispatch(_connected);
     }
 
     protected function getCtx (hosted :HostedLocus) :LocusContext

@@ -5,6 +5,8 @@
 // GENERATED PREAMBLE START
 package com.threerings.orth.nodelet.data {
 
+import flash.utils.getQualifiedClassName;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
@@ -29,6 +31,11 @@ public class Nodelet extends SimpleStreamableObject
 
 // GENERATED STREAMING END
 
+    public function equals (other :Object) :Boolean
+    {
+        return getQualifiedClassName(other) == getQualifiedClassName(this) &&
+            getId() == Nodelet(other).getId();
+    }
     /**
      * Gets a unique identifier for this locus, used as a dset key.
      */

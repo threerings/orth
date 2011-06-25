@@ -27,7 +27,7 @@ public class AbstractLocusModule extends BindingModule
         // and instantiate the context in that scope (and much of the locus layer with it)
         _chainMod.inject(function () :void {
             ctx = createContext();
-            ctx.getLocusClient().initWithModule(_chainMod);
+            ctx.locusClient.initWithModule(_chainMod);
             doLocusBinds(ctx);
         });
 

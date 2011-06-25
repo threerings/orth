@@ -16,10 +16,10 @@ public interface LocusContext
     extends PresentsContext
 {
     /** For convenience, return our current display name. */
-    function getMyName () :PlayerName;
+    function get myName () :PlayerName;
 
     /** For convenience, return {@link #getClient} as a {@link LocusClient}. */
-    function getLocusClient () :LocusClient;
+    function get locusClient () :LocusClient;
 
     /**
      * Given the precondition that our locus client is logged onto the correct server and

@@ -81,8 +81,7 @@ public class RoomContext
         return _module.getInstance(SceneDirector);
     }
 
-    // from LocusContext
-    public function getMyName () :PlayerName
+    public function get myName () :PlayerName
     {
         var body :SocializerObject = getSocializerObject();
 
@@ -96,7 +95,7 @@ public class RoomContext
     }
 
     // from LocusContext
-    public function getLocusClient () :LocusClient
+    public function get locusClient () :LocusClient
     {
         return _client;
     }

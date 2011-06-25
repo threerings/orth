@@ -31,6 +31,7 @@ import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyInvite;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyObjectAddress;
+import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.party.data.PartyRegistryMarshaller;
 
 /**
@@ -61,10 +62,10 @@ public class PartyDirector
     /**
      * Can we invite people to our party?
      */
-    public function canInviteToParty () :Boolean
+    public function get canInviteToParty () :Boolean
     {
         return (_partyObj != null) &&
-            ((_partyObj.recruitment == PartyCodes.RECRUITMENT_OPEN) || isPartyLeader());
+            ((_partyObj.recruitment == PartyCodes.RECRUITMENT_OPEN) || partyLeader);
     }
 
     public function partyContainsPlayer (memberId :int) :Boolean
@@ -72,24 +73,30 @@ public class PartyDirector
         return (_partyObj != null) && _partyObj.peeps.containsKey(memberId);
     }
 
-    public function getPartySize () :int
+    public function get partySize () :int
     {
         return (_partyObj == null) ? 0 : _partyObj.peeps.size();
     }
 
-    public function isInParty () :Boolean
+    public function get inParty () :Boolean
     {
         return _partyObj != null;
     }
 
-    public function isPartyLeader () :Boolean
+    public function get partyLeader () :Boolean
     {
         return (_partyObj != null) && (_partyObj.leaderId == _octx.myId);
     }
 
-    public function getPartyObject () :PartyObject
+    public function get partyObject () :PartyObject
     {
         return _partyObj;
+    }
+
+    public function get partierIds () :Array //<int>
+    {
+        return F.map(partyObject.peeps.toArray(),
+            function (peep :PartyPeep) :int { return peep.name.id; });
     }
 
     /**
@@ -164,7 +171,7 @@ public class PartyDirector
 
     public function invitePlayer (memberId :int) :void
     {
-        if (isInParty()) {
+        if (inParty) {
             _partyObj.partyService.invitePlayer(memberId, _octx.listener(OrthCodes.PARTY_MSGS));
         } else {
             createParty();

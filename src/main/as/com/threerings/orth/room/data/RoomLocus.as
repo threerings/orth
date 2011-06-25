@@ -9,12 +9,15 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.locus.data.Locus;
+import com.threerings.orth.nodelet.data.Nodelet;
 
 // GENERATED PREAMBLE END
 
-// GENERATED CLASSDECL DISABLED
-public class RoomLocus extends Locus
+// GENERATED CLASSDECL START
+public class RoomLocus extends Nodelet
+    implements Locus
 {
+// GENERATED CLASSDECL END
     public var loc :OrthLocation;
 
     public function RoomLocus (sceneId :int=0, loc :OrthLocation=null)

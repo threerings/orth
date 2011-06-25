@@ -126,7 +126,7 @@ public class RoomController extends SceneController
      */
     public function getEntityInstanceId () :int
     {
-        var name :PlayerName = _rctx.getMyName();
+        var name :PlayerName = _rctx.myName;
         return (name != null) ? name.id : 0;
     }
 
@@ -135,7 +135,7 @@ public class RoomController extends SceneController
      */
     public function getViewerName (instanceId :int = 0) :String
     {
-        var name :PlayerName = _rctx.getMyName();
+        var name :PlayerName = _rctx.myName;
         if (instanceId == 0 || instanceId == name.id) {
             return name.toString();
         }
@@ -886,7 +886,6 @@ import com.threerings.util.Throttle;
 
 import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.room.client.RoomElementSprite;
-import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.OrthRoomCodes;
 
 class WalkTarget extends RoomElementSprite
@@ -915,6 +914,10 @@ class WalkTarget extends RoomElementSprite
 
 }
 
+import com.threerings.orth.room.data.EntityIdent;
+import com.threerings.util.Log;
+import com.threerings.util.Throttle;
+
 /**
  * Throttles entity communications.
  */
@@ -926,7 +929,6 @@ class Throttler
 
     public static const log :Log = Log.getLog(Throttler);
 
-    /** The ident associated with this Throttler. */
     public var ident :EntityIdent;
 
     public function Throttler (ident :EntityIdent)
