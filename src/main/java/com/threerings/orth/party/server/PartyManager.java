@@ -214,7 +214,6 @@ public class PartyManager
         InvocationService.InvocationListener listener)
         throws InvocationException
     {
-        requireLeader(client);
         _partyObj.setLocus(locus);
     }
 
