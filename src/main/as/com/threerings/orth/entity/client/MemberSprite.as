@@ -63,7 +63,7 @@ public class MemberSprite extends ActorSprite
     override public function isImportant () :Boolean
     {
         // our own sprite is more important than the others
-        return _module.getInstance(RoomContext).getMyName().equals(_occInfo.username);
+        return _module.getInstance(RoomContext).myName.equals(_occInfo.username);
     }
 
     // from ActorSprite
