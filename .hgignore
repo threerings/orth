@@ -7,3 +7,6 @@ _temp_flex_config.xml$
 orth.iws
 .settings$
 .iml$
+.classpath
+.project
+.settings
