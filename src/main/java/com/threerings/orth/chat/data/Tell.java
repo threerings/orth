@@ -4,17 +4,15 @@
 
 package com.threerings.orth.chat.data;
 
-import com.threerings.io.SimpleStreamableObject;
-import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.comms.data.BaseOneToOneComm;
+import com.threerings.orth.data.OrthName;
 
-public class Tell extends SimpleStreamableObject
+public class Tell extends BaseOneToOneComm
 {
-    public Tell (PlayerName from, String message)
+    public Tell (OrthName from, OrthName to, String message)
     {
-        _from = from;
-        _message = message;
+        super(from, to);
     }
 
-    protected PlayerName _from;
     protected String _message;
 }

@@ -7,6 +7,7 @@ package com.threerings.orth.chat.server;
 import javax.annotation.Generated;
 
 import com.threerings.orth.chat.client.TellService;
+import com.threerings.orth.data.OrthName;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
@@ -22,6 +23,6 @@ public interface TellProvider extends InvocationProvider
     /**
      * Handles a {@link TellService#sendTell} request.
      */
-    void sendTell (ClientObject caller, int arg1, String arg2, InvocationService.ConfirmListener arg3)
+    void sendTell (ClientObject caller, OrthName arg1, String arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 }

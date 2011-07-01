@@ -4,10 +4,9 @@
 
 package com.threerings.orth.aether.server;
 
-import static com.threerings.orth.Log.log;
-
 import java.util.List;
 import java.util.Map;
+
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.SetMultimap;
@@ -18,17 +17,8 @@ import com.google.inject.Singleton;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.Lifecycle;
 
-import com.threerings.orth.aether.data.AetherCodes;
-import com.threerings.orth.aether.data.FriendMarshaller;
-import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.aether.server.persist.RelationshipRepository;
-import com.threerings.orth.data.FriendEntry;
-import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.peer.data.OrthClientInfo;
-import com.threerings.orth.peer.server.OrthPeerManager;
-import com.threerings.orth.server.persist.OrthPlayerRepository;
-import com.threerings.orth.server.util.InviteThrottle;
+import com.threerings.util.Resulting;
+
 import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.client.InvocationService.ResultListener;
@@ -38,7 +28,23 @@ import com.threerings.presents.peer.server.NodeRequestsListener;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.PresentsSession;
-import com.threerings.util.Resulting;
+
+import com.threerings.orth.aether.data.AetherCodes;
+import com.threerings.orth.aether.data.FriendMarshaller;
+import com.threerings.orth.aether.data.FriendshipAcceptance;
+import com.threerings.orth.aether.data.FriendshipRequest;
+import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.server.persist.RelationshipRepository;
+import com.threerings.orth.comms.data.CommSender;
+import com.threerings.orth.data.FriendEntry;
+import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.peer.data.OrthClientInfo;
+import com.threerings.orth.peer.server.OrthPeerManager;
+import com.threerings.orth.server.persist.OrthPlayerRepository;
+import com.threerings.orth.server.util.InviteThrottle;
+
+import static com.threerings.orth.Log.log;
 
 /**
  * Manages {@link PlayerObject#friends} and friend-related request for the local server.
@@ -93,7 +99,8 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         // ok, notify the other player, wherever they are
         _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(targetId) {
             @Override protected void execute (PlayerObject target, ResultListener listener) {
-                FriendSender.friendshipRequested(target, playerName);
+                CommSender.receiveComm(target,
+                    new FriendshipRequest(playerName, target.getPlayerName()));
                 listener.requestProcessed(null);
             }
         }, new Resulting<Void>(listener) {
@@ -128,11 +135,12 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 OrthClientInfo other = peermgr.locatePlayer(acceptingPlayerName.getId());
                 if (other == null) {
                     log.warning("Edge case, accepting friend logged off before sender received " +
-                        "notification of friendship", "senderId", senderId,
-                        "acceptingPlayer", acceptingPlayerName);
+                        "notification of friendship", "sender", sender,
+                        "accepting", acceptingPlayerName);
                 } else {
                     friendmgr.addNewFriend(sender, other);
-                    FriendSender.friendshipAccepted(sender, acceptingPlayerName);
+                    CommSender.receiveComm(sender,
+                        new FriendshipAcceptance(sender.getPlayerName(), acceptingPlayerName));
                 }
 
 

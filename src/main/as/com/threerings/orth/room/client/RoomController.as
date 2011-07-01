@@ -881,9 +881,6 @@ import flash.display.DisplayObject;
 
 import flashx.funk.ioc.inject;
 
-import com.threerings.util.Log;
-import com.threerings.util.Throttle;
-
 import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.room.client.RoomElementSprite;
 import com.threerings.orth.room.data.OrthRoomCodes;
@@ -914,9 +911,10 @@ class WalkTarget extends RoomElementSprite
 
 }
 
-import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.util.Log;
 import com.threerings.util.Throttle;
+
+import com.threerings.orth.room.data.EntityIdent;
 
 /**
  * Throttles entity communications.

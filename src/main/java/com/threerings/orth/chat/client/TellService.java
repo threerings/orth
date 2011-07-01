@@ -6,6 +6,9 @@ package com.threerings.orth.chat.client;
 
 import com.threerings.presents.client.InvocationService;
 
+import com.threerings.orth.chat.server.ChatManager;
+import com.threerings.orth.data.OrthName;
+
 /**
  * Each Orth chat system should have one tell service configured. Tells go from the client
  * over the aether connection directly to the {@link ChatManager}, which implements this
@@ -13,5 +16,5 @@ import com.threerings.presents.client.InvocationService;
  */
 public interface TellService extends InvocationService
 {
-    public void sendTell (int playerId, String tell, ConfirmListener listener);
+    public void sendTell (OrthName tellee, String tell, ConfirmListener listener);
 }

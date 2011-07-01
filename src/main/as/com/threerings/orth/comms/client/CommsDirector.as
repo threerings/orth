@@ -27,7 +27,6 @@ public class CommsDirector
         commReceived.dispatch(comm);
     }
 
-
     protected const _aether :AetherClient = inject(AetherClient);
 }
 }

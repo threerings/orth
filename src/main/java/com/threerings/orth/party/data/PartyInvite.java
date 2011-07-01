@@ -1,25 +1,15 @@
 package com.threerings.orth.party.data;
 
 import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.comms.data.SourcedComm;
-import com.threerings.orth.data.ModuleStreamable;
+import com.threerings.orth.comms.data.BaseOneToOneComm;
 
-public class PartyInvite extends ModuleStreamable
-    implements SourcedComm
+public class PartyInvite extends BaseOneToOneComm
 {
     public PartyObjectAddress address;
 
-    public PartyInvite (PlayerName playerName, PartyObjectAddress addr)
+    public PartyInvite (PlayerName from, PlayerName to, PartyObjectAddress addr)
     {
-        _source = playerName;
+        super(from, to);
         address = addr;
     }
-
-    @Override
-    public PlayerName getSource ()
-    {
-        return _source;
-    }
-
-    protected PlayerName _source;
 }

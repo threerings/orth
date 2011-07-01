@@ -76,9 +76,6 @@ public class OrthController extends Controller
     /** Command to join a party. */
     public static const JOIN_PARTY :String = "JoinParty";
 
-    /** Command to invite a member to the current party. */
-    public static const INVITE_TO_PARTY :String = "InviteToParty";
-
     /** Command to create a new guild. */
     public static const CREATE_GUILD :String = "CreateGuild";
 
@@ -216,14 +213,6 @@ public class OrthController extends Controller
     public function handleCreateGuild (name :String) :void
     {
         _aetherDir.createGuild(name);
-    }
-
-    /**
-     * Handles INVITE_TO_PARTY.
-     */
-    public function handleInviteToParty (playerId :int) :void
-    {
-        _partyDir.invitePlayer(playerId);
     }
 
     /**

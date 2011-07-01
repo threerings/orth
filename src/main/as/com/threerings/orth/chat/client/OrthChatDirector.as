@@ -24,7 +24,6 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakRouter;
@@ -32,21 +31,22 @@ import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.OrthName;
 
 public class OrthChatDirector extends BasicDirector
     implements MessageListener, TellReceiver
 {
-    public static function buildTellMessage (from :PlayerName, text :String) :UserMessage
+    public static function buildTellMessage (from :OrthName, text :String) :UserMessage
     {
         return buildMessage(from, text, ChatCodes.USER_CHAT_TYPE);
     }
 
-    public static function buildSpeakMessage (from :PlayerName, text :String) :UserMessage
+    public static function buildSpeakMessage (from :OrthName, text :String) :UserMessage
     {
         return buildMessage(from, text, ChatCodes.PLACE_CHAT_TYPE);
     }
 
-    public static function buildMessage (from :PlayerName, text :String, type :String) :UserMessage
+    public static function buildMessage (from :OrthName, text :String, type :String) :UserMessage
     {
         var msg :UserMessage = new UserMessage();
         msg.speaker = from;
@@ -69,9 +69,9 @@ public class OrthChatDirector extends BasicDirector
         return _place;
     }
 
-    public function requestSendTell (memberId :int, msg :String) :UserMessage
+    public function requestSendTell (tellee :OrthName, msg :String) :UserMessage
     {
-        _tellService.sendTell(memberId, msg, new ConfirmAdapter(null,
+        _tellService.sendTell(tellee, msg, new ConfirmAdapter(null,
             function (cause :String) :void { log.warning("Tell failed!", "reason", cause); }));
         return buildTellMessage(_octx.myName, msg);
     }

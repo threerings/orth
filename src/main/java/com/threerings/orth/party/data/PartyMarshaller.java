@@ -6,6 +6,7 @@ package com.threerings.orth.party.data;
 
 import javax.annotation.Generated;
 
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.client.PartyService;
 import com.threerings.presents.client.InvocationService;
@@ -53,12 +54,12 @@ public class PartyMarshaller extends InvocationMarshaller
     public static final int INVITE_PLAYER = 3;
 
     // from interface PartyService
-    public void invitePlayer (int arg1, InvocationService.InvocationListener arg2)
+    public void invitePlayer (PlayerName arg1, InvocationService.InvocationListener arg2)
     {
         ListenerMarshaller listener2 = new ListenerMarshaller();
         listener2.listener = arg2;
         sendRequest(INVITE_PLAYER, new Object[] {
-            Integer.valueOf(arg1), listener2
+            arg1, listener2
         });
     }
 

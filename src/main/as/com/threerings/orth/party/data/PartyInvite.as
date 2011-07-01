@@ -8,21 +8,17 @@ package com.threerings.orth.party.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
-import com.threerings.orth.aether.data.PlayerName;
-import com.threerings.orth.comms.data.SourcedComm;
-import com.threerings.orth.data.ModuleStreamable;
+import com.threerings.orth.comms.data.BaseOneToOneComm;
+import com.threerings.orth.comms.data.OneToOneComm;
 import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.party.data.PartyObjectAddress;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class PartyInvite extends ModuleStreamable
-    implements SourcedComm
+public class PartyInvite extends BaseOneToOneComm
 {
 // GENERATED CLASSDECL END
-
-    public function get source() :PlayerName { return _source; }
 
     public function onAccepted () :void
     {
@@ -36,17 +32,14 @@ public class PartyInvite extends ModuleStreamable
     {
         super.readObject(ins);
         address = ins.readObject(PartyObjectAddress);
-        _source = ins.readObject(PlayerName);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
         out.writeObject(address);
-        out.writeObject(_source);
     }
 
-    protected var _source :PlayerName;
 // GENERATED STREAMING END
 
 // GENERATED CLASSFINISH START

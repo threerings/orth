@@ -9,7 +9,20 @@ import com.google.inject.Inject;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.util.Resulting;
+
+import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.data.InvocationCodes;
+import com.threerings.presents.dobj.ObjectDeathListener;
+import com.threerings.presents.dobj.ObjectDestroyedEvent;
+import com.threerings.presents.dobj.RootDObjectManager;
+import com.threerings.presents.server.ClientManager;
+import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.InvocationManager;
+
 import com.threerings.orth.Log;
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.PlayerNodeAction;
 import com.threerings.orth.aether.server.PlayerNodeRequest;
@@ -25,16 +38,6 @@ import com.threerings.orth.party.data.PartyObjectAddress;
 import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.OrthDeploymentConfig;
-import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.data.InvocationCodes;
-import com.threerings.presents.dobj.ObjectDeathListener;
-import com.threerings.presents.dobj.ObjectDestroyedEvent;
-import com.threerings.presents.dobj.RootDObjectManager;
-import com.threerings.presents.server.ClientManager;
-import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.server.InvocationManager;
-import com.threerings.util.Resulting;
 
 /**
  * Manages a particular party, living on a single node.
@@ -190,7 +193,7 @@ public class PartyManager
 
     // from interface PartyProvider
     public void invitePlayer (
-        ClientObject caller, int playerId, InvocationService.InvocationListener listener)
+        ClientObject caller, PlayerName invitee, InvocationService.InvocationListener listener)
         throws InvocationException
     {
         PartierObject inviter = (PartierObject)caller;
@@ -199,10 +202,10 @@ public class PartyManager
             throw new InvocationException(PartyCodes.E_CANT_INVITE_CLOSED);
         }
         // add them to the invited set
-        _partyObj.invitedIds.add(playerId);
+        _partyObj.invitedIds.add(invitee.getId());
 
-        final PartyInvite invite = new PartyInvite(inviter.playerName.toPlayerName(), addr);
-        _peerMgr.invokeSingleNodeAction(new PlayerNodeAction(playerId) {
+        final PartyInvite invite = new PartyInvite(inviter.playerName.toPlayerName(), invitee, addr);
+        _peerMgr.invokeSingleNodeAction(new PlayerNodeAction(invitee.getId()) {
             @Override protected void execute (PlayerObject plobj) {
                 CommSender.receiveComm(plobj, invite);
             }

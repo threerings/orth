@@ -6,6 +6,7 @@ package com.threerings.orth.party.server;
 
 import javax.annotation.Generated;
 
+import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.client.PartyService;
 import com.threerings.presents.client.InvocationService;
@@ -35,7 +36,7 @@ public interface PartyProvider extends InvocationProvider
     /**
      * Handles a {@link PartyService#invitePlayer} request.
      */
-    void invitePlayer (ClientObject caller, int arg1, InvocationService.InvocationListener arg2)
+    void invitePlayer (ClientObject caller, PlayerName arg1, InvocationService.InvocationListener arg2)
         throws InvocationException;
 
     /**
