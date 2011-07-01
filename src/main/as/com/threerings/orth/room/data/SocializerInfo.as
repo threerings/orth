@@ -10,7 +10,7 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.util.Joiner;
 
-import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.data.ActorInfo;
 
 // GENERATED PREAMBLE END
@@ -24,7 +24,7 @@ public class SocializerInfo extends ActorInfo
      */
     public function get id () :int
     {
-        return (username as PlayerName).id;
+        return (username as OrthName).id;
     }
 
     /**

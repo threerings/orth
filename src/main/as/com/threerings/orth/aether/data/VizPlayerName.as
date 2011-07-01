@@ -8,13 +8,13 @@ package com.threerings.orth.aether.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.MediaDesc;
+import com.threerings.orth.data.OrthName;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class VizPlayerName extends PlayerName
+public class VizPlayerName extends OrthName
 {
 // GENERATED CLASSDECL END
 

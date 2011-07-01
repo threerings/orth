@@ -5,45 +5,35 @@
 package com.threerings.orth.aether.data;
 
 import com.threerings.orth.data.MediaDesc;
+import com.threerings.orth.data.OrthName;
 
-public class VizPlayerName extends PlayerName
+public class VizPlayerName extends OrthName
 {
-    /** For unserialization. */
+    // We need a no-arg constructor as we have multiple arg'd constructors
     public VizPlayerName ()
     {
         super(null, 0);
     }
 
-    /**
-     * Creates a new name with the supplied data.
-     */
     public VizPlayerName (String displayName, int playerId, MediaDesc photo)
     {
         super(displayName, playerId);
         _photo = photo;
     }
 
-    public VizPlayerName (PlayerName name, MediaDesc photo)
+    public VizPlayerName (OrthName name, MediaDesc photo)
     {
-        super(name.toString(), name.getId());
-        _photo = photo;
+        this(name.toString(), name.getId(), photo);
     }
 
-    /**
-     * Returns a guaranteed plain {@link PlayerName} variant of this name.
-     */
-    @Override
-    public PlayerName toPlayerName ()
-    {
-        return new PlayerName(_name, _id);
-    }
-
-    /**
-     * Returns this player's photo.
-     */
     public MediaDesc getPhoto ()
     {
         return _photo;
+    }
+
+    public OrthName toOrthName()
+    {
+        return new OrthName(toString(), getId());
     }
 
     /** This player's profile photo. */

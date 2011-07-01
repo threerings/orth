@@ -15,13 +15,14 @@ import com.google.inject.Inject;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.util.Resulting;
+
 import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
-import com.threerings.util.Resulting;
 
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.data.VizPlayerName;
@@ -110,7 +111,7 @@ public class GuildManager extends NodeletManager
         if (!getThrottle(sender).allow(targetId)) {
             throw new InvocationException(E_INVITE_ALREADY_SENT);
         }
-        final Notification notification = new GuildInviteNotification(sender.name.toPlayerName(),
+        final Notification notification = new GuildInviteNotification(sender.name.toOrthName(),
             _guildObj.name, _guildId);
         _peerMan.invokeSingleNodeRequest(new PlayerNodeRequest(targetId) {
             @Inject transient NotificationManager notMgr;
@@ -266,7 +267,7 @@ public class GuildManager extends NodeletManager
             rl.requestFailed(null);
             return;
         }
-        final GuildMemberEntry newEntry = GuildMemberEntry.fromPlayerName(clinfo.playerName,
+        final GuildMemberEntry newEntry = GuildMemberEntry.fromOrthName(clinfo.orthName,
                 GuildRank.MEMBER);
         // woo! add 'em to the guild
         _invoker.postUnit(new Resulting<Void>("add guild member", rl) {

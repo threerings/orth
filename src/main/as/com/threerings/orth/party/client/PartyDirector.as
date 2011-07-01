@@ -21,10 +21,10 @@ import com.threerings.presents.dobj.ObjectAccessError;
 import com.threerings.presents.util.SafeSubscriber;
 
 import com.threerings.orth.aether.client.AetherClient;
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
@@ -171,7 +171,7 @@ public class PartyDirector
         _partyObj.partyService.moveParty(locus, _octx.listener(OrthCodes.PARTY_MSGS));
     }
 
-    public function invitePlayer (invitee :PlayerName) :void
+    public function invitePlayer (invitee :OrthName) :void
     {
         if (inParty) {
             _partyObj.partyService.invitePlayer(invitee, _octx.listener(OrthCodes.PARTY_MSGS));

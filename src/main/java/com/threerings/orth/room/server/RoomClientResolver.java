@@ -4,13 +4,13 @@
 
 package com.threerings.orth.room.server;
 
-import com.threerings.crowd.server.CrowdClientResolver;
-
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.ClientLocal;
 
-import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.crowd.server.CrowdClientResolver;
+
 import com.threerings.orth.data.AuthName;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.data.SocializerObject;
 
 /**
@@ -43,6 +43,6 @@ public class RoomClientResolver extends CrowdClientResolver
     protected void populate (SocializerObject sobj)
     {
         AuthName name = (AuthName) sobj.username;
-        sobj.name = new PlayerName(name.toString(), name.getId());
+        sobj.name = new OrthName(name.toString(), name.getId());
     }
 }

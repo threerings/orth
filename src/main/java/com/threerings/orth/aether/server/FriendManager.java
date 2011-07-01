@@ -33,12 +33,12 @@ import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.FriendMarshaller;
 import com.threerings.orth.aether.data.FriendshipAcceptance;
 import com.threerings.orth.aether.data.FriendshipRequest;
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
@@ -73,11 +73,11 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 shutdownFriends(plobj);
             }
         });
-        _aetherMgr.addObserver(new OrthPeerManager.FarSeeingObserver<PlayerName>() {
-            @Override public void loggedOn (String node, PlayerName member) {
+        _aetherMgr.addObserver(new OrthPeerManager.FarSeeingObserver<OrthName>() {
+            @Override public void loggedOn (String node, OrthName member) {
                 notifyFriends(member.getId(), FriendEntry.Status.ONLINE);
             }
-            @Override public void loggedOff (String node, PlayerName member) {
+            @Override public void loggedOff (String node, OrthName member) {
                 notifyFriends(member.getId(), FriendEntry.Status.OFFLINE);
             }
         });
@@ -88,7 +88,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         throws InvocationException
     {
         PlayerObject player = ((PlayerObject)caller);
-        final PlayerName playerName = player.playerName;
+        final OrthName playerName = player.playerName;
 
         // anti-spam logic
         final InviteThrottle throttle = player.getLocal(PlayerLocal.class).getInviteThrottle();
@@ -99,7 +99,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         // ok, notify the other player, wherever they are
         _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(targetId) {
             @Override protected void execute (PlayerObject target, ResultListener listener) {
-                FriendshipRequest req = new FriendshipRequest(playerName, target.getPlayerName());
+                FriendshipRequest req = new FriendshipRequest(playerName, target.playerName);
                 CommSender.receiveComm(target, req);
                 listener.requestProcessed(req);
             }
@@ -120,7 +120,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         throws InvocationException
     {
         final PlayerObject acceptingPlayer = (PlayerObject)caller;
-        final PlayerName acceptingPlayerName = acceptingPlayer.playerName;
+        final OrthName acceptingPlayerName = acceptingPlayer.playerName;
 
         // forward this acceptance to the server the other player is on
         _peerMgr.invokeNodeRequest(new PlayerNodeRequest(senderId) {
@@ -144,7 +144,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 } else {
                     friendmgr.addNewFriend(sender, other);
                     CommSender.receiveComm(sender,
-                        new FriendshipAcceptance(sender.getPlayerName(), acceptingPlayerName));
+                        new FriendshipAcceptance(sender.playerName, acceptingPlayerName));
                 }
 
 
@@ -275,12 +275,12 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
             return;
         }
         player.addToFriends(toFriendEntry(other));
-        _notifyMap.put(other.playerName.getId(), player);
+        _notifyMap.put(other.orthName.getId(), player);
     }
 
     protected static FriendEntry toFriendEntry (OrthClientInfo info)
     {
-        return FriendEntry.fromPlayerName(info.playerName, FriendEntry.Status.ONLINE);
+        return FriendEntry.fromOrthName(info.orthName, FriendEntry.Status.ONLINE);
     }
 
     /** Mapping of local and remote player ids to friend ids logged into this server. */

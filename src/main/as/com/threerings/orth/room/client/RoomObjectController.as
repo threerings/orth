@@ -23,7 +23,6 @@ import com.threerings.util.ValueEvent;
 import com.threerings.presents.dobj.AttributeChangeAdapter;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.TopPanel;
@@ -70,7 +69,7 @@ public class RoomObjectController extends RoomController
     /**
      * Is the specified player in this room?
      */
-    public function containsPlayer (name :PlayerName) :Boolean
+    public function containsPlayer (name :OrthName) :Boolean
     {
         var info :OccupantInfo = _roomObj.getOccupantInfo(name);
         return (info != null);

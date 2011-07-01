@@ -4,8 +4,6 @@
 
 package com.threerings.orth.nodelet.server;
 
-import static com.threerings.orth.Log.log;
-
 import java.util.Map;
 import java.util.Set;
 
@@ -18,6 +16,11 @@ import com.google.inject.Injector;
 
 import com.samskivert.util.Logger;
 import com.samskivert.util.ResultListener;
+
+import com.threerings.io.Streamable;
+
+import com.threerings.util.Name;
+import com.threerings.util.Resulting;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -42,13 +45,10 @@ import com.threerings.presents.server.PresentsSession;
 import com.threerings.presents.server.SessionFactory;
 import com.threerings.presents.server.net.AuthingConnection;
 import com.threerings.presents.server.net.PresentsConnectionManager;
-import com.threerings.util.Name;
-import com.threerings.util.Resulting;
 
-import com.threerings.io.Streamable;
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthAuthCodes;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.data.TokenCredentials;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
@@ -58,6 +58,8 @@ import com.threerings.orth.nodelet.data.NodeletCredentials;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.OrthPlayerRecord;
 import com.threerings.orth.server.persist.OrthPlayerRepository;
+
+import static com.threerings.orth.Log.log;
 
 /**
  * Main entry point for serving various types of nodelets. Abstraction goals:
@@ -140,7 +142,7 @@ public abstract class NodeletRegistry
                 if (player == null) {
                     throw new AuthException(OrthAuthCodes.SESSION_EXPIRED);
                 }
-                PlayerName name = player.getPlayerName();
+                OrthName name = player.getOrthName();
                 conn.setAuthName(new NodeletAuthName(_nodeletClass, name.toString(), name.getId()));
                 rsp.getData().code = AuthResponseData.SUCCESS;
                 rsp.authdata = NodeletRegistry.this;

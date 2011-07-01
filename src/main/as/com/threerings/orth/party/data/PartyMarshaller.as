@@ -12,7 +12,7 @@ import com.threerings.presents.client.InvocationService_InvocationListener;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.data.InvocationMarshaller_ListenerMarshaller;
 
-import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.client.PartyService;
 
@@ -56,7 +56,7 @@ public class PartyMarshaller extends InvocationMarshaller
     public static const INVITE_PLAYER :int = 3;
 
     // from interface PartyService
-    public function invitePlayer (arg1 :PlayerName, arg2 :InvocationService_InvocationListener) :void
+    public function invitePlayer (arg1 :OrthName, arg2 :InvocationService_InvocationListener) :void
     {
         var listener2 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
         listener2.listener = arg2;

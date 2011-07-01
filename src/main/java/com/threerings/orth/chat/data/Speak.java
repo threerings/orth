@@ -5,20 +5,17 @@
 package com.threerings.orth.chat.data;
 
 import com.threerings.io.SimpleStreamableObject;
-import com.threerings.orth.aether.data.PlayerName;
+
+import com.threerings.orth.data.OrthName;
 
 public class Speak extends SimpleStreamableObject
 {
-    public Speak ()
-    {
-    }
-
-    public Speak (PlayerName from, String message)
+    public Speak (OrthName from, String message)
     {
         _from = from;
         _message = message;
     }
 
-    protected PlayerName _from;
+    protected OrthName _from;
     protected String _message;
 }

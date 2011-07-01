@@ -199,7 +199,7 @@ public abstract class OrthPeerManager extends PeerManager
 
         ClientObject clobj = client.getClientObject();
         if (clobj instanceof PlayerObject) {
-            ((OrthClientInfo)info).playerName = ((PlayerObject) clobj).playerName;
+            ((OrthClientInfo)info).orthName = ((PlayerObject) clobj).playerName;
         }
 
         loggedOn(_nodeName, (OrthClientInfo) info);
@@ -310,7 +310,7 @@ public abstract class OrthPeerManager extends PeerManager
             _list.apply(new ObserverList.ObserverOp<FarSeeingObserver<T>>() {
                 public boolean apply (FarSeeingObserver<T> observer) {
                     @SuppressWarnings("unchecked")
-                    T vizName = (T) info.playerName;
+                    T vizName = (T) info.orthName;
                     op.apply(observer, vizName);
                     return true;
                 }

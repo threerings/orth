@@ -12,19 +12,20 @@ import com.google.inject.Singleton;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.util.Resulting;
+
 import com.threerings.presents.annotation.EventThread;
 import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
-import com.threerings.util.Resulting;
 
 import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.PlayerMarshaller;
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.server.GuildManager;
@@ -52,7 +53,7 @@ public class AetherManager
         _observers = injector.getInstance(OrthPeerManager.class).observe(AetherAuthName.class);
     }
 
-    public void addObserver (OrthPeerManager.FarSeeingObserver<PlayerName> observer)
+    public void addObserver (OrthPeerManager.FarSeeingObserver<OrthName> observer)
     {
         _observers.add(observer);
     }
@@ -104,7 +105,7 @@ public class AetherManager
     }
 
     /** Observers of aether logins throughout the cluster. */
-    protected ObserverList<OrthPeerManager.FarSeeingObserver<PlayerName>> _observers;
+    protected ObserverList<OrthPeerManager.FarSeeingObserver<OrthName>> _observers;
 
     @Inject protected NotificationManager _notifyMan;
     @Inject protected PlayerSessionLocator _locator;

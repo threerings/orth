@@ -9,7 +9,7 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.data.OrthName;
 
 // GENERATED PREAMBLE END
 
@@ -17,7 +17,7 @@ import com.threerings.orth.aether.data.PlayerName;
 public class Speak extends SimpleStreamableObject
 {
 // GENERATED CLASSDECL END
-    public function get from () :PlayerName
+    public function get from () :OrthName
     {
         return _from;
     }
@@ -31,7 +31,7 @@ public class Speak extends SimpleStreamableObject
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        _from = ins.readObject(PlayerName);
+        _from = ins.readObject(OrthName);
         _message = ins.readField(String);
     }
 
@@ -42,7 +42,7 @@ public class Speak extends SimpleStreamableObject
         out.writeField(_message);
     }
 
-    protected var _from :PlayerName;
+    protected var _from :OrthName;
     protected var _message :String;
 // GENERATED STREAMING END
 

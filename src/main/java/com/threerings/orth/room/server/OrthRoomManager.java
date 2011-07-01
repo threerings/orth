@@ -14,23 +14,42 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
-import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.util.ObjectUtil;
+
+import com.samskivert.jdbc.RepositoryUnit;
+
+import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.client.InvocationService.InvocationListener;
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.EntryAddedEvent;
+import com.threerings.presents.dobj.EntryRemovedEvent;
+import com.threerings.presents.dobj.EntryUpdatedEvent;
+import com.threerings.presents.dobj.MessageEvent;
+import com.threerings.presents.dobj.SetListener;
+import com.threerings.presents.peer.server.PeerManager;
+import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.Place;
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.orth.aether.data.PlayerName;
+
+import com.threerings.whirled.data.SceneUpdate;
+import com.threerings.whirled.spot.data.Location;
+import com.threerings.whirled.spot.data.Portal;
+import com.threerings.whirled.spot.data.SceneLocation;
+import com.threerings.whirled.spot.server.SpotSceneManager;
+
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.server.SpeakProvider;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.room.client.OrthRoomService;
 import com.threerings.orth.room.data.ActorInfo;
+import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
-import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
@@ -38,22 +57,6 @@ import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.RoomPlace;
 import com.threerings.orth.room.data.SocializerObject;
-
-import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.client.InvocationService.InvocationListener;
-import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.peer.server.PeerManager;
-import com.threerings.presents.dobj.EntryAddedEvent;
-import com.threerings.presents.dobj.EntryRemovedEvent;
-import com.threerings.presents.dobj.EntryUpdatedEvent;
-import com.threerings.presents.dobj.MessageEvent;
-import com.threerings.presents.dobj.SetListener;
-import com.threerings.whirled.data.SceneUpdate;
-import com.threerings.whirled.spot.data.Location;
-import com.threerings.whirled.spot.data.Portal;
-import com.threerings.whirled.spot.data.SceneLocation;
-import com.threerings.whirled.spot.server.SpotSceneManager;
 
 import static com.threerings.orth.Log.log;
 
@@ -89,7 +92,7 @@ public class OrthRoomManager extends SpotSceneManager
     public void speak (ClientObject caller, String msg, InvocationListener arg2)
         throws InvocationException
     {
-        PlayerName name = ((SocializerObject)caller).name;
+        OrthName name = ((SocializerObject)caller).name;
 
         _plobj.postMessage(OrthChatCodes.SPEAK_MSG_TYPE, new Speak(name, msg));
     }

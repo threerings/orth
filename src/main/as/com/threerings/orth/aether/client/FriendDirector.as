@@ -10,10 +10,10 @@ import com.threerings.presents.client.ClientEvent;
 
 import com.threerings.orth.aether.data.FriendshipAcceptance;
 import com.threerings.orth.aether.data.FriendshipRequest;
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.data.FriendEntry;
+import com.threerings.orth.data.OrthName;
 
 public class FriendDirector
 {
@@ -28,7 +28,7 @@ public class FriendDirector
         });
     }
 
-    public function inviteFriend (invitee :PlayerName) :void
+    public function inviteFriend (invitee :OrthName) :void
     {
         _fsvc.requestFriendship(invitee.id, _octx.listener());
     }

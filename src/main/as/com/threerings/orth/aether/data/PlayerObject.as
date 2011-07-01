@@ -13,7 +13,6 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.nodelet.data.HostedNodelet;
@@ -29,10 +28,6 @@ public class PlayerObject extends ClientObject
 // GENERATED STREAMING START
     public var playerName :VizPlayerName;
 
-    public var following :PlayerName;
-
-    public var followers :DSet;
-
     public var friends :DSet;
 
     public var party :PartyObjectAddress;
@@ -42,11 +37,6 @@ public class PlayerObject extends ClientObject
     public var guild :HostedNodelet;
 
     public var playerNameChanged :Signal = new Signal(VizPlayerName, VizPlayerName);
-    public var followingChanged :Signal = new Signal(PlayerName, PlayerName);
-    public var followersChanged :Signal = new Signal(DSet, DSet);
-    public var followersEntryAdded :Signal = new Signal(DSet_Entry);
-    public var followersEntryRemoved :Signal = new Signal(DSet_Entry);
-    public var followersEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
     public var friendsChanged :Signal = new Signal(DSet, DSet);
     public var friendsEntryAdded :Signal = new Signal(DSet_Entry);
     public var friendsEntryRemoved :Signal = new Signal(DSet_Entry);
@@ -56,10 +46,6 @@ public class PlayerObject extends ClientObject
     public var guildChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
 
     public static const PLAYER_NAME :String = "playerName";
-
-    public static const FOLLOWING :String = "following";
-
-    public static const FOLLOWERS :String = "followers";
 
     public static const FRIENDS :String = "friends";
 
@@ -73,8 +59,6 @@ public class PlayerObject extends ClientObject
     {
         super.readObject(ins);
         playerName = ins.readObject(VizPlayerName);
-        following = ins.readObject(PlayerName);
-        followers = ins.readObject(DSet);
         friends = ins.readObject(DSet);
         party = ins.readObject(PartyObjectAddress);
         guildId = ins.readInt();
@@ -149,12 +133,6 @@ class Signaller
             case "playerName":
                 signal = _obj.playerNameChanged;
                 break;
-            case "following":
-                signal = _obj.followingChanged;
-                break;
-            case "followers":
-                signal = _obj.followersChanged;
-                break;
             case "friends":
                 signal = _obj.friendsChanged;
                 break;
@@ -177,9 +155,6 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
-            case "followers":
-                signal = _obj.followersEntryAdded;
-                break;
             case "friends":
                 signal = _obj.friendsEntryAdded;
                 break;
@@ -193,9 +168,6 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
-            case "followers":
-                signal = _obj.followersEntryRemoved;
-                break;
             case "friends":
                 signal = _obj.friendsEntryRemoved;
                 break;
@@ -209,9 +181,6 @@ class Signaller
     {
         var signal :Signal;
         switch (event.getName()) {
-            case "followers":
-                signal = _obj.followersEntryUpdated;
-                break;
             case "friends":
                 signal = _obj.friendsEntryUpdated;
                 break;

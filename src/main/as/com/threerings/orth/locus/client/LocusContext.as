@@ -5,7 +5,7 @@
 package com.threerings.orth.locus.client {
 import com.threerings.presents.util.PresentsContext;
 
-import com.threerings.orth.aether.data.PlayerName;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.locus.data.Locus;
 
 /**
@@ -16,7 +16,7 @@ public interface LocusContext
     extends PresentsContext
 {
     /** For convenience, return our current display name. */
-    function get myName () :PlayerName;
+    function get myName () :OrthName;
 
     /** For convenience, return {@link #getClient} as a {@link LocusClient}. */
     function get locusClient () :LocusClient;

@@ -8,12 +8,15 @@ import java.util.Set;
 
 import javax.annotation.Generated;
 
+import com.threerings.util.Name;
+
+import com.threerings.presents.dobj.DSet;
+
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.orth.aether.data.PlayerName;
+
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.entity.data.Avatar;
-import com.threerings.presents.dobj.DSet;
-import com.threerings.util.Name;
 
 /**
  * Represents an Orth player's in-room incarnation.
@@ -40,7 +43,7 @@ public class SocializerObject extends ActorObject
 
     /** The display name of this socializer. While this name is not the same as that in
         PlayerObject.playerName, their numerical ID's will always be the same. */
-    public PlayerName name;
+    public OrthName name;
 
     /** The avatar that the user has chosen, or null for guests. */
     public Avatar avatar;
@@ -101,9 +104,9 @@ public class SocializerObject extends ActorObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setName (PlayerName value)
+    public void setName (OrthName value)
     {
-        PlayerName ovalue = this.name;
+        OrthName ovalue = this.name;
         requestAttributeChange(
             NAME, value, ovalue);
         this.name = value;

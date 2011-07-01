@@ -26,8 +26,8 @@ import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.aether.client.FriendDirector;
 import com.threerings.orth.aether.data.AetherCredentials;
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.OrthName;
 import com.threerings.orth.guild.client.GuildDirector;
 import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.locus.client.LocusDirector;
@@ -146,7 +146,7 @@ public class OrthController extends Controller
     /**
      * Handles INVITE_FRIEND.
      */
-    public function handleInviteFriend (invitee :PlayerName) :void
+    public function handleInviteFriend (invitee :OrthName) :void
     {
         _friendDir.inviteFriend(invitee);
     }

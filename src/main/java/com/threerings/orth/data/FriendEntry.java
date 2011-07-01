@@ -4,7 +4,6 @@
 
 package com.threerings.orth.data;
 
-import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.VizPlayerName;
 
 /**
@@ -42,7 +41,7 @@ public class FriendEntry extends PlayerEntry
      * TODO: callers of this will need to worry about photo and status message when those are
      * implemented.
      */
-    public static FriendEntry fromPlayerName (PlayerName playerName, Status status)
+    public static FriendEntry fromOrthName (OrthName playerName, Status status)
     {
         MediaDesc photo = null; // TODO
         String statusMessage = null; // TODO
