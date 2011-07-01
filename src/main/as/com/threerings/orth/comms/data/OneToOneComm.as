@@ -6,5 +6,10 @@ package com.threerings.orth.comms.data {
 
 public interface OneToOneComm extends ToComm, FromComm
 {
+    /** Returns a message appropriate to display to the to participant in this comm */
+    function get toMessage () :String;
+
+    /** Returns a message appropriate to display to the from participant in this comm */
+    function get fromMessage () :String;
 }
 }

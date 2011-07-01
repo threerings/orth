@@ -14,6 +14,8 @@ import com.threerings.presents.util.PresentsContext;
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
+import com.threerings.orth.comms.client.CommsDirector;
+import com.threerings.orth.comms.data.CommDecoder;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyCredentials;
 import com.threerings.orth.party.data.PartyObjectAddress;
@@ -36,6 +38,9 @@ public class PartyContext implements PresentsContext
 
         PolicyLoader.registerClient(_client, _depConf.policyPort);
 
+        // Allow the party connection to send comms over our existing director
+        _client.getInvocationDirector().registerReceiver(new CommDecoder(_comms));
+
         // configure our client and logon
         _client.setVersion(_depConf.version);
         _client.setServer(address.host, address.ports);
@@ -55,6 +60,7 @@ public class PartyContext implements PresentsContext
         return _client.getDObjectManager();
     }
 
+    protected const _comms :CommsDirector = inject(CommsDirector);
     protected const _module :Module = inject(Module);
     protected const _depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
     protected const _client :Client = new Client();

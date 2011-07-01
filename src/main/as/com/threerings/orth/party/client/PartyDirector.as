@@ -23,6 +23,7 @@ import com.threerings.presents.util.SafeSubscriber;
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.locus.data.HostedLocus;
@@ -258,6 +259,7 @@ public class PartyDirector
     protected const _module :Module = inject(Module);
     protected const _locusDir :LocusDirector = inject(LocusDirector);
     protected const _octx :OrthContext = inject(OrthContext);
+    protected const _comms :CommsDirector = inject(CommsDirector);
 
     protected var _prsvc :PartyRegistryService;
     protected var _pctx :PartyContext;

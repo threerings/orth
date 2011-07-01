@@ -10,6 +10,7 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.comms.data.BaseOneToOneComm;
 import com.threerings.orth.comms.data.OneToOneComm;
+import com.threerings.orth.comms.data.RequestComm;
 import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.party.data.PartyObjectAddress;
 
@@ -17,8 +18,28 @@ import com.threerings.orth.party.data.PartyObjectAddress;
 
 // GENERATED CLASSDECL START
 public class PartyInvite extends BaseOneToOneComm
+    implements RequestComm
 {
 // GENERATED CLASSDECL END
+    override public function get toMessage () :String
+    {
+        return _from + " invited you to their party";
+    }
+
+    override public function get fromMessage () :String
+    {
+        return "You invited " + _to + " to you party";
+    }
+
+    public function get acceptMessage () :String
+    {
+        return "You joined " + _from + "'s party";
+    }
+
+    public function get ignoreMessage () :String
+    {
+        return "You ignored " + _from + "'s party invitation";
+    }
 
     public function onAccepted () :void
     {

@@ -5,46 +5,32 @@
 package com.threerings.orth.aether.client {
 import flashx.funk.ioc.inject;
 
-import org.osflash.signals.Signal;
-
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 
+import com.threerings.orth.aether.data.FriendshipAcceptance;
+import com.threerings.orth.aether.data.FriendshipRequest;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.data.FriendEntry;
 
-public class FriendDirector implements FriendReceiver
+public class FriendDirector
 {
     FriendEntry;
-
-    public const onRequestReceived :Signal = new Signal(PlayerName);
-    public const onRequestSent :Signal = new Signal(PlayerName);
-    public const onSentRequestAccepted :Signal = new Signal(PlayerName);
+    FriendshipAcceptance;
 
     public function FriendDirector ()
     {
         const client :Client = inject(AetherClient);
-        client.getInvocationDirector().registerReceiver(new FriendDecoder(this));
         client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
             _fsvc = client.requireService(FriendService);
         });
     }
 
-    public function friendshipRequested (requester :PlayerName) :void
-    {
-        onRequestReceived.dispatch(requester);
-    }
-
-    public function friendshipAccepted (acceptor :PlayerName) :void
-    {
-        onSentRequestAccepted.dispatch(acceptor);
-    }
-
     public function inviteFriend (invitee :PlayerName) :void
     {
         _fsvc.requestFriendship(invitee.id, _octx.listener());
-        onRequestSent.dispatch(invitee);
     }
 
     public function acceptFriendInvite (friendId :int) :void
@@ -54,6 +40,7 @@ public class FriendDirector implements FriendReceiver
 
     protected var _fsvc :FriendService;
 
+    protected const _comms :CommsDirector = inject(CommsDirector);
     protected const _octx :OrthContext = inject(OrthContext);
 }
 }

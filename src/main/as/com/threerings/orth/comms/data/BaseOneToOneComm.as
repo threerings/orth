@@ -19,9 +19,10 @@ public class BaseOneToOneComm extends ModuleStreamable
     implements OneToOneComm
 {
 // GENERATED CLASSDECL END
-
+    public function get fromMessage () :String { throw new Error("Abstract!"); }
     public function get from() :OrthName { return _from; }
 
+    public function get toMessage () :String { throw new Error("Abstract!"); }
     public function get to() :OrthName { return _to; }
 
 // GENERATED STREAMING START

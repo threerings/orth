@@ -16,6 +16,15 @@ import com.threerings.orth.comms.data.BaseOneToOneComm;
 public class FriendshipAcceptance extends BaseOneToOneComm
 {
 // GENERATED CLASSDECL END
+    override public function get fromMessage () :String
+    {
+        return _to + " accepted your friend request";
+    }
+
+    override public function get toMessage () :String
+    {
+        return "You accepted " + _from + "'s friend request";
+    }
 
 // GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void

@@ -83,7 +83,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         });
     }
 
-    public void requestFriendship (ClientObject caller, final int targetId,
+    public void requestFriendship (final ClientObject caller, final int targetId,
         InvocationListener listener)
         throws InvocationException
     {
@@ -99,11 +99,15 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         // ok, notify the other player, wherever they are
         _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(targetId) {
             @Override protected void execute (PlayerObject target, ResultListener listener) {
-                CommSender.receiveComm(target,
-                    new FriendshipRequest(playerName, target.getPlayerName()));
-                listener.requestProcessed(null);
+                FriendshipRequest req = new FriendshipRequest(playerName, target.getPlayerName());
+                CommSender.receiveComm(target, req);
+                listener.requestProcessed(req);
             }
-        }, new Resulting<Void>(listener) {
+        }, new Resulting<FriendshipRequest>(listener) {
+            @Override public void requestCompleted (FriendshipRequest result) {
+                super.requestCompleted(result);
+                CommSender.receiveComm(caller, result);
+            }
             @Override public void requestFailed (Exception cause) {
                 throttle.clear(targetId);
                 super.requestFailed(cause);

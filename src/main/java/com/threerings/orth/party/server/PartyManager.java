@@ -24,7 +24,6 @@ import com.threerings.presents.server.InvocationManager;
 import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.PlayerName;
 import com.threerings.orth.aether.data.PlayerObject;
-import com.threerings.orth.aether.server.PlayerNodeAction;
 import com.threerings.orth.aether.server.PlayerNodeRequest;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.locus.data.HostedLocus;
@@ -193,7 +192,7 @@ public class PartyManager
 
     // from interface PartyProvider
     public void invitePlayer (
-        ClientObject caller, PlayerName invitee, InvocationService.InvocationListener listener)
+        final ClientObject caller, PlayerName invitee, InvocationService.InvocationListener listener)
         throws InvocationException
     {
         PartierObject inviter = (PartierObject)caller;
@@ -205,9 +204,15 @@ public class PartyManager
         _partyObj.invitedIds.add(invitee.getId());
 
         final PartyInvite invite = new PartyInvite(inviter.playerName.toPlayerName(), invitee, addr);
-        _peerMgr.invokeSingleNodeAction(new PlayerNodeAction(invitee.getId()) {
-            @Override protected void execute (PlayerObject plobj) {
+        _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(invitee.getId()) {
+            @Override protected void execute (PlayerObject plobj, InvocationService.ResultListener listener) {
                 CommSender.receiveComm(plobj, invite);
+                listener.requestProcessed(null);
+            }
+        }, new Resulting<Void>(listener) {
+            @Override public void requestCompleted (Void result) {
+                super.requestCompleted(result);
+                CommSender.receiveComm(caller, invite);
             }
         });
     }
