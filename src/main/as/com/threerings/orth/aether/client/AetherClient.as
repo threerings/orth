@@ -13,10 +13,10 @@ import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.net.BootstrapData;
 
 import com.threerings.orth.aether.data.AetherAuthResponseData;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.AetherCredentials;
+import com.threerings.orth.aether.data.AetherMarshaller;
 import com.threerings.orth.aether.data.FriendMarshaller;
-import com.threerings.orth.aether.data.PlayerMarshaller;
-import com.threerings.orth.aether.data.PlayerObject;
 import com.threerings.orth.chat.data.TellMarshaller;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.OrthModule;
@@ -31,8 +31,8 @@ public class AetherClient extends Client
 
     // reference classes that would otherwise not be linked in
     AuthName;
-    PlayerObject;
-    PlayerMarshaller;
+    AetherClientObject;
+    AetherMarshaller;
     FriendMarshaller;
     TellMarshaller;
 
@@ -51,7 +51,7 @@ public class AetherClient extends Client
 
     }
 
-    public function getPlayerObject () :PlayerObject
+    public function getPlayerObject () :AetherClientObject
     {
         return _plobj;
     }
@@ -94,7 +94,7 @@ public class AetherClient extends Client
 
     override public function gotClientObject (clobj :ClientObject):void
     {
-        _plobj = PlayerObject(clobj);
+        _plobj = AetherClientObject(clobj);
         super.gotClientObject(clobj);
     }
 
@@ -105,7 +105,7 @@ public class AetherClient extends Client
         return props;
     }
 
-    protected var _plobj :PlayerObject;
+    protected var _plobj :AetherClientObject;
 
     protected const _module :OrthModule = inject(OrthModule);
 

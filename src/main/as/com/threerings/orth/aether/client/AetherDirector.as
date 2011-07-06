@@ -19,7 +19,7 @@ public class AetherDirector
     {
         const client :Client = inject(AetherClient);
         client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
-            _psvc = client.requireService(PlayerService);
+            _psvc = client.requireService(AetherService);
         });
     }
 
@@ -33,7 +33,7 @@ public class AetherDirector
         _psvc.createGuild(name, _octx.listener());
     }
 
-    protected var _psvc :PlayerService;
+    protected var _psvc :AetherService;
     protected const _octx :OrthContext = inject(OrthContext);
 }
 }

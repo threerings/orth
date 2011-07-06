@@ -13,11 +13,11 @@ import com.threerings.presents.server.ChainedAuthenticator;
 import com.threerings.presents.server.net.AuthingConnection;
 
 import com.threerings.orth.data.OrthAuthCodes;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCredentials;
-import com.threerings.orth.server.persist.OrthPlayerRecord;
-import com.threerings.orth.server.persist.OrthPlayerRepository;
+import com.threerings.orth.server.persist.PlayerRecord;
+import com.threerings.orth.server.persist.PlayerRepository;
 
 /**
  * Handles partier authentication.
@@ -36,14 +36,14 @@ public class PartyAuthenticator extends ChainedAuthenticator
         throws AuthException
     {
         PartyCredentials creds = (PartyCredentials)conn.getAuthRequest().getCredentials();
-        OrthPlayerRecord player = _playerRepo.loadPlayerForSession(creds.sessionToken);
+        PlayerRecord player = _playerRepo.loadPlayerForSession(creds.sessionToken);
         if (player == null) {
             throw new AuthException(OrthAuthCodes.SESSION_EXPIRED);
         }
-        OrthName name = player.getOrthName();
+        PlayerName name = player.getName();
         conn.setAuthName(new PartyAuthName(name.toString(), name.getId()));
         rsp.getData().code = AuthResponseData.SUCCESS;
     }
 
-    @Inject protected OrthPlayerRepository _playerRepo;
+    @Inject protected PlayerRepository _playerRepo;
 }

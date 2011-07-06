@@ -11,7 +11,7 @@ import com.threerings.presents.annotation.EventThread;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.PresentsSession;
 
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.PlayerSessionLocator;
 
 @Singleton @EventThread
@@ -24,7 +24,7 @@ public class PlayerManager
      */
     public boolean bootPlayer (final int playerId)
     {
-        final PlayerObject mobj = _locator.lookupPlayer(playerId);
+        final AetherClientObject mobj = _locator.lookupPlayer(playerId);
         if (mobj != null) {
             final PresentsSession pclient = _clmgr.getClient(mobj.username);
             if (pclient != null) {

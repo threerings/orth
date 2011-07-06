@@ -8,14 +8,14 @@ import com.google.inject.Inject;
 
 import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherCodes;
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerManager.NodeRequest;
 
 /**
  * Request that applies to a node that a specified aether player is on and invokes the subclass'
- * {@link #execute(PlayerObject, ResultListener)} method with the player object.
+ * {@link #execute(AetherClientObject, ResultListener)} method with the player object.
  */
 public abstract class PlayerNodeRequest extends NodeRequest
 {
@@ -36,7 +36,7 @@ public abstract class PlayerNodeRequest extends NodeRequest
     @Override // from NodeRequest
     protected void execute (ResultListener listener)
     {
-        PlayerObject player = _playerLocator.lookupPlayer(_targetPlayer.getId());
+        AetherClientObject player = _playerLocator.lookupPlayer(_targetPlayer.getId());
         if (player == null || !player.isActive()) {
             listener.requestFailed(AetherCodes.USER_NOT_ONLINE);
             return;
@@ -49,7 +49,7 @@ public abstract class PlayerNodeRequest extends NodeRequest
      * @param player the requested player
      * @param listener on which to invoke success or failure
      */
-    protected abstract void execute (PlayerObject player, ResultListener listener);
+    protected abstract void execute (AetherClientObject player, ResultListener listener);
 
     protected AetherAuthName _targetPlayer;
     @Inject transient protected PlayerSessionLocator _playerLocator;

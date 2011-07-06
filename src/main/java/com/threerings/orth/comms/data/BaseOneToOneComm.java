@@ -1,29 +1,29 @@
 package com.threerings.orth.comms.data;
 
 import com.threerings.orth.data.ModuleStreamable;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 
 public abstract class BaseOneToOneComm extends ModuleStreamable
     implements OneToOneComm
 {
-    public BaseOneToOneComm (OrthName from, OrthName to)
+    public BaseOneToOneComm (PlayerName from, PlayerName to)
     {
         _from = from;
         _to = to;
     }
 
     @Override
-    public OrthName getTo ()
+    public PlayerName getTo ()
     {
         return _to;
     }
 
     @Override
-    public OrthName getFrom ()
+    public PlayerName getFrom ()
     {
         return _from;
     }
 
 
-    protected OrthName _from, _to;
+    protected PlayerName _from, _to;
 }

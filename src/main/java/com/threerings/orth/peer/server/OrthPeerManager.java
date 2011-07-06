@@ -26,9 +26,9 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.orth.aether.data.AetherAuthName;
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.AuthName;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.server.NodeletRegistry;
@@ -55,7 +55,7 @@ public abstract class OrthPeerManager extends PeerManager
      * and return the associated {@link ObserverList}. Observers will be notified of loggings
      * in an d out of any clients identified by the given class.
      */
-    public <O extends OrthName> ObserverList<FarSeeingObserver<O>> observe (Class<?> type)
+    public <O extends PlayerName> ObserverList<FarSeeingObserver<O>> observe (Class<?> type)
     {
         return this.<O>newObservation(type).getList();
     }
@@ -198,8 +198,8 @@ public abstract class OrthPeerManager extends PeerManager
         super.initClientInfo(client, info);
 
         ClientObject clobj = client.getClientObject();
-        if (clobj instanceof PlayerObject) {
-            ((OrthClientInfo)info).orthName = ((PlayerObject) clobj).playerName;
+        if (clobj instanceof AetherClientObject) {
+            ((OrthClientInfo)info).orthName = ((AetherClientObject) clobj).playerName;
         }
 
         loggedOn(_nodeName, (OrthClientInfo) info);
@@ -260,7 +260,7 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     /** Call the 'loggedOn' method on this client's registered {@link FarSeeingObserver} list. */
-    protected  <T extends OrthName> void loggedOn (final String nodeName, OrthClientInfo info)
+    protected  <T extends PlayerName> void loggedOn (final String nodeName, OrthClientInfo info)
     {
         apply(info, new VizOp<T>() {
             public void apply (FarSeeingObserver<T> observer, T name) {
@@ -270,7 +270,7 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     /** Call the 'loggedOff' method on this client's registered {@link FarSeeingObserver} list. */
-    protected <T extends OrthName> void loggedOff (final String nodeName, OrthClientInfo info)
+    protected <T extends PlayerName> void loggedOff (final String nodeName, OrthClientInfo info)
     {
         apply(info, new VizOp<T>() {
             public void apply (FarSeeingObserver<T> observer, T name) {
@@ -279,7 +279,7 @@ public abstract class OrthPeerManager extends PeerManager
         });
     }
 
-    protected <T extends OrthName> void apply (OrthClientInfo info, VizOp<T> op)
+    protected <T extends PlayerName> void apply (OrthClientInfo info, VizOp<T> op)
     {
         @SuppressWarnings("unchecked")
         Observation<T> observation = (Observation<T>) _observations.get(info.username.getClass());
@@ -288,7 +288,7 @@ public abstract class OrthPeerManager extends PeerManager
         }
     }
 
-    protected <T extends OrthName> Observation<T> newObservation (Class<?> type)
+    protected <T extends PlayerName> Observation<T> newObservation (Class<?> type)
     {
         if (_observations.containsKey(type)) {
             throw new IllegalStateException("Multiple observations on type: " + type);
@@ -298,12 +298,12 @@ public abstract class OrthPeerManager extends PeerManager
         return observation;
     }
 
-    protected interface VizOp<T extends OrthName>
+    protected interface VizOp<T extends PlayerName>
     {
         void apply (FarSeeingObserver<T> observer, T name);
     }
 
-    protected static class Observation<T extends OrthName>
+    protected static class Observation<T extends PlayerName>
     {
         public void apply (final OrthClientInfo info, final VizOp<T> op)
         {
@@ -331,7 +331,7 @@ public abstract class OrthPeerManager extends PeerManager
      * peer servers and this local server, therefore all client activity anywhere may be tracked
      * through this interface.
      */
-    public static interface FarSeeingObserver<T extends OrthName>
+    public static interface FarSeeingObserver<T extends PlayerName>
     {
         /**
          * Notifies the observer when a member has logged onto an orth server.

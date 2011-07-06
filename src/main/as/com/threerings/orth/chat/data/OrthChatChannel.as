@@ -15,7 +15,7 @@ import com.threerings.util.Name;
 import com.threerings.util.StringUtil;
 
 import com.threerings.orth.data.ChannelName;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.room.data.RoomName;
 
 /**
@@ -42,7 +42,7 @@ public class OrthChatChannel extends ChatChannel
     /**
      * Creates a channel identifier for a channel communicating with the specified member.
      */
-    public static function makeMemberChannel (member :OrthName) :OrthChatChannel
+    public static function makeMemberChannel (member :PlayerName) :OrthChatChannel
     {
         return new OrthChatChannel(MEMBER_CHANNEL, member);
     }
@@ -166,8 +166,8 @@ public class OrthChatChannel extends ChatChannel
 
     protected static function getId (name :Name) :String
     {
-        if (name is OrthName) {
-            return "" + OrthName(name).id;
+        if (name is PlayerName) {
+            return "" + PlayerName(name).id;
 
         } else if (name is RoomName) {
             return "" + (name as RoomName).getSceneId();

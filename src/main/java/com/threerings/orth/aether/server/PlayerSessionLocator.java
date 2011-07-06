@@ -18,7 +18,7 @@ import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.orth.aether.data.AetherAuthName;
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 
 /**
  * Convenience class for finding {@link PlayerSession} instances logged into this server.
@@ -28,8 +28,8 @@ public class PlayerSessionLocator implements Lifecycle.InitComponent
 {
     public interface Observer
     {
-        void playerLoggedIn (PresentsSession session, PlayerObject plobj);
-        void playerWillLogout (PresentsSession session, PlayerObject plobj);
+        void playerLoggedIn (PresentsSession session, AetherClientObject plobj);
+        void playerWillLogout (PresentsSession session, AetherClientObject plobj);
     }
 
     @Inject public PlayerSessionLocator (Lifecycle lifecycle)
@@ -41,7 +41,7 @@ public class PlayerSessionLocator implements Lifecycle.InitComponent
     {
         _clientMgr.addClientObserver(new ClientManager.DetailedClientObserver() {
             @Override public void clientSessionDidStart (PresentsSession session) {
-                PlayerObject plobj = player(session);
+                AetherClientObject plobj = player(session);
                 if (plobj != null) {
                     for (Observer o : _observers) {
                         try {
@@ -54,7 +54,7 @@ public class PlayerSessionLocator implements Lifecycle.InitComponent
             }
 
             @Override public void clientSessionWillEnd (PresentsSession session) {
-                PlayerObject plobj = player(session);
+                AetherClientObject plobj = player(session);
                 if (plobj != null) {
                     for (Observer o : _observers) {
                         try {
@@ -69,10 +69,10 @@ public class PlayerSessionLocator implements Lifecycle.InitComponent
             @Override public void clientSessionDidEnd (PresentsSession session) {
             }
 
-            PlayerObject player (PresentsSession session) {
+            AetherClientObject player (PresentsSession session) {
                 ClientObject clobj = session.getClientObject();
-                if (clobj instanceof PlayerObject) {
-                    return (PlayerObject)clobj;
+                if (clobj instanceof AetherClientObject) {
+                    return (AetherClientObject)clobj;
                 }
                 return null;
             }
@@ -89,14 +89,14 @@ public class PlayerSessionLocator implements Lifecycle.InitComponent
         _observers.remove(observer);
     }
 
-    public PlayerObject lookupPlayer (int playerId)
+    public AetherClientObject lookupPlayer (int playerId)
     {
         return forClient(_clientMgr.getClientObject(AetherAuthName.makeKey(playerId)));
     }
 
-    public PlayerObject forClient (ClientObject client)
+    public AetherClientObject forClient (ClientObject client)
     {
-        return (PlayerObject) client;
+        return (AetherClientObject) client;
     }
 
     /** Other code interested in players logging on and off. */

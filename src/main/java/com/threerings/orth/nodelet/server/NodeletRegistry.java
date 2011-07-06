@@ -48,7 +48,7 @@ import com.threerings.presents.server.net.PresentsConnectionManager;
 
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthAuthCodes;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.TokenCredentials;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
@@ -56,8 +56,8 @@ import com.threerings.orth.nodelet.data.NodeletAuthName;
 import com.threerings.orth.nodelet.data.NodeletBootstrapData;
 import com.threerings.orth.nodelet.data.NodeletCredentials;
 import com.threerings.orth.peer.server.OrthPeerManager;
-import com.threerings.orth.server.persist.OrthPlayerRecord;
-import com.threerings.orth.server.persist.OrthPlayerRepository;
+import com.threerings.orth.server.persist.PlayerRecord;
+import com.threerings.orth.server.persist.PlayerRepository;
 
 import static com.threerings.orth.Log.log;
 
@@ -138,11 +138,11 @@ public abstract class NodeletRegistry
                 throws Exception
             {
                 TokenCredentials creds = (TokenCredentials)conn.getAuthRequest().getCredentials();
-                OrthPlayerRecord player = _playerRepo.loadPlayerForSession(creds.sessionToken);
+                PlayerRecord player = _playerRepo.loadPlayerForSession(creds.sessionToken);
                 if (player == null) {
                     throw new AuthException(OrthAuthCodes.SESSION_EXPIRED);
                 }
-                OrthName name = player.getOrthName();
+                PlayerName name = player.getName();
                 conn.setAuthName(new NodeletAuthName(_nodeletClass, name.toString(), name.getId()));
                 rsp.getData().code = AuthResponseData.SUCCESS;
                 rsp.authdata = NodeletRegistry.this;
@@ -432,7 +432,7 @@ public abstract class NodeletRegistry
 
     // dependencies
     @Inject protected PresentsDObjectMgr _omgr;
-    @Inject protected OrthPlayerRepository _playerRepo;
+    @Inject protected PlayerRepository _playerRepo;
     @Inject protected Injector _injector;
     @Inject protected InvocationManager _invMgr;
     @Inject protected OrthPeerManager _peerMan;

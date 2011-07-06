@@ -44,7 +44,7 @@ import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.server.SpeakProvider;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.room.client.OrthRoomService;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.ActorObject;
@@ -92,7 +92,7 @@ public class OrthRoomManager extends SpotSceneManager
     public void speak (ClientObject caller, String msg, InvocationListener arg2)
         throws InvocationException
     {
-        OrthName name = ((SocializerObject)caller).name;
+        PlayerName name = ((SocializerObject)caller).name;
 
         _plobj.postMessage(OrthChatCodes.SPEAK_MSG_TYPE, new Speak(name, msg));
     }

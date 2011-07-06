@@ -24,7 +24,7 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.aether.server.PlayerNodeAction;
 import com.threerings.orth.aether.server.PlayerNodeRequest;
@@ -43,7 +43,7 @@ import com.threerings.orth.notify.data.Notification;
 import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
-import com.threerings.orth.server.persist.OrthPlayerRepository;
+import com.threerings.orth.server.persist.PlayerRepository;
 import com.threerings.orth.server.util.InviteThrottle;
 
 import static com.threerings.orth.Log.log;
@@ -116,7 +116,7 @@ public class GuildManager extends NodeletManager
         _peerMan.invokeSingleNodeRequest(new PlayerNodeRequest(targetId) {
             @Inject transient NotificationManager notMgr;
 
-            @Override protected void execute (PlayerObject target,
+            @Override protected void execute (AetherClientObject target,
                 InvocationService.ResultListener listener) {
                 notMgr.notify(target, notification);
                 listener.requestProcessed(null);
@@ -286,7 +286,7 @@ public class GuildManager extends NodeletManager
     protected void clearPlayerObjectGuild (int playerId)
     {
         _peerMan.invokeNodeAction(new PlayerNodeAction(playerId) {
-            @Override protected void execute (PlayerObject player) {
+            @Override protected void execute (AetherClientObject player) {
                 player.startTransaction();
                 try {
                     player.setGuildId(0);
@@ -344,7 +344,7 @@ public class GuildManager extends NodeletManager
 
     // dependencies
     @Inject protected GuildRepository _guildRepo;
-    @Inject protected OrthPlayerRepository _playerRepo;
+    @Inject protected PlayerRepository _playerRepo;
     @Inject protected @MainInvoker Invoker _invoker;
     @Inject protected OrthPeerManager _peerMan;
 }

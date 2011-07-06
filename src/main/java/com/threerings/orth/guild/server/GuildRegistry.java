@@ -15,7 +15,7 @@ import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.util.Resulting;
 
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.guild.data.GuildMarshaller;
 import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
@@ -47,7 +47,7 @@ public class GuildRegistry extends NodeletRegistry
      * {@code guild} member will be updated to the new hosted location and the result listener
      * notified.
      */
-    public void createAndHostGuild (final String name, final PlayerObject officer,
+    public void createAndHostGuild (final String name, final AetherClientObject officer,
             final ResultListener<HostedNodelet> rl)
     {
         _invoker.postUnit(new Resulting<GuildRecord>(

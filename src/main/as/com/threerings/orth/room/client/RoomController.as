@@ -39,7 +39,7 @@ import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.OrthPlaceBox;
 import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.client.TopPanel;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.MemberSprite;
@@ -126,7 +126,7 @@ public class RoomController extends SceneController
      */
     public function getEntityInstanceId () :int
     {
-        var name :OrthName = _rctx.myName;
+        var name :PlayerName = _rctx.myName;
         return (name != null) ? name.id : 0;
     }
 
@@ -135,7 +135,7 @@ public class RoomController extends SceneController
      */
     public function getViewerName (instanceId :int = 0) :String
     {
-        var name :OrthName = _rctx.myName;
+        var name :PlayerName = _rctx.myName;
         if (instanceId == 0 || instanceId == name.id) {
             return name.toString();
         }

@@ -4,10 +4,10 @@
 
 package com.threerings.orth.comms.data {
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 
 public interface FromComm
 {
-    function get from() :OrthName;
+    function get from() :PlayerName;
 }
 }

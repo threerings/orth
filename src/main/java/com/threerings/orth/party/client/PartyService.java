@@ -6,7 +6,7 @@ package com.threerings.orth.party.client;
 
 import com.threerings.presents.client.InvocationService;
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 
 /**
@@ -30,7 +30,7 @@ public interface PartyService extends InvocationService
     void updateDisband (boolean disband, InvocationListener il);
 
     /** Invites a specific player to this party. */
-    void invitePlayer (OrthName invitee, InvocationListener il);
+    void invitePlayer (PlayerName invitee, InvocationListener il);
 
     /** Moves the entire party to the given locus. Move to null to let partiers roam freely. */
     void moveParty(HostedLocus locus, InvocationListener il);

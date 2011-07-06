@@ -14,7 +14,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.ChangeListener;
 import com.threerings.presents.dobj.DObject;
 
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.guild.data.GuildMemberEntry;
 import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
@@ -47,7 +47,7 @@ public class GuildDirector extends NodeletDirector
      */
     public function attributeChanged (event :AttributeChangedEvent) :void
     {
-        if (event.getName() == PlayerObject.GUILD) {
+        if (event.getName() == AetherClientObject.GUILD) {
             // connect to the guild
             connect(_plobj.guild);
         }

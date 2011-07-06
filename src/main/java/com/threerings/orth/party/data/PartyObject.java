@@ -13,7 +13,7 @@ import com.google.common.collect.Sets;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 
 public class PartyObject extends DObject
@@ -256,7 +256,7 @@ public class PartyObject extends DObject
      * you can't even see on the party board.
      *
      */
-    public boolean mayJoin (OrthName player)
+    public boolean mayJoin (PlayerName player)
     {
         return peeps.size() < PartyCodes.MAX_PARTY_SIZE &&
             (invitedIds.contains(player.getId()) || recruitment == PartyCodes.RECRUITMENT_OPEN);

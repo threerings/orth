@@ -12,7 +12,7 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.entity.data.Avatar;
 import com.threerings.orth.room.data.ActorObject;
 
@@ -24,7 +24,7 @@ public class SocializerObject extends ActorObject
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
-    public var name :OrthName;
+    public var name :PlayerName;
 
     public var avatar :Avatar;
 
@@ -32,7 +32,7 @@ public class SocializerObject extends ActorObject
 
     public var walkingId :int;
 
-    public var nameChanged :Signal = new Signal(OrthName, OrthName);
+    public var nameChanged :Signal = new Signal(PlayerName, PlayerName);
     public var avatarChanged :Signal = new Signal(Avatar, Avatar);
     public var avatarCacheChanged :Signal = new Signal(DSet, DSet);
     public var avatarCacheEntryAdded :Signal = new Signal(DSet_Entry);
@@ -51,7 +51,7 @@ public class SocializerObject extends ActorObject
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        name = ins.readObject(OrthName);
+        name = ins.readObject(PlayerName);
         avatar = ins.readObject(Avatar);
         avatarCache = ins.readObject(DSet);
         walkingId = ins.readInt();

@@ -10,7 +10,7 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.util.Name;
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.notify.data.Notification;
 
 // GENERATED PREAMBLE END
@@ -24,7 +24,7 @@ public class GuildInviteNotification extends Notification
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        _sender = ins.readObject(OrthName);
+        _sender = ins.readObject(PlayerName);
         _guildName = ins.readField(String);
         _guildId = ins.readInt();
     }
@@ -37,7 +37,7 @@ public class GuildInviteNotification extends Notification
         out.writeInt(_guildId);
     }
 
-    protected var _sender :OrthName;
+    protected var _sender :PlayerName;
     protected var _guildName :String;
     protected var _guildId :int;
 // GENERATED STREAMING END
@@ -50,7 +50,7 @@ public class GuildInviteNotification extends Notification
     /**
      * Gets the player that sent the invite.
      */
-    public function getPlayerSender () :OrthName
+    public function getPlayerSender () :PlayerName
     {
         return _sender;
     }

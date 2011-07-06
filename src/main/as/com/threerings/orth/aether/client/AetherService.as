@@ -8,17 +8,17 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService_InvocationListener;
 
 /**
- * An ActionScript version of the Java PlayerService interface.
+ * An ActionScript version of the Java AetherService interface.
  */
-public interface PlayerService extends InvocationService
+public interface AetherService extends InvocationService
 {
-    // from Java interface PlayerService
+    // from Java interface AetherService
     function acceptGuildInvite (arg1 :int, arg2 :int, arg3 :InvocationService_InvocationListener) :void;
 
-    // from Java interface PlayerService
+    // from Java interface AetherService
     function createGuild (arg1 :String, arg2 :InvocationService_InvocationListener) :void;
 
-    // from Java interface PlayerService
+    // from Java interface AetherService
     function dispatchDeferredNotifications () :void;
 }
 }

@@ -13,7 +13,7 @@ import com.threerings.whirled.spot.data.SpotScene;
 import com.threerings.util.Cloneable;
 import com.threerings.util.Iterator;
 
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 
 public class OrthScene extends SceneImpl
     implements SpotScene, Cloneable
@@ -27,7 +27,7 @@ public class OrthScene extends SceneImpl
     /**
      * Does the specified member have management rights in this room?
      */
-    public function canManage (member :PlayerObject, allowSupport :Boolean = true) :Boolean
+    public function canManage (member :AetherClientObject, allowSupport :Boolean = true) :Boolean
     {
         // ORTH TODO
         return true;

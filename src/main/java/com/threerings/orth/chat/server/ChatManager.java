@@ -15,13 +15,13 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.PlayerNodeRequest;
 import com.threerings.orth.aether.server.PlayerSessionLocator;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.chat.data.TellMarshaller;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
 @Singleton
@@ -34,13 +34,13 @@ public class ChatManager
     }
 
     // from TellProvider
-    public void sendTell (ClientObject caller, OrthName tellee, String msg, ConfirmListener listener)
+    public void sendTell (ClientObject caller, PlayerName tellee, String msg, ConfirmListener listener)
         throws InvocationException
     {
-        PlayerObject from = _locator.forClient(caller);
+        AetherClientObject from = _locator.forClient(caller);
         final Tell tell = new Tell(from.playerName, tellee, msg);
         _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(tellee.getId()) {
-            @Override protected void execute (PlayerObject player, ResultListener listener) {
+            @Override protected void execute (AetherClientObject player, ResultListener listener) {
                 TellSender.receiveTell(player, tell);
                 listener.requestProcessed(null);
 

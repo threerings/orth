@@ -17,7 +17,7 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.ObjectAccessError;
 import com.threerings.presents.util.SafeSubscriber;
 
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
@@ -174,7 +174,7 @@ public class NodeletDirector extends BasicDirector
 
     // TODO: service
     //protected var _service :NodeletService;
-    protected var _plobj :PlayerObject;
+    protected var _plobj :AetherClientObject;
     protected var _nodelet :HostedNodelet; // TODO: may be better not to keep this around
     protected var _sub :SafeSubscriber;
     protected var _dobj :DObject;

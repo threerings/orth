@@ -20,10 +20,10 @@ import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.util.PresentsContext;
 
 import com.threerings.orth.aether.client.AetherClient;
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.client.AbstractLocusModule;
 import com.threerings.orth.locus.client.LocusContext;
 import com.threerings.orth.locus.client.LocusModule;
@@ -91,21 +91,21 @@ public class OrthContext
     /**
      * Returns our connected {@link PlayerObject}, or null if we are not logged on.
      */
-    public function get playerObject () :PlayerObject
+    public function get playerObject () :AetherClientObject
     {
         return (_client != null) ? _client.getPlayerObject() : null;
     }
 
     /** For convenience, return our current display name. */
-    public function get myName () :OrthName
+    public function get myName () :PlayerName
     {
-        var player :PlayerObject = playerObject;
+        var player :AetherClientObject = playerObject;
         return (player != null) ? player.playerName : null;
     }
 
     public function get myId () :int
     {
-        var player :PlayerObject = playerObject;
+        var player :AetherClientObject = playerObject;
         return (player != null) ? player.playerName.id : 0;
     }
 

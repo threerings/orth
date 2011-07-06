@@ -31,22 +31,22 @@ import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 
 public class OrthChatDirector extends BasicDirector
     implements MessageListener, TellReceiver
 {
-    public static function buildTellMessage (from :OrthName, text :String) :UserMessage
+    public static function buildTellMessage (from :PlayerName, text :String) :UserMessage
     {
         return buildMessage(from, text, ChatCodes.USER_CHAT_TYPE);
     }
 
-    public static function buildSpeakMessage (from :OrthName, text :String) :UserMessage
+    public static function buildSpeakMessage (from :PlayerName, text :String) :UserMessage
     {
         return buildMessage(from, text, ChatCodes.PLACE_CHAT_TYPE);
     }
 
-    public static function buildMessage (from :OrthName, text :String, type :String) :UserMessage
+    public static function buildMessage (from :PlayerName, text :String, type :String) :UserMessage
     {
         var msg :UserMessage = new UserMessage();
         msg.speaker = from;
@@ -69,7 +69,7 @@ public class OrthChatDirector extends BasicDirector
         return _place;
     }
 
-    public function requestSendTell (tellee :OrthName, msg :String) :UserMessage
+    public function requestSendTell (tellee :PlayerName, msg :String) :UserMessage
     {
         _tellService.sendTell(tellee, msg, new ConfirmAdapter(null,
             function (cause :String) :void { log.warning("Tell failed!", "reason", cause); }));

@@ -10,22 +10,22 @@ import com.threerings.presents.client.InvocationService_InvocationListener;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.data.InvocationMarshaller_ListenerMarshaller;
 
-import com.threerings.orth.aether.client.PlayerService;
+import com.threerings.orth.aether.client.AetherService;
 
 /**
- * Provides the implementation of the <code>PlayerService</code> interface
+ * Provides the implementation of the <code>AetherService</code> interface
  * that marshalls the arguments and delivers the request to the provider
  * on the server. Also provides an implementation of the response listener
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
-public class PlayerMarshaller extends InvocationMarshaller
-    implements PlayerService
+public class AetherMarshaller extends InvocationMarshaller
+    implements AetherService
 {
     /** The method id used to dispatch <code>acceptGuildInvite</code> requests. */
     public static const ACCEPT_GUILD_INVITE :int = 1;
 
-    // from interface PlayerService
+    // from interface AetherService
     public function acceptGuildInvite (arg1 :int, arg2 :int, arg3 :InvocationService_InvocationListener) :void
     {
         var listener3 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
@@ -38,7 +38,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     /** The method id used to dispatch <code>createGuild</code> requests. */
     public static const CREATE_GUILD :int = 2;
 
-    // from interface PlayerService
+    // from interface AetherService
     public function createGuild (arg1 :String, arg2 :InvocationService_InvocationListener) :void
     {
         var listener2 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
@@ -51,7 +51,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     /** The method id used to dispatch <code>dispatchDeferredNotifications</code> requests. */
     public static const DISPATCH_DEFERRED_NOTIFICATIONS :int = 3;
 
-    // from interface PlayerService
+    // from interface AetherService
     public function dispatchDeferredNotifications () :void
     {
         sendRequest(DISPATCH_DEFERRED_NOTIFICATIONS, [

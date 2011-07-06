@@ -15,7 +15,6 @@ import com.threerings.util.Hashable;
 import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.aether.data.VizPlayerName;
-import com.threerings.orth.data.OrthName;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
@@ -28,7 +27,7 @@ public class PlayerEntry extends SimpleStreamableObject
      */
     public static function sortByName (lhs :PlayerEntry, rhs :PlayerEntry, ... rest) :int
     {
-        return OrthName.BY_DISPLAY_NAME(lhs.name, rhs.name);
+        return PlayerName.BY_DISPLAY_NAME(lhs.name, rhs.name);
     }
 
 

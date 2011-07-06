@@ -15,7 +15,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.entity.data.Avatar;
 
 /**
@@ -43,7 +43,7 @@ public class SocializerObject extends ActorObject
 
     /** The display name of this socializer. While this name is not the same as that in
         PlayerObject.playerName, their numerical ID's will always be the same. */
-    public OrthName name;
+    public PlayerName name;
 
     /** The avatar that the user has chosen, or null for guests. */
     public Avatar avatar;
@@ -104,9 +104,9 @@ public class SocializerObject extends ActorObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setName (OrthName value)
+    public void setName (PlayerName value)
     {
-        OrthName ovalue = this.name;
+        PlayerName ovalue = this.name;
         requestAttributeChange(
             NAME, value, ovalue);
         this.name = value;

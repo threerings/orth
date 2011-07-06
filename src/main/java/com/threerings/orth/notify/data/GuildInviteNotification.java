@@ -4,11 +4,11 @@
 
 package com.threerings.orth.notify.data;
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 
 public class GuildInviteNotification extends Notification
 {
-    public GuildInviteNotification (OrthName sender, String guildName, int guildId)
+    public GuildInviteNotification (PlayerName sender, String guildName, int guildId)
     {
         _sender = sender;
         _guildName = guildName;
@@ -21,7 +21,7 @@ public class GuildInviteNotification extends Notification
         return null; // ?
     }
 
-    protected OrthName _sender;
+    protected PlayerName _sender;
     protected String _guildName;
     protected int _guildId;
 }

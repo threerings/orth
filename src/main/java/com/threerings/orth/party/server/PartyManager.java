@@ -22,10 +22,10 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.Log;
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.PlayerNodeRequest;
 import com.threerings.orth.comms.data.CommSender;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyAuthName;
@@ -47,7 +47,7 @@ public class PartyManager
     public final PartyObjectAddress addr;
 
     @Inject public PartyManager (RootDObjectManager omgr, InvocationManager invMgr,
-            OrthDeploymentConfig conf, PlayerObject creator)
+            OrthDeploymentConfig conf, AetherClientObject creator)
     {
         _omgr = omgr;
         _invMgr = invMgr;
@@ -95,7 +95,7 @@ public class PartyManager
         _partyObj.invitedIds.remove(playerId);
 
         _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(playerId) {
-            @Override protected void execute (PlayerObject player, InvocationService.ResultListener listener) {
+            @Override protected void execute (AetherClientObject player, InvocationService.ResultListener listener) {
                 player.setParty(closureAddr);
                 listener.requestProcessed(null);
             }
@@ -192,7 +192,7 @@ public class PartyManager
 
     // from interface PartyProvider
     public void invitePlayer (
-        final ClientObject caller, OrthName invitee, InvocationService.InvocationListener listener)
+        final ClientObject caller, PlayerName invitee, InvocationService.InvocationListener listener)
         throws InvocationException
     {
         PartierObject inviter = (PartierObject)caller;
@@ -205,7 +205,7 @@ public class PartyManager
 
         final PartyInvite invite = new PartyInvite(inviter.playerName.toOrthName(), invitee, addr);
         _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(invitee.getId()) {
-            @Override protected void execute (PlayerObject plobj, InvocationService.ResultListener listener) {
+            @Override protected void execute (AetherClientObject plobj, InvocationService.ResultListener listener) {
                 CommSender.receiveComm(plobj, invite);
                 listener.requestProcessed(null);
             }
@@ -268,7 +268,7 @@ public class PartyManager
     protected void endPartierSession (int playerId)
     {
         _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(playerId) {
-            @Override protected void execute (PlayerObject pl, InvocationService.ResultListener rl) {
+            @Override protected void execute (AetherClientObject pl, InvocationService.ResultListener rl) {
                 pl.setParty(null);
                 rl.requestProcessed(null);
             }

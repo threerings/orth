@@ -6,26 +6,26 @@ package com.threerings.orth.aether.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.aether.client.PlayerService;
+import com.threerings.orth.aether.client.AetherService;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
 
 /**
- * Provides the implementation of the {@link PlayerService} interface
+ * Provides the implementation of the {@link AetherService} interface
  * that marshalls the arguments and delivers the request to the provider
  * on the server. Also provides an implementation of the response listener
  * interfaces that marshall the response arguments and deliver them back
  * to the requesting client.
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
-           comments="Derived from PlayerService.java.")
-public class PlayerMarshaller extends InvocationMarshaller
-    implements PlayerService
+           comments="Derived from AetherService.java.")
+public class AetherMarshaller extends InvocationMarshaller
+    implements AetherService
 {
     /** The method id used to dispatch {@link #acceptGuildInvite} requests. */
     public static final int ACCEPT_GUILD_INVITE = 1;
 
-    // from interface PlayerService
+    // from interface AetherService
     public void acceptGuildInvite (int arg1, int arg2, InvocationService.InvocationListener arg3)
     {
         ListenerMarshaller listener3 = new ListenerMarshaller();
@@ -38,7 +38,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #createGuild} requests. */
     public static final int CREATE_GUILD = 2;
 
-    // from interface PlayerService
+    // from interface AetherService
     public void createGuild (String arg1, InvocationService.InvocationListener arg2)
     {
         ListenerMarshaller listener2 = new ListenerMarshaller();
@@ -51,7 +51,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #dispatchDeferredNotifications} requests. */
     public static final int DISPATCH_DEFERRED_NOTIFICATIONS = 3;
 
-    // from interface PlayerService
+    // from interface AetherService
     public void dispatchDeferredNotifications ()
     {
         sendRequest(DISPATCH_DEFERRED_NOTIFICATIONS, new Object[] {

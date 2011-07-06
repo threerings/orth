@@ -14,13 +14,12 @@ import com.threerings.util.Name;
 
 import com.threerings.presents.dobj.DSet_Entry;
 
+import com.threerings.orth.data.PlayerName;
+
 // GENERATED PREAMBLE END
 
-/**
- * Extends Name with persistent member information.
- */
 // GENERATED CLASSDECL START
-public class OrthName extends Name
+public class PlayerName extends Name
     implements DSet_Entry
 {
 // GENERATED CLASSDECL END
@@ -29,10 +28,7 @@ public class OrthName extends Name
         return Comparators.compareStringsInsensitively(n1.toString(), n2.toString());
     };
 
-    /**
-     * Create a new OrthName.
-     */
-    public function OrthName (displayName :String = "", memberId :int = 0)
+    public function PlayerName (displayName :String = "", memberId :int = 0)
     {
         super(displayName);
         _id = memberId;
@@ -64,13 +60,13 @@ public class OrthName extends Name
         // Note: You may be tempted to have names sort by the String value, but Names are used
         // as DSet keys in various places and so each user's must be unique.
         // Use BY_DISPLAY_NAME to sort names for display.
-        return Integer.compare(_id, (o as OrthName)._id);
+        return Integer.compare(_id, (o as PlayerName)._id);
     }
 
     // from Name
     override public function equals (other :Object) :Boolean
     {
-        return (other is OrthName) && ((other as OrthName)._id == _id);
+        return (other is PlayerName) && ((other as PlayerName)._id == _id);
     }
 
     // from Name
@@ -94,10 +90,9 @@ public class OrthName extends Name
 
     protected var _id :int;
 // GENERATED STREAMING END
+
 // GENERATED CLASSFINISH START
 }
 }
 // GENERATED CLASSFINISH END
-
-
 

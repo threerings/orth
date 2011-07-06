@@ -6,13 +6,13 @@ package com.threerings.orth.peer.data;
 
 import com.threerings.presents.peer.data.ClientInfo;
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 /**
  * Contains information on a player logged into one of our peer servers.
  */
 public class OrthClientInfo extends ClientInfo
 {
-    public OrthName orthName;
+    public PlayerName orthName;
 
     /** Returns this member's unique identifier. */
     public int getMemberId ()

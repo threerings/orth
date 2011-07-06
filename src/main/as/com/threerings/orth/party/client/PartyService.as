@@ -7,7 +7,7 @@ package com.threerings.orth.party.client {
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService_InvocationListener;
 
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 
 /**
@@ -22,7 +22,7 @@ public interface PartyService extends InvocationService
     function bootPlayer (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface PartyService
-    function invitePlayer (arg1 :OrthName, arg2 :InvocationService_InvocationListener) :void;
+    function invitePlayer (arg1 :PlayerName, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface PartyService
     function moveParty (arg1 :HostedLocus, arg2 :InvocationService_InvocationListener) :void;

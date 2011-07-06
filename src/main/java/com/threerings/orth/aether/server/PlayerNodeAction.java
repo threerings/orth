@@ -7,7 +7,7 @@ package com.threerings.orth.aether.server;
 import com.google.inject.Inject;
 
 import com.threerings.orth.aether.data.AetherAuthName;
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerManager;
 
@@ -33,7 +33,7 @@ public abstract class PlayerNodeAction extends PeerManager.NodeAction
     @Override // from PeerManager.NodeAction
     protected void execute ()
     {
-        PlayerObject memobj = _locator.lookupPlayer(_playerId);
+        AetherClientObject memobj = _locator.lookupPlayer(_playerId);
         if (memobj != null) {
             if (!memobj.isActive()) {
                 log.warning("Got an inactive player from the locator!?", "who", memobj.username);
@@ -43,7 +43,7 @@ public abstract class PlayerNodeAction extends PeerManager.NodeAction
         } // if not, oh well, they went away
     }
 
-    protected abstract void execute (PlayerObject memobj);
+    protected abstract void execute (AetherClientObject memobj);
 
     protected int _playerId;
 

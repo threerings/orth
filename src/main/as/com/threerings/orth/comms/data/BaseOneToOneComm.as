@@ -10,7 +10,7 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.comms.data.OneToOneComm;
 import com.threerings.orth.data.ModuleStreamable;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 
 // GENERATED PREAMBLE END
 
@@ -20,17 +20,17 @@ public class BaseOneToOneComm extends ModuleStreamable
 {
 // GENERATED CLASSDECL END
     public function get fromMessage () :String { throw new Error("Abstract!"); }
-    public function get from() :OrthName { return _from; }
+    public function get from() :PlayerName { return _from; }
 
     public function get toMessage () :String { throw new Error("Abstract!"); }
-    public function get to() :OrthName { return _to; }
+    public function get to() :PlayerName { return _to; }
 
 // GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        _from = ins.readObject(OrthName);
-        _to = ins.readObject(OrthName);
+        _from = ins.readObject(PlayerName);
+        _to = ins.readObject(PlayerName);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
@@ -40,8 +40,8 @@ public class BaseOneToOneComm extends ModuleStreamable
         out.writeObject(_to);
     }
 
-    protected var _from :OrthName;
-    protected var _to :OrthName;
+    protected var _from :PlayerName;
+    protected var _to :PlayerName;
 // GENERATED STREAMING END
 
 // GENERATED CLASSFINISH START

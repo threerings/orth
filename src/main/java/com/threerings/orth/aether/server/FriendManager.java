@@ -33,21 +33,21 @@ import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.FriendMarshaller;
 import com.threerings.orth.aether.data.FriendshipAcceptance;
 import com.threerings.orth.aether.data.FriendshipRequest;
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
-import com.threerings.orth.server.persist.OrthPlayerRepository;
+import com.threerings.orth.server.persist.PlayerRepository;
 import com.threerings.orth.server.util.InviteThrottle;
 
 import static com.threerings.orth.Log.log;
 
 /**
- * Manages {@link PlayerObject#friends} and friend-related request for the local server.
+ * Manages {@link AetherClientObject#friends} and friend-related request for the local server.
  */
 @Singleton
 public class FriendManager implements Lifecycle.InitComponent, FriendProvider
@@ -65,19 +65,19 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     public void init ()
     {
         _locator.addObserver(new PlayerSessionLocator.Observer() {
-            @Override public void playerLoggedIn (PresentsSession session, PlayerObject plobj) {
+            @Override public void playerLoggedIn (PresentsSession session, AetherClientObject plobj) {
                 initFriends(plobj);
             }
 
-            @Override public void playerWillLogout (PresentsSession session, PlayerObject plobj) {
+            @Override public void playerWillLogout (PresentsSession session, AetherClientObject plobj) {
                 shutdownFriends(plobj);
             }
         });
-        _aetherMgr.addObserver(new OrthPeerManager.FarSeeingObserver<OrthName>() {
-            @Override public void loggedOn (String node, OrthName member) {
+        _aetherMgr.addObserver(new OrthPeerManager.FarSeeingObserver<PlayerName>() {
+            @Override public void loggedOn (String node, PlayerName member) {
                 notifyFriends(member.getId(), FriendEntry.Status.ONLINE);
             }
-            @Override public void loggedOff (String node, OrthName member) {
+            @Override public void loggedOff (String node, PlayerName member) {
                 notifyFriends(member.getId(), FriendEntry.Status.OFFLINE);
             }
         });
@@ -87,8 +87,8 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         InvocationListener listener)
         throws InvocationException
     {
-        PlayerObject player = ((PlayerObject)caller);
-        final OrthName playerName = player.playerName;
+        AetherClientObject player = ((AetherClientObject)caller);
+        final PlayerName playerName = player.playerName;
 
         // anti-spam logic
         final InviteThrottle throttle = player.getLocal(PlayerLocal.class).getInviteThrottle();
@@ -98,7 +98,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
 
         // ok, notify the other player, wherever they are
         _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(targetId) {
-            @Override protected void execute (PlayerObject target, ResultListener listener) {
+            @Override protected void execute (AetherClientObject target, ResultListener listener) {
                 FriendshipRequest req = new FriendshipRequest(playerName, target.playerName);
                 CommSender.receiveComm(target, req);
                 listener.requestProcessed(req);
@@ -119,14 +119,14 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         ClientObject caller, final int senderId, final InvocationListener listener)
         throws InvocationException
     {
-        final PlayerObject acceptingPlayer = (PlayerObject)caller;
-        final OrthName acceptingPlayerName = acceptingPlayer.playerName;
+        final AetherClientObject acceptingPlayer = (AetherClientObject)caller;
+        final PlayerName acceptingPlayerName = acceptingPlayer.playerName;
 
         // forward this acceptance to the server the other player is on
         _peerMgr.invokeNodeRequest(new PlayerNodeRequest(senderId) {
             @Inject transient OrthPeerManager peermgr;
             @Inject transient FriendManager friendmgr;
-            @Override protected void execute (PlayerObject sender, ResultListener listener) {
+            @Override protected void execute (AetherClientObject sender, ResultListener listener) {
                 PlayerLocal local = sender.getLocal(PlayerLocal.class);
                 if (!local.getInviteThrottle().clear(acceptingPlayerName.getId())) {
                     log.warning("Uninvited friend acceptance!", "player", acceptingPlayerName,
@@ -175,7 +175,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     /**
      * Sets up the members friends and adds to friend tracking.
      */
-    protected void initFriends (final PlayerObject player)
+    protected void initFriends (final AetherClientObject player)
     {
         log.debug("Strarting resolution of friends dset", "player", player);
 
@@ -222,7 +222,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         });
     }
 
-    protected void updateFriends (PlayerObject player, List<FriendEntry> friends)
+    protected void updateFriends (AetherClientObject player, List<FriendEntry> friends)
     {
         // the player may have had some friends come online already while we were off in invoker
         // land. Replace the ones in the invoker list since the status should be more up to
@@ -245,7 +245,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         log.debug("Finished resolution of friends dset", "player", player);
     }
 
-    protected void shutdownFriends (PlayerObject player)
+    protected void shutdownFriends (AetherClientObject player)
     {
         log.debug("Removing friend notifications", "player", player);
 
@@ -258,7 +258,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     {
         log.debug("Notifying friends", "playerId", playerId, "status", status);
 
-        for (PlayerObject friend : _notifyMap.get(playerId)) {
+        for (AetherClientObject friend : _notifyMap.get(playerId)) {
             FriendEntry entry = friend.friends.get(playerId);
             if (entry == null) {
                 continue;
@@ -269,7 +269,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }
     }
 
-    protected void addNewFriend (PlayerObject player, OrthClientInfo other)
+    protected void addNewFriend (AetherClientObject player, OrthClientInfo other)
     {
         if (other == null) {
             return;
@@ -284,13 +284,13 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     }
 
     /** Mapping of local and remote player ids to friend ids logged into this server. */
-    protected SetMultimap<Integer, PlayerObject> _notifyMap = HashMultimap.create();
+    protected SetMultimap<Integer, AetherClientObject> _notifyMap = HashMultimap.create();
 
     // dependencies
     @Inject protected AetherManager _aetherMgr;
     @Inject protected PlayerSessionLocator _locator;
     @Inject protected OrthPeerManager _peerMgr;
-    @Inject protected OrthPlayerRepository _playerRepo;
+    @Inject protected PlayerRepository _playerRepo;
     @Inject protected RelationshipRepository _friendRepo;
     @Inject protected @MainInvoker Invoker _invoker;
 }

@@ -5,11 +5,11 @@
 package com.threerings.orth.chat.data;
 
 import com.threerings.orth.comms.data.BaseOneToOneComm;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 
 public class Tell extends BaseOneToOneComm
 {
-    public Tell (OrthName from, OrthName to, String message)
+    public Tell (PlayerName from, PlayerName to, String message)
     {
         super(from, to);
     }

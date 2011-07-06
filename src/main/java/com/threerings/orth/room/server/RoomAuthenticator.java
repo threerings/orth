@@ -12,11 +12,11 @@ import com.threerings.presents.server.ChainedAuthenticator;
 import com.threerings.presents.server.net.AuthingConnection;
 
 import com.threerings.orth.data.OrthAuthCodes;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.room.data.RoomAuthName;
 import com.threerings.orth.room.data.RoomCredentials;
-import com.threerings.orth.server.persist.OrthPlayerRecord;
-import com.threerings.orth.server.persist.OrthPlayerRepository;
+import com.threerings.orth.server.persist.PlayerRecord;
+import com.threerings.orth.server.persist.PlayerRepository;
 
 public class RoomAuthenticator extends ChainedAuthenticator
 {
@@ -25,11 +25,11 @@ public class RoomAuthenticator extends ChainedAuthenticator
         throws AuthException
     {
         RoomCredentials creds = (RoomCredentials)conn.getAuthRequest().getCredentials();
-        OrthPlayerRecord player = _playerRepo.loadPlayerForSession(creds.sessionToken);
+        PlayerRecord player = _playerRepo.loadPlayerForSession(creds.sessionToken);
         if (player == null) {
             throw new AuthException(OrthAuthCodes.SESSION_EXPIRED);
         }
-        OrthName name = player.getOrthName();
+        PlayerName name = player.getName();
         conn.setAuthName(new RoomAuthName(name.toString(), name.getId()));
         rsp.getData().code = AuthResponseData.SUCCESS;
     }
@@ -40,5 +40,5 @@ public class RoomAuthenticator extends ChainedAuthenticator
         return conn.getAuthRequest().getCredentials() instanceof RoomCredentials;
     }
 
-    @Inject protected OrthPlayerRepository _playerRepo;
+    @Inject protected PlayerRepository _playerRepo;
 }

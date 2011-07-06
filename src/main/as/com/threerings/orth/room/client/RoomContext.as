@@ -19,7 +19,7 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
 
 import com.threerings.orth.client.TopPanel;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.client.LocusClient;
 import com.threerings.orth.locus.client.LocusContext;
 import com.threerings.orth.locus.data.Locus;
@@ -81,7 +81,7 @@ public class RoomContext
         return _module.getInstance(SceneDirector);
     }
 
-    public function get myName () :OrthName
+    public function get myName () :PlayerName
     {
         var body :SocializerObject = getSocializerObject();
 

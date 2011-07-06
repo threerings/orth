@@ -7,7 +7,7 @@ package com.threerings.orth.chat.data;
 import javax.annotation.Generated;
 
 import com.threerings.orth.chat.client.TellService;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
 
@@ -27,7 +27,7 @@ public class TellMarshaller extends InvocationMarshaller
     public static final int SEND_TELL = 1;
 
     // from interface TellService
-    public void sendTell (OrthName arg1, String arg2, InvocationService.ConfirmListener arg3)
+    public void sendTell (PlayerName arg1, String arg2, InvocationService.ConfirmListener arg3)
     {
         InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
         listener3.listener = arg3;

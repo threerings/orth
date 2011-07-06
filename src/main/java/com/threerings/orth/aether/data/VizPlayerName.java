@@ -5,9 +5,9 @@
 package com.threerings.orth.aether.data;
 
 import com.threerings.orth.data.MediaDesc;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 
-public class VizPlayerName extends OrthName
+public class VizPlayerName extends PlayerName
 {
     // We need a no-arg constructor as we have multiple arg'd constructors
     public VizPlayerName ()
@@ -21,7 +21,7 @@ public class VizPlayerName extends OrthName
         _photo = photo;
     }
 
-    public VizPlayerName (OrthName name, MediaDesc photo)
+    public VizPlayerName (PlayerName name, MediaDesc photo)
     {
         this(name.toString(), name.getId(), photo);
     }
@@ -31,9 +31,9 @@ public class VizPlayerName extends OrthName
         return _photo;
     }
 
-    public OrthName toOrthName()
+    public PlayerName toOrthName()
     {
-        return new OrthName(toString(), getId());
+        return new PlayerName(toString(), getId());
     }
 
     /** This player's profile photo. */

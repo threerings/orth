@@ -16,7 +16,7 @@ import com.threerings.orth.party.data.PartyObjectAddress;
 /**
  * The core distributed object representing the location-agnostic aspect of an Orth player.
  */
-public class PlayerObject extends ClientObject
+public class AetherClientObject extends ClientObject
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>playerName</code> field. */

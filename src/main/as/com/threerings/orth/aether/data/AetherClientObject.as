@@ -21,7 +21,7 @@ import com.threerings.orth.party.data.PartyObjectAddress;
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class PlayerObject extends ClientObject
+public class AetherClientObject extends ClientObject
 {
 // GENERATED CLASSDECL END
 
@@ -65,7 +65,7 @@ public class PlayerObject extends ClientObject
         guild = ins.readObject(HostedNodelet);
     }
 
-    public function PlayerObject ()
+    public function AetherClientObject ()
     {
         new Signaller(this);
     }
@@ -115,12 +115,12 @@ import com.threerings.presents.dobj.ObjectRemovedEvent;
 import com.threerings.presents.dobj.OidListListener;
 import com.threerings.presents.dobj.SetListener;
 
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 
 class Signaller
     implements AttributeChangeListener, SetListener, ElementUpdateListener, OidListListener
 {
-    public function Signaller (obj :PlayerObject)
+    public function Signaller (obj :AetherClientObject)
     {
         _obj = obj;
         _obj.addListener(this);
@@ -220,6 +220,6 @@ class Signaller
         signal.dispatch(event.getOid());
     }
 
-    protected var _obj :PlayerObject;
+    protected var _obj :AetherClientObject;
 }
 // GENERATED SIGNALLER END

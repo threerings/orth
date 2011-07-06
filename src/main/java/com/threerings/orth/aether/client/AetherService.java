@@ -4,13 +4,13 @@
 
 package com.threerings.orth.aether.client;
 
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.presents.client.InvocationService;
 
 /**
  * Requests from an Orth client to the Aether server related to their PlayerObject.
  */
-public interface PlayerService extends InvocationService
+public interface AetherService extends InvocationService
 {
     /**
      * Lets the server know we are now ready to get our logon notifications.
@@ -19,7 +19,7 @@ public interface PlayerService extends InvocationService
 
     /**
      * Creates a new guild if this player doesn't already have one. If the guild creation is
-     * successful, the {@link PlayerObject#guild} member will be set. Otherwise, the listener
+     * successful, the {@link AetherClientObject#guild} member will be set. Otherwise, the listener
      * will be notified of the failure.
      */
     void createGuild (String name, InvocationListener listener);

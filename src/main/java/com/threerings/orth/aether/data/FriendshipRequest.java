@@ -2,12 +2,12 @@ package com.threerings.orth.aether.data;
 
 import com.threerings.orth.comms.data.BaseOneToOneComm;
 import com.threerings.orth.comms.data.RequestComm;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 
 public class FriendshipRequest extends BaseOneToOneComm
     implements RequestComm
 {
-    public FriendshipRequest (OrthName from, OrthName to)
+    public FriendshipRequest (PlayerName from, PlayerName to)
     {
         super(from, to);
     }

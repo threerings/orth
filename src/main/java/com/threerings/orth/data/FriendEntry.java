@@ -41,7 +41,7 @@ public class FriendEntry extends PlayerEntry
      * TODO: callers of this will need to worry about photo and status message when those are
      * implemented.
      */
-    public static FriendEntry fromOrthName (OrthName playerName, Status status)
+    public static FriendEntry fromOrthName (PlayerName playerName, Status status)
     {
         MediaDesc photo = null; // TODO
         String statusMessage = null; // TODO

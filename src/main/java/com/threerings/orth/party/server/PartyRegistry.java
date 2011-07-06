@@ -18,7 +18,7 @@ import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.SessionFactory;
 import com.threerings.presents.server.net.PresentsConnectionManager;
 
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCredentials;
@@ -45,14 +45,14 @@ public class PartyRegistry
     public void createParty (ClientObject caller, ResultListener rl)
         throws InvocationException
     {
-        final PlayerObject player = (PlayerObject)caller;
+        final AetherClientObject player = (AetherClientObject)caller;
 
         if (player.party != null) {
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
         PartyManager mgr = _injector.createChildInjector(new AbstractModule() {
             @Override protected void configure () {
-                bind(PlayerObject.class).toInstance(player);
+                bind(AetherClientObject.class).toInstance(player);
             }
         }).getInstance(PartyManager.class);
         rl.requestProcessed(mgr.addr);

@@ -23,11 +23,11 @@ import com.threerings.util.ValueEvent;
 import com.threerings.presents.dobj.AttributeChangeAdapter;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
-import com.threerings.orth.aether.data.PlayerObject;
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.data.OrthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.client.BootablePlaceController;
 import com.threerings.orth.room.client.updates.UpdateAction;
 import com.threerings.orth.room.client.updates.UpdateStack;
@@ -69,7 +69,7 @@ public class RoomObjectController extends RoomController
     /**
      * Is the specified player in this room?
      */
-    public function containsPlayer (name :OrthName) :Boolean
+    public function containsPlayer (name :PlayerName) :Boolean
     {
         var info :OccupantInfo = _roomObj.getOccupantInfo(name);
         return (info != null);
@@ -78,7 +78,7 @@ public class RoomObjectController extends RoomController
     /**
      * Set the specified name hovered or unhovered.
      */
-    public function setHoverName (name :OrthName, hovered :Boolean) :void
+    public function setHoverName (name :PlayerName, hovered :Boolean) :void
     {
         setHoverSprite(hovered ? _roomObjectView.getOccupantByName(name) : null);
         _suppressNormalHovering = hovered;
@@ -165,7 +165,7 @@ public class RoomObjectController extends RoomController
     override public function canManageRoom (
         memberId :int = 0, allowSupport :Boolean = true) :Boolean
     {
-        var me :PlayerObject = _octx.playerObject;
+        var me :AetherClientObject = _octx.playerObject;
         return (memberId == 0 || memberId == me.id) && _scene != null &&
             _scene.canManage(me, allowSupport);
     }

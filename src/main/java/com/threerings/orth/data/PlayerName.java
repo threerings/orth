@@ -23,11 +23,11 @@ import com.threerings.util.Name;
  * <p> If you extend this class (or if you extend {@link Name}) you will have to implement a custom
  * field serializer for your derived class.
  */
-public class OrthName extends Name implements DSet.Entry
+public class PlayerName extends Name implements DSet.Entry
 {
     /** A comparator for sorting Names by their display portion, case insensitively. */
-    public static final Comparator<OrthName> BY_DISPLAY_NAME = new Comparator<OrthName>() {
-        public int compare (OrthName name1, OrthName name2) {
+    public static final Comparator<PlayerName> BY_DISPLAY_NAME = new Comparator<PlayerName>() {
+        public int compare (PlayerName name1, PlayerName name2) {
             return compareNames(name1, name2);
         }
     };
@@ -35,13 +35,13 @@ public class OrthName extends Name implements DSet.Entry
     /**
      * Compares two member name records case insensitively.
      */
-    public static int compareNames (OrthName m1, OrthName m2)
+    public static int compareNames (PlayerName m1, PlayerName m2)
     {
         return m1.toString().toLowerCase().compareTo(m2.toString().toLowerCase());
     }
 
     /** Create a new Orthname with the given display name and id. */
-    public OrthName (String name, int id)
+    public PlayerName (String name, int id)
     {
         super(name);
         _id = id;
@@ -69,7 +69,7 @@ public class OrthName extends Name implements DSet.Entry
     @Override // from Name
     public boolean equals (Object other)
     {
-        return (other instanceof OrthName) && (((OrthName) other).getId() == _id);
+        return (other instanceof PlayerName) && (((PlayerName) other).getId() == _id);
     }
 
     @Override // from Name
@@ -78,7 +78,7 @@ public class OrthName extends Name implements DSet.Entry
         // Note: You may be tempted to have names sort by the String value, but Names are used
         // as DSet keys in various places and so each user's must be unique.
         // Use BY_DISPLAY_NAME to sort names for display.
-        return Ints.compare(_id, ((OrthName) o).getId());
+        return Ints.compare(_id, ((PlayerName) o).getId());
     }
 
     /** The member id of the member we represent. */
