@@ -23,7 +23,7 @@ import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherClientObject;
-import com.threerings.orth.aether.server.PlayerNodeRequest;
+import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
@@ -94,7 +94,7 @@ public class PartyManager
         // clear their invites to this party, if any
         _partyObj.invitedIds.remove(playerId);
 
-        _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(playerId) {
+        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(playerId) {
             @Override protected void execute (AetherClientObject player, InvocationService.ResultListener listener) {
                 player.setParty(closureAddr);
                 listener.requestProcessed(null);
@@ -204,7 +204,7 @@ public class PartyManager
         _partyObj.invitedIds.add(invitee.getId());
 
         final PartyInvite invite = new PartyInvite(inviter.playerName.toOrthName(), invitee, addr);
-        _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(invitee.getId()) {
+        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(invitee.getId()) {
             @Override protected void execute (AetherClientObject plobj, InvocationService.ResultListener listener) {
                 CommSender.receiveComm(plobj, invite);
                 listener.requestProcessed(null);
@@ -267,7 +267,7 @@ public class PartyManager
 
     protected void endPartierSession (int playerId)
     {
-        _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(playerId) {
+        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(playerId) {
             @Override protected void execute (AetherClientObject pl, InvocationService.ResultListener rl) {
                 pl.setParty(null);
                 rl.requestProcessed(null);

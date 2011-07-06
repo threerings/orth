@@ -17,9 +17,9 @@ import static com.threerings.orth.Log.log;
  * An action to be invoked on every server on which a player is logged in. You must read {@link
  * PeerManager.NodeAction} for caveats before using this class.
  */
-public abstract class PlayerNodeAction extends PeerManager.NodeAction
+public abstract class AetherNodeAction extends PeerManager.NodeAction
 {
-    public PlayerNodeAction (int playerId)
+    public AetherNodeAction (int playerId)
     {
         _playerId = playerId;
     }
@@ -48,5 +48,5 @@ public abstract class PlayerNodeAction extends PeerManager.NodeAction
     protected int _playerId;
 
     /** Used to look up player objects. */
-    @Inject protected transient PlayerSessionLocator _locator;
+    @Inject protected transient AetherSessionLocator _locator;
 }

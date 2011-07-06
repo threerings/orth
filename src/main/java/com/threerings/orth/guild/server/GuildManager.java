@@ -26,8 +26,8 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.VizPlayerName;
-import com.threerings.orth.aether.server.PlayerNodeAction;
-import com.threerings.orth.aether.server.PlayerNodeRequest;
+import com.threerings.orth.aether.server.AetherNodeAction;
+import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildMemberEntry;
@@ -113,7 +113,7 @@ public class GuildManager extends NodeletManager
         }
         final Notification notification = new GuildInviteNotification(sender.name.toOrthName(),
             _guildObj.name, _guildId);
-        _peerMan.invokeSingleNodeRequest(new PlayerNodeRequest(targetId) {
+        _peerMan.invokeSingleNodeRequest(new AetherNodeRequest(targetId) {
             @Inject transient NotificationManager notMgr;
 
             @Override protected void execute (AetherClientObject target,
@@ -285,7 +285,7 @@ public class GuildManager extends NodeletManager
 
     protected void clearPlayerObjectGuild (int playerId)
     {
-        _peerMan.invokeNodeAction(new PlayerNodeAction(playerId) {
+        _peerMan.invokeNodeAction(new AetherNodeAction(playerId) {
             @Override protected void execute (AetherClientObject player) {
                 player.startTransaction();
                 try {

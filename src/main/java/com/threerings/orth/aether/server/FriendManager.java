@@ -29,11 +29,11 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.PresentsSession;
 
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.FriendMarshaller;
 import com.threerings.orth.aether.data.FriendshipAcceptance;
 import com.threerings.orth.aether.data.FriendshipRequest;
-import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.FriendEntry;
@@ -64,7 +64,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     @Override
     public void init ()
     {
-        _locator.addObserver(new PlayerSessionLocator.Observer() {
+        _locator.addObserver(new AetherSessionLocator.Observer() {
             @Override public void playerLoggedIn (PresentsSession session, AetherClientObject plobj) {
                 initFriends(plobj);
             }
@@ -91,13 +91,13 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         final PlayerName playerName = player.playerName;
 
         // anti-spam logic
-        final InviteThrottle throttle = player.getLocal(PlayerLocal.class).getInviteThrottle();
+        final InviteThrottle throttle = player.getLocal(AetherLocal.class).getInviteThrottle();
         if (!throttle.allow(targetId)) {
             throw new InvocationException(AetherCodes.FRIEND_REQUEST_ALREADY_SENT);
         }
 
         // ok, notify the other player, wherever they are
-        _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(targetId) {
+        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(targetId) {
             @Override protected void execute (AetherClientObject target, ResultListener listener) {
                 FriendshipRequest req = new FriendshipRequest(playerName, target.playerName);
                 CommSender.receiveComm(target, req);
@@ -123,11 +123,11 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         final PlayerName acceptingPlayerName = acceptingPlayer.playerName;
 
         // forward this acceptance to the server the other player is on
-        _peerMgr.invokeNodeRequest(new PlayerNodeRequest(senderId) {
+        _peerMgr.invokeNodeRequest(new AetherNodeRequest(senderId) {
             @Inject transient OrthPeerManager peermgr;
             @Inject transient FriendManager friendmgr;
             @Override protected void execute (AetherClientObject sender, ResultListener listener) {
-                PlayerLocal local = sender.getLocal(PlayerLocal.class);
+                AetherLocal local = sender.getLocal(AetherLocal.class);
                 if (!local.getInviteThrottle().clear(acceptingPlayerName.getId())) {
                     log.warning("Uninvited friend acceptance!", "player", acceptingPlayerName,
                         "sender", _targetPlayer);
@@ -184,7 +184,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
             return;
         }
 
-        final PlayerLocal local = player.getLocal(PlayerLocal.class);
+        final AetherLocal local = player.getLocal(AetherLocal.class);
         final List<FriendEntry> friends = Lists.newArrayListWithCapacity(
             local.unresolvedFriendIds.size());
         for (Integer friendId : local.unresolvedFriendIds) {
@@ -240,7 +240,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         player.setFriends(DSet.newDSet(friends));
 
         // clear out the holding buffer
-        player.getLocal(PlayerLocal.class).unresolvedFriendIds = null;
+        player.getLocal(AetherLocal.class).unresolvedFriendIds = null;
 
         log.debug("Finished resolution of friends dset", "player", player);
     }
@@ -288,7 +288,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
 
     // dependencies
     @Inject protected AetherManager _aetherMgr;
-    @Inject protected PlayerSessionLocator _locator;
+    @Inject protected AetherSessionLocator _locator;
     @Inject protected OrthPeerManager _peerMgr;
     @Inject protected PlayerRepository _playerRepo;
     @Inject protected RelationshipRepository _friendRepo;

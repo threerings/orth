@@ -16,8 +16,8 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.aether.data.AetherClientObject;
-import com.threerings.orth.aether.server.PlayerNodeRequest;
-import com.threerings.orth.aether.server.PlayerSessionLocator;
+import com.threerings.orth.aether.server.AetherNodeRequest;
+import com.threerings.orth.aether.server.AetherSessionLocator;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.chat.data.TellMarshaller;
 import com.threerings.orth.data.OrthCodes;
@@ -39,7 +39,7 @@ public class ChatManager
     {
         AetherClientObject from = _locator.forClient(caller);
         final Tell tell = new Tell(from.playerName, tellee, msg);
-        _peerMgr.invokeSingleNodeRequest(new PlayerNodeRequest(tellee.getId()) {
+        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(tellee.getId()) {
             @Override protected void execute (AetherClientObject player, ResultListener listener) {
                 TellSender.receiveTell(player, tell);
                 listener.requestProcessed(null);
@@ -48,7 +48,7 @@ public class ChatManager
         }, new Resulting<Void>(listener));
     }
 
-    @Inject protected PlayerSessionLocator _locator;
+    @Inject protected AetherSessionLocator _locator;
     @Inject protected InvocationManager _invMgr;
     @Inject protected OrthPeerManager _peerMgr;
 }

@@ -17,12 +17,12 @@ import com.threerings.presents.peer.server.PeerManager.NodeRequest;
  * Request that applies to a node that a specified aether player is on and invokes the subclass'
  * {@link #execute(AetherClientObject, ResultListener)} method with the player object.
  */
-public abstract class PlayerNodeRequest extends NodeRequest
+public abstract class AetherNodeRequest extends NodeRequest
 {
     /**
      * Creates a new requests targeting the given player id.
      */
-    public PlayerNodeRequest (int targetPlayerId)
+    public AetherNodeRequest (int targetPlayerId)
     {
         _targetPlayer = AetherAuthName.makeKey(targetPlayerId);
     }
@@ -52,5 +52,5 @@ public abstract class PlayerNodeRequest extends NodeRequest
     protected abstract void execute (AetherClientObject player, ResultListener listener);
 
     protected AetherAuthName _targetPlayer;
-    @Inject transient protected PlayerSessionLocator _playerLocator;
+    @Inject transient protected AetherSessionLocator _playerLocator;
 }

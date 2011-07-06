@@ -21,10 +21,10 @@ import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
 
 /**
- * Convenience class for finding {@link PlayerSession} instances logged into this server.
+ * Convenience class for finding {@link PresentsSession} instances logged into this aether server.
  */
 @Singleton @EventThread
-public class PlayerSessionLocator implements Lifecycle.InitComponent
+public class AetherSessionLocator implements Lifecycle.InitComponent
 {
     public interface Observer
     {
@@ -32,7 +32,7 @@ public class PlayerSessionLocator implements Lifecycle.InitComponent
         void playerWillLogout (PresentsSession session, AetherClientObject plobj);
     }
 
-    @Inject public PlayerSessionLocator (Lifecycle lifecycle)
+    @Inject public AetherSessionLocator (Lifecycle lifecycle)
     {
         lifecycle.addComponent(this);
     }
@@ -47,7 +47,7 @@ public class PlayerSessionLocator implements Lifecycle.InitComponent
                         try {
                             o.playerLoggedIn(session, plobj);
                         } catch (Exception e) {
-                            
+
                         }
                     }
                 }
@@ -60,7 +60,7 @@ public class PlayerSessionLocator implements Lifecycle.InitComponent
                         try {
                             o.playerWillLogout(session, plobj);
                         } catch (Exception e) {
-                            
+
                         }
                     }
                 }

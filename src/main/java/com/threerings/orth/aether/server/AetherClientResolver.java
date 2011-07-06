@@ -36,9 +36,9 @@ public class AetherClientResolver extends CrowdClientResolver
     }
 
     @Override // from ClientResolver
-    public PlayerLocal createLocalAttribute ()
+    public AetherLocal createLocalAttribute ()
     {
-        return new PlayerLocal();
+        return new AetherLocal();
     }
 
     @Override // from ClientResolver
@@ -46,7 +46,7 @@ public class AetherClientResolver extends CrowdClientResolver
         throws Exception
     {
         super.resolveClientData(clobj);
-        clobj.getLocal(PlayerLocal.class).init();
+        clobj.getLocal(AetherLocal.class).init();
         resolvePlayer((AetherClientObject)clobj);
     }
 
@@ -62,7 +62,7 @@ public class AetherClientResolver extends CrowdClientResolver
             "Missing player record for authenticated player? [username=%s]", _username);
 
         // load the friend ids, these will get fully resolved later
-        plobj.getLocal(PlayerLocal.class).unresolvedFriendIds = Sets.newHashSet(
+        plobj.getLocal(AetherLocal.class).unresolvedFriendIds = Sets.newHashSet(
             _friendRepo.getFriendIds(playerId));
 
         // set the guild id

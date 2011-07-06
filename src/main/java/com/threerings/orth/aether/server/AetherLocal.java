@@ -17,7 +17,7 @@ import com.threerings.orth.server.util.InviteThrottle;
 /**
  * Maintain PlayerObject-related data that should only exist server-side.
  */
-public class PlayerLocal extends BodyLocal
+public class AetherLocal extends BodyLocal
     implements NotificationLocal
 {
     /** A list of notifications that will be dispatched when the client's NotificationDirector asks
