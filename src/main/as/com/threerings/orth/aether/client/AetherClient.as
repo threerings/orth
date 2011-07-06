@@ -51,7 +51,7 @@ public class AetherClient extends Client
 
     }
 
-    public function getPlayerObject () :AetherClientObject
+    public function get aetherObject () :AetherClientObject
     {
         return _plobj;
     }

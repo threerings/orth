@@ -55,8 +55,8 @@ public class PartyDirector
         const client :Client = inject(AetherClient);
         client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
             _prsvc = client.requireService(PartyRegistryService);
-            if (_octx.playerObject.party != null) {
-                DelayUtil.delayFrame(joinParty, [ _octx.playerObject.party ]); // Join it!
+            if (_octx.aetherObject.party != null) {
+                DelayUtil.delayFrame(joinParty, [ _octx.aetherObject.party ]); // Join it!
             }
         });
     }

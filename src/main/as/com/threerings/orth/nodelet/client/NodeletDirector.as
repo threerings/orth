@@ -86,7 +86,7 @@ public class NodeletDirector extends BasicDirector
      */
     protected function refreshPlayer () :void
     {
-        _plobj = _octx.playerObject;
+        _plobj = _octx.aetherObject;
     }
 
     /**

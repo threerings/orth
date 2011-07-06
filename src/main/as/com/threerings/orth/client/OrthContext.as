@@ -91,22 +91,22 @@ public class OrthContext
     /**
      * Returns our connected {@link PlayerObject}, or null if we are not logged on.
      */
-    public function get playerObject () :AetherClientObject
+    public function get aetherObject () :AetherClientObject
     {
-        return (_client != null) ? _client.getPlayerObject() : null;
+        return (_client != null) ? _client.aetherObject : null;
     }
 
     /** For convenience, return our current display name. */
     public function get myName () :PlayerName
     {
-        var player :AetherClientObject = playerObject;
+        var player :AetherClientObject = aetherObject;
         return (player != null) ? player.playerName : null;
     }
 
     public function get myId () :int
     {
-        var player :AetherClientObject = playerObject;
-        return (player != null) ? player.playerName.id : 0;
+        var name :PlayerName = myName;
+        return (name != null) ? name.id : 0;
     }
 
     // from OrthContext

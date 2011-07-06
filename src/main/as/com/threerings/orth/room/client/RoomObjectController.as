@@ -165,7 +165,7 @@ public class RoomObjectController extends RoomController
     override public function canManageRoom (
         memberId :int = 0, allowSupport :Boolean = true) :Boolean
     {
-        var me :AetherClientObject = _octx.playerObject;
+        var me :AetherClientObject = _octx.aetherObject;
         return (memberId == 0 || memberId == me.id) && _scene != null &&
             _scene.canManage(me, allowSupport);
     }
