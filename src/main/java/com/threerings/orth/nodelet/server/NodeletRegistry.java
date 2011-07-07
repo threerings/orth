@@ -244,7 +244,7 @@ public abstract class NodeletRegistry
         }
         if (_serviceField != null) {
             try {
-                _invMgr.clearDispatcher((InvocationMarshaller)
+                _invMgr.clearDispatcher((InvocationMarshaller<?>)
                     obj.getClass().getField(_serviceField).get(obj));
             } catch (Exception e) {
             }
@@ -375,7 +375,7 @@ public abstract class NodeletRegistry
      */
     protected <T extends NodeletManager & InvocationProvider> void setManagerClass(
             Class<T> mgrClass, String serviceField,
-            Class<? extends InvocationMarshaller> serviceClass)
+            Class<? extends InvocationMarshaller<?>> serviceClass)
     {
         Preconditions.checkNotNull(serviceClass);
         Preconditions.checkNotNull(serviceField);
@@ -428,7 +428,7 @@ public abstract class NodeletRegistry
     protected Class<? extends Session> _sessionClass = Session.class;
     protected Class<? extends NodeletManager> _managerClass = NodeletManager.class;
     protected String _serviceField;
-    protected Class<? extends InvocationMarshaller> _serviceClass;
+    protected Class<? extends InvocationMarshaller<?>> _serviceClass;
 
     // dependencies
     @Inject protected PresentsDObjectMgr _omgr;
