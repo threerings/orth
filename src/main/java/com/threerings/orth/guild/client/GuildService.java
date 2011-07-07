@@ -5,6 +5,7 @@
 package com.threerings.orth.guild.client;
 
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.guild.data.GuildObject;
@@ -13,13 +14,13 @@ import com.threerings.orth.guild.data.GuildRank;
 /**
  * Services for managing a guild.
  */
-public interface GuildService extends InvocationService
+public interface GuildService extends InvocationService<ClientObject>
 {
     /**
      * Invites another player to join the guild. If the invitation is accepted, the target player
      * will have {@link AetherClientObject#guild guild} and {@link AetherClientObject#guildId guildId} updated
      * and will be added to {@link GuildObject#members}. On failure, the listener will be notified
-     * of the error.  
+     * of the error.
      */
     void sendInvite (int playerId, InvocationListener listener);
 

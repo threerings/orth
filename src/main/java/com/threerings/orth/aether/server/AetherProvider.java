@@ -6,11 +6,12 @@ package com.threerings.orth.aether.server;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.aether.client.AetherService;
 import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
+
+import com.threerings.orth.aether.client.AetherService;
+import com.threerings.orth.aether.data.AetherClientObject;
 
 /**
  * Defines the server-side of the {@link AetherService}.
@@ -22,17 +23,17 @@ public interface AetherProvider extends InvocationProvider
     /**
      * Handles a {@link AetherService#acceptGuildInvite} request.
      */
-    void acceptGuildInvite (ClientObject caller, int arg1, int arg2, InvocationService.InvocationListener arg3)
+    void acceptGuildInvite (AetherClientObject caller, int arg1, int arg2, InvocationService.InvocationListener arg3)
         throws InvocationException;
 
     /**
      * Handles a {@link AetherService#createGuild} request.
      */
-    void createGuild (ClientObject caller, String arg1, InvocationService.InvocationListener arg2)
+    void createGuild (AetherClientObject caller, String arg1, InvocationService.InvocationListener arg2)
         throws InvocationException;
 
     /**
      * Handles a {@link AetherService#dispatchDeferredNotifications} request.
      */
-    void dispatchDeferredNotifications (ClientObject caller);
+    void dispatchDeferredNotifications (AetherClientObject caller);
 }

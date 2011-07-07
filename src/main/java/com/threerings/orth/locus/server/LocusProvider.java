@@ -6,11 +6,12 @@ package com.threerings.orth.locus.server;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.locus.client.LocusService;
-import com.threerings.orth.locus.data.Locus;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
+
+import com.threerings.orth.locus.client.LocusService;
+import com.threerings.orth.locus.data.Locus;
 
 /**
  * Defines the server-side of the {@link LocusService}.

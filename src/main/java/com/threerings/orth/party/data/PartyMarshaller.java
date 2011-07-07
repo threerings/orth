@@ -6,11 +6,12 @@ package com.threerings.orth.party.data;
 
 import javax.annotation.Generated;
 
+import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.InvocationMarshaller;
+
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.client.PartyService;
-import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.data.InvocationMarshaller;
 
 /**
  * Provides the implementation of the {@link PartyService} interface
@@ -21,7 +22,7 @@ import com.threerings.presents.data.InvocationMarshaller;
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
            comments="Derived from PartyService.java.")
-public class PartyMarshaller extends InvocationMarshaller
+public class PartyMarshaller extends InvocationMarshaller<PartierObject>
     implements PartyService
 {
     /** The method id used to dispatch {@link #assignLeader} requests. */

@@ -6,9 +6,11 @@ package com.threerings.orth.guild.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.guild.client.GuildService;
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.orth.guild.client.GuildService;
 
 /**
  * Provides the implementation of the {@link GuildService} interface
@@ -19,7 +21,7 @@ import com.threerings.presents.data.InvocationMarshaller;
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
            comments="Derived from GuildService.java.")
-public class GuildMarshaller extends InvocationMarshaller
+public class GuildMarshaller extends InvocationMarshaller<ClientObject>
     implements GuildService
 {
     /** The method id used to dispatch {@link #disband} requests. */

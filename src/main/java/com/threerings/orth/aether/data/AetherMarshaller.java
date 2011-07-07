@@ -6,9 +6,10 @@ package com.threerings.orth.aether.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.aether.client.AetherService;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.orth.aether.client.AetherService;
 
 /**
  * Provides the implementation of the {@link AetherService} interface
@@ -19,7 +20,7 @@ import com.threerings.presents.data.InvocationMarshaller;
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
            comments="Derived from AetherService.java.")
-public class AetherMarshaller extends InvocationMarshaller
+public class AetherMarshaller extends InvocationMarshaller<AetherClientObject>
     implements AetherService
 {
     /** The method id used to dispatch {@link #acceptGuildInvite} requests. */

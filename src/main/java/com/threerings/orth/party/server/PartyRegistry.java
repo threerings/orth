@@ -10,7 +10,6 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 import com.threerings.presents.client.InvocationService.ResultListener;
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.InvocationException;
@@ -42,10 +41,10 @@ public class PartyRegistry
                                     PartyAuthName.class, PartyClientResolver.class));
     }
 
-    public void createParty (ClientObject caller, ResultListener rl)
+    public void createParty (AetherClientObject caller, ResultListener rl)
         throws InvocationException
     {
-        final AetherClientObject player = (AetherClientObject)caller;
+        final AetherClientObject player = caller;
 
         if (player.party != null) {
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);

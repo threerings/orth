@@ -6,12 +6,13 @@ package com.threerings.orth.chat.server;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.chat.client.TellService;
-import com.threerings.orth.data.PlayerName;
 import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
+
+import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.chat.client.TellService;
+import com.threerings.orth.data.PlayerName;
 
 /**
  * Defines the server-side of the {@link TellService}.
@@ -23,6 +24,6 @@ public interface TellProvider extends InvocationProvider
     /**
      * Handles a {@link TellService#sendTell} request.
      */
-    void sendTell (ClientObject caller, PlayerName arg1, String arg2, InvocationService.ConfirmListener arg3)
+    void sendTell (AetherClientObject caller, PlayerName arg1, String arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 }

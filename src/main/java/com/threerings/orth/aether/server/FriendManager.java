@@ -22,7 +22,6 @@ import com.threerings.util.Resulting;
 import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.client.InvocationService.ResultListener;
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.peer.server.NodeRequestsListener;
 import com.threerings.presents.server.InvocationException;
@@ -83,11 +82,11 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         });
     }
 
-    public void requestFriendship (final ClientObject caller, final int targetId,
+    public void requestFriendship (final AetherClientObject caller, final int targetId,
         InvocationListener listener)
         throws InvocationException
     {
-        AetherClientObject player = ((AetherClientObject)caller);
+        AetherClientObject player = caller;
         final PlayerName playerName = player.playerName;
 
         // anti-spam logic
@@ -116,10 +115,10 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     }
 
     public void acceptFriendshipRequest (
-        ClientObject caller, final int senderId, final InvocationListener listener)
+        AetherClientObject caller, final int senderId, final InvocationListener listener)
         throws InvocationException
     {
-        final AetherClientObject acceptingPlayer = (AetherClientObject)caller;
+        final AetherClientObject acceptingPlayer = caller;
         final PlayerName acceptingPlayerName = acceptingPlayer.playerName;
 
         // forward this acceptance to the server the other player is on

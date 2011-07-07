@@ -4,14 +4,15 @@
 
 package com.threerings.orth.aether.client;
 
-import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.presents.client.InvocationService;
+
+import com.threerings.orth.aether.data.AetherClientObject;
 
 /**
  * Requests from an Orth client to the Aether server related to their PlayerObject's friends.
  */
 public interface FriendService
-    extends InvocationService
+    extends InvocationService<AetherClientObject>
 {
     /**
      * Requests that the specified player be added to the local player's friends list. A failure

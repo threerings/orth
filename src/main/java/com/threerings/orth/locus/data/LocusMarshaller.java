@@ -6,8 +6,10 @@ package com.threerings.orth.locus.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.locus.client.LocusService;
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.orth.locus.client.LocusService;
 
 /**
  * Provides the implementation of the {@link LocusService} interface
@@ -18,7 +20,7 @@ import com.threerings.presents.data.InvocationMarshaller;
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
            comments="Derived from LocusService.java.")
-public class LocusMarshaller extends InvocationMarshaller
+public class LocusMarshaller extends InvocationMarshaller<ClientObject>
     implements LocusService
 {
     /**

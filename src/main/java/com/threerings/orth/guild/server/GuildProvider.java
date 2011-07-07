@@ -6,12 +6,13 @@ package com.threerings.orth.guild.server;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.guild.client.GuildService;
-import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
+
+import com.threerings.orth.guild.client.GuildService;
+import com.threerings.orth.guild.data.GuildRank;
 
 /**
  * Defines the server-side of the {@link GuildService}.

@@ -6,12 +6,14 @@ package com.threerings.orth.room.server;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.room.client.OrthSceneService;
-import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.whirled.client.SceneService;
+
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
-import com.threerings.whirled.client.SceneService;
+
+import com.threerings.orth.room.client.OrthSceneService;
+import com.threerings.orth.room.data.OrthLocation;
 
 /**
  * Defines the server-side of the {@link OrthSceneService}.

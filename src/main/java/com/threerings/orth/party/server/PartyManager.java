@@ -122,7 +122,7 @@ public class PartyManager
 
     // from interface PartyProvider
     public void bootPlayer (
-        ClientObject caller, int playerId, InvocationService.InvocationListener listener)
+        PartierObject caller, int playerId, InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
@@ -135,7 +135,7 @@ public class PartyManager
 
     // from interface PartyProvider
     public void assignLeader (
-        ClientObject caller, int playerId, InvocationService.InvocationListener listener)
+        PartierObject caller, int playerId, InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
@@ -161,7 +161,7 @@ public class PartyManager
 
     // from interface PartyProvider
     public void updateStatus (
-        ClientObject caller, String status, InvocationService.InvocationListener listener)
+        PartierObject caller, String status, InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
@@ -174,7 +174,7 @@ public class PartyManager
 
     // from interface PartyProvider
     public void updateRecruitment (
-        ClientObject caller, byte recruitment, InvocationService.InvocationListener listener)
+        PartierObject caller, byte recruitment, InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
@@ -183,7 +183,7 @@ public class PartyManager
 
     // from interface PartyProvider
     public void updateDisband (
-        ClientObject caller, boolean disband, InvocationService.InvocationListener listener)
+        PartierObject caller, boolean disband, InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
@@ -192,10 +192,10 @@ public class PartyManager
 
     // from interface PartyProvider
     public void invitePlayer (
-        final ClientObject caller, PlayerName invitee, InvocationService.InvocationListener listener)
+        final PartierObject caller, PlayerName invitee, InvocationService.InvocationListener listener)
         throws InvocationException
     {
-        PartierObject inviter = (PartierObject)caller;
+        PartierObject inviter = caller;
         if (_partyObj.recruitment == PartyCodes.RECRUITMENT_CLOSED &&
                 _partyObj.leaderId != inviter.getPlayerId()) {
             throw new InvocationException(PartyCodes.E_CANT_INVITE_CLOSED);
@@ -218,7 +218,7 @@ public class PartyManager
     }
 
     @Override
-    public void moveParty (ClientObject client, HostedLocus locus,
+    public void moveParty (PartierObject client, HostedLocus locus,
         InvocationService.InvocationListener listener)
         throws InvocationException
     {

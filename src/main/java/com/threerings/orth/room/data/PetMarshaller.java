@@ -6,9 +6,11 @@ package com.threerings.orth.room.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.room.client.PetService;
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.orth.room.client.PetService;
 
 /**
  * Provides the implementation of the {@link PetService} interface
@@ -19,7 +21,7 @@ import com.threerings.presents.data.InvocationMarshaller;
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
            comments="Derived from PetService.java.")
-public class PetMarshaller extends InvocationMarshaller
+public class PetMarshaller extends InvocationMarshaller<ClientObject>
     implements PetService
 {
     /** The method id used to dispatch {@link #callPet} requests. */

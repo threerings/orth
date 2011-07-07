@@ -16,7 +16,6 @@ import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.EventThread;
 import com.threerings.presents.client.InvocationService.InvocationListener;
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
@@ -59,17 +58,17 @@ public class AetherManager
     }
 
     @Override
-    public void dispatchDeferredNotifications (ClientObject caller)
+    public void dispatchDeferredNotifications (AetherClientObject caller)
     {
         _notifyMan.dispatchDeferredNotifications(caller);
     }
 
     @Override
-    public void createGuild (ClientObject caller, String name, InvocationListener lner)
+    public void createGuild (AetherClientObject caller, String name, InvocationListener lner)
         throws InvocationException
     {
         // TODO: permissions and money
-        AetherClientObject player = (AetherClientObject)caller;
+        AetherClientObject player = caller;
         if (player.guild != null) {
             throw new InvocationException(GuildCodes.E_PLAYER_ALREADY_IN_GUILD);
         }
@@ -81,11 +80,11 @@ public class AetherManager
     }
 
     @Override
-    public void acceptGuildInvite (ClientObject caller, final int senderId, int guildId,
+    public void acceptGuildInvite (AetherClientObject caller, final int senderId, int guildId,
             InvocationListener lner)
         throws InvocationException
     {
-        final AetherClientObject player = (AetherClientObject)caller;
+        final AetherClientObject player = caller;
         final int playerId = player.getPlayerId();
 
         // delegate to the possibly remote guild manager

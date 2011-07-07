@@ -8,11 +8,12 @@ import com.threerings.presents.client.InvocationService;
 
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
+import com.threerings.orth.party.data.PartierObject;
 
 /**
  * Provides services to people in a party.
  */
-public interface PartyService extends InvocationService
+public interface PartyService extends InvocationService<PartierObject>
 {
     /** Requests to boot a player from the party. */
     void bootPlayer (int playerId, InvocationListener il);

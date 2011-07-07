@@ -6,10 +6,12 @@ package com.threerings.orth.chat.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.chat.client.TellService;
-import com.threerings.orth.data.PlayerName;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.chat.client.TellService;
+import com.threerings.orth.data.PlayerName;
 
 /**
  * Provides the implementation of the {@link TellService} interface
@@ -20,7 +22,7 @@ import com.threerings.presents.data.InvocationMarshaller;
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
            comments="Derived from TellService.java.")
-public class TellMarshaller extends InvocationMarshaller
+public class TellMarshaller extends InvocationMarshaller<AetherClientObject>
     implements TellService
 {
     /** The method id used to dispatch {@link #sendTell} requests. */

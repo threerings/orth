@@ -6,10 +6,12 @@ package com.threerings.orth.party.client;
 
 import com.threerings.presents.client.InvocationService;
 
+import com.threerings.orth.aether.data.AetherClientObject;
+
 /**
  * Provides party services accessed via a world session.
  */
-public interface PartyRegistryService extends InvocationService
+public interface PartyRegistryService extends InvocationService<AetherClientObject>
 {
     /**
      * Creates a new party with the requester as its leader. Sends a PartyObjectAddress back.

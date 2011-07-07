@@ -11,7 +11,6 @@ import com.threerings.util.Resulting;
 
 import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.client.InvocationService.ResultListener;
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
@@ -34,7 +33,7 @@ public class ChatManager
     }
 
     // from TellProvider
-    public void sendTell (ClientObject caller, PlayerName tellee, String msg, ConfirmListener listener)
+    public void sendTell (AetherClientObject caller, PlayerName tellee, String msg, ConfirmListener listener)
         throws InvocationException
     {
         AetherClientObject from = _locator.forClient(caller);

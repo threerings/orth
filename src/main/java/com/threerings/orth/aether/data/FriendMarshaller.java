@@ -6,9 +6,10 @@ package com.threerings.orth.aether.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.aether.client.FriendService;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.orth.aether.client.FriendService;
 
 /**
  * Provides the implementation of the {@link FriendService} interface
@@ -19,7 +20,7 @@ import com.threerings.presents.data.InvocationMarshaller;
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
            comments="Derived from FriendService.java.")
-public class FriendMarshaller extends InvocationMarshaller
+public class FriendMarshaller extends InvocationMarshaller<AetherClientObject>
     implements FriendService
 {
     /** The method id used to dispatch {@link #acceptFriendshipRequest} requests. */

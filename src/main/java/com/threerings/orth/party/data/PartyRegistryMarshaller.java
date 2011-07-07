@@ -6,9 +6,11 @@ package com.threerings.orth.party.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.party.client.PartyRegistryService;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.party.client.PartyRegistryService;
 
 /**
  * Provides the implementation of the {@link PartyRegistryService} interface
@@ -19,7 +21,7 @@ import com.threerings.presents.data.InvocationMarshaller;
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
            comments="Derived from PartyRegistryService.java.")
-public class PartyRegistryMarshaller extends InvocationMarshaller
+public class PartyRegistryMarshaller extends InvocationMarshaller<AetherClientObject>
     implements PartyRegistryService
 {
     /** The method id used to dispatch {@link #createParty} requests. */

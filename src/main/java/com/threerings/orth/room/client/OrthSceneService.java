@@ -5,7 +5,9 @@
 package com.threerings.orth.room.client;
 
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
 
+import com.threerings.whirled.client.SceneService;
 import com.threerings.whirled.client.SceneService.SceneMoveListener;
 
 import com.threerings.orth.room.data.OrthLocation;
@@ -13,7 +15,7 @@ import com.threerings.orth.room.data.OrthLocation;
 /**
  * Extends the {@link SceneService} with a scene traversal mechanism needed by Orth.
  */
-public interface OrthSceneService extends InvocationService
+public interface OrthSceneService extends InvocationService<ClientObject>
 {
     /**
      * Requests that that this client's body be moved to the specified scene.

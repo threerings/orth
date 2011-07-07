@@ -6,10 +6,13 @@ package com.threerings.orth.room.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.room.client.OrthSceneService;
-import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.whirled.client.SceneService;
 import com.threerings.whirled.data.SceneMarshaller;
+
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.orth.room.client.OrthSceneService;
 
 /**
  * Provides the implementation of the {@link OrthSceneService} interface
@@ -20,7 +23,7 @@ import com.threerings.whirled.data.SceneMarshaller;
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
            comments="Derived from OrthSceneService.java.")
-public class OrthSceneMarshaller extends InvocationMarshaller
+public class OrthSceneMarshaller extends InvocationMarshaller<ClientObject>
     implements OrthSceneService
 {
     /** The method id used to dispatch {@link #moveTo} requests. */

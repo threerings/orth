@@ -5,11 +5,12 @@
 package com.threerings.orth.room.client;
 
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
 
 /**
  * Defines services provided for Pets in the virtual world.
  */
-public interface PetService extends InvocationService
+public interface PetService extends InvocationService<ClientObject>
 {
     /**
      * Calls the specified pet. If the pet is not loaded, it will be resolved and placed in the

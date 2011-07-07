@@ -6,9 +6,11 @@ package com.threerings.orth.chat.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.chat.client.SpeakService;
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.orth.chat.client.SpeakService;
 
 /**
  * Provides the implementation of the {@link SpeakService} interface
@@ -19,7 +21,7 @@ import com.threerings.presents.data.InvocationMarshaller;
  */
 @Generated(value={"com.threerings.presents.tools.GenServiceTask"},
            comments="Derived from SpeakService.java.")
-public class SpeakMarshaller extends InvocationMarshaller
+public class SpeakMarshaller extends InvocationMarshaller<ClientObject>
     implements SpeakService
 {
     /** The method id used to dispatch {@link #speak} requests. */
