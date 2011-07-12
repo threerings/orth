@@ -680,14 +680,6 @@ public class RoomController extends SceneController
         try {
             var keyDown :Boolean = event.type == KeyboardEvent.KEY_DOWN;
             switch (event.keyCode) {
-            case Keyboard.F4:
-                _roomView.dimAvatars(keyDown);
-                return;
-
-            case Keyboard.F5:
-                _roomView.dimFurni(keyDown);
-                return;
-
             case Keyboard.SHIFT:
                 _shiftDown = keyDown;
                 if (keyDown) {
