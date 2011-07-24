@@ -111,7 +111,10 @@ public class PartyManager
                 // Crap, we used to do this in addPlayer, but they could never actually enter the
                 // party and leave it hosed. The downside of doing it this way is that we could approve
                 // more than MAX_PLAYERS to join the party...
-                _partyObj.addToPeeps(new PartyPeep(partier.playerName, nextJoinOrder()));
+                PartyPeep peep = new PartyPeep(partier.playerName, nextJoinOrder());
+                if (!_partyObj.peeps.contains(peep)) {
+                    _partyObj.addToPeeps(peep);
+                }
             }
 
             @Override public void requestFailed (Exception cause) {
