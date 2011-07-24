@@ -28,7 +28,7 @@ public class PartyInvite extends BaseOneToOneComm
 
     override public function get fromMessage () :String
     {
-        return "You invited " + _to + " to you party";
+        return "You invited " + _to + " to your party";
     }
 
     public function get acceptMessage () :String
