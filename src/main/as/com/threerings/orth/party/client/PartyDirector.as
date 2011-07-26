@@ -235,7 +235,6 @@ public class PartyDirector
         _partyObj.destroyed.add(clearParty);
 
         _partyObj.locusChanged.add(locusChanged);
-        locusChanged(_partyObj.locus);
 
         partyJoined.dispatch();
     }
