@@ -316,7 +316,7 @@ public abstract class NodeletRegistry
 
         if (!inittedMgr.prepare(new Resulting<Void>(listener, Functions.constant(hosted)))) {
             listener.requestCompleted(hosted);
-        };
+        }
     }
 
     /**
