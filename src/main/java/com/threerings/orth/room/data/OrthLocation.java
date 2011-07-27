@@ -68,7 +68,7 @@ public class OrthLocation
             (orient == ((OrthLocation) other).orient);
     }
 
-    // documentation inherited
+    @Override
     public OrthLocation clone ()
     {
         try {
@@ -78,7 +78,7 @@ public class OrthLocation
         }
     }
 
-    // documentation inherited
+    @Override
     public boolean equals (Object other)
     {
         if (other instanceof OrthLocation) {
@@ -89,12 +89,13 @@ public class OrthLocation
         return false;
     }
 
-    // documentation inherited
+    @Override
     public int hashCode ()
     {
         return ((int) x) ^ ((int) y) ^ ((int) z);
     }
 
+    @Override
     public String toString ()
     {
         return "[MsoyLocation(" + x + ", " + y + ", " + z + ") at " +

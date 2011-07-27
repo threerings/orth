@@ -15,12 +15,14 @@ import com.threerings.io.SimpleStreamableObject;
  */
 public abstract class Nodelet extends SimpleStreamableObject
 {
+    @Override
     public boolean equals (Object other)
     {
         return other != null && other.getClass() == getClass()
             && getKey().equals(((Nodelet)other).getKey());
     }
 
+    @Override
     public int hashCode ()
     {
         return getKey().hashCode();

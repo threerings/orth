@@ -69,6 +69,7 @@ public class SocializerObject extends ActorObject
     }
 
     // from ActorObject
+    @Override
     public boolean canEnterScene (
         int sceneId, int ownerId, byte ownerType, byte accessControl, Set<Integer> friendIds)
     {

@@ -15,6 +15,7 @@ public abstract class FurniUpdate extends SceneUpdate
     /** Indicates that furniture has been added to a scene. */
     public static class Add extends FurniUpdate
     {
+        @Override
         protected void doUpdate (OrthSceneModel model) {
             model.addFurni(data);
         }
@@ -23,6 +24,7 @@ public abstract class FurniUpdate extends SceneUpdate
     /** Indicates that furniture has been removed from a scene. */
     public static class Remove extends FurniUpdate
     {
+        @Override
         protected void doUpdate (OrthSceneModel model) {
             model.removeFurni(data);
         }
@@ -31,6 +33,7 @@ public abstract class FurniUpdate extends SceneUpdate
     /** Indicates that furniture in a scene has been changed. */
     public static class Change extends FurniUpdate
     {
+        @Override
         protected void doUpdate (OrthSceneModel model) {
             model.updateFurni(data);
         }

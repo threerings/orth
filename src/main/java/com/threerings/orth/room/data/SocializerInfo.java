@@ -86,6 +86,7 @@ public class SocializerInfo extends ActorInfo
         return false;
     }
 
+    @Override
     public void updateMedia (ActorObject body)
     {
         SocializerObject sobj = (SocializerObject) body;

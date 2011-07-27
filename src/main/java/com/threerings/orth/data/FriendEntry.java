@@ -57,6 +57,7 @@ public class FriendEntry extends PlayerEntry
     }
 
     /** Copies this friend entry. */
+    @Override
     public FriendEntry clone ()
     {
         try {

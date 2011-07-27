@@ -54,9 +54,7 @@ public class SimpleEntityIdent
         return (_type.toByte() * 37) | _id;
     }
 
-    /**
-     * Generates a string representation of this instance.
-     */
+    @Override
     public String toString ()
     {
         return _type + ":" + _id;

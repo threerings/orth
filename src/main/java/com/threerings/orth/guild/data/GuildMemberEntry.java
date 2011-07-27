@@ -19,6 +19,7 @@ public class GuildMemberEntry extends PlayerEntry
         this.rank = rank;
     }
 
+    @Override
     public GuildMemberEntry clone ()
     {
         try {

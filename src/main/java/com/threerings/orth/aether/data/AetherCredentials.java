@@ -14,6 +14,7 @@ public class AetherCredentials extends UsernamePasswordCreds
     /** The machine identifier of the client, if one is known. */
     public String ident;
 
+    @Override
     protected void toString (StringBuilder buf)
     {
         super.toString(buf);

@@ -13,6 +13,7 @@ public class NodeletCredentials extends TokenCredentials
     /** The nodelet that the client is attempting to access. */
     public Nodelet nodelet;
 
+    @Override
     protected void toString (StringBuilder buf)
     {
         super.toString(buf);

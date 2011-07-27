@@ -11,6 +11,7 @@ import com.threerings.crowd.data.PlaceConfig;
  */
 public class OrthRoomConfig extends PlaceConfig
 {
+    @Override
     public String getManagerClassName ()
     {
         return "com.threerings.orth.room.server.OrthRoomManager";
