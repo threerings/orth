@@ -59,12 +59,15 @@ public class TopPanel extends Sprite
     /**
      * Creates a new top panel. Initially the size of the top panel is set to the stage size.
      * Subclasses can change this later using setSize.
+     * @param prefsLocation Where to store the preferences for this TopPanel and app. Passed here so
+     * Prefs can be initialized first off.
      * @param trackStageSize if set, then whenever the stage size changes, the top panel will set
      * its size to the new stage size.
      * @see flash.events.Event#RESIZE
      */
-    public function TopPanel (trackStageSize :Boolean = true)
+    public function TopPanel (prefsLocation :String, trackStageSize :Boolean = true)
     {
+        Prefs.init(prefsLocation);
         _trackStageSize = trackStageSize;
 
         // configure the stage
