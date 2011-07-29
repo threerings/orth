@@ -88,13 +88,6 @@ public class SocializerObject extends ActorObject
         return name;
     }
 
-    @Override // from BodyObject
-    protected void addWhoData (StringBuilder buf)
-    {
-        buf.append("mid=").append(name.getId()).append(" oid=");
-        super.addWhoData(buf);
-    }
-
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>name</code> field be set to the

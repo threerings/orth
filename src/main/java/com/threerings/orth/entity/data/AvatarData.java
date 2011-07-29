@@ -4,6 +4,7 @@
 
 package com.threerings.orth.entity.data;
 
+import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.data.MediaDesc;
 
 /**
@@ -14,6 +15,14 @@ public class AvatarData extends EntityData
 {
     public MediaDesc avatarMedia;
     public float scale;
+
+    public AvatarData (String name, MediaDesc media, EntityIdent ident, MediaDesc avatarMedia,
+        float scale)
+    {
+        super(name, media, ident);
+        this.avatarMedia = avatarMedia;
+        this.scale = scale;
+    }
 
     @Override public MediaDesc getAvatarMedia ()
     {
