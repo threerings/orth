@@ -10,7 +10,7 @@ import flash.display.Sprite;
 public interface LayeredContainer extends Snapshottable
 {
     function asSprite () :Sprite;
-    
+
     function setBaseLayer (base :DisplayObject) :void;
 
     function clearBaseLayer () :void;

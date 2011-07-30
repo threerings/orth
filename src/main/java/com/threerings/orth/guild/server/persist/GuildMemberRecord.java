@@ -3,7 +3,7 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 /**
- * 
+ *
  */
 package com.threerings.orth.guild.server.persist;
 
