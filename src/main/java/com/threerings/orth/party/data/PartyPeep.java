@@ -21,7 +21,7 @@ public class PartyPeep extends PlayerEntry
     /** Mr. Constructor. */
     public PartyPeep (VizPlayerName name, int joinOrder)
     {
-    	super(name);
+        super(name);
         this.joinOrder = joinOrder;
     }
 }

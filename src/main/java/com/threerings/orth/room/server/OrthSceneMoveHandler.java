@@ -40,7 +40,7 @@ public class OrthSceneMoveHandler extends SceneMoveHandler
     }
 
     @Override
-	protected void effectSceneMove (SceneManager scmgr)
+    protected void effectSceneMove (SceneManager scmgr)
         throws InvocationException
     {
         final OrthScene scene = (OrthScene) scmgr.getScene();
