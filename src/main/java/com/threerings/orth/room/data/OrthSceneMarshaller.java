@@ -6,11 +6,11 @@ package com.threerings.orth.room.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.whirled.client.SceneService;
-import com.threerings.whirled.data.SceneMarshaller;
-
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.whirled.client.SceneService;
+import com.threerings.whirled.data.SceneMarshaller;
 
 import com.threerings.orth.room.client.OrthSceneService;
 

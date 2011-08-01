@@ -6,15 +6,6 @@ package com.threerings.orth.room.client {
 import flash.geom.Point;
 import flash.utils.ByteArray;
 
-import com.threerings.crowd.chat.client.ChatDisplay;
-import com.threerings.crowd.chat.client.ChatSnooper;
-import com.threerings.crowd.chat.data.ChatMessage;
-import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.crowd.data.PlaceObject;
-import com.threerings.whirled.data.SceneUpdate;
-import com.threerings.whirled.spot.data.SceneLocation;
-import com.threerings.whirled.spot.data.SpotSceneObject;
-
 import com.threerings.util.Map;
 import com.threerings.util.Name;
 import com.threerings.util.ObserverList;
@@ -28,6 +19,16 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 import com.threerings.presents.dobj.SetListener;
+
+import com.threerings.crowd.chat.client.ChatDisplay;
+import com.threerings.crowd.chat.client.ChatSnooper;
+import com.threerings.crowd.chat.data.ChatMessage;
+import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.crowd.data.PlaceObject;
+
+import com.threerings.whirled.data.SceneUpdate;
+import com.threerings.whirled.spot.data.SceneLocation;
+import com.threerings.whirled.spot.data.SpotSceneObject;
 
 import com.threerings.orth.chat.client.SpeakerObserver;
 import com.threerings.orth.client.LoadingWatcher;

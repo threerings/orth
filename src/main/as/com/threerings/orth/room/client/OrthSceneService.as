@@ -4,9 +4,9 @@
 
 package com.threerings.orth.room.client {
 
-import com.threerings.whirled.client.SceneService_SceneMoveListener;
-
 import com.threerings.presents.client.InvocationService;
+
+import com.threerings.whirled.client.SceneService_SceneMoveListener;
 
 import com.threerings.orth.room.data.OrthLocation;
 

@@ -3,9 +3,9 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.room.client.updates {
-import com.threerings.whirled.data.SceneUpdate;
-
 import com.threerings.util.Log;
+
+import com.threerings.whirled.data.SceneUpdate;
 
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.SceneAttrsUpdate;

@@ -4,15 +4,16 @@
 
 package com.threerings.orth.room.client {
 
+import com.threerings.util.MessageManager;
+
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
+
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.client.persist.SceneRepository;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
-
-import com.threerings.util.MessageManager;
 
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.AbstractLocusModule;

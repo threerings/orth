@@ -5,12 +5,12 @@
 // GENERATED PREAMBLE START
 package com.threerings.orth.room.data {
 
-import com.threerings.crowd.data.OccupantInfo;
-
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.util.Joiner;
+
+import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.room.data.EntityIdent;

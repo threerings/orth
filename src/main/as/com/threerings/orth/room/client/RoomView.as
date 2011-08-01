@@ -14,10 +14,6 @@ import flash.utils.ByteArray;
 import flashx.funk.ioc.inject;
 import flashx.funk.util.isAbstract;
 
-import com.threerings.crowd.data.PlaceObject;
-import com.threerings.whirled.spot.data.Location;
-import com.threerings.whirled.spot.data.Portal;
-
 import com.threerings.util.Arrays;
 import com.threerings.util.Iterator;
 import com.threerings.util.Log;
@@ -26,6 +22,11 @@ import com.threerings.util.Maps;
 import com.threerings.util.Name;
 import com.threerings.util.NamedValueEvent;
 import com.threerings.util.ObjectMarshaller;
+
+import com.threerings.crowd.data.PlaceObject;
+
+import com.threerings.whirled.spot.data.Location;
+import com.threerings.whirled.spot.data.Portal;
 
 import com.threerings.orth.chat.client.ChatInfoProvider;
 import com.threerings.orth.chat.client.SpeakerObserver;

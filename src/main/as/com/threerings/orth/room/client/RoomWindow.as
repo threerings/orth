@@ -6,11 +6,12 @@ package com.threerings.orth.room.client {
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
-import com.threerings.crowd.data.PlaceObject;
-import com.threerings.display.FrameSprite;
-
 import com.threerings.util.MathUtil;
 import com.threerings.util.Name;
+
+import com.threerings.crowd.data.PlaceObject;
+
+import com.threerings.display.FrameSprite;
 
 import com.threerings.orth.chat.client.ChatInfoProvider;
 import com.threerings.orth.chat.client.SpeakerObserver;

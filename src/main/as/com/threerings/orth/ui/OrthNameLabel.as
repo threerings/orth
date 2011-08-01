@@ -10,6 +10,7 @@ import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 
 import com.threerings.crowd.data.OccupantInfo;
+
 import com.threerings.text.TextFieldUtil;
 
 import com.threerings.orth.room.data.SocializerInfo;

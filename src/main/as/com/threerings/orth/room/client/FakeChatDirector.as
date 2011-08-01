@@ -6,11 +6,11 @@ package com.threerings.orth.room.client {
 
 import flashx.funk.ioc.inject;
 
-import com.threerings.crowd.chat.client.ChatDirector;
-import com.threerings.crowd.data.PlaceObject;
-
 import com.threerings.util.Log;
 import com.threerings.util.MessageManager;
+
+import com.threerings.crowd.chat.client.ChatDirector;
+import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.data.OrthCodes;

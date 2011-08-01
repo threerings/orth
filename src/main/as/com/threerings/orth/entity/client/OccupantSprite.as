@@ -14,13 +14,15 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 
-import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.display.FilterUtil;
-import com.threerings.media.MediaContainer;
-
 import com.threerings.util.Arrays;
 import com.threerings.util.Comparators;
 import com.threerings.util.ValueEvent;
+
+import com.threerings.crowd.data.OccupantInfo;
+
+import com.threerings.display.FilterUtil;
+
+import com.threerings.media.MediaContainer;
 
 import com.threerings.orth.chat.client.SpeakerObserver;
 import com.threerings.orth.client.WalkAnimation;

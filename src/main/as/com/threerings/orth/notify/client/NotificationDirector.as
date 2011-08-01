@@ -5,8 +5,6 @@
 package com.threerings.orth.notify.client {
 import flashx.funk.ioc.inject;
 
-import com.threerings.crowd.client.CrowdClient;
-
 import com.threerings.util.Log;
 import com.threerings.util.Name;
 import com.threerings.util.Set;
@@ -17,6 +15,8 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
+
+import com.threerings.crowd.client.CrowdClient;
 
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.notify.data.GenericNotification;

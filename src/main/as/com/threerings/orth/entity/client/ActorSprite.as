@@ -4,11 +4,11 @@
 
 package com.threerings.orth.entity.client {
 
-import com.threerings.crowd.data.OccupantInfo;
-
 import com.threerings.util.DelayUtil;
 import com.threerings.util.Log;
 import com.threerings.util.Util;
+
+import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.room.client.RoomController;

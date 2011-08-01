@@ -6,13 +6,13 @@ package com.threerings.orth.room.server;
 
 import javax.annotation.Generated;
 
-import com.threerings.whirled.data.SceneUpdate;
-import com.threerings.whirled.spot.data.Location;
-
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
+
+import com.threerings.whirled.data.SceneUpdate;
+import com.threerings.whirled.spot.data.Location;
 
 import com.threerings.orth.room.client.OrthRoomService;
 import com.threerings.orth.room.data.EntityIdent;

@@ -6,15 +6,15 @@ package com.threerings.orth.room.client {
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
-import com.threerings.crowd.client.LocationAdapter;
-import com.threerings.crowd.client.LocationDirector;
-import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.crowd.data.PlaceObject;
-
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.ClientEvent;
+
+import com.threerings.crowd.client.LocationAdapter;
+import com.threerings.crowd.client.LocationDirector;
+import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.FurniSprite;

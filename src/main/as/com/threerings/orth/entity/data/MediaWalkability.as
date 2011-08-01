@@ -10,12 +10,12 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.geom.Point;
 
-import com.threerings.media.MediaContainer;
-
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.util.Log;
+
+import com.threerings.media.MediaContainer;
 
 import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.entity.data.Walkability;

@@ -5,12 +5,6 @@
 package com.threerings.orth.chat.client {
 import flashx.funk.ioc.inject;
 
-import com.threerings.crowd.chat.client.ChatDisplay;
-import com.threerings.crowd.chat.data.ChatCodes;
-import com.threerings.crowd.chat.data.ChatMessage;
-import com.threerings.crowd.chat.data.SystemMessage;
-import com.threerings.crowd.chat.data.UserMessage;
-
 import com.threerings.util.Log;
 import com.threerings.util.MessageManager;
 import com.threerings.util.ObserverList;
@@ -23,6 +17,12 @@ import com.threerings.presents.client.InvocationDirector;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
+
+import com.threerings.crowd.chat.client.ChatDisplay;
+import com.threerings.crowd.chat.data.ChatCodes;
+import com.threerings.crowd.chat.data.ChatMessage;
+import com.threerings.crowd.chat.data.SystemMessage;
+import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;

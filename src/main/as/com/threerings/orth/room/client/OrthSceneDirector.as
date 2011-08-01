@@ -5,15 +5,16 @@
 package com.threerings.orth.room.client {
 import flashx.funk.ioc.inject;
 
+import com.threerings.util.Log;
+
+import com.threerings.presents.client.Client;
+
 import com.threerings.crowd.client.LocationDirector;
+
 import com.threerings.whirled.client.PendingData;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.client.SceneService_SceneMoveListener;
 import com.threerings.whirled.client.persist.SceneRepository;
-
-import com.threerings.util.Log;
-
-import com.threerings.presents.client.Client;
 
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.locus.data.Locus;

@@ -6,13 +6,13 @@ package com.threerings.orth.locus.client
 {
 import flashx.funk.ioc.inject;
 
-import com.threerings.crowd.client.CrowdClient;
-
 import com.threerings.io.TypedArray;
 
 import com.threerings.util.Log;
 
 import com.threerings.presents.net.Credentials;
+
+import com.threerings.crowd.client.CrowdClient;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.client.OrthDeploymentConfig;

@@ -17,20 +17,21 @@ import flash.utils.getTimer;
 
 import flashx.funk.ioc.inject;
 
+import com.threerings.util.Log;
+import com.threerings.util.Map;
+import com.threerings.util.Maps;
+import com.threerings.util.ObjectMarshaller;
+
 import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceConfig;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.util.CrowdContext;
+
 import com.threerings.whirled.client.SceneController;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
-
-import com.threerings.util.Log;
-import com.threerings.util.Map;
-import com.threerings.util.Maps;
-import com.threerings.util.ObjectMarshaller;
 
 import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.chat.client.OrthChatDirector;

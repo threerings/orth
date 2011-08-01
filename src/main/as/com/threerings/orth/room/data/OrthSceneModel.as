@@ -5,9 +5,6 @@
 // GENERATED PREAMBLE START
 package com.threerings.orth.room.data {
 
-import com.threerings.whirled.data.SceneModel;
-import com.threerings.whirled.spot.data.Portal;
-
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.TypedArray;
@@ -18,6 +15,9 @@ import com.threerings.util.Iterator;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
 import com.threerings.util.Short;
+
+import com.threerings.whirled.data.SceneModel;
+import com.threerings.whirled.spot.data.Portal;
 
 import com.threerings.orth.room.data.DecorData;
 import com.threerings.orth.room.data.OrthLocation;

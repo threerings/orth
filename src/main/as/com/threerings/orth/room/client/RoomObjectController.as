@@ -12,16 +12,17 @@ import flash.utils.ByteArray;
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
-import com.threerings.crowd.data.OccupantInfo;
-import com.threerings.crowd.data.PlaceObject;
-import com.threerings.whirled.data.SceneUpdate;
-
 import com.threerings.util.F;
 import com.threerings.util.ObjectMarshaller;
 import com.threerings.util.ValueEvent;
 
 import com.threerings.presents.dobj.AttributeChangeAdapter;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+
+import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.crowd.data.PlaceObject;
+
+import com.threerings.whirled.data.SceneUpdate;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.client.Msgs;

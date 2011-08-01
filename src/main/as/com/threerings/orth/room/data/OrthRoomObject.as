@@ -7,8 +7,6 @@ package com.threerings.orth.room.data {
 
 import org.osflash.signals.Signal;
 
-import com.threerings.whirled.spot.data.SpotSceneObject;
-
 import com.threerings.io.ObjectInputStream;
 
 import com.threerings.util.Name;
@@ -16,6 +14,8 @@ import com.threerings.util.Name;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.DSet_Entry;
+
+import com.threerings.whirled.spot.data.SpotSceneObject;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.data.SpeakRouter;

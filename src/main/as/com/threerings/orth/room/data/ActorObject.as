@@ -7,9 +7,9 @@ package com.threerings.orth.room.data {
 
 import org.osflash.signals.Signal;
 
-import com.threerings.crowd.data.BodyObject;
-
 import com.threerings.io.ObjectInputStream;
+
+import com.threerings.crowd.data.BodyObject;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START

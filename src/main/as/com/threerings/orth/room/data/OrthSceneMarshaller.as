@@ -4,12 +4,12 @@
 
 package com.threerings.orth.room.data {
 
-import com.threerings.whirled.client.SceneService_SceneMoveListener;
-import com.threerings.whirled.data.SceneMarshaller_SceneMoveMarshaller;
-
 import com.threerings.util.Integer;
 
 import com.threerings.presents.data.InvocationMarshaller;
+
+import com.threerings.whirled.client.SceneService_SceneMoveListener;
+import com.threerings.whirled.data.SceneMarshaller_SceneMoveMarshaller;
 
 import com.threerings.orth.room.client.OrthSceneService;
 

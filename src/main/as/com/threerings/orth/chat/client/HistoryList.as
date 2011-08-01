@@ -4,10 +4,10 @@
 
 package com.threerings.orth.chat.client {
 
+import com.threerings.util.Log;
+
 import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatMessage;
-
-import com.threerings.util.Log;
 
 /**
  * Maintains chat history.

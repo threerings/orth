@@ -5,10 +5,10 @@
 // GENERATED PREAMBLE START
 package com.threerings.orth.room.data {
 
-import com.threerings.whirled.spot.data.Portal;
-
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+
+import com.threerings.whirled.spot.data.Portal;
 
 import com.threerings.orth.room.data.OrthLocation;
 

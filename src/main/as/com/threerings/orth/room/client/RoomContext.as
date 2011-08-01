@@ -7,16 +7,17 @@ package com.threerings.orth.room.client {
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
+import com.threerings.presents.client.Client;
+import com.threerings.presents.dobj.DObjectManager;
+
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.crowd.client.PlaceView;
+
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
 import com.threerings.whirled.util.WhirledContext;
-
-import com.threerings.presents.client.Client;
-import com.threerings.presents.dobj.DObjectManager;
 
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.PlayerName;

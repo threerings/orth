@@ -5,11 +5,11 @@
 // GENERATED PREAMBLE START
 package com.threerings.orth.room.data {
 
-import com.threerings.crowd.client.PlaceController;
-import com.threerings.crowd.data.PlaceConfig;
-
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+
+import com.threerings.crowd.client.PlaceController;
+import com.threerings.crowd.data.PlaceConfig;
 
 import com.threerings.orth.room.client.RoomObjectController;
 

@@ -10,10 +10,10 @@ import flash.events.MouseEvent;
 import flash.events.SecurityErrorEvent;
 import flash.geom.Point;
 
-import com.threerings.media.MediaContainer;
-
 import com.threerings.util.CommandEvent;
 import com.threerings.util.ValueEvent;
+
+import com.threerings.media.MediaContainer;
 
 import com.threerings.orth.client.LoadingWatcher;
 import com.threerings.orth.client.Msgs;

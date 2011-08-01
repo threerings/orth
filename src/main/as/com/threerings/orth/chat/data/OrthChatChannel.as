@@ -4,15 +4,15 @@
 
 package com.threerings.orth.chat.data {
 
-import com.threerings.crowd.chat.data.ChatChannel;
-import com.threerings.crowd.chat.data.ChatCodes;
-
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.util.Log;
 import com.threerings.util.Name;
 import com.threerings.util.StringUtil;
+
+import com.threerings.crowd.chat.data.ChatChannel;
+import com.threerings.crowd.chat.data.ChatCodes;
 
 import com.threerings.orth.data.ChannelName;
 import com.threerings.orth.data.PlayerName;

@@ -6,9 +6,9 @@ package com.threerings.orth.room.client.layout {
 import flash.display.DisplayObject;
 import flash.geom.Point;
 
-import com.threerings.geom.Vector3;
-
 import com.threerings.util.Log;
+
+import com.threerings.geom.Vector3;
 
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.FurniSprite;

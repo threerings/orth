@@ -6,9 +6,9 @@ package com.threerings.orth.entity.client {
 import flash.display.DisplayObject;
 import flash.geom.Rectangle;
 
-import com.threerings.crowd.data.OccupantInfo;
-
 import com.threerings.util.CommandEvent;
+
+import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.RoomController;
