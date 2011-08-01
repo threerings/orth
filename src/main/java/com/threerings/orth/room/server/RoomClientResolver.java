@@ -9,8 +9,6 @@ import com.threerings.presents.server.ClientLocal;
 
 import com.threerings.crowd.server.CrowdClientResolver;
 
-import com.threerings.orth.data.AuthName;
-import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.room.data.SocializerObject;
 
 /**
