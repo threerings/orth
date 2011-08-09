@@ -3,6 +3,8 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.party.client {
+import com.threerings.orth.client.Listeners;
+
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
@@ -12,7 +14,6 @@ import com.threerings.util.DelayUtil;
 import com.threerings.util.F;
 import com.threerings.util.Log;
 import com.threerings.util.MessageBundle;
-import com.threerings.util.Util;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
@@ -27,7 +28,6 @@ import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.locus.data.HostedLocus;
-import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyInvite;
@@ -140,22 +140,22 @@ public class PartyDirector
 
     public function assignLeader (memberId :int) :void
     {
-        _partyObj.partyService.assignLeader(memberId, _octx.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.assignLeader(memberId, Listeners.listener(OrthCodes.PARTY_MSGS));
     }
 
     public function updateStatus (status :String) :void
     {
-        _partyObj.partyService.updateStatus(status, _octx.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.updateStatus(status, Listeners.listener(OrthCodes.PARTY_MSGS));
     }
 
     public function updateRecruitment (recruitment :int) :void
     {
-        _partyObj.partyService.updateRecruitment(recruitment, _octx.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.updateRecruitment(recruitment, Listeners.listener(OrthCodes.PARTY_MSGS));
     }
 
     public function updateDisband (disband :Boolean) :void
     {
-        _partyObj.partyService.updateDisband(disband, _octx.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.updateDisband(disband, Listeners.listener(OrthCodes.PARTY_MSGS));
     }
 
     /**
@@ -163,18 +163,18 @@ public class PartyDirector
      */
     public function bootPlayer (memberId :int) :void
     {
-        _partyObj.partyService.bootPlayer(memberId, _octx.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.bootPlayer(memberId, Listeners.listener(OrthCodes.PARTY_MSGS));
     }
 
     public function moveParty (locus :HostedLocus) :void
     {
-        _partyObj.partyService.moveParty(locus, _octx.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.moveParty(locus, Listeners.listener(OrthCodes.PARTY_MSGS));
     }
 
     public function invitePlayer (invitee :PlayerName) :void
     {
         if (inParty) {
-            _partyObj.partyService.invitePlayer(invitee, _octx.listener(OrthCodes.PARTY_MSGS));
+            _partyObj.partyService.invitePlayer(invitee, Listeners.listener(OrthCodes.PARTY_MSGS));
         } else {
             createParty();
             _onJoin = F.callback(invitePlayer, invitee);
@@ -202,7 +202,7 @@ public class PartyDirector
 
         // report via locus chat that we lost our party connection
         if (cause != null) {
-            _octx.displayFeedback(OrthCodes.PARTY_MSGS,
+            Listeners.displayFeedback(OrthCodes.PARTY_MSGS,
                 MessageBundle.tcompose("e.lost_party", cause.message));
         }
     }
@@ -220,7 +220,7 @@ public class PartyDirector
             function (event :ClientEvent) :void {
                 log.warning("Failed to logon to party server", "cause", event.getCause());
                 onJoinFailed();
-                _octx.displayFeedback(OrthCodes.PARTY_MSGS, event.getCause().message);
+                Listeners.displayFeedback(OrthCodes.PARTY_MSGS, event.getCause().message);
         });
         client.addEventListener(ClientEvent.CLIENT_CONNECTION_FAILED, partyConnectFailed);
         _pctx.connect(address);

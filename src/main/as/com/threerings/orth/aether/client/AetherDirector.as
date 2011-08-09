@@ -3,6 +3,8 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.aether.client {
+import com.threerings.orth.client.Listeners;
+
 import flashx.funk.ioc.inject;
 
 import com.threerings.presents.client.Client;
@@ -25,12 +27,12 @@ public class AetherDirector
 
     public function acceptGuildInvite (senderId :int, guildId :int) :void
     {
-        _psvc.acceptGuildInvite(senderId, guildId, _octx.listener());
+        _psvc.acceptGuildInvite(senderId, guildId, Listeners.listener());
     }
 
     public function createGuild (name :String) :void
     {
-        _psvc.createGuild(name, _octx.listener());
+        _psvc.createGuild(name, Listeners.listener());
     }
 
     protected var _psvc :AetherService;

@@ -3,6 +3,8 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.room.client {
+import com.threerings.orth.client.Listeners;
+
 import flash.display.Stage;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
@@ -255,7 +257,7 @@ public class RoomObjectController extends RoomController
      */
     protected function updateRoom (update :SceneUpdate) :void
     {
-        _roomObj.orthRoomService.updateRoom(update, _octx.listener(OrthCodes.EDITING_MSGS));
+        _roomObj.orthRoomService.updateRoom(update, Listeners.listener(OrthCodes.EDITING_MSGS));
     }
 
     override protected function requestAvatarMove (newLoc :OrthLocation) :void
@@ -289,7 +291,7 @@ public class RoomObjectController extends RoomController
     {
         var svc :PetService = (_rctx.getClient().requireService(PetService) as PetService);
         throttle(info.getEntityIdent(), svc.sendChat,
-            info.bodyOid, _scene.getId(), msg, _octx.confirmListener());
+            info.bodyOid, _scene.getId(), msg, Listeners.confirmListener());
     }
 
     // documentation inherited
@@ -308,7 +310,7 @@ public class RoomObjectController extends RoomController
 
         // ship the update request off to the server
         throttle(ident, _roomObj.orthRoomService.updateMemory,
-            ident, key, data, _octx.resultListener(resultHandler));
+            ident, key, data, Listeners.resultListener(resultHandler));
     }
 
     /**

@@ -4,6 +4,8 @@
 
 package com.threerings.orth.guild.client
 {
+import com.threerings.orth.client.Listeners;
+
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
@@ -59,27 +61,27 @@ public class GuildDirector extends NodeletDirector
             log.warning("Weird, inviting someone to non-guild?");
             return;
         }
-        _guildObj.guildService.sendInvite(playerId, _octx.listener());
+        _guildObj.guildService.sendInvite(playerId, Listeners.listener());
     }
 
     public function leave () :void
     {
-        _guildObj.guildService.leave(_octx.listener());
+        _guildObj.guildService.leave(Listeners.listener());
     }
 
     public function disband () :void
     {
-        _guildObj.guildService.disband(_octx.listener());
+        _guildObj.guildService.disband(Listeners.listener());
     }
 
     public function remove (playerId :int) :void
     {
-        _guildObj.guildService.remove(playerId, _octx.listener());
+        _guildObj.guildService.remove(playerId, Listeners.listener());
     }
 
     public function setRank (playerId :int, rank :GuildRank) :void
     {
-        _guildObj.guildService.updateRank(playerId, rank, _octx.listener());
+        _guildObj.guildService.updateRank(playerId, rank, Listeners.listener());
     }
 
     // from NodeletDirector

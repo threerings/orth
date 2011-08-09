@@ -3,6 +3,8 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.locus.client {
+import com.threerings.orth.client.Listeners;
+
 import flash.display.Sprite;
 import flash.utils.getQualifiedClassName;
 
@@ -175,7 +177,7 @@ public class LocusDirector extends BasicDirector
         _materializing = null;
 
         log.warning("Place resolution request failed", "cause", cause);
-        _octx.displayFeedback(OrthCodes.WORLD_MSGS, cause);
+        Listeners.displayFeedback(OrthCodes.WORLD_MSGS, cause);
     }
 
     // from Java LocusService_PlaceResolutionListener
@@ -226,7 +228,7 @@ public class LocusDirector extends BasicDirector
 
         _connecting = null;
         _connected = null;
-        _octx.displayFeedback(OrthCodes.WORLD_MSGS, "Connection failed");
+        Listeners.displayFeedback(OrthCodes.WORLD_MSGS, "Connection failed");
     }
 
     protected function gotoConnecting (..._) :void

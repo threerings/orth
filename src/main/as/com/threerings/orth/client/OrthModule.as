@@ -63,6 +63,8 @@ public class OrthModule extends BindingModule
 
     public function init () :void
     {
+        Listeners.init(this);
+
         var ctx :OrthContext = getInstance(OrthContext);
 
         didInit();

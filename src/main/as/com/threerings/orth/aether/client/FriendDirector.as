@@ -3,13 +3,14 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.aether.client {
+import com.threerings.orth.client.Listeners;
+
 import flashx.funk.ioc.inject;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 
 import com.threerings.orth.aether.data.FriendshipAcceptance;
-import com.threerings.orth.aether.data.FriendshipRequest;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.data.FriendEntry;
@@ -30,12 +31,12 @@ public class FriendDirector
 
     public function inviteFriend (invitee :PlayerName) :void
     {
-        _fsvc.requestFriendship(invitee.id, _octx.listener());
+        _fsvc.requestFriendship(invitee.id, Listeners.listener());
     }
 
     public function acceptFriendInvite (friendId :int) :void
     {
-        _fsvc.acceptFriendshipRequest(friendId, _octx.listener());
+        _fsvc.acceptFriendshipRequest(friendId, Listeners.listener());
     }
 
     protected var _fsvc :FriendService;

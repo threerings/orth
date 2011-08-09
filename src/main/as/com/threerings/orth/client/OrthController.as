@@ -138,7 +138,8 @@ public class OrthController extends Controller
             return true;
         }
 
-        _octx.displayFeedback(OrthCodes.GENERAL_MSGS, MessageBundle.tcompose("e.no_navigate", url));
+        Listeners.displayFeedback(OrthCodes.GENERAL_MSGS,
+            MessageBundle.tcompose("e.no_navigate", url));
 
         return false;
     }
