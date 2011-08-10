@@ -11,6 +11,8 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.MapBinder;
 
 import com.threerings.presents.peer.server.PeerManager;
+import com.threerings.whirled.server.SceneRegistry;
+import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
 import com.threerings.crowd.server.CrowdServer;
 import com.threerings.orth.aether.server.AetherManager;
@@ -43,6 +45,7 @@ public class OrthServer extends CrowdServer
 
             // room
             bind(MemoryRepository.class).to(AmnesiacMemorySupply.class);
+            bind(SceneRegistry.class).to(SpotSceneRegistry.class);
 
             // presents
             bind(PeerManager.class).to(OrthPeerManager.class);
