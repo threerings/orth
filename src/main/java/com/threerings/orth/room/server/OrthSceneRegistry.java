@@ -18,6 +18,7 @@ import com.threerings.orth.locus.server.LocusMaterializer;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.server.DSetNodeletHoster;
+import com.threerings.orth.nodelet.server.HostNodeletRequest;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.room.data.ActorObject;
@@ -46,23 +47,40 @@ public class OrthSceneRegistry
     {
         invmgr.registerProvider(this, OrthSceneMarshaller.class, SceneCodes.WHIRLED_GROUP);
 
-        // a little inline hoster that just uses the scene registry when the job of hosting falls
+        // a little inline hoster that just uses the scene registry once the job of hosting falls
         // to the local peer
         injector.injectMembers(_hoster = new DSetNodeletHoster(
                 OrthNodeObject.HOSTED_ROOMS, RoomLocus.class) {
-            @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
-                    final ResultListener<HostedNodelet> listener) {
-                final HostedNodelet room = new HostedNodelet(nodelet, _depConf.getRoomHost(),
-                        _depConf.getRoomPorts());
-                _sceneReg.resolveScene(((RoomLocus) nodelet).sceneId, new ResolutionListener() {
-                    @Override public void sceneWasResolved (SceneManager scmgr) {
-                        listener.requestCompleted(room);
-                    }
-                    @Override public void sceneFailedToResolve (int sceneId, Exception reason) {
-                        listener.requestFailed(reason);
-                    }
-                });
-            }});
+            @Override protected HostNodeletRequest createHostingRequest (
+                AuthName caller, Nodelet nodelet) {
+                return new OrthSceneHoster(caller, OrthNodeObject.HOSTED_ROOMS, nodelet);
+            }
+        });
+    }
+
+    protected static class OrthSceneHoster extends HostNodeletRequest
+    {
+        public OrthSceneHoster (AuthName user, String dsetName, Nodelet nodelet)
+        {
+            super(user, dsetName, nodelet);
+        }
+
+        @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
+            final ResultListener<HostedNodelet> listener) {
+            final HostedNodelet room = new HostedNodelet(nodelet, _depConf.getRoomHost(),
+                _depConf.getRoomPorts());
+            _sceneReg.resolveScene(((RoomLocus) nodelet).sceneId, new ResolutionListener() {
+                @Override public void sceneWasResolved (SceneManager scmgr) {
+                    listener.requestCompleted(room);
+                }
+                @Override public void sceneFailedToResolve (int sceneId, Exception reason) {
+                    listener.requestFailed(reason);
+                }
+            });
+        }
+
+        @Inject protected transient OrthDeploymentConfig _depConf;
+        @Inject protected transient SpotSceneRegistry _sceneReg;
     }
 
     // from interface OrthSceneProvider
@@ -102,7 +120,6 @@ public class OrthSceneRegistry
     // our dependencies
     @Inject protected Injector _injector;
     @Inject protected OrthPeerManager _peerMan;
-    @Inject protected OrthDeploymentConfig _depConf;
     @Inject protected LocationManager _locman;
     @Inject protected SpotSceneRegistry _sceneReg;
 }

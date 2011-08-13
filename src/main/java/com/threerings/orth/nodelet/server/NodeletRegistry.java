@@ -167,6 +167,27 @@ public abstract class NodeletRegistry
         _hoster.resolveHosting(caller, nodelet, listener);
     }
 
+    public void registerManager (Nodelet nodelet, NodeletManager inittedMgr)
+    {
+        _mgrs.put(nodelet, inittedMgr);
+    }
+
+    public String getHost () {
+        return _host;
+    }
+    public int[] getPorts () {
+        return _ports;
+    }
+    public Class<? extends NodeletManager> getManagerClass () {
+        return _managerClass;
+    }
+    public String getServiceField () {
+        return _serviceField;
+    }
+    public Class<? extends InvocationMarshaller> getServiceClass () {
+        return _serviceClass;
+    }
+
     /**
      * Invokes the given request on the remote nodelet of the given id and notifies the listener of
      * the result when the request has completed. A failure is reported if the nodelet is not
@@ -279,59 +300,99 @@ public abstract class NodeletRegistry
         return (nname.getDiscriminator().equals(_nodeletClass.getSimpleName()));
     }
 
-    protected void hostLocally (AuthName caller, Nodelet nodelet,
-            ResultListener<HostedNodelet> listener)
-    {
-        HostedNodelet hosted = new HostedNodelet(nodelet, _host, _ports);
-
-        DObject registeredObj = null;
-        NodeletManager inittedMgr = null;
-        try {
-            DObject obj = createSharedObject(nodelet);
-            NodeletManager mgr = _injector.getInstance(_managerClass);
-            if (_serviceField != null) {
-                obj.getClass().getField(_serviceField).set(obj,
-                    _invMgr.registerProvider((InvocationProvider)mgr, _serviceClass));
-            }
-            registeredObj = _omgr.registerObject(obj);
-            mgr.init(this, hosted, obj);
-            mgr.didInit();
-            inittedMgr = mgr;
-
-        } catch (Exception e) {
-            log.warning("Problem hosting nodelet", e);
-            listener.requestFailed(e);
-
-            // kill the object and manager we created
-            if (inittedMgr != null) {
-                inittedMgr.shutdown();
-            }
-            if (registeredObj != null) {
-                _omgr.destroyObject(registeredObj.getOid());
-            }
-            return;
-        }
-
-        _mgrs.put(nodelet, inittedMgr);
-
-        if (!inittedMgr.prepare(new Resulting<Void>(listener, Functions.constant(hosted)))) {
-            listener.requestCompleted(hosted);
-        }
-    }
 
     /**
      * Overrides the default "local only" hosting strategy with one that will negotiate the
      * publishing of nodelets using the peer manager's locking system.
      */
-    protected void setPeeredHostingStrategy (String dsetName, Injector injector)
+    protected void setPeeredHostingStrategy (final String dsetName, Injector injector)
     {
         // cannot use the member injector because we want this to be callable from subclass ctor
         injector.injectMembers(_hoster = new DSetNodeletHoster(dsetName, _nodeletClass) {
-            @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
-                    ResultListener<HostedNodelet> listener) {
-                NodeletRegistry.this.hostLocally(caller, nodelet, listener);
+            @Override
+            protected HostNodeletRequest createHostingRequest (AuthName caller, Nodelet nodelet) {
+                return new NodeletRegistryRequest(caller, nodelet, dsetName,
+                    NodeletRegistry.this.getClass().getCanonicalName());
             }
         });
+    }
+
+    /**
+     * The {@link NodeletRegistry} specific implementation of {@link HostNodeletRequest}.
+     *
+     * Note that we can't send along _host and _ports and such values as part of the request --
+     * the whole point is to have those values come from the node that is actually going to
+     * do the hosting!
+     *
+     * Instead, we send along the name of the {@link NodeletRegistry} subclass itself, and use
+     * the guice injector to acquire a singleton reference to it on the remote node. From there
+     * we can then query all the properties we requireI hope this is kosher.
+     */
+    protected static class NodeletRegistryRequest extends HostNodeletRequest
+    {
+        public NodeletRegistryRequest (
+            AuthName caller, Nodelet nodelet, String dSetName, String className)
+        {
+            super(caller, dSetName, nodelet);
+            _className = className;
+        }
+
+        protected void hostLocally (AuthName caller, Nodelet nodelet,
+                ResultListener<HostedNodelet> listener)
+        {
+            // find the NodeletRegistry subclass
+            Class<?> regClass;
+            try {
+                regClass = Class.forName(_className);
+            } catch (ClassNotFoundException e) {
+                log.warning("Eek! Could not find NodeletRegistry subclass", "className", _className);
+                throw new IllegalArgumentException(e);
+            }
+            // acquire a reference to it as a singleton
+            NodeletRegistry reg = (NodeletRegistry) _injector.getInstance(regClass);
+
+            HostedNodelet hosted = new HostedNodelet(nodelet, reg.getHost(), reg.getPorts());
+
+            DObject registeredObj = null;
+            NodeletManager inittedMgr = null;
+            try {
+                DObject obj = reg.createSharedObject(nodelet);
+                NodeletManager mgr = _injector.getInstance(reg.getManagerClass());
+                if (reg.getServiceField() != null) {
+                    obj.getClass().getField(reg.getServiceField()).set(obj,
+                        _invMgr.registerProvider((InvocationProvider)mgr, reg.getServiceClass()));
+                }
+                registeredObj = _omgr.registerObject(obj);
+                mgr.init(reg, hosted, obj);
+                mgr.didInit();
+                inittedMgr = mgr;
+
+            } catch (Exception e) {
+                log.warning("Problem hosting nodelet", e);
+                listener.requestFailed(e);
+
+                // kill the object and manager we created
+                if (inittedMgr != null) {
+                    inittedMgr.shutdown();
+                }
+                if (registeredObj != null) {
+                    _omgr.destroyObject(registeredObj.getOid());
+                }
+                return;
+            }
+
+            reg.registerManager(nodelet, inittedMgr);
+
+            if (!inittedMgr.prepare(new Resulting<Void>(listener, Functions.constant(hosted)))) {
+                listener.requestCompleted(hosted);
+            }
+        }
+
+        protected String _className;
+        
+        @Inject protected transient Injector _injector;
+        @Inject protected transient PresentsDObjectMgr _omgr;
+        @Inject protected transient InvocationManager _invMgr;
     }
 
     /**
@@ -414,7 +475,7 @@ public abstract class NodeletRegistry
      * Creates the DObject corresponding to this nodelet. This is called early in the hosting
      * process and should just created the correct type of object.
      */
-    protected abstract DObject createSharedObject (Nodelet nodelet);
+    public abstract DObject createSharedObject (Nodelet nodelet);
 
     protected Class<? extends Nodelet> _nodeletClass;
     protected NodeletHoster _hoster;

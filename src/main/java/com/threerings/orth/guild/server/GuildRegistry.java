@@ -89,7 +89,7 @@ public class GuildRegistry extends NodeletRegistry
     }
 
     @Override // from NodeletRegistry
-    protected DObject createSharedObject (Nodelet nodelet)
+    public DObject createSharedObject (Nodelet nodelet)
     {
         return new GuildObject();
     }
