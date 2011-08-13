@@ -33,6 +33,12 @@ public class OrthNodeObject extends NodeObject
     /** Contains the guilds hosted by this server. */
     public DSet<HostedNodelet> hostedGuilds = DSet.newDSet();
 
+    /** The default implementation of a node's load is simply its client count. */
+    public float calculateLoad ()
+    {
+        return clients.size();
+    }
+
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the specified entry be added to the

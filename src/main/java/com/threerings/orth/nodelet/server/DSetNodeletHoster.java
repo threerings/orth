@@ -4,6 +4,9 @@
 
 package com.threerings.orth.nodelet.server;
 
+import java.util.List;
+
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 
@@ -17,6 +20,7 @@ import com.threerings.orth.peer.server.OrthPeerManager;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.peer.data.NodeObject;
 
 /**
  * Implement hosting for nodelets, assuming said hosting is governed by a DSet in
@@ -51,11 +55,20 @@ public abstract class DSetNodeletHoster
             return;
         }
 
-        // ORTH TODO: At this point we know the nodelet needs to be hosted. For now, we will
-        // resolve it locally, but what should really happen here is that the nodes should
-        // all be queried to see which peer is the least loaded and the request should
-        // be punted to there.
-        String peer = _peerMan.getNodeObject().nodeName;
+        // our load balancing strategy is very simple; we define the load of a peer as
+        // the number of clients currently connected to it. while all sorts of more complex
+        // expressions can be imagined, this one is probably about as good as any other in
+        // capturing the general business of a server -- at least until such a day as we get
+
+        float minLoad = -1;
+        String chosenPeer = null;
+        for (NodeObject obj : _peerMan.getNodeObjects()) {
+            float load = ((OrthNodeObject) obj).calculateLoad();
+            if (load < minLoad || minLoad < 0) {
+                chosenPeer = obj.nodeName;
+                minLoad = load;
+            }
+        }
 
         // a simple listener forwarder - curse the narya/samskivert confusion!
         InvocationService.ResultListener peerListener = new InvocationService.ResultListener() {
@@ -67,7 +80,7 @@ public abstract class DSetNodeletHoster
             }
         };
 
-        _peerMan.invokeNodeRequest(peer, createHostingRequest(
+        _peerMan.invokeNodeRequest(chosenPeer, createHostingRequest(
             (AuthName) caller.username, nodelet), peerListener);
     }
 
