@@ -71,7 +71,7 @@ public abstract class DSetNodeletHoster
             (AuthName) caller.username, nodelet), peerListener);
     }
 
-    /** Overridden to instantiate the appropriate concrete {@link HostNodeletRequest}. *//
+    /** Overridden to instantiate the appropriate concrete {@link HostNodeletRequest}. */
     abstract protected HostNodeletRequest createHostingRequest (AuthName caller, Nodelet nodelet);
 
     /** The name of the dset governing our hosted nodelet instances in the OrthNodeObject. */
