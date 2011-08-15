@@ -172,19 +172,28 @@ public abstract class NodeletRegistry
         _mgrs.put(nodelet, inittedMgr);
     }
 
-    public String getHost () {
+    public String getHost ()
+    {
         return _host;
     }
-    public int[] getPorts () {
+
+    public int[] getPorts ()
+    {
         return _ports;
     }
-    public Class<? extends NodeletManager> getManagerClass () {
+
+    public Class<? extends NodeletManager> getManagerClass ()
+    {
         return _managerClass;
     }
-    public String getServiceField () {
+
+    public String getServiceField ()
+    {
         return _serviceField;
     }
-    public Class<? extends InvocationMarshaller> getServiceClass () {
+
+    public Class<? extends InvocationMarshaller<?>> getServiceClass ()
+    {
         return _serviceClass;
     }
 
@@ -389,7 +398,7 @@ public abstract class NodeletRegistry
         }
 
         protected String _className;
-        
+
         @Inject protected transient Injector _injector;
         @Inject protected transient PresentsDObjectMgr _omgr;
         @Inject protected transient InvocationManager _invMgr;
