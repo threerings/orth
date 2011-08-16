@@ -54,6 +54,7 @@ public class AetherClientResolver extends CrowdClientResolver
      * Resolves the members for an aether player. This is called on the invoker thread.
      */
     protected void resolvePlayer (final AetherClientObject plobj)
+        throws Exception
     {
         int playerId = ((AuthName)_username).getId();
 
