@@ -3,8 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.party.client {
-import com.threerings.orth.client.Listeners;
-
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
@@ -22,6 +20,7 @@ import com.threerings.presents.dobj.ObjectAccessError;
 import com.threerings.presents.util.SafeSubscriber;
 
 import com.threerings.orth.aether.client.AetherClient;
+import com.threerings.orth.client.Listeners;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.data.OrthCodes;

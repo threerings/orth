@@ -3,8 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.room.client {
-import com.threerings.orth.client.Listeners;
-
 import flash.display.Stage;
 import flash.events.Event;
 import flash.events.KeyboardEvent;
@@ -27,6 +25,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.whirled.data.SceneUpdate;
 
 import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.client.Listeners;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthCodes;

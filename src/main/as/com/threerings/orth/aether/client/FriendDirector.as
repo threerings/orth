@@ -3,14 +3,13 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.aether.client {
-import com.threerings.orth.client.Listeners;
-
 import flashx.funk.ioc.inject;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 
 import com.threerings.orth.aether.data.FriendshipAcceptance;
+import com.threerings.orth.client.Listeners;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.data.FriendEntry;

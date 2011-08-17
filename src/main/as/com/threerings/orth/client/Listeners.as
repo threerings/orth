@@ -3,18 +3,20 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.client {
-import com.threerings.orth.chat.client.OrthChatDirector;
-import com.threerings.orth.data.OrthCodes;
+import flashx.funk.ioc.Module;
+
+import com.threerings.util.Log;
+import com.threerings.util.MessageBundle;
+
 import com.threerings.presents.client.ConfirmAdapter;
 import com.threerings.presents.client.InvocationAdapter;
 import com.threerings.presents.client.InvocationService_ConfirmListener;
 import com.threerings.presents.client.InvocationService_InvocationListener;
 import com.threerings.presents.client.InvocationService_ResultListener;
 import com.threerings.presents.client.ResultAdapter;
-import com.threerings.util.Log;
-import com.threerings.util.MessageBundle;
 
-import flashx.funk.ioc.Module;
+import com.threerings.orth.chat.client.OrthChatDirector;
+import com.threerings.orth.data.OrthCodes;
 
 public class Listeners
 {

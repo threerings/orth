@@ -4,8 +4,6 @@
 
 package com.threerings.orth.guild.client
 {
-import com.threerings.orth.client.Listeners;
-
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
@@ -17,6 +15,7 @@ import com.threerings.presents.dobj.ChangeListener;
 import com.threerings.presents.dobj.DObject;
 
 import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.client.Listeners;
 import com.threerings.orth.guild.data.GuildMemberEntry;
 import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;

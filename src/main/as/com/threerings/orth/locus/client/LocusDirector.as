@@ -3,8 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.locus.client {
-import com.threerings.orth.client.Listeners;
-
 import flash.display.Sprite;
 import flash.utils.getQualifiedClassName;
 
@@ -25,6 +23,7 @@ import com.threerings.presents.client.ClientAdapter;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.client.ClientObserver;
 
+import com.threerings.orth.client.Listeners;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthCodes;
