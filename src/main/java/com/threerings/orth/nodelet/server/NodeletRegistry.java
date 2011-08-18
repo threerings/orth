@@ -346,7 +346,7 @@ public abstract class NodeletRegistry
             _className = className;
         }
 
-        protected void hostLocally (AuthName caller, Nodelet nodelet,
+        @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
                 ResultListener<HostedNodelet> listener)
         {
             // find the NodeletRegistry subclass
