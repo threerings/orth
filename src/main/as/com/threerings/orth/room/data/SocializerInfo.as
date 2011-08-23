@@ -36,15 +36,6 @@ public class SocializerInfo extends ActorInfo
     }
 
     /**
-     * Update the scale. This method currently only exists on the actionscript side.  We update the
-     * scale immediately when someone is futzing with the scale in the avatar viewer.
-     */
-    public function setScale (scale :Number) :void
-    {
-        _scale = scale;
-    }
-
-    /**
      * Returns true if this player is away, false otherwise.
      */
     public function isAway () :Boolean
