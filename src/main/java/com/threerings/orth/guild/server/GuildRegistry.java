@@ -11,9 +11,10 @@ import com.google.inject.Singleton;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.util.Resulting;
+
 import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.dobj.DObject;
-import com.threerings.util.Resulting;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.guild.data.GuildMarshaller;

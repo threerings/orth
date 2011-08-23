@@ -11,13 +11,14 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.InvocationManager;
+
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusMarshaller;
-import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.server.InvocationManager;
 
 @Singleton
 public class LocusManager

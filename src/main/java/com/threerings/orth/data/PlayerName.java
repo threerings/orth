@@ -8,8 +8,9 @@ import java.util.Comparator;
 
 import com.google.common.primitives.Ints;
 
-import com.threerings.presents.dobj.DSet;
 import com.threerings.util.Name;
+
+import com.threerings.presents.dobj.DSet;
 
 /**
  * Extends {link Name} with a unique identifier useful for persistence.

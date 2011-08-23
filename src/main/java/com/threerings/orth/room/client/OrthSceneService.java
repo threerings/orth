@@ -7,8 +7,8 @@ package com.threerings.orth.room.client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 
-import com.threerings.whirled.client.SceneService;
 import com.threerings.whirled.client.SceneService.SceneMoveListener;
+import com.threerings.whirled.client.SceneService;
 
 import com.threerings.orth.room.data.OrthLocation;
 

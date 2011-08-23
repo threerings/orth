@@ -10,7 +10,20 @@ import com.google.inject.Singleton;
 
 import com.samskivert.util.ResultListener;
 
+import com.threerings.util.Resulting;
+
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.InvocationManager;
+
 import com.threerings.crowd.server.LocationManager;
+
+import com.threerings.whirled.client.SceneService.SceneMoveListener;
+import com.threerings.whirled.data.SceneCodes;
+import com.threerings.whirled.server.SceneManager;
+import com.threerings.whirled.server.SceneRegistry.ResolutionListener;
+import com.threerings.whirled.spot.server.SpotSceneRegistry;
+
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.locus.data.HostedLocus;
@@ -26,15 +39,6 @@ import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.server.OrthDeploymentConfig;
-import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.server.InvocationException;
-import com.threerings.presents.server.InvocationManager;
-import com.threerings.util.Resulting;
-import com.threerings.whirled.client.SceneService.SceneMoveListener;
-import com.threerings.whirled.data.SceneCodes;
-import com.threerings.whirled.server.SceneManager;
-import com.threerings.whirled.server.SceneRegistry.ResolutionListener;
-import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
 /**
  * Handles some custom Orth scene traversal business.

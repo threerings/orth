@@ -6,12 +6,13 @@ package com.threerings.orth.aether.server;
 
 import com.google.inject.Inject;
 
-import com.threerings.orth.aether.data.AetherAuthName;
-import com.threerings.orth.aether.data.AetherCodes;
-import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerManager.NodeRequest;
+
+import com.threerings.orth.aether.data.AetherAuthName;
+import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.aether.data.AetherCodes;
 
 /**
  * Request that applies to a node that a specified aether player is on and invokes the subclass'

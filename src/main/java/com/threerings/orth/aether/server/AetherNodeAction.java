@@ -6,10 +6,11 @@ package com.threerings.orth.aether.server;
 
 import com.google.inject.Inject;
 
-import com.threerings.orth.aether.data.AetherAuthName;
-import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerManager;
+
+import com.threerings.orth.aether.data.AetherAuthName;
+import com.threerings.orth.aether.data.AetherClientObject;
 
 import static com.threerings.orth.Log.log;
 

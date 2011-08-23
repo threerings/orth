@@ -8,9 +8,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-import com.threerings.crowd.server.CrowdClientResolver;
-import com.threerings.presents.data.ClientObject;
 import com.threerings.util.Resulting;
+
+import com.threerings.presents.data.ClientObject;
+
+import com.threerings.crowd.server.CrowdClientResolver;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;

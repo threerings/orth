@@ -4,11 +4,12 @@
 
 package com.threerings.orth.chat.server;
 
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.server.InvocationSender;
+
 import com.threerings.orth.chat.client.TellDecoder;
 import com.threerings.orth.chat.client.TellReceiver;
 import com.threerings.orth.chat.data.Tell;
-import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.server.InvocationSender;
 
 /**
  * Used to issue notifications to a {@link TellReceiver} instance on a

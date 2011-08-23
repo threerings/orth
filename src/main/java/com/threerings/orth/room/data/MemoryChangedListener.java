@@ -6,7 +6,6 @@ package com.threerings.orth.room.data;
 
 import com.threerings.presents.dobj.ChangeListener;
 
-
 public interface MemoryChangedListener extends ChangeListener
 {
     /**

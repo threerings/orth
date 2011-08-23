@@ -5,8 +5,10 @@
 package com.threerings.orth.data;
 
 import com.threerings.io.SimpleStreamableObject;
-import com.threerings.orth.aether.data.VizPlayerName;
+
 import com.threerings.presents.dobj.DSet;
+
+import com.threerings.orth.aether.data.VizPlayerName;
 
 public class PlayerEntry extends SimpleStreamableObject
     implements /* IsSerializable, */ DSet.Entry, Cloneable

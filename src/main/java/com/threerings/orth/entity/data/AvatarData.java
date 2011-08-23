@@ -4,8 +4,8 @@
 
 package com.threerings.orth.entity.data;
 
-import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.data.MediaDesc;
+import com.threerings.orth.room.data.EntityIdent;
 
 /**
  * A basic streamable implementation of {@link Avatar}.

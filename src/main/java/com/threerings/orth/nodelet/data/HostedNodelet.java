@@ -4,8 +4,9 @@
 
 package com.threerings.orth.nodelet.data;
 
-import com.threerings.orth.data.ServerAddress;
 import com.threerings.presents.dobj.DSet;
+
+import com.threerings.orth.data.ServerAddress;
 
 public final class HostedNodelet extends ServerAddress
     implements DSet.Entry

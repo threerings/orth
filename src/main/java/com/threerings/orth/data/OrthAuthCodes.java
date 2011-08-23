@@ -4,8 +4,9 @@
 
 package com.threerings.orth.data;
 
-import com.threerings.presents.data.AuthCodes;
 import com.threerings.util.ActionScript;
+
+import com.threerings.presents.data.AuthCodes;
 
 /**
  * Additional authorization codes for Orth.

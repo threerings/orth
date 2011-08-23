@@ -4,8 +4,6 @@
 
 package com.threerings.orth.room.data;
 
-import static com.threerings.orth.Log.log;
-
 import java.util.Iterator;
 import java.util.Map;
 
@@ -16,6 +14,8 @@ import com.samskivert.util.ListUtil;
 
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.spot.data.Portal;
+
+import static com.threerings.orth.Log.log;
 
 /**
  *

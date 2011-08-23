@@ -3,6 +3,8 @@
 
 package com.threerings.orth.nodelet.server;
 
+import com.google.inject.Inject;
+
 import com.samskivert.util.ResultListener;
 
 import com.threerings.presents.client.InvocationService;
@@ -14,8 +16,6 @@ import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
-
-import com.google.inject.Inject;
 
 import static com.threerings.orth.Log.log;
 

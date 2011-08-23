@@ -5,6 +5,7 @@
 package com.threerings.orth.room.data;
 
 import java.util.Set;
+
 import javax.annotation.Generated;
 
 import com.threerings.crowd.data.BodyObject;

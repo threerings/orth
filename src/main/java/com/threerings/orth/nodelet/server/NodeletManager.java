@@ -4,8 +4,9 @@
 
 package com.threerings.orth.nodelet.server;
 
-import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.presents.dobj.DObject;
+
+import com.threerings.orth.nodelet.data.HostedNodelet;
 
 /**
  * Manages a nodelet DObject.

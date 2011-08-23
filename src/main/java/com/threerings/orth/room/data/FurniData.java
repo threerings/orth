@@ -5,7 +5,9 @@
 package com.threerings.orth.room.data;
 
 import com.samskivert.util.ObjectUtil;
+
 import com.threerings.io.SimpleStreamableObject;
+
 import com.threerings.orth.data.MediaDesc;
 
 /** The streamable definition of a piece of furniture in a room. */

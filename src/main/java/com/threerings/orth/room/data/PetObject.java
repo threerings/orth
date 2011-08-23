@@ -9,6 +9,7 @@ import javax.annotation.Generated;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.Place;
 import com.threerings.crowd.data.PlaceObject;
+
 import com.threerings.orth.entity.data.Pet;
 
 /**

@@ -16,12 +16,14 @@ import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.util.Resulting;
+
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.data.NodeObject;
-import com.threerings.presents.peer.server.PeerNode;
 import com.threerings.presents.peer.server.PeerManager;
+import com.threerings.presents.peer.server.PeerNode;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsSession;
 
@@ -35,7 +37,6 @@ import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.room.data.RoomLocus;
-import com.threerings.util.Resulting;
 
 import static com.threerings.orth.Log.log;
 

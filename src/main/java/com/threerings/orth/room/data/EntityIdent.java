@@ -5,6 +5,7 @@
 package com.threerings.orth.room.data;
 
 import com.threerings.io.Streamable;
+
 import com.threerings.util.ActionScript;
 
 /**

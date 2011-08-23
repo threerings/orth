@@ -9,15 +9,15 @@ import com.google.inject.Inject;
 
 import com.samskivert.util.ResultListener;
 
+import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.peer.data.NodeObject;
+
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
-
-import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.peer.data.NodeObject;
 
 /**
  * Implement hosting for nodelets, assuming said hosting is governed by a DSet in

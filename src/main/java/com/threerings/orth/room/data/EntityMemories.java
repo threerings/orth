@@ -7,9 +7,9 @@ package com.threerings.orth.room.data;
 import java.util.Arrays;
 import java.util.Map;
 
-import com.threerings.presents.dobj.DSet;
-
 import com.threerings.util.StreamableHashMap;
+
+import com.threerings.presents.dobj.DSet;
 
 /**
  * Holds the memories of an entity in a room.

@@ -5,6 +5,7 @@
 package com.threerings.orth.room.data;
 
 import com.samskivert.util.ByteEnum;
+
 import com.threerings.io.Streamable;
 
 public interface FurniAction extends ByteEnum, Streamable

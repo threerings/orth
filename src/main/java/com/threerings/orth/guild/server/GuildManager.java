@@ -18,8 +18,8 @@ import com.samskivert.util.ResultListener;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.MainInvoker;
-import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService.InvocationListener;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;

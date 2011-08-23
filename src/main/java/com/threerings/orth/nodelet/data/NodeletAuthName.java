@@ -6,8 +6,9 @@ package com.threerings.orth.nodelet.data;
 
 import com.google.common.collect.ComparisonChain;
 
-import com.threerings.orth.data.AuthName;
 import com.threerings.util.Name;
+
+import com.threerings.orth.data.AuthName;
 
 /**
  * Names for clients authenticating for nodelet access. Note this class is final. This is because

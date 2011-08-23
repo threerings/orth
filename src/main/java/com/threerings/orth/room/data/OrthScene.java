@@ -7,6 +7,7 @@ package com.threerings.orth.room.data;
 import java.util.Iterator;
 
 import com.threerings.crowd.data.PlaceConfig;
+
 import com.threerings.whirled.data.SceneImpl;
 import com.threerings.whirled.data.SceneModel;
 import com.threerings.whirled.spot.data.Portal;

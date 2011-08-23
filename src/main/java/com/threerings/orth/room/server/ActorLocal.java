@@ -5,6 +5,7 @@
 package com.threerings.orth.room.server;
 
 import com.threerings.crowd.server.BodyLocal;
+
 import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;

@@ -18,8 +18,8 @@ import com.samskivert.util.ObjectUtil;
 
 import com.samskivert.jdbc.RepositoryUnit;
 
-import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService.InvocationListener;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;

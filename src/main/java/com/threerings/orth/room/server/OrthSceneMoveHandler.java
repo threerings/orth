@@ -8,18 +8,22 @@
 package com.threerings.orth.room.server;
 
 import com.google.inject.Inject;
+
+import com.threerings.presents.server.InvocationException;
+
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.server.LocationManager;
+
+import com.threerings.whirled.client.SceneMoveAdapter;
+import com.threerings.whirled.client.SceneService.SceneMoveListener;
+import com.threerings.whirled.server.SceneManager;
+import com.threerings.whirled.server.SceneMoveHandler;
+
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.PetObject;
 import com.threerings.orth.room.data.SocializerObject;
-import com.threerings.presents.server.InvocationException;
-import com.threerings.whirled.client.SceneMoveAdapter;
-import com.threerings.whirled.client.SceneService.SceneMoveListener;
-import com.threerings.whirled.server.SceneManager;
-import com.threerings.whirled.server.SceneMoveHandler;
 
 import static com.threerings.orth.Log.log;
 

@@ -6,9 +6,10 @@ package com.threerings.orth.guild.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.guild.client.GuildService;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
+
+import com.threerings.orth.guild.client.GuildService;
 
 /**
  * Object corresponding to a player guild (a.k.a. universe in the emerging design). Guilds are

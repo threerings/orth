@@ -5,6 +5,7 @@
 package com.threerings.orth.notify.data;
 
 import com.threerings.io.SimpleStreamableObject;
+
 import com.threerings.util.Name;
 
 /**

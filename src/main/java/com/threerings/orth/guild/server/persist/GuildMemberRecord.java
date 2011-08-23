@@ -10,6 +10,7 @@ package com.threerings.orth.guild.server.persist;
 import java.util.Date;
 
 import com.google.common.base.Function;
+
 import com.threerings.orth.guild.data.GuildRank;
 
 /**

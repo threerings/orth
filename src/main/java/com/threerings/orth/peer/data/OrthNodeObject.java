@@ -6,10 +6,12 @@ package com.threerings.orth.peer.data;
 
 import javax.annotation.Generated;
 
-import com.threerings.orth.nodelet.data.HostedNodelet;
+import com.threerings.util.ActionScript;
+
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.peer.data.NodeObject;
-import com.threerings.util.ActionScript;
+
+import com.threerings.orth.nodelet.data.HostedNodelet;
 
 /**
  * Maintains information on an Orth peer server.

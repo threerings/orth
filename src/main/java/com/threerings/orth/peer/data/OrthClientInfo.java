@@ -7,6 +7,7 @@ package com.threerings.orth.peer.data;
 import com.threerings.presents.peer.data.ClientInfo;
 
 import com.threerings.orth.data.PlayerName;
+
 /**
  * Contains information on a player logged into one of our peer servers.
  */
