@@ -11,9 +11,9 @@ import com.threerings.io.ObjectInputStream;
 
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.guild.client.GuildService;
+import com.threerings.orth.guild.data.GuildMemberEntry;
 
 // GENERATED PREAMBLE END
 
@@ -27,21 +27,19 @@ public class GuildObject extends DObject
 // GENERATED STREAMING START
     public var name :String;
 
-    public var members :DSet;
+    public var members :DSet; /* of */ GuildMemberEntry;
 
     public var guildService :GuildService;
 
     public var nameChanged :Signal = new Signal(String, String);
     public var membersChanged :Signal = new Signal(DSet, DSet);
-    public var membersEntryAdded :Signal = new Signal(DSet_Entry);
-    public var membersEntryRemoved :Signal = new Signal(DSet_Entry);
-    public var membersEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
+    public var membersEntryAdded :Signal = new Signal(GuildMemberEntry);
+    public var membersEntryRemoved :Signal = new Signal(GuildMemberEntry);
+    public var membersEntryUpdated :Signal = new Signal(GuildMemberEntry, GuildMemberEntry);
     public var guildServiceChanged :Signal = new Signal(GuildService, GuildService);
 
     public static const NAME :String = "name";
-
     public static const MEMBERS :String = "members";
-
     public static const GUILD_SERVICE :String = "guildService";
 
     override public function readObject (ins :ObjectInputStream) :void

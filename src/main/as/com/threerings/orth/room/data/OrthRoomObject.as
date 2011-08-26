@@ -13,12 +13,12 @@ import com.threerings.util.Name;
 
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.whirled.spot.data.SpotSceneObject;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.data.SpeakRouter;
+import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
 
 // GENERATED PREAMBLE END
@@ -41,7 +41,7 @@ public class OrthRoomObject extends SpotSceneObject
 
     public var orthSpeakService :SpeakMarshaller;
 
-    public var memories :DSet;
+    public var memories :DSet; /* of */ EntityMemories;
 
     public var nameChanged :Signal = new Signal(String, String);
     public var ownerChanged :Signal = new Signal(Name, Name);
@@ -49,20 +49,15 @@ public class OrthRoomObject extends SpotSceneObject
     public var orthRoomServiceChanged :Signal = new Signal(OrthRoomMarshaller, OrthRoomMarshaller);
     public var orthSpeakServiceChanged :Signal = new Signal(SpeakMarshaller, SpeakMarshaller);
     public var memoriesChanged :Signal = new Signal(DSet, DSet);
-    public var memoriesEntryAdded :Signal = new Signal(DSet_Entry);
-    public var memoriesEntryRemoved :Signal = new Signal(DSet_Entry);
-    public var memoriesEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
+    public var memoriesEntryAdded :Signal = new Signal(EntityMemories);
+    public var memoriesEntryRemoved :Signal = new Signal(EntityMemories);
+    public var memoriesEntryUpdated :Signal = new Signal(EntityMemories, EntityMemories);
 
     public static const NAME :String = "name";
-
     public static const OWNER :String = "owner";
-
     public static const ACCESS_CONTROL :String = "accessControl";
-
     public static const ORTH_ROOM_SERVICE :String = "orthRoomService";
-
     public static const ORTH_SPEAK_SERVICE :String = "orthSpeakService";
-
     public static const MEMORIES :String = "memories";
 
     override public function readObject (ins :ObjectInputStream) :void

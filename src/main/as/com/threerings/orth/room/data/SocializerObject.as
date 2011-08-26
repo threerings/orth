@@ -10,7 +10,6 @@ import org.osflash.signals.Signal;
 import com.threerings.io.ObjectInputStream;
 
 import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.entity.data.Avatar;
@@ -28,24 +27,21 @@ public class SocializerObject extends ActorObject
 
     public var avatar :Avatar;
 
-    public var avatarCache :DSet;
+    public var avatarCache :DSet; /* of */ Avatar;
 
     public var walkingId :int;
 
     public var nameChanged :Signal = new Signal(PlayerName, PlayerName);
     public var avatarChanged :Signal = new Signal(Avatar, Avatar);
     public var avatarCacheChanged :Signal = new Signal(DSet, DSet);
-    public var avatarCacheEntryAdded :Signal = new Signal(DSet_Entry);
-    public var avatarCacheEntryRemoved :Signal = new Signal(DSet_Entry);
-    public var avatarCacheEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
+    public var avatarCacheEntryAdded :Signal = new Signal(Avatar);
+    public var avatarCacheEntryRemoved :Signal = new Signal(Avatar);
+    public var avatarCacheEntryUpdated :Signal = new Signal(Avatar, Avatar);
     public var walkingIdChanged :Signal = new Signal(int, int);
 
     public static const NAME :String = "name";
-
     public static const AVATAR :String = "avatar";
-
     public static const AVATAR_CACHE :String = "avatarCache";
-
     public static const WALKING_ID :String = "walkingId";
 
     override public function readObject (ins :ObjectInputStream) :void

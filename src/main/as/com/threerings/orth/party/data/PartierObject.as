@@ -29,7 +29,6 @@ public class PartierObject extends ClientObject
     public var partyOidChanged :Signal = new Signal(int, int);
 
     public static const PLAYER_NAME :String = "playerName";
-
     public static const PARTY_OID :String = "partyOid";
 
     override public function readObject (ins :ObjectInputStream) :void

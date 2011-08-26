@@ -14,10 +14,10 @@ import com.threerings.util.Util;
 
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.data.PartyMarshaller;
+import com.threerings.orth.party.data.PartyPeep;
 
 // GENERATED PREAMBLE END
 
@@ -28,7 +28,7 @@ public class PartyObject extends DObject
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
-    public var peeps :DSet;
+    public var peeps :DSet; /* of */ PartyPeep;
 
     public var leaderId :int;
 
@@ -45,9 +45,9 @@ public class PartyObject extends DObject
     public var locus :HostedLocus;
 
     public var peepsChanged :Signal = new Signal(DSet, DSet);
-    public var peepsEntryAdded :Signal = new Signal(DSet_Entry);
-    public var peepsEntryRemoved :Signal = new Signal(DSet_Entry);
-    public var peepsEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
+    public var peepsEntryAdded :Signal = new Signal(PartyPeep);
+    public var peepsEntryRemoved :Signal = new Signal(PartyPeep);
+    public var peepsEntryUpdated :Signal = new Signal(PartyPeep, PartyPeep);
     public var leaderIdChanged :Signal = new Signal(int, int);
     public var statusChanged :Signal = new Signal(String, String);
     public var statusTypeChanged :Signal = new Signal(int, int);
@@ -57,19 +57,12 @@ public class PartyObject extends DObject
     public var locusChanged :Signal = new Signal(HostedLocus, HostedLocus);
 
     public static const PEEPS :String = "peeps";
-
     public static const LEADER_ID :String = "leaderId";
-
     public static const STATUS :String = "status";
-
     public static const STATUS_TYPE :String = "statusType";
-
     public static const RECRUITMENT :String = "recruitment";
-
     public static const DISBAND :String = "disband";
-
     public static const PARTY_SERVICE :String = "partyService";
-
     public static const LOCUS :String = "locus";
 
     override public function readObject (ins :ObjectInputStream) :void

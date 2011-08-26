@@ -4,11 +4,10 @@
 
 package com.threerings.orth.comms.data;
 
-import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.server.InvocationSender;
-
 import com.threerings.orth.comms.data.CommDecoder;
 import com.threerings.orth.comms.data.CommReceiver;
+import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.server.InvocationSender;
 
 /**
  * Used to issue notifications to a {@link CommReceiver} instance on a

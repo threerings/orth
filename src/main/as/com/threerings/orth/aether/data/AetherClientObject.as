@@ -11,9 +11,9 @@ import com.threerings.io.ObjectInputStream;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.aether.data.VizPlayerName;
+import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.PartyObjectAddress;
@@ -28,7 +28,7 @@ public class AetherClientObject extends ClientObject
 // GENERATED STREAMING START
     public var playerName :VizPlayerName;
 
-    public var friends :DSet;
+    public var friends :DSet; /* of */ FriendEntry;
 
     public var party :PartyObjectAddress;
 
@@ -38,21 +38,17 @@ public class AetherClientObject extends ClientObject
 
     public var playerNameChanged :Signal = new Signal(VizPlayerName, VizPlayerName);
     public var friendsChanged :Signal = new Signal(DSet, DSet);
-    public var friendsEntryAdded :Signal = new Signal(DSet_Entry);
-    public var friendsEntryRemoved :Signal = new Signal(DSet_Entry);
-    public var friendsEntryUpdated :Signal = new Signal(DSet_Entry, DSet_Entry);
+    public var friendsEntryAdded :Signal = new Signal(FriendEntry);
+    public var friendsEntryRemoved :Signal = new Signal(FriendEntry);
+    public var friendsEntryUpdated :Signal = new Signal(FriendEntry, FriendEntry);
     public var partyChanged :Signal = new Signal(PartyObjectAddress, PartyObjectAddress);
     public var guildIdChanged :Signal = new Signal(int, int);
     public var guildChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
 
     public static const PLAYER_NAME :String = "playerName";
-
     public static const FRIENDS :String = "friends";
-
     public static const PARTY :String = "party";
-
     public static const GUILD_ID :String = "guildId";
-
     public static const GUILD :String = "guild";
 
     override public function readObject (ins :ObjectInputStream) :void

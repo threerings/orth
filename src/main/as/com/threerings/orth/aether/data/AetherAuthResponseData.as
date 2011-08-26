@@ -30,9 +30,7 @@ public class AetherAuthResponseData extends AuthResponseData
     public var warningChanged :Signal = new Signal(String, String);
 
     public static const SESSION_TOKEN :String = "sessionToken";
-
     public static const IDENT :String = "ident";
-
     public static const WARNING :String = "warning";
 
     override public function readObject (ins :ObjectInputStream) :void
