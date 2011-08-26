@@ -4,8 +4,9 @@
 
 package com.threerings.orth.chat.client;
 
-import com.threerings.orth.chat.data.Tell;
 import com.threerings.presents.client.InvocationDecoder;
+
+import com.threerings.orth.chat.data.Tell;
 
 /**
  * Dispatches calls to a {@link TellReceiver} instance.
