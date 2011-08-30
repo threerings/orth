@@ -41,7 +41,7 @@ import com.threerings.orth.room.data.RoomLocus;
 import static com.threerings.orth.Log.log;
 
 /**
- * Extends CrowdPeerManager with functionality needed for Orth and its intended uses.
+ * Extends PeerManager with functionality needed for Orth and its intended uses.
  */
 public abstract class OrthPeerManager extends PeerManager
 {
@@ -193,7 +193,7 @@ public abstract class OrthPeerManager extends PeerManager
         return new OrthClientInfo();
     }
 
-    @Override // from CrowdPeerManager
+    @Override // from PeerManager
     protected void initClientInfo (PresentsSession client, ClientInfo info)
     {
         super.initClientInfo(client, info);

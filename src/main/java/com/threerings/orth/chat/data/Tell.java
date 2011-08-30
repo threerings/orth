@@ -12,6 +12,12 @@ public class Tell extends BaseOneToOneComm
     public Tell (PlayerName from, PlayerName to, String message)
     {
         super(from, to);
+        _message = message;
+    }
+
+    public String getMessage ()
+    {
+        return _message;
     }
 
     protected String _message;
