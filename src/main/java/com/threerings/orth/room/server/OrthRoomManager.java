@@ -67,11 +67,6 @@ import static com.threerings.orth.Log.log;
 public class OrthRoomManager extends SpotSceneManager
     implements OrthRoomProvider, SpeakProvider
 {
-    public OrthRoomManager ()
-    {
-        super();
-    }
-
     @Override
     public void sendSpriteMessage (ClientObject caller, EntityIdent item,
         String name, byte[] arg, boolean isAction)
