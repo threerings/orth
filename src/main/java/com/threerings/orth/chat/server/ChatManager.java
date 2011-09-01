@@ -21,6 +21,7 @@ import com.threerings.presents.server.InvocationManager;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.aether.server.AetherSessionLocator;
+import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.chat.data.TellMarshaller;
 import com.threerings.orth.data.OrthCodes;
@@ -71,6 +72,21 @@ public class ChatManager
     public void addChatMonitor (ChatMonitor monitor)
     {
         _monitors.add(monitor);
+    }
+
+    public boolean check (final Speak speak)
+    {
+        final AtomicBoolean allow = new AtomicBoolean(true);
+        _monitors.apply(new ObserverList.ObserverOp<ChatMonitor> () {
+            @Override public boolean apply (ChatMonitor mon) {
+                if (!mon.check(speak)) {
+                    log.warning("Speak disallowed", "monitor", mon, "speak", speak);
+                    allow.set(false);
+                }
+                return true;
+            }
+        });
+        return allow.get();
     }
 
     @Inject protected AetherSessionLocator _locator;

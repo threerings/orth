@@ -16,6 +16,16 @@ public class Speak extends SimpleStreamableObject
         _message = message;
     }
 
+    public String getMessage ()
+    {
+        return _message;
+    }
+
+    public PlayerName getFrom ()
+    {
+        return _from;
+    }
+
     protected PlayerName _from;
     protected String _message;
 }

@@ -43,6 +43,7 @@ import com.threerings.whirled.spot.server.SpotSceneManager;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakMarshaller;
+import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.room.client.OrthRoomService;
@@ -89,7 +90,10 @@ public class OrthRoomManager extends SpotSceneManager
     {
         PlayerName name = ((SocializerObject)caller).name;
 
-        _plobj.postMessage(OrthChatCodes.SPEAK_MSG_TYPE, new Speak(name, msg));
+        Speak speak = new Speak(name, msg);
+        if (_chatMan.check(speak)) {
+            _plobj.postMessage(OrthChatCodes.SPEAK_MSG_TYPE, speak);
+        }
     }
 
     @Override
@@ -505,6 +509,7 @@ public class OrthRoomManager extends SpotSceneManager
     /** Listens to the room object. */
     protected RoomListener _roomListener = new RoomListener();
 
+    @Inject protected ChatManager _chatMan;
     @Inject protected MemoryRepository _memSupply;
     @Inject protected PeerManager _peerMgr;
 }
