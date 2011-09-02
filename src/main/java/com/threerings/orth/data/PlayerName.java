@@ -41,7 +41,7 @@ public class PlayerName extends Name implements DSet.Entry
         return m1.toString().toLowerCase().compareTo(m2.toString().toLowerCase());
     }
 
-    /** Create a new Orthname with the given display name and id. */
+    /** Create a new PlayerName with the given display name and id. */
     public PlayerName (String name, int id)
     {
         super(name);
