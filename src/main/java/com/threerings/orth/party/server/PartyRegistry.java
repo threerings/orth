@@ -23,6 +23,8 @@ import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCredentials;
 import com.threerings.orth.party.data.PartyRegistryMarshaller;
 
+import static com.threerings.orth.Log.log;
+
 /**
  * The PartyRegistry creates PartyManagers on a single node. Once a user is in a party, they talk
  * to their PartyManager via their party connection.
@@ -47,6 +49,7 @@ public class PartyRegistry
         final AetherClientObject player = caller;
 
         if (player.party != null) {
+            log.warning("Player tried to create party while already in one", "player", player);
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
         PartyManager mgr = _injector.createChildInjector(new AbstractModule() {
