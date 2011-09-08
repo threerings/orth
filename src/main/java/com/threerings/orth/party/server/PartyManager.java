@@ -47,7 +47,7 @@ public class PartyManager
     public final PartyObjectAddress addr;
 
     @Inject public PartyManager (RootDObjectManager omgr, InvocationManager invMgr,
-            OrthDeploymentConfig conf, AetherClientObject creator)
+        OrthDeploymentConfig conf, AetherClientObject creator)
     {
         _omgr = omgr;
         _invMgr = invMgr;
@@ -95,7 +95,8 @@ public class PartyManager
         _partyObj.invitedIds.remove(playerId);
 
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(playerId) {
-            @Override protected void execute (AetherClientObject player, InvocationService.ResultListener listener) {
+            @Override protected void execute (AetherClientObject player,
+                InvocationService.ResultListener listener) {
                 player.setParty(closureAddr);
                 listener.requestProcessed(null);
             }
@@ -109,8 +110,8 @@ public class PartyManager
                 });
 
                 // Crap, we used to do this in addPlayer, but they could never actually enter the
-                // party and leave it hosed. The downside of doing it this way is that we could approve
-                // more than MAX_PLAYERS to join the party...
+                // party and leave it hosed. The downside of doing it this way is that we could
+                // approve more than MAX_PLAYERS to join the party...
                 PartyPeep peep = new PartyPeep(partier.playerName, nextJoinOrder());
                 if (!_partyObj.peeps.contains(peep)) {
                     _partyObj.addToPeeps(peep);
@@ -124,8 +125,8 @@ public class PartyManager
     }
 
     // from interface PartyProvider
-    public void bootPlayer (
-        PartierObject caller, int playerId, InvocationService.InvocationListener listener)
+    public void bootPlayer (PartierObject caller, int playerId,
+        InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
@@ -137,8 +138,8 @@ public class PartyManager
     }
 
     // from interface PartyProvider
-    public void assignLeader (
-        PartierObject caller, int playerId, InvocationService.InvocationListener listener)
+    public void assignLeader ( PartierObject caller, int playerId,
+        InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
@@ -163,8 +164,8 @@ public class PartyManager
     }
 
     // from interface PartyProvider
-    public void updateStatus (
-        PartierObject caller, String status, InvocationService.InvocationListener listener)
+    public void updateStatus (PartierObject caller, String status,
+        InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
@@ -176,8 +177,8 @@ public class PartyManager
     }
 
     // from interface PartyProvider
-    public void updateRecruitment (
-        PartierObject caller, byte recruitment, InvocationService.InvocationListener listener)
+    public void updateRecruitment (PartierObject caller, byte recruitment,
+        InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
@@ -185,8 +186,8 @@ public class PartyManager
     }
 
     // from interface PartyProvider
-    public void updateDisband (
-        PartierObject caller, boolean disband, InvocationService.InvocationListener listener)
+    public void updateDisband (PartierObject caller, boolean disband,
+        InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
@@ -194,13 +195,13 @@ public class PartyManager
     }
 
     // from interface PartyProvider
-    public void invitePlayer (
-        final PartierObject caller, PlayerName invitee, InvocationService.InvocationListener listener)
+    public void invitePlayer (final PartierObject caller, PlayerName invitee,
+        InvocationService.InvocationListener listener)
         throws InvocationException
     {
         PartierObject inviter = caller;
         if (_partyObj.recruitment == PartyCodes.RECRUITMENT_CLOSED &&
-                _partyObj.leaderId != inviter.getPlayerId()) {
+            _partyObj.leaderId != inviter.getPlayerId()) {
             throw new InvocationException(PartyCodes.E_CANT_INVITE_CLOSED);
         }
         // add them to the invited set
@@ -208,7 +209,8 @@ public class PartyManager
 
         final PartyInvite invite = new PartyInvite(inviter.playerName.toOrthName(), invitee, addr);
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(invitee.getId()) {
-            @Override protected void execute (AetherClientObject plobj, InvocationService.ResultListener listener) {
+            @Override protected void execute (AetherClientObject plobj,
+                InvocationService.ResultListener listener) {
                 CommSender.receiveComm(plobj, invite);
                 listener.requestProcessed(null);
             }
@@ -271,7 +273,8 @@ public class PartyManager
     protected void endPartierSession (int playerId)
     {
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(playerId) {
-            @Override protected void execute (AetherClientObject pl, InvocationService.ResultListener rl) {
+            @Override protected void execute (AetherClientObject pl,
+                InvocationService.ResultListener rl) {
                 pl.setParty(null);
                 rl.requestProcessed(null);
             }

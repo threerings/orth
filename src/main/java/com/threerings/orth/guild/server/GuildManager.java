@@ -63,17 +63,17 @@ public class GuildManager extends NodeletManager
                 // get the data from the db
                 guild = _guildRepo.getGuild(_guildId);
                 Map<Integer, GuildMemberRecord> gmrecs = Maps.uniqueIndex(
-                        _guildRepo.getGuildMembers(_guildId),
-                        GuildMemberRecord.TO_PLAYER_ID);
+                    _guildRepo.getGuildMembers(_guildId),
+                    GuildMemberRecord.TO_PLAYER_ID);
                 final Map<Integer, String> playerNames =
-                        _playerRepo.resolvePlayerNames(gmrecs.keySet());
+                    _playerRepo.resolvePlayerNames(gmrecs.keySet());
 
                 // transform to entries
                 return Iterables.transform(gmrecs.values(),
-                        new Function<GuildMemberRecord, GuildMemberEntry>() {
+                    new Function<GuildMemberRecord, GuildMemberEntry>() {
                     public GuildMemberEntry apply (GuildMemberRecord gmrec) {
                         VizPlayerName vpn = new VizPlayerName(playerNames.get(gmrec.getPlayerId()),
-                                gmrec.getPlayerId(), null);
+                            gmrec.getPlayerId(), null);
                         return new GuildMemberEntry(vpn, gmrec.getRank());
                     }
                 });
@@ -132,7 +132,7 @@ public class GuildManager extends NodeletManager
         GuildMemberEntry officer = requireMember(caller);
         if (officer.rank != GuildRank.OFFICER) {
             log.warning("Non officer attempting to update rank", "caller", officer,
-                    "targetId", targetId);
+                "targetId", targetId);
             throw new InvocationException(E_INTERNAL_ERROR);
         }
         final GuildMemberEntry target = lookupMember(targetId);
@@ -166,7 +166,7 @@ public class GuildManager extends NodeletManager
         GuildMemberEntry officer = requireMember(caller);
         if (officer.rank != GuildRank.OFFICER) {
             log.warning("Non officer attempting to remove member", "caller", officer,
-                    "targetId", targetId);
+                "targetId", targetId);
             throw new InvocationException(E_INTERNAL_ERROR);
         }
         final GuildMemberEntry target = lookupMember(targetId);
@@ -268,7 +268,7 @@ public class GuildManager extends NodeletManager
             return;
         }
         final GuildMemberEntry newEntry = GuildMemberEntry.fromOrthName(clinfo.orthName,
-                GuildRank.MEMBER);
+            GuildRank.MEMBER);
         // woo! add 'em to the guild
         _invoker.postUnit(new Resulting<Void>("add guild member", rl) {
             @Override public Void invokePersist () throws Exception {
@@ -336,7 +336,7 @@ public class GuildManager extends NodeletManager
     protected Map<Integer, InviteThrottle> _invitations;
 
     protected static final Predicate<GuildMemberEntry> IS_OFFICER =
-            new Predicate<GuildMemberEntry> () {
+        new Predicate<GuildMemberEntry> () {
         @Override public boolean apply (GuildMemberEntry entry) {
             return entry.isOfficer();
         }

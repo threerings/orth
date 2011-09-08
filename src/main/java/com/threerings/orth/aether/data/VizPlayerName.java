@@ -31,7 +31,7 @@ public class VizPlayerName extends PlayerName
         return _photo;
     }
 
-    public PlayerName toOrthName()
+    public PlayerName toOrthName ()
     {
         return new PlayerName(toString(), getId());
     }

@@ -23,8 +23,7 @@ public interface OrthRoomService extends InvocationService<ClientObject>
      * @param arg the data
      * @param isAction if the message is a "action".
      */
-    void sendSpriteMessage (EntityIdent item, String name,
-        byte[] arg, boolean isAction);
+    void sendSpriteMessage (EntityIdent item, String name, byte[] arg, boolean isAction);
 
     /**
      * Requests to send a sprite signal.
@@ -55,8 +54,7 @@ public interface OrthRoomService extends InvocationService<ClientObject>
      * Issues a request to update the memory of the specified entity (which is associated with a
      * particular item).
      */
-    void updateMemory (EntityIdent ident, String key,
-        byte[] newValue, ResultListener listener);
+    void updateMemory (EntityIdent ident, String key, byte[] newValue, ResultListener listener);
 
     /**
      * Issues a request to update the current scene location of the specified item. This is called
