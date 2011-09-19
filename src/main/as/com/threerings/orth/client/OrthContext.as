@@ -24,14 +24,17 @@ import com.threerings.orth.locus.client.LocusModule;
  * and its associated distributed object manager along with all the directors responsible for
  * the services that take place over the Aether link.
  *
- * Whenever the player is in a locus location, this context additionally returns a non-null
- * reference to a {@link LocusContext}, which is the nexus of the entirely distinct other half
+ * <p>Whenever the player is in a locus location, this context additionally returns a non-null
+ * reference to a <code>LocusContext</code>, which is the nexus of the entirely distinct other half
  * of the client's workings: a separate client connected to its own server and distributed object
- * system and, consequently, a different set of directors to take advantage of it all.
+ * system and, consequently, a different set of directors to take advantage of it all.</p>
  *
- * Never confuse the two contexts. They represent different systems. This one is primary, in that
- * there is always an {@link OrthContext} and always an {@link AetherClient}, but only some of
- * the time is that true for {@link LocusContext} and {@link LocusClient}.
+ * <p>Never confuse the two contexts. They represent different systems. This one is primary, in that
+ * there is always an <code>OrthContext</code> and always an <code>AetherClient</code>, but only
+ * some of the time is that true for <code>LocusContext</code> and <code>LocusClient</code>.</p>
+ * @see LocusContext
+ * @see LocusClient
+ * @see AetherClient
  */
 public class OrthContext
     implements PresentsContext
@@ -65,9 +68,10 @@ public class OrthContext
     }
 
     /**
-     * Instantiate a new {@link AbstractLocusModule} and use it to fire up a {@link LocusContext}
-     * of the correct concrete subtype, which in turn will instantiate all the necessary
-     * infrastructure.
+     * Instantiate a new <code>AbstractLocusModule</code> and use it to fire up a
+     * <code>LocusContext</code> of the correct concrete subtype, which in turn will instantiate
+     * all the necessary infrastructure.
+     * @see AbstractLocusModule
      */
     public function setupLocus (moduleClass :Class) :LocusContext
     {
@@ -80,7 +84,8 @@ public class OrthContext
     }
 
     /**
-     * Returns our connected {@link PlayerObject}, or null if we are not logged on.
+     * Returns our connected <code>AetherClientObject</code>, or null if we are not logged on.
+     * @see AetherClientObject
      */
     public function get aetherObject () :AetherClientObject
     {
