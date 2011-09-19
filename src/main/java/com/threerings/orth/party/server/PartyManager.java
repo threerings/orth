@@ -53,17 +53,33 @@ public class PartyManager
         _invMgr = invMgr;
 
         // set up the new PartyObject
-        _partyObj = new PartyObject();
-        _partyObj.leaderId = creator.getPlayerId();
-        _partyObj.disband = true;
-        _partyObj.setAccessController(new PartyAccessController(this));
-        _partyObj.partyService = _invMgr.registerProvider(this, PartyMarshaller.class);
+        _partyObj = createPartyObject();
+        configurePartyObject(creator);
         _omgr.registerObject(_partyObj);
 
         addr = new PartyObjectAddress(conf.getPartyHost(), conf.getPartyPort(), _partyObj.getOid());
 
         // "invite" the creator
         _partyObj.invitedIds.add(_partyObj.leaderId);
+    }
+
+    /**
+     * Create the PartyObject for this party.
+     */
+    protected PartyObject createPartyObject ()
+    {
+        return new PartyObject();
+    }
+
+    /**
+     * Fill in info on the party object.
+     */
+    protected void configurePartyObject (AetherClientObject creator)
+    {
+        _partyObj.leaderId = creator.getPlayerId();
+        _partyObj.disband = true;
+        _partyObj.setAccessController(new PartyAccessController(this));
+        _partyObj.partyService = _invMgr.registerProvider(this, PartyMarshaller.class);
     }
 
     /**
