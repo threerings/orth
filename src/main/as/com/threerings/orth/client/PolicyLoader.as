@@ -36,9 +36,11 @@ public class PolicyLoader
 
         if (!_loadedPolicies[hostname]) {
             var url :String = "xmlsocket://" + hostname + ":" + _socketPolicyPort;
-            log.info("Loading security policy", "url", url);
-            Security.loadPolicyFile(url);
-            _loadedPolicies[hostname] = true;
+            if (_socketPolicyPort != 843) {
+                log.info("Loading security policy", "url", url);
+                Security.loadPolicyFile(url);
+                _loadedPolicies[hostname] = true;
+            }
         }
     }
 
