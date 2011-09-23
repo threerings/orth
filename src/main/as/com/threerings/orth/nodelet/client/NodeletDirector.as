@@ -6,8 +6,6 @@ package com.threerings.orth.nodelet.client
 {
 import flashx.funk.ioc.inject;
 
-import as3isolib.data.Node;
-
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.BasicDirector;
