@@ -25,13 +25,13 @@ public class Listeners
         _module = module;
     }
 
-    public static function listener (bundle :String = OrthCodes.GENERAL_MSGS,
+    public static function listener (bundle :String = null,
         errWrap :String = null, ... logArgs) :InvocationService_InvocationListener
     {
         return new InvocationAdapter(chatErrHandler(bundle, errWrap, logArgs));
     }
 
-    public static function confirmListener (bundle :String = OrthCodes.GENERAL_MSGS,
+    public static function confirmListener (bundle :String = null,
         confirm :* = null, errWrap :String = null, ... logArgs)
         :InvocationService_ConfirmListener
     {
@@ -46,7 +46,7 @@ public class Listeners
     }
 
     public static function resultListener (gotResult :Function,
-        bundle :String = OrthCodes.GENERAL_MSGS, errWrap :String = null, ... logArgs)
+        bundle :String = null, errWrap :String = null, ... logArgs)
         :InvocationService_ResultListener
     {
         return new ResultAdapter(gotResult, chatErrHandler(bundle, errWrap, logArgs));
@@ -58,6 +58,9 @@ public class Listeners
     public static function chatErrHandler (
         bundle :String, errWrap :String=null, ...logArgs) :Function
     {
+        if (bundle == null) {
+            bundle = OrthCodes.GENERAL_MSGS;
+        }
         return function (cause :String) :void {
             var args :Array = logArgs.concat("cause", cause); // make a copy, we're reentrant
             if (args.length % 2 == 0) {
@@ -75,6 +78,9 @@ public class Listeners
     // from OrthContext
     public static function displayFeedback (bundle :String, message :String) :void
     {
+        if (bundle == null) {
+            bundle = OrthCodes.GENERAL_MSGS;
+        }
         _module.getInstance(OrthChatDirector).displayFeedback(bundle, message);
     }
 
