@@ -3,7 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.room.client {
-
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
@@ -13,9 +12,8 @@ import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.orth.chat.client.OrthChatDirector;
+import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.room.client.RoomContext;
-import com.threerings.orth.room.data.OrthRoomObject;
 
 /**
  * A fake chat director that just gives us something non-null to put in the
@@ -38,12 +36,12 @@ public class FakeChatDirector extends ChatDirector
 
     override public function enteredLocation (place :PlaceObject) :void
     {
-        _chatDir.enteredLocation(OrthRoomObject(place));
+        _chatDir.enteredLocation(SpeakRouter(place));
     }
 
     override public function leftLocation (place :PlaceObject) :void
     {
-        _chatDir.leftLocation(OrthRoomObject(place));
+        _chatDir.leftLocation(SpeakRouter(place));
     }
 
     protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
