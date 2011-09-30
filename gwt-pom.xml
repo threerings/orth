@@ -6,7 +6,7 @@
   <groupId>com.threerings</groupId>
   <artifactId>orth-gwt</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
 
   <name>Orth GWT</name>
   <description>Source for classes that work with GWT.</description>
