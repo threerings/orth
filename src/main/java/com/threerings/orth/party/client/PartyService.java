@@ -34,5 +34,5 @@ public interface PartyService extends InvocationService<PartierObject>
     void invitePlayer (PlayerName invitee, InvocationListener il);
 
     /** Moves the entire party to the given locus. Move to null to let partiers roam freely. */
-    void moveParty(HostedLocus locus, InvocationListener il);
+    void moveParty (HostedLocus locus, InvocationListener il);
 }
