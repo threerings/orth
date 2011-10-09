@@ -95,7 +95,8 @@ public class OrthSceneRegistry
     {
         final ActorObject mover = (ActorObject) caller;
 
-        // ORTH TODO: Should this be a locus materialization/nodelet hosting?
+        // NOTE: this should only ever be called as the last stage of a locus-routed move, where
+        // we know we've already resolved the scene on this server in OrthSceneHoster
         _sceneReg.resolveScene(sceneId, new OrthSceneMoveHandler(
                 _locman, mover, version, portalId, destLoc, listener));
     }
