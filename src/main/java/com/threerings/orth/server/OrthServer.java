@@ -27,7 +27,7 @@ import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.room.server.MemoryRepository;
 import com.threerings.orth.room.server.OrthRoomManager.AmnesiacMemorySupply;
-import com.threerings.orth.room.server.OrthSceneRegistry;
+import com.threerings.orth.room.server.OrthSceneMaterializer;
 import com.threerings.orth.room.server.RoomAuthenticator;
 import com.threerings.orth.room.server.RoomSessionFactory;
 
@@ -52,7 +52,7 @@ public class OrthServer extends CrowdServer
             // presents
             bind(PeerManager.class).to(OrthPeerManager.class);
 
-            _materializers.addBinding(RoomLocus.class).to(OrthSceneRegistry.class);
+            _materializers.addBinding(RoomLocus.class).to(OrthSceneMaterializer.class);
         }
 
         protected MapBinder<Class<?>, LocusMaterializer<?>> _materializers;
@@ -79,7 +79,7 @@ public class OrthServer extends CrowdServer
     @Inject protected AetherManager _aetherMgr;
     @Inject protected LocusManager _locusMgr;
     @Inject protected ChatManager _chatMgr;
-    @Inject protected OrthSceneRegistry _sceneReg;
+    @Inject protected OrthSceneMaterializer _sceneMtr;
     @Inject protected PartyRegistry _partyReg;
     @Inject protected GuildRegistry _guildReg;
 }

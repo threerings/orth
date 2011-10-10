@@ -44,10 +44,10 @@ import com.threerings.orth.server.OrthDeploymentConfig;
  * Handles some custom Orth scene traversal business.
  */
 @Singleton
-public class OrthSceneRegistry
+public class OrthSceneMaterializer
     implements OrthSceneProvider, LocusMaterializer<RoomLocus>
 {
-    @Inject public OrthSceneRegistry (InvocationManager invmgr, Injector injector)
+    @Inject public OrthSceneMaterializer (InvocationManager invmgr, Injector injector)
     {
         invmgr.registerProvider(this, OrthSceneMarshaller.class, SceneCodes.WHIRLED_GROUP);
 
