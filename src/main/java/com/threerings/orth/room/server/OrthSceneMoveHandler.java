@@ -28,7 +28,7 @@ import com.threerings.orth.room.data.SocializerObject;
 import static com.threerings.orth.Log.log;
 
 /**
- * Handle all the complexities that happen on Whirled when you transition from one scene
+ * Handle all the complexities that happen in Orth when you transition from one scene
  * to another, including the theme-boundary-crossing checks and manipulations.
  */
 public class OrthSceneMoveHandler extends SceneMoveHandler
@@ -80,16 +80,17 @@ public class OrthSceneMoveHandler extends SceneMoveHandler
             return;
         }
 
-        if (_petobj != null) {
-            try {
-                _screg.moveTo(_petobj, scene.getId(), Integer.MAX_VALUE, _portalId, _destLoc,
-                    new SceneMoveAdapter());
-
-            } catch (InvocationException ie) {
-                log.warning("Pet follow failed", "memberId", _memobj.name.getId(),
-                    "sceneId", scene.getId(), ie);
-            }
-        }
+        // ORTH TODO -- A lot later
+//        if (_petobj != null) {
+//            try {
+//                _screg.moveTo(_petobj, scene.getId(), Integer.MAX_VALUE, _portalId, _destLoc,
+//                    new SceneMoveAdapter());
+//
+//            } catch (InvocationException ie) {
+//                log.warning("Pet follow failed", "memberId", _memobj.name.getId(),
+//                    "sceneId", scene.getId(), ie);
+//            }
+//        }
     }
 
     protected int _portalId;
@@ -98,7 +99,6 @@ public class OrthSceneMoveHandler extends SceneMoveHandler
     protected BodyObject _mover;
     protected PetObject _petobj;
 
-    @Inject protected OrthSceneRegistry _screg;
     // ORTH TODO -- A lot later
     // @Inject protected PetManager _petMan;
 }
