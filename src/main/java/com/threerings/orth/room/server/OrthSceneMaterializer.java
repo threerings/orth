@@ -53,41 +53,40 @@ public class OrthSceneMaterializer
 
         // a little inline hoster that just uses the scene registry once the job of hosting falls
         // to the local peer
-        injector.injectMembers(_hoster = new DSetNodeletHoster(
-                OrthNodeObject.HOSTED_ROOMS, RoomLocus.class) {
-            @Override protected HostNodeletRequest createHostingRequest (
-                AuthName caller, Nodelet nodelet) {
-                return new OrthSceneHoster(caller, OrthNodeObject.HOSTED_ROOMS, nodelet);
+        injector.injectMembers(_hoster = createHoster());
+    }
+
+    // -- BITS THAT RUN ON THE VAULT SERVER
+    @Override
+    public void materializeLocus (ClientObject caller, final RoomLocus locus,
+        final LocusMaterializationListener listener)
+    {
+        // we re-route materialization via NodeletHoster so that we first get the lock and publish
+        // the fact that we are hosting this scene
+        _hoster.resolveHosting(caller, locus, new Resulting<HostedNodelet> (listener) {
+            @Override public void requestCompleted (HostedNodelet result) {
+                listener.locusMaterialized(new HostedLocus(locus, result.host, result.ports));
             }
         });
     }
 
-    protected static class OrthSceneHoster extends HostNodeletRequest
+    protected static class OrthNodeletHoster extends DSetNodeletHoster
     {
-        public OrthSceneHoster (AuthName user, String dsetName, Nodelet nodelet)
+        public OrthNodeletHoster (String dsetName, Class<? extends Nodelet> nclass)
         {
-            super(user, dsetName, nodelet);
+            super(dsetName, nclass);
         }
 
-        @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
-            final ResultListener<HostedNodelet> listener) {
-            final HostedNodelet room = new HostedNodelet(nodelet, _depConf.getRoomHost(),
-                _depConf.getRoomPorts());
-            _sceneReg.resolveScene(((RoomLocus) nodelet).sceneId, new ResolutionListener() {
-                @Override public void sceneWasResolved (SceneManager scmgr) {
-                    listener.requestCompleted(room);
-                }
-                @Override public void sceneFailedToResolve (int sceneId, Exception reason) {
-                    listener.requestFailed(reason);
-                }
-            });
+        @Override
+        protected HostNodeletRequest createHostingRequest (AuthName caller, Nodelet nodelet)
+        {
+            return new OrthSceneHoster(caller, OrthNodeObject.HOSTED_ROOMS, nodelet);
         }
-
-        @Inject protected transient OrthDeploymentConfig _depConf;
-        @Inject protected transient SpotSceneRegistry _sceneReg;
     }
 
-    // from interface OrthSceneProvider
+
+    // -- BITS THAT RUN ON THE ROOM SERVER
+
     @Override
     public void moveTo (ClientObject caller, int sceneId, int version, int portalId,
         OrthLocation destLoc, SceneMoveListener listener)
@@ -101,17 +100,34 @@ public class OrthSceneMaterializer
                 _locman, mover, version, portalId, destLoc, listener));
     }
 
-    @Override
-    public void materializeLocus (ClientObject caller, final RoomLocus locus,
-        final LocusMaterializationListener listener)
+    protected DSetNodeletHoster createHoster ()
     {
-        // we re-route materialization via NodeletHoster so that we first get the lock and publish
-        // the fact that we are hosting this scene
-        _hoster.resolveHosting(caller, locus, new Resulting<HostedNodelet> (listener) {
-            @Override public void requestCompleted (HostedNodelet result) {
-                listener.locusMaterialized(new HostedLocus(locus, result.host, result.ports));
-            }
-        });
+        return new OrthNodeletHoster(OrthNodeObject.HOSTED_ROOMS, RoomLocus.class);
+    }
+
+    protected static class OrthSceneHoster extends HostNodeletRequest
+    {
+        public OrthSceneHoster (AuthName user, String dsetName, Nodelet nodelet)
+        {
+            super(user, dsetName, nodelet);
+        }
+
+        @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
+            final ResultListener<HostedNodelet> listener) {
+            final HostedNodelet room = new HostedNodelet(
+                nodelet, _depConf.getRoomHost(), _depConf.getRoomPorts());
+            _sceneReg.resolveScene(((RoomLocus) nodelet).sceneId, new ResolutionListener() {
+                @Override public void sceneWasResolved (SceneManager scmgr) {
+                    listener.requestCompleted(room);
+                }
+                @Override public void sceneFailedToResolve (int sceneId, Exception reason) {
+                    listener.requestFailed(reason);
+                }
+            });
+        }
+
+        @Inject protected transient OrthDeploymentConfig _depConf;
+        @Inject protected transient SpotSceneRegistry _sceneReg;
     }
 
     @Override
