@@ -27,12 +27,12 @@ public class OrthSceneMarshaller extends InvocationMarshaller
     public static const MOVE_TO :int = 1;
 
     // from interface OrthSceneService
-    public function moveTo (arg1 :int, arg2 :int, arg3 :int, arg4 :OrthLocation, arg5 :SceneService_SceneMoveListener) :void
+    public function moveTo (arg1 :RoomLocus, arg2 :int, arg3 :int, arg4 :SceneService_SceneMoveListener) :void
     {
-        var listener5 :SceneMarshaller_SceneMoveMarshaller = new SceneMarshaller_SceneMoveMarshaller();
-        listener5.listener = arg5;
+        var listener4 :SceneMarshaller_SceneMoveMarshaller = new SceneMarshaller_SceneMoveMarshaller();
+        listener4.listener = arg4;
         sendRequest(MOVE_TO, [
-            Integer.valueOf(arg1), Integer.valueOf(arg2), Integer.valueOf(arg3), arg4, listener5
+            arg1, Integer.valueOf(arg2), Integer.valueOf(arg3), listener4
         ]);
     }
 }

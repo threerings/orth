@@ -15,10 +15,11 @@ import com.threerings.whirled.client.PendingData;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.client.SceneService_SceneMoveListener;
 import com.threerings.whirled.client.persist.SceneRepository;
+import com.threerings.whirled.util.SceneFactory;
+import com.threerings.whirled.util.WhirledContext;
 
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.locus.data.Locus;
-import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
@@ -37,8 +38,8 @@ public class OrthSceneDirector extends SceneDirector
 
     public function OrthSceneDirector ()
     {
-        super(inject(RoomContext), inject(LocationDirector),
-            inject(SceneRepository), new OrthSceneFactory());
+        super(inject(WhirledContext), inject(LocationDirector),
+            inject(SceneRepository), inject(SceneFactory));
     }
 
     /**
@@ -70,8 +71,8 @@ public class OrthSceneDirector extends SceneDirector
 
     public function moveToLocalPlace (locus :Locus) :void
     {
-        _pendingLocation = RoomLocus(locus).loc;
-        moveTo(RoomLocus(locus).sceneId);
+        _pendingLocus = RoomLocus(locus);
+        moveTo(_pendingLocus.sceneId);
     }
 
     // from SceneDirector
@@ -93,8 +94,8 @@ public class OrthSceneDirector extends SceneDirector
             return;
         }
 
-        data.destLoc = _pendingLocation;
-        _pendingLocation = null;
+        data.locus = _pendingLocus;
+        _pendingLocus = null;
 
         // check the version of our cached copy of the scene to which we're requesting to move; if
         // we were unable to load it, assume a cached version of zero
@@ -108,9 +109,8 @@ public class OrthSceneDirector extends SceneDirector
         // switching from one server to another
 
         // issue a moveTo request
-        log.info("Issuing moveTo(->" + data.sceneId + ", " +
-                 sceneVers + ", " + data.destLoc + ").");
-        _mssvc.moveTo(data.sceneId, sceneVers, -1, data.destLoc, this);
+        log.info("Issuing moveTo(->" + data.locus + ", " + sceneVers + ").");
+        _mssvc.moveTo(data.locus, sceneVers, -1, this);
     }
 
     // from SceneDirector
@@ -122,10 +122,8 @@ public class OrthSceneDirector extends SceneDirector
     }
 
     protected var _mssvc :OrthSceneService;
-
-    protected var _pendingLocation :OrthLocation;
+    protected var _pendingLocus :RoomLocus;
 
     protected const _locusDir :LocusDirector = inject(LocusDirector);
-
 }
 }

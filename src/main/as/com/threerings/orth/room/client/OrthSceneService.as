@@ -8,7 +8,7 @@ import com.threerings.presents.client.InvocationService;
 
 import com.threerings.whirled.client.SceneService_SceneMoveListener;
 
-import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.RoomLocus;
 
 /**
  * An ActionScript version of the Java OrthSceneService interface.
@@ -16,6 +16,6 @@ import com.threerings.orth.room.data.OrthLocation;
 public interface OrthSceneService extends InvocationService
 {
     // from Java interface OrthSceneService
-    function moveTo (arg1 :int, arg2 :int, arg3 :int, arg4 :OrthLocation, arg5 :SceneService_SceneMoveListener) :void;
+    function moveTo (arg1 :RoomLocus, arg2 :int, arg3 :int, arg4 :SceneService_SceneMoveListener) :void;
 }
 }

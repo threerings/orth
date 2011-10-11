@@ -11,10 +11,12 @@ public class RoomLocus extends Nodelet
     implements Locus
 {
     public int sceneId;
+    public OrthLocation loc;
 
-    public RoomLocus (int sceneId)
+    public RoomLocus (int sceneId, OrthLocation loc)
     {
         this.sceneId = sceneId;
+        this.loc = loc;
     }
 
     @Override

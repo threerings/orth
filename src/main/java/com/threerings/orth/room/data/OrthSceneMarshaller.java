@@ -30,12 +30,12 @@ public class OrthSceneMarshaller extends InvocationMarshaller<ClientObject>
     public static final int MOVE_TO = 1;
 
     // from interface OrthSceneService
-    public void moveTo (int arg1, int arg2, int arg3, OrthLocation arg4, SceneService.SceneMoveListener arg5)
+    public void moveTo (RoomLocus arg1, int arg2, int arg3, SceneService.SceneMoveListener arg4)
     {
-        SceneMarshaller.SceneMoveMarshaller listener5 = new SceneMarshaller.SceneMoveMarshaller();
-        listener5.listener = arg5;
+        SceneMarshaller.SceneMoveMarshaller listener4 = new SceneMarshaller.SceneMoveMarshaller();
+        listener4.listener = arg4;
         sendRequest(MOVE_TO, new Object[] {
-            Integer.valueOf(arg1), Integer.valueOf(arg2), Integer.valueOf(arg3), arg4, listener5
+            arg1, Integer.valueOf(arg2), Integer.valueOf(arg3), listener4
         });
     }
 }

@@ -10,7 +10,7 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.whirled.client.SceneService.SceneMoveListener;
 import com.threerings.whirled.client.SceneService;
 
-import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.RoomLocus;
 
 /**
  * Extends the {@link SceneService} with a scene traversal mechanism needed by Orth.
@@ -25,6 +25,5 @@ public interface OrthSceneService extends InvocationService<ClientObject>
      * @param portalId the id of the portal via which we are departing the current scene, or 0.
      * @param destLoc the location in the target scene where the client wishes to enter.
      */
-    public void moveTo (int sceneId, int version, int portalId,
-        OrthLocation destLoc, SceneMoveListener listener);
+    public void moveTo (RoomLocus locus, int version, int portalId, SceneMoveListener listener);
 }

@@ -13,7 +13,7 @@ import com.threerings.presents.server.InvocationProvider;
 import com.threerings.whirled.client.SceneService;
 
 import com.threerings.orth.room.client.OrthSceneService;
-import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.RoomLocus;
 
 /**
  * Defines the server-side of the {@link OrthSceneService}.
@@ -25,6 +25,6 @@ public interface OrthSceneProvider extends InvocationProvider
     /**
      * Handles a {@link OrthSceneService#moveTo} request.
      */
-    void moveTo (ClientObject caller, int arg1, int arg2, int arg3, OrthLocation arg4, SceneService.SceneMoveListener arg5)
+    void moveTo (ClientObject caller, RoomLocus arg1, int arg2, int arg3, SceneService.SceneMoveListener arg4)
         throws InvocationException;
 }

@@ -14,6 +14,8 @@ import com.threerings.crowd.client.OccupantDirector;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.client.persist.SceneRepository;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
+import com.threerings.whirled.util.SceneFactory;
+import com.threerings.whirled.util.WhirledContext;
 
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.AbstractLocusModule;
@@ -48,6 +50,8 @@ public class RoomModule extends AbstractLocusModule
         var locDir :LocationDirector = new OrthLocationDirector(rCtx);
         bind(LocationDirector).toInstance(locDir);
 
+        bind(WhirledContext).to(RoomContext);
+        bind(SceneFactory).to(OrthSceneFactory);
         bind(SceneDirector).to(OrthSceneDirector);
         var scDir :SceneDirector = _chainMod.inject(newSceneDirector);
         bind(OrthSceneDirector).toInstance(scDir);

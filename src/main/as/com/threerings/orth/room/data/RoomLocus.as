@@ -10,6 +10,7 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.nodelet.data.Nodelet;
+import com.threerings.orth.room.data.OrthLocation;
 
 // GENERATED PREAMBLE END
 
@@ -18,9 +19,7 @@ public class RoomLocus extends Nodelet
     implements Locus
 {
 // GENERATED CLASSDECL END
-    public var loc :OrthLocation;
-
-    public function RoomLocus (sceneId :int=0, loc :OrthLocation=null)
+    public function RoomLocus (sceneId :int = 0, loc :OrthLocation = null)
     {
         this.sceneId = sceneId;
         this.loc = loc;
@@ -29,16 +28,20 @@ public class RoomLocus extends Nodelet
 // GENERATED STREAMING START
     public var sceneId :int;
 
+    public var loc :OrthLocation;
+
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         sceneId = ins.readInt();
+        loc = ins.readObject(OrthLocation);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
         out.writeInt(sceneId);
+        out.writeObject(loc);
     }
 
 // GENERATED STREAMING END
