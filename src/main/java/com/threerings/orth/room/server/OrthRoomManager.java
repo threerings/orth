@@ -46,6 +46,7 @@ import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.instance.server.InstancedSceneManager;
 import com.threerings.orth.room.client.OrthRoomService;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.ActorObject;
@@ -65,7 +66,7 @@ import static com.threerings.orth.Log.log;
  * Manages all the various complex operations of an actual instantiated Orth room.
  * This class relies on {@link MemoryRepository} having been previously bound.
  */
-public class OrthRoomManager extends SpotSceneManager
+public class OrthRoomManager extends InstancedSceneManager
     implements OrthRoomProvider, SpeakProvider
 {
     @Override
