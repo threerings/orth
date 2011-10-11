@@ -4,13 +4,15 @@
 
 package com.threerings.orth.room.data;
 
+import com.threerings.io.Streamable;
+
 import com.threerings.whirled.spot.data.Location;
 
 /**
  * Extends basic the basic Location with a z-coordinate.
  */
 public class OrthLocation
-    implements Location
+    implements Location, Streamable
 {
     /** The body's x position (interpreted by the display system). */
     public float x;

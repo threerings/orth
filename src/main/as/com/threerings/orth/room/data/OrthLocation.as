@@ -7,12 +7,13 @@ package com.threerings.orth.room.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+import com.threerings.io.Streamable;
 
 import com.threerings.whirled.spot.data.Location;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
-public class OrthLocation implements Location
+public class OrthLocation implements Location, Streamable
 {
 // GENERATED CLASSDECL END
 // GENERATED STREAMING START
