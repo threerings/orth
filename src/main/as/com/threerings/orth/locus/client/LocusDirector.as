@@ -185,7 +185,7 @@ public class LocusDirector extends BasicDirector
         _connecting = hosted;
         _materializing = null;
 
-        var ctx :LocusContext = getCtx(_connecting.locus);
+        var ctx :LocusContext = getCtx(_connecting);
         if (ctx == null) {
             // this can happen if the server materializes a subclass of the original locus
             log.warning("Erk! Materialized unknown locus!", "locus", _connecting.locus);
