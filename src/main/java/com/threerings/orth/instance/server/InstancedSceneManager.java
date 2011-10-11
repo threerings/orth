@@ -3,9 +3,14 @@
 
 package com.threerings.orth.instance.server;
 
+import com.threerings.presents.server.InvocationException;
+
+import com.threerings.crowd.data.BodyObject;
+
 import com.threerings.whirled.data.Scene;
 import com.threerings.whirled.server.SceneManager;
 import com.threerings.whirled.server.SceneRegistry;
+import com.threerings.whirled.spot.data.Location;
 import com.threerings.whirled.spot.server.SpotSceneManager;
 import com.threerings.whirled.util.UpdateList;
 
@@ -30,6 +35,13 @@ public class InstancedSceneManager extends SpotSceneManager
     {
         super.setSceneData(scene, updates, extras, screg);
         _instance = instance;
+    }
+
+    // only overridden to widen to public
+    @Override public void handleChangeLoc (BodyObject source, Location loc)
+        throws InvocationException
+    {
+        super.handleChangeLoc(source, loc);
     }
 
     protected Instance _instance;
