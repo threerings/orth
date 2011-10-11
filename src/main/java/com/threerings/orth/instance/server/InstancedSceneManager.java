@@ -13,7 +13,7 @@ import com.threerings.whirled.spot.data.Location;
 import com.threerings.whirled.spot.server.SpotSceneManager;
 import com.threerings.whirled.util.UpdateList;
 
-import com.threerings.orth.Log;
+import com.threerings.orth.instance.data.Instance;
 
 public class InstancedSceneManager extends SpotSceneManager
 {

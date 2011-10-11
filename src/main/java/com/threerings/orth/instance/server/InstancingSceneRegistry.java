@@ -3,10 +3,7 @@
 
 package com.threerings.orth.instance.server;
 
-import java.util.List;
-
 import com.google.inject.Inject;
-import com.google.inject.internal.Preconditions;
 
 import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.data.ClientObject;
@@ -16,16 +13,14 @@ import com.threerings.presents.server.InvocationManager;
 import com.threerings.crowd.data.BodyObject;
 
 import com.threerings.whirled.client.SceneService.SceneMoveListener;
-import com.threerings.whirled.data.Scene;
 import com.threerings.whirled.server.SceneManager;
 import com.threerings.whirled.server.SceneMoveHandler;
-import com.threerings.whirled.server.SceneRegistry;
 import com.threerings.whirled.spot.client.SpotService.SpotSceneMoveListener;
 import com.threerings.whirled.spot.client.SpotService;
 import com.threerings.whirled.spot.data.Location;
 import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
-import com.threerings.orth.instance.server.Instance.InstanceVisitor;
+import com.threerings.orth.instance.data.Instance;
 
 public class InstancingSceneRegistry extends SpotSceneRegistry
 {
@@ -46,11 +41,7 @@ public class InstancingSceneRegistry extends SpotSceneRegistry
                                 SpotService.ConfirmListener listener)
         throws InvocationException
     {
-        BodyObject body = _locator.forClient(caller);
-        Preconditions.checkArgument(body instanceof InstanceVisitor,
-            "Instance methods must be called with InstanceVisitor bodies");
-
-        _instReg.getInstance((InstanceVisitor) body)
+        Instance.requireFor(_locator.forClient(caller))
             .changeLocation(caller, sceneId, loc, listener);
     }
 
@@ -58,13 +49,8 @@ public class InstancingSceneRegistry extends SpotSceneRegistry
     public void moveTo (ClientObject caller, int sceneId, int sceneVer, SceneMoveListener listener)
     {
         BodyObject body = _locator.forClient(caller);
-        Preconditions.checkArgument(body instanceof InstanceVisitor,
-            "Instance methods must be called with InstanceVisitor bodies");
-
-        Instance instance = _instReg.getInstance((InstanceVisitor) body);
-        Preconditions.checkNotNull(body, "This method must be called with an instanced body.");
-
-        instance.resolveScene(sceneId, new SceneMoveHandler(_locman, body, sceneVer, listener));
+        Instance.requireFor(body).resolveScene(
+            sceneId, new SceneMoveHandler(_locman, body, sceneVer, listener));
     }
 
     @Override // documentation inherited

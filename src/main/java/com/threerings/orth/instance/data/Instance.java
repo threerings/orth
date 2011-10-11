@@ -1,7 +1,7 @@
 //
 // Who - Copyright 2010-2011 Three Rings Design, Inc.
 
-package com.threerings.orth.instance.server;
+package com.threerings.orth.instance.data;
 
 import java.util.List;
 import java.util.Map;
@@ -9,6 +9,7 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.internal.Maps;
+import com.google.inject.internal.Preconditions;
 
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ObserverList;
@@ -41,16 +42,33 @@ import com.threerings.whirled.util.NoSuchSceneException;
 import com.threerings.whirled.util.SceneFactory;
 import com.threerings.whirled.util.UpdateList;
 
+import com.threerings.orth.instance.server.InstanceLocal;
+import com.threerings.orth.instance.server.InstanceRegistry;
+import com.threerings.orth.instance.server.InstancedSceneManager;
+
 import static com.threerings.whirled.spot.Log.log;
 
 public class Instance
 {
-    public interface InstanceVisitor
+    /**
+     * Return the given {@link BodyObject}'s Instance, or null if none.
+     */
+    public static Instance getFor (BodyObject body)
     {
-        public BodyObject asBody ();
-        public void setInstanceId (String instanceId);
+        InstanceLocal local = body.getLocal(InstanceLocal.class);
+        return (local != null) ? local.instance : null;
     }
-    
+
+    /**
+     * Return the given {@link BodyObject}'s Instance, throwing if there is none.
+     */
+    public static Instance requireFor (BodyObject body)
+    {
+        Instance instance = getFor(body);
+        Preconditions.checkNotNull(instance, "Body is not in an instance: " + body.who());
+        return instance;
+    }
+
     /**
      * To be implemented by parties interested in instance changes.
      */
@@ -59,14 +77,14 @@ public class Instance
         /**
          * Notes that a player has been added to the instance.
          */
-        public void playerAdded (Instance instance, InstanceVisitor player);
+        public void playerAdded (Instance instance, BodyObject player);
 
         /**
          * Notes that a player has been removed from the instance.
          *
          * @param seconds the number of seconds spent in the instance.
          */
-        public void playerRemoved (Instance instance, InstanceVisitor player, int seconds);
+        public void playerRemoved (Instance instance, BodyObject player, int seconds);
 
         /**
          * Notes that the instance became empty of players and scenes.
@@ -108,54 +126,51 @@ public class Instance
     /**
      * Adds a player to this instance.
      */
-    public void addPlayer (final InstanceVisitor visitor)
+    public void addPlayer (final BodyObject body)
     {
-        InstanceLocal local = getLocal(visitor);
+        InstanceLocal local = getLocal(body);
         if (local.instance != null) {
-            local.instance.removePlayer(visitor);
+            local.instance.removePlayer(body);
         }
         local.instance = this;
         local.entered = System.currentTimeMillis();
-        visitor.setInstanceId(_instanceId);
         _population++;
+
+        if (body instanceof InstanceBody) {
+            ((InstanceBody) body).addedTo(this);
+        }
 
         // notify observers
         _observers.apply(new ObserverList.ObserverOp<InstanceObserver>() {
             public boolean apply (InstanceObserver observer) {
-                observer.playerAdded(Instance.this, visitor);
+                observer.playerAdded(Instance.this, body);
                 return true;
             }
         });
     }
 
-    protected InstanceLocal getLocal (InstanceVisitor visitor)
-    {
-        InstanceLocal local = visitor.asBody().getLocal(InstanceLocal.class);
-        if (local == null) {
-            local = new InstanceLocal();
-            visitor.asBody().setLocal(InstanceLocal.class, local);
-        }
-        return local;
-    }
-
     /**
      * Removes a player from this instance.
      */
-    public void removePlayer (final InstanceVisitor visitor)
+    public void removePlayer (final BodyObject body)
     {
-        if (visitor.asBody().getLocal(InstanceLocal.class).instance != this) {
+        if (body.getLocal(InstanceLocal.class).instance != this) {
             return;
         }
-        InstanceLocal local = visitor.asBody().getLocal(InstanceLocal.class);
+        InstanceLocal local = body.getLocal(InstanceLocal.class);
         local.instance = null;
         final int seconds = (int)((System.currentTimeMillis() - local.entered)/1000L);
-        visitor.setInstanceId(null);
+
         _population--;
+
+        if (body instanceof InstanceBody) {
+            ((InstanceBody) body).removedFrom(this);
+        }
 
         // notify observers
         _observers.apply(new ObserverList.ObserverOp<InstanceObserver>() {
             public boolean apply (InstanceObserver observer) {
-                observer.playerRemoved(Instance.this, visitor, seconds);
+                observer.playerRemoved(Instance.this, body, seconds);
                 return true;
             }
         });
@@ -307,7 +322,7 @@ public class Instance
      *
      * NOTE: Copied from SceneRegistry
      */
-    protected void sceneManagerDidStart (SceneManager scmgr)
+    public void sceneManagerDidStart (SceneManager scmgr)
     {
         // register this scene manager in our table
         int sceneId = scmgr.getScene().getId();
@@ -333,7 +348,7 @@ public class Instance
      *
      * NOTE: Copied from SceneRegistry
      */
-    protected void unmapSceneManager (SceneManager scmgr)
+    public void unmapSceneManager (SceneManager scmgr)
     {
         if (_scenemgrs.remove(scmgr.getScene().getId()) == null) {
             log.warning("Requested to unmap unmapped scene manager.", "scmgr", scmgr);
@@ -396,6 +411,16 @@ public class Instance
     protected SceneRegistry getSceneRegistry ()
     {
         return _defscreg;
+    }
+
+    protected InstanceLocal getLocal (BodyObject body)
+    {
+        InstanceLocal local = body.getLocal(InstanceLocal.class);
+        if (local == null) {
+            local = new InstanceLocal();
+            body.setLocal(InstanceLocal.class, local);
+        }
+        return local;
     }
 
     protected String _instanceId;
