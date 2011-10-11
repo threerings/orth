@@ -24,6 +24,7 @@ import com.threerings.whirled.server.SceneManager;
 import com.threerings.whirled.server.SceneRegistry.ResolutionListener;
 import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
+import com.threerings.orth.Log;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.locus.data.HostedLocus;
@@ -35,7 +36,6 @@ import com.threerings.orth.nodelet.server.HostNodeletRequest;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.room.data.ActorObject;
-import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.server.OrthDeploymentConfig;
@@ -70,6 +70,11 @@ public class OrthSceneMaterializer
         });
     }
 
+    protected DSetNodeletHoster createHoster ()
+    {
+        return new OrthNodeletHoster(OrthNodeObject.HOSTED_ROOMS, RoomLocus.class);
+    }
+
     protected static class OrthNodeletHoster extends DSetNodeletHoster
     {
         public OrthNodeletHoster (String dsetName, Class<? extends Nodelet> nclass)
@@ -88,21 +93,15 @@ public class OrthSceneMaterializer
     // -- BITS THAT RUN ON THE ROOM SERVER
 
     @Override
-    public void moveTo (ClientObject caller, int sceneId, int version, int portalId,
-        OrthLocation destLoc, SceneMoveListener listener)
-        throws InvocationException
+    public void moveTo (ClientObject caller, RoomLocus locus, int version, int portalId,
+        SceneMoveListener listener) throws InvocationException
     {
         final ActorObject mover = (ActorObject) caller;
 
         // NOTE: this should only ever be called as the last stage of a locus-routed move, where
         // we know we've already resolved the scene on this server in OrthSceneHoster
-        _sceneReg.resolveScene(sceneId, new OrthSceneMoveHandler(
-                _locman, mover, version, portalId, destLoc, listener));
-    }
-
-    protected DSetNodeletHoster createHoster ()
-    {
-        return new OrthNodeletHoster(OrthNodeObject.HOSTED_ROOMS, RoomLocus.class);
+        _sceneReg.resolveScene(locus.sceneId, new OrthSceneMoveHandler(
+                _locman, mover, version, portalId, locus.loc, listener));
     }
 
     protected static class OrthSceneHoster extends HostNodeletRequest
