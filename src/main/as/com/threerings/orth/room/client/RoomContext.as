@@ -105,7 +105,7 @@ public class RoomContext
     public function go (locus :Locus) :void
     {
         var sceneDir :OrthSceneDirector = _module.getInstance(SceneDirector);
-        sceneDir.moveToPlace(locus);
+        sceneDir.moveToLocalPlace(locus);
     }
 
     /** We use this for moving around a scene. */

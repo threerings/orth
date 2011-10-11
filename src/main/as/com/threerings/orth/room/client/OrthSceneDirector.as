@@ -42,7 +42,7 @@ public class OrthSceneDirector extends SceneDirector
     }
 
     /**
-     * Traverses the specified portal using the OrthSceneService which handles switching between
+     * Traverses the specified portal using the LocusDirector, which handles switching between
      * servers and other useful business.
      *
      * @return true if we issued the request, false if it was rejected for some reason.
@@ -68,7 +68,7 @@ public class OrthSceneDirector extends SceneDirector
         return true;
     }
 
-    public function moveToPlace (locus :Locus) :void
+    public function moveToLocalPlace (locus :Locus) :void
     {
         _pendingLocation = RoomLocus(locus).loc;
         moveTo(RoomLocus(locus).sceneId);
