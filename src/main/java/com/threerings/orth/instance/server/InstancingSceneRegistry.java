@@ -4,6 +4,7 @@
 package com.threerings.orth.instance.server;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.data.ClientObject;
@@ -22,6 +23,7 @@ import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
 import com.threerings.orth.instance.data.Instance;
 
+@Singleton
 public class InstancingSceneRegistry extends SpotSceneRegistry
 {
     /**
