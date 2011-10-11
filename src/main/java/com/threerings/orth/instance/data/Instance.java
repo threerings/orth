@@ -135,6 +135,8 @@ public class Instance
         local.entered = System.currentTimeMillis();
         _population++;
 
+        log.debug("Added player to instance", "player", body.username, "instance", _instanceId);
+
         if (body instanceof InstanceBody) {
             ((InstanceBody) body).addedTo(this);
         }
@@ -153,14 +155,15 @@ public class Instance
      */
     public void removePlayer (final BodyObject body)
     {
-        if (body.getLocal(InstanceLocal.class).instance != this) {
+        if (getLocal(body).instance != this) {
             return;
         }
         InstanceLocal local = body.getLocal(InstanceLocal.class);
         local.instance = null;
         final int seconds = (int)((System.currentTimeMillis() - local.entered)/1000L);
-
         _population--;
+
+        log.debug("Removed player from instance", "player", body.username, "instance", _instanceId);
 
         if (body instanceof InstanceBody) {
             ((InstanceBody) body).removedFrom(this);
@@ -177,8 +180,6 @@ public class Instance
         // check for emptiness
         checkEmpty();
     }
-
-
 
     /**
      * @see SpotService#changeLocation(int, Location, ConfirmListener)
