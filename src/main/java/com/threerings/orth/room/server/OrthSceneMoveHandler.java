@@ -7,21 +7,19 @@
  */
 package com.threerings.orth.room.server;
 
-import com.google.inject.Inject;
-
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.server.LocationManager;
 
-import com.threerings.whirled.client.SceneMoveAdapter;
 import com.threerings.whirled.client.SceneService.SceneMoveListener;
+import com.threerings.whirled.data.Scene;
 import com.threerings.whirled.server.SceneManager;
 import com.threerings.whirled.server.SceneMoveHandler;
+import com.threerings.whirled.spot.server.SpotSceneManager;
 
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthPortal;
-import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.PetObject;
 import com.threerings.orth.room.data.SocializerObject;
 
@@ -47,8 +45,8 @@ public class OrthSceneMoveHandler extends SceneMoveHandler
     protected void effectSceneMove (SceneManager scmgr)
         throws InvocationException
     {
-        final OrthScene scene = (OrthScene) scmgr.getScene();
-        final OrthRoomManager destmgr = (OrthRoomManager)scmgr;
+        final Scene scene = scmgr.getScene();
+        final SpotSceneManager destmgr = (SpotSceneManager) scmgr;
 
         // if we're not going to be let into the room, let our listener know now
         String accessMsg = scmgr.ratifyBodyEntry(_mover);
@@ -56,9 +54,6 @@ public class OrthSceneMoveHandler extends SceneMoveHandler
             _listener.requestFailed(accessMsg);
             return;
         }
-
-        // ORTH TODO -- A lot later
-        // _petobj = (_memobj != null) ? _petMan.getPetObject(_memobj.walkingId) : null;
 
         // create a fake "from" portal that contains our destination location
         OrthPortal from = new OrthPortal();
@@ -69,28 +64,14 @@ public class OrthSceneMoveHandler extends SceneMoveHandler
         destmgr.mapEnteringBody(_mover, from);
 
         try {
-            OrthSceneMoveHandler.super.effectSceneMove(destmgr);
+            super.effectSceneMove(destmgr);
 
         } catch (InvocationException ie) {
             // if anything goes haywire, clear out our entering status
             destmgr.clearEnteringBody(_mover);
-            log.warning("Scene move failed", "mover", _mover.who(),
-                "sceneId", scene.getId(), ie);
+            log.warning("Scene move failed", "mover", _mover.who(), "sceneId", scene.getId(), ie);
             _listener.requestFailed(ie.getMessage());
-            return;
         }
-
-        // ORTH TODO -- A lot later
-//        if (_petobj != null) {
-//            try {
-//                _screg.moveTo(_petobj, scene.getId(), Integer.MAX_VALUE, _portalId, _destLoc,
-//                    new SceneMoveAdapter());
-//
-//            } catch (InvocationException ie) {
-//                log.warning("Pet follow failed", "memberId", _memobj.name.getId(),
-//                    "sceneId", scene.getId(), ie);
-//            }
-//        }
     }
 
     protected int _portalId;
