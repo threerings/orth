@@ -5,14 +5,14 @@ package com.threerings.orth.instance.server;
 
 import java.util.Map;
 
-import com.threerings.crowd.server.BodyLocator;
-
-import com.threerings.orth.instance.data.Instance;
-
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import com.google.inject.internal.Maps;
+
+import com.threerings.crowd.server.BodyLocator;
+
+import com.threerings.orth.instance.data.Instance;
 
 @Singleton
 public class InstanceRegistry
