@@ -64,9 +64,8 @@ public class Instance
      */
     public static Instance requireFor (BodyObject body)
     {
-        Instance instance = getFor(body);
-        Preconditions.checkNotNull(instance, "Body is not in an instance: " + body.who());
-        return instance;
+        return Preconditions.checkNotNull(getFor(body),
+            "Body of %s is not in an instance", body.username);
     }
 
     /**
@@ -258,7 +257,7 @@ public class Instance
 
     /**
      * Called when the scene resolution has completed successfully.
-     * 
+     *
      * NOTE: Copied from SceneRegistry
      */
     protected void processSuccessfulResolution (
