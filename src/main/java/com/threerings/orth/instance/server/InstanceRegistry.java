@@ -9,14 +9,23 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import com.google.inject.internal.Preconditions;
 
 import com.threerings.crowd.server.BodyLocator;
+
+import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
 import com.threerings.orth.instance.data.Instance;
 
 @Singleton
 public class InstanceRegistry
 {
+    @Inject public InstanceRegistry (SpotSceneRegistry reg)
+    {
+        Preconditions.checkState(reg instanceof InstancingSceneRegistry,
+            "Failing: SpotSceneRegistry must be bound to InstancingSceneRegistry.");
+    }
+
     public Instance getInstance (String instanceId)
     {
         return _instances.get(instanceId);
