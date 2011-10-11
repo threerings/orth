@@ -185,6 +185,14 @@ public class LocusDirector extends BasicDirector
         _connecting = hosted;
         _materializing = null;
 
+        var ctx :LocusContext = getCtx(_connecting.locus);
+        if (ctx == null) {
+            // this can happen if the server materializes a subclass of the original locus
+            log.warning("Erk! Materialized unknown locus!", "locus", _connecting.locus);
+            _connecting = null;
+            return;
+        }
+
         // Are we already on the right peer?
         if (locus != null && ClassUtil.isSameClass(_connecting.locus, locus) &&
             _connecting.host == _connected.host) {
@@ -205,7 +213,7 @@ public class LocusDirector extends BasicDirector
         }
 
         // now grab the (possibly) new client
-        const connectingClient :LocusClient = getCtx(_connecting).locusClient;
+        const connectingClient :LocusClient = ctx.locusClient;
 
         // listen to it
         connectingClient.addClientObserver(_observer);
