@@ -9,9 +9,10 @@ import com.google.inject.Inject;
 
 import com.samskivert.util.ResultListener;
 
+import com.threerings.util.Resulting;
+
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.peer.data.NodeObject;
-import com.threerings.util.Resulting;
 
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
