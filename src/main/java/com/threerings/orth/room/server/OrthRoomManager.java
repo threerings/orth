@@ -290,8 +290,10 @@ public class OrthRoomManager extends InstancedSceneManager
     @Override
     public Place getLocation ()
     {
-        return new RoomPlace(_peerMgr.getNodeObject().nodeName, _plobj.getOid(),
-            _scene.getId(), _orthObj.name);
+        // if we have an instance name available, let's use it for the peer
+        String peer = (_instance != null) ? _instance.getInstanceId() :
+            _peerMgr.getNodeObject().nodeName;
+        return new RoomPlace(peer, _plobj.getOid(), _scene.getId(), _orthObj.name);
     }
 
     @Override // from PlaceManager
