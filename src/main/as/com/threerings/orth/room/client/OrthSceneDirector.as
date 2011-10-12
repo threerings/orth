@@ -77,8 +77,9 @@ public class OrthSceneDirector extends SceneDirector
             return false;
         }
 
-        _locusDir.moveToLocus(new InstancedRoomLocus(
-            this.instanceId, dest.targetSceneId, dest.dest));
+        _locusDir.moveToLocus(this.instanceId != null ?
+            new InstancedRoomLocus(this.instanceId, dest.targetSceneId, dest.dest) :
+            new RoomLocus(dest.targetSceneId, dest.dest));
         return true;
     }
 
