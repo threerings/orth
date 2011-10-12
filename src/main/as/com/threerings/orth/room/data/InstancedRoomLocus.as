@@ -48,7 +48,6 @@ public class InstancedRoomLocus extends RoomLocus
 // GENERATED CLASSFINISH START
 }
 }
-
 // GENERATED CLASSFINISH END
 
 import com.threerings.util.Equalable;

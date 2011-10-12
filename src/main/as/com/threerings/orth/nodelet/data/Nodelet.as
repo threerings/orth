@@ -4,6 +4,7 @@
 
 // GENERATED PREAMBLE START
 package com.threerings.orth.nodelet.data {
+
 import flash.utils.getQualifiedClassName;
 
 import com.threerings.io.ObjectInputStream;
@@ -35,7 +36,7 @@ public class Nodelet extends SimpleStreamableObject
     public function equals (other :Object) :Boolean
     {
         if (getQualifiedClassName(other) == getQualifiedClassName(this)) {
-            var id :* = getId();
+            var id :Object = getId();
             if (id is Equalable) {
                 return Equalable(id).equals(other);
             }
