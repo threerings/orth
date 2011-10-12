@@ -12,6 +12,7 @@ import com.samskivert.util.ResultListener;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.peer.data.NodeObject;
+import com.threerings.util.Resulting;
 
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
@@ -71,18 +72,9 @@ public abstract class DSetNodeletHoster
             }
         }
 
-        // a simple listener forwarder - curse the narya/samskivert confusion!
-        InvocationService.ResultListener peerListener = new InvocationService.ResultListener() {
-            @Override public void requestProcessed (Object result) {
-                listener.requestCompleted((HostedNodelet) result);
-            }
-            @Override public void requestFailed (String cause) {
-                listener.requestFailed(new RuntimeException(cause));
-            }
-        };
-
-        _peerMan.invokeNodeRequest(chosenPeer, createHostingRequest(
-            (AuthName) caller.username, nodelet), peerListener);
+        _peerMan.invokeNodeRequest(chosenPeer,
+            createHostingRequest((AuthName) caller.username, nodelet),
+            new Resulting<HostedNodelet>(listener));
     }
 
     /** Overridden to instantiate the appropriate concrete {@link HostNodeletRequest}. */
