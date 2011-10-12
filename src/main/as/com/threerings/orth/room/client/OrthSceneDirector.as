@@ -10,6 +10,7 @@ import com.threerings.util.Log;
 import com.threerings.presents.client.Client;
 
 import com.threerings.crowd.client.LocationDirector;
+import com.threerings.crowd.data.PlaceConfig;
 
 import com.threerings.whirled.client.PendingData;
 import com.threerings.whirled.client.SceneDirector;
@@ -20,6 +21,7 @@ import com.threerings.whirled.util.WhirledContext;
 
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.locus.data.Locus;
+import com.threerings.orth.room.data.InstancedRoomLocus;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
@@ -40,6 +42,16 @@ public class OrthSceneDirector extends SceneDirector
     {
         super(inject(WhirledContext), inject(LocationDirector),
             inject(SceneRepository), inject(SceneFactory));
+    }
+
+    public function get locus () :RoomLocus
+    {
+        return _locus;
+    }
+
+    public function get instanceId () :String
+    {
+        return (_locus is InstancedRoomLocus) ? InstancedRoomLocus(_locus).instanceId : null;
     }
 
     /**
@@ -65,15 +77,44 @@ public class OrthSceneDirector extends SceneDirector
             return false;
         }
 
-        _locusDir.moveToLocus(new RoomLocus(dest.targetSceneId, dest.dest));
+        _locusDir.moveToLocus(new InstancedRoomLocus(
+            this.instanceId, dest.targetSceneId, dest.dest));
         return true;
     }
 
-    public function moveToLocalPlace (locus :Locus) :void
+    /**
+     * Route all movement through moveToLocalPlace.
+     */
+    override public function moveTo (sceneId :int) :Boolean
     {
-        _pendingLocus = RoomLocus(locus);
-        moveTo(_pendingLocus.sceneId);
+        return moveToLocalPlace(new RoomLocus(sceneId));
     }
+
+    public function moveToLocalPlace (locus :Locus) :Boolean
+    {
+        const sceneId :int = RoomLocus(locus).sceneId;
+        // make sure the sceneId is valid
+        if (sceneId < 0) {
+            log.warning("Refusing moveToLocalPlace(): invalid sceneId", "sceneId", sceneId);
+            return false;
+        }
+
+        // sanity-check the destination scene id
+        if (locus.equals(_locus)) {
+            log.warning("Refusing request to move to the same place", "locus", locus);
+        }
+
+        _pendingLocus = RoomLocus(locus);
+        // prepare to move to this scene (sets up pending data)
+        if (!prepareMoveTo(sceneId, null)) {
+            return false;
+        }
+
+        // do the deed
+        sendMoveRequest();
+        return true;
+    }
+
 
     // from SceneDirector
     override protected function createPendingData () :PendingData
@@ -95,7 +136,6 @@ public class OrthSceneDirector extends SceneDirector
         }
 
         data.locus = _pendingLocus;
-        _pendingLocus = null;
 
         // check the version of our cached copy of the scene to which we're requesting to move; if
         // we were unable to load it, assume a cached version of zero
@@ -113,7 +153,22 @@ public class OrthSceneDirector extends SceneDirector
         _mssvc.moveTo(data.locus, sceneVers, -1, this);
     }
 
-    // from SceneDirector
+    override public function moveSucceeded (placeId :int, config :PlaceConfig) :void
+    {
+        _locus = _pendingLocus;
+        _pendingLocus = null;
+
+        super.moveSucceeded(placeId, config);
+    }
+
+    override protected function clearScene () :void
+    {
+        super.clearScene();
+
+        _locus = null;
+    }
+
+// from SceneDirector
     override protected function fetchServices (client :Client) :void
     {
         super.fetchServices(client);
@@ -122,6 +177,7 @@ public class OrthSceneDirector extends SceneDirector
     }
 
     protected var _mssvc :OrthSceneService;
+    protected var _locus :RoomLocus;
     protected var _pendingLocus :RoomLocus;
 
     protected const _locusDir :LocusDirector = inject(LocusDirector);
