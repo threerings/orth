@@ -4,12 +4,13 @@
 
 // GENERATED PREAMBLE START
 package com.threerings.orth.nodelet.data {
-
 import flash.utils.getQualifiedClassName;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
+
+import com.threerings.util.Equalable;
 
 // GENERATED PREAMBLE END
 
@@ -33,13 +34,20 @@ public class Nodelet extends SimpleStreamableObject
 
     public function equals (other :Object) :Boolean
     {
-        return getQualifiedClassName(other) == getQualifiedClassName(this) &&
-            getId() == Nodelet(other).getId();
+        if (getQualifiedClassName(other) == getQualifiedClassName(this)) {
+            var id :* = getId();
+            if (id is Equalable) {
+                return Equalable(id).equals(other);
+            }
+            return getId() == Nodelet(other).getId();
+        }
+        return false;
     }
+
     /**
-     * Gets a unique identifier for this locus, used as a dset key.
+     * Gets a unique key for this locus, used as a dset key.
      */
-    public function getId () :int
+    public function getId () :Object
     {
         throw new Error("abstract");
     }

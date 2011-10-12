@@ -46,7 +46,7 @@ public class RoomLocus extends Nodelet
 
 // GENERATED STREAMING END
 
-    override public function getId () :int
+    override public function getId () :Object
     {
         return sceneId;
     }
