@@ -62,14 +62,14 @@ public class InstancedSceneMaterializer extends OrthSceneMaterializer
         // if we're not in an instance yet, pick one (this will get much more involved shortly)
         if (instanceId == null) {
             locus = new InstancedRoomLocus(
-                pickInstanceForPlayer((AetherClientObject) caller),
+                pickInstanceForPlayer((AetherClientObject) caller, locus.sceneId),
                 locus.sceneId, locus.loc);
         }
 
         super.materializeLocus(caller, locus, listener);
     }
 
-    protected String pickInstanceForPlayer (AetherClientObject player)
+    protected String pickInstanceForPlayer (AetherClientObject player, int sceneId)
     {
         return "public";
     }
