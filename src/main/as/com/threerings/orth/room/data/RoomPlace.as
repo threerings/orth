@@ -18,40 +18,25 @@ public class RoomPlace extends ScenePlace
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
-    public var peer :String;
+    public var instanceId :String;
 
     public var name :String;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        peer = ins.readField(String);
+        instanceId = ins.readField(String);
         name = ins.readField(String);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeField(peer);
+        out.writeField(instanceId);
         out.writeField(name);
     }
 
 // GENERATED STREAMING END
-
-    public function getPeer () :String
-    {
-        return peer;
-    }
-
-    public function describePlace () :String
-    {
-        return name;
-    }
-
-    public function getPlaceType () :String
-    {
-        return OrthRoomCodes.ROOM_PLACE_TYPE;
-    }
 
 // GENERATED CLASSFINISH START
 }
