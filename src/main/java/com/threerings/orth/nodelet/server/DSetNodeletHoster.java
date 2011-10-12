@@ -9,7 +9,6 @@ import com.google.inject.Inject;
 
 import com.samskivert.util.ResultListener;
 
-import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.util.Resulting;
@@ -52,7 +51,19 @@ public abstract class DSetNodeletHoster
             listener.requestCompleted(hosted);
             return;
         }
+        _peerMan.invokeNodeRequest(determineHostingPeer(nodelet),
+            createHostingRequest((AuthName) caller.username, nodelet),
+            new Resulting<HostedNodelet>(listener));
+    }
 
+    /**
+     * The nodelet is about to be hosted; we need to determine which host to ask to do it.
+     *
+     * The default implementation does a simple load balancing. Subclasses may use whatever
+     * method they see fit -- any peer's nodeName is a valid return value.
+     */
+    protected String determineHostingPeer (Nodelet nodelet)
+    {
         // our load balancing strategy is very simple; we define the load of a peer as
         // the number of clients currently connected to it. while all sorts of more complex
         // expressions can be imagined, this one is probably about as good as any other in
@@ -71,10 +82,7 @@ public abstract class DSetNodeletHoster
                 minLoad = load;
             }
         }
-
-        _peerMan.invokeNodeRequest(chosenPeer,
-            createHostingRequest((AuthName) caller.username, nodelet),
-            new Resulting<HostedNodelet>(listener));
+        return chosenPeer;
     }
 
     /** Overridden to instantiate the appropriate concrete {@link HostNodeletRequest}. */
