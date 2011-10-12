@@ -24,7 +24,6 @@ import com.threerings.whirled.server.SceneManager;
 import com.threerings.whirled.server.SceneRegistry.ResolutionListener;
 import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
-import com.threerings.orth.Log;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.locus.data.HostedLocus;

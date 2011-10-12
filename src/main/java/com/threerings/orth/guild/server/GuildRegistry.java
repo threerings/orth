@@ -81,7 +81,7 @@ public class GuildRegistry extends NodeletRegistry
 
     /**
      * Invoke the given guild request on the appropriate guild manager, wherever it may be in the
-     * server cluster. Invokers failure on the listener if there the nodelet is not hosted or there
+     * server cluster. Invoker failure on the listener if the nodelet is not hosted or there
      * is an error invoking the request remotely.
      */
     public <T> void invokeRemoteRequest (int guildId, Request<T> request, ResultListener<T> lner)
