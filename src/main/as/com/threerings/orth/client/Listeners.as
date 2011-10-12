@@ -58,20 +58,10 @@ public class Listeners
     public static function chatErrHandler (
         bundle :String, errWrap :String=null, ...logArgs) :Function
     {
-        if (bundle == null) {
-            bundle = OrthCodes.GENERAL_MSGS;
-        }
         return function (cause :String) :void {
-            var args :Array = logArgs.concat("cause", cause); // make a copy, we're reentrant
-            if (args.length % 2 == 0) {
-                args.unshift("Reporting failure");
-            }
-            log.info.apply(null, args);
-
-            if (errWrap != null) {
-                cause = MessageBundle.compose(errWrap, cause);
-            }
-            displayFeedback(bundle, cause);
+            var args :Array = logArgs.slice();
+            args.splice(0, 0, bundle, cause, errWrap);
+            displayError.apply(null, args);
         };
     }
 
@@ -82,6 +72,24 @@ public class Listeners
             bundle = OrthCodes.GENERAL_MSGS;
         }
         _module.getInstance(OrthChatDirector).displayFeedback(bundle, message);
+    }
+
+    public static function displayError (bundle :String, cause :String,
+        errWrap :String=null, ...logArgs) :void
+    {
+        if (bundle == null) {
+            bundle = OrthCodes.GENERAL_MSGS;
+        }
+        var args :Array = logArgs.concat("cause", cause); // make a copy, we're reentrant
+        if (args.length % 2 == 0) {
+            args.unshift("Reporting failure");
+        }
+        log.info.apply(null, args);
+
+        if (errWrap != null) {
+            cause = MessageBundle.compose(errWrap, cause);
+        }
+        displayFeedback(bundle, cause);
     }
 
     protected static var _module :Module;
