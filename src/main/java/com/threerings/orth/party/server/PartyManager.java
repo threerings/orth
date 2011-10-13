@@ -47,13 +47,13 @@ public class PartyManager
     public final PartyObjectAddress addr;
 
     @Inject public PartyManager (RootDObjectManager omgr, InvocationManager invMgr,
-        OrthDeploymentConfig conf, AetherClientObject creator)
+        OrthDeploymentConfig conf, AetherClientObject creator, PartyObject partyObj)
     {
         _omgr = omgr;
         _invMgr = invMgr;
 
         // set up the new PartyObject
-        _partyObj = createPartyObject();
+        _partyObj = partyObj;
         configurePartyObject(creator);
         _omgr.registerObject(_partyObj);
 
@@ -61,14 +61,6 @@ public class PartyManager
 
         // "invite" the creator
         _partyObj.invitedIds.add(_partyObj.leaderId);
-    }
-
-    /**
-     * Create the PartyObject for this party.
-     */
-    protected PartyObject createPartyObject ()
-    {
-        return new PartyObject();
     }
 
     /**
