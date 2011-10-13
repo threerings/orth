@@ -149,7 +149,7 @@ public class PartyManager
     }
 
     // from interface PartyProvider
-    public void assignLeader ( PartierObject caller, int playerId,
+    public void assignLeader (PartierObject caller, int playerId,
         InvocationService.InvocationListener listener)
         throws InvocationException
     {
