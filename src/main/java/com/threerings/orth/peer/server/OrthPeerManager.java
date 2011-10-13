@@ -45,9 +45,6 @@ import static com.threerings.orth.Log.log;
  */
 public abstract class OrthPeerManager extends PeerManager
 {
-    /** The maximum number of nodes we can start up after a global reboot. */
-    public static final int MAX_NODES = 100;
-
     /** Our {@link PeerObserver}s. */
     public final ObserverList<PeerObserver> peerObs = ObserverList.newFastUnsafe();
 
@@ -175,11 +172,6 @@ public abstract class OrthPeerManager extends PeerManager
         }
         throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
     }
-
-    /**
-     * Return a uniquely assigned integer for this node, smaller than {@link MAX_NODES}.
-     */
-    public abstract int getNodeId ();
 
     @Override // from PeerManager
     protected NodeObject createNodeObject ()
