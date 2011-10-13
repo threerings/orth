@@ -4,6 +4,8 @@
 
 package com.threerings.orth.data;
 
+import com.google.inject.Inject;
+
 import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.presents.dobj.DSet;
@@ -15,6 +17,11 @@ public class PlayerEntry extends SimpleStreamableObject
 {
     /** The display name of the friend. */
     public VizPlayerName name;
+
+    @Inject
+    public PlayerEntry ()
+    {
+    }
 
     public PlayerEntry (VizPlayerName name)
     {

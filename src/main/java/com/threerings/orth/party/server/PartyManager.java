@@ -5,6 +5,7 @@
 package com.threerings.orth.party.server;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
@@ -120,7 +121,9 @@ public class PartyManager
                 // Crap, we used to do this in addPlayer, but they could never actually enter the
                 // party and leave it hosed. The downside of doing it this way is that we could
                 // approve more than MAX_PLAYERS to join the party...
-                PartyPeep peep = new PartyPeep(partier.playerName, nextJoinOrder());
+                PartyPeep peep = _peepProvider.get();
+                peep.name = partier.playerName;
+                peep.joinOrder = nextJoinOrder();
                 if (!_partyObj.peeps.contains(peep)) {
                     _partyObj.addToPeeps(peep);
                 }
@@ -345,4 +348,5 @@ public class PartyManager
 
     @Inject protected ClientManager _clmgr;
     @Inject protected OrthPeerManager _peerMgr;
+    @Inject protected Provider<PartyPeep> _peepProvider;
 }

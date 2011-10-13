@@ -4,7 +4,6 @@
 
 package com.threerings.orth.party.data;
 
-import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.data.PlayerEntry;
 
 /**
@@ -17,11 +16,4 @@ public class PartyPeep extends PlayerEntry
      * value, the better priority they have to be auto-assigned leadership.
      */
     public int joinOrder;
-
-    /** Mr. Constructor. */
-    public PartyPeep (VizPlayerName name, int joinOrder)
-    {
-        super(name);
-        this.joinOrder = joinOrder;
-    }
 }
