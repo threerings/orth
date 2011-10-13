@@ -10,6 +10,11 @@ import com.threerings.presents.dobj.DSet;
  */
 public class InstanceInfo implements DSet.Entry
 {
+    public static Comparable<?> makeKey (String instanceId)
+    {
+        return instanceId;
+    }
+
     public InstanceInfo (String instanceId)
     {
         _instanceId = instanceId;

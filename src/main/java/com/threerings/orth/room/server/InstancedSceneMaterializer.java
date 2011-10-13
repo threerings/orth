@@ -21,6 +21,7 @@ import com.threerings.whirled.server.SceneRegistry.ResolutionListener;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.instance.data.Instance;
+import com.threerings.orth.instance.data.InstanceInfo;
 import com.threerings.orth.instance.server.InstanceRegistry;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.nodelet.data.HostedNodelet;
@@ -91,20 +92,17 @@ public class InstancedSceneMaterializer extends OrthSceneMaterializer
             return new InstancedSceneHoster(caller, OrthNodeObject.HOSTED_ROOMS, nodelet);
         }
 
+        // TODO: This can be significantly cleaned up when we have OrthNodeObject.instances
         @Override protected String determineHostingPeer (Nodelet toHost)
         {
             String instanceId = ((InstancedRoomLocus) toHost).instanceId;
 
             // iterate over all hosted rooms in all nodes
             for (OrthNodeObject obj : _peerMan.getOrthNodeObjects()) {
-                for (HostedNodelet hosted : obj.hostedRooms) {
-                    // if we find an existing hosted room in the requested instance, we're done
-                    if (hosted.nodelet instanceof InstancedRoomLocus &&
-                        instanceId.equals(((InstancedRoomLocus) hosted.nodelet).instanceId)) {
-                        log.debug("Hosting scene on existing instance peer",
-                            "toHost", toHost, "hosted", hosted.nodelet, "peer", obj.nodeName);
-                        return obj.nodeName;
-                    }
+                if (obj.instances.containsKey(InstanceInfo.makeKey(instanceId))) {
+                    log.debug("Hosting scene on existing instance peer",
+                        "toHost", toHost, "peer", obj.nodeName);
+                    return obj.nodeName;
                 }
             }
 
