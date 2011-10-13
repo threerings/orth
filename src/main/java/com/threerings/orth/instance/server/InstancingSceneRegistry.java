@@ -38,7 +38,7 @@ public class InstancingSceneRegistry extends SpotSceneRegistry
         _penders = null;
     }
 
-    // from interface SpotProvider
+    @Override
     public void changeLocation (ClientObject caller, int sceneId, Location loc,
                                 SpotService.ConfirmListener listener)
         throws InvocationException
