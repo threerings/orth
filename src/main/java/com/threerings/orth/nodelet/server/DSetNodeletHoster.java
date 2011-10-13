@@ -67,7 +67,7 @@ public abstract class DSetNodeletHoster
      *
      * Alternately, if they merely want to tweak the balancing decision, see
      * {@link #getHostingPeerScore(OrthNodeObject, Nodelet)}, which is what the default
-     * implementation uses to find the least loaded peer.
+     * implementation uses to find the least loaded (highest scoring) peer.
      */
     protected String determineHostingPeer (final Nodelet nodelet)
     {
@@ -75,7 +75,7 @@ public abstract class DSetNodeletHoster
             @Override public Comparable apply (OrthNodeObject input) {
                 return getHostingPeerScore (input, nodelet);
             }
-        }).leastOf(_peerMan.getOrthNodeObjects(), 1).get(0).nodeName;
+        }).greatestOf(_peerMan.getOrthNodeObjects(), 1).get(0).nodeName;
     }
 
     /**
