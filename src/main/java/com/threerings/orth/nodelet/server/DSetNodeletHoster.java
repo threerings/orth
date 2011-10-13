@@ -4,8 +4,6 @@
 
 package com.threerings.orth.nodelet.server;
 
-import javax.annotation.Nullable;
-
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
@@ -17,7 +15,6 @@ import com.samskivert.util.ResultListener;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.peer.data.NodeObject;
 
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
