@@ -7,6 +7,8 @@ package com.threerings.orth.nodelet.data {
 
 import flash.utils.getQualifiedClassName;
 
+import flashx.funk.util.isAbstract;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
@@ -50,7 +52,7 @@ public class Nodelet extends SimpleStreamableObject
      */
     public function getId () :Object
     {
-        throw new Error("abstract");
+        return isAbstract();
     }
 // GENERATED CLASSFINISH START
 }

@@ -2,9 +2,10 @@
 // Orth - a package of MMO services: rooms, parties, guilds, and more!
 // Copyright 2010-2011 Three Rings Design, Inc.
 
-package com.threerings.orth.locus.client
-{
+package com.threerings.orth.locus.client {
+
 import flashx.funk.ioc.inject;
+import flashx.funk.util.isAbstract;
 
 import com.threerings.io.TypedArray;
 
@@ -52,7 +53,7 @@ public class LocusClient extends CrowdClient
 
     protected function buildCredentials () :Credentials
     {
-        throw new Error("abstract");
+        return isAbstract();
     }
 
     override protected function buildClientProps ():Object

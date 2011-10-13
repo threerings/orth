@@ -4,6 +4,8 @@
 
 package com.threerings.orth.room.data {
 
+import flashx.funk.util.isAbstract;
+
 import com.threerings.util.ByteEnum;
 
 public class EntityType extends ByteEnum
@@ -18,7 +20,7 @@ public class EntityType extends ByteEnum
     // ORTH TODO: see MSOY's RoomController.ENTITY_TYPES
     public function getPropertyType () :String
     {
-        throw new Error("abstract");
+        return isAbstract();
     }
 }
 }

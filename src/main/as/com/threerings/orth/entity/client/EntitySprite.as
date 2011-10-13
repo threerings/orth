@@ -19,6 +19,7 @@ import flash.geom.Rectangle;
 
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
+import flashx.funk.util.isAbstract;
 
 import com.threerings.util.Log;
 import com.threerings.util.StringUtil;
@@ -163,7 +164,7 @@ public class EntitySprite
     public function getDesc () :String
     {
         // should return something like m.furni, m.avatar...
-        throw new Error("abstract");
+        return isAbstract();
     }
 
     /**

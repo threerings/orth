@@ -3,7 +3,9 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.notify.client {
+
 import flashx.funk.ioc.inject;
+import flashx.funk.util.isAbstract;
 
 import com.threerings.util.Log;
 import com.threerings.util.Name;
@@ -97,13 +99,13 @@ public class NotificationDirector extends BasicDirector
     /** Return the NotificationDisplay implementation that will actually show the player their notifications. */
     protected function getDisplay () :NotificationDisplay
     {
-        throw new Error("abstract");
+        return isAbstract();
     }
 
     /** Perform the service call to the server to release the deferred notifications. */
     protected function dispatchDeferredNotifications () :void
     {
-        throw new Error("abstract");
+        isAbstract();
     }
 
     /** Return the name of the NOTIFICATION field, i.e. *Object.NOTIFICATION. */

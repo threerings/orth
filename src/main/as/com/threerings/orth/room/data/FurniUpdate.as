@@ -5,6 +5,8 @@
 // GENERATED PREAMBLE START
 package com.threerings.orth.room.data {
 
+import flashx.funk.util.isAbstract;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
@@ -44,7 +46,7 @@ public class FurniUpdate extends SceneUpdate
 
     protected /*abstract*/ function doUpdate (model :OrthSceneModel) :void
     {
-        throw new Error("abstract");
+        isAbstract();
     }
 
 // GENERATED CLASSFINISH START

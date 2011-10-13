@@ -5,6 +5,8 @@
 // GENERATED PREAMBLE START
 package com.threerings.orth.comms.data {
 
+import flashx.funk.util.isAbstract;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
@@ -19,10 +21,10 @@ public class BaseOneToOneComm extends ModuleStreamable
     implements OneToOneComm
 {
 // GENERATED CLASSDECL END
-    public function get fromMessage () :String { throw new Error("Abstract!"); }
+    public function get fromMessage () :String { return isAbstract(); }
     public function get from() :PlayerName { return _from; }
 
-    public function get toMessage () :String { throw new Error("Abstract!"); }
+    public function get toMessage () :String { return isAbstract(); }
     public function get to() :PlayerName { return _to; }
 
 // GENERATED STREAMING START

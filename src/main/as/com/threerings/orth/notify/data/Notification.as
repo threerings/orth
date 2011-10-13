@@ -5,6 +5,8 @@
 // GENERATED PREAMBLE START
 package com.threerings.orth.notify.data {
 
+import flashx.funk.util.isAbstract;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
@@ -56,7 +58,7 @@ public class Notification extends SimpleStreamableObject
      */
     public function getAnnouncement () :String
     {
-        throw new Error("Abstract");
+        return isAbstract();
     }
 
     /**
