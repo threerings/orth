@@ -16,6 +16,10 @@ import com.threerings.crowd.server.BodyLocator;
 import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
 import com.threerings.orth.instance.data.Instance;
+import com.threerings.orth.instance.data.InstanceInfo;
+import com.threerings.orth.peer.server.OrthPeerManager;
+
+import static com.threerings.orth.Log.log;
 
 @Singleton
 public class InstanceRegistry
@@ -42,11 +46,22 @@ public class InstanceRegistry
 
     public void registerInstance (Instance instance)
     {
+        Preconditions.checkState(!_instances.containsKey(instance.getInstanceId()),
+            "Instance '%s' already registered", instance.getInstanceId());
         _instances.put(instance.getInstanceId(), instance);
+
+        // TODO: This should lock!
+        InstanceInfo info = new InstanceInfo(instance.getInstanceId());
+        if (_peerman.getOrthNodeObject().instances.contains(info)) {
+            log.warning("InstanceInfo already registered on OrthNodeObject",
+                "instance", instance.getInstanceId());
+        }
+        _peerman.getOrthNodeObject().addToInstances(info);
     }
 
     protected Map<String, Instance> _instances = Maps.newHashMap();
 
     @Inject protected Injector _injector;
     @Inject protected BodyLocator _locator;
+    @Inject protected OrthPeerManager _peerman;
 }
