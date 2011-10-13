@@ -11,7 +11,6 @@ import com.google.inject.Singleton;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 

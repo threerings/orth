@@ -38,7 +38,6 @@ import com.threerings.whirled.data.SceneUpdate;
 import com.threerings.whirled.spot.data.Location;
 import com.threerings.whirled.spot.data.Portal;
 import com.threerings.whirled.spot.data.SceneLocation;
-import com.threerings.whirled.spot.server.SpotSceneManager;
 
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;

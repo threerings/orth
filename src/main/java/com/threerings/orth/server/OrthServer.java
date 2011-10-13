@@ -20,7 +20,6 @@ import com.threerings.whirled.spot.server.SpotSceneRegistry;
 import com.threerings.orth.aether.server.AetherManager;
 import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.guild.server.GuildRegistry;
-import com.threerings.orth.instance.server.InstancingSceneRegistry;
 import com.threerings.orth.locus.server.LocusManager;
 import com.threerings.orth.locus.server.LocusMaterializer;
 import com.threerings.orth.party.server.PartyRegistry;
