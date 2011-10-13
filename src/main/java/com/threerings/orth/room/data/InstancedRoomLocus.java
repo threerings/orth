@@ -14,6 +14,11 @@ public class InstancedRoomLocus extends RoomLocus
 {
     public String instanceId;
 
+    public static Key makeKey (String instanceId, int sceneId)
+    {
+        return new Key(instanceId, sceneId);
+    }
+
     public InstancedRoomLocus (String instanceId, int sceneId, OrthLocation loc)
     {
         super(sceneId, loc);
@@ -24,7 +29,7 @@ public class InstancedRoomLocus extends RoomLocus
     // social rooms are hosted by instance, not by scene
     @Override public Comparable<?> getKey ()
     {
-        return new Key(this);
+        return new Key(this.instanceId, this.sceneId);
     }
 
     @Override public int hashCode ()
@@ -44,10 +49,10 @@ public class InstancedRoomLocus extends RoomLocus
         public String instanceId;
         public int sceneId;
 
-        public Key (InstancedRoomLocus locus)
+        public Key (String instanceId, int sceneId)
         {
-            this.instanceId = locus.instanceId;
-            this.sceneId = locus.sceneId;
+            this.instanceId = instanceId;
+            this.sceneId = sceneId;
         }
 
         @Override public int compareTo (Key o) {
