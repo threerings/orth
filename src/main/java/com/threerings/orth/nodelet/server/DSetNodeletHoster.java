@@ -4,7 +4,12 @@
 
 package com.threerings.orth.nodelet.server;
 
+import javax.annotation.Nullable;
+
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Ordering;
+
 import com.google.inject.Inject;
 
 import com.samskivert.util.ResultListener;
@@ -60,31 +65,34 @@ public abstract class DSetNodeletHoster
     /**
      * The nodelet is about to be hosted; we need to determine which host to ask to do it.
      *
-     * The default implementation does a simple load balancing. Subclasses may use whatever
-     * method they see fit -- any peer's nodeName is a valid return value.
+     * Subclasses may override this method and return an absolute decision that they come up
+     * with however they like.
+     *
+     * Alternately, if they merely want to tweak the balancing decision, see
+     * {@link #getHostingPeerScore(OrthNodeObject, Nodelet)}, which is what the default
+     * implementation uses to find the least loaded peer.
      */
-    protected String determineHostingPeer (Nodelet nodelet)
+    protected String determineHostingPeer (final Nodelet nodelet)
     {
-        // our load balancing strategy is very simple; we define the load of a peer as
-        // the number of clients currently connected to it. while all sorts of more complex
-        // expressions can be imagined, this one is probably about as good as any other in
-        // capturing the general business of a server -- at least until such a day as we get
-
-        float minLoad = -1;
-        String chosenPeer = null;
-        for (OrthNodeObject obj : _peerMan.getOrthNodeObjects()) {
-            float load = obj.calculateLoad();
-            if (obj.nodeName.equals(_peerMan.getNodeObject().nodeName)) {
-                // if there's no great difference in loads, prefer to host it locally
-                load *= 0.9;
+        return Ordering.natural().onResultOf(new Function<OrthNodeObject, Comparable>() {
+            @Override public Comparable apply (OrthNodeObject input) {
+                return getHostingPeerScore (input, nodelet);
             }
-            if (load < minLoad || minLoad < 0) {
-                chosenPeer = obj.nodeName;
-                minLoad = load;
-            }
-        }
-        return chosenPeer;
+        }).leastOf(_peerMan.getOrthNodeObjects(), 1).get(0).nodeName;
     }
+
+    /**
+     * Return a peer's load balancing score, from 0.0 (absolutely full) to 1.0 (unloaded) or,
+     * if subclassed, even higher to suggest an explicit hunger to host the given nodelet.
+     *
+     * Subclasses may modify or override this value for their own application specific purposes.
+     * The default implementation is 1 / (1 + node.load), which will always lie in (0, 1].
+     */
+    protected float getHostingPeerScore (OrthNodeObject nodeObj, Nodelet nodelet)
+    {
+        return (float) (1.0 / (1.0 + Math.max(0, nodeObj.calculateLoad())));
+    }
+
 
     /** Overridden to instantiate the appropriate concrete {@link HostNodeletRequest}. */
     abstract protected HostNodeletRequest createHostingRequest (AuthName caller, Nodelet nodelet);
