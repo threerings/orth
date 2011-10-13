@@ -7,7 +7,6 @@ package com.threerings.orth.nodelet.server;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Ordering;
-
 import com.google.inject.Inject;
 
 import com.samskivert.util.ResultListener;
