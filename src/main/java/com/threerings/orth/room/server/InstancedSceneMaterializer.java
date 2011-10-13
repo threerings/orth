@@ -97,8 +97,8 @@ public class InstancedSceneMaterializer extends OrthSceneMaterializer
             String instanceId = ((InstancedRoomLocus) toHost).instanceId;
 
             // iterate over all hosted rooms in all nodes
-            for (NodeObject obj : _peerMan.getNodeObjects()) {
-                for (HostedNodelet hosted : ((OrthNodeObject) obj).hostedRooms) {
+            for (OrthNodeObject obj : _peerMan.getOrthNodeObjects()) {
+                for (HostedNodelet hosted : obj.hostedRooms) {
                     // if we find an existing hosted room in the requested instance, we're done
                     if (hosted.nodelet instanceof InstancedRoomLocus &&
                         instanceId.equals(((InstancedRoomLocus) hosted.nodelet).instanceId)) {

@@ -72,8 +72,8 @@ public abstract class DSetNodeletHoster
 
         float minLoad = -1;
         String chosenPeer = null;
-        for (NodeObject obj : _peerMan.getNodeObjects()) {
-            float load = ((OrthNodeObject) obj).calculateLoad();
+        for (OrthNodeObject obj : _peerMan.getOrthNodeObjects()) {
+            float load = obj.calculateLoad();
             if (obj.nodeName.equals(_peerMan.getNodeObject().nodeName)) {
                 // if there's no great difference in loads, prefer to host it locally
                 load *= 0.9;
