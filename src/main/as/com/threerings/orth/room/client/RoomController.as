@@ -22,7 +22,6 @@ import com.threerings.util.Map;
 import com.threerings.util.Maps;
 import com.threerings.util.ObjectMarshaller;
 
-import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.client.LocationDirector;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceConfig;
@@ -33,18 +32,14 @@ import com.threerings.whirled.client.SceneController;
 import com.threerings.whirled.client.SceneDirector;
 import com.threerings.whirled.spot.client.SpotSceneDirector;
 
-import com.threerings.orth.aether.client.AetherDirector;
-import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthController;
 import com.threerings.orth.client.OrthPlaceBox;
-import com.threerings.orth.client.OrthResourceFactory;
 import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.entity.client.ActorSprite;
 import com.threerings.orth.entity.client.EntitySprite;
 import com.threerings.orth.entity.client.MemberSprite;
-import com.threerings.orth.locus.client.LocusController;
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.EntityIdent;
@@ -607,12 +602,14 @@ public class RoomController extends SceneController
                 // orient the location as appropriate
                 addAvatarYOffset(cloc);
                 var newLoc :OrthLocation = cloc.loc;
-                var degrees :Number = 180 / Math.PI *
-                    Math.atan2(newLoc.z - curLoc.z, newLoc.x - curLoc.x);
-                // we rotate so that 0 faces forward
-                newLoc.orient = (degrees + 90 + 360) % 360;
-                // effect the move
-                requestAvatarMove(newLoc);
+                if (_roomView.canWalkTo(newLoc)) {
+                    var degrees :Number = 180 / Math.PI *
+                        Math.atan2(newLoc.z - curLoc.z, newLoc.x - curLoc.x);
+                    // we rotate so that 0 faces forward
+                    newLoc.orient = (degrees + 90 + 360) % 360;
+                    // effect the move
+                    requestAvatarMove(newLoc);
+                }
             }
         }
     }
@@ -816,16 +813,8 @@ public class RoomController extends SceneController
     protected const _octx :OrthContext = inject(OrthContext);
     protected const _rctx :RoomContext = inject(RoomContext);
 
-    protected const _muteDir :MuteDirector = inject(MuteDirector);
     protected const _locDir :LocationDirector = inject(LocationDirector);
-
     protected const _orthCtrl :OrthController = inject(OrthController);
-    protected const _locusCtrl :LocusController = inject(LocusController);
-    protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
-    protected const _rsrc :OrthResourceFactory = inject(OrthResourceFactory);
-
-
-    protected const _aetherDir :AetherDirector = inject(AetherDirector);
     protected const _locusDir :LocusDirector = inject(LocusDirector);
     protected const _sceneDir :OrthSceneDirector = inject(SceneDirector);
     protected const _spotDir :SpotSceneDirector = inject(SpotSceneDirector);

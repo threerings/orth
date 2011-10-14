@@ -6,7 +6,7 @@ package com.threerings.orth.room.data;
 
 import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.orth.entity.data.Walkability;
+import com.threerings.orth.ui.ObjectMediaDesc;
 
 /**
  */
@@ -21,7 +21,7 @@ public class DecorData extends SimpleStreamableObject
     public float actorScale;
     public float furniScale;
     public boolean hideWalls;
-    public Walkability walkability;
+    public ObjectMediaDesc walkability;
 
     /** Deserializing constructor. */
     public DecorData ()
@@ -30,7 +30,7 @@ public class DecorData extends SimpleStreamableObject
 
     /** Initializing constructor. */
     public DecorData ( byte type, short width, short height, short depth, float horizon,
-        float actorScale, float furniScale, Walkability walkability)
+        float actorScale, float furniScale, ObjectMediaDesc walkability)
     {
         this.type = type;
         this.width = width;
@@ -78,7 +78,7 @@ public class DecorData extends SimpleStreamableObject
     }
 
     // from Decor
-    public Walkability getWalkability () {
+    public ObjectMediaDesc getWalkability () {
         return walkability;
     }
 }

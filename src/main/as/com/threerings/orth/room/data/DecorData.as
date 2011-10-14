@@ -9,8 +9,7 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.orth.entity.data.Walkability;
-import com.threerings.orth.room.data.Decor;
+import com.threerings.orth.ui.ObjectMediaDesc;
 
 // GENERATED PREAMBLE END
 
@@ -37,7 +36,7 @@ public class DecorData extends SimpleStreamableObject
 
     public var hideWalls :Boolean;
 
-    public var walkability :Walkability;
+    public var walkability :ObjectMediaDesc;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
@@ -50,7 +49,7 @@ public class DecorData extends SimpleStreamableObject
         actorScale = ins.readFloat();
         furniScale = ins.readFloat();
         hideWalls = ins.readBoolean();
-        walkability = ins.readObject(Walkability);
+        walkability = ins.readObject(ObjectMediaDesc);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
@@ -110,7 +109,7 @@ public class DecorData extends SimpleStreamableObject
     }
 
     // from Decor
-    public function getWalkability () :Walkability {
+    public function getWalkability () :ObjectMediaDesc {
         return walkability;
     }
 

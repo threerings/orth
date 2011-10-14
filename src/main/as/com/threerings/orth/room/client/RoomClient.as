@@ -9,7 +9,6 @@ import com.threerings.presents.net.Credentials;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.entity.data.AvatarData;
-import com.threerings.orth.entity.data.MediaWalkability;
 import com.threerings.orth.locus.client.LocusClient;
 import com.threerings.orth.room.data.DecorData;
 import com.threerings.orth.room.data.OrthRoomConfig;
@@ -25,7 +24,6 @@ public class RoomClient extends LocusClient
     OrthRoomConfig;
     DecorData;
     AvatarData;
-    MediaWalkability;
 
     override protected function buildCredentials () :Credentials
     {

@@ -329,6 +329,8 @@ public class RoomObjectView extends RoomView
         // save our scene object
         _roomObj = (plobj as OrthRoomObject);
 
+        super.willEnterPlace(plobj);
+
         rereadScene();
         updateAllFurni();
 

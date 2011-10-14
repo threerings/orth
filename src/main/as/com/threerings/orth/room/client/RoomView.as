@@ -31,7 +31,6 @@ import com.threerings.whirled.spot.data.Portal;
 import com.threerings.orth.chat.client.ChatInfoProvider;
 import com.threerings.orth.chat.client.SpeakerObserver;
 import com.threerings.orth.client.ContextMenuProvider;
-import com.threerings.orth.client.OrthPlaceView;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.client.SnapshotUtil;
 import com.threerings.orth.client.Snapshottable;
@@ -42,7 +41,6 @@ import com.threerings.orth.entity.client.FurniSprite;
 import com.threerings.orth.entity.client.MemberSprite;
 import com.threerings.orth.entity.client.OccupantSprite;
 import com.threerings.orth.entity.client.ParallaxSprite;
-import com.threerings.orth.entity.data.Walkability;
 import com.threerings.orth.room.client.layout.RoomLayout;
 import com.threerings.orth.room.client.layout.RoomLayoutFactory;
 import com.threerings.orth.room.data.Decor;
@@ -242,6 +240,8 @@ public class RoomView extends Sprite
                 relayoutSprite(sprite);
             }
         });
+
+        _layout.updateScreenLocation(_obMap);
     }
 
     /**
@@ -331,7 +331,7 @@ public class RoomView extends Sprite
     // documentation inherited from interface PlaceView
     public function willEnterPlace (plobj :PlaceObject) :void
     {
-        // nada
+        appendElement(_obMap);
     }
 
     // documentation inherited from interface PlaceView
@@ -352,6 +352,9 @@ public class RoomView extends Sprite
         updateLayout(scene.getDecor());
         _backdrop.update(scene.getDecor());
         relayout();
+
+        _obMap.desc = scene.getDecor().getWalkability();
+        _layout.updateScreenLocation(_obMap);
     }
 
     public function getScene () :OrthScene
@@ -359,24 +362,24 @@ public class RoomView extends Sprite
         return _scene;
     }
 
-    // ORTH TODO: once this uses logical coordinates, it really belongs in the controller
     public function canWalkTo (toLoc :OrthLocation) :Boolean
     {
-        var myLoc :OrthLocation = getMyCurrentLocation();
-        var walkability :Walkability = getScene().getDecor().getWalkability();
-
-        if (walkability == null || myLoc == null) {
+        const myLoc :OrthLocation = getMyCurrentLocation();
+        if (myLoc == null || _obMap.desc == null) {
             return true;
         }
 
-//        var from :Point = _layout.metrics.roomToScreen(myLoc.x, myLoc.y, myLoc.z);
-//        from = _bg.viz.globalToLocal(from);
-//
-//        var to :Point = _layout.metrics.roomToScreen(toLoc.x, toLoc.y, toLoc.z);
-//        to = _bg.viz.globalToLocal(to);
-//
-//        return walkability.isPathWalkable(from, to);
-        return false;
+        const from :Point = localToGlobal(_layout.metrics.roomToScreen(myLoc.x, myLoc.y, myLoc.z));
+        const to :Point = localToGlobal(_layout.metrics.roomToScreen(toLoc.x, toLoc.y, toLoc.z));
+
+        const dT :Number = 1.0 / Point.distance(from, to);
+        for (var t :Number = 0; t <= 1; t += dT) {
+            const p :Point = Point.interpolate(from, to, t);
+            if (!_obMap.hitTestPoint(p.x, p.y, true)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -785,6 +788,8 @@ public class RoomView extends Sprite
     /** What is the current offset into the RoomView that the player is watching? */
     protected var _scrollOffset :Point = new Point(0, 0);
 
+    protected var _obMap :ObstructionMap = new ObstructionMap();
+
     /** Object responsible for our spatial layout. */
     protected var _layout :RoomLayout;
 
@@ -802,18 +807,41 @@ public class RoomView extends Sprite
 }
 }
 
+import com.threerings.display.DisplayUtil;
 
 import com.threerings.orth.room.client.RoomElementSprite;
+import com.threerings.orth.room.data.OrthRoomCodes;
+import com.threerings.orth.ui.ObjectMediaDesc;
 
-class BackdropOverlay extends RoomElementSprite
+class ObstructionMap extends RoomElementSprite
 {
-    public function BackdropOverlay ()
+    public function ObstructionMap ()
     {
         mouseEnabled = false;
+        visible = false;
+
+        _loc.z = 1.0;
     }
 
-    override public function setScreenLocation (x :Number, y :Number, scale :Number) :void
+    public function set desc (desc :ObjectMediaDesc) :void
     {
-        // no op - this object cannot be moved, it's always displayed directly on top of the room
+        DisplayUtil.removeAllChildren(this);
+        _desc = desc;
+        if (_desc != null) {
+            this.addChild(desc.getMediaObject());
+        }
     }
+
+    public function get desc () :ObjectMediaDesc
+    {
+        return _desc;
+    }
+
+    // from RoomElement
+    override public function getLayoutType () :int
+    {
+        return OrthRoomCodes.LAYOUT_PARALLAX;
+    }
+
+    protected var _desc :ObjectMediaDesc;
 }
