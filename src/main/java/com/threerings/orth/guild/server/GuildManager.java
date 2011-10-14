@@ -267,7 +267,7 @@ public class GuildManager extends NodeletManager
             rl.requestFailed(null);
             return;
         }
-        final GuildMemberEntry newEntry = GuildMemberEntry.fromOrthName(clinfo.orthName,
+        final GuildMemberEntry newEntry = GuildMemberEntry.fromOrthName(clinfo.visibleName,
             GuildRank.MEMBER);
         // woo! add 'em to the guild
         _invoker.postUnit(new Resulting<Void>("add guild member", rl) {

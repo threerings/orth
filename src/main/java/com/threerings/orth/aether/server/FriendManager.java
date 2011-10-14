@@ -274,12 +274,12 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
             return;
         }
         player.addToFriends(toFriendEntry(other));
-        _notifyMap.put(other.orthName.getId(), player);
+        _notifyMap.put(other.visibleName.getId(), player);
     }
 
     protected static FriendEntry toFriendEntry (OrthClientInfo info)
     {
-        return FriendEntry.fromOrthName(info.orthName, FriendEntry.Status.ONLINE);
+        return FriendEntry.fromOrthName(info.visibleName, FriendEntry.Status.ONLINE);
     }
 
     /** Mapping of local and remote player ids to friend ids logged into this server. */
