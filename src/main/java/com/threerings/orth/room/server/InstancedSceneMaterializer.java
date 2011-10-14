@@ -92,7 +92,6 @@ public class InstancedSceneMaterializer extends OrthSceneMaterializer
             return new InstancedSceneHoster(caller, OrthNodeObject.HOSTED_ROOMS, nodelet);
         }
 
-        // TODO: This can be significantly cleaned up when we have OrthNodeObject.instances
         @Override protected String determineHostingPeer (Nodelet toHost)
         {
             String instanceId = ((InstancedRoomLocus) toHost).instanceId;
