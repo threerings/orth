@@ -20,6 +20,11 @@ public class InstanceInfo implements DSet.Entry
         _instanceId = instanceId;
     }
 
+    public String getInstanceId ()
+    {
+        return _instanceId;
+    }
+
     @Override public Comparable<?> getKey ()
     {
         return _instanceId;
