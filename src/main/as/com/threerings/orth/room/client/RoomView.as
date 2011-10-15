@@ -362,24 +362,26 @@ public class RoomView extends Sprite
         return _scene;
     }
 
-    public function canWalkTo (toLoc :OrthLocation) :Boolean
+    public function getLastWalkablePoint (toLoc :OrthLocation) :OrthLocation
     {
         const myLoc :OrthLocation = getMyCurrentLocation();
         if (myLoc == null || _obMap.desc == null) {
-            return true;
+            return toLoc;
         }
 
         const from :Point = localToGlobal(_layout.metrics.roomToScreen(myLoc.x, myLoc.y, myLoc.z));
         const to :Point = localToGlobal(_layout.metrics.roomToScreen(toLoc.x, toLoc.y, toLoc.z));
 
-        const dT :Number = 1.0 / Point.distance(from, to);
-        for (var t :Number = 0; t <= 1; t += dT) {
-            const p :Point = Point.interpolate(from, to, t);
-            if (!_obMap.hitTestPoint(p.x, p.y, true)) {
-                return false;
+        const n :int = Point.distance(from, to);
+        // don't test the first 5 pixels, to get us out of weird trap situations
+        for (var ii :int = 5; ii < n; ii ++) {
+            // apparently Point.interpolate's interpolation factor goes from 1 to 0, not 0 to 1?!
+            const toTest :Point = Point.interpolate(from, to, (n-ii)/n);
+            if (!_obMap.hitTestPoint(toTest.x, toTest.y, true)) {
+                return OrthLocation.interpolate(myLoc, toLoc, (ii-1)/n);
             }
         }
-        return true;
+        return toLoc;
     }
 
     /**
