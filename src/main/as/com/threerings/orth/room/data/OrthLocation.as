@@ -16,6 +16,19 @@ import com.threerings.whirled.spot.data.Location;
 public class OrthLocation implements Location, Streamable
 {
 // GENERATED CLASSDECL END
+    /**
+     * Return the linear combination (1-t)*a + t*b, i.e. the OrthLocation at point t between
+     * a and b, where 0 <= t <= 1.
+     */
+    public static function interpolate (a :OrthLocation, b :OrthLocation, t :Number) :OrthLocation
+    {
+        return new OrthLocation(
+            a.x + t*(b.x - a.x),
+            a.y + t*(b.y - a.y),
+            a.z + t*(b.z - a.z),
+            a.orient + t*(b.orient - a.orient));
+    }
+
 // GENERATED STREAMING START
     public var x :Number;
 
