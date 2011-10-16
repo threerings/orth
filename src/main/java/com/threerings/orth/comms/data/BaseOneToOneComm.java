@@ -24,6 +24,5 @@ public abstract class BaseOneToOneComm extends ModuleStreamable
         return _from;
     }
 
-
     protected PlayerName _from, _to;
 }
