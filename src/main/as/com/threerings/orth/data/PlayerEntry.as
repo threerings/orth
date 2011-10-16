@@ -66,6 +66,11 @@ public class PlayerEntry extends SimpleStreamableObject
         return "PlayerEntry[" + name + "]";
     }
 
+    public function get id () :int
+    {
+        return this.name.id;
+    }
+
     // from interface DSet_Entry
     public function getKey () :Object
     {
