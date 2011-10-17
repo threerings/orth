@@ -218,7 +218,7 @@ public class PartyManager
         // add them to the invited set
         _partyObj.invitedIds.add(invitee.getId());
 
-        final PartyInvite invite = new PartyInvite(inviter.playerName.toOrthName(), invitee, addr);
+        final PartyInvite invite = createInvite(inviter, invitee);
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(invitee.getId()) {
             @Override protected void execute (AetherClientObject plobj,
                 InvocationService.ResultListener listener) {
@@ -231,6 +231,11 @@ public class PartyManager
                 CommSender.receiveComm(caller, invite);
             }
         });
+    }
+
+    protected PartyInvite createInvite (PartierObject inviter, PlayerName invitee)
+    {
+        return new PartyInvite(inviter.playerName.toOrthName(), invitee, addr);
     }
 
     @Override
