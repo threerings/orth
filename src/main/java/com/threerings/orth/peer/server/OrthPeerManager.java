@@ -16,6 +16,7 @@ import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.util.Name;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.data.ClientObject;
@@ -31,6 +32,9 @@ import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.data.Whereabouts;
+import com.threerings.orth.locus.data.Locus;
+import com.threerings.orth.locus.data.LocusAuthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.server.NodeletRegistry;
@@ -77,9 +81,11 @@ public abstract class OrthPeerManager extends PeerManager
      */
     public Iterable<OrthNodeObject> getOrthNodeObjects ()
     {
-        return Iterables.transform(getNodeObjects(), new Function<NodeObject, OrthNodeObject>() {
-            public OrthNodeObject apply (NodeObject node) {
-                return (OrthNodeObject)node;
+        return Iterables.transform(getNodeObjects(), new Function<NodeObject, OrthNodeObject>()
+        {
+            public OrthNodeObject apply (NodeObject node)
+            {
+                return (OrthNodeObject) node;
             }
         });
     }
@@ -108,11 +114,19 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     /**
-     * Locate a client by player id.
+     * Locate an aether client by player id.
      */
     public OrthClientInfo locatePlayer (int playerId)
     {
         return (OrthClientInfo)locateClient(AetherAuthName.makeKey(playerId));
+    }
+
+    /**
+     * Locate an aether client by player id.
+     */
+    public OrthClientInfo locateLocusBody (int playerId)
+    {
+        return (OrthClientInfo)locateClient(LocusAuthName.makeKey(playerId));
     }
 
     /**
@@ -173,6 +187,28 @@ public abstract class OrthPeerManager extends PeerManager
         throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
     }
 
+    public void enteredLocus (Name name, Locus locus, String description)
+    {
+        Preconditions.checkArgument(name instanceof LocusAuthName,
+            "Unexpected Name: %s", name);
+        updateClientInfo((AuthName) name, new Whereabouts.InLocus(locus, description));
+    }
+
+    public void leftLocus (Name name)
+    {
+        Preconditions.checkArgument(name instanceof LocusAuthName,
+            "Unexpected Name: %s", name);
+        updateClientInfo((AuthName) name, Whereabouts.ONLINE);
+    }
+
+    public void updateClientInfo (AuthName name, Whereabouts whereabouts)
+    {
+        OrthClientInfo foo = (OrthClientInfo) locateClient(name);
+        if (foo != null) {
+            foo.whereabouts = whereabouts;
+        }
+    }
+
     @Override // from PeerManager
     protected NodeObject createNodeObject ()
     {
@@ -189,21 +225,26 @@ public abstract class OrthPeerManager extends PeerManager
     protected void initClientInfo (PresentsSession client, ClientInfo info)
     {
         super.initClientInfo(client, info);
+        OrthClientInfo orthInfo = (OrthClientInfo) info;
 
         ClientObject clobj = client.getClientObject();
-        if (clobj instanceof AetherClientObject) {
-            ((OrthClientInfo)info).visibleName = ((AetherClientObject) clobj).playerName;
+        if (clobj.username instanceof AetherAuthName) {
+            AetherClientObject aetherObj = (AetherClientObject) clobj;
+            orthInfo.visibleName = aetherObj.playerName;
         }
+        orthInfo.whereabouts = Whereabouts.ONLINE;
 
-        loggedOn(_nodeName, (OrthClientInfo) info);
+        loggedOn(_nodeName, orthInfo);
     }
 
     @Override // from PeerManager
     protected void clearClientInfo (PresentsSession client, ClientInfo info)
     {
         super.clearClientInfo(client, info);
+        OrthClientInfo orthInfo = (OrthClientInfo) info;
 
-        loggedOff(_nodeName, (OrthClientInfo)info);
+        orthInfo.whereabouts = Whereabouts.OFFLINE;
+        loggedOff(_nodeName, orthInfo);
     }
 
     @Override // from PeerManager

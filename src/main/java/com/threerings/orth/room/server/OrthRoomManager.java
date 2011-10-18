@@ -46,6 +46,8 @@ import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.instance.server.InstancedSceneManager;
+import com.threerings.orth.locus.data.Locus;
+import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.room.client.OrthRoomService;
 import com.threerings.orth.room.data.ActorInfo;
 import com.threerings.orth.room.data.ActorObject;
@@ -56,6 +58,7 @@ import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
 import com.threerings.orth.room.data.OrthRoomObject;
 import com.threerings.orth.room.data.OrthScene;
+import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.room.data.RoomPlace;
 import com.threerings.orth.room.data.SocializerObject;
 
@@ -231,6 +234,13 @@ public class OrthRoomManager extends InstancedSceneManager
                 // as we arrive at a room, we entrust it with our memories for broadcast to clients
                 body.getLocal(ActorLocal.class).willEnterRoom(actor, _orthObj);
             }
+
+            // notify peers of our arrival in a locus
+
+            SceneLocation sLoc = locationForBody(body.getOid());
+            _peerMgr.enteredLocus(body.username,
+                new RoomLocus(getScene().getId(), (sLoc != null) ? (OrthLocation) sLoc.loc : null),
+                getScene().getName());
         }
 
         // Note: we want to add the occupant info *after* we set up the party
@@ -257,6 +267,9 @@ public class OrthRoomManager extends InstancedSceneManager
                 mems = mems.clone();
                 mems.modified = false; // clear the modified flag in the clone...
             }
+
+            // notify peers of our departure from this locus
+            _peerMgr.leftLocus(body.username);
         }
     }
 
@@ -513,5 +526,5 @@ public class OrthRoomManager extends InstancedSceneManager
 
     @Inject protected ChatManager _chatMan;
     @Inject protected MemoryRepository _memSupply;
-    @Inject protected PeerManager _peerMgr;
+    @Inject protected OrthPeerManager _peerMgr;
 }
