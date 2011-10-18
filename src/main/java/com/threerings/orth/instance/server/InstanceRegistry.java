@@ -50,13 +50,14 @@ public class InstanceRegistry
             "Instance '%s' already registered", instance.getInstanceId());
         _instances.put(instance.getInstanceId(), instance);
 
-        // TODO: This should lock!
+        // NOTE: This does no locking or coordination between peers. It's purely informative.
         InstanceInfo info = new InstanceInfo(instance.getInstanceId());
         if (_peerman.getOrthNodeObject().instances.contains(info)) {
             log.warning("InstanceInfo already registered on OrthNodeObject",
                 "instance", instance.getInstanceId());
+        } else {
+            _peerman.getOrthNodeObject().addToInstances(info);
         }
-        _peerman.getOrthNodeObject().addToInstances(info);
     }
 
     protected Map<String, Instance> _instances = Maps.newHashMap();
