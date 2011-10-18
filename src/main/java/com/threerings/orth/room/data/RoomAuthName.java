@@ -4,12 +4,12 @@
 
 package com.threerings.orth.room.data;
 
-import com.threerings.orth.data.AuthName;
+import com.threerings.orth.locus.data.LocusAuthName;
 
 /**
- * An {@link AuthName} that signals the server that we are logging into the room services.
+ * A {@link LocusAuthName} that signals the server that we are logging into the room services.
  */
-public class RoomAuthName extends AuthName
+public class RoomAuthName extends LocusAuthName
 {
     // for instantiation
     public RoomAuthName (String accountName, int playerId)
