@@ -3,11 +3,14 @@
 
 package com.threerings.orth.instance.data;
 
+import com.threerings.util.ActionScript;
+
 import com.threerings.presents.dobj.DSet;
 
 /**
  * Keep track of which peer hosts which instance.
  */
+@ActionScript(omit=true)
 public class InstanceInfo implements DSet.Entry
 {
     public static Comparable<?> makeKey (String instanceId)

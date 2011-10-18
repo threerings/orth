@@ -7,8 +7,11 @@ import com.google.common.base.Objects;
 
 import com.threerings.io.SimpleStreamableObject;
 
+import com.threerings.util.ActionScript;
+
 import com.threerings.orth.locus.data.Locus;
 
+@ActionScript(omit=true)
 public abstract class Whereabouts extends SimpleStreamableObject
 {
     /** Indicate the all that's known is that the player is offline. */
