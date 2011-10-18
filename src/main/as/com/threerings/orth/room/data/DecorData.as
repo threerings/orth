@@ -9,6 +9,7 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
 
+import com.threerings.orth.room.data.Decor;
 import com.threerings.orth.ui.ObjectMediaDesc;
 
 // GENERATED PREAMBLE END
