@@ -35,15 +35,9 @@ public class InstanceRegistry
         return _instances.get(instanceId);
     }
 
-    // TODO: how does this fit with Instance subclassing? probably drop.
-    public Instance createInstance (String instanceId)
-    {
-        Instance instance = new Instance(instanceId);
-        _injector.injectMembers(instance);
-        registerInstance(instance);
-        return instance;
-    }
-
+    /**
+     * Register an {@link Instance} locally and on the peer nodes.
+     */
     public void registerInstance (Instance instance)
     {
         Preconditions.checkState(!_instances.containsKey(instance.getInstanceId()),
