@@ -27,7 +27,6 @@ public class InstancedRoomLocus extends RoomLocus
         this.instanceId = instanceId;
     }
 
-    // social rooms are hosted by instance, not by scene
     @Override public Comparable<?> getKey ()
     {
         return new Key(this.instanceId, this.sceneId);
