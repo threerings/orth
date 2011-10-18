@@ -45,7 +45,7 @@ public class InstanceRegistry
         _instances.put(instance.getInstanceId(), instance);
 
         // NOTE: This does no locking or coordination between peers. It's purely informative.
-        InstanceInfo info = new InstanceInfo(instance.getInstanceId());
+        InstanceInfo info = instance.toInfo();
         if (_peerman.getOrthNodeObject().instances.contains(info)) {
             log.warning("InstanceInfo already registered on OrthNodeObject",
                 "instance", instance.getInstanceId());

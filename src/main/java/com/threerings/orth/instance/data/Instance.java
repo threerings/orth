@@ -107,6 +107,15 @@ public class Instance
     }
 
     /**
+     * Return an {@link InstanceInfo} to represent this Instance. This method is meant to
+     * be overridden by subclasses.
+     */
+    public InstanceInfo toInfo ()
+    {
+        return new InstanceInfo(_instanceId);
+    }
+
+    /**
      * Adds an observer to notify on player addition and removal.
      */
     public void addObserver (InstanceObserver observer)
