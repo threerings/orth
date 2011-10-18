@@ -3,18 +3,17 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 // GENERATED PREAMBLE START
-package com.threerings.orth.room.data {
+package com.threerings.orth.locus.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.data.AuthName;
-import com.threerings.orth.locus.data.LocusAuthName;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class RoomAuthName extends LocusAuthName
+public class LocusAuthName extends AuthName
 {
 // GENERATED CLASSDECL END
 
