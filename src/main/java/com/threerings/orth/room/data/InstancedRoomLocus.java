@@ -3,6 +3,7 @@
 
 package com.threerings.orth.room.data;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 
 import com.threerings.io.SimpleStreamableObject;
@@ -34,7 +35,7 @@ public class InstancedRoomLocus extends RoomLocus
 
     @Override public int hashCode ()
     {
-        return instanceId.hashCode() + 43*super.hashCode();
+        return Objects.hashCode(instanceId, super.hashCode());
     }
 
     @Override public boolean equals (Object other)
