@@ -231,7 +231,7 @@ public class Instance
      *
      * NOTE: Copied from SceneRegistry
      */
-    public void resolveScene (int sceneId, ResolutionListener target)
+    public void resolveScene (final int sceneId, ResolutionListener target)
     {
         SceneManager mgr = _scenemgrs.get(sceneId);
         if (mgr != null) {
@@ -246,18 +246,17 @@ public class Instance
         }
 
         // otherwise we have to load the scene from the repository
-        final int fsceneId = sceneId;
         _invoker.postUnit(new RepositoryUnit("resolveScene(" + sceneId + ")") {
             @Override public void invokePersist () throws Exception {
-                _model = _screp.loadSceneModel(fsceneId);
-                _updates = _screp.loadUpdates(fsceneId);
-                _extras = _screp.loadExtras(fsceneId, _model);
+                _model = _screp.loadSceneModel(sceneId);
+                _updates = _screp.loadUpdates(sceneId);
+                _extras = _screp.loadExtras(sceneId, _model);
             }
             @Override public void handleSuccess () {
                 processSuccessfulResolution(_model, _updates, _extras);
             }
             @Override public void handleFailure (Exception error) {
-                processFailedResolution(fsceneId, error);
+                processFailedResolution(sceneId, error);
             }
             protected SceneModel _model;
             protected UpdateList _updates;
