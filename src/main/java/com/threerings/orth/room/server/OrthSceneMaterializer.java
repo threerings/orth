@@ -76,7 +76,7 @@ public class OrthSceneMaterializer
         final Locus fLoc = locus;
         // we re-route materialization via NodeletHoster so that we first get the lock and publish
         // the fact that we are hosting this scene
-        _hoster.resolveHosting(caller, locus, new Resulting<HostedNodelet> (listener) {
+        _hoster.resolveHosting(caller, locus, new Resulting<HostedNodelet>(listener) {
             @Override public void requestCompleted (HostedNodelet result) {
                 listener.locusMaterialized(new HostedLocus(fLoc, result.host, result.ports));
             }
@@ -156,17 +156,18 @@ public class OrthSceneMaterializer
 
         @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
             final ResultListener<HostedNodelet> listener) {
-            String instanceId = ((RoomLocus) nodelet).instanceId;
-            Instance instance = _instreg.getInstance(instanceId);
+            final RoomLocus locus = (RoomLocus) nodelet;
+
+            Instance instance = _instreg.getInstance(locus.instanceId);
             if (instance == null) {
-                instance = createInstance(instanceId);
+                instance = createInstance(locus);
+                registerInstance(instance);
             }
 
-            final HostedNodelet room = new HostedNodelet(
-                nodelet, _depConf.getRoomHost(), _depConf.getRoomPorts());
-            instance.resolveScene(((RoomLocus) nodelet).sceneId, new ResolutionListener() {
+            instance.resolveScene(locus.sceneId, new ResolutionListener() {
                 @Override public void sceneWasResolved (SceneManager scmgr) {
-                    listener.requestCompleted(room);
+                    listener.requestCompleted(new HostedNodelet(
+                        locus, _depConf.getRoomHost(), _depConf.getRoomPorts()));
                 }
                 @Override public void sceneFailedToResolve (int sceneId, Exception reason) {
                     listener.requestFailed(reason);
@@ -174,14 +175,13 @@ public class OrthSceneMaterializer
             });
         }
 
-        protected Instance createInstance (String instanceId)
+        protected void registerInstance (Instance instance)
         {
-            // TODO: use an Instance subclass here
-            Instance instance = new Instance(instanceId);
-            _injector.injectMembers(instance);
             _instreg.registerInstance(instance);
 
-            // NOTE: This does no locking or coordination between peers. It's purely informative.
+            // NOTE: This does no locking nor coordination with other peers. It does not e.g.
+            // try to ensure that an instance is only hosted on one peer (because that is not
+            // always what's wanted).
             InstanceInfo info = instance.toInfo();
             if (_peerman.getOrthNodeObject().instances.contains(info)) {
                 log.warning("InstanceInfo already registered on OrthNodeObject",
@@ -189,9 +189,15 @@ public class OrthSceneMaterializer
             } else {
                 _peerman.getOrthNodeObject().addToInstances(info);
             }
+        }
+
+        protected Instance createInstance (RoomLocus locus)
+        {
+            Instance instance = new Instance(locus.instanceId);
+            _injector.injectMembers(instance);
             return instance;
         }
-        
+
         @Inject protected transient OrthDeploymentConfig _depConf;
         @Inject protected transient Injector _injector;
         @Inject protected transient InstanceRegistry _instreg;
