@@ -10,6 +10,7 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.nodelet.data.Nodelet;
+import com.threerings.orth.room.data.OrthLocation;
 
 // GENERATED PREAMBLE END
 
