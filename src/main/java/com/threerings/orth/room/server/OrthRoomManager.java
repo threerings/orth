@@ -26,7 +26,6 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.SetListener;
-import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.BodyObject;
@@ -34,19 +33,25 @@ import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.Place;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.whirled.data.Scene;
 import com.threerings.whirled.data.SceneUpdate;
+import com.threerings.whirled.server.SceneRegistry;
 import com.threerings.whirled.spot.data.Location;
 import com.threerings.whirled.spot.data.Portal;
 import com.threerings.whirled.spot.data.SceneLocation;
+import com.threerings.whirled.util.UpdateList;
 
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.chat.server.SpeakProvider;
+import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.data.Whereabouts.InLocus;
+import com.threerings.orth.data.Whereabouts;
+import com.threerings.orth.instance.data.Instance;
 import com.threerings.orth.instance.server.InstancedSceneManager;
-import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.room.client.OrthRoomService;
 import com.threerings.orth.room.data.ActorInfo;
@@ -224,6 +229,17 @@ public class OrthRoomManager extends InstancedSceneManager
         });
     }
 
+    @Override
+    public void setSceneData (Scene scene, UpdateList updates, Object extras, Instance instance,
+        SceneRegistry screg)
+    {
+        super.setSceneData(scene, updates, extras, instance, screg);
+
+        _whereabouts = new InLocus(
+            new RoomLocus(scene.getId(), instance.getInstanceId(), null),
+            scene.getName());
+    }
+
     @Override // from PlaceManager
     public void bodyWillEnter (BodyObject body)
     {
@@ -235,12 +251,8 @@ public class OrthRoomManager extends InstancedSceneManager
                 body.getLocal(ActorLocal.class).willEnterRoom(actor, _orthObj);
             }
 
-            // notify peers of our arrival in a locus (TODO: this is gross)
-            SceneLocation sLoc = locationForBody(body.getOid());
-            _peerMgr.enteredLocus(body.username,
-                new RoomLocus(getScene().getId(), null,
-                    (sLoc != null) ? (OrthLocation) sLoc.loc : null),
-                getScene().getName());
+            // notify peers of our arrival in a locus
+            _peerMgr.updateWhereabouts((AuthName) body.username, _whereabouts);
         }
 
         // Note: we want to add the occupant info *after* we set up the party
@@ -269,7 +281,7 @@ public class OrthRoomManager extends InstancedSceneManager
             }
 
             // notify peers of our departure from this locus
-            _peerMgr.leftLocus(body.username);
+            _peerMgr.updateWhereabouts((AuthName) body.username);
         }
     }
 
@@ -523,6 +535,9 @@ public class OrthRoomManager extends InstancedSceneManager
 
     /** Listens to the room object. */
     protected RoomListener _roomListener = new RoomListener();
+
+    /** The whereabouts of anybody in this room. */
+    protected Whereabouts _whereabouts;
 
     @Inject protected ChatManager _chatMan;
     @Inject protected MemoryRepository _memSupply;

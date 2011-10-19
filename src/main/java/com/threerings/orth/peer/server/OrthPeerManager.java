@@ -16,7 +16,6 @@ import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
 
-import com.threerings.util.Name;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.data.ClientObject;
@@ -33,7 +32,6 @@ import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.Whereabouts;
-import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusAuthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
@@ -187,21 +185,12 @@ public abstract class OrthPeerManager extends PeerManager
         throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
     }
 
-    public void enteredLocus (Name name, Locus locus, String description)
+    public void updateWhereabouts (AuthName name)
     {
-        Preconditions.checkArgument(name instanceof LocusAuthName,
-            "Unexpected Name: %s", name);
-        updateClientInfo((AuthName) name, new Whereabouts.InLocus(locus, description));
+        updateWhereabouts(name, Whereabouts.ONLINE);
     }
 
-    public void leftLocus (Name name)
-    {
-        Preconditions.checkArgument(name instanceof LocusAuthName,
-            "Unexpected Name: %s", name);
-        updateClientInfo((AuthName) name, Whereabouts.ONLINE);
-    }
-
-    public void updateClientInfo (AuthName name, Whereabouts whereabouts)
+    public void updateWhereabouts (AuthName name, Whereabouts whereabouts)
     {
         OrthClientInfo foo = (OrthClientInfo) locateClient(name);
         if (foo != null) {
