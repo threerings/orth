@@ -20,13 +20,12 @@ import com.threerings.whirled.spot.server.SpotSceneRegistry;
 import com.threerings.orth.aether.server.AetherManager;
 import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.guild.server.GuildRegistry;
+import com.threerings.orth.instance.server.InstancingSceneRegistry;
 import com.threerings.orth.locus.server.LocusManager;
 import com.threerings.orth.locus.server.LocusMaterializer;
 import com.threerings.orth.party.server.PartyRegistry;
 import com.threerings.orth.peer.server.OrthPeerManager;
-import com.threerings.orth.room.data.InstancedRoomLocus;
 import com.threerings.orth.room.data.RoomLocus;
-import com.threerings.orth.room.server.InstancedSceneMaterializer;
 import com.threerings.orth.room.server.MemoryRepository;
 import com.threerings.orth.room.server.OrthRoomManager.AmnesiacMemorySupply;
 import com.threerings.orth.room.server.OrthSceneMaterializer;
@@ -55,11 +54,7 @@ public class OrthServer extends CrowdServer
             bind(PeerManager.class).to(OrthPeerManager.class);
 
             _materializers.addBinding(RoomLocus.class).to(OrthSceneMaterializer.class);
-            _materializers.addBinding(InstancedRoomLocus.class).to(InstancedSceneMaterializer.class);
-
-            // NOTE: To enable instancing, a subclass should bind:
-            //   SpotSceneRegistry -> InstancingSceneRegistry
-            //   OrthSceneMaterializer -> InstancingSceneMaterializer
+            bind(SpotSceneRegistry.class).to(InstancingSceneRegistry.class);
         }
 
         protected MapBinder<Class<?>, LocusMaterializer<?>> _materializers;
