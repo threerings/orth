@@ -176,7 +176,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
      */
     protected void initFriends (final AetherClientObject player)
     {
-        log.debug("Strarting resolution of friends dset", "player", player);
+        log.debug("Starting resolution of friends dset", "player", player.who());
 
         if (!player.friends.isEmpty()) {
             log.warning("Friends already? Something is very wrong.", "player", player.who());
@@ -241,7 +241,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         // clear out the holding buffer
         player.getLocal(AetherLocal.class).unresolvedFriendIds = null;
 
-        log.debug("Finished resolution of friends dset", "player", player);
+        log.debug("Finished resolution of friends dset", "player", player.who());
     }
 
     protected void shutdownFriends (AetherClientObject player)
