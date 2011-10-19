@@ -368,6 +368,11 @@ public class Instance
         checkEmpty();
     }
 
+    @Override public String toString ()
+    {
+        return "[instanceId=" + _instanceId + ", population=" + _population + "]";
+    }
+
     /**
      * Adds a callback for when the scene is resolved. Returns true if this is the first such
      * thing (and thusly, the caller should actually fire off scene resolution) or false if we've
