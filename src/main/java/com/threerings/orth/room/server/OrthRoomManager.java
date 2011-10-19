@@ -235,11 +235,11 @@ public class OrthRoomManager extends InstancedSceneManager
                 body.getLocal(ActorLocal.class).willEnterRoom(actor, _orthObj);
             }
 
-            // notify peers of our arrival in a locus
-
+            // notify peers of our arrival in a locus (TODO: this is gross)
             SceneLocation sLoc = locationForBody(body.getOid());
             _peerMgr.enteredLocus(body.username,
-                new RoomLocus(getScene().getId(), (sLoc != null) ? (OrthLocation) sLoc.loc : null),
+                new RoomLocus(getScene().getId(), null,
+                    (sLoc != null) ? (OrthLocation) sLoc.loc : null),
                 getScene().getName());
         }
 

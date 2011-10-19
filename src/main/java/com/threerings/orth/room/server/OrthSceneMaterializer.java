@@ -4,6 +4,7 @@
 
 package com.threerings.orth.room.server;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -22,11 +23,15 @@ import com.threerings.whirled.client.SceneService.SceneMoveListener;
 import com.threerings.whirled.data.SceneCodes;
 import com.threerings.whirled.server.SceneManager;
 import com.threerings.whirled.server.SceneRegistry.ResolutionListener;
-import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.AuthName;
+import com.threerings.orth.instance.data.Instance;
+import com.threerings.orth.instance.data.InstanceInfo;
+import com.threerings.orth.instance.server.InstanceRegistry;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.locus.data.HostedLocus;
+import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.server.LocusMaterializer;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;
@@ -38,6 +43,8 @@ import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
 import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.server.OrthDeploymentConfig;
+
+import static com.threerings.orth.Log.log;
 
 /**
  * Handles some custom Orth scene traversal business.
@@ -57,16 +64,28 @@ public class OrthSceneMaterializer
 
     // -- BITS THAT RUN ON THE VAULT SERVER
     @Override
-    public void materializeLocus (ClientObject caller, final RoomLocus locus,
+    public void materializeLocus (ClientObject caller, RoomLocus locus,
         final LocusMaterializationListener listener)
     {
+        // if we're not in an instance yet, pick one (this will get much more involved shortly)
+        if (locus.instanceId == null) {
+            String newInstance = pickInstanceForPlayer((AetherClientObject) caller, locus.sceneId);
+            locus = new RoomLocus(locus.sceneId, newInstance, locus.loc);
+        }
+
+        final Locus fLoc = locus;
         // we re-route materialization via NodeletHoster so that we first get the lock and publish
         // the fact that we are hosting this scene
         _hoster.resolveHosting(caller, locus, new Resulting<HostedNodelet> (listener) {
             @Override public void requestCompleted (HostedNodelet result) {
-                listener.locusMaterialized(new HostedLocus(locus, result.host, result.ports));
+                listener.locusMaterialized(new HostedLocus(fLoc, result.host, result.ports));
             }
         });
+    }
+
+    protected String pickInstanceForPlayer (AetherClientObject player, int sceneId)
+    {
+        return "public";
     }
 
     protected DSetNodeletHoster createHoster ()
@@ -86,6 +105,25 @@ public class OrthSceneMaterializer
         {
             return new OrthSceneHoster(caller, OrthNodeObject.HOSTED_ROOMS, nodelet);
         }
+
+        @Override protected String determineHostingPeer (Nodelet toHost)
+        {
+            String instanceId = ((RoomLocus) toHost).instanceId;
+
+            // iterate over all hosted rooms in all nodes
+            for (OrthNodeObject obj : _peerMan.getOrthNodeObjects()) {
+                if (obj.instances.containsKey(InstanceInfo.makeKey(instanceId))) {
+                    log.debug("Hosting scene on existing instance peer",
+                        "toHost", toHost, "peer", obj.nodeName);
+                    return obj.nodeName;
+                }
+            }
+
+            // if not, this is an unhosted instance: fall back on load-balancing
+            String peer = super.determineHostingPeer(toHost);
+            log.debug("Hosting entirely new instance", "toHost", toHost, "peer", peer);
+            return peer;
+        }
     }
 
 
@@ -95,12 +133,18 @@ public class OrthSceneMaterializer
     public void moveTo (ClientObject caller, RoomLocus locus, int version, int portalId,
         SceneMoveListener listener) throws InvocationException
     {
-        final ActorObject mover = (ActorObject) caller;
+        final ActorObject body = (ActorObject) caller;
+        Instance instance = Preconditions.checkNotNull(_instreg.getInstance(locus.instanceId),
+            "No instance named '%s' registered.", locus.instanceId);
 
-        // NOTE: this should only ever be called as the last stage of a locus-routed move, where
-        // we know we've already resolved the scene on this server in OrthSceneHoster
-        _sceneReg.resolveScene(locus.sceneId, new OrthSceneMoveHandler(
-                _locman, mover, version, portalId, locus.loc, listener));
+        // if we're not in this instance yet, we want to be
+        if (Instance.getFor(body) != instance) {
+            instance.addPlayer(body);
+        }
+
+        // now go there -- the scene is really resolved already, by the SceneHoster below.
+        instance.resolveScene(locus.sceneId,
+            new OrthSceneMoveHandler(_locman, body, version, portalId, locus.loc, listener));
     }
 
     protected static class OrthSceneHoster extends HostNodeletRequest
@@ -112,9 +156,15 @@ public class OrthSceneMaterializer
 
         @Override protected void hostLocally (AuthName caller, Nodelet nodelet,
             final ResultListener<HostedNodelet> listener) {
+            String instanceId = ((RoomLocus) nodelet).instanceId;
+            Instance instance = _instreg.getInstance(instanceId);
+            if (instance == null) {
+                instance = createInstance(instanceId);
+            }
+
             final HostedNodelet room = new HostedNodelet(
                 nodelet, _depConf.getRoomHost(), _depConf.getRoomPorts());
-            _sceneReg.resolveScene(((RoomLocus) nodelet).sceneId, new ResolutionListener() {
+            instance.resolveScene(((RoomLocus) nodelet).sceneId, new ResolutionListener() {
                 @Override public void sceneWasResolved (SceneManager scmgr) {
                     listener.requestCompleted(room);
                 }
@@ -124,8 +174,28 @@ public class OrthSceneMaterializer
             });
         }
 
+        protected Instance createInstance (String instanceId)
+        {
+            // TODO: use an Instance subclass here
+            Instance instance = new Instance(instanceId);
+            _injector.injectMembers(instance);
+            _instreg.registerInstance(instance);
+
+            // NOTE: This does no locking or coordination between peers. It's purely informative.
+            InstanceInfo info = instance.toInfo();
+            if (_peerman.getOrthNodeObject().instances.contains(info)) {
+                log.warning("InstanceInfo already registered on OrthNodeObject",
+                    "instance", instance.getInstanceId());
+            } else {
+                _peerman.getOrthNodeObject().addToInstances(info);
+            }
+            return instance;
+        }
+        
         @Inject protected transient OrthDeploymentConfig _depConf;
-        @Inject protected transient SpotSceneRegistry _sceneReg;
+        @Inject protected transient Injector _injector;
+        @Inject protected transient InstanceRegistry _instreg;
+        @Inject protected transient OrthPeerManager _peerman;
     }
 
     @Override
@@ -138,7 +208,7 @@ public class OrthSceneMaterializer
 
     // our dependencies
     @Inject protected Injector _injector;
-    @Inject protected OrthPeerManager _peerMan;
+    @Inject protected InstanceRegistry _instreg;
     @Inject protected LocationManager _locman;
-    @Inject protected SpotSceneRegistry _sceneReg;
+    @Inject protected OrthPeerManager _peerMan;
 }

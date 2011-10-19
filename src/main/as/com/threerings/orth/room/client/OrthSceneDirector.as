@@ -21,7 +21,6 @@ import com.threerings.whirled.util.WhirledContext;
 
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.locus.data.Locus;
-import com.threerings.orth.room.data.InstancedRoomLocus;
 import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthScene;
 import com.threerings.orth.room.data.OrthSceneMarshaller;
@@ -51,7 +50,7 @@ public class OrthSceneDirector extends SceneDirector
 
     public function get instanceId () :String
     {
-        return (_locus is InstancedRoomLocus) ? InstancedRoomLocus(_locus).instanceId : null;
+        return _locus.instanceId;
     }
 
     /**
@@ -77,9 +76,7 @@ public class OrthSceneDirector extends SceneDirector
             return false;
         }
 
-        _locusDir.moveToLocus(this.instanceId != null ?
-            new InstancedRoomLocus(this.instanceId, dest.targetSceneId, dest.dest) :
-            new RoomLocus(dest.targetSceneId, dest.dest));
+        _locusDir.moveToLocus(new RoomLocus(dest.targetSceneId, this.instanceId, dest.dest));
         return true;
     }
 
