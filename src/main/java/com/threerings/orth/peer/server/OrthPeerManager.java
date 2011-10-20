@@ -192,9 +192,10 @@ public abstract class OrthPeerManager extends PeerManager
 
     public void updateWhereabouts (AuthName name, Whereabouts whereabouts)
     {
-        OrthClientInfo foo = (OrthClientInfo) locateClient(name);
-        if (foo != null) {
-            foo.whereabouts = whereabouts;
+        OrthClientInfo info = (OrthClientInfo) locateClient(name);
+        if (info != null) {
+            info.whereabouts = whereabouts;
+            _nodeobj.updateClients(info);
         }
     }
 
@@ -230,10 +231,8 @@ public abstract class OrthPeerManager extends PeerManager
     protected void clearClientInfo (PresentsSession client, ClientInfo info)
     {
         super.clearClientInfo(client, info);
-        OrthClientInfo orthInfo = (OrthClientInfo) info;
 
-        orthInfo.whereabouts = Whereabouts.OFFLINE;
-        loggedOff(_nodeName, orthInfo);
+        loggedOff(_nodeName, (OrthClientInfo) info);
     }
 
     @Override // from PeerManager
