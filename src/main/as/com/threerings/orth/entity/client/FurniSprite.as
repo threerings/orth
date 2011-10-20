@@ -138,6 +138,11 @@ public class FurniSprite extends EntitySprite
         messageReceived(entering ? "bodyEntered" : "bodyLeft", null, true);
     }
 
+    override protected function setGlow (glow :Boolean) :void
+    {
+        super.setGlow(glow && !_furni.isNoGlow());
+    }
+
     override protected function scaleUpdated () :void
     {
         // update our visualization with the furni's current scale

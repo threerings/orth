@@ -362,7 +362,7 @@ public class EntitySprite
                 FilterUtil.addFilter(media.mask, _glow);
             }
 
-        } else {
+        } else if (_glow != null) {
             FilterUtil.removeFilter(media, _glow);
             if (media.mask != null) {
                 FilterUtil.removeFilter(media.mask, _glow);

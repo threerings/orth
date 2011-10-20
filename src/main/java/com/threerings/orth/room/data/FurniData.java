@@ -110,6 +110,23 @@ public class FurniData extends SimpleStreamableObject
     }
 
     /**
+     * Should we supress the hover glow for this furni?
+     */
+    public void setNoGlow (boolean isNoGlow)
+    {
+        setLayoutInfo(NOGLOW_FLAG, isNoGlow);
+    }
+
+    /**
+     * Should we supress the hover glow for this furni?
+     */
+    public boolean isNoGlow ()
+    {
+        return isLayoutInfo(NOGLOW_FLAG);
+    }
+
+
+    /**
      * @return true if the other FurniData is identical.
      */
     public boolean equivalent (FurniData that)
@@ -184,4 +201,5 @@ public class FurniData extends SimpleStreamableObject
     protected static final int NOSCALE_FLAG = (1 << 0);
     protected static final int PARALLAX_FLAG = (1 << 1);
     protected static final int STATIC_FLAG = (1 << 2);
+    protected static final int NOGLOW_FLAG = (1 << 2);
 }

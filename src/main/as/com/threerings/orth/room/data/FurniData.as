@@ -142,6 +142,22 @@ public class FurniData extends SimpleStreamableObject
         return isLayoutInfo(STATIC_FLAG);
     }
 
+    /**
+     * Should we supress the hover glow for this furni?
+     */
+    public function isNoGlow () :Boolean
+    {
+        return isLayoutInfo(NOGLOW_FLAG);
+    }
+
+    /**
+     * Should we supress the hover glow for this furni?
+     */
+    public function setNoGlow (noGlow :Boolean) :void
+    {
+        setLayoutInfo(NOGLOW_FLAG, noGlow);
+    }
+
     override public function toString () :String
     {
         return "FurniData[id=" + id + ", item=" + item + "]";
@@ -265,6 +281,7 @@ public class FurniData extends SimpleStreamableObject
     protected static const NOSCALE_FLAG :int = (1 << 0);
     protected static const PARALLAX_FLAG :int = (1 << 1);
     protected static const STATIC_FLAG :int = (1 << 2);
+    protected static const NOGLOW_FLAG :int = (1 << 3);
 
 // GENERATED CLASSFINISH START
 }
