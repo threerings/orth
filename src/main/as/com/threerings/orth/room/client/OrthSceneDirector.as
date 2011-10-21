@@ -50,7 +50,7 @@ public class OrthSceneDirector extends SceneDirector
 
     public function get instanceId () :String
     {
-        return _locus.instanceId;
+        return (_locus != null) ? _locus.instanceId : null;
     }
 
     /**
