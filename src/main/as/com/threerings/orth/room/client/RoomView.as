@@ -374,7 +374,7 @@ public class RoomView extends Sprite
 
         const n :int = Point.distance(from, to);
         // don't test the first 5 pixels, to get us out of weird trap situations
-        for (var ii :int = 5; ii < n; ii ++) {
+        for (var ii :int = (n <= 5) ? n-1 : 5; ii < n; ii ++) {
             // apparently Point.interpolate's interpolation factor goes from 1 to 0, not 0 to 1?!
             const toTest :Point = Point.interpolate(from, to, (n-ii)/n);
             if (!_obMap.hitTestPoint(toTest.x, toTest.y, true)) {
