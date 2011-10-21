@@ -104,7 +104,7 @@ public abstract class NodeletRegistry
      * Creates a new nodelet registry that will handle all connections with a matching
      * {@link NodeletCredentials} instance and provide hosting logic for the associated nodelet
      * type.
-     * @param nclass the kind of nodelet this regsitry registers
+     * @param nclass the kind of nodelet this registry registers
      * @param hostName the name we use if this server is chosen to host a nodelet
      * @param ports the ports we use if this server is chosen to host a nodelet
      * @param injector access to globals
