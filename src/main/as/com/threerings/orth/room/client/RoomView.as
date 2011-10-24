@@ -241,7 +241,7 @@ public class RoomView extends Sprite
             }
         });
 
-        _layout.updateScreenLocation(_obMap);
+        _layout.updateScreenLocation(_walkmap);
     }
 
     /**
@@ -331,7 +331,7 @@ public class RoomView extends Sprite
     // documentation inherited from interface PlaceView
     public function willEnterPlace (plobj :PlaceObject) :void
     {
-        appendElement(_obMap);
+        appendElement(_walkmap);
     }
 
     // documentation inherited from interface PlaceView
@@ -353,8 +353,8 @@ public class RoomView extends Sprite
         _backdrop.update(scene.getDecor());
         relayout();
 
-        _obMap.desc = scene.getDecor().getWalkability();
-        _layout.updateScreenLocation(_obMap);
+        _walkmap.desc = scene.getDecor().getWalkability();
+        _layout.updateScreenLocation(_walkmap);
     }
 
     public function getScene () :OrthScene
@@ -362,10 +362,18 @@ public class RoomView extends Sprite
         return _scene;
     }
 
+    /**
+     * Potentially display the walkmap; this is for debugging purposes.
+     */
+    public function set walkmapVisibility (vis :Boolean) :void
+    {
+        _walkmap.visible = vis;
+    }
+
     public function getLastWalkablePoint (toLoc :OrthLocation) :OrthLocation
     {
         const myLoc :OrthLocation = getMyCurrentLocation();
-        if (myLoc == null || _obMap.desc == null) {
+        if (myLoc == null || _walkmap.desc == null) {
             return toLoc;
         }
 
@@ -397,7 +405,7 @@ public class RoomView extends Sprite
         function isWalkable (ii :Number) :Boolean {
             // note that Point's interpolate()'s third argument goes from 1 to 0 (!?)
             const toTest :Point = Point.interpolate(from, to, (n-ii)/n);
-            return _obMap.hitTestPoint(toTest.x, toTest.y, true);
+            return _walkmap.hitTestPoint(toTest.x, toTest.y, true);
         }
     }
 
@@ -807,7 +815,7 @@ public class RoomView extends Sprite
     /** What is the current offset into the RoomView that the player is watching? */
     protected var _scrollOffset :Point = new Point(0, 0);
 
-    protected var _obMap :ObstructionMap = new ObstructionMap();
+    protected var _walkmap :WalkMap = new WalkMap();
 
     /** Object responsible for our spatial layout. */
     protected var _layout :RoomLayout;
@@ -832,9 +840,9 @@ import com.threerings.orth.room.client.RoomElementSprite;
 import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.ui.ObjectMediaDesc;
 
-class ObstructionMap extends RoomElementSprite
+class WalkMap extends RoomElementSprite
 {
-    public function ObstructionMap ()
+    public function WalkMap ()
     {
         mouseEnabled = false;
         visible = false;
