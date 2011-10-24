@@ -100,7 +100,6 @@ public class OrthLocation
     @Override
     public String toString ()
     {
-        return "[MsoyLocation(" + x + ", " + y + ", " + z + ") at " +
-            orient + " degrees]";
+        return "[(" + x + ", " + y + ", " + z + ")/" + orient + "°]";
     }
 }

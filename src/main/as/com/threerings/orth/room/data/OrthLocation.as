@@ -144,7 +144,7 @@ public class OrthLocation implements Location, Streamable
     // from Object
     public function toString () :String
     {
-        return "[OrthLocation(" + x + ", " + y + ", " + z + ") at " + orient + " degrees]";
+        return "[(" + x + ", " + y + ", " + z + ")/" + orient + "°]";
     }
 
 // GENERATED CLASSFINISH START
