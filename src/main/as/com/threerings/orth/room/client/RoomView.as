@@ -373,15 +373,32 @@ public class RoomView extends Sprite
         const to :Point = localToGlobal(_layout.metrics.roomToScreen(toLoc.x, toLoc.y, toLoc.z));
 
         const n :int = Point.distance(from, to);
-        // don't test the first 5 pixels, to get us out of weird trap situations
-        for (var ii :int = (n <= 5) ? n-1 : 5; ii < n; ii ++) {
-            // apparently Point.interpolate's interpolation factor goes from 1 to 0, not 0 to 1?!
-            const toTest :Point = Point.interpolate(from, to, (n-ii)/n);
-            if (!_obMap.hitTestPoint(toTest.x, toTest.y, true)) {
-                return OrthLocation.interpolate(myLoc, toLoc, (ii-1)/n);
+        var ii :int = 0;
+        // if we're stuck and trying to get out, scan ahead to the first walkable point
+        while (!isWalkable(ii)) {
+            if (ii >= n) {
+                // not a single walkable point: they are utterly stuck, allow anything
+                return toLoc;
             }
+            ii ++;
         }
-        return toLoc;
+        // if we get here, ii represents a walkable point; see how far we can walk from there
+
+        while (isWalkable(ii)) {
+            if (ii >= n) {
+                // we were able to walk all the way to the end, hurray
+                return toLoc;
+            }
+            ii ++;
+        }
+        // else figure out how far we got
+        return OrthLocation.interpolate(myLoc, toLoc, (ii-1)/n);
+
+        function isWalkable (ii :Number) :Boolean {
+            // note that Point's interpolate()'s third argument goes from 1 to 0 (!?)
+            const toTest :Point = Point.interpolate(from, to, (n-ii)/n);
+            return _obMap.hitTestPoint(toTest.x, toTest.y, true);
+        }
     }
 
     /**
