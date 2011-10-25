@@ -53,6 +53,15 @@ public class SimpleLayeredContainer extends Sprite
 
     public function addOverlay (overlay:DisplayObject, layer:int):void
     {
+        if (overlay in _layers) {
+            // we already have this overlay...
+            if (_layers[overlay] == layer) {
+                // we already have it in precisely the right spot! we're done
+                return;
+            }
+            // else let's remove it first
+            removeOverlay(overlay);
+        }
         _layers[overlay] = layer;
         // step through the children until we find one whose layer is larger than ours
         for (var ii:int = 0; ii < numChildren; ii++) {
