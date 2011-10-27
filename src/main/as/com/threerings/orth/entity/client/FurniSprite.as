@@ -49,11 +49,7 @@ public class FurniSprite extends EntitySprite
         setEntityIdent(furni.item);
         _sprite.setSpriteMediaScale(furni.scaleX, furni.scaleY);
         _sprite.setMediaDesc(furni.media);
-
-        // set up our hotspot if one is configured in the furni data record
-        if (_furni.hotSpotX !=0 || _furni.hotSpotY != 0) {
-            _hotSpot = new Point(_furni.hotSpotX, _furni.hotSpotY);
-        }
+        hotspotUpdated();
     }
 
     override public function getDesc () :String
@@ -96,6 +92,7 @@ public class FurniSprite extends EntitySprite
         _sprite.setMediaDesc(furni.media);
         scaleUpdated();
         rotationUpdated();
+        hotspotUpdated();
         setLocation(furni.loc);
     }
 
@@ -136,6 +133,14 @@ public class FurniSprite extends EntitySprite
         // that without that class being compiled in, and constants are not inlined.
         // So- we've made the decision to a) Duplicate and b) Don't fuck up step a.
         messageReceived(entering ? "bodyEntered" : "bodyLeft", null, true);
+    }
+
+    protected function hotspotUpdated () :void
+    {
+        // set up our hotspot if one is configured in the furni data record
+        if (_furni.hotSpotX != 0 || _furni.hotSpotY != 0) {
+            _hotSpot = new Point(_furni.hotSpotX, _furni.hotSpotY);
+        }
     }
 
     override protected function setGlow (glow :Boolean) :void
