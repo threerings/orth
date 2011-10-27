@@ -56,11 +56,8 @@ public class RoomController extends SceneController
     /** Logging facilities. */
     protected static const log :Log = Log.getLog(RoomController);
 
-    /** Command to go to a particular place (by Oid). */
-    public static const GO_LOCATION :String = "GoLocation";
-
-    /** Command to view a member's profile, arg is [ memberId ] */
-    public static const VIEW_MEMBER :String = "ViewMember";
+    /** Command to move the current player to a given {@link OrthLocation}. */
+    public static const MOVE_AVATAR :String = "MoveAvatar";
 
     /** Command to go to a particular scene. */
     public static const GO_SCENE :String = "GoScene";
@@ -309,6 +306,11 @@ public class RoomController extends SceneController
         setActorState(avatar.getEntityIdent(), avatar.getOid(), state);
     }
 
+    public function handleMoveAvatar (loc :OrthLocation) :void
+    {
+        requestAvatarMove(loc);
+    }
+
     /**
      * Handles FURNI_CLICKED.
      */
@@ -316,7 +318,6 @@ public class RoomController extends SceneController
     {
         // see subclasses
     }
-
 
     /**
      * Handles AVATAR_CLICKED.
@@ -767,27 +768,11 @@ public class RoomController extends SceneController
 
 
     /**
-     * Handles the VIEW_MEMBER command.
-     */
-    public function handleViewMember (memberId :int) :void
-    {
-        log.warning("VIEW_MEMBER not implemented.");
-    }
-
-    /**
      * Handles the GO_SCENE command.
      */
     public function handleGoScene (sceneId :int) :void
     {
         _sceneDir.moveTo(sceneId);
-    }
-
-    /**
-     * Handles the GO_LOCATION command to go to a placeobject.
-     */
-    public function handleGoLocation (placeOid :int) :void
-    {
-        _locDir.moveTo(placeOid);
     }
 
     protected function doSnapshot () :void
