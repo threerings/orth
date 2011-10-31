@@ -1,5 +1,6 @@
 //
-// $Id: OrthNameLabelCreator.as 19754 2010-12-07 16:19:29Z zell $
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.ui {
 

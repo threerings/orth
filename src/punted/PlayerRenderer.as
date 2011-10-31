@@ -1,5 +1,6 @@
 //
-// $Id: PlayerRenderer.as 18861 2009-12-17 19:49:18Z zell $
+// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.client {
 import flashx.funk.ioc.inject;
