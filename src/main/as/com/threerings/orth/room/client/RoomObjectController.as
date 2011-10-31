@@ -48,9 +48,6 @@ import com.threerings.orth.room.data.SocializerInfo;
 public class RoomObjectController extends RoomController
     implements BootablePlaceController
 {
-    /** Some commands */
-    public static const PUBLISH_ROOM :String = "PublishRoom";
-
     // documentation inherited
     override protected function createRoomView () :RoomView
     {
