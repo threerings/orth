@@ -72,7 +72,7 @@ public abstract class DSetNodeletHoster
     {
         return Ordering.natural().onResultOf(new Function<OrthNodeObject, Comparable>() {
             @Override public Comparable apply (OrthNodeObject input) {
-                return getHostingPeerScore (input, nodelet);
+                return getHostingPeerScore(input, nodelet);
             }
         }).greatestOf(_peerMan.getOrthNodeObjects(), 1).get(0).nodeName;
     }
@@ -88,7 +88,6 @@ public abstract class DSetNodeletHoster
     {
         return (float) (1.0 / (1.0 + Math.max(0, nodeObj.calculateLoad())));
     }
-
 
     /** Overridden to instantiate the appropriate concrete {@link HostNodeletRequest}. */
     abstract protected HostNodeletRequest createHostingRequest (AuthName caller, Nodelet nodelet);
