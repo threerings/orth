@@ -543,13 +543,7 @@ public class EntitySprite
 
     protected function configureMouseProperties () :void
     {
-        // If we want to capture mouse events for this sprite up in the whirled layer, then
-        // we cannot allow the click to go down into the usercode, because when we're running
-        // with security boundaries then the click won't come back out.
-        // TODO: have a way for entities to temporarily capture mouse events? Maybe only
-        // your own personal avatar, for things like an art-vatar, or an avatar that plays back
-        // mouse motions...
-        _sprite.mouseChildren = _active && !_editing && !hasAction() && capturesMouse();
+        _sprite.mouseChildren = _active && !_editing && capturesMouse();
         _sprite.mouseEnabled = _active && !_editing;
     }
 
