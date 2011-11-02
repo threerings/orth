@@ -79,10 +79,8 @@ public abstract class OrthPeerManager extends PeerManager
      */
     public Iterable<OrthNodeObject> getOrthNodeObjects ()
     {
-        return Iterables.transform(getNodeObjects(), new Function<NodeObject, OrthNodeObject>()
-        {
-            public OrthNodeObject apply (NodeObject node)
-            {
+        return Iterables.transform(getNodeObjects(), new Function<NodeObject, OrthNodeObject>() {
+            public OrthNodeObject apply (NodeObject node) {
                 return (OrthNodeObject) node;
             }
         });
