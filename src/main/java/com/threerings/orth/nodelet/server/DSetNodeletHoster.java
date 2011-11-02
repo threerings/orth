@@ -70,8 +70,8 @@ public abstract class DSetNodeletHoster
      */
     protected String determineHostingPeer (final Nodelet nodelet)
     {
-        return Ordering.natural().onResultOf(new Function<OrthNodeObject, Comparable>() {
-            @Override public Comparable apply (OrthNodeObject input) {
+        return Ordering.natural().onResultOf(new Function<OrthNodeObject, Comparable<?>>() {
+            @Override public Comparable<?> apply (OrthNodeObject input) {
                 return getHostingPeerScore(input, nodelet);
             }
         }).greatestOf(_peerMan.getOrthNodeObjects(), 1).get(0).nodeName;
