@@ -29,7 +29,7 @@ public abstract class DSetNodeletHoster
     implements NodeletRegistry.NodeletHoster
 {
     /**
-     * Creates a new nodelet registry governed by the dset with the given name.
+     * Creates a new nodelet registry governed by the DSet with the given name.
      * @see OrthNodeObject
      */
     public DSetNodeletHoster (String dsetName, Class<? extends Nodelet> nclass)
@@ -92,7 +92,7 @@ public abstract class DSetNodeletHoster
     /** Overridden to instantiate the appropriate concrete {@link HostNodeletRequest}. */
     abstract protected HostNodeletRequest createHostingRequest (AuthName caller, Nodelet nodelet);
 
-    /** The name of the dset governing our hosted nodelet instances in the OrthNodeObject. */
+    /** The name of the DSet governing our hosted nodelet instances in the OrthNodeObject. */
     protected String _dsetName;
     protected Class<? extends Nodelet> _nodeletClass;
 
