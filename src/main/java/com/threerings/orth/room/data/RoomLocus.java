@@ -46,14 +46,12 @@ public class RoomLocus extends Nodelet
 
     @Override public int hashCode ()
     {
-        return Objects.hashCode(instanceId, sceneId);
+        return getKey().hashCode();
     }
 
     @Override public boolean equals (Object other)
     {
-        return (other instanceof RoomLocus) &&
-            Objects.equal(instanceId, ((RoomLocus) other).instanceId) &&
-            sceneId == ((RoomLocus) other).sceneId;
+        return (other instanceof RoomLocus) && getKey().equals(((RoomLocus) other).getKey());
     }
 
     protected static class Key extends SimpleStreamableObject
@@ -73,6 +71,15 @@ public class RoomLocus extends Nodelet
                 .compare(instanceId, o.instanceId)
                 .compare(sceneId, o.sceneId).result();
         }
-    }
 
+        @Override public int hashCode () {
+            return Objects.hashCode(instanceId, sceneId);
+        }
+
+        @Override public boolean equals (Object other) {
+            return (other instanceof RoomLocus.Key) &&
+                Objects.equal(instanceId, ((RoomLocus.Key) other).instanceId) &&
+                sceneId == ((RoomLocus.Key) other).sceneId;
+        }
+    }
 }
