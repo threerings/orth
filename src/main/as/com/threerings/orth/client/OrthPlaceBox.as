@@ -25,7 +25,6 @@ public class OrthPlaceBox extends Sprite
 
     public function setMainView (view :DisplayObject) :void
     {
-        // throw an exception now if it's not a display object
         _layers.setBaseLayer(view);
         _mainView = view;
 
