@@ -24,7 +24,6 @@ import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherClientObject;
-import com.threerings.orth.aether.data.AppearanceInfo;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.PlayerName;
