@@ -24,6 +24,7 @@ import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.aether.data.AppearanceInfo;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.PlayerName;
@@ -75,6 +76,14 @@ public class PartyManager
         _partyObj.partyService = _invMgr.registerProvider(this, PartyMarshaller.class);
     }
 
+    protected PartyPeep createPartyPeep (PartierObject partier, AppearanceInfo appearanceInfo)
+    {
+        PartyPeep peep = _peepProvider.get();
+        peep.name = partier.playerName;
+        peep.joinOrder = nextJoinOrder();
+        return peep;
+    }
+
     /**
      * Shutdown this party.
      */
@@ -98,19 +107,13 @@ public class PartyManager
     public void clientSubscribed (final PartierObject partier)
     {
         final int playerId = partier.getPlayerId();
-        final PartyObjectAddress closureAddr = addr;
 
         // clear their invites to this party, if any
         _partyObj.invitedIds.remove(playerId);
 
-        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(playerId) {
-            @Override protected void execute (AetherClientObject player,
-                InvocationService.ResultListener listener) {
-                player.setParty(closureAddr);
-                listener.requestProcessed(null);
-            }
-        }, new ResultListener<Void>(){
-            @Override public void requestCompleted (Void result) {
+        _peerMgr.invokeSingleNodeRequest(createPartyClientSubscribedRequest(playerId, addr),
+            new ResultListener<AppearanceInfo>() {
+            @Override public void requestCompleted (AppearanceInfo result) {
                 // listen for them to die
                 partier.addListener(new ObjectDeathListener() {
                     public void objectDestroyed (ObjectDestroyedEvent event) {
@@ -121,9 +124,7 @@ public class PartyManager
                 // Crap, we used to do this in addPlayer, but they could never actually enter the
                 // party and leave it hosed. The downside of doing it this way is that we could
                 // approve more than MAX_PLAYERS to join the party...
-                PartyPeep peep = _peepProvider.get();
-                peep.name = partier.playerName;
-                peep.joinOrder = nextJoinOrder();
+                PartyPeep peep = createPartyPeep(partier, result);
                 if (!_partyObj.peeps.contains(peep)) {
                     _partyObj.addToPeeps(peep);
                 }
@@ -133,6 +134,12 @@ public class PartyManager
                 // TODO - notify the client that we done fucked up
                 endPartierSession(playerId);
             }});
+    }
+
+    protected PartyClientSubscribedRequest createPartyClientSubscribedRequest (int playerId,
+        PartyObjectAddress addr)
+    {
+        return new PartyClientSubscribedRequest(playerId, addr);
     }
 
     // from interface PartyProvider
@@ -345,6 +352,38 @@ public class PartyManager
             }
         }
         return newLeader;
+    }
+
+    protected static class PartyClientSubscribedRequest extends AetherNodeRequest
+    {
+        public PartyClientSubscribedRequest (int playerId, PartyObjectAddress addr)
+        {
+            super(playerId);
+            _addr = addr;
+        }
+
+        @Override protected void execute (AetherClientObject player,
+            InvocationService.ResultListener listener) {
+            player.setParty(_addr);
+            listener.requestProcessed(getAppearanceInfo(player));
+        }
+
+        /**
+         * Returns appropriate party appearance info for the player.
+         */
+        protected AppearanceInfo getAppearanceInfo (AetherClientObject player)
+        {
+            return new AppearanceInfo();
+        }
+
+        protected PartyObjectAddress _addr;
+    }
+
+    /**
+     * Captures any relevant info about a player's appearance to include in the party data.
+     */
+    protected static class AppearanceInfo
+    {
     }
 
     protected final InvocationManager _invMgr;
