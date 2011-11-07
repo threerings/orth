@@ -159,8 +159,7 @@ public class LocusDirector extends BasicDirector
         }
 
         // Clear the current view out since it's no longer active.
-        // TODO - add a spinner for when locus materialization takes a while
-        _top.setMainView(new Sprite());
+        _top.clearMainView();
 
         mover();
 
