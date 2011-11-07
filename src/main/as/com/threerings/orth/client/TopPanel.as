@@ -3,7 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.client {
-
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.display.Stage;
@@ -18,6 +17,9 @@ import flashx.funk.util.isAbstract;
 
 import com.threerings.util.StageLifetime;
 import com.threerings.util.ValueEvent;
+
+import com.threerings.orth.locus.client.LocusDirector;
+import com.threerings.orth.locus.data.Locus;
 
 /**
  * Dispatched when the name of our current location changes. The value supplied will be a string
@@ -87,6 +89,8 @@ public class TopPanel extends Sprite
                 needsLayout();
             }
         });
+
+        _locusDir.locusWillChange.add(onLocusWillChange);
 
         setMainView(getBlankPlaceView());
     }
@@ -180,6 +184,11 @@ public class TopPanel extends Sprite
         doLayout(_placeBox);
     }
 
+    protected function onLocusWillChange (locus :Locus) :void
+    {
+        clearMainView();
+    }
+
     protected function doLayout (placeBox :OrthPlaceBox) :void
     {
         placeBox.setActualSize(_width, _height);
@@ -204,6 +213,7 @@ public class TopPanel extends Sprite
 
     protected const _stage :Stage = inject(Stage);
     protected const _placeBox :OrthPlaceBox = inject(OrthPlaceBox);
+    protected const _locusDir :LocusDirector = inject(LocusDirector);
     protected const _depConf :OrthDeploymentConfig = inject(OrthDeploymentConfig);
 
     protected var _trackStageSize :Boolean;

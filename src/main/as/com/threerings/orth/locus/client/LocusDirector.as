@@ -24,7 +24,6 @@ import com.threerings.presents.client.ClientObserver;
 
 import com.threerings.orth.client.Listeners;
 import com.threerings.orth.client.OrthContext;
-import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
@@ -175,9 +174,6 @@ public class LocusDirector extends BasicDirector
             return;
         }
 
-        // Clear the current view out since it's no longer active.
-        _top.clearMainView();
-
         locusWillChange.dispatch(dest);
 
         mover();
@@ -294,7 +290,6 @@ public class LocusDirector extends BasicDirector
 
 
     protected const _octx :OrthContext = inject(OrthContext);
-    protected const _top :TopPanel = inject(TopPanel);
 
     protected var _lsvc :LocusService;
 
