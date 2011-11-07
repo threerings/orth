@@ -3,7 +3,6 @@
 // Copyright 2010-2011 Three Rings Design, Inc.
 
 package com.threerings.orth.locus.client {
-import flash.display.Sprite;
 import flash.utils.getQualifiedClassName;
 
 import flashx.funk.ioc.inject;
@@ -48,6 +47,12 @@ public class LocusDirector extends BasicDirector
      * Called when we've initiated a locus change.
      */
     public const locusWillChange :Signal = new Signal(Locus);
+
+    /**
+     * Called when the vault server returns our materialization request, but before we
+     * initiate the connection/login to the new host.
+     */
+    public const locusDidMaterialize :Signal = new Signal(HostedLocus);
 
     /**
      * Called when we have switched to a new locus. Note: this only means we've connected
@@ -131,10 +136,22 @@ public class LocusDirector extends BasicDirector
     public function moveToLocus (dest :Locus) :void
     {
         var self :LocusDirector = this;
-        performMove(dest, function (..._) :void {
+        performMove(dest, (dest != null) ? reallyMove : justLeave);
+
+        function reallyMove () :void {
             _materializing = dest;
             _lsvc.materializeLocus(_materializing, self)
-        });
+        }
+
+        function justLeave () :void {
+            logout();
+            // just in case, so this can be used to get back from a screwed state
+            _connecting = null;
+            _materializing = null;
+
+            // let the world know our new locus is a null
+            locusDidChange.dispatch(null);
+        }
     }
 
     public function moveToHostedLocus (dest :HostedLocus) :void
@@ -149,11 +166,11 @@ public class LocusDirector extends BasicDirector
             log.warning("Refusing to move while we're already in mid-move",
                     "desired", dest, "materializing", _materializing, "connecting", _connecting);
             return;
-        } else if (!_contexts.containsKey(getQualifiedClassName(dest))) {
+        } else if (dest != null && !_contexts.containsKey(getQualifiedClassName(dest))) {
             log.warning("Aii! Unknown locus type",
                 "dest", dest, "class", getQualifiedClassName(dest));
             return;
-        } else if (dest.equals(locus)) {
+        } else if (dest != null && dest.equals(locus)) {
             log.warning("Already at dest?", "locus", locus, "dest", dest);
             return;
         }
@@ -161,9 +178,9 @@ public class LocusDirector extends BasicDirector
         // Clear the current view out since it's no longer active.
         _top.clearMainView();
 
-        mover();
-
         locusWillChange.dispatch(dest);
+
+        mover();
     }
 
     // from Java LocusService_PlaceResolutionListener
@@ -192,23 +209,18 @@ public class LocusDirector extends BasicDirector
             return;
         }
 
-        // Are we already on the right peer?
+        locusDidMaterialize.dispatch(hosted);
+
+        // Are we already on the right peer in the right locus context?
         if (locus != null && ClassUtil.isSameClass(_connecting.locus, locus) &&
             _connecting.host == _connected.host) {
             gotoConnecting();
             return;
         }
 
-        // if not we probably need to log out
+        // if not, we must start by logging out
         if (_connected != null) {
-            const connectedClient :LocusClient = context.locusClient;
-            // first stop listening to the client
-            connectedClient.removeClientObserver(_observer);
-            _clientObservers.apply(connectedClient.removeClientObserver);
-            _connected = null;
-
-            // the really cut the cord
-            connectedClient.logoff(false);
+            logout();
         }
 
         // now grab the (possibly) new client
@@ -247,6 +259,18 @@ public class LocusDirector extends BasicDirector
         context.go(locus);
 
         locusDidChange.dispatch(_connected);
+    }
+
+    protected function logout () :void
+    {
+        const connectedClient :LocusClient = this.context.locusClient;
+        // first stop listening to the client
+        connectedClient.removeClientObserver(_observer);
+        _clientObservers.apply(connectedClient.removeClientObserver);
+        _connected = null;
+
+        // then really cut the cord
+        connectedClient.logoff(false);
     }
 
     protected function getCtx (hosted :HostedLocus) :LocusContext
