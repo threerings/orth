@@ -6,7 +6,7 @@
   <groupId>com.threerings</groupId>
   <artifactId>orthlib</artifactId>
   <packaging>swc</packaging>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
 
   <name>Orth for ActionScript</name>
 
