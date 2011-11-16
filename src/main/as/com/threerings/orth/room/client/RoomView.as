@@ -390,8 +390,8 @@ public class RoomView extends Sprite
             }
             ii ++;
         }
-        // if we get here, ii represents a walkable point; see how far we can walk from there
 
+        // if we get here, ii represents a walkable point; see how far we can walk from there
         while (isWalkable(ii)) {
             if (ii >= n) {
                 // we were able to walk all the way to the end, hurray
@@ -399,8 +399,11 @@ public class RoomView extends Sprite
             }
             ii ++;
         }
+
         // else figure out how far we got
-        return OrthLocation.interpolate(myLoc, toLoc, (ii-1)/n);
+        const lastPoint :Point = Point.interpolate(from, to, (n-(ii-1))/n);
+        const lastLoc :ClickLocation = _layout.pointToAvatarLocation(lastPoint.x, lastPoint.y);
+        return (lastLoc != null) ? lastLoc.loc : null;
 
         function isWalkable (ii :Number) :Boolean {
             // note that Point's interpolate()'s third argument goes from 1 to 0 (!?)
