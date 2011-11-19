@@ -3,7 +3,7 @@
 
 package com.threerings.orth.locus.data;
 
-import com.samskivert.util.Comparators;
+import com.google.common.collect.ComparisonChain;
 
 import com.threerings.util.Name;
 
@@ -37,7 +37,9 @@ public class LocusAuthName extends AuthName
     @Override // from Name
     public int compareTo (Name o)
     {
-        return Comparators.compare(getId(), ((AuthName)o).getId());
+        return ComparisonChain.start().
+            compare(true, (o instanceof LocusAuthName)).
+            compare(getId(), ((AuthName)o).getId()).result();
     }
 
 }
