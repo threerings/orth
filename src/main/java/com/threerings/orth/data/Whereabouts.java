@@ -44,6 +44,11 @@ public abstract class Whereabouts extends SimpleStreamableObject
         {
             return 0;
         }
+
+        @Override public String toString ()
+        {
+            return "[Offline]";
+        }
     }
 
     /**
@@ -70,24 +75,32 @@ public abstract class Whereabouts extends SimpleStreamableObject
         {
             return 0;
         }
+
+        @Override public String toString ()
+        {
+            return "[Online]";
+        }
     }
 
     public static class InLocus extends Whereabouts
     {
+        public Locus locus;
+        public String description;
+
         public InLocus (Locus locus, String description)
         {
-            _locus = locus;
-            _description = description;
+            this.locus = locus;
+            this.description = description;
         }
 
         public Locus getLocus ()
         {
-            return _locus;
+            return locus;
         }
 
         @Override public String getDescription ()
         {
-            return _description;
+            return description;
         }
 
         @Override public boolean isOnline ()
@@ -98,16 +111,13 @@ public abstract class Whereabouts extends SimpleStreamableObject
         @Override public boolean equals (Object other)
         {
             return other != null && other instanceof InLocus &&
-                _locus.equals(((InLocus) other).getLocus());
+                locus.equals(((InLocus) other).getLocus());
         }
 
         @Override public int hashCode ()
         {
-            return Objects.hashCode(_locus);
+            return Objects.hashCode(locus);
         }
-
-        protected Locus _locus;
-        protected String _description;
     }
 
     /**
