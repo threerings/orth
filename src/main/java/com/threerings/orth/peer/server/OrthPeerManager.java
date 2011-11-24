@@ -190,7 +190,7 @@ public abstract class OrthPeerManager extends PeerManager
 
     public void updateWhereabouts (AuthName name, Whereabouts whereabouts)
     {
-        OrthClientInfo info = (OrthClientInfo) locateClient(name);
+        OrthClientInfo info = (OrthClientInfo) _nodeobj.clients.get(name);
         if (info != null) {
             info.whereabouts = whereabouts;
             _nodeobj.updateClients(info);
