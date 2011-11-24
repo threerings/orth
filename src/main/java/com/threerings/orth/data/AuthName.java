@@ -47,5 +47,11 @@ public class AuthName extends Name
             .compare(getId(), ((AuthName)o).getId()).result();
     }
 
+    @Override
+    public String toString ()
+    {
+        return "[name=" + super.toString() + ", id=" + _id + "]";
+    }
+
     protected int _id;
 }
