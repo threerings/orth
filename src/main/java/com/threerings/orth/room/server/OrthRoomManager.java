@@ -361,6 +361,13 @@ public class OrthRoomManager extends InstancedSceneManager
         _memSupply.flushMemories(_orthObj.memories.asSet());
     }
 
+    @Override protected void deregisterPlace ()
+    {
+        // TODO: It could be argued that this class shouldn't need to know about HOSTED_ROOMS
+        _peerMgr.getOrthNodeObject().removeFromHostedRooms(
+            RoomLocus.makeKey(_scene.getId(), _instance.getInstanceId()));
+    }
+
     /** A trivial class that remembers nothing. */
     public static class AmnesiacMemorySupply implements MemoryRepository
     {

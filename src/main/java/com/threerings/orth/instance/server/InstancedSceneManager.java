@@ -74,6 +74,19 @@ public abstract class InstancedSceneManager extends SpotSceneManager
         }
     }
 
+    @Override protected void didShutdown ()
+    {
+        super.didShutdown();
+
+        deregisterPlace();
+    }
+
+    /**
+     * If any global or peered registration took place as part of creating this place,
+     * this method, which is called on shutdown, may be used to clear said registration out.
+     */
+    abstract protected void deregisterPlace ();
+
     abstract protected Whereabouts createWhereabouts ();
 
     /** The instance this place is in. */
