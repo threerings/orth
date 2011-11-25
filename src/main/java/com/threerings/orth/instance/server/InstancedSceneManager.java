@@ -3,6 +3,8 @@
 
 package com.threerings.orth.instance.server;
 
+import com.google.inject.Inject;
+
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.BodyObject;
@@ -14,9 +16,12 @@ import com.threerings.whirled.spot.data.Location;
 import com.threerings.whirled.spot.server.SpotSceneManager;
 import com.threerings.whirled.util.UpdateList;
 
+import com.threerings.orth.data.AuthName;
+import com.threerings.orth.data.Whereabouts;
 import com.threerings.orth.instance.data.Instance;
+import com.threerings.orth.peer.server.OrthPeerManager;
 
-public class InstancedSceneManager extends SpotSceneManager
+public abstract class InstancedSceneManager extends SpotSceneManager
 {
     /**
      * Return the instance of this scene we're managing, or null.
@@ -35,6 +40,9 @@ public class InstancedSceneManager extends SpotSceneManager
     {
         super.setSceneData(scene, updates, extras, screg);
         _instance = instance;
+
+        _whereabouts = createWhereabouts();
+
     }
 
     // only overridden to widen to public
@@ -44,5 +52,35 @@ public class InstancedSceneManager extends SpotSceneManager
         super.handleChangeLoc(source, loc);
     }
 
+    @Override // from PlaceManager
+    public void bodyWillEnter (BodyObject body)
+    {
+        super.bodyWillEnter(body);
+
+        if (_whereabouts != null && body.username instanceof AuthName) {
+            // notify peers of our arrival in a locus
+            _peerMgr.updateWhereabouts((AuthName) body.username, _whereabouts);
+        }
+    }
+
+    @Override // from PlaceManager
+    public void bodyWillLeave (BodyObject body)
+    {
+        super.bodyWillLeave(body);
+
+        if (_whereabouts != null && body.username instanceof AuthName) {
+            // notify peers of our departure from this locus
+            _peerMgr.updateWhereabouts((AuthName) body.username);
+        }
+    }
+
+    abstract protected Whereabouts createWhereabouts ();
+
+    /** The instance this place is in. */
     protected Instance _instance;
+
+    /** The whereabouts of anybody in this room. */
+    protected Whereabouts _whereabouts;
+
+    @Inject protected OrthPeerManager _peerMgr;
 }
