@@ -4,8 +4,8 @@
 
 package com.threerings.orth.room.server;
 
-import com.threerings.presents.server.PresentsSession;
+import com.threerings.crowd.server.CrowdSession;
 
-public class RoomSession extends PresentsSession
+public class RoomSession extends CrowdSession
 {
 }
