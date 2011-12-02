@@ -12,6 +12,7 @@ import flash.display.LoaderInfo;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.MouseEvent;
+import flash.filters.BitmapFilter;
 import flash.filters.GlowFilter;
 import flash.geom.Matrix;
 import flash.geom.Point;
@@ -356,7 +357,7 @@ public class EntitySprite
         var media :DisplayObject = _sprite.getMedia();
 
         if (glow) {
-            _glow = new GlowFilter(getHoverColor(), 1, 32, 32);
+            _glow = createHoverFilter();
             FilterUtil.addFilter(media, _glow);
             if (media.mask != null) {
                 FilterUtil.addFilter(media.mask, _glow);
@@ -369,6 +370,11 @@ public class EntitySprite
             }
             _glow = null;
         }
+    }
+
+    protected function createHoverFilter () :BitmapFilter
+    {
+        return new GlowFilter(getHoverColor(), 1, 32, 32);
     }
 
     /**
@@ -938,7 +944,7 @@ public class EntitySprite
      * avatar sprite will know its ident (and only we can update our avatar's memory, etc.).  */
     protected var _ident :EntityIdent;
 
-    protected var _glow :GlowFilter;
+    protected var _glow :BitmapFilter;
 
     /** The media hotspot, which should be used to position it. */
     protected var _hotSpot :Point = null;
