@@ -147,6 +147,8 @@ public class LocusDirector extends BasicDirector
             // just in case, so this can be used to get back from a screwed state
             _connecting = null;
             _materializing = null;
+
+            locusDidChange.dispatch(null);
         }
     }
 
