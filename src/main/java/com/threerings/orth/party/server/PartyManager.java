@@ -249,6 +249,11 @@ public class PartyManager
         InvocationService.InvocationListener listener)
         throws InvocationException
     {
+        moveParty(locus);
+    }
+
+    protected void moveParty (HostedLocus locus)
+    {
         _partyObj.setLocus(locus);
     }
 
