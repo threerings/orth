@@ -250,7 +250,10 @@ public class PartyDirector
 
     public function locusChanged (newLocus :HostedLocus) :void
     {
-        if (newLocus == null || _locusDir.locus.equals(newLocus)) { return; }
+        if (newLocus == null || (_locusDir.locus != null &&
+                _locusDir.locus.equals(newLocus))) {
+            return;
+        }
         _locusDir.moveToHostedLocus(newLocus);
     }
 
