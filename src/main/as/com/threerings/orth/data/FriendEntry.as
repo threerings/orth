@@ -39,6 +39,11 @@ public class FriendEntry extends PlayerEntry
 
 // GENERATED STREAMING END
 
+    public function get online () :Boolean
+    {
+        return status == FriendEntry_Status.ONLINE;
+    }
+
     override public function toString () :String
     {
         return Joiner.simpleToString(this);
