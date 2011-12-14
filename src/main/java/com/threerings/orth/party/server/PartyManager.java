@@ -299,6 +299,8 @@ public class PartyManager
 
     protected void endPartierSession (int playerId)
     {
+        // TODO: Using invokeSingleNodeRequest here is over-ambitious, there is no guarantee
+        // the player is still around when this executes.
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(playerId) {
             @Override protected void execute (AetherClientObject pl,
                 InvocationService.ResultListener rl) {
