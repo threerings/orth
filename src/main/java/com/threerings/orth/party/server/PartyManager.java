@@ -221,6 +221,15 @@ public class PartyManager
             _partyObj.leaderId != inviter.getPlayerId()) {
             throw new InvocationException(PartyCodes.E_CANT_INVITE_CLOSED);
         }
+
+        if (_partyObj.peeps.containsKey(invitee.getKey())) {
+            throw new InvocationException(PartyCodes.E_ALREADY_IN_PARTY);
+        }
+
+        if (_partyObj.invitedIds.contains(invitee.getId())) {
+            throw new InvocationException(PartyCodes.E_ALREADY_INVITED);
+        }
+
         // add them to the invited set
         _partyObj.invitedIds.add(invitee.getId());
 
