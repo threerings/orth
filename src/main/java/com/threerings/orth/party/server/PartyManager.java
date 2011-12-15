@@ -299,15 +299,18 @@ public class PartyManager
 
     protected void endPartierSession (int playerId)
     {
-        // TODO: Using invokeSingleNodeRequest here is over-ambitious, there is no guarantee
-        // the player is still around when this executes.
-        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(playerId) {
-            @Override protected void execute (AetherClientObject pl,
-                InvocationService.ResultListener rl) {
+        AetherNodeRequest request = new AetherNodeRequest(playerId) {
+            @Override protected void execute (
+                    AetherClientObject pl, InvocationService.ResultListener rl) {
                 pl.setParty(null);
                 rl.requestProcessed(null);
             }
-        }, new Resulting<Void>("PartyClearer", Log.log, "playerId", playerId));
+        };
+        // the player may have logged off, but otherwise should have only 1 aether login
+        if (!_peerMgr.findApplicableNodes(request).isEmpty()) {
+            _peerMgr.invokeSingleNodeRequest(request,
+                new Resulting<Void>("PartyClearer", Log.log, "playerId", playerId));
+        }
         PartySession session = (PartySession)_clmgr.getClient(PartyAuthName.makeKey(playerId));
         if (session != null) {
             session.endSession();
