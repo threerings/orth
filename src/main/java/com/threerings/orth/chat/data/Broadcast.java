@@ -4,14 +4,12 @@
 
 package com.threerings.orth.chat.data;
 
-import com.threerings.orth.comms.data.BaseOneToOneComm;
+import com.threerings.orth.data.ModuleStreamable;
 
-public class Broadcast extends BaseOneToOneComm
+public class Broadcast extends ModuleStreamable
 {
-    // TODO: This should perhaps just implement a pure 'Comm'
     public Broadcast (String message)
     {
-        super(null, null);
         _message = message;
     }
 
