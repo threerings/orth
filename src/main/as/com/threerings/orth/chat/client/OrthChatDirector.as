@@ -24,12 +24,14 @@ import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
+import com.threerings.orth.chat.data.Broadcast;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.client.Msgs;
 import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 
@@ -62,6 +64,12 @@ public class OrthChatDirector extends BasicDirector
         _chatHistory = new HistoryList(this);
 
         _ctx.getClient().getInvocationDirector().registerReceiver(new TellDecoder(this));
+
+        _comms.commReceived.add(function (msg :Object) :void {
+            if (msg is Broadcast) {
+                displayFeedback(OrthCodes.GENERAL_MSGS, Broadcast(msg).message);
+            }
+        });
     }
 
     public function get placeObject () :SpeakRouter
@@ -216,6 +224,7 @@ public class OrthChatDirector extends BasicDirector
     /** A list of registered chat displays. */
     protected var _displays :ObserverList = new ObserverList();
 
+    protected const _comms :CommsDirector = inject(CommsDirector);
     protected const _msgMgr :MessageManager = inject(MessageManager);
     protected const _octx :OrthContext = inject(OrthContext);
 
