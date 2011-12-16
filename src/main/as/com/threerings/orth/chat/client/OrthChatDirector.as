@@ -159,7 +159,8 @@ public class OrthChatDirector extends BasicDirector
 
     public function displayFeedback (bundle :String, msg :String) :void
     {
-        dispatchPreparedMessage(new SystemMessage(msg, bundle, SystemMessage.FEEDBACK));
+        dispatchPreparedMessage(
+            new SystemMessage(Msgs.CHAT.xlate(msg), bundle, SystemMessage.FEEDBACK));
     }
 
     // from MessageListener
