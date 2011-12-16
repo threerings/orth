@@ -21,12 +21,12 @@ import com.threerings.orth.comms.data.OneToOneComm;
 public class CommsManager
 {
     /**
-     * Send a {@link OneToOneComm} to every player on the server by iterating over all our
+     * Send a comm to every player on the server by iterating over all our
      * resolved aether connections.
      *
      * TODO: Use instead a {@link DObject} that *every* client is always subscribed to?
      */
-    public void broadcast (OneToOneComm comm)
+    public void broadcast (Object comm)
     {
         for (ClientObject clobj : _clmgr.clientObjects()) {
             if (clobj.username instanceof AetherAuthName) {
