@@ -10,6 +10,7 @@ import com.google.inject.Provider;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.io.SimpleStreamableObject;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.client.InvocationService;
@@ -400,7 +401,7 @@ public class PartyManager
     /**
      * Captures any relevant info about a player's appearance to include in the party data.
      */
-    protected static class AppearanceInfo
+    protected static class AppearanceInfo extends SimpleStreamableObject
     {
     }
 
