@@ -78,7 +78,10 @@ public class ChatHistory
 
     public void file (Tell tell, Date timestamp)
     {
+        // make sure this ends up in the tell history both of sender and recipient
         doFile(tell.getFrom(), Collections.singleton(tell.getTo().getId()),
+            tell.getMessage(), timestamp);
+        doFile(tell.getTo(), Collections.singleton(tell.getFrom().getId()),
             tell.getMessage(), timestamp);
     }
 
@@ -173,4 +176,3 @@ public class ChatHistory
             }
         };
 }
-
