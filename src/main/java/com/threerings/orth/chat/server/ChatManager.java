@@ -4,6 +4,7 @@
 
 package com.threerings.orth.chat.server;
 
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.google.inject.Inject;
@@ -55,11 +56,12 @@ public class ChatManager
             return;
         }
 
+        _history.file(tell, new Date());
+
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(tellee.getId()) {
             @Override protected void execute (AetherClientObject player, ResultListener listener) {
                 TellSender.receiveTell(player, tell);
                 listener.requestProcessed(null);
-
             }
         }, new Resulting<Void>(listener));
     }
@@ -74,6 +76,9 @@ public class ChatManager
             log.warning("Speak not sent", "router", router, "from", sender, "msg", msg);
             return;
         }
+
+        _history.file(speak, router.getSpeakReceipients(), new Date());
+
         router.getSpeakObject().postMessage(OrthChatCodes.SPEAK_MSG_TYPE, speak);
     }
 
@@ -115,6 +120,7 @@ public class ChatManager
     protected final ObserverList<ChatMonitor> _monitors = ObserverList.newFastUnsafe();
 
     @Inject protected AetherSessionLocator _locator;
+    @Inject protected ChatHistory _history;
     @Inject protected InvocationManager _invMgr;
     @Inject protected OrthPeerManager _peerMgr;
 }
