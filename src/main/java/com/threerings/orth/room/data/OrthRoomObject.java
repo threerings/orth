@@ -21,7 +21,7 @@ import com.threerings.whirled.spot.data.SpotSceneObject;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.data.SpeakRouter;
-import com.threerings.orth.data.AuthName;
+import com.threerings.orth.data.PlayerName;
 
 import static com.threerings.orth.Log.log;
 
@@ -81,8 +81,8 @@ public class OrthRoomObject extends SpotSceneObject
     {
         Set<Integer> playerIds = Sets.newHashSetWithExpectedSize(this.occupantInfo.size());
         for (OccupantInfo info : this.occupantInfo) {
-            if (info.username instanceof AuthName) {
-                playerIds.add(((AuthName) info.username).getId());
+            if (info.username instanceof PlayerName) {
+                playerIds.add(((PlayerName) info.username).getId());
             }
         }
         return playerIds;
