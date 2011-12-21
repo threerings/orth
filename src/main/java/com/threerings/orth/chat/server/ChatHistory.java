@@ -15,7 +15,8 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.primitives.Longs;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import com.samskivert.util.Comparators;
 import com.samskivert.util.ResultListener;
@@ -26,9 +27,6 @@ import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.NodeRequestsListener;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.Tell;
