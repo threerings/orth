@@ -38,12 +38,9 @@ import com.threerings.whirled.spot.data.Location;
 import com.threerings.whirled.spot.data.Portal;
 import com.threerings.whirled.spot.data.SceneLocation;
 
-import com.threerings.orth.chat.data.OrthChatCodes;
-import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.chat.server.SpeakProvider;
-import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.Whereabouts.InLocus;
 import com.threerings.orth.data.Whereabouts;
 import com.threerings.orth.instance.server.InstancedSceneManager;
@@ -87,15 +84,10 @@ public class OrthRoomManager extends InstancedSceneManager
     }
 
     @Override
-    public void speak (ClientObject caller, String msg, InvocationListener arg2)
+    public void speak (ClientObject caller, String msg, InvocationListener listener)
         throws InvocationException
     {
-        PlayerName name = ((SocializerObject)caller).name;
-
-        Speak speak = new Speak(name, msg);
-        if (_chatMan.check(speak)) {
-            _plobj.postMessage(OrthChatCodes.SPEAK_MSG_TYPE, speak);
-        }
+        _chatMan.sendSpeak(_orthObj, ((SocializerObject)caller).name, msg, listener);
     }
 
     @Override

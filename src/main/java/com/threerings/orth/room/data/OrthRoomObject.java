@@ -8,6 +8,7 @@ import javax.annotation.Generated;
 
 import com.threerings.util.Name;
 
+import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.whirled.spot.data.SpotSceneObject;
@@ -63,6 +64,11 @@ public class OrthRoomObject extends SpotSceneObject
 
     /** Contains the memories for all entities in this room. */
     public DSet<EntityMemories> memories = DSet.newDSet();
+
+    @Override public DObject getSpeakObject ()
+    {
+        return this;
+    }
 
     // AUTO-GENERATED: METHODS START
     /**

@@ -11,6 +11,7 @@ import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.io.SimpleStreamableObject;
+
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.client.InvocationService;
