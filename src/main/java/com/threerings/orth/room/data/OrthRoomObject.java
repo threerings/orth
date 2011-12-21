@@ -4,17 +4,24 @@
 
 package com.threerings.orth.room.data;
 
+import java.util.Set;
+
 import javax.annotation.Generated;
+
+import com.google.common.collect.Sets;
 
 import com.threerings.util.Name;
 
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.crowd.data.OccupantInfo;
+
 import com.threerings.whirled.spot.data.SpotSceneObject;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.data.SpeakRouter;
+import com.threerings.orth.data.AuthName;
 
 import static com.threerings.orth.Log.log;
 
@@ -68,6 +75,17 @@ public class OrthRoomObject extends SpotSceneObject
     @Override public DObject getSpeakObject ()
     {
         return this;
+    }
+
+    @Override public Set<Integer> getSpeakReceipients ()
+    {
+        Set<Integer> playerIds = Sets.newHashSetWithExpectedSize(this.occupantInfo.size());
+        for (OccupantInfo info : this.occupantInfo) {
+            if (info.username instanceof AuthName) {
+                playerIds.add(((AuthName) info.username).getId());
+            }
+        }
+        return playerIds;
     }
 
     // AUTO-GENERATED: METHODS START
