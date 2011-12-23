@@ -21,6 +21,8 @@ import com.google.inject.Singleton;
 import com.samskivert.util.Comparators;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.io.SimpleStreamableObject;
+
 import com.threerings.presents.annotation.AnyThread;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.peer.data.NodeObject;
@@ -42,7 +44,7 @@ public class ChatHistory
     /** The amount of time before chat history becomes... history. */
     public static final long HISTORY_EXPIRATION = 5L * 60L * 1000L;
 
-    public static class ChatHistoryEntry
+    public static class ChatHistoryEntry extends SimpleStreamableObject
     {
         public PlayerName sender;
         public String message;
@@ -59,7 +61,7 @@ public class ChatHistory
     /**
      * Value asynchronously returned by {@link #collectChatHistory} after polling all peer nodes.
      */
-    public static class ChatHistoryResult
+    public static class ChatHistoryResult extends SimpleStreamableObject
     {
         /** The set of nodes that either did not reply within the timeout, or had a failure. */
         public Set<String> failedNodes;
