@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerManager.NodeRequest;
 
@@ -78,6 +79,7 @@ public abstract class HostNodeletRequest extends NodeRequest
 
                         @Override public void requestFailed (Exception cause) {
                             log.warning("Couldn't host nodelet!", "nodelet", _nodelet, cause);
+                            listener.requestFailed(InvocationCodes.E_INTERNAL_ERROR);
                             _peerMan.releaseLock(lock, new NOOP<String>());
                         }
                     });
