@@ -25,10 +25,10 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.orth.aether.data.AetherClientObject;
-import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.aether.server.AetherNodeAction;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.data.AuthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildMemberEntry;
 import com.threerings.orth.guild.data.GuildNodelet;
@@ -72,8 +72,8 @@ public class GuildManager extends NodeletManager
                 return Iterables.transform(gmrecs.values(),
                     new Function<GuildMemberRecord, GuildMemberEntry>() {
                     public GuildMemberEntry apply (GuildMemberRecord gmrec) {
-                        VizPlayerName vpn = new VizPlayerName(playerNames.get(gmrec.getPlayerId()),
-                            gmrec.getPlayerId(), null);
+                        PlayerName vpn = new PlayerName(
+                            playerNames.get(gmrec.getPlayerId()), gmrec.getPlayerId());
                         return new GuildMemberEntry(vpn, gmrec.getRank());
                     }
                 });
@@ -111,8 +111,8 @@ public class GuildManager extends NodeletManager
         if (!getThrottle(sender).allow(targetId)) {
             throw new InvocationException(E_INVITE_ALREADY_SENT);
         }
-        final Notification notification = new GuildInviteNotification(sender.name.toOrthName(),
-            _guildObj.name, _guildId);
+        final Notification notification =
+            new GuildInviteNotification(sender.name, _guildObj.name, _guildId);
         _peerMan.invokeSingleNodeRequest(new AetherNodeRequest(targetId) {
             @Inject transient NotificationManager notMgr;
 

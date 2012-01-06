@@ -10,20 +10,18 @@ import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.presents.dobj.DSet;
 
-import com.threerings.orth.aether.data.VizPlayerName;
-
 public class PlayerEntry extends SimpleStreamableObject
     implements /* IsSerializable, */ DSet.Entry, Cloneable
 {
     /** The display name of the friend. */
-    public VizPlayerName name;
+    public PlayerName name;
 
     @Inject
     public PlayerEntry ()
     {
     }
 
-    public PlayerEntry (VizPlayerName name)
+    public PlayerEntry (PlayerName name)
     {
         this.name = name;
     }

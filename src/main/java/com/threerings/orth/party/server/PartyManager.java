@@ -252,7 +252,7 @@ public class PartyManager
 
     protected PartyInvite createInvite (PartierObject inviter, PlayerName invitee)
     {
-        return new PartyInvite(inviter.playerName.toOrthName(), invitee, addr);
+        return new PartyInvite(inviter.playerName, invitee, addr);
     }
 
     @Override

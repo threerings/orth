@@ -14,7 +14,7 @@ import com.threerings.util.Hashable;
 
 import com.threerings.presents.dobj.DSet_Entry;
 
-import com.threerings.orth.aether.data.VizPlayerName;
+import com.threerings.orth.data.PlayerName;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
@@ -32,12 +32,12 @@ public class PlayerEntry extends SimpleStreamableObject
 
 
 // GENERATED STREAMING START
-    public var name :VizPlayerName;
+    public var name :PlayerName;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        name = ins.readObject(VizPlayerName);
+        name = ins.readObject(PlayerName);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void

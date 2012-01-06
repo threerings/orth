@@ -11,7 +11,7 @@ import com.threerings.io.ObjectInputStream;
 
 import com.threerings.presents.data.ClientObject;
 
-import com.threerings.orth.aether.data.VizPlayerName;
+import com.threerings.orth.data.PlayerName;
 
 // GENERATED PREAMBLE END
 
@@ -21,11 +21,11 @@ public class PartierObject extends ClientObject
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
-    public var playerName :VizPlayerName;
+    public var playerName :PlayerName;
 
     public var partyOid :int;
 
-    public var playerNameChanged :Signal = new Signal(VizPlayerName, VizPlayerName);
+    public var playerNameChanged :Signal = new Signal(PlayerName, PlayerName);
     public var partyOidChanged :Signal = new Signal(int, int);
 
     public static const PLAYER_NAME :String = "playerName";
@@ -34,7 +34,7 @@ public class PartierObject extends ClientObject
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        playerName = ins.readObject(VizPlayerName);
+        playerName = ins.readObject(PlayerName);
         partyOid = ins.readInt();
     }
 

@@ -7,7 +7,7 @@ package com.threerings.orth.party.server;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.ClientResolver;
 
-import com.threerings.orth.aether.data.VizPlayerName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyAuthName;
 
@@ -31,8 +31,6 @@ public class PartyClientResolver extends ClientResolver
         PartierObject partObj = (PartierObject)clobj;
         PartyAuthName authName = (PartyAuthName)_username;
 
-        // TODO(bruno): Pull name and photo from a DB.
-
-        partObj.playerName = new VizPlayerName(authName.toString(), authName.getId(), null);
+        partObj.playerName = new PlayerName(authName.toString(), authName.getId());
     }
 }

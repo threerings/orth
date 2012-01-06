@@ -4,8 +4,6 @@
 
 package com.threerings.orth.guild.data;
 
-import com.threerings.orth.aether.data.VizPlayerName;
-import com.threerings.orth.data.MediaDesc;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.data.PlayerName;
 
@@ -13,7 +11,7 @@ public class GuildMemberEntry extends PlayerEntry
 {
     public GuildRank rank;
 
-    public GuildMemberEntry (VizPlayerName name, GuildRank rank)
+    public GuildMemberEntry (PlayerName name, GuildRank rank)
     {
         super(name);
         this.rank = rank;
@@ -35,12 +33,10 @@ public class GuildMemberEntry extends PlayerEntry
     }
 
     /**
-     * Creates a new guild member entry for the given player and status. The photo will be null.
-     * TODO: callers of this will need to worry about the photo when those are implemented.
+     * Creates a new guild member entry for the given player and status.
      */
     public static GuildMemberEntry fromOrthName (PlayerName playerName, GuildRank rank)
     {
-        MediaDesc photo = null; // TODO
-        return new GuildMemberEntry(new VizPlayerName(playerName, photo), rank);
+        return new GuildMemberEntry(playerName, rank);
     }
 }

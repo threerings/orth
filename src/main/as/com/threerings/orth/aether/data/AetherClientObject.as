@@ -12,9 +12,9 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
-import com.threerings.orth.aether.data.VizPlayerName;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.PlayerEntry;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.PartyObjectAddress;
 
@@ -26,7 +26,7 @@ public class AetherClientObject extends ClientObject
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
-    public var playerName :VizPlayerName;
+    public var playerName :PlayerName;
 
     public var friends :DSet; /* of */ FriendEntry;
 
@@ -36,7 +36,7 @@ public class AetherClientObject extends ClientObject
 
     public var guild :HostedNodelet;
 
-    public var playerNameChanged :Signal = new Signal(VizPlayerName, VizPlayerName);
+    public var playerNameChanged :Signal = new Signal(PlayerName, PlayerName);
     public var friendsChanged :Signal = new Signal(DSet, DSet);
     public var friendsEntryAdded :Signal = new Signal(FriendEntry);
     public var friendsEntryRemoved :Signal = new Signal(FriendEntry);
@@ -54,7 +54,7 @@ public class AetherClientObject extends ClientObject
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        playerName = ins.readObject(VizPlayerName);
+        playerName = ins.readObject(PlayerName);
         friends = ins.readObject(DSet);
         party = ins.readObject(PartyObjectAddress);
         guildId = ins.readInt();

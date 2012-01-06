@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 
 import com.threerings.presents.data.ClientObject;
 
-import com.threerings.orth.aether.data.VizPlayerName;
+import com.threerings.orth.data.PlayerName;
 
 /**
  * Contains information on a party player logged into the server.
@@ -26,7 +26,7 @@ public class PartierObject extends ClientObject
     // AUTO-GENERATED: FIELDS END
 
     /** The name and id information for this user. */
-    public VizPlayerName playerName;
+    public PlayerName playerName;
 
     /** The party to which this partier is party. */
     public int partyOid;
@@ -49,9 +49,9 @@ public class PartierObject extends ClientObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setPlayerName (VizPlayerName value)
+    public void setPlayerName (PlayerName value)
     {
-        VizPlayerName ovalue = this.playerName;
+        PlayerName ovalue = this.playerName;
         requestAttributeChange(
             PLAYER_NAME, value, ovalue);
         this.playerName = value;

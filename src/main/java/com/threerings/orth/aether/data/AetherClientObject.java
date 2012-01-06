@@ -10,6 +10,7 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.data.FriendEntry;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.PartyObjectAddress;
 
@@ -45,7 +46,7 @@ public class AetherClientObject extends ClientObject
     public static final String NOTIFICATION = "notification";
 
     /** The name and id information for this player. */
-    public VizPlayerName playerName;
+    public PlayerName playerName;
 
     /** The online friends of this player. */
     public DSet<FriendEntry> friends = new DSet<FriendEntry>();
@@ -88,9 +89,9 @@ public class AetherClientObject extends ClientObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setPlayerName (VizPlayerName value)
+    public void setPlayerName (PlayerName value)
     {
-        VizPlayerName ovalue = this.playerName;
+        PlayerName ovalue = this.playerName;
         requestAttributeChange(
             PLAYER_NAME, value, ovalue);
         this.playerName = value;

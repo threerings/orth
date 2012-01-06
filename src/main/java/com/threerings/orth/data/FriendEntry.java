@@ -4,8 +4,6 @@
 
 package com.threerings.orth.data;
 
-import com.threerings.orth.aether.data.VizPlayerName;
-
 /**
  * Represents a friend connection.
  */
@@ -23,33 +21,27 @@ public class FriendEntry extends PlayerEntry
     public String statusMessage;
 
     /**
-     * Creates a new offline friend entry for the given player id and name. The photo and status
+     * Creates a new offline friend entry for the given player id and name. The status
      * message will be null.
-     * TODO: callers of this will need to worry about photo and status message when those are
-     * implemented.
      */
     public static FriendEntry offline (int id, String name)
     {
-        MediaDesc photo = null; // TODO
         String statusMessage = null; // TODO
-        return new FriendEntry(new VizPlayerName(name, id, photo), Status.OFFLINE, statusMessage);
+        return new FriendEntry(new PlayerName(name, id), Status.OFFLINE, statusMessage);
     }
 
     /**
-     * Creates a new friend entry for the given player and status. The photo and status message
+     * Creates a new friend entry for the given player and status. The status message
      * will be null.
-     * TODO: callers of this will need to worry about photo and status message when those are
-     * implemented.
      */
     public static FriendEntry fromOrthName (PlayerName playerName, Status status)
     {
-        MediaDesc photo = null; // TODO
         String statusMessage = null; // TODO
-        return new FriendEntry(new VizPlayerName(playerName, photo), status, statusMessage);
+        return new FriendEntry(playerName, status, statusMessage);
     }
 
     /** Mr. Constructor. */
-    public FriendEntry (VizPlayerName name, Status status, String statusMessage)
+    public FriendEntry (PlayerName name, Status status, String statusMessage)
     {
         super(name);
         this.status = status;
