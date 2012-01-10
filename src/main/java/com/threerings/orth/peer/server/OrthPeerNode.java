@@ -9,7 +9,6 @@ import com.threerings.presents.dobj.DSet.Entry;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.peer.server.PeerNode;
 
-import com.threerings.orth.Log;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.data.OrthNodeObject;
 
