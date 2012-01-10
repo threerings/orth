@@ -13,9 +13,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
 import com.samskivert.util.Lifecycle;
+import com.samskivert.util.ObserverList.ObserverOp;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.util.Name;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.data.ClientObject;
@@ -49,14 +51,37 @@ public abstract class OrthPeerManager extends PeerManager
     /** Our {@link PeerObserver}s. */
     public final ObserverList<PeerObserver> peerObs = ObserverList.newFastUnsafe();
 
+    /** Our {@link FarSeeingObserver}s. */
+    public final ObserverList<FarSeeingObserver> farSeeingObs = ObserverList.newFastUnsafe();
+
     /**
-     * Register the observation of sessions identified by a new {@link AuthName} subclass
-     * and return the associated {@link ObserverList}. Observers will be notified of loggings
-     * in an d out of any clients identified by the given class.
+     * Used to notify interested parties when clients log onto and off of servers. This includes
+     * peer servers and this local server, therefore all client activity anywhere may be tracked
+     * through this interface.
      */
-    public <O extends AuthName> ObserverList<FarSeeingObserver<O>> observe (Class<?> type)
+    public static interface FarSeeingObserver
     {
-        return this.<O>newObservation(type).getList();
+        /**
+         * Notifies the observer when a member has logged onto an orth server.
+         */
+        void loggedOn (String node, Name member);
+
+        /**
+         * Notifies the observer when a member has logged off of an orth server.
+         */
+        void loggedOff (String node, Name member);
+    }
+
+    /**
+     * Used to hear when peers connect or disconnect from this node.
+     */
+    public static interface PeerObserver
+    {
+        /** Called when a peer logs onto this node. */
+        void connectedToPeer (OrthNodeObject nodeobj);
+
+        /** Called when a peer logs off of this node. */
+        void disconnectedFromPeer (String node);
     }
 
     public OrthPeerManager (Lifecycle cycle)
@@ -279,104 +304,28 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     /** Call the 'loggedOn' method on this client's registered {@link FarSeeingObserver} list. */
-    protected  <T extends AuthName> void loggedOn (final String nodeName, OrthClientInfo info)
+    protected void loggedOn (final String nodeName, final OrthClientInfo info)
     {
-        apply(info, new VizOp<T>() {
-            public void apply (FarSeeingObserver<T> observer, T name) {
-                observer.loggedOn(nodeName, name);
+        farSeeingObs.apply(new ObserverOp<FarSeeingObserver>() {
+            @Override public boolean apply (FarSeeingObserver observer) {
+                observer.loggedOn(nodeName, info.username);
+                return true;
             }
         });
     }
 
     /** Call the 'loggedOff' method on this client's registered {@link FarSeeingObserver} list. */
-    protected <T extends AuthName> void loggedOff (final String nodeName, OrthClientInfo info)
+    protected void loggedOff (final String nodeName, final OrthClientInfo info)
     {
-        apply(info, new VizOp<T>() {
-            public void apply (FarSeeingObserver<T> observer, T name) {
-                observer.loggedOff(nodeName, name);
+        farSeeingObs.apply(new ObserverOp<FarSeeingObserver>() {
+            @Override public boolean apply (FarSeeingObserver observer) {
+                observer.loggedOff(nodeName, info.username);
+                return true;
             }
         });
-    }
-
-    protected <T extends AuthName> void apply (OrthClientInfo info, VizOp<T> op)
-    {
-        @SuppressWarnings("unchecked")
-        Observation<T> observation = (Observation<T>) _observations.get(info.username.getClass());
-        if (observation != null) {
-            observation.apply(info, op);
-        }
-    }
-
-    protected <T extends AuthName> Observation<T> newObservation (Class<?> type)
-    {
-        if (_observations.containsKey(type)) {
-            throw new IllegalStateException("Multiple observations on type: " + type);
-        }
-        Observation<T> observation = new Observation<T>();
-        _observations.put(type, observation);
-        return observation;
-    }
-
-    protected interface VizOp<T extends AuthName>
-    {
-        void apply (FarSeeingObserver<T> observer, T name);
-    }
-
-    protected static class Observation<T extends AuthName>
-    {
-        public void apply (final OrthClientInfo info, final VizOp<T> op) {
-            _list.apply(new ObserverList.ObserverOp<FarSeeingObserver<T>>() {
-                public boolean apply (FarSeeingObserver<T> observer) {
-                    @SuppressWarnings("unchecked")
-                    T authName = (T) info.username;
-                    op.apply(observer, authName);
-                    return true;
-                }
-            });
-        }
-
-        public ObserverList<FarSeeingObserver<T>> getList()
-        {
-            return _list;
-        }
-
-        protected ObserverList<FarSeeingObserver<T>> _list = ObserverList.newFastUnsafe();
-
-    }
-
-    /**
-     * Used to notify interested parties when clients log onto and off of servers. This includes
-     * peer servers and this local server, therefore all client activity anywhere may be tracked
-     * through this interface.
-     */
-    public static interface FarSeeingObserver<T extends AuthName>
-    {
-        /**
-         * Notifies the observer when a member has logged onto an orth server.
-         */
-        void loggedOn (String node, T member);
-
-        /**
-         * Notifies the observer when a member has logged off of an orth server.
-         */
-        void loggedOff (String node, T member);
-    }
-
-    /**
-     * Used to hear when peers connect or disconnect from this node.
-     */
-    public static interface PeerObserver
-    {
-        /** Called when a peer logs onto this node. */
-        void connectedToPeer (OrthNodeObject nodeobj);
-
-        /** Called when a peer logs off of this node. */
-        void disconnectedFromPeer (String node);
     }
 
     protected OrthNodeObject _onobj;
 
     protected Map<Class<? extends Nodelet>, NodeletRegistry> _nodeletRegistries = Maps.newHashMap();
-
-    protected final Map<Class<?>, Observation<?>> _observations = Maps.newHashMap();
 }

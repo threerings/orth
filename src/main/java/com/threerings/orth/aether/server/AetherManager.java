@@ -9,7 +9,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
-import com.samskivert.util.ObserverList;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.util.Resulting;
@@ -19,7 +18,6 @@ import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
-import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.AetherMarshaller;
@@ -46,14 +44,6 @@ public class AetherManager
         // register our bootstrap invocation service
         injector.getInstance(InvocationManager.class).registerProvider(
             this, AetherMarshaller.class, OrthCodes.AETHER_GROUP);
-
-        // observe aether auths from afar
-        _observers = injector.getInstance(OrthPeerManager.class).observe(AetherAuthName.class);
-    }
-
-    public void addObserver (OrthPeerManager.FarSeeingObserver<AetherAuthName> observer)
-    {
-        _observers.add(observer);
     }
 
     @Override
@@ -101,9 +91,6 @@ public class AetherManager
             }
         });
     }
-
-    /** Observers of aether logins throughout the cluster. */
-    protected ObserverList<OrthPeerManager.FarSeeingObserver<AetherAuthName>> _observers;
 
     @Inject protected NotificationManager _notifyMan;
     @Inject protected AetherSessionLocator _locator;

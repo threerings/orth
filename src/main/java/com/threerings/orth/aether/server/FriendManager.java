@@ -74,11 +74,11 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 shutdownFriends(plobj);
             }
         });
-        _aetherMgr.addObserver(new OrthPeerManager.FarSeeingObserver<AetherAuthName>() {
-            @Override public void loggedOn (String node, AetherAuthName member) {
+        _peerMgr.farSeeingObs.add(new DistantAetherObserver() {
+            @Override public void aetherLogOn (String node, AetherAuthName member) {
                 notifyFriends(member.getId(), Whereabouts.ONLINE);
             }
-            @Override public void loggedOff (String node, AetherAuthName member) {
+            @Override public void aetherLogOff (String node, AetherAuthName member) {
                 notifyFriends(member.getId(), Whereabouts.OFFLINE);
             }
         });
