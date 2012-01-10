@@ -17,6 +17,7 @@ import com.google.inject.Singleton;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.Lifecycle;
 
+import com.threerings.util.Name;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.MainInvoker;
@@ -36,11 +37,14 @@ import com.threerings.orth.aether.data.FriendshipAcceptance;
 import com.threerings.orth.aether.data.FriendshipRequest;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.comms.data.CommSender;
+import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.data.where.InLocus;
 import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.peer.data.OrthClientInfo;
+import com.threerings.orth.peer.server.OrthPeerManager.FarSeeingObserver;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.PlayerRepository;
 import com.threerings.orth.server.util.InviteThrottle;
@@ -74,12 +78,22 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 shutdownFriends(plobj);
             }
         });
-        _peerMgr.farSeeingObs.add(new DistantAetherObserver() {
-            @Override public void aetherLogOn (String node, AetherAuthName member) {
-                notifyFriends(member.getId(), Whereabouts.ONLINE);
+        // we listen to Aether connections for logon/logoff events, and everywhere for Whereabouts
+        _peerMgr.farSeeingObs.add(new FarSeeingObserver() {
+            @Override public void loggedOn (String node, OrthClientInfo info) {
+                if (info.username instanceof AetherAuthName) {
+                    notifyFriends(((AuthName) (info.username)).getId(), Whereabouts.ONLINE);
+                }
             }
-            @Override public void aetherLogOff (String node, AetherAuthName member) {
-                notifyFriends(member.getId(), Whereabouts.OFFLINE);
+            @Override public void loggedOff (String node, Name client) {
+                if (client instanceof AetherAuthName) {
+                    notifyFriends(((AuthName) client).getId(), Whereabouts.OFFLINE);
+                }
+            }
+            @Override public void infoChanged (String nodeName, OrthClientInfo info) {
+                if (info.whereabouts instanceof InLocus) {
+                    notifyFriends(((AuthName) (info.username)).getId(), info.whereabouts);
+                }
             }
         });
     }
