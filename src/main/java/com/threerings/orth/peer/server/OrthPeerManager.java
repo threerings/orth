@@ -62,14 +62,19 @@ public abstract class OrthPeerManager extends PeerManager
     public static interface FarSeeingObserver
     {
         /**
-         * Notifies the observer when a member has logged onto an orth server.
+         * Notifies the observer when a client has logged onto an orth server.
          */
-        void loggedOn (String node, Name member);
+        void loggedOn (String node, OrthClientInfo info);
 
         /**
-         * Notifies the observer when a member has logged off of an orth server.
+         * Notifies the observer when a client has logged off of an orth server.
          */
-        void loggedOff (String node, Name member);
+        void loggedOff (String node, Name client);
+
+        /**
+         * Notifies the observer when a client's info has changed.
+         */
+        void infoChanged (String nodeName, OrthClientInfo info);
     }
 
     /**
@@ -217,8 +222,14 @@ public abstract class OrthPeerManager extends PeerManager
         OrthClientInfo info = (OrthClientInfo) _nodeobj.clients.get(name);
         if (info != null) {
             info.whereabouts = whereabouts;
-            _nodeobj.updateClients(info);
+            updateClientInfo(info);
         }
+    }
+
+    protected void updateClientInfo (OrthClientInfo info)
+    {
+        _nodeobj.updateClients(info);
+        clientInfoChanged(_nodeName, info);
     }
 
     @Override // from PeerManager
@@ -237,6 +248,7 @@ public abstract class OrthPeerManager extends PeerManager
     protected void initClientInfo (PresentsSession client, ClientInfo info)
     {
         super.initClientInfo(client, info);
+
         OrthClientInfo orthInfo = (OrthClientInfo) info;
 
         ClientObject clobj = client.getClientObject();
@@ -258,11 +270,17 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     @Override // from PeerManager
+    protected Class<? extends PeerNode> getPeerNodeClass ()
+    {
+        return OrthPeerNode.class;
+    }
+
+    @Override // from PeerManager
     protected void clientLoggedOn (String nodeName, ClientInfo clinfo)
     {
         super.clientLoggedOn(nodeName, clinfo);
 
-        loggedOn(nodeName, (OrthClientInfo)clinfo);
+        loggedOn(nodeName, (OrthClientInfo) clinfo);
     }
 
     @Override // from PeerManager
@@ -270,7 +288,12 @@ public abstract class OrthPeerManager extends PeerManager
     {
         super.clientLoggedOff(nodeName, clinfo);
 
-        loggedOff(nodeName, (OrthClientInfo)clinfo);
+        loggedOff(nodeName, (OrthClientInfo) clinfo);
+    }
+
+    protected void clientInfoChanged (String nodeName, OrthClientInfo clinfo)
+    {
+        infoChanged(nodeName, clinfo);
     }
 
     @Override // from PeerManager
@@ -308,7 +331,7 @@ public abstract class OrthPeerManager extends PeerManager
     {
         farSeeingObs.apply(new ObserverOp<FarSeeingObserver>() {
             @Override public boolean apply (FarSeeingObserver observer) {
-                observer.loggedOn(nodeName, info.username);
+                observer.loggedOn(nodeName, info);
                 return true;
             }
         });
@@ -320,6 +343,17 @@ public abstract class OrthPeerManager extends PeerManager
         farSeeingObs.apply(new ObserverOp<FarSeeingObserver>() {
             @Override public boolean apply (FarSeeingObserver observer) {
                 observer.loggedOff(nodeName, info.username);
+                return true;
+            }
+        });
+    }
+
+    /** Call the 'infoChanged' method on this client's registered {@link FarSeeingObserver} list. */
+    protected void infoChanged (final String nodeName, final OrthClientInfo info)
+    {
+        farSeeingObs.apply(new ObserverOp<FarSeeingObserver>() {
+            @Override public boolean apply (FarSeeingObserver observer) {
+                observer.infoChanged(nodeName, info);
                 return true;
             }
         });
