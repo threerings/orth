@@ -18,7 +18,7 @@ public class Online extends Whereabouts
 // GENERATED CLASSDECL END
     override public function getDescription () :String
     {
-        return "m.online";
+        return "Online";
     }
 
     override public function isOnline () :Boolean

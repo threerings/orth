@@ -10,7 +10,7 @@ public class Offline extends Whereabouts
 {
     @Override public String getDescription ()
     {
-        return "m.offline";
+        return "Offline";
     }
 
     @Override public boolean isOnline ()
