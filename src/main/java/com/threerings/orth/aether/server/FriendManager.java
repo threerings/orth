@@ -73,7 +73,6 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
             @Override public void playerLoggedIn (PresentsSession session, AetherClientObject plobj) {
                 initFriends(plobj);
             }
-
             @Override public void playerWillLogout (PresentsSession session, AetherClientObject plobj) {
                 shutdownFriends(plobj);
             }
@@ -295,7 +294,8 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
 
     protected FriendEntry toFriendEntry (OrthClientInfo info)
     {
-        return new FriendEntry(info.visibleName, info.whereabouts, null);
+        return new FriendEntry(
+            info.visibleName, _peerMgr.getWhereabouts(info.visibleName.getId()), null);
     }
 
     /** Mapping of local and remote player ids to friend ids logged into this server. */
