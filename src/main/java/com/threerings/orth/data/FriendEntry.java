@@ -5,7 +5,6 @@
 package com.threerings.orth.data;
 
 import com.threerings.orth.data.where.Whereabouts;
-import com.threerings.orth.peer.data.OrthClientInfo;
 
 /**
  * Represents a friend connection.
@@ -26,16 +25,6 @@ public class FriendEntry extends PlayerEntry
     {
         String statusMessage = null; // TODO
         return new FriendEntry(new PlayerName(name, id), Whereabouts.OFFLINE, statusMessage);
-    }
-
-    /**
-     * Creates a new friend entry for the given player and status. The status message
-     * will be null.
-     */
-    public static FriendEntry fromClientInfo (OrthClientInfo info)
-    {
-        String statusMessage = null; // TODO
-        return new FriendEntry(info.visibleName, info.whereabouts, statusMessage);
     }
 
     /** Mr. Constructor. */
