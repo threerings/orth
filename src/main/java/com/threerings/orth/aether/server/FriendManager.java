@@ -294,8 +294,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
 
     protected FriendEntry toFriendEntry (OrthClientInfo info)
     {
-        return new FriendEntry(
-            info.visibleName, _peerMgr.getWhereabouts(info.visibleName.getId()), null);
+        return new FriendEntry(info.visibleName, _peerMgr.getWhereabouts(info.visibleName.getId()));
     }
 
     /** Mapping of local and remote player ids to friend ids logged into this server. */

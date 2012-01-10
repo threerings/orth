@@ -14,25 +14,20 @@ public class FriendEntry extends PlayerEntry
     /** The status of the friend's connection. */
     public Whereabouts status;
 
-    /** The player's self-designated status (not yet implemented). */
-    public String statusMessage;
-
     /**
      * Creates a new offline friend entry for the given player id and name. The status
      * message will be null.
      */
     public static FriendEntry offline (int id, String name)
     {
-        String statusMessage = null; // TODO
-        return new FriendEntry(new PlayerName(name, id), Whereabouts.OFFLINE, statusMessage);
+        return new FriendEntry(new PlayerName(name, id), Whereabouts.OFFLINE);
     }
 
     /** Mr. Constructor. */
-    public FriendEntry (PlayerName name, Whereabouts status, String statusMessage)
+    public FriendEntry (PlayerName name, Whereabouts status)
     {
         super(name);
         this.status = status;
-        this.statusMessage = statusMessage;
     }
 
     /** Copies this friend entry. */

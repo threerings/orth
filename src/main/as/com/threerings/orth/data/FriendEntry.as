@@ -21,20 +21,16 @@ public class FriendEntry extends PlayerEntry
 // GENERATED STREAMING START
     public var status :Whereabouts;
 
-    public var statusMessage :String;
-
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         status = ins.readObject(Whereabouts);
-        statusMessage = ins.readField(String);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
         out.writeObject(status);
-        out.writeField(statusMessage);
     }
 
 // GENERATED STREAMING END
