@@ -4,11 +4,7 @@
 
 package com.threerings.orth.data.where;
 
-import com.google.common.base.Objects;
-
 import com.threerings.io.SimpleStreamableObject;
-
-import com.threerings.orth.locus.data.Locus;
 
 public abstract class Whereabouts extends SimpleStreamableObject
 {
