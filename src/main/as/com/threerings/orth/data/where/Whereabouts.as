@@ -17,7 +17,10 @@ import com.threerings.io.SimpleStreamableObject;
 public class Whereabouts extends SimpleStreamableObject
 {
 // GENERATED CLASSDECL END
-
+    Online;
+    Offline;
+    InLocus;
+    
     /**
      * Returns a translatable description of the player's whereabouts.
      */
