@@ -5,6 +5,7 @@
 package com.threerings.orth.aether.data;
 
 import com.samskivert.util.StringUtil;
+
 import com.threerings.presents.net.Credentials;
 
 /**

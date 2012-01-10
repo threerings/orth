@@ -5,8 +5,6 @@
 // GENERATED PREAMBLE START
 package com.threerings.orth.aether.data {
 
-import com.threerings.util.Joiner;
-
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
