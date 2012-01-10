@@ -212,6 +212,18 @@ public abstract class OrthPeerManager extends PeerManager
         throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
     }
 
+    public Whereabouts getWhereabouts (int playerId)
+    {
+        OrthClientInfo aetherInfo = locatePlayer(playerId);
+        // we may not be logged in at all
+        if (aetherInfo == null) {
+            return Whereabouts.OFFLINE;
+        }
+        OrthClientInfo locusInfo = locateLocusBody(playerId);
+        // else if we have a locus connection, that is authoritative
+        return ((locusInfo != null) ? locusInfo : aetherInfo).whereabouts;
+    }
+
     public void updateWhereabouts (AuthName name)
     {
         updateWhereabouts(name, Whereabouts.ONLINE);
@@ -351,8 +363,10 @@ public abstract class OrthPeerManager extends PeerManager
     /** Call the 'infoChanged' method on this client's registered {@link FarSeeingObserver} list. */
     protected void infoChanged (final String nodeName, final OrthClientInfo info)
     {
-        farSeeingObs.apply(new ObserverOp<FarSeeingObserver>() {
-            @Override public boolean apply (FarSeeingObserver observer) {
+        farSeeingObs.apply(new ObserverOp<FarSeeingObserver>()
+        {
+            @Override public boolean apply (FarSeeingObserver observer)
+            {
                 observer.infoChanged(nodeName, info);
                 return true;
             }
