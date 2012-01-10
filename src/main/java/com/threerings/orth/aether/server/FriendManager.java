@@ -28,6 +28,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.PresentsSession;
 
+import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.FriendMarshaller;
@@ -73,11 +74,11 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 shutdownFriends(plobj);
             }
         });
-        _aetherMgr.addObserver(new OrthPeerManager.FarSeeingObserver<PlayerName>() {
-            @Override public void loggedOn (String node, PlayerName member) {
+        _aetherMgr.addObserver(new OrthPeerManager.FarSeeingObserver<AetherAuthName>() {
+            @Override public void loggedOn (String node, AetherAuthName member) {
                 notifyFriends(member.getId(), Whereabouts.ONLINE);
             }
-            @Override public void loggedOff (String node, PlayerName member) {
+            @Override public void loggedOff (String node, AetherAuthName member) {
                 notifyFriends(member.getId(), Whereabouts.OFFLINE);
             }
         });

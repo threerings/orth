@@ -30,7 +30,6 @@ import com.threerings.presents.server.PresentsSession;
 import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.AuthName;
-import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.locus.data.LocusAuthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
@@ -55,7 +54,7 @@ public abstract class OrthPeerManager extends PeerManager
      * and return the associated {@link ObserverList}. Observers will be notified of loggings
      * in an d out of any clients identified by the given class.
      */
-    public <O extends PlayerName> ObserverList<FarSeeingObserver<O>> observe (Class<?> type)
+    public <O extends AuthName> ObserverList<FarSeeingObserver<O>> observe (Class<?> type)
     {
         return this.<O>newObservation(type).getList();
     }
@@ -280,7 +279,7 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     /** Call the 'loggedOn' method on this client's registered {@link FarSeeingObserver} list. */
-    protected  <T extends PlayerName> void loggedOn (final String nodeName, OrthClientInfo info)
+    protected  <T extends AuthName> void loggedOn (final String nodeName, OrthClientInfo info)
     {
         apply(info, new VizOp<T>() {
             public void apply (FarSeeingObserver<T> observer, T name) {
@@ -290,7 +289,7 @@ public abstract class OrthPeerManager extends PeerManager
     }
 
     /** Call the 'loggedOff' method on this client's registered {@link FarSeeingObserver} list. */
-    protected <T extends PlayerName> void loggedOff (final String nodeName, OrthClientInfo info)
+    protected <T extends AuthName> void loggedOff (final String nodeName, OrthClientInfo info)
     {
         apply(info, new VizOp<T>() {
             public void apply (FarSeeingObserver<T> observer, T name) {
@@ -299,7 +298,7 @@ public abstract class OrthPeerManager extends PeerManager
         });
     }
 
-    protected <T extends PlayerName> void apply (OrthClientInfo info, VizOp<T> op)
+    protected <T extends AuthName> void apply (OrthClientInfo info, VizOp<T> op)
     {
         @SuppressWarnings("unchecked")
         Observation<T> observation = (Observation<T>) _observations.get(info.username.getClass());
@@ -308,7 +307,7 @@ public abstract class OrthPeerManager extends PeerManager
         }
     }
 
-    protected <T extends PlayerName> Observation<T> newObservation (Class<?> type)
+    protected <T extends AuthName> Observation<T> newObservation (Class<?> type)
     {
         if (_observations.containsKey(type)) {
             throw new IllegalStateException("Multiple observations on type: " + type);
@@ -318,20 +317,19 @@ public abstract class OrthPeerManager extends PeerManager
         return observation;
     }
 
-    protected interface VizOp<T extends PlayerName>
+    protected interface VizOp<T extends AuthName>
     {
         void apply (FarSeeingObserver<T> observer, T name);
     }
 
-    protected static class Observation<T extends PlayerName>
+    protected static class Observation<T extends AuthName>
     {
-        public void apply (final OrthClientInfo info, final VizOp<T> op)
-        {
+        public void apply (final OrthClientInfo info, final VizOp<T> op) {
             _list.apply(new ObserverList.ObserverOp<FarSeeingObserver<T>>() {
                 public boolean apply (FarSeeingObserver<T> observer) {
                     @SuppressWarnings("unchecked")
-                    T vizName = (T) info.visibleName;
-                    op.apply(observer, vizName);
+                    T authName = (T) info.username;
+                    op.apply(observer, authName);
                     return true;
                 }
             });
@@ -351,7 +349,7 @@ public abstract class OrthPeerManager extends PeerManager
      * peer servers and this local server, therefore all client activity anywhere may be tracked
      * through this interface.
      */
-    public static interface FarSeeingObserver<T extends PlayerName>
+    public static interface FarSeeingObserver<T extends AuthName>
     {
         /**
          * Notifies the observer when a member has logged onto an orth server.
