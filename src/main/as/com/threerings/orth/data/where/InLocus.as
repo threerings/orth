@@ -18,6 +18,16 @@ public class InLocus extends Whereabouts
 {
 // GENERATED CLASSDECL END
 
+    override public function getDescription () :String
+    {
+        return description;
+    }
+
+    override public function isOnline () :Boolean
+    {
+        return true;
+    }
+
 // GENERATED STREAMING START
     public var locus :Locus;
 

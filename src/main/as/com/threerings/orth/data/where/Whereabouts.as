@@ -5,6 +5,8 @@
 // GENERATED PREAMBLE START
 package com.threerings.orth.data.where {
 
+import flashx.funk.util.isAbstract;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
@@ -15,6 +17,22 @@ import com.threerings.io.SimpleStreamableObject;
 public class Whereabouts extends SimpleStreamableObject
 {
 // GENERATED CLASSDECL END
+
+    /**
+     * Returns a translatable description of the player's whereabouts.
+     */
+    public function getDescription () :String
+    {
+        return isAbstract();
+    }
+
+    /**
+     * Checks whether the player is online.
+     */
+    public function isOnline () :Boolean
+    {
+        return isAbstract();
+    }
 
 // GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void

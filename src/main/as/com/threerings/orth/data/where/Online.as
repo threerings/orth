@@ -16,6 +16,15 @@ import com.threerings.orth.data.where.Whereabouts;
 public class Online extends Whereabouts
 {
 // GENERATED CLASSDECL END
+    override public function getDescription () :String
+    {
+        return "m.online";
+    }
+
+    override public function isOnline () :Boolean
+    {
+        return true;
+    }
 
 // GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void
