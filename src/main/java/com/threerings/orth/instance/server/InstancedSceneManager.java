@@ -18,7 +18,7 @@ import com.threerings.whirled.spot.server.SpotSceneManager;
 import com.threerings.whirled.util.UpdateList;
 
 import com.threerings.orth.data.AuthName;
-import com.threerings.orth.data.Whereabouts;
+import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.instance.data.Instance;
 import com.threerings.orth.peer.server.OrthPeerManager;
 

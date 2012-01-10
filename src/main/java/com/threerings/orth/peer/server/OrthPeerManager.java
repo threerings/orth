@@ -31,7 +31,7 @@ import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.PlayerName;
-import com.threerings.orth.data.Whereabouts;
+import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.locus.data.LocusAuthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.Nodelet;

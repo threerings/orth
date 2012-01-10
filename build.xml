@@ -210,6 +210,7 @@
                            asroot="${asrc.dir}">
        <fileset dir="${src.dir}">
          <include name="**/data/*.java"/>
+         <include name="com/threerings/orth/data/where/*.java"/>
          <exclude name="com/threerings/orth/peer/**/*.java"/>
          <exclude name="**/*Object.java"/>
          <exclude name="**/*_CustomFieldSerializer.java"/>
