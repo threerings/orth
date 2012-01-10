@@ -4,18 +4,16 @@
 
 package com.threerings.orth.data;
 
+import com.threerings.orth.data.where.Whereabouts;
+import com.threerings.orth.peer.data.OrthClientInfo;
+
 /**
  * Represents a friend connection.
  */
 public class FriendEntry extends PlayerEntry
 {
-    public enum Status
-    {
-        OFFLINE, ONLINE
-    }
-
     /** The status of the friend's connection. */
-    public Status status;
+    public Whereabouts status;
 
     /** The player's self-designated status (not yet implemented). */
     public String statusMessage;
@@ -27,21 +25,21 @@ public class FriendEntry extends PlayerEntry
     public static FriendEntry offline (int id, String name)
     {
         String statusMessage = null; // TODO
-        return new FriendEntry(new PlayerName(name, id), Status.OFFLINE, statusMessage);
+        return new FriendEntry(new PlayerName(name, id), Whereabouts.OFFLINE, statusMessage);
     }
 
     /**
      * Creates a new friend entry for the given player and status. The status message
      * will be null.
      */
-    public static FriendEntry fromOrthName (PlayerName playerName, Status status)
+    public static FriendEntry fromClientInfo (OrthClientInfo info)
     {
         String statusMessage = null; // TODO
-        return new FriendEntry(playerName, status, statusMessage);
+        return new FriendEntry(info.visibleName, info.whereabouts, statusMessage);
     }
 
     /** Mr. Constructor. */
-    public FriendEntry (PlayerName name, Status status, String statusMessage)
+    public FriendEntry (PlayerName name, Whereabouts status, String statusMessage)
     {
         super(name);
         this.status = status;

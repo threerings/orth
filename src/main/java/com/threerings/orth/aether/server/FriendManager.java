@@ -38,6 +38,7 @@ import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.PlayerRepository;
@@ -74,10 +75,10 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         });
         _aetherMgr.addObserver(new OrthPeerManager.FarSeeingObserver<PlayerName>() {
             @Override public void loggedOn (String node, PlayerName member) {
-                notifyFriends(member.getId(), FriendEntry.Status.ONLINE);
+                notifyFriends(member.getId(), Whereabouts.ONLINE);
             }
             @Override public void loggedOff (String node, PlayerName member) {
-                notifyFriends(member.getId(), FriendEntry.Status.OFFLINE);
+                notifyFriends(member.getId(), Whereabouts.OFFLINE);
             }
         });
     }
@@ -253,7 +254,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }
     }
 
-    protected void notifyFriends (int playerId, FriendEntry.Status status)
+    protected void notifyFriends (int playerId, Whereabouts status)
     {
         log.debug("Notifying friends", "playerId", playerId, "status", status);
 
@@ -279,7 +280,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
 
     protected static FriendEntry toFriendEntry (OrthClientInfo info)
     {
-        return FriendEntry.fromOrthName(info.visibleName, FriendEntry.Status.ONLINE);
+        return FriendEntry.fromClientInfo(info);
     }
 
     /** Mapping of local and remote player ids to friend ids logged into this server. */
