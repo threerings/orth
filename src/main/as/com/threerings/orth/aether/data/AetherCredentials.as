@@ -5,13 +5,15 @@
 // GENERATED PREAMBLE START
 package com.threerings.orth.aether.data {
 
+import com.threerings.util.Joiner;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
-import com.threerings.util.Joiner;
-import com.threerings.util.Name;
+import com.threerings.presents.net.Credentials;
+import com.threerings.presents.net.Credentials_HasMachineIdent;
 
-import com.threerings.presents.net.UsernamePasswordCreds;
+import com.threerings.orth.client.Prefs;
 
 // GENERATED PREAMBLE END
 
@@ -19,42 +21,39 @@ import com.threerings.presents.net.UsernamePasswordCreds;
  * Used to authenticate a aether session.
  */
 // GENERATED CLASSDECL START
-public class AetherCredentials extends UsernamePasswordCreds
+public class AetherCredentials extends Credentials
+    implements Credentials_HasMachineIdent
 {
 // GENERATED CLASSDECL END
 // GENERATED STREAMING START
     public var ident :String;
 
+    public var name :String;
+
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         ident = ins.readField(String);
+        name = ins.readField(String);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
         out.writeField(ident);
+        out.writeField(name);
     }
 
 // GENERATED STREAMING END
 
     /**
-     * Creates credentials with the specified username and password. The other public fields should
-     * be set before logging in.
+     * Creates credentials with the specified name. Assigns the ident to the value from the user's
+     * Prefs.
      */
-    public function AetherCredentials (username :Name, password :String = null)
+    public function AetherCredentials (name :String)
     {
-        super(username);
-
-        _password = password;
-    }
-
-    // documentation inherited
-    override protected function toStringJoiner (j :Joiner) :void
-    {
-        super.toStringJoiner(j);
-        j.add("password", _password);
+        this.name = name;
+        this.ident = Prefs.getMachineIdent();
     }
 
 // GENERATED CLASSFINISH START

@@ -62,9 +62,6 @@ public class AetherClient extends Client
             return false;
         }
 
-        Prefs.setUsername(creds.getUsername().toString());
-
-        creds.ident = Prefs.getMachineIdent();
         setCredentials(creds);
         logon();
         return true;

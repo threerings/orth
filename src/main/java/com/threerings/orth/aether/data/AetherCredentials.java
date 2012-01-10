@@ -4,20 +4,28 @@
 
 package com.threerings.orth.aether.data;
 
-import com.threerings.presents.net.UsernamePasswordCreds;
+import com.samskivert.util.StringUtil;
+import com.threerings.presents.net.Credentials;
 
 /**
  * Contains information used during authentication of an orth aether session.
  */
-public class AetherCredentials extends UsernamePasswordCreds
+public abstract class AetherCredentials extends Credentials
+    implements Credentials.HasMachineIdent
 {
     /** The machine identifier of the client, if one is known. */
     public String ident;
 
-    @Override
-    protected void toString (StringBuilder buf)
+    /** The name for these credentials. The exact meaning of the name is determined by type. */
+    public String name;
+
+    @Override public String getMachineIdent ()
     {
-        super.toString(buf);
-        buf.append(", ident=").append(ident);
+        return ident;
+    }
+
+    @Override public String toString ()
+    {
+        return getClass().getSimpleName() + " " + StringUtil.fieldsToString(this);
     }
 }
