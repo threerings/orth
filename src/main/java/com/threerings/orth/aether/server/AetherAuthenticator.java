@@ -65,13 +65,13 @@ public abstract class AetherAuthenticator extends Authenticator
 
     protected static String toString (UUID uuid)
     {
-        return Long.toHexString(uuid.getLeastSignificantBits()) +
-                Long.toHexString(uuid.getMostSignificantBits());
+        return toHex(uuid.getLeastSignificantBits()) +
+            toHex(uuid.getMostSignificantBits());
     }
 
     protected static String toHex (long l)
     {
-        return Long.toHexString(l);
+        return StringUtil.prepad(Long.toHexString(l), 16, '0');
     }
 
     protected static long fromHex (String hex)
