@@ -17,6 +17,8 @@ import com.google.inject.Singleton;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.Lifecycle;
 
+import com.samskivert.depot.clause.Where;
+
 import com.threerings.util.Name;
 import com.threerings.util.Resulting;
 
@@ -29,6 +31,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.PresentsSession;
 
+import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.AetherCodes;
@@ -41,7 +44,6 @@ import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
-import com.threerings.orth.data.where.InLocus;
 import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager.FarSeeingObserver;
@@ -81,18 +83,17 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         _peerMgr.farSeeingObs.add(new FarSeeingObserver() {
             @Override public void loggedOn (String node, OrthClientInfo info) {
                 if (info.username instanceof AetherAuthName) {
-                    notifyFriends(((AuthName) (info.username)).getId(), Whereabouts.ONLINE);
+                    notifyFriends(((AuthName) (info.username)).getId(), info);
                 }
             }
             @Override public void loggedOff (String node, Name client) {
                 if (client instanceof AetherAuthName) {
-                    notifyFriends(((AuthName) client).getId(), Whereabouts.OFFLINE);
+                    notifyFriends(((AuthName) client).getId(), null);
                 }
             }
             @Override public void infoChanged (String nodeName, OrthClientInfo info) {
-                if (info.whereabouts instanceof InLocus) {
-                    notifyFriends(((AuthName) (info.username)).getId(), info.whereabouts);
-                }
+                Log.log.info("infoChanged", "info", info);
+                notifyFriends(((AuthName) (info.username)).getId(), info);
             }
         });
     }
@@ -268,9 +269,9 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }
     }
 
-    protected void notifyFriends (int playerId, Whereabouts status)
+    protected void notifyFriends (int playerId, OrthClientInfo info)
     {
-        log.debug("Notifying friends", "playerId", playerId, "status", status);
+        log.debug("Notifying friends", "playerId", playerId, "clientInfo", info);
 
         for (AetherClientObject friend : _notifyMap.get(playerId)) {
             FriendEntry entry = friend.friends.get(playerId);
@@ -278,8 +279,19 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 continue;
             }
             entry = entry.clone();
-            entry.status = status;
+            populateEntry(entry, info);
             friend.updateFriends(entry);
+        }
+    }
+
+    protected void populateEntry (FriendEntry entry, OrthClientInfo info)
+    {
+        if (info == null) {
+            entry.status = Whereabouts.OFFLINE;
+        } else if (info.whereabouts == null) {
+            entry.status = Whereabouts.ONLINE;
+        } else {
+            entry.status = info.whereabouts;
         }
     }
 
