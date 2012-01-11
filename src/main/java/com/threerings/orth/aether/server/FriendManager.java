@@ -229,7 +229,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 }
 
                 for (Map.Entry<Integer, String> pair : result.entrySet()) {
-                    friends.add(FriendEntry.offline(pair.getKey(), pair.getValue()));
+                    friends.add(offlineFriendEntry(pair.getKey(), pair.getValue()));
                 }
                 updateFriends(player, friends);
             }
@@ -292,6 +292,18 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         _notifyMap.put(other.visibleName.getId(), player);
     }
 
+    /**
+     * Creates a new offline friend entry for the given player id and name. The status
+     * message will be null.
+     */
+    protected FriendEntry offlineFriendEntry (int id, String name)
+    {
+        return new FriendEntry(new PlayerName(name, id), Whereabouts.OFFLINE);
+    }
+
+    /**
+     * Creates a new friend entry, given a logged-on player's client info.
+     */
     protected FriendEntry toFriendEntry (OrthClientInfo info)
     {
         return new FriendEntry(info.visibleName, _peerMgr.getWhereabouts(info.visibleName.getId()));
