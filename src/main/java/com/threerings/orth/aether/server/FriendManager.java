@@ -17,8 +17,6 @@ import com.google.inject.Singleton;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.Lifecycle;
 
-import com.samskivert.depot.clause.Where;
-
 import com.threerings.util.Name;
 import com.threerings.util.Resulting;
 
@@ -92,7 +90,6 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 }
             }
             @Override public void infoChanged (String nodeName, OrthClientInfo info) {
-                Log.log.info("infoChanged", "info", info);
                 notifyFriends(((AuthName) (info.username)).getId(), info);
             }
         });
