@@ -88,8 +88,10 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                     notifyFriends(((AuthName) client).getId(), null);
                 }
             }
-            @Override public void infoChanged (String nodeName, OrthClientInfo info) {
-                notifyFriends(((AuthName) (info.username)).getId(), info);
+            @Override public void infoChanged (String node, OrthClientInfo info) {
+                if (info.username instanceof AuthName) {
+                    notifyFriends(((AuthName) (info.username)).getId(), info);
+                }
             }
         });
     }
