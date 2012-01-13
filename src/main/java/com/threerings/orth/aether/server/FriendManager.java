@@ -296,7 +296,14 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         if (other == null) {
             return;
         }
-        player.addToFriends(toFriendEntry(other));
+        FriendEntry otherEntry = toFriendEntry(other);
+        if (player.friends.contains(otherEntry)) {
+            log.warning("Erk, player already contains friend", "player", player.who(),
+                "other", other.visibleName, "isInNotifyMap",
+                _notifyMap.containsKey(other.visibleName.getId()));
+        } else {
+            player.addToFriends(otherEntry);
+        }
         _notifyMap.put(other.visibleName.getId(), player);
     }
 
