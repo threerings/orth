@@ -40,7 +40,7 @@ public class Nodelet extends SimpleStreamableObject
         if (getQualifiedClassName(other) == getQualifiedClassName(this)) {
             var id :Object = getId();
             if (id is Equalable) {
-                return Equalable(id).equals(other);
+                return Equalable(id).equals(Nodelet(other).getId());
             }
             return getId() == Nodelet(other).getId();
         }
