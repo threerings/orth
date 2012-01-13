@@ -286,9 +286,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     {
         if (info == null) {
             entry.status = Whereabouts.OFFLINE;
-        } else if (info.whereabouts == null) {
-            entry.status = Whereabouts.ONLINE;
-        } else {
+        } else if (info.whereabouts != null) {
             entry.status = info.whereabouts;
         }
     }
