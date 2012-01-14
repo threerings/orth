@@ -186,7 +186,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     }
 
     /**
-     * Sets up the members friends and adds to friend tracking.
+     * Sets up the member's friends and adds to friend tracking.
      */
     protected void initFriends (final AetherClientObject player)
     {
