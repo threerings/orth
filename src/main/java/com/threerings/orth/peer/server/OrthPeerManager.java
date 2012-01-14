@@ -74,7 +74,7 @@ public abstract class OrthPeerManager extends PeerManager
         /**
          * Notifies the observer when a client's info has changed.
          */
-        void infoChanged (String nodeName, OrthClientInfo info);
+        void infoChanged (String node, OrthClientInfo info);
     }
 
     /**
