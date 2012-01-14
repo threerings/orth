@@ -12,13 +12,13 @@ import com.threerings.orth.data.where.Whereabouts;
 public class FriendEntry extends PlayerEntry
 {
     /** The status of the friend's connection. */
-    public Whereabouts status;
+    public Whereabouts whereabouts;
 
     /** Mr. Constructor. */
     public FriendEntry (PlayerName name, Whereabouts status)
     {
         super(name);
-        this.status = status;
+        this.whereabouts = status;
     }
 
     /** Copies this friend entry. */

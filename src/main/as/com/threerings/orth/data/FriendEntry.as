@@ -19,25 +19,25 @@ public class FriendEntry extends PlayerEntry
 {
 // GENERATED CLASSDECL END
 // GENERATED STREAMING START
-    public var status :Whereabouts;
+    public var whereabouts :Whereabouts;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        status = ins.readObject(Whereabouts);
+        whereabouts = ins.readObject(Whereabouts);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeObject(status);
+        out.writeObject(whereabouts);
     }
 
 // GENERATED STREAMING END
 
     public function get online () :Boolean
     {
-        return status.isOnline();
+        return whereabouts.isOnline();
     }
 
     override public function toString () :String
