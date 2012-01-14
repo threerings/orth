@@ -17,7 +17,6 @@ import com.google.inject.Singleton;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.Lifecycle;
 
-import com.threerings.util.Name;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.MainInvoker;
@@ -35,18 +34,18 @@ import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.FriendMarshaller;
 import com.threerings.orth.aether.data.FriendshipAcceptance;
 import com.threerings.orth.aether.data.FriendshipRequest;
+import com.threerings.orth.aether.data.PeeredPlayerInfo;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.comms.data.CommSender;
-import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.Whereabouts;
-import com.threerings.orth.peer.data.OrthClientInfo;
-import com.threerings.orth.peer.server.OrthPeerManager.FarSeeingObserver;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.PlayerRepository;
 import com.threerings.orth.server.util.InviteThrottle;
+
+import com.threerings.signals.Listener1;
 
 import static com.threerings.orth.Log.log;
 
@@ -76,22 +75,19 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 shutdownFriends(plobj);
             }
         });
-        // we listen to Aether connections for logon/logoff events, and everywhere for Whereabouts
-        _peerMgr.farSeeingObs.add(new FarSeeingObserver() {
-            @Override public void loggedOn (String node, OrthClientInfo info) {
-                if (info.username instanceof AetherAuthName) {
-                    notifyFriends(((AuthName) (info.username)).getId(), info);
-                }
+        _eyeballer.playerLoggedOn.connect(new Listener1<PeeredPlayerInfo>() {
+            @Override public void apply (PeeredPlayerInfo info) {
+                notifyFriends(info.authName.getId(), info);
             }
-            @Override public void loggedOff (String node, Name client) {
-                if (client instanceof AetherAuthName) {
-                    notifyFriends(((AuthName) client).getId(), null);
-                }
+        });
+        _eyeballer.playerLoggedOff.connect(new Listener1<AetherAuthName>() {
+            @Override public void apply (AetherAuthName username) {
+                notifyFriends(username.getId(), null);
             }
-            @Override public void infoChanged (String node, OrthClientInfo info) {
-                if (info.username instanceof AuthName) {
-                    notifyFriends(((AuthName) (info.username)).getId(), info);
-                }
+        });
+        _eyeballer.playerInfoChanged.connect(new Listener1<PeeredPlayerInfo>() {
+            @Override public void apply (PeeredPlayerInfo info) {
+                notifyFriends(info.authName.getId(), info);
             }
         });
     }
@@ -137,7 +133,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
 
         // forward this acceptance to the server the other player is on
         _peerMgr.invokeNodeRequest(new AetherNodeRequest(senderId) {
-            @Inject transient OrthPeerManager peermgr;
+            @Inject transient PeerEyeballer eyeballer;
             @Inject transient FriendManager friendmgr;
             @Override protected void execute (AetherClientObject sender, ResultListener listener) {
                 AetherLocal local = sender.getLocal(AetherLocal.class);
@@ -149,7 +145,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 }
 
                 // add the friend!
-                OrthClientInfo other = peermgr.locatePlayer(acceptingPlayerName.getId());
+                PeeredPlayerInfo other = eyeballer.getPlayerData(acceptingPlayerName.getId());
                 if (other == null) {
                     log.warning("Edge case, accepting friend logged off before sender received " +
                         "notification of friendship", "sender", sender,
@@ -167,7 +163,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }, new NodeRequestsListener<Void>() {
             @Override public void requestsProcessed (NodeRequestsResult<Void> result) {
                 // all clear, add the friend!
-                addNewFriend(acceptingPlayer, _peerMgr.locatePlayer(senderId));
+                addNewFriend(acceptingPlayer, _eyeballer.getPlayerData(senderId));
 
                 // persist: friends4evah
                 _invoker.postRunnable(new Runnable() {
@@ -190,8 +186,6 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
      */
     protected void initFriends (final AetherClientObject player)
     {
-        log.debug("Starting resolution of friends dset", "player", player.who());
-
         if (!player.friends.isEmpty()) {
             log.warning("Friends already? Something is very wrong.", "player", player.who());
             return;
@@ -200,10 +194,13 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         final AetherLocal local = player.getLocal(AetherLocal.class);
         final List<FriendEntry> friends = Lists.newArrayListWithCapacity(
             local.unresolvedFriendIds.size());
+
+        log.debug("Starting resolution of friends dset", "player", player.who(),
+            "friends count", local.unresolvedFriendIds.size());
         for (Integer friendId : local.unresolvedFriendIds) {
-            OrthClientInfo clientInfo = _peerMgr.locatePlayer(friendId);
-            if (clientInfo != null) {
-                friends.add(toFriendEntry(clientInfo));
+            PeeredPlayerInfo playerInfo = _eyeballer.getPlayerData(friendId);
+            if (playerInfo != null) {
+                friends.add(toFriendEntry(playerInfo));
                 local.unresolvedFriendIds.remove(friendId);
             }
         }
@@ -255,7 +252,8 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         // clear out the holding buffer
         player.getLocal(AetherLocal.class).unresolvedFriendIds = null;
 
-        log.debug("Finished resolution of friends dset", "player", player.who());
+        log.debug("Finished resolution of friends dset", "player", player.who(),
+            "friends count", player.friends.size());
     }
 
     protected void shutdownFriends (AetherClientObject player)
@@ -267,9 +265,9 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }
     }
 
-    protected void notifyFriends (int playerId, OrthClientInfo info)
+    protected void notifyFriends (int playerId, PeeredPlayerInfo info)
     {
-        log.debug("Notifying friends", "playerId", playerId, "clientInfo", info);
+        log.debug("Notifying friends", "playerId", playerId, "playerInfo", info);
 
         for (AetherClientObject friend : _notifyMap.get(playerId)) {
             FriendEntry entry = friend.friends.get(playerId);
@@ -282,16 +280,12 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }
     }
 
-    protected void populateEntry (FriendEntry entry, OrthClientInfo info)
+    protected void populateEntry (FriendEntry entry, PeeredPlayerInfo info)
     {
-        if (info == null) {
-            entry.status = Whereabouts.OFFLINE;
-        } else if (info.whereabouts != null) {
-            entry.status = info.whereabouts;
-        }
+        entry.whereabouts = info.whereabouts;
     }
 
-    protected void addNewFriend (AetherClientObject player, OrthClientInfo other)
+    protected void addNewFriend (AetherClientObject player, PeeredPlayerInfo other)
     {
         if (other == null) {
             return;
@@ -319,9 +313,9 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     /**
      * Creates a new friend entry, given a logged-on player's client info.
      */
-    protected FriendEntry toFriendEntry (OrthClientInfo info)
+    protected FriendEntry toFriendEntry (PeeredPlayerInfo info)
     {
-        return new FriendEntry(info.visibleName, _peerMgr.getWhereabouts(info.visibleName.getId()));
+        return new FriendEntry(info.visibleName, info.whereabouts);
     }
 
     /** Mapping of local and remote player ids to friend ids logged into this server. */
@@ -331,6 +325,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     @Inject protected AetherManager _aetherMgr;
     @Inject protected AetherSessionLocator _locator;
     @Inject protected OrthPeerManager _peerMgr;
+    @Inject protected PeerEyeballer _eyeballer;
     @Inject protected PlayerRepository _playerRepo;
     @Inject protected RelationshipRepository _friendRepo;
     @Inject protected @MainInvoker Invoker _invoker;
