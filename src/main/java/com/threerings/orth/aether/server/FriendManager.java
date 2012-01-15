@@ -6,10 +6,13 @@ package com.threerings.orth.aether.server;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
+
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -197,13 +200,16 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
 
         log.debug("Starting resolution of friends dset", "player", player.who(),
             "friends count", local.unresolvedFriendIds.size());
+        Set<Integer> resolved = Sets.newHashSet();
         for (Integer friendId : local.unresolvedFriendIds) {
             PeeredPlayerInfo playerInfo = _eyeballer.getPlayerData(friendId);
             if (playerInfo != null) {
                 friends.add(toFriendEntry(playerInfo));
-                local.unresolvedFriendIds.remove(friendId);
+                resolved.add(friendId);
             }
         }
+
+        local.unresolvedFriendIds.removeAll(resolved);
 
         if (local.unresolvedFriendIds.isEmpty()) {
             updateFriends(player, friends);
