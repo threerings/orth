@@ -20,8 +20,6 @@ import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.signals.Signal1;
 import com.threerings.signals.Signals;
 
-import static com.threerings.orth.Log.log;
-
 @Singleton
 public class PeerEyeballer
 {

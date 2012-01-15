@@ -4,6 +4,7 @@
 package com.threerings.orth.aether.data;
 
 import com.threerings.io.SimpleStreamableObject;
+
 import com.threerings.util.ActionScript;
 
 import com.threerings.orth.aether.data.AetherAuthName;

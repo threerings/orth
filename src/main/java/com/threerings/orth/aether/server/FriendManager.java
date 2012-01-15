@@ -12,7 +12,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
-
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -210,7 +209,6 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }
 
         local.unresolvedFriendIds.removeAll(resolved);
-
         if (local.unresolvedFriendIds.isEmpty()) {
             updateFriends(player, friends);
             return;
