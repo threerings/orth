@@ -43,12 +43,16 @@ public class PeerEyeballer
                 }
             }
             @Override public void infoChanged (String node, OrthClientInfo info) {
+                PeeredPlayerInfo result = null;
                 if (info.username instanceof AetherAuthName) {
-                    playerInfoChanged.dispatch(getPlayerData(info));
+                    result = getPlayerData(info);
+
                 } else if (info.username instanceof LocusAuthName) {
-                    playerInfoChanged.dispatch(getPlayerData(
-                        ((AuthName) info.username).getId(), null, info));
+                    result = getPlayerData(((AuthName) info.username).getId(), null, info);
                 }
+                if (result != null) {
+                    playerInfoChanged.dispatch(result);
+                } // else player logged out
             }
         });
     }
