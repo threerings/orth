@@ -20,6 +20,8 @@ import com.threerings.presents.server.PresentsSession;
 import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
 
+import static com.threerings.orth.Log.log;
+
 /**
  * Convenience class for finding {@link PresentsSession} instances logged into this aether server.
  */
@@ -47,7 +49,8 @@ public class AetherSessionLocator implements Lifecycle.InitComponent
                         try {
                             o.playerLoggedIn(session, plobj);
                         } catch (Exception e) {
-
+                            log.warning("Choked during playerLoggedIn notification", "player",
+                                plobj.who(), e);
                         }
                     }
                 }
@@ -60,13 +63,15 @@ public class AetherSessionLocator implements Lifecycle.InitComponent
                         try {
                             o.playerWillLogout(session, plobj);
                         } catch (Exception e) {
-
+                            log.warning("Choked during playerWillLogout notification", "player",
+                                plobj.who(), e);
                         }
                     }
                 }
             }
 
             @Override public void clientSessionDidEnd (PresentsSession session) {
+                // don't care
             }
 
             AetherClientObject player (PresentsSession session) {
