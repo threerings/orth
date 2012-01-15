@@ -77,8 +77,6 @@ public class PeerEyeballer
         }
 
         PeeredPlayerInfo data = createPlayerData();
-        log.debug("Foo", "aetherInfo", aetherInfo, "peeRMgr", _peerMgr,
-            "visibleName", (aetherInfo != null) ? aetherInfo.visibleName : "N/A");
         populatePlayerData(data, aetherInfo, locusInfo);
         return data;
     }
