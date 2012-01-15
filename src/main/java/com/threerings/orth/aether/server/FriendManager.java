@@ -282,7 +282,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
 
     protected void populateEntry (FriendEntry entry, PeeredPlayerInfo info)
     {
-        entry.whereabouts = info.whereabouts;
+        entry.whereabouts = (info != null) ? info.whereabouts : Whereabouts.OFFLINE;
     }
 
     protected void addNewFriend (AetherClientObject player, PeeredPlayerInfo other)
