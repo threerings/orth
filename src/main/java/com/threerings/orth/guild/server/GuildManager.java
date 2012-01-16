@@ -27,9 +27,11 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.AetherNodeAction;
 import com.threerings.orth.aether.server.AetherNodeRequest;
+import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.guild.data.GuildCodes;
+import com.threerings.orth.guild.data.GuildInviteNotification;
 import com.threerings.orth.guild.data.GuildMemberEntry;
 import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
@@ -38,9 +40,6 @@ import com.threerings.orth.guild.server.persist.GuildMemberRecord;
 import com.threerings.orth.guild.server.persist.GuildRecord;
 import com.threerings.orth.guild.server.persist.GuildRepository;
 import com.threerings.orth.nodelet.server.NodeletManager;
-import com.threerings.orth.notify.data.GuildInviteNotification;
-import com.threerings.orth.notify.data.Notification;
-import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.PlayerRepository;
@@ -99,7 +98,7 @@ public class GuildManager extends NodeletManager
     public void sendInvite (ClientObject caller, int targetId, InvocationListener lner)
         throws InvocationException
     {
-        GuildMemberEntry sender = requireMember(caller);
+        final GuildMemberEntry sender = requireMember(caller);
         if (sender.rank != GuildRank.OFFICER) {
             log.warning("Non officer attempting to send guild invite", "sender", sender,
                 "targetId", targetId);
@@ -111,14 +110,12 @@ public class GuildManager extends NodeletManager
         if (!getThrottle(sender).allow(targetId)) {
             throw new InvocationException(E_INVITE_ALREADY_SENT);
         }
-        final Notification notification =
-            new GuildInviteNotification(sender.name, _guildObj.name, _guildId);
-        _peerMan.invokeSingleNodeRequest(new AetherNodeRequest(targetId) {
-            @Inject transient NotificationManager notMgr;
 
+        _peerMan.invokeSingleNodeRequest(new AetherNodeRequest(targetId) {
             @Override protected void execute (AetherClientObject target,
                 InvocationService.ResultListener listener) {
-                notMgr.notify(target, notification);
+                CommSender.receiveComm(target, new GuildInviteNotification(
+                    sender.name, target.playerName, _guildObj.name, _guildId));
                 listener.requestProcessed(null);
             }
         }, new Resulting<Void>(lner));
