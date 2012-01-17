@@ -31,9 +31,4 @@ public interface AetherProvider extends InvocationProvider
      */
     void createGuild (AetherClientObject caller, String arg1, InvocationService.InvocationListener arg2)
         throws InvocationException;
-
-    /**
-     * Handles a {@link AetherService#dispatchDeferredNotifications} request.
-     */
-    void dispatchDeferredNotifications (AetherClientObject caller);
 }

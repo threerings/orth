@@ -47,15 +47,5 @@ public class AetherMarshaller extends InvocationMarshaller
             arg1, listener2
         ]);
     }
-
-    /** The method id used to dispatch <code>dispatchDeferredNotifications</code> requests. */
-    public static const DISPATCH_DEFERRED_NOTIFICATIONS :int = 3;
-
-    // from interface AetherService
-    public function dispatchDeferredNotifications () :void
-    {
-        sendRequest(DISPATCH_DEFERRED_NOTIFICATIONS, [
-        ]);
-    }
 }
 }

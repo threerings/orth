@@ -48,14 +48,4 @@ public class AetherMarshaller extends InvocationMarshaller<AetherClientObject>
             arg1, listener2
         });
     }
-
-    /** The method id used to dispatch {@link #dispatchDeferredNotifications} requests. */
-    public static final int DISPATCH_DEFERRED_NOTIFICATIONS = 3;
-
-    // from interface AetherService
-    public void dispatchDeferredNotifications ()
-    {
-        sendRequest(DISPATCH_DEFERRED_NOTIFICATIONS, new Object[] {
-        });
-    }
 }

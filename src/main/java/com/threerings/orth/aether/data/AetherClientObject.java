@@ -41,10 +41,6 @@ public class AetherClientObject extends ClientObject
     public static final String GUILD = "guild";
     // AUTO-GENERATED: FIELDS END
 
-    /** A message sent by the server to denote a notification to be displayed.
-     * Format: [ Notification ]. */
-    public static final String NOTIFICATION = "notification";
-
     /** The name and id information for this player. */
     public PlayerName playerName;
 

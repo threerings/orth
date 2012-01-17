@@ -17,8 +17,5 @@ public interface AetherService extends InvocationService
 
     // from Java interface AetherService
     function createGuild (arg1 :String, arg2 :InvocationService_InvocationListener) :void;
-
-    // from Java interface AetherService
-    function dispatchDeferredNotifications () :void;
 }
 }

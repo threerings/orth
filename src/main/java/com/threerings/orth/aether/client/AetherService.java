@@ -14,11 +14,6 @@ import com.threerings.orth.aether.data.AetherClientObject;
 public interface AetherService extends InvocationService<AetherClientObject>
 {
     /**
-     * Lets the server know we are now ready to get our logon notifications.
-     */
-    void dispatchDeferredNotifications ();
-
-    /**
      * Creates a new guild if this player doesn't already have one. If the guild creation is
      * successful, the {@link AetherClientObject#guild} member will be set. Otherwise, the listener
      * will be notified of the failure.

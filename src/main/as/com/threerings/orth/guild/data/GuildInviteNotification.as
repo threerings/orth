@@ -7,6 +7,7 @@ package com.threerings.orth.guild.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
+
 import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.comms.data.BaseOneToOneComm;
 import com.threerings.orth.comms.data.RequestComm;

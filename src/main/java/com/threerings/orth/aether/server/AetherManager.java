@@ -29,7 +29,6 @@ import com.threerings.orth.guild.server.GuildRegistry;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.nodelet.server.NodeletRegistry;
-import com.threerings.orth.notify.server.NotificationManager;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
 /**
@@ -44,12 +43,6 @@ public class AetherManager
         // register our bootstrap invocation service
         injector.getInstance(InvocationManager.class).registerProvider(
             this, AetherMarshaller.class, OrthCodes.AETHER_GROUP);
-    }
-
-    @Override
-    public void dispatchDeferredNotifications (AetherClientObject caller)
-    {
-        _notifyMan.dispatchDeferredNotifications(caller);
     }
 
     @Override
@@ -92,7 +85,6 @@ public class AetherManager
         });
     }
 
-    @Inject protected NotificationManager _notifyMan;
     @Inject protected AetherSessionLocator _locator;
     @Inject protected OrthPeerManager _peermgr;
     @Inject protected FriendManager _friendMgr;

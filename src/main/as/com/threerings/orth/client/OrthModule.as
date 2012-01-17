@@ -18,7 +18,6 @@ import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.guild.client.GuildDirector;
 import com.threerings.orth.locus.client.LocusDirector;
-import com.threerings.orth.notify.client.NotificationDirector;
 import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.room.client.RoomModule;
 import com.threerings.orth.room.data.RoomLocus;
@@ -47,7 +46,6 @@ public class OrthModule extends BindingModule
         bind(GuildDirector).asSingleton();
         bind(LocusDirector).asSingleton();
         bind(MessageManager).asSingleton();
-        bind(NotificationDirector).asSingleton();
         bind(OrthChatDirector).asSingleton();
         bind(OrthContext).asSingleton();
         bind(OrthController).asSingleton();
@@ -81,7 +79,6 @@ public class OrthModule extends BindingModule
         getInstance(AetherDirector);
         getInstance(OrthController);
         getInstance(PartyDirector);
-        getInstance(NotificationDirector);
         getInstance(GuildDirector);
 
     }
