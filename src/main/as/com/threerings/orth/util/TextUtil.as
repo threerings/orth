@@ -2,7 +2,7 @@
 // Orth - a package of MMO services: rooms, parties, guilds, and more!
 // Copyright 2010-2012 Three Rings Design, Inc.
 
-package com.threerings.orth.utils {
+package com.threerings.orth.util {
 
 import flash.text.TextField;
 import flash.text.TextFormat;
