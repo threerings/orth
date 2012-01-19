@@ -42,7 +42,7 @@ import com.threerings.orth.util.ComputingMap;
 public class ChatHistory
 {
     /** The amount of time before chat history becomes... history. */
-    public static final long HISTORY_EXPIRATION = 5L * 60L * 1000L;
+    public static final long HISTORY_EXPIRATION = 10L * 60L * 1000L;
 
     public static class ChatHistoryEntry extends SimpleStreamableObject
     {
