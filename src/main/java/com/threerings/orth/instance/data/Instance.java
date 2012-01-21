@@ -308,7 +308,7 @@ public class Instance
     {
         // if this is not simply a missing scene, log a warning
         if (!(cause instanceof NoSuchSceneException)) {
-            log.info("Failed to resolve scene [sceneId=" + sceneId + "].", cause);
+            log.info("Failed to resolve scene", "sceneId", sceneId, cause);
         }
 
         // alas things didn't work out, notify our penders

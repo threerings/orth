@@ -67,8 +67,8 @@ public class OrthSceneModel extends SceneModel
             furnis[idx] = data;
             invalidatePortalInfo(data);
         } else {
-            log.warning("Requested to update furni not in scene [id=" + sceneId + ", name=" + name +
-                        ", furni=" + data + "].");
+            log.warning("Requested to update furni not in scene", "id", sceneId, "name", name,
+                "furni", data);
         }
     }
 
@@ -175,7 +175,7 @@ public class OrthSceneModel extends SceneModel
                     OrthPortal p = new OrthPortal(furni);
                     _portalInfo.put(p.portalId, p);
                 } catch (Exception e) {
-                    log.warning("Invalid portal furni [fd=" + furni + "].", e);
+                    log.warning("Invalid portal furni", "fd", furni, e);
                 }
             }
         }
