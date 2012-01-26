@@ -4,7 +4,7 @@
 
 package com.threerings.orth.comms.data;
 
-public interface OneToOneComm
-    extends FromComm, ToOneComm
+public interface ToOneComm
+    extends ToComm
 {
 }
