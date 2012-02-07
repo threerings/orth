@@ -111,11 +111,12 @@ public class GuildManager extends NodeletManager
             throw new InvocationException(E_INVITE_ALREADY_SENT);
         }
 
+        final String guildName = _guildObj.name;
         _peerMan.invokeSingleNodeRequest(new AetherNodeRequest(targetId) {
             @Override protected void execute (AetherClientObject target,
                 InvocationService.ResultListener listener) {
                 CommSender.receiveComm(target, new GuildInviteNotification(
-                    sender.name, target.playerName, _guildObj.name, _guildId));
+                    sender.name, target.playerName, guildName, _guildId));
                 listener.requestProcessed(null);
             }
         }, new Resulting<Void>(lner));
