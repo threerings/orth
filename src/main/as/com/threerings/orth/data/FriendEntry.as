@@ -11,7 +11,6 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.util.Joiner;
 
 import com.threerings.orth.data.PlayerEntry;
-import com.threerings.orth.data.where.Whereabouts;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
@@ -19,26 +18,17 @@ public class FriendEntry extends PlayerEntry
 {
 // GENERATED CLASSDECL END
 // GENERATED STREAMING START
-    public var whereabouts :Whereabouts;
-
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        whereabouts = ins.readObject(Whereabouts);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeObject(whereabouts);
     }
 
 // GENERATED STREAMING END
-
-    public function get online () :Boolean
-    {
-        return whereabouts.isOnline();
-    }
 
     override public function toString () :String
     {

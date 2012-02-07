@@ -10,20 +10,26 @@ import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.orth.data.where.Whereabouts;
+
 public class PlayerEntry extends SimpleStreamableObject
     implements /* IsSerializable, */ DSet.Entry, Cloneable
 {
     /** The display name of the friend. */
     public PlayerName name;
 
+    /** The status of the friend's connection. */
+    public Whereabouts whereabouts;
+
     @Inject
     public PlayerEntry ()
     {
     }
 
-    public PlayerEntry (PlayerName name)
+    public PlayerEntry (PlayerName name, Whereabouts status)
     {
         this.name = name;
+        this.whereabouts = status;
     }
 
     public int getPlayerId ()

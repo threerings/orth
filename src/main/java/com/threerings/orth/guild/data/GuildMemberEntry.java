@@ -6,14 +6,15 @@ package com.threerings.orth.guild.data;
 
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.data.where.Whereabouts;
 
 public class GuildMemberEntry extends PlayerEntry
 {
     public GuildRank rank;
 
-    public GuildMemberEntry (PlayerName name, GuildRank rank)
+    public GuildMemberEntry (PlayerName name, GuildRank rank, Whereabouts abouts)
     {
-        super(name);
+        super(name, abouts);
         this.rank = rank;
     }
 
@@ -30,13 +31,5 @@ public class GuildMemberEntry extends PlayerEntry
     public boolean isOfficer ()
     {
         return rank == GuildRank.OFFICER;
-    }
-
-    /**
-     * Creates a new guild member entry for the given player and status.
-     */
-    public static GuildMemberEntry fromOrthName (PlayerName playerName, GuildRank rank)
-    {
-        return new GuildMemberEntry(playerName, rank);
     }
 }

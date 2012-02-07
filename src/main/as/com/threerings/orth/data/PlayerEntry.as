@@ -15,6 +15,7 @@ import com.threerings.util.Hashable;
 import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.data.where.Whereabouts;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
@@ -34,19 +35,28 @@ public class PlayerEntry extends SimpleStreamableObject
 // GENERATED STREAMING START
     public var name :PlayerName;
 
+    public var whereabouts :Whereabouts;
+
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         name = ins.readObject(PlayerName);
+        whereabouts = ins.readObject(Whereabouts);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
         out.writeObject(name);
+        out.writeObject(whereabouts);
     }
 
 // GENERATED STREAMING END
+
+    public function get online () :Boolean
+    {
+        return whereabouts.isOnline();
+    }
 
     // from Hashable
     public function hashCode () :int

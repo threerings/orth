@@ -24,12 +24,15 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.aether.data.PeeredPlayerInfo;
 import com.threerings.orth.aether.server.AetherNodeAction;
 import com.threerings.orth.aether.server.AetherNodeRequest;
+import com.threerings.orth.aether.server.PeerEyeballer;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.AuthName;
-import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildInviteNotification;
 import com.threerings.orth.guild.data.GuildMemberEntry;
@@ -40,10 +43,11 @@ import com.threerings.orth.guild.server.persist.GuildMemberRecord;
 import com.threerings.orth.guild.server.persist.GuildRecord;
 import com.threerings.orth.guild.server.persist.GuildRepository;
 import com.threerings.orth.nodelet.server.NodeletManager;
-import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.PlayerRepository;
 import com.threerings.orth.server.util.InviteThrottle;
+
+import com.threerings.signals.Listener1;
 
 import static com.threerings.orth.Log.log;
 
@@ -56,31 +60,31 @@ public class GuildManager extends NodeletManager
     @Override
     public boolean prepare (final ResultListener<Void> rl)
     {
-        _invoker.postUnit(new Resulting<Iterable<GuildMemberEntry>>("Loading guild") {
-            GuildRecord guild;
-            @Override public Iterable<GuildMemberEntry> invokePersist () throws Exception {
+        _invoker.postUnit(new Resulting<Void>("Loading guild") {
+            protected GuildRecord _guild;
+            protected Map<Integer, GuildMemberRecord> _members;
+            protected Map<Integer, String> _names;
+            @Override public Void invokePersist () throws Exception {
                 // get the data from the db
-                guild = _guildRepo.getGuild(_guildId);
-                Map<Integer, GuildMemberRecord> gmrecs = Maps.uniqueIndex(
-                    _guildRepo.getGuildMembers(_guildId),
+                _guild = _guildRepo.getGuild(_guildId);
+                _members = Maps.uniqueIndex(_guildRepo.getGuildMembers(_guildId),
                     GuildMemberRecord.TO_PLAYER_ID);
-                final Map<Integer, String> playerNames =
-                    _playerRepo.resolvePlayerNames(gmrecs.keySet());
-
-                // transform to entries
-                return Iterables.transform(gmrecs.values(),
-                    new Function<GuildMemberRecord, GuildMemberEntry>() {
-                    public GuildMemberEntry apply (GuildMemberRecord gmrec) {
-                        PlayerName vpn = new PlayerName(
-                            playerNames.get(gmrec.getPlayerId()), gmrec.getPlayerId());
-                        return new GuildMemberEntry(vpn, gmrec.getRank());
-                    }
-                });
+                _names = _playerRepo.resolvePlayerNames(_members.keySet());
+                return null;
             }
 
-            @Override public void requestCompleted (Iterable<GuildMemberEntry> result) {
-                _guildObj.setName(guild.getName());
-                _guildObj.setMembers(DSet.newDSet(result));
+            @Override public void requestCompleted (Void nothing) {
+                // transform to entries
+                Iterable<GuildMemberEntry> entries = Iterables.transform(_members.values(),
+                    new Function<GuildMemberRecord, GuildMemberEntry>() {
+                        public GuildMemberEntry apply (GuildMemberRecord gmrec) {
+                            return toMemberEntry(
+                                _eyeballer.getPlayerData(gmrec.getPlayerId()), gmrec.getRank());
+                        }
+                    });
+
+                _guildObj.setName(_guild.getName());
+                _guildObj.setMembers(DSet.newDSet(entries));
                 rl.requestCompleted(null);
             }
         });
@@ -92,6 +96,22 @@ public class GuildManager extends NodeletManager
     {
         _guildObj = ((GuildObject)_sharedObject);
         _guildId = ((GuildNodelet)_nodelet.nodelet).guildId;
+
+        _eyeballer.playerLoggedOn.connect(new Listener1<PeeredPlayerInfo>() {
+            @Override public void apply (PeeredPlayerInfo info) {
+                updateEntry(info.authName.getId(), info);
+            }
+        });
+        _eyeballer.playerLoggedOff.connect(new Listener1<AetherAuthName>() {
+            @Override public void apply (AetherAuthName username) {
+                updateEntry(username.getId(), null);
+            }
+        });
+        _eyeballer.playerInfoChanged.connect(new Listener1<PeeredPlayerInfo>() {
+            @Override public void apply (PeeredPlayerInfo info) {
+                updateEntry(info.authName.getId(), info);
+            }
+        });
     }
 
     @Override
@@ -259,15 +279,9 @@ public class GuildManager extends NodeletManager
             rl.requestFailed(null);
             return;
         }
-        OrthClientInfo clinfo = _peerMan.locatePlayer(newMemberId);
-        if (clinfo == null) {
-            // this could happen in theory if the player accepted the guild invite and logged off
-            // immediately. Not worth handling
-            rl.requestFailed(null);
-            return;
-        }
-        final GuildMemberEntry newEntry = GuildMemberEntry.fromOrthName(clinfo.visibleName,
-            GuildRank.MEMBER);
+        final GuildMemberEntry newEntry = toMemberEntry(
+            _eyeballer.getPlayerData(newMemberId), GuildRank.MEMBER);
+
         // woo! add 'em to the guild
         _invoker.postUnit(new Resulting<Void>("add guild member", rl) {
             @Override public Void invokePersist () throws Exception {
@@ -297,6 +311,23 @@ public class GuildManager extends NodeletManager
         });
     }
 
+    protected void updateEntry (int playerId, PeeredPlayerInfo info)
+    {
+        GuildMemberEntry entry = _guildObj.members.get(playerId);
+        if (entry == null) {
+            // update on a player who's not in this guild, ignore
+            return;
+        }
+        entry = entry.clone();
+        populateEntry(entry, info);
+        _guildObj.updateMembers(entry);
+    }
+
+    protected void populateEntry (GuildMemberEntry entry, PeeredPlayerInfo info)
+    {
+        entry.whereabouts = (info != null) ? info.whereabouts : Whereabouts.OFFLINE;
+    }
+
     protected GuildMemberEntry requireMember (ClientObject caller)
         throws InvocationException
     {
@@ -316,6 +347,14 @@ public class GuildManager extends NodeletManager
     protected InviteThrottle getThrottle (GuildMemberEntry member)
     {
         return getThrottle(member.getPlayerId());
+    }
+
+    /**
+     * Creates a new guild member entry.
+     */
+    protected GuildMemberEntry toMemberEntry (PeeredPlayerInfo info, GuildRank rank)
+    {
+        return new GuildMemberEntry(info.visibleName, rank, info.whereabouts);
     }
 
     protected InviteThrottle getThrottle (int playerId)
@@ -346,4 +385,5 @@ public class GuildManager extends NodeletManager
     @Inject protected PlayerRepository _playerRepo;
     @Inject protected @MainInvoker Invoker _invoker;
     @Inject protected OrthPeerManager _peerMan;
+    @Inject protected PeerEyeballer _eyeballer;
 }
