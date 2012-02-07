@@ -20,27 +20,6 @@ public class GuildInviteNotification extends BaseOneToOneComm
 {
 // GENERATED CLASSDECL END
 
-// GENERATED STREAMING START
-    override public function readObject (ins :ObjectInputStream) :void
-    {
-        super.readObject(ins);
-        _guildName = ins.readField(String);
-        _guildId = ins.readInt();
-    }
-
-    override public function writeObject (out :ObjectOutputStream) :void
-    {
-        super.writeObject(out);
-        out.writeField(_guildName);
-        out.writeInt(_guildId);
-    }
-
-    protected var _guildName :String;
-    protected var _guildId :int;
-// GENERATED STREAMING END
-
-// GENERATED CLASSFINISH START
-
     override public function get fromMessage () :String
     {
         return "You invite " + _to + " to your guild '" + _guildName + "'.";
@@ -65,6 +44,27 @@ public class GuildInviteNotification extends BaseOneToOneComm
     {
         return "You declined the intivation to join '" + _guildName + "'.";
     }
+
+// GENERATED STREAMING START
+    override public function readObject (ins :ObjectInputStream) :void
+    {
+        super.readObject(ins);
+        _guildName = ins.readField(String);
+        _guildId = ins.readInt();
+    }
+
+    override public function writeObject (out :ObjectOutputStream) :void
+    {
+        super.writeObject(out);
+        out.writeField(_guildName);
+        out.writeInt(_guildId);
+    }
+
+    protected var _guildName :String;
+    protected var _guildId :int;
+// GENERATED STREAMING END
+
+// GENERATED CLASSFINISH START
 }
 }
 // GENERATED CLASSFINISH END
