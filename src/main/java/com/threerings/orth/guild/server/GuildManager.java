@@ -112,11 +112,12 @@ public class GuildManager extends NodeletManager
         }
 
         final String guildName = _guildObj.name;
+        final int guildId = _guildId;
         _peerMan.invokeSingleNodeRequest(new AetherNodeRequest(targetId) {
             @Override protected void execute (AetherClientObject target,
                 InvocationService.ResultListener listener) {
                 CommSender.receiveComm(target, new GuildInviteNotification(
-                    sender.name, target.playerName, guildName, _guildId));
+                    sender.name, target.playerName, guildName, guildId));
                 listener.requestProcessed(null);
             }
         }, new Resulting<Void>(lner));
