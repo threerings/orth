@@ -3,27 +3,16 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.aether.client {
-import flashx.funk.ioc.inject;
 
 import com.threerings.presents.client.Client;
-import com.threerings.presents.client.ClientEvent;
 
 import com.threerings.orth.client.Listeners;
-import com.threerings.orth.client.OrthContext;
 
 /**
  * Handles player-oriented requests.
  */
-public class AetherDirector
+public class AetherDirector extends AetherDirectorBase
 {
-    public function AetherDirector ()
-    {
-        const client :Client = inject(AetherClient);
-        client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
-            _psvc = client.requireService(AetherService);
-        });
-    }
-
     public function acceptGuildInvite (senderId :int, guildId :int) :void
     {
         _psvc.acceptGuildInvite(senderId, guildId, Listeners.listener());
@@ -34,7 +23,11 @@ public class AetherDirector
         _psvc.createGuild(name, Listeners.listener());
     }
 
+    override protected function fetchServices (client :Client) :void
+    {
+        _psvc = client.requireService(AetherService);
+    }
+
     protected var _psvc :AetherService;
-    protected const _octx :OrthContext = inject(OrthContext);
 }
 }
