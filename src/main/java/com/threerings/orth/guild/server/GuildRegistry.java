@@ -39,7 +39,7 @@ public class GuildRegistry extends NodeletRegistry
     @Inject public GuildRegistry (Injector injector, OrthDeploymentConfig config)
     {
         super(GuildNodelet.class, config.getGuildHost(), config.getGuildPorts(), injector);
-        setManagerClass(GuildManager.class, GuildObject.GUILD_SERVICE, GuildMarshaller.class);
+        setManagerClass(getGuildManagerClass(), GuildObject.GUILD_SERVICE, GuildMarshaller.class);
         setPeeredHostingStrategy(OrthNodeObject.HOSTED_GUILDS, injector);
     }
 
@@ -93,6 +93,14 @@ public class GuildRegistry extends NodeletRegistry
     public DObject createSharedObject (Nodelet nodelet)
     {
         return new GuildObject();
+    }
+
+    /**
+     * The {@link GuildManager} subclass to instantiate. Meant for subclassing.
+     */
+    protected Class<? extends GuildManager> getGuildManagerClass ()
+    {
+        return GuildManager.class;
     }
 
     @Inject protected @MainInvoker Invoker _invoker;
