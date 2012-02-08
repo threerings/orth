@@ -48,6 +48,34 @@ public class GuildDirector extends NodeletDirector
     }
 
     /**
+     * Is the given player a member of our guild?
+     */
+    public function isMember (playerId :int) :Boolean
+    {
+        return getRank(playerId) != null;
+    }
+
+    /**
+     * Is the given player a member of our guild with sufficient rank to invite others?
+     */
+    public function canInvite (playerId :int) :Boolean
+    {
+        return getRank(playerId) == GuildRank.OFFICER;
+    }
+
+    /**
+     * Return the guild rank of the given player, or null if not a member of our guild.
+     */
+    public function getRank (playerId :int) :GuildRank
+    {
+        var entry :GuildMemberEntry = null;
+        if (_guildObj != null) {
+            entry = GuildMemberEntry(_guildObj.members.get(playerId));
+        }
+        return (entry != null) ? entry.rank : null;
+    }
+
+    /**
      * Called when a player attribute is updated.
      */
     public function attributeChanged (event :AttributeChangedEvent) :void
@@ -85,11 +113,6 @@ public class GuildDirector extends NodeletDirector
     public function setRank (playerId :int, rank :GuildRank) :void
     {
         _guildObj.guildService.updateRank(playerId, rank, Listeners.listener());
-    }
-
-    public function isMember (playerId :int) :Boolean
-    {
-        return _guildObj.members.containsKey(playerId);
     }
 
     // from NodeletDirector
