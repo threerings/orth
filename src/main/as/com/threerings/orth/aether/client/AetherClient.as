@@ -24,6 +24,7 @@ import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.client.Prefs;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.PlayerName;
 
 public class AetherClient extends Client
 {
@@ -49,6 +50,11 @@ public class AetherClient extends Client
         setVersion(depConf.version);
         addServiceGroup(OrthCodes.AETHER_GROUP);
 
+    }
+
+    public function get playerName () :PlayerName
+    {
+        return (_plobj != null) ? _plobj.playerName : null;
     }
 
     public function get aetherObject () :AetherClientObject
