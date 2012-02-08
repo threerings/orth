@@ -43,6 +43,29 @@ public final class GuildRank extends Enum
         super(name);
     }
 // GENERATED ENUM END
+
+    public function promotion () :GuildRank
+    {
+        if (this == MEMBER) {
+            return VETERAN;
+        } else if (this == VETERAN) {
+            return OFFICER;
+        } else {
+            return null;
+        }
+    }
+
+    public function demotion () :GuildRank
+    {
+        if (this == OFFICER) {
+            return VETERAN;
+        } else if (this == VETERAN) {
+            return MEMBER;
+        } else {
+            return null;
+        }
+    }
+
 // GENERATED CLASSFINISH START
 }
 }
