@@ -11,11 +11,13 @@ import com.threerings.util.Log;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
-import com.threerings.presents.dobj.ChangeListener;
 import com.threerings.presents.dobj.DObject;
 
+import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.aether.data.GuildMemberNotificationComm;
 import com.threerings.orth.client.Listeners;
+import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.guild.data.GuildInviteNotification;
 import com.threerings.orth.guild.data.GuildMemberEntry;
 import com.threerings.orth.guild.data.GuildNodelet;
@@ -120,6 +122,8 @@ public class GuildDirector extends NodeletDirector
         if (entry.name.id == _octx.myId) {
             // the server should already have added us prior to subscription
             log.warning("Local player added to guild, weird");
+        } else {
+            notify(entry, GuildMemberNotificationComm.NOTE_JOIN);
         }
     }
 
@@ -127,6 +131,8 @@ public class GuildDirector extends NodeletDirector
     {
         if (entry.name.id == _octx.myId) {
             log.warning("Local player removed from guild, weird");
+        } else {
+            notify(entry, GuildMemberNotificationComm.NOTE_LEAVE);
         }
     }
 
@@ -136,7 +142,16 @@ public class GuildDirector extends NodeletDirector
             if (old.rank != entry.rank) {
                 localPlayerRankChanged();
             }
+        } else if (old.whereabouts.isOnline() != entry.whereabouts.isOnline()) {
+            notify(entry, entry.whereabouts.isOnline() ?
+                GuildMemberNotificationComm.NOTE_LOGON : GuildMemberNotificationComm.NOTE_LOGOFF);
         }
+    }
+
+    protected function notify (entry :GuildMemberEntry, event :int) :void
+    {
+        _commsDir.receiveComm(new GuildMemberNotificationComm(
+            entry.name, _client.playerName, event));
     }
 
     protected function localPlayerRankChanged () :void
@@ -145,7 +160,11 @@ public class GuildDirector extends NodeletDirector
     }
 
     protected var _guildObj :GuildObject;
-    protected var _module :Module = inject(Module);
+
+    protected const _module :Module = inject(Module);
+    protected const _client :AetherClient = inject(AetherClient);
+    protected const _commsDir :CommsDirector = inject(CommsDirector);
+
     private const log :Log = Log.getLog(this);
 }
 }
