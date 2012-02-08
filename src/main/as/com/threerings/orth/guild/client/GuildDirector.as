@@ -87,6 +87,11 @@ public class GuildDirector extends NodeletDirector
         _guildObj.guildService.updateRank(playerId, rank, Listeners.listener());
     }
 
+    public function isMember (playerId :int) :Boolean
+    {
+        return _guildObj.members.containsKey(playerId);
+    }
+
     // from NodeletDirector
     override protected function refreshPlayer () :void
     {
