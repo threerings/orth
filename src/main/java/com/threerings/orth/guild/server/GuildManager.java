@@ -4,11 +4,12 @@
 
 package com.threerings.orth.guild.server;
 
+import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
@@ -32,6 +33,7 @@ import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.aether.server.PeerEyeballer;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.AuthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildInviteNotification;
@@ -74,14 +76,23 @@ public class GuildManager extends NodeletManager
             }
 
             @Override public void requestCompleted (Void nothing) {
-                // transform to entries
-                Iterable<GuildMemberEntry> entries = Iterables.transform(_members.values(),
-                    new Function<GuildMemberRecord, GuildMemberEntry>() {
-                        public GuildMemberEntry apply (GuildMemberRecord gmrec) {
-                            return toMemberEntry(
-                                _eyeballer.getPlayerData(gmrec.getPlayerId()), gmrec.getRank());
-                        }
-                    });
+                List<GuildMemberEntry> entries = Lists.newArrayList();
+                for (GuildMemberRecord gmrec : _members.values()) {
+                    GuildMemberEntry result;
+                    int playerId = gmrec.getPlayerId();
+                    PeeredPlayerInfo info = _eyeballer.getPlayerData(playerId);
+                    if (info != null) {
+                        entries.add(toMemberEntry(info, gmrec.getRank()));
+                        continue;
+                    }
+                    String nameStr = _names.get(playerId);
+                    if (nameStr == null) {
+                        log.warning("Huh? Nameless guild member?", "playerId", playerId);
+                        continue;
+                    }
+                    PlayerName name = new PlayerName(_names.get(playerId), playerId);
+                    entries.add(toMemberEntry(name, gmrec.getRank()));
+                }
 
                 _guildObj.setName(_guild.getName());
                 _guildObj.setMembers(DSet.newDSet(entries));
@@ -350,7 +361,15 @@ public class GuildManager extends NodeletManager
     }
 
     /**
-     * Creates a new guild member entry.
+     * Creates a new guild member entry when we only know the name and rank.
+     */
+    protected GuildMemberEntry toMemberEntry (PlayerName name, GuildRank rank)
+    {
+        return new GuildMemberEntry(name, rank, Whereabouts.OFFLINE);
+    }
+
+    /**
+     * Creates a new guild member entry for an online player.
      */
     protected GuildMemberEntry toMemberEntry (PeeredPlayerInfo info, GuildRank rank)
     {
