@@ -56,28 +56,38 @@ public class GuildRegistry extends NodeletRegistry
             @Override public GuildRecord invokePersist () throws Exception {
                 return _guildRepo.createGuild(name, officer.getPlayerId());
             }
-
             @Override public void requestCompleted (GuildRecord result) {
-                _hoster.resolveHosting(officer, new GuildNodelet(result.getGuildId()),
-                        new Resulting<HostedNodelet>(rl) {
-                    @Override public void requestCompleted (HostedNodelet result) {
-                        officer.startTransaction();
-                        try {
-                            officer.setGuild(result); // Whoo, all done!
-                            officer.setGuildId(((GuildNodelet)result.nodelet).guildId);
-                        } finally {
-                            officer.commitTransaction();
-                        }
-                        super.requestCompleted(result);
-                    }
-                });
+                hostGuild(result, officer, rl);
             }
-
             @Override public void requestFailed (Exception cause) {
                 rl.requestFailed(cause);
             }
         });
     }
+
+    /**
+     * Attempts to host a guild that has already been created in the repository. Upon success, the
+     * officer's {@code guild} member will be updated to the new hosted location and the result
+     * listener notified.
+     */
+    public void hostGuild (GuildRecord result, final AetherClientObject officer,
+        ResultListener<HostedNodelet> rl)
+    {
+        _hoster.resolveHosting(officer, new GuildNodelet(result.getGuildId()),
+            new Resulting<HostedNodelet>(rl) {
+                @Override public void requestCompleted (HostedNodelet result) {
+                    officer.startTransaction();
+                    try {
+                        officer.setGuild(result); // Whoo, all done!
+                        officer.setGuildId(((GuildNodelet)result.nodelet).guildId);
+                    } finally {
+                        officer.commitTransaction();
+                    }
+                    super.requestCompleted(result);
+                }
+            });
+    }
+
 
     /**
      * Invoke the given guild request on the appropriate guild manager, wherever it may be in the
