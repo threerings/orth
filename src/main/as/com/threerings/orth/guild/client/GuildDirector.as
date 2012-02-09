@@ -18,6 +18,8 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.GuildMemberNotificationComm;
+import com.threerings.orth.chat.client.OrthChatDirector;
+import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.client.Listeners;
 import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.guild.data.GuildInviteNotification;
@@ -159,6 +161,8 @@ public class GuildDirector extends NodeletDirector
             _guildObj.membersEntryUpdated.add(memberUpdated);
         }
 
+        _chatDir.registerRouter(OrthChatCodes.GUILD_CHAT_TYPE, _guildObj);
+
         guildObjectChanged.dispatch(_guildObj);
     }
 
@@ -208,6 +212,7 @@ public class GuildDirector extends NodeletDirector
 
     protected const _module :Module = inject(Module);
     protected const _client :AetherClient = inject(AetherClient);
+    protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
     protected const _commsDir :CommsDirector = inject(CommsDirector);
 
     private const log :Log = Log.getLog(this);

@@ -66,12 +66,11 @@ public class ChatManager
         }, new Resulting<Void>(listener));
     }
 
-
-    public void sendSpeak (SpeakRouter router, PlayerName sender, String msg,
+    public void sendSpeak (SpeakRouter router, PlayerName sender, String msg, String localType,
         InvocationService.InvocationListener listener)
         throws InvocationException
     {
-        Speak speak = new Speak(sender, msg);
+        Speak speak = new Speak(sender, msg, localType);
         if (!check(speak)) {
             log.warning("Speak not sent", "router", router, "from", sender, "msg", msg);
             return;

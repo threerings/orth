@@ -32,6 +32,7 @@ import com.threerings.orth.aether.data.PeeredPlayerInfo;
 import com.threerings.orth.aether.server.AetherNodeAction;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.aether.server.PeerEyeballer;
+import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.chat.server.SpeakProvider;
@@ -136,7 +137,7 @@ public class GuildManager extends NodeletManager
     @Override public void speak (ClientObject caller, String msg, InvocationListener listener)
         throws InvocationException
     {
-        _chatMan.sendSpeak(_guildObj, requireMember(caller).name, msg, listener);
+        _chatMan.sendSpeak(_guildObj, requireMember(caller).name, msg, OrthChatCodes.GUILD_CHAT_TYPE, listener);
     }
 
     @Override

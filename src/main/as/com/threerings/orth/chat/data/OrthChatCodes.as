@@ -13,5 +13,8 @@ public class OrthChatCodes extends InvocationCodes
 
     /** An error code delivered when the user targeted for a tell notification is not online. */
     public static const USER_NOT_ONLINE :String = "m.user_not_online";
+
+    /** The chat localtype code for messages delivered on the player's current guild object. */
+    public static const GUILD_CHAT_TYPE :String = "guildChat";
 }
 }

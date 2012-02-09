@@ -27,12 +27,18 @@ public class Speak extends SimpleStreamableObject
         return _message;
     }
 
+    public function get localType () :String
+    {
+        return _localType;
+    }
+
 // GENERATED STREAMING START
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         _from = ins.readObject(PlayerName);
         _message = ins.readField(String);
+        _localType = ins.readField(String);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
@@ -40,10 +46,12 @@ public class Speak extends SimpleStreamableObject
         super.writeObject(out);
         out.writeObject(_from);
         out.writeField(_message);
+        out.writeField(_localType);
     }
 
     protected var _from :PlayerName;
     protected var _message :String;
+    protected var _localType :String;
 // GENERATED STREAMING END
 
 // GENERATED CLASSFINISH START

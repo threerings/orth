@@ -28,6 +28,7 @@ import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.SetListener;
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.Place;
@@ -87,7 +88,8 @@ public class OrthRoomManager extends InstancedSceneManager
     public void speak (ClientObject caller, String msg, InvocationListener listener)
         throws InvocationException
     {
-        _chatMan.sendSpeak(_orthObj, ((SocializerObject)caller).name, msg, listener);
+        _chatMan.sendSpeak(_orthObj, ((SocializerObject)caller).name, msg,
+            ChatCodes.PLACE_CHAT_TYPE, listener);
     }
 
     @Override

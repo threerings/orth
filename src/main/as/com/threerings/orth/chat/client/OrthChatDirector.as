@@ -6,14 +6,14 @@ package com.threerings.orth.chat.client {
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
-import com.threerings.util.MessageManager;
+import com.threerings.util.Map;
+import com.threerings.util.Maps;
 import com.threerings.util.ObserverList;
 
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.client.ConfirmAdapter;
-import com.threerings.presents.client.InvocationDirector;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
@@ -43,9 +43,10 @@ public class OrthChatDirector extends BasicDirector
         return buildMessage(from, text, ChatCodes.USER_CHAT_TYPE);
     }
 
-    public static function buildSpeakMessage (from :PlayerName, text :String) :UserMessage
+    public static function buildSpeakMessage (speak :Speak) :UserMessage
     {
-        return buildMessage(from, text, ChatCodes.PLACE_CHAT_TYPE);
+        log.info("Building speak message", "from", speak.from, "msg", speak.message, "localType", speak.localType);
+        return buildMessage(speak.from, speak.message, speak.localType);
     }
 
     public static function buildMessage (from :PlayerName, text :String, type :String) :UserMessage
@@ -137,6 +138,30 @@ public class OrthChatDirector extends BasicDirector
         });
     }
 
+    /**
+     * Add a new SpeakRouter under the given localType.
+     */
+    public function registerRouter (type :String, router :SpeakRouter) :void
+    {
+        // stop listening to the old one, if there was one
+        deregisterRouter(type);
+
+        // start listening to the new one
+        _routers.put(type, router);
+        router.speakObject.addListener(this);
+    }
+
+    /**
+     * Remove any SpeakRouter registered under the given localType.
+     */
+    public function deregisterRouter (type :String) :void
+    {
+        const oldRouter :SpeakRouter = _routers.get(type);
+        if (oldRouter != null) {
+            oldRouter.speakObject.removeListener(this);
+        }
+    }
+
     public function enteredLocation (place :SpeakRouter) :void
     {
         // nix our old location if we have one
@@ -175,7 +200,7 @@ public class OrthChatDirector extends BasicDirector
         // We should decide to go one way or another rather than "convert" here.
         var value :Object = event.getArgs()[0];
         if (OrthChatCodes.SPEAK_MSG_TYPE == event.getName()) {
-            dispatchPreparedMessage(buildSpeakMessage(Speak(value).from, Speak(value).message));
+            dispatchPreparedMessage(buildSpeakMessage(Speak(value)));
 
         } else {
             log.warning("Got unhandled message type", "eventName", event.getName(), "event", event);
@@ -222,11 +247,12 @@ public class OrthChatDirector extends BasicDirector
     protected var _chatHistory :HistoryList;
     protected var _tellService :TellService;
 
+    protected const _routers :Map = Maps.newMapOf(String);
+
     /** A list of registered chat displays. */
     protected var _displays :ObserverList = new ObserverList();
 
     protected const _comms :CommsDirector = inject(CommsDirector);
-    protected const _msgMgr :MessageManager = inject(MessageManager);
     protected const _octx :OrthContext = inject(OrthContext);
 
     private static const log :Log = Log.getLog(OrthChatDirector);
