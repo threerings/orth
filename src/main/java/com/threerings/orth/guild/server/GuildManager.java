@@ -170,7 +170,7 @@ public class GuildManager extends NodeletManager
             throw new InvocationException(E_INTERNAL_ERROR);
         }
         if (target.rank == GuildRank.OFFICER) {
-            log.warning("Illegal rank update", "caller", officer, "target", target);
+            log.warning("Illegal rank update", "caller", officer.name, "target", target.name);
             throw new InvocationException(E_INTERNAL_ERROR);
         }
 
