@@ -4,11 +4,17 @@
 
 package com.threerings.orth.guild.data;
 
+import java.util.Set;
+
 import javax.annotation.Generated;
+
+import com.google.common.collect.Sets;
 
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.orth.chat.data.SpeakMarshaller;
+import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.guild.client.GuildService;
 
 /**
@@ -17,6 +23,7 @@ import com.threerings.orth.guild.client.GuildService;
  * information.
  */
 public class GuildObject extends DObject
+    implements SpeakRouter
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>name</code> field. */
@@ -30,6 +37,10 @@ public class GuildObject extends DObject
     /** The field name of the <code>guildService</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String GUILD_SERVICE = "guildService";
+
+    /** The field name of the <code>guildChatService</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String GUILD_CHAT_SERVICE = "guildChatService";
     // AUTO-GENERATED: FIELDS END
 
     /** The name of the guild. */
@@ -41,6 +52,24 @@ public class GuildObject extends DObject
     /** The guild service. */
     public GuildService guildService;
 
+    public SpeakMarshaller guildChatService;
+
+    // from SpeakRouter
+    @Override public DObject getSpeakObject ()
+    {
+        return this;
+    }
+
+    // from SpeakRouter
+    @Override public Set<Integer> getSpeakReceipients ()
+    {
+        Set<Integer> result = Sets.newHashSet();
+        for (GuildMemberEntry entry : members) {
+            result.add(entry.getPlayerId());
+        }
+        return result;
+    }
+    
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>name</code> field be set to the
@@ -125,6 +154,23 @@ public class GuildObject extends DObject
         requestAttributeChange(
             GUILD_SERVICE, value, ovalue);
         this.guildService = value;
+    }
+
+    /**
+     * Requests that the <code>guildChatService</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setGuildChatService (SpeakMarshaller value)
+    {
+        SpeakMarshaller ovalue = this.guildChatService;
+        requestAttributeChange(
+            GUILD_CHAT_SERVICE, value, ovalue);
+        this.guildChatService = value;
     }
     // AUTO-GENERATED: METHODS END
 }

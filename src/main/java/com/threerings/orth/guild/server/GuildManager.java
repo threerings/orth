@@ -24,6 +24,7 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
@@ -31,6 +32,9 @@ import com.threerings.orth.aether.data.PeeredPlayerInfo;
 import com.threerings.orth.aether.server.AetherNodeAction;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.aether.server.PeerEyeballer;
+import com.threerings.orth.chat.data.SpeakMarshaller;
+import com.threerings.orth.chat.server.ChatManager;
+import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.PlayerName;
@@ -57,7 +61,7 @@ import static com.threerings.orth.Log.log;
  * Manages a {@link GuildObject} on the server.
  */
 public class GuildManager extends NodeletManager
-    implements GuildProvider, GuildCodes
+    implements GuildProvider, GuildCodes, SpeakProvider
 {
     @Override
     public boolean prepare (final ResultListener<Void> rl)
@@ -108,6 +112,9 @@ public class GuildManager extends NodeletManager
         _guildObj = ((GuildObject)_sharedObject);
         _guildId = ((GuildNodelet)_nodelet.nodelet).guildId;
 
+        // add the Orth speak service for this room
+        _guildObj.guildChatService = _invmgr.registerProvider(this, SpeakMarshaller.class);
+
         _eyeballer.playerLoggedOn.connect(new Listener1<PeeredPlayerInfo>() {
             @Override public void apply (PeeredPlayerInfo info) {
                 updateEntry(info.authName.getId(), info);
@@ -123,6 +130,13 @@ public class GuildManager extends NodeletManager
                 updateEntry(info.authName.getId(), info);
             }
         });
+    }
+
+    // from SpeakRouter
+    @Override public void speak (ClientObject caller, String msg, InvocationListener listener)
+        throws InvocationException
+    {
+        _chatMan.sendSpeak(_guildObj, requireMember(caller).name, msg, listener);
     }
 
     @Override
@@ -401,8 +415,10 @@ public class GuildManager extends NodeletManager
 
     // dependencies
     @Inject protected GuildRepository _guildRepo;
-    @Inject protected PlayerRepository _playerRepo;
+    @Inject protected InvocationManager _invmgr;
     @Inject protected @MainInvoker Invoker _invoker;
+    @Inject protected ChatManager _chatMan;
     @Inject protected OrthPeerManager _peerMan;
     @Inject protected PeerEyeballer _eyeballer;
+    @Inject protected PlayerRepository _playerRepo;
 }

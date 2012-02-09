@@ -12,6 +12,8 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.orth.chat.data.SpeakMarshaller;
+import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.guild.client.GuildService;
 import com.threerings.orth.guild.data.GuildMemberEntry;
 
@@ -19,6 +21,7 @@ import com.threerings.orth.guild.data.GuildMemberEntry;
 
 // GENERATED CLASSDECL START
 public class GuildObject extends DObject
+    implements SpeakRouter
 {
 // GENERATED CLASSDECL END
     GuildMemberEntry;
@@ -31,16 +34,20 @@ public class GuildObject extends DObject
 
     public var guildService :GuildService;
 
+    public var guildChatService :SpeakMarshaller;
+
     public var nameChanged :Signal = new Signal(String, String);
     public var membersChanged :Signal = new Signal(DSet, DSet);
     public var membersEntryAdded :Signal = new Signal(GuildMemberEntry);
     public var membersEntryRemoved :Signal = new Signal(GuildMemberEntry);
     public var membersEntryUpdated :Signal = new Signal(GuildMemberEntry, GuildMemberEntry);
     public var guildServiceChanged :Signal = new Signal(GuildService, GuildService);
+    public var guildChatServiceChanged :Signal = new Signal(SpeakMarshaller, SpeakMarshaller);
 
     public static const NAME :String = "name";
     public static const MEMBERS :String = "members";
     public static const GUILD_SERVICE :String = "guildService";
+    public static const GUILD_CHAT_SERVICE :String = "guildChatService";
 
     override public function readObject (ins :ObjectInputStream) :void
     {
@@ -48,6 +55,7 @@ public class GuildObject extends DObject
         name = ins.readField(String);
         members = ins.readObject(DSet);
         guildService = ins.readObject(GuildService);
+        guildChatService = ins.readObject(SpeakMarshaller);
     }
 
     public function GuildObject ()
@@ -55,6 +63,15 @@ public class GuildObject extends DObject
         new Signaller(this);
     }
 // GENERATED STREAMING END
+    public function get speakObject () :DObject
+    {
+        return this;
+    }
+
+    public function get speakMarshaller () :SpeakMarshaller
+    {
+        return guildChatService;
+    }
 
 // GENERATED CLASSFINISH START
 }
@@ -99,6 +116,9 @@ class Signaller
                 break;
             case "guildService":
                 signal = _obj.guildServiceChanged;
+                break;
+            case "guildChatService":
+                signal = _obj.guildChatServiceChanged;
                 break;
             default:
                 return;

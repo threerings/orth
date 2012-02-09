@@ -7,6 +7,8 @@ package com.threerings.orth.guild.client
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
 
+import org.osflash.signals.Signal;
+
 import com.threerings.util.Log;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -24,8 +26,6 @@ import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
 import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.nodelet.client.NodeletDirector;
-
-import org.osflash.signals.Signal;
 
 /**
  * Connects to a player's guild on the server and provides convenient entry points and utilities
