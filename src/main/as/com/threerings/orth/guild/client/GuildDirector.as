@@ -25,6 +25,8 @@ import com.threerings.orth.guild.data.GuildObject;
 import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.nodelet.client.NodeletDirector;
 
+import org.osflash.signals.Signal;
+
 /**
  * Connects to a player's guild on the server and provides convenient entry points and utilities
  * for a player to interact with the guild object.
@@ -34,6 +36,12 @@ public class GuildDirector extends NodeletDirector
 {
     GuildNodelet;
     GuildInviteNotification;
+
+    /**
+     * A signal dispatched when our GuildObject changes; null for when we leave a guild,
+     * non-null for when we join one or when we log in for the first time.
+     */
+    public const guildObjectChanged :Signal = new Signal(GuildObject);
 
     /**
      * Creates a new guild director.
@@ -115,7 +123,14 @@ public class GuildDirector extends NodeletDirector
         _guildObj.guildService.updateRank(playerId, rank, Listeners.listener());
     }
 
-    // from NodeletDirector
+    override protected function disconnect () :void
+    {
+        super.disconnect();
+
+        guildObjectChanged.dispatch(null);
+    }
+
+// from NodeletDirector
     override protected function refreshPlayer () :void
     {
         if (_plobj != null) {
@@ -143,6 +158,8 @@ public class GuildDirector extends NodeletDirector
             _guildObj.membersEntryRemoved.add(memberRemoved);
             _guildObj.membersEntryUpdated.add(memberUpdated);
         }
+
+        guildObjectChanged.dispatch(_guildObj);
     }
 
     protected function memberAdded (entry :GuildMemberEntry) :void
