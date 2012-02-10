@@ -262,7 +262,7 @@ public abstract class NodeletRegistry
      */
     public void shutdownManager (NodeletManager manager)
     {
-        boolean hasMgr = _mgrs.remove(manager.getNodelet()) != null;
+        boolean hasMgr = _mgrs.remove(manager.getNodelet().nodelet) != null;
         if (!hasMgr) {
             throw new RuntimeException("Shutting down a manager twice: " + manager.getNodelet());
         }
