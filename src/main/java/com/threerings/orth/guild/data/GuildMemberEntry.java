@@ -4,6 +4,7 @@
 
 package com.threerings.orth.guild.data;
 
+import com.threerings.orth.Log;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.Whereabouts;
@@ -15,8 +16,8 @@ public class GuildMemberEntry extends PlayerEntry
     public GuildMemberEntry (PlayerName name, GuildRank rank, Whereabouts abouts)
     {
         super(name, abouts);
+
         this.rank = rank;
-        this.whereabouts = abouts;
     }
 
     @Override
