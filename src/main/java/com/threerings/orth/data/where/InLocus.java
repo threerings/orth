@@ -35,8 +35,8 @@ public class InLocus extends Whereabouts
 
     @Override public boolean equals (Object other)
     {
-        return other != null && other instanceof com.threerings.orth.data.where.InLocus &&
-            locus.equals(((com.threerings.orth.data.where.InLocus) other).getLocus());
+        return other != null && other instanceof InLocus &&
+            locus.equals(((InLocus) other).getLocus());
     }
 
     @Override public int hashCode ()
