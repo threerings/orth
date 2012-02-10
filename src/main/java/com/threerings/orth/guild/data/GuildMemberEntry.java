@@ -16,6 +16,7 @@ public class GuildMemberEntry extends PlayerEntry
     {
         super(name, abouts);
         this.rank = rank;
+        this.whereabouts = abouts;
     }
 
     @Override
