@@ -11,16 +11,14 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import com.google.gwt.activity.shared.Activity;
 import com.google.inject.Inject;
 
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
-import com.threerings.presents.annotation.BlockingThread;
 import com.threerings.util.Resulting;
 
+import com.threerings.presents.annotation.BlockingThread;
 import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.client.InvocationService;

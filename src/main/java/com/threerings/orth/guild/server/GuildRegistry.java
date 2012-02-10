@@ -11,9 +11,9 @@ import com.google.inject.Singleton;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
-import com.threerings.presents.annotation.BlockingThread;
 import com.threerings.util.Resulting;
 
+import com.threerings.presents.annotation.BlockingThread;
 import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.dobj.DObject;
 
