@@ -28,6 +28,7 @@ import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
 import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.nodelet.client.NodeletDirector;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 
 /**
  * Connects to a player's guild on the server and provides convenient entry points and utilities
@@ -125,13 +126,6 @@ public class GuildDirector extends NodeletDirector
         _guildObj.guildService.updateRank(playerId, rank, Listeners.listener());
     }
 
-    override protected function disconnect () :void
-    {
-        super.disconnect();
-
-        guildObjectChanged.dispatch(null);
-    }
-
 // from NodeletDirector
     override protected function refreshPlayer () :void
     {
@@ -150,7 +144,17 @@ public class GuildDirector extends NodeletDirector
         }
     }
 
-    // from NodeletDirector
+    override protected function connect (nodelet :HostedNodelet) :void
+    {
+        super.connect(nodelet);
+
+        if (nodelet == null) {
+            _guildObj = null;
+            guildObjectChanged.dispatch(null);
+        }
+    }
+
+// from NodeletDirector
     override protected function objectAvailable (obj :DObject) :void
     {
         super.objectAvailable(obj);
