@@ -11,11 +11,14 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
+import com.google.gwt.activity.shared.Activity;
 import com.google.inject.Inject;
 
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.presents.annotation.BlockingThread;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.MainInvoker;
@@ -112,7 +115,7 @@ public class GuildManager extends NodeletManager
         _guildObj = ((GuildObject)_sharedObject);
         _guildId = ((GuildNodelet)_nodelet.nodelet).guildId;
 
-        // add the Orth speak service for this room
+        // add the Orth speak service for this guild
         _guildObj.guildChatService = _invmgr.registerProvider(this, SpeakMarshaller.class);
 
         _eyeballer.playerLoggedOn.connect(new Listener1<PeeredPlayerInfo>() {
@@ -226,6 +229,7 @@ public class GuildManager extends NodeletManager
         _invoker.postUnit(new Resulting<Void>("remove guild member", listener) {
             @Override public Void invokePersist () throws Exception {
                 _guildRepo.removeMember(_guildId, target.getPlayerId());
+                didLeaveGuild(target.getPlayerId());
                 return null;
             }
             @Override public void requestCompleted (Void result) {
@@ -256,6 +260,7 @@ public class GuildManager extends NodeletManager
         _invoker.postUnit(new Resulting<Void>("remove guild member", listener) {
             @Override public Void invokePersist () throws Exception {
                 _guildRepo.removeMember(_guildId, member.getPlayerId());
+                didLeaveGuild(member.getPlayerId());
                 return null;
             }
             @Override public void requestCompleted (Void result) {
@@ -278,6 +283,7 @@ public class GuildManager extends NodeletManager
             @Override public Void invokePersist () throws Exception {
                 _guildRepo.removeMember(_guildId, member.getPlayerId());
                 _guildRepo.removeEmptyGuild(_guildId);
+                didDisbandGuild(member.getPlayerId());
                 return null;
             }
             @Override public void requestCompleted (Void result) {
@@ -311,6 +317,7 @@ public class GuildManager extends NodeletManager
         _invoker.postUnit(new Resulting<Void>("add guild member", rl) {
             @Override public Void invokePersist () throws Exception {
                 _guildRepo.addMember(_guildId, newMemberId, newEntry.rank);
+                didJoinGuild(newMemberId);
                 return null;
             }
 
@@ -319,6 +326,24 @@ public class GuildManager extends NodeletManager
                 super.requestCompleted(result);
             }
         });
+    }
+
+    @BlockingThread
+    protected void didJoinGuild (int playerId)
+    {
+        // subclasses may react
+    }
+
+    @BlockingThread
+    protected void didLeaveGuild (int playerId)
+    {
+        // subclasses may react
+    }
+
+    @BlockingThread
+    protected void didDisbandGuild (int playerId)
+    {
+        // subclasses may react
     }
 
     protected void clearPlayerObjectGuild (int playerId)

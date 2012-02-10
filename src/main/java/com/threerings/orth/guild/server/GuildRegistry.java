@@ -11,6 +11,7 @@ import com.google.inject.Singleton;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.presents.annotation.BlockingThread;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.MainInvoker;
@@ -54,7 +55,9 @@ public class GuildRegistry extends NodeletRegistry
         _invoker.postUnit(new Resulting<GuildRecord>(
                 "Creating guild", log, "officer", officer.who()) {
             @Override public GuildRecord invokePersist () throws Exception {
-                return _guildRepo.createGuild(name, officer.getPlayerId());
+                GuildRecord rec = _guildRepo.createGuild(name, officer.getPlayerId());
+                didCreateGuild(officer.getPlayerId(), rec.getGuildId());
+                return rec;
             }
             @Override public void requestCompleted (GuildRecord result) {
                 hostGuild(result, officer, rl);
@@ -63,6 +66,12 @@ public class GuildRegistry extends NodeletRegistry
                 rl.requestFailed(cause);
             }
         });
+    }
+
+    @BlockingThread
+    protected void didCreateGuild (int playerId, int guildId)
+    {
+        // subclasses may react
     }
 
     /**
