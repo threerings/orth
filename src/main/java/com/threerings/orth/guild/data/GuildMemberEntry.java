@@ -4,7 +4,6 @@
 
 package com.threerings.orth.guild.data;
 
-import com.threerings.orth.Log;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.Whereabouts;
