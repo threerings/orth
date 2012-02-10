@@ -83,7 +83,6 @@ public class GuildManager extends NodeletManager
             @Override public void requestCompleted (Void nothing) {
                 List<GuildMemberEntry> entries = Lists.newArrayList();
                 for (GuildMemberRecord gmrec : _members.values()) {
-                    GuildMemberEntry result;
                     int playerId = gmrec.getPlayerId();
                     PeeredPlayerInfo info = _eyeballer.getPlayerData(playerId);
                     if (info != null) {
