@@ -35,16 +35,26 @@ public class AuthName extends Name
     @Override // from Name
     public boolean equals (Object other)
     {
-        return (other != null) && other.getClass().equals(getClass()) &&
-            (((AuthName)other).getId() == getId());
+        if (other == null || !(other instanceof AuthName)) {
+            return false;
+        }
+        AuthName aName = (AuthName) other;
+        return getDiscriminator().equals(aName.getDiscriminator()) && getId() == aName.getId();
+    }
+
+    public String getDiscriminator ()
+    {
+        return getClass().getName();
     }
 
     @Override // from Name
     public int compareTo (Name o)
     {
+        String oClass = (o instanceof AuthName) ?
+            ((AuthName) o).getDiscriminator() : o.getClass().getName();
         return ComparisonChain.start()
-            .compare(getClass().getName(), o.getClass().getName())
-            .compare(getId(), ((AuthName)o).getId()).result();
+            .compare(getDiscriminator(), oClass)
+            .compare(getId(), ((AuthName) o).getId()).result();
     }
 
     protected int _id;

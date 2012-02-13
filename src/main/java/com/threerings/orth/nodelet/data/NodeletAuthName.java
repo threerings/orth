@@ -36,6 +36,7 @@ public final class NodeletAuthName extends AuthName
     /**
      * Gets a short unique string corresponding to the kind of nodelet.
      */
+    @Override
     public String getDiscriminator ()
     {
         return _discriminator;

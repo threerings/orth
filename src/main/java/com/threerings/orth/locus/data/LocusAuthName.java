@@ -4,8 +4,6 @@
 
 package com.threerings.orth.locus.data;
 
-import com.google.common.collect.ComparisonChain;
-
 import com.threerings.util.Name;
 
 import com.threerings.orth.data.AuthName;
@@ -35,12 +33,9 @@ public class LocusAuthName extends AuthName
             (((AuthName)other).getId() == getId());
     }
 
-    @Override // from Name
-    public int compareTo (Name o)
+    @Override
+    public String getDiscriminator ()
     {
-        return ComparisonChain.start().
-            compare(true, (o instanceof LocusAuthName)).
-            compare(getId(), ((AuthName)o).getId()).result();
+        return LocusAuthName.class.getName();
     }
-
 }
