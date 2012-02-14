@@ -311,7 +311,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
      */
     protected FriendEntry offlineFriendEntry (int id, String name)
     {
-        return new FriendEntry(new PlayerName(name, id), Whereabouts.OFFLINE);
+        return new FriendEntry(new PlayerName(name, id), null, Whereabouts.OFFLINE);
     }
 
     /**
@@ -319,7 +319,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
      */
     protected FriendEntry toFriendEntry (PeeredPlayerInfo info)
     {
-        return new FriendEntry(info.visibleName, info.whereabouts);
+        return new FriendEntry(info.visibleName, info.guildName, info.whereabouts);
     }
 
     /** Mapping of local and remote player ids to friend ids logged into this server. */

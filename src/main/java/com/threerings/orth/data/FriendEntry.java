@@ -5,6 +5,7 @@
 package com.threerings.orth.data;
 
 import com.threerings.orth.data.where.Whereabouts;
+import com.threerings.orth.guild.data.GuildName;
 
 /**
  * Represents a friend connection.
@@ -12,9 +13,9 @@ import com.threerings.orth.data.where.Whereabouts;
 public class FriendEntry extends PlayerEntry
 {
     /** Mr. Constructor. */
-    public FriendEntry (PlayerName name, Whereabouts status)
+    public FriendEntry (PlayerName name, GuildName guild, Whereabouts status)
     {
-        super(name, status);
+        super(name, guild, status);
     }
 
     /** Copies this friend entry. */

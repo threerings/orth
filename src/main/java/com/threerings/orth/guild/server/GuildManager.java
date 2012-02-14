@@ -423,7 +423,7 @@ public class GuildManager extends NodeletManager
      */
     protected GuildMemberEntry toMemberEntry (PlayerName name, GuildRank rank)
     {
-        return new GuildMemberEntry(name, rank, Whereabouts.OFFLINE);
+        return new GuildMemberEntry(name, _guildName, rank, Whereabouts.OFFLINE);
     }
 
     /**
@@ -431,7 +431,7 @@ public class GuildManager extends NodeletManager
      */
     protected GuildMemberEntry toMemberEntry (PeeredPlayerInfo info, GuildRank rank)
     {
-        return new GuildMemberEntry(info.visibleName, rank, info.whereabouts);
+        return new GuildMemberEntry(info.visibleName, _guildName, rank, info.whereabouts);
     }
 
     protected InviteThrottle getThrottle (int playerId)

@@ -11,12 +11,16 @@ import com.threerings.io.SimpleStreamableObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.data.where.Whereabouts;
+import com.threerings.orth.guild.data.GuildName;
 
 public class PlayerEntry extends SimpleStreamableObject
     implements /* IsSerializable, */ DSet.Entry, Cloneable
 {
     /** The display name of the friend. */
     public PlayerName name;
+
+    /** The name of the guild the player is in, or null. */
+    public GuildName guild;
 
     /** The status of the friend's connection. */
     public Whereabouts whereabouts;
@@ -26,9 +30,10 @@ public class PlayerEntry extends SimpleStreamableObject
     {
     }
 
-    public PlayerEntry (PlayerName name, Whereabouts status)
+    public PlayerEntry (PlayerName name, GuildName guild, Whereabouts status)
     {
         this.name = name;
+        this.guild = guild;
         this.whereabouts = status;
     }
 

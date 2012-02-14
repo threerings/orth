@@ -16,6 +16,7 @@ import com.threerings.presents.dobj.DSet_Entry;
 
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.Whereabouts;
+import com.threerings.orth.guild.data.GuildName;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
@@ -35,12 +36,15 @@ public class PlayerEntry extends SimpleStreamableObject
 // GENERATED STREAMING START
     public var name :PlayerName;
 
+    public var guild :GuildName;
+
     public var whereabouts :Whereabouts;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         name = ins.readObject(PlayerName);
+        guild = ins.readObject(GuildName);
         whereabouts = ins.readObject(Whereabouts);
     }
 
@@ -48,6 +52,7 @@ public class PlayerEntry extends SimpleStreamableObject
     {
         super.writeObject(out);
         out.writeObject(name);
+        out.writeObject(guild);
         out.writeObject(whereabouts);
     }
 

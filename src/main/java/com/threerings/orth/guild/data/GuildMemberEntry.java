@@ -12,9 +12,9 @@ public class GuildMemberEntry extends PlayerEntry
 {
     public GuildRank rank;
 
-    public GuildMemberEntry (PlayerName name, GuildRank rank, Whereabouts abouts)
+    public GuildMemberEntry (PlayerName name, GuildName guild, GuildRank rank, Whereabouts abouts)
     {
-        super(name, abouts);
+        super(name, guild, abouts);
 
         this.rank = rank;
     }
