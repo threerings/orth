@@ -19,4 +19,7 @@ public interface GuildCodes extends InvocationCodes
 
     /** Error thrown when attempting to disband a group with other members. */
     public static final String E_GUILD_HAS_OTHER_MEMBERS = "e.guild_has_other_members";
+
+    /** Error thrown when the player tries to create a guild that already exists. */
+    public static final String E_GUILD_ALREADY_EXISTS = "e.guild_already_exists";
 }
