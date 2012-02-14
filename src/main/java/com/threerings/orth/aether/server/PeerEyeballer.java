@@ -93,6 +93,7 @@ public class PeerEyeballer
     {
         data.authName = (AetherAuthName) aetherInfo.username;
         data.visibleName = aetherInfo.visibleName;
+        data.guildName = aetherInfo.guild;
         data.whereabouts = figureWhereabouts(aetherInfo, locusInfo);
     }
 

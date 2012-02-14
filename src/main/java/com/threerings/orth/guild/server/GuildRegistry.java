@@ -21,6 +21,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildMarshaller;
+import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
 import com.threerings.orth.guild.server.persist.GuildRecord;
@@ -82,16 +83,17 @@ public class GuildRegistry extends NodeletRegistry
      * officer's {@code guild} member will be updated to the new hosted location and the result
      * listener notified.
      */
-    public void hostGuild (GuildRecord result, final AetherClientObject officer,
+    public void hostGuild (GuildRecord gRec, final AetherClientObject officer,
         ResultListener<HostedNodelet> rl)
     {
-        _hoster.resolveHosting(officer, new GuildNodelet(result.getGuildId()),
+        final GuildName gName = new GuildName(gRec.getName(), gRec.getGuildId());
+        _hoster.resolveHosting(officer, new GuildNodelet(gName.getGuildId()),
             new Resulting<HostedNodelet>(rl) {
                 @Override public void requestCompleted (HostedNodelet result) {
                     officer.startTransaction();
                     try {
                         officer.setGuild(result); // Whoo, all done!
-                        officer.setGuildId(((GuildNodelet)result.nodelet).guildId);
+                        officer.setGuildName(gName);
                     } finally {
                         officer.commitTransaction();
                     }
@@ -99,7 +101,6 @@ public class GuildRegistry extends NodeletRegistry
                 }
             });
     }
-
 
     /**
      * Invoke the given guild request on the appropriate guild manager, wherever it may be in the

@@ -15,6 +15,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.PartyObjectAddress;
 
@@ -32,7 +33,7 @@ public class AetherClientObject extends ClientObject
 
     public var party :PartyObjectAddress;
 
-    public var guildId :int;
+    public var guildName :GuildName;
 
     public var guild :HostedNodelet;
 
@@ -42,13 +43,13 @@ public class AetherClientObject extends ClientObject
     public var friendsEntryRemoved :Signal = new Signal(FriendEntry);
     public var friendsEntryUpdated :Signal = new Signal(FriendEntry, FriendEntry);
     public var partyChanged :Signal = new Signal(PartyObjectAddress, PartyObjectAddress);
-    public var guildIdChanged :Signal = new Signal(int, int);
+    public var guildNameChanged :Signal = new Signal(GuildName, GuildName);
     public var guildChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
 
     public static const PLAYER_NAME :String = "playerName";
     public static const FRIENDS :String = "friends";
     public static const PARTY :String = "party";
-    public static const GUILD_ID :String = "guildId";
+    public static const GUILD_NAME :String = "guildName";
     public static const GUILD :String = "guild";
 
     override public function readObject (ins :ObjectInputStream) :void
@@ -57,7 +58,7 @@ public class AetherClientObject extends ClientObject
         playerName = ins.readObject(PlayerName);
         friends = ins.readObject(DSet);
         party = ins.readObject(PartyObjectAddress);
-        guildId = ins.readInt();
+        guildName = ins.readObject(GuildName);
         guild = ins.readObject(HostedNodelet);
     }
 
@@ -135,8 +136,8 @@ class Signaller
             case "party":
                 signal = _obj.partyChanged;
                 break;
-            case "guildId":
-                signal = _obj.guildIdChanged;
+            case "guildName":
+                signal = _obj.guildNameChanged;
                 break;
             case "guild":
                 signal = _obj.guildChanged;

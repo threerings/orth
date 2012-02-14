@@ -69,7 +69,7 @@ public class AetherClientResolver extends CrowdClientResolver
             _friendRepo.getFriendIds(playerId));
 
         // set the guild id
-        plobj.guildId = _guildRepo.getGuildId(playerId);
+        plobj.guildName = _guildRepo.getGuildName(playerId);
     }
 
     @Override // from ClientResolver
@@ -78,10 +78,10 @@ public class AetherClientResolver extends CrowdClientResolver
         super.finishResolution(clobj);
 
         final AetherClientObject plobj = (AetherClientObject)clobj;
-        if (plobj.guildId != 0) {
-            _guildReg.resolveHosting(clobj, new GuildNodelet(plobj.guildId),
+        if (plobj.guildName != null) {
+            _guildReg.resolveHosting(clobj, new GuildNodelet(plobj.guildName.getGuildId()),
                 new Resulting<HostedNodelet>("HostedNodelet for guild", log,
-                        "player", plobj.who(), "guildId", plobj.guildId) {
+                        "player", plobj.who(), "guildName", plobj.guildName) {
                     @Override public void requestCompleted (HostedNodelet result) {
                         plobj.setGuild(result);
                     }

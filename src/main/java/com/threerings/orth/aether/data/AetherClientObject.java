@@ -11,6 +11,7 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.PartyObjectAddress;
 
@@ -32,9 +33,9 @@ public class AetherClientObject extends ClientObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String PARTY = "party";
 
-    /** The field name of the <code>guildId</code> field. */
+    /** The field name of the <code>guildName</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String GUILD_ID = "guildId";
+    public static final String GUILD_NAME = "guildName";
 
     /** The field name of the <code>guild</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -52,7 +53,7 @@ public class AetherClientObject extends ClientObject
     public PartyObjectAddress party;
 
     /** The id of the guild this player belongs to, or zero if they belong to no guild. */
-    public int guildId;
+    public GuildName guildName;
 
     /** The hosted guild. This may be null if the player is not in a guild or if the guild has
      * not yet been hosted on any server. */
@@ -162,7 +163,7 @@ public class AetherClientObject extends ClientObject
     }
 
     /**
-     * Requests that the <code>guildId</code> field be set to the
+     * Requests that the <code>guildName</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
@@ -170,12 +171,12 @@ public class AetherClientObject extends ClientObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setGuildId (int value)
+    public void setGuildName (GuildName value)
     {
-        int ovalue = this.guildId;
+        GuildName ovalue = this.guildName;
         requestAttributeChange(
-            GUILD_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
-        this.guildId = value;
+            GUILD_NAME, value, ovalue);
+        this.guildName = value;
     }
 
     /**

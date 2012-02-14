@@ -6,6 +6,7 @@ package com.threerings.orth.guild.server.persist;
 
 import java.util.List;
 
+import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.guild.data.GuildRank;
 
 /**
@@ -16,7 +17,7 @@ public interface GuildRepository
     /**
      * Gets the id of the guild that the given player belongs to. Zero for none.
      */
-    int getGuildId (int playerId);
+    GuildName getGuildName (int playerId);
 
     /**
      * Gets the guild record for the given guild id.

@@ -10,6 +10,7 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 import com.samskivert.util.ResultListener;
+import com.samskivert.util.Tuple;
 
 import com.threerings.util.Resulting;
 
@@ -19,13 +20,12 @@ import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
-import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.AetherMarshaller;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.guild.data.GuildCodes;
-import com.threerings.orth.guild.data.GuildNodelet;
+import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.guild.server.GuildManager;
 import com.threerings.orth.guild.server.GuildRegistry;
 import com.threerings.orth.nodelet.data.HostedNodelet;
@@ -72,8 +72,8 @@ public class AetherManager
         final int playerId = player.getPlayerId();
 
         // they may have joined another guild since they got the invite
-        if (player.guild != null) {
-            if (player.guildId == guildId) {
+        if (player.guildName != null) {
+            if (player.guildName.getGuildId() == guildId) {
                 // in fact, they may have joined this precise one, in which case we're done
                 return;
             }
@@ -82,17 +82,22 @@ public class AetherManager
         }
 
         // delegate to the possibly remote guild manager
-        _guildReg.invokeRemoteRequest(guildId, new NodeletRegistry.Request<HostedNodelet>() {
+        _guildReg.invokeRemoteRequest(guildId,
+            new NodeletRegistry.Request<Tuple<GuildName, HostedNodelet>>() {
             @Override public void execute (NodeletManager manager,
-                    ResultListener<HostedNodelet> rl) {
+                    ResultListener<Tuple<GuildName, HostedNodelet>> rl) {
+                GuildManager gMgr = (GuildManager) manager;
+                Tuple<GuildName, HostedNodelet> result =
+                    Tuple.newTuple(gMgr.getGuildName(), gMgr.getNodelet());
+
                 ((GuildManager)manager).acceptInvite(senderId, playerId,
-                        new Resulting<Void>(rl, Functions.constant(manager.getNodelet())));
+                    new Resulting<Void>(rl, Functions.constant(result)));
             }
 
-        }, new Resulting<HostedNodelet>(lner) {
-            @Override public void requestCompleted (HostedNodelet result) {
-                player.setGuildId(((GuildNodelet)result.nodelet).guildId);
-                player.setGuild(result);
+        }, new Resulting<Tuple<GuildName, HostedNodelet>>(lner) {
+            @Override public void requestCompleted (Tuple<GuildName, HostedNodelet> result) {
+                player.setGuildName(result.left);
+                player.setGuild(result.right);
             }
         });
     }

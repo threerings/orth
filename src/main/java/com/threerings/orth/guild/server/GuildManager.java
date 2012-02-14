@@ -27,7 +27,6 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
-import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.PeeredPlayerInfo;
@@ -45,6 +44,7 @@ import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildInviteNotification;
 import com.threerings.orth.guild.data.GuildMemberEntry;
+import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
 import com.threerings.orth.guild.data.GuildRank;
@@ -66,6 +66,32 @@ import static com.threerings.orth.Log.log;
 public class GuildManager extends NodeletManager
     implements GuildProvider, GuildCodes, SpeakProvider
 {
+    @Override
+    public void didInit ()
+    {
+        _guildObj = ((GuildObject)_sharedObject);
+        _guildId = ((GuildNodelet)_nodelet.nodelet).guildId;
+
+        // add the Orth speak service for this guild
+        _guildObj.guildChatService = _invmgr.registerProvider(this, SpeakMarshaller.class);
+
+        _eyeballer.playerLoggedOn.connect(new Listener1<PeeredPlayerInfo>() {
+            @Override public void apply (PeeredPlayerInfo info) {
+                updateEntry(info.authName.getId(), info);
+            }
+        });
+        _eyeballer.playerLoggedOff.connect(new Listener1<AetherAuthName>() {
+            @Override public void apply (AetherAuthName username) {
+                updateEntry(username.getId(), null);
+            }
+        });
+        _eyeballer.playerInfoChanged.connect(new Listener1<PeeredPlayerInfo>() {
+            @Override public void apply (PeeredPlayerInfo info) {
+                updateEntry(info.authName.getId(), info);
+            }
+        });
+    }
+
     @Override
     public boolean prepare (final ResultListener<Void> rl)
     {
@@ -102,36 +128,23 @@ public class GuildManager extends NodeletManager
 
                 _guildObj.setName(_guild.getName());
                 _guildObj.setMembers(DSet.newDSet(entries));
+
+                _guildName = new GuildName(_guild.getName(), _guild.getGuildId());
+
                 rl.requestCompleted(null);
             }
         });
         return true;
     }
 
-    @Override
-    public void didInit ()
+    public int getGuildId ()
     {
-        _guildObj = ((GuildObject)_sharedObject);
-        _guildId = ((GuildNodelet)_nodelet.nodelet).guildId;
+        return _guildId;
+    }
 
-        // add the Orth speak service for this guild
-        _guildObj.guildChatService = _invmgr.registerProvider(this, SpeakMarshaller.class);
-
-        _eyeballer.playerLoggedOn.connect(new Listener1<PeeredPlayerInfo>() {
-            @Override public void apply (PeeredPlayerInfo info) {
-                updateEntry(info.authName.getId(), info);
-            }
-        });
-        _eyeballer.playerLoggedOff.connect(new Listener1<AetherAuthName>() {
-            @Override public void apply (AetherAuthName username) {
-                updateEntry(username.getId(), null);
-            }
-        });
-        _eyeballer.playerInfoChanged.connect(new Listener1<PeeredPlayerInfo>() {
-            @Override public void apply (PeeredPlayerInfo info) {
-                updateEntry(info.authName.getId(), info);
-            }
-        });
+    public GuildName getGuildName ()
+    {
+        return _guildName;
     }
 
     // from SpeakRouter
@@ -358,7 +371,7 @@ public class GuildManager extends NodeletManager
             @Override protected void execute (AetherClientObject player) {
                 player.startTransaction();
                 try {
-                    player.setGuildId(0);
+                    player.setGuildName(null);
                     player.setGuild(null);
                 } finally {
                     player.commitTransaction();
@@ -433,8 +446,9 @@ public class GuildManager extends NodeletManager
         return throttle;
     }
 
-    protected GuildObject _guildObj;
     protected int _guildId;
+    protected GuildObject _guildObj;
+    protected GuildName _guildName;
     protected Map<Integer, InviteThrottle> _invitations;
 
     protected static final Predicate<GuildMemberEntry> IS_OFFICER =
