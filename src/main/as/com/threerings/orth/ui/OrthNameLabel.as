@@ -45,7 +45,7 @@ public class OrthNameLabel extends Sprite
     public function update (info :OccupantInfo) :void
     {
         TextFieldUtil.updateText(_label, info.username.toString());
-        var guildName :String = null;
+        var guildName :String = "";
         if ((info is SocializerInfo) && SocializerInfo(info).guild != null) {
             _guild.visible = true;
             guildName = "<" + SocializerInfo(info).guild.toString() + ">";
