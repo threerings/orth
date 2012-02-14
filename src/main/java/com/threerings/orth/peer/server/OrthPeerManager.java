@@ -267,6 +267,7 @@ public abstract class OrthPeerManager extends PeerManager
         if (clobj.username instanceof AetherAuthName) {
             AetherClientObject aetherObj = (AetherClientObject) clobj;
             orthInfo.visibleName = aetherObj.playerName;
+            orthInfo.guild = aetherObj.guildName;
         }
         orthInfo.whereabouts = Whereabouts.ONLINE;
 
