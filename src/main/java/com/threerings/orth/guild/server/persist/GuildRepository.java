@@ -24,6 +24,11 @@ public interface GuildRepository
     GuildRecord getGuild (int guildId);
 
     /**
+     * Gets the guild record with the given name.
+     */
+    GuildRecord getGuild (String name);
+
+    /**
      * Gets the members of the guild with the given guild id.
      */
     List<GuildMemberRecord> getGuildMembers (int guildId);

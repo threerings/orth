@@ -16,8 +16,10 @@ import com.threerings.util.Resulting;
 import com.threerings.presents.annotation.BlockingThread;
 import com.threerings.presents.annotation.MainInvoker;
 import com.threerings.presents.dobj.DObject;
+import com.threerings.presents.server.InvocationException;
 
 import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildMarshaller;
 import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
@@ -28,8 +30,6 @@ import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.server.OrthDeploymentConfig;
-
-import static com.threerings.orth.Log.log;
 
 /**
  * A nodelet registry configured for handling guild clients.
@@ -52,9 +52,12 @@ public class GuildRegistry extends NodeletRegistry
     public void createAndHostGuild (final String name, final AetherClientObject officer,
             final ResultListener<HostedNodelet> rl)
     {
-        _invoker.postUnit(new Resulting<GuildRecord>(
-                "Creating guild", log, "officer", officer.who()) {
+        // note that this Resulting() is not passed the incoming listener
+        _invoker.postUnit(new Resulting<GuildRecord>("Creating guild") {
             @Override public GuildRecord invokePersist () throws Exception {
+                if (_guildRepo.getGuild(name) != null) {
+                    throw new InvocationException(GuildCodes.E_GUILD_ALREADY_EXISTS);
+                }
                 GuildRecord rec = _guildRepo.createGuild(name, officer.getPlayerId());
                 didCreateGuild(officer.getPlayerId(), rec.getGuildId());
                 return rec;
