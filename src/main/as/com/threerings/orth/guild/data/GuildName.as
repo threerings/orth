@@ -19,6 +19,11 @@ public class GuildName extends Name
     implements DSet_Entry
 {
 // GENERATED CLASSDECL END
+    public function get guildId () :int
+    {
+        return _id;
+    }
+
     public function getKey () :Object
     {
         return _id;
