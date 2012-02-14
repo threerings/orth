@@ -11,6 +11,7 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.util.Joiner;
 
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.room.data.ActorInfo;
 
 // GENERATED PREAMBLE END
@@ -33,6 +34,11 @@ public class SocializerInfo extends ActorInfo
     public function getScale () :Number
     {
         return _scale;
+    }
+
+    public function get guild () :GuildName
+    {
+        return _guild;
     }
 
     /**
@@ -71,6 +77,7 @@ public class SocializerInfo extends ActorInfo
     {
         super.readObject(ins);
         _scale = ins.readFloat();
+        _guild = ins.readObject(GuildName);
         _partyId = ins.readInt();
         _away = ins.readBoolean();
     }
@@ -79,11 +86,13 @@ public class SocializerInfo extends ActorInfo
     {
         super.writeObject(out);
         out.writeFloat(_scale);
+        out.writeObject(_guild);
         out.writeInt(_partyId);
         out.writeBoolean(_away);
     }
 
     protected var _scale :Number;
+    protected var _guild :GuildName;
     protected var _partyId :int;
     protected var _away :Boolean;
 // GENERATED STREAMING END

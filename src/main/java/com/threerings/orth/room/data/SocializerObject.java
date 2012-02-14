@@ -17,6 +17,7 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.entity.data.Avatar;
+import com.threerings.orth.guild.data.GuildName;
 
 /**
  * Represents an Orth player's in-room incarnation.
@@ -27,6 +28,10 @@ public class SocializerObject extends ActorObject
     /** The field name of the <code>name</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String NAME = "name";
+
+    /** The field name of the <code>guild</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String GUILD = "guild";
 
     /** The field name of the <code>avatar</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -44,6 +49,9 @@ public class SocializerObject extends ActorObject
     /** The display name of this socializer. While this name is not the same as that in
         PlayerObject.playerName, their numerical ID's will always be the same. */
     public PlayerName name;
+
+    /** The name of this player's guild, or null. */
+    public GuildName guild;
 
     /** The avatar that the user has chosen, or null for guests. */
     public Avatar avatar;
@@ -104,6 +112,23 @@ public class SocializerObject extends ActorObject
         requestAttributeChange(
             NAME, value, ovalue);
         this.name = value;
+    }
+
+    /**
+     * Requests that the <code>guild</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setGuild (GuildName value)
+    {
+        GuildName ovalue = this.guild;
+        requestAttributeChange(
+            GUILD, value, ovalue);
+        this.guild = value;
     }
 
     /**

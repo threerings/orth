@@ -5,6 +5,7 @@
 package com.threerings.orth.room.data;
 
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.guild.data.GuildName;
 
 /**
  * Contains published information about a player in a room.
@@ -20,6 +21,7 @@ public class SocializerInfo extends ActorInfo
         }
         public boolean update (SocializerInfo info) {
             info.updateMedia(_mobj);
+            info.updateGuild(_mobj.guild);
             return true;
         }
         protected SocializerObject _mobj;
@@ -29,6 +31,7 @@ public class SocializerInfo extends ActorInfo
     {
         super(sobj);
         // configure our various bits
+        _guild = sobj.guild;
         // updatePartyId(sobj.partyId);
         updateIsAway(sobj);
     }
@@ -76,6 +79,11 @@ public class SocializerInfo extends ActorInfo
         return _scale;
     }
 
+    public void updateGuild (GuildName guild)
+    {
+        _guild = guild;
+    }
+
     // from PartyOccupantInfo
     public boolean updatePartyId (int partyId)
     {
@@ -103,10 +111,11 @@ public class SocializerInfo extends ActorInfo
     {
         super.toString(buf);
         buf.append(", scale=").append(_scale).append(", away=").append(_away);
-        buf.append(", party=").append(_partyId);
+        buf.append(", party=").append(_partyId).append(", guild=").append(_guild);
     }
 
     protected float _scale;
+    protected GuildName _guild;
     protected int _partyId;
     protected boolean _away;
 }

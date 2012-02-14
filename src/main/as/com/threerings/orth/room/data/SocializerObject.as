@@ -13,6 +13,7 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.entity.data.Avatar;
+import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.room.data.ActorObject;
 
 // GENERATED PREAMBLE END
@@ -25,6 +26,8 @@ public class SocializerObject extends ActorObject
 // GENERATED STREAMING START
     public var name :PlayerName;
 
+    public var guild :GuildName;
+
     public var avatar :Avatar;
 
     public var avatarCache :DSet; /* of */ Avatar;
@@ -32,6 +35,7 @@ public class SocializerObject extends ActorObject
     public var walkingId :int;
 
     public var nameChanged :Signal = new Signal(PlayerName, PlayerName);
+    public var guildChanged :Signal = new Signal(GuildName, GuildName);
     public var avatarChanged :Signal = new Signal(Avatar, Avatar);
     public var avatarCacheChanged :Signal = new Signal(DSet, DSet);
     public var avatarCacheEntryAdded :Signal = new Signal(Avatar);
@@ -40,6 +44,7 @@ public class SocializerObject extends ActorObject
     public var walkingIdChanged :Signal = new Signal(int, int);
 
     public static const NAME :String = "name";
+    public static const GUILD :String = "guild";
     public static const AVATAR :String = "avatar";
     public static const AVATAR_CACHE :String = "avatarCache";
     public static const WALKING_ID :String = "walkingId";
@@ -48,6 +53,7 @@ public class SocializerObject extends ActorObject
     {
         super.readObject(ins);
         name = ins.readObject(PlayerName);
+        guild = ins.readObject(GuildName);
         avatar = ins.readObject(Avatar);
         avatarCache = ins.readObject(DSet);
         walkingId = ins.readInt();
@@ -97,6 +103,9 @@ class Signaller
         switch (event.getName()) {
             case "name":
                 signal = _obj.nameChanged;
+                break;
+            case "guild":
+                signal = _obj.guildChanged;
                 break;
             case "avatar":
                 signal = _obj.avatarChanged;
