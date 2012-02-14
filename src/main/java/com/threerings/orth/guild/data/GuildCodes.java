@@ -22,4 +22,7 @@ public interface GuildCodes extends InvocationCodes
 
     /** Error thrown when the player tries to create a guild that already exists. */
     public static final String E_GUILD_ALREADY_EXISTS = "e.guild_already_exists";
+
+    /** Error thrown for an unacceptable guild name. */
+    public static final String E_BAD_GUILD_NAME = "e.bad_guild_name";
 }

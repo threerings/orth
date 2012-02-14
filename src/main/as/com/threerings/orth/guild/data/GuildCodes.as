@@ -17,5 +17,8 @@ public class GuildCodes extends InvocationCodes
 
     /** Error thrown when the player tries to create a guild that already exists. */
     public static const E_GUILD_ALREADY_EXISTS :String = "e.guild_already_exists";
+
+    /** Error thrown for an unacceptable guild name. */
+    public static const E_BAD_GUILD_NAME :String = "e.bad_guild_name";
 }
 }
