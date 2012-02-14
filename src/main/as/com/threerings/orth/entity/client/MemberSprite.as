@@ -10,6 +10,7 @@ import com.threerings.util.CommandEvent;
 
 import com.threerings.crowd.data.OccupantInfo;
 
+import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.room.client.RoomContext;
 import com.threerings.orth.room.client.RoomController;
 import com.threerings.orth.room.data.SocializerInfo;
@@ -88,8 +89,18 @@ public class MemberSprite extends ActorSprite
     override protected function isNameChangeRequired (oldInfo :OccupantInfo,
                                                       newInfo :OccupantInfo) :Boolean
     {
-        return super.isNameChangeRequired(oldInfo, newInfo) || // is true if oldInfo == null
-            (SocializerInfo(oldInfo).isAway() != SocializerInfo(newInfo).isAway());
+        if (super.isNameChangeRequired(oldInfo, newInfo)) {
+            return true;
+        }
+
+        const oldGuild :GuildName = SocializerInfo(oldInfo).guild;
+        const newGuild :GuildName = SocializerInfo(newInfo).guild;
+        if (((oldGuild != null) ? oldGuild.guildId : -1) !=
+            ((newGuild != null) ? newGuild.guildId : -1)) {
+            return true;
+        }
+
+        return (SocializerInfo(oldInfo).isAway() != SocializerInfo(newInfo).isAway());
     }
 
     // from OccupantSprite

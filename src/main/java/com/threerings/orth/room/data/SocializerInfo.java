@@ -21,6 +21,18 @@ public class SocializerInfo extends ActorInfo
         }
         public boolean update (SocializerInfo info) {
             info.updateMedia(_mobj);
+            return true;
+        }
+        protected SocializerObject _mobj;
+    }
+
+    /** Used to update our guild info when that changes. */
+    public static class GuildUpdater implements Updater<SocializerInfo>
+    {
+        public GuildUpdater (SocializerObject mobj) {
+            _mobj = mobj;
+        }
+        public boolean update (SocializerInfo info) {
             info.updateGuild(_mobj.guild);
             return true;
         }
