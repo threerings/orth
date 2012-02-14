@@ -19,6 +19,7 @@ import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
+import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.AetherMarshaller;
@@ -50,7 +51,7 @@ public class AetherManager
     public void createGuild (AetherClientObject caller, String name, ConfirmListener lner)
         throws InvocationException
     {
-        // TODO: permissions and money
+        // TODO: permissions?
         AetherClientObject player = caller;
         if (player.guild != null) {
             throw new InvocationException(GuildCodes.E_PLAYER_ALREADY_IN_GUILD);
@@ -69,6 +70,16 @@ public class AetherManager
     {
         final AetherClientObject player = caller;
         final int playerId = player.getPlayerId();
+
+        // they may have joined another guild since they got the invite
+        if (player.guild != null) {
+            if (player.guildId == guildId) {
+                // in fact, they may have joined this precise one, in which case we're done
+                return;
+            }
+            // otherwise scream and wail
+            throw new InvocationException(GuildCodes.E_PLAYER_ALREADY_IN_GUILD);
+        }
 
         // delegate to the possibly remote guild manager
         _guildReg.invokeRemoteRequest(guildId, new NodeletRegistry.Request<HostedNodelet>() {

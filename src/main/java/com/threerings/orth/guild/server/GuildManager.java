@@ -27,6 +27,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
+import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.PeeredPlayerInfo;
@@ -146,7 +147,7 @@ public class GuildManager extends NodeletManager
     {
         final GuildMemberEntry sender = requireMember(caller);
         if (sender.rank != GuildRank.OFFICER) {
-            log.warning("Non officer attempting to send guild invite", "sender", sender,
+            log.warning("Non-officer attempting to send guild invite", "sender", sender,
                 "targetId", targetId);
             throw new InvocationException(INTERNAL_ERROR);
         }
@@ -162,6 +163,12 @@ public class GuildManager extends NodeletManager
         _peerMan.invokeSingleNodeRequest(new AetherNodeRequest(targetId) {
             @Override protected void execute (AetherClientObject target,
                 InvocationService.ResultListener listener) {
+                // now that we're on their vault server, we can check if they're in a guild
+                if (target.guild != null &&
+                    ((GuildNodelet) target.guild.nodelet).guildId != _guildId) {
+                    listener.requestFailed(GuildCodes.E_PLAYER_ALREADY_IN_GUILD);
+                    return;
+                }
                 CommSender.receiveComm(target, new GuildInviteNotification(
                     sender.name, target.playerName, guildName, guildId));
                 listener.requestProcessed(null);
@@ -308,6 +315,7 @@ public class GuildManager extends NodeletManager
             rl.requestFailed(null);
             return;
         }
+
         final GuildMemberEntry newEntry = toMemberEntry(
             _eyeballer.getPlayerData(newMemberId), GuildRank.MEMBER);
 
