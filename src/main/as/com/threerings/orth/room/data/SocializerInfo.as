@@ -69,7 +69,7 @@ public class SocializerInfo extends ActorInfo
     override protected function toStringJoiner (j :Joiner): void
     {
         super.toStringJoiner(j);
-        j.add("scale", _scale, "partyId", _partyId, "away", _away);
+        j.add("scale", _scale, "partyId", _partyId, "away", _away, "guild", _guild);
     }
 
 // GENERATED STREAMING START
