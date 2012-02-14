@@ -184,9 +184,8 @@ public class GuildDirector extends NodeletDirector
     {
         if (entry.name.id == _octx.myId) {
             log.warning("Local player removed from guild, weird");
-        } else {
-            notify(entry, GuildMemberNotificationComm.NOTE_LEAVE);
         }
+        notify(entry, GuildMemberNotificationComm.NOTE_LEAVE);
     }
 
     protected function memberUpdated (entry :GuildMemberEntry, old :GuildMemberEntry) :void
