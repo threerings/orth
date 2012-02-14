@@ -14,6 +14,7 @@ import com.samskivert.util.ResultListener;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.EventThread;
+import com.threerings.presents.client.InvocationService.ConfirmListener;
 import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
@@ -46,7 +47,7 @@ public class AetherManager
     }
 
     @Override
-    public void createGuild (AetherClientObject caller, String name, InvocationListener lner)
+    public void createGuild (AetherClientObject caller, String name, ConfirmListener lner)
         throws InvocationException
     {
         // TODO: permissions and money

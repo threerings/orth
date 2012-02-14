@@ -29,6 +29,6 @@ public interface AetherProvider extends InvocationProvider
     /**
      * Handles a {@link AetherService#createGuild} request.
      */
-    void createGuild (AetherClientObject caller, String arg1, InvocationService.InvocationListener arg2)
+    void createGuild (AetherClientObject caller, String arg1, InvocationService.ConfirmListener arg2)
         throws InvocationException;
 }

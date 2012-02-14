@@ -3,8 +3,8 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.aether.client {
-
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ConfirmAdapter;
 
 import com.threerings.orth.client.Listeners;
 
@@ -18,9 +18,9 @@ public class AetherDirector extends AetherDirectorBase
         _psvc.acceptGuildInvite(senderId, guildId, Listeners.listener());
     }
 
-    public function createGuild (name :String) :void
+    public function createGuild (name :String, confirmed :Function, failed :Function) :void
     {
-        _psvc.createGuild(name, Listeners.listener());
+        _psvc.createGuild(name, new ConfirmAdapter(confirmed, failed));
     }
 
     override protected function fetchServices (client :Client) :void

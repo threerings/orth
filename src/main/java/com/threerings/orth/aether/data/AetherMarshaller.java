@@ -40,9 +40,9 @@ public class AetherMarshaller extends InvocationMarshaller<AetherClientObject>
     public static final int CREATE_GUILD = 2;
 
     // from interface AetherService
-    public void createGuild (String arg1, InvocationService.InvocationListener arg2)
+    public void createGuild (String arg1, InvocationService.ConfirmListener arg2)
     {
-        ListenerMarshaller listener2 = new ListenerMarshaller();
+        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
         listener2.listener = arg2;
         sendRequest(CREATE_GUILD, new Object[] {
             arg1, listener2

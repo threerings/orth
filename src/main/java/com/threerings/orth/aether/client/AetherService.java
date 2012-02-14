@@ -18,7 +18,7 @@ public interface AetherService extends InvocationService<AetherClientObject>
      * successful, the {@link AetherClientObject#guild} member will be set. Otherwise, the listener
      * will be notified of the failure.
      */
-    void createGuild (String name, InvocationListener listener);
+    void createGuild (String name, ConfirmListener listener);
 
     /**
      * Accepts a previously sent guild invitation. The sender must be in the guild and must have

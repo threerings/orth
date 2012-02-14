@@ -5,6 +5,7 @@
 package com.threerings.orth.aether.client {
 
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.client.InvocationService_ConfirmListener;
 import com.threerings.presents.client.InvocationService_InvocationListener;
 
 /**
@@ -16,6 +17,6 @@ public interface AetherService extends InvocationService
     function acceptGuildInvite (arg1 :int, arg2 :int, arg3 :InvocationService_InvocationListener) :void;
 
     // from Java interface AetherService
-    function createGuild (arg1 :String, arg2 :InvocationService_InvocationListener) :void;
+    function createGuild (arg1 :String, arg2 :InvocationService_ConfirmListener) :void;
 }
 }

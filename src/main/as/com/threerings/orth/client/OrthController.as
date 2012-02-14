@@ -209,14 +209,6 @@ public class OrthController extends Controller
     }
 
     /**
-     * Handles CREATE_GUILD.
-     */
-    public function handleCreateGuild (name :String) :void
-    {
-        _aetherDir.createGuild(name);
-    }
-
-    /**
      * Handles the JOIN_PARTY command.
      */
     public function handleJoinParty (address :PartyObjectAddress) :void
