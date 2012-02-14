@@ -4,8 +4,6 @@
 
 package com.threerings.orth.locus.data;
 
-import com.threerings.util.Name;
-
 import com.threerings.orth.data.AuthName;
 
 public class LocusAuthName extends AuthName
