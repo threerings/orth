@@ -30,7 +30,9 @@ public final class NodeletAuthName extends AuthName
     public NodeletAuthName (Class<? extends Nodelet> nclass, String accountName, int id)
     {
         super(accountName, id);
-        _discriminator = nclass.getSimpleName();
+        if (nclass != null) {
+            _discriminator = nclass.getSimpleName();
+        }
     }
 
     /**
