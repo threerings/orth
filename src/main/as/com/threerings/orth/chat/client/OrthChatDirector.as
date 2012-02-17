@@ -3,6 +3,7 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.chat.client {
+
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
@@ -42,13 +43,14 @@ public class OrthChatDirector extends BasicDirector
 {
     public static function buildTellMessage (from :PlayerName, text :String) :UserMessage
     {
-        return buildMessage(from, text, ChatCodes.USER_CHAT_TYPE);
+        return buildMessage(from, MessageBundle.taint(text), ChatCodes.USER_CHAT_TYPE);
     }
 
     public static function buildSpeakMessage (speak :Speak) :UserMessage
     {
-        log.info("Building speak message", "from", speak.from, "msg", speak.message, "localType", speak.localType);
-        return buildMessage(speak.from, speak.message, speak.localType);
+        log.info("Building speak message", "from", speak.from, "msg", speak.message, "localType",
+            speak.localType);
+        return buildMessage(speak.from, MessageBundle.taint(speak.message), speak.localType);
     }
 
     public static function buildMessage (from :PlayerName, text :String, type :String) :UserMessage
