@@ -13,8 +13,10 @@ import java.util.Set;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -81,9 +83,7 @@ public class ChatHistory
     public void file (Tell tell, Date timestamp)
     {
         // make sure this ends up in the tell history both of sender and recipient
-        doFile(tell.getFrom(), Collections.singleton(tell.getTo().getId()),
-            tell.getMessage(), timestamp);
-        doFile(tell.getTo(), Collections.singleton(tell.getFrom().getId()),
+        doFile(tell.getFrom(), ImmutableSet.of(tell.getFrom().getId(), tell.getTo().getId()),
             tell.getMessage(), timestamp);
     }
 
