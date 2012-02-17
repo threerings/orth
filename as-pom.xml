@@ -25,7 +25,7 @@
     <dependency>
       <groupId>com.threerings</groupId>
       <artifactId>naryalib</artifactId>
-      <version>1.10.2</version>
+      <version>1.12-SNAPSHOT</version>
       <type>swc</type>
     </dependency>
     <dependency>
