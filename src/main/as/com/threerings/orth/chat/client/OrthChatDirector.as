@@ -8,6 +8,8 @@ import flashx.funk.ioc.inject;
 import com.threerings.util.Log;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
+import com.threerings.util.MessageBundle;
+import com.threerings.util.MessageManager;
 import com.threerings.util.ObserverList;
 
 import com.threerings.presents.client.BasicDirector;
@@ -184,9 +186,12 @@ public class OrthChatDirector extends BasicDirector
 
     public function displayFeedback (bundle :String, msg :String) :void
     {
-        dispatchPreparedMessage(
-            new SystemMessage(Msgs.CHAT.xlate(msg), bundle, SystemMessage.FEEDBACK));
+        const msgBundle :MessageBundle = _msgMgr.getBundle(bundle);
+        dispatchPreparedMessage(new SystemMessage(
+            msgBundle.xlate(msg), bundle, SystemMessage.FEEDBACK));
     }
+
+    protected const _msgMgr :MessageManager = inject(MessageManager);
 
     // from MessageListener
     public function messageReceived (event :MessageEvent) :void
