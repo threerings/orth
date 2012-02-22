@@ -17,7 +17,6 @@ import com.threerings.presents.server.SessionFactory;
 
 import com.threerings.orth.room.data.RoomAuthName;
 import com.threerings.orth.room.data.RoomCredentials;
-import com.threerings.orth.room.server.RoomSession;
 
 @Singleton
 public class RoomSessionFactory extends SessionFactory

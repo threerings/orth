@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.threerings.crowd.server.BodyLocal;
 
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.server.util.InviteThrottle;
 
 /**

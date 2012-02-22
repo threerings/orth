@@ -6,8 +6,6 @@ package com.threerings.orth.data;
 
 import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.orth.data.MediaDesc;
-
 /**
  * An implementation base for certain kinds of {@link MediaDesc}.
  */

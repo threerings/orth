@@ -9,6 +9,7 @@ import com.google.inject.Singleton;
 
 import com.threerings.presents.annotation.EventThread;
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.server.ClientManager;
 
 import com.threerings.orth.aether.data.AetherAuthName;

@@ -4,6 +4,8 @@
 
 package com.threerings.orth.room.data;
 
+import com.threerings.crowd.data.OccupantInfo;
+
 /**
  * Provides a way for the {@link MemberObject} and {@link PetObject} to obtain information from the
  * RoomManager when configuring their {@link OccupantInfo}.

@@ -5,6 +5,7 @@
 package com.threerings.orth.nodelet.data;
 
 import com.threerings.orth.data.TokenCredentials;
+import com.threerings.orth.nodelet.server.NodeletRegistry;
 
 /**
  * Credentials for logging into a nodelet server. When the server receives a nodelet credentials
