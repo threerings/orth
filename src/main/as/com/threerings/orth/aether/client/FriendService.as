@@ -16,6 +16,9 @@ public interface FriendService extends InvocationService
     function acceptFriendshipRequest (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface FriendService
+    function endFriendship (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
+
+    // from Java interface FriendService
     function requestFriendship (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
 }
 }

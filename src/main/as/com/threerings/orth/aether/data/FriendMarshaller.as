@@ -35,8 +35,21 @@ public class FriendMarshaller extends InvocationMarshaller
         ]);
     }
 
+    /** The method id used to dispatch <code>endFriendship</code> requests. */
+    public static const END_FRIENDSHIP :int = 2;
+
+    // from interface FriendService
+    public function endFriendship (arg1 :int, arg2 :InvocationService_InvocationListener) :void
+    {
+        var listener2 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(END_FRIENDSHIP, [
+            Integer.valueOf(arg1), listener2
+        ]);
+    }
+
     /** The method id used to dispatch <code>requestFriendship</code> requests. */
-    public static const REQUEST_FRIENDSHIP :int = 2;
+    public static const REQUEST_FRIENDSHIP :int = 3;
 
     // from interface FriendService
     public function requestFriendship (arg1 :int, arg2 :InvocationService_InvocationListener) :void

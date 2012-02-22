@@ -126,6 +126,33 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         });
     }
 
+    public void endFriendship (final AetherClientObject caller, final int playerId,
+        InvocationListener listener)
+        throws InvocationException
+    {
+        if (!caller.friends.containsKey(playerId)) {
+            throw new InvocationException(AetherCodes.USER_IS_NOT_FRIEND);
+        }
+
+        if (!_friendRepo.removeFriendship(caller.getPlayerId(), playerId)) {
+            // We crapped out removing the friendship from the db, so just say we had a problem
+            // and leave it alone. They'll try again if they really hate this person, and hopefully
+            // it'll stick
+            throw new InvocationException(AetherCodes.E_INTERNAL_ERROR);
+        }
+
+        // I don't like you
+        caller.removeFromFriends(playerId);
+
+        // You don't like me
+        _peerMgr.invokeNodeAction(new AetherNodeAction(playerId) {
+            @Override
+            protected void execute (AetherClientObject memobj) {
+                memobj.removeFromFriends(caller.getPlayerId());
+            }
+        });
+    }
+
     public void acceptFriendshipRequest (
         AetherClientObject caller, final int senderId, final InvocationListener listener)
         throws InvocationException

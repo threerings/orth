@@ -36,8 +36,21 @@ public class FriendMarshaller extends InvocationMarshaller<AetherClientObject>
         });
     }
 
+    /** The method id used to dispatch {@link #endFriendship} requests. */
+    public static final int END_FRIENDSHIP = 2;
+
+    // from interface FriendService
+    public void endFriendship (int arg1, InvocationService.InvocationListener arg2)
+    {
+        ListenerMarshaller listener2 = new ListenerMarshaller();
+        listener2.listener = arg2;
+        sendRequest(END_FRIENDSHIP, new Object[] {
+            Integer.valueOf(arg1), listener2
+        });
+    }
+
     /** The method id used to dispatch {@link #requestFriendship} requests. */
-    public static final int REQUEST_FRIENDSHIP = 2;
+    public static final int REQUEST_FRIENDSHIP = 3;
 
     // from interface FriendService
     public void requestFriendship (int arg1, InvocationService.InvocationListener arg2)

@@ -29,4 +29,11 @@ public interface FriendService
      * {@link AetherClientObject#friends} updated.
      */
     void acceptFriendshipRequest (int senderId, InvocationListener listener);
+
+    /**
+     * Ends the friendship between the local player and the specified player. If something goes
+     * awry during the process, the request will fail, otherwise it will remove the record and
+     * both players (if online) will have their {@link AetherClientObject#friends} updated.
+     */
+    void endFriendship (int playerId, InvocationListener listener);
 }

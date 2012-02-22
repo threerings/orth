@@ -27,6 +27,12 @@ public interface FriendProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link FriendService#endFriendship} request.
+     */
+    void endFriendship (AetherClientObject caller, int arg1, InvocationService.InvocationListener arg2)
+        throws InvocationException;
+
+    /**
      * Handles a {@link FriendService#requestFriendship} request.
      */
     void requestFriendship (AetherClientObject caller, int arg1, InvocationService.InvocationListener arg2)
