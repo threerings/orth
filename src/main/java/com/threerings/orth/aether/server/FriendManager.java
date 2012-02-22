@@ -36,6 +36,7 @@ import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.FriendMarshaller;
 import com.threerings.orth.aether.data.FriendshipAcceptance;
 import com.threerings.orth.aether.data.FriendshipRequest;
+import com.threerings.orth.aether.data.FriendshipTermination;
 import com.threerings.orth.aether.data.PeeredPlayerInfo;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.comms.data.CommSender;
@@ -130,7 +131,9 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         InvocationListener listener)
         throws InvocationException
     {
-        if (!caller.friends.containsKey(playerId)) {
+        FriendEntry entry = caller.friends.get(playerId);
+
+        if (entry == null) {
             throw new InvocationException(AetherCodes.USER_IS_NOT_FRIEND);
         }
 
@@ -141,14 +144,18 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
             throw new InvocationException(AetherCodes.E_INTERNAL_ERROR);
         }
 
-        // I don't like you
-        caller.removeFromFriends(playerId);
+        final FriendshipTermination comm = new FriendshipTermination(caller.playerName, entry.name);
 
-        // You don't like me
+        // I don't like you.
+        caller.removeFromFriends(playerId);
+        CommSender.receiveComm(caller, comm);
+
+        // You don't like me.
         _peerMgr.invokeNodeAction(new AetherNodeAction(playerId) {
             @Override
             protected void execute (AetherClientObject memobj) {
                 memobj.removeFromFriends(caller.getPlayerId());
+                CommSender.receiveComm(memobj, comm);
             }
         });
     }

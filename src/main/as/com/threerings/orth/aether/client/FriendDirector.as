@@ -3,6 +3,7 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.aether.client {
+
 import flashx.funk.ioc.inject;
 
 import com.threerings.presents.client.Client;
@@ -10,6 +11,7 @@ import com.threerings.presents.client.Client;
 import com.threerings.orth.aether.data.FriendLogOnOffComm;
 import com.threerings.orth.aether.data.FriendshipAcceptance;
 import com.threerings.orth.aether.data.FriendshipRequest;
+import com.threerings.orth.aether.data.FriendshipTermination;
 import com.threerings.orth.client.Listeners;
 import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.data.FriendEntry;
@@ -20,10 +22,16 @@ public class FriendDirector extends AetherDirectorBase
     FriendEntry;
     FriendshipRequest;
     FriendshipAcceptance;
+    FriendshipTermination;
 
     public function inviteFriend (invitee :PlayerName) :void
     {
         _fsvc.requestFriendship(invitee.id, Listeners.listener());
+    }
+
+    public function removeFriend (invitee :PlayerName) :void
+    {
+        _fsvc.endFriendship(invitee.id, Listeners.listener());
     }
 
     public function acceptFriendInvite (friendId :int) :void
