@@ -144,18 +144,15 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
             throw new InvocationException(AetherCodes.E_INTERNAL_ERROR);
         }
 
-        final FriendshipTermination comm = new FriendshipTermination(caller.playerName, entry.name);
-
         // I don't like you.
         caller.removeFromFriends(playerId);
-        CommSender.receiveComm(caller, comm);
+        CommSender.receiveComm(caller, new FriendshipTermination(caller.playerName, entry.name));
 
         // You don't like me.
         _peerMgr.invokeNodeAction(new AetherNodeAction(playerId) {
             @Override
             protected void execute (AetherClientObject memobj) {
                 memobj.removeFromFriends(caller.getPlayerId());
-                CommSender.receiveComm(memobj, comm);
             }
         });
     }
