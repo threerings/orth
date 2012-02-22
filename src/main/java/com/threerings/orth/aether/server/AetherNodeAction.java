@@ -28,7 +28,7 @@ public abstract class AetherNodeAction extends PeerManager.NodeAction
     @Override // from PeerManager.NodeAction
     public boolean isApplicable (NodeObject nodeobj)
     {
-        return nodeobj.clients.containsKey( AetherAuthName.makeKey(_playerId));
+        return nodeobj.clients.containsKey(AetherAuthName.makeKey(_playerId));
     }
 
     @Override // from PeerManager.NodeAction

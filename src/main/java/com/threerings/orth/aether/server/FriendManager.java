@@ -196,12 +196,12 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
 
                 // persist: friends4evah
                 _invoker.postRunnable(new Runnable() {
-                   @Override public void run () {
-                       _friendRepo.addFriendship(acceptingPlayer.getPlayerId(), senderId);
-                   }
-                   @Override public String toString () {
+                    @Override public void run () {
+                        _friendRepo.addFriendship(acceptingPlayer.getPlayerId(), senderId);
+                    }
+                    @Override public String toString () {
                        return "Add friends";
-                   }
+                    }
                 });
             }
             @Override public void requestFailed (String cause) {
