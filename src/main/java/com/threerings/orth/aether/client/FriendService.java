@@ -25,7 +25,7 @@ public interface FriendService
     /**
      * Accepts a previously sent friend request notification. If the player is offline, the request
      * will fail. If no previous request was sent, an error will be logged on the server and the
-     * request will fail. Othwerise, the request should succeed and both players will have their
+     * request will fail. Otherwise, the request should succeed and both players will have their
      * {@link AetherClientObject#friends} updated.
      */
     void acceptFriendshipRequest (int senderId, InvocationListener listener);
