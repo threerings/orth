@@ -76,6 +76,18 @@ public class AetherClientObject extends ClientObject
         return friends.containsKey(memberId);
     }
 
+    /**
+     * Returns an orth-appropriate short string identifying this aether client.
+     */
+    @Override
+    public String who ()
+    {
+        if (playerName != null) {
+            return "(" + playerName.toString() + ":" + playerName.getId() + ")";
+        }
+        return super.who() + " [playerName = null]";
+    }
+
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>playerName</code> field be set to the
