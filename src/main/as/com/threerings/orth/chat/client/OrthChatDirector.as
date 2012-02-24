@@ -48,8 +48,6 @@ public class OrthChatDirector extends BasicDirector
 
     public static function buildSpeakMessage (speak :Speak) :UserMessage
     {
-        log.info("Building speak message", "from", speak.from, "msg", speak.message, "localType",
-            speak.localType);
         return buildMessage(speak.from, MessageBundle.taint(speak.message), speak.localType);
     }
 
