@@ -15,6 +15,7 @@ import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.BlockingThread;
 import com.threerings.presents.annotation.MainInvoker;
+import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.server.InvocationException;
 
@@ -43,6 +44,18 @@ public class GuildRegistry extends NodeletRegistry
         super(GuildNodelet.class, config.getGuildHost(), config.getGuildPorts(), injector);
         setManagerClass(getGuildManagerClass(), GuildObject.GUILD_SERVICE, GuildMarshaller.class);
         setPeeredHostingStrategy(OrthNodeObject.HOSTED_GUILDS, injector);
+    }
+
+    /**
+     * Checks the proposed name against whatever rules are appropriate, throwing an
+     * InvocationException describing why we don't like it if we don't.
+     */
+    public void validateGuildName (String name)
+        throws InvocationException
+    {
+        if (name == null || name.length() == 0) {
+            throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
+        }
     }
 
     /**

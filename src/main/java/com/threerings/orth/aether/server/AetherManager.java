@@ -56,10 +56,8 @@ public class AetherManager
         if (player.guild != null) {
             throw new InvocationException(GuildCodes.E_PLAYER_ALREADY_IN_GUILD);
         }
-        if (name.length() == 0) {
-            throw new InvocationException(E_INTERNAL_ERROR);
-        }
 
+        _guildReg.validateGuildName(name);
         _guildReg.createAndHostGuild(name, player, new Resulting<HostedNodelet>(lner));
     }
 
