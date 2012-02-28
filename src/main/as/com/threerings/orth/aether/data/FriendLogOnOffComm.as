@@ -5,7 +5,7 @@
 // GENERATED PREAMBLE START
 package com.threerings.orth.aether.data {
 
-import com.threerings.orth.comms.data.OneToOneComm;
+import com.threerings.orth.comms.data.ToOneComm;
 import com.threerings.orth.data.PlayerName;
 
 /**
@@ -13,18 +13,13 @@ import com.threerings.orth.data.PlayerName;
  * is triggered on the client.
  */
 public class FriendLogOnOffComm
-    implements OneToOneComm
+    implements ToOneComm
 {
     public function FriendLogOnOffComm (from :PlayerName, to :PlayerName, logon :Boolean)
     {
         _from = from;
         _to = to;
         _logon = logon;
-    }
-
-    public function get fromMessage () :String
-    {
-        return null;
     }
 
     public function get toMessage () :String
@@ -35,11 +30,6 @@ public class FriendLogOnOffComm
     public function get to () :PlayerName
     {
         return _to;
-    }
-
-    public function get from () :PlayerName
-    {
-        return _from;
     }
 
     protected var _from :PlayerName;
