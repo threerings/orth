@@ -151,7 +151,8 @@ public class GuildManager extends NodeletManager
     @Override public void speak (ClientObject caller, String msg, InvocationListener listener)
         throws InvocationException
     {
-        _chatMan.sendSpeak(_guildObj, requireMember(caller).name, msg, OrthChatCodes.GUILD_CHAT_TYPE, listener);
+        _chatMan.sendSpeak(_guildObj, requireMember(caller).name, msg,
+            OrthChatCodes.GUILD_CHAT_TYPE, listener);
     }
 
     @Override
