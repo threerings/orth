@@ -203,6 +203,8 @@ public class GuildManager extends NodeletManager
         }
         final GuildMemberEntry target = lookupMember(targetId);
         if (target == null) {
+            log.warning("Tried to update rank of non-member",
+                "caller", officer, "targetId", targetId);
             throw new InvocationException(E_INTERNAL_ERROR);
         }
         if (target.rank == GuildRank.OFFICER) {
@@ -272,6 +274,7 @@ public class GuildManager extends NodeletManager
                 }
             }
             if (!hasOtherOfficer) {
+                log.warning("Last officer tried to leave guild", "officer", caller);
                 throw new InvocationException(E_INTERNAL_ERROR);
             }
         }
@@ -296,6 +299,7 @@ public class GuildManager extends NodeletManager
     {
         final GuildMemberEntry member = requireMember(caller);
         if (_guildObj.members.size() > 1) {
+            log.warning("Tried to disband guild that still has members", "caller", caller);
             throw new InvocationException(E_GUILD_HAS_OTHER_MEMBERS);
         }
         _invoker.postUnit(new Resulting<Void>("disband guild", listener) {
