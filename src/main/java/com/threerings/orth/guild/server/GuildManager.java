@@ -267,13 +267,7 @@ public class GuildManager extends NodeletManager
     {
         final GuildMemberEntry member = requireMember(caller);
         if (member.isOfficer()) {
-            boolean hasOtherOfficer = false;
-            for (GuildMemberEntry other : Iterables.filter(_guildObj.members, IS_OFFICER)) {
-                if (!other.equals(member)) {
-                    hasOtherOfficer = true;
-                }
-            }
-            if (!hasOtherOfficer) {
+            if (Iterables.size(Iterables.filter(_guildObj.members, IS_OFFICER)) == 1) {
                 log.warning("Last officer tried to leave guild", "officer", caller);
                 throw new InvocationException(E_INTERNAL_ERROR);
             }
