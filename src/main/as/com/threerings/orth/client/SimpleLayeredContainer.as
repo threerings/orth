@@ -3,12 +3,13 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.client {
-
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.geom.Matrix;
 import flash.utils.Dictionary;
+
+import com.threerings.util.Log;
 
 /**
  * Provide an organized way for callers to layer display objects onto one another at
@@ -72,6 +73,20 @@ public class SimpleLayeredContainer extends Sprite
         }
         // if no such child found, just append
         addChild(overlay);
+    }
+
+    public function removeLayer (layer :int) :void
+    {
+        var ii :int = 0;
+        while (ii < numChildren) {
+            const child :DisplayObject = getChildAt(ii);
+            if (_layers[child] === layer) {
+                removeChildAt(ii);
+                delete _layers[child];
+            } else {
+                ii ++;
+            }
+        }
     }
 
     public function removeOverlay (overlay :DisplayObject) :void
