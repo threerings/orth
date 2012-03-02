@@ -26,13 +26,13 @@ public class SimpleLayeredContainer extends Sprite
         return this;
     }
 
-    public function setBaseLayer (base:DisplayObject):void
+    public function setBaseLayer (base :DisplayObject) :void
     {
         clearBaseLayer();
         addChildAt(_base = base, 0);
     }
 
-    public function clearBaseLayer ():void
+    public function clearBaseLayer () :void
     {
         if (_base != null) {
             removeChild(_base);
@@ -51,7 +51,7 @@ public class SimpleLayeredContainer extends Sprite
             });
     }
 
-    public function addOverlay (overlay:DisplayObject, layer:int):void
+    public function addOverlay (overlay :DisplayObject, layer :int) :void
     {
         if (overlay in _layers) {
             // we already have this overlay...
@@ -64,7 +64,7 @@ public class SimpleLayeredContainer extends Sprite
         }
         _layers[overlay] = layer;
         // step through the children until we find one whose layer is larger than ours
-        for (var ii:int = 0; ii < numChildren; ii++) {
+        for (var ii :int = 0; ii < numChildren; ii++) {
             if (getLayer(getChildAt(ii)) > layer) {
                 addChildAt(overlay, ii);
                 return;
@@ -74,12 +74,12 @@ public class SimpleLayeredContainer extends Sprite
         addChild(overlay);
     }
 
-    public function removeOverlay (overlay:DisplayObject):void
+    public function removeOverlay (overlay :DisplayObject) :void
     {
         delete _layers[overlay];
         // remove this child from the display the hard way
-        for (var ii:int = 0; ii < numChildren; ii++) {
-            var child:DisplayObject = getChildAt(ii);
+        for (var ii :int = 0; ii < numChildren; ii++) {
+            var child :DisplayObject = getChildAt(ii);
             if (child == overlay) {
                 child = removeChildAt(ii);
                 break;
@@ -87,12 +87,12 @@ public class SimpleLayeredContainer extends Sprite
         }
     }
 
-    public function containsOverlay (overlay:DisplayObject):Boolean
+    public function containsOverlay (overlay :DisplayObject) :Boolean
     {
         return (overlay in _layers);
     }
 
-    public function getLayer (overlay:DisplayObject):int
+    public function getLayer (overlay :DisplayObject) :int
     {
         return int(_layers[overlay]);
     }
