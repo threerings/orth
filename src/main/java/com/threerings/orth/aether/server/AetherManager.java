@@ -10,8 +10,8 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 import com.samskivert.util.ResultListener;
-import com.samskivert.util.Tuple;
 
+import com.threerings.io.SimpleStreamableObject;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.EventThread;
@@ -25,8 +25,8 @@ import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.AetherMarshaller;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.guild.data.GuildCodes;
-import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.guild.server.GuildManager;
+import com.threerings.orth.guild.server.GuildManager.HostingInfo;
 import com.threerings.orth.guild.server.GuildRegistry;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.server.NodeletManager;
@@ -81,23 +81,25 @@ public class AetherManager
 
         // delegate to the possibly remote guild manager
         _guildReg.invokeRemoteRequest(guildId,
-            new NodeletRegistry.Request<Tuple<GuildName, HostedNodelet>>() {
-            @Override public void execute (NodeletManager manager,
-                    ResultListener<Tuple<GuildName, HostedNodelet>> rl) {
-                GuildManager gMgr = (GuildManager) manager;
-                Tuple<GuildName, HostedNodelet> result =
-                    Tuple.newTuple(gMgr.getGuildName(), gMgr.getNodelet());
-
-                ((GuildManager)manager).acceptInvite(senderId, playerId,
-                    new Resulting<Void>(rl, Functions.constant(result)));
+            new NodeletRegistry.Request<HostingInfo>() {
+            @Override public void execute (NodeletManager mgr, ResultListener<HostingInfo> rl) {
+                GuildManager gMgr = (GuildManager) mgr;
+                gMgr.acceptInvite(senderId, playerId,
+                    new Resulting<Void>(rl, Functions.constant(gMgr.getHostingInfo())));
             }
 
-        }, new Resulting<Tuple<GuildName, HostedNodelet>>(lner) {
-            @Override public void requestCompleted (Tuple<GuildName, HostedNodelet> result) {
-                player.setGuildName(result.left);
-                player.setGuild(result.right);
+        }, new Resulting<HostingInfo>(lner) {
+            @Override public void requestCompleted (HostingInfo result) {
+                player.setGuildName(result.name);
+                player.setGuild(result.nodelet);
             }
         });
+    }
+
+    protected static class AcceptGuildInviteResult extends SimpleStreamableObject
+    {
+        public String guildName;
+        public HostedNodelet guildNodelet;
     }
 
     @Inject protected AetherSessionLocator _locator;

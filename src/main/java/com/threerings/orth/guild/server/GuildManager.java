@@ -16,6 +16,7 @@ import com.google.inject.Inject;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
+import com.threerings.io.SimpleStreamableObject;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.BlockingThread;
@@ -51,6 +52,7 @@ import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.guild.server.persist.GuildMemberRecord;
 import com.threerings.orth.guild.server.persist.GuildRecord;
 import com.threerings.orth.guild.server.persist.GuildRepository;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.PlayerRepository;
@@ -66,6 +68,12 @@ import static com.threerings.orth.Log.log;
 public class GuildManager extends NodeletManager
     implements GuildProvider, GuildCodes, SpeakProvider
 {
+    public static class HostingInfo extends SimpleStreamableObject
+    {
+        public GuildName name;
+        public HostedNodelet nodelet;
+    }
+
     @Override
     public void didInit ()
     {
@@ -145,6 +153,14 @@ public class GuildManager extends NodeletManager
     public GuildName getGuildName ()
     {
         return _guildName;
+    }
+
+    public HostingInfo getHostingInfo ()
+    {
+        HostingInfo result = new HostingInfo();
+        result.name = _guildName;
+        result.nodelet = _nodelet;
+        return result;
     }
 
     // from SpeakRouter
