@@ -9,8 +9,6 @@ import flash.display.Sprite;
 import flash.geom.Matrix;
 import flash.utils.Dictionary;
 
-import com.threerings.util.Log;
-
 /**
  * Provide an organized way for callers to layer display objects onto one another at
  * different priority levels (which they will have to work out amongst themselves).

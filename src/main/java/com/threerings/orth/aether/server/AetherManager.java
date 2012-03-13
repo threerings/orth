@@ -12,6 +12,7 @@ import com.google.inject.Singleton;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.io.SimpleStreamableObject;
+
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.EventThread;
@@ -25,8 +26,8 @@ import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.data.AetherMarshaller;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.guild.data.GuildCodes;
-import com.threerings.orth.guild.server.GuildManager;
 import com.threerings.orth.guild.server.GuildManager.HostingInfo;
+import com.threerings.orth.guild.server.GuildManager;
 import com.threerings.orth.guild.server.GuildRegistry;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.server.NodeletManager;

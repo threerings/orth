@@ -17,6 +17,7 @@ import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.io.SimpleStreamableObject;
+
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.BlockingThread;
