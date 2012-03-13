@@ -193,7 +193,6 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                         new FriendshipAcceptance(sender.playerName, acceptingPlayerName));
                 }
 
-
                 // finished, go back to the original peer
                 listener.requestProcessed(null);
             }
