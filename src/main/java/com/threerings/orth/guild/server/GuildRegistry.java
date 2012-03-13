@@ -33,6 +33,8 @@ import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.server.OrthDeploymentConfig;
 
+import static com.threerings.orth.Log.log;
+
 /**
  * A nodelet registry configured for handling guild clients.
  */
@@ -70,6 +72,8 @@ public class GuildRegistry extends NodeletRegistry
         _invoker.postUnit(new Resulting<GuildRecord>("Creating guild") {
             @Override public GuildRecord invokePersist () throws Exception {
                 if (_guildRepo.getGuild(name) != null) {
+                    log.warning("Tried to create duplicate guild",
+                        "name", name, "officer", officer);
                     throw new InvocationException(GuildCodes.E_GUILD_ALREADY_EXISTS);
                 }
                 GuildRecord rec = _guildRepo.createGuild(name, officer.getPlayerId());

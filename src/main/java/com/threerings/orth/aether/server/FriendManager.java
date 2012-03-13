@@ -105,6 +105,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         // anti-spam logic
         final InviteThrottle throttle = player.getLocal(AetherLocal.class).getInviteThrottle();
         if (!throttle.allow(targetId)) {
+            log.info("Throttling friend request", "caller", caller, "targetId", targetId);
             throw new InvocationException(AetherCodes.FRIEND_REQUEST_ALREADY_SENT);
         }
 
@@ -134,6 +135,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         FriendEntry entry = caller.friends.get(playerId);
 
         if (entry == null) {
+            log.info("Tried to unfriend non-friend", "caller", caller, "playerId", playerId);
             throw new InvocationException(AetherCodes.USER_IS_NOT_FRIEND);
         }
 
@@ -141,6 +143,8 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
             // We crapped out removing the friendship from the db, so just say we had a problem
             // and leave it alone. They'll try again if they really hate this person, and hopefully
             // it'll stick
+            log.warning("Something went awry removing friend",
+                "caller", caller, "playerId", playerId);
             throw new InvocationException(AetherCodes.E_INTERNAL_ERROR);
         }
 

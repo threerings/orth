@@ -34,6 +34,8 @@ import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
+import static com.threerings.orth.Log.log;
+
 /**
  * Manage Orth Players.
  */
@@ -55,6 +57,8 @@ public class AetherManager
         // TODO: permissions?
         AetherClientObject player = caller;
         if (player.guild != null) {
+            log.warning("Tried to create guild, but already in one",
+                "caller", caller, "name", name);
             throw new InvocationException(GuildCodes.E_PLAYER_ALREADY_IN_GUILD);
         }
 
@@ -77,6 +81,8 @@ public class AetherManager
                 return;
             }
             // otherwise scream and wail
+            log.warning("Trying to accept a guild invite, but already in one",
+                "caller", caller, "senderId", senderId, "guildId", guildId);
             throw new InvocationException(GuildCodes.E_PLAYER_ALREADY_IN_GUILD);
         }
 

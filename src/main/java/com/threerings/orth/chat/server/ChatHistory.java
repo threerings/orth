@@ -36,6 +36,8 @@ import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.util.ComputingMap;
 
+import static com.threerings.orth.Log.log;
+
 /**
  * Track the recent chat history of our players,
  */
@@ -130,6 +132,7 @@ public class ChatHistory
                 lner.requestCompleted(chRes);
             }
             public void requestFailed (String cause) {
+                log.warning("collectChatHistory failed", "playerId", playerId, cause);
                 lner.requestFailed(new InvocationException(cause));
             }
         });

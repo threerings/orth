@@ -183,9 +183,12 @@ public class GuildManager extends NodeletManager
             throw new InvocationException(INTERNAL_ERROR);
         }
         if (_guildObj.members.containsKey(targetId)) {
+            log.warning("Send guild invite to existing member", "sender", sender,
+                "targetId", targetId);
             throw new InvocationException(E_PLAYER_ALREADY_IN_GUILD);
         }
         if (!getThrottle(sender).allow(targetId)) {
+            log.info("Throttling guild invite", "sender", sender, "targetId", targetId);
             throw new InvocationException(E_INVITE_ALREADY_SENT);
         }
 
@@ -250,16 +253,18 @@ public class GuildManager extends NodeletManager
     {
         GuildMemberEntry officer = requireMember(caller);
         if (officer.rank != GuildRank.OFFICER) {
-            log.warning("Non officer attempting to remove member", "caller", officer,
+            log.warning("Non-officer attempting to remove member", "caller", officer,
                 "targetId", targetId);
             throw new InvocationException(E_INTERNAL_ERROR);
         }
         final GuildMemberEntry target = lookupMember(targetId);
         if (target == null) {
+            log.warning("Tried to remove non-member from guild", "caller", officer,
+                "targetId", targetId);
             throw new InvocationException(E_INTERNAL_ERROR);
         }
         if (target.rank == GuildRank.OFFICER) {
-            log.warning("Illegal remove", "caller", officer, "target", target);
+            log.warning("Tried to remove officer from guild", "caller", officer, "target", target);
             throw new InvocationException(E_INTERNAL_ERROR);
         }
 
