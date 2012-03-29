@@ -52,6 +52,7 @@ public class GuildObject extends DObject
     /** The guild service. */
     public GuildService guildService;
 
+    /** The chat service for this guild. */
     public SpeakMarshaller guildChatService;
 
     // from SpeakRouter

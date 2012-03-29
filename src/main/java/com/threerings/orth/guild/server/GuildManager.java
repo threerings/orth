@@ -164,7 +164,7 @@ public class GuildManager extends NodeletManager
         return result;
     }
 
-    // from SpeakRouter
+    // from SpeakProvider
     @Override public void speak (ClientObject caller, String msg, InvocationListener listener)
         throws InvocationException
     {
