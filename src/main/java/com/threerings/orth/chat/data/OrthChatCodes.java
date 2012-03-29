@@ -17,6 +17,9 @@ public interface OrthChatCodes extends InvocationCodes
     /** The chat localtype code for messages delivered on the player's current guild object. */
     public final String GUILD_CHAT_TYPE = "guildChat";
 
+    /** The chat localtype code for messages delivered on the player's current party object. */
+    public final String PARTY_CHAT_TYPE = "partyChat";
+
     /** An error code delivered when the user targeted for a tell notification is not online. */
     public final String USER_NOT_ONLINE = "m.user_not_online";
 }

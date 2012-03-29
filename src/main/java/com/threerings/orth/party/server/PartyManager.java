@@ -14,6 +14,7 @@ import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.util.Resulting;
 
+import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
@@ -27,6 +28,10 @@ import com.threerings.presents.server.InvocationManager;
 import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.AetherNodeRequest;
+import com.threerings.orth.chat.data.OrthChatCodes;
+import com.threerings.orth.chat.data.SpeakMarshaller;
+import com.threerings.orth.chat.server.ChatManager;
+import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
@@ -45,7 +50,7 @@ import com.threerings.orth.server.OrthDeploymentConfig;
  * Manages a particular party, living on a single node.
  */
 public class PartyManager
-    implements PartyProvider
+    implements PartyProvider, SpeakProvider
 {
     public final PartyObjectAddress addr;
 
@@ -57,13 +62,22 @@ public class PartyManager
 
         // set up the new PartyObject
         _partyObj = partyObj;
+
+        // add the Orth speak service for this guild
+        _partyObj.partyChatService = invMgr.registerProvider(this, SpeakMarshaller.class);
+
         configurePartyObject(creator);
         _omgr.registerObject(_partyObj);
 
         addr = new PartyObjectAddress(conf.getPartyHost(), conf.getPartyPort(), _partyObj.getOid());
+    }
 
-        // "invite" the creator
-        _partyObj.invitedIds.add(_partyObj.leaderId);
+    // from SpeakProvider
+    @Override public void speak (ClientObject caller, String msg, InvocationListener listener)
+        throws InvocationException
+    {
+        _chatMan.sendSpeak(_partyObj, ((PartierObject) caller).playerName, msg,
+            OrthChatCodes.PARTY_CHAT_TYPE, listener);
     }
 
     /**
@@ -71,6 +85,9 @@ public class PartyManager
      */
     protected void configurePartyObject (AetherClientObject creator)
     {
+        // "invite" the creator
+        _partyObj.invitedIds.add(_partyObj.leaderId);
+
         _partyObj.leaderId = creator.getPlayerId();
         _partyObj.disband = true;
         _partyObj.setAccessController(new PartyAccessController(this));
@@ -410,6 +427,7 @@ public class PartyManager
     protected final RootDObjectManager _omgr;
     protected final PartyObject _partyObj;
 
+    @Inject protected ChatManager _chatMan;
     @Inject protected ClientManager _clmgr;
     @Inject protected OrthPeerManager _peerMgr;
     @Inject protected Provider<PartyPeep> _peepProvider;

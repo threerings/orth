@@ -20,9 +20,10 @@ import com.threerings.presents.dobj.ObjectAccessError;
 import com.threerings.presents.util.SafeSubscriber;
 
 import com.threerings.orth.aether.client.AetherClient;
+import com.threerings.orth.chat.client.OrthChatDirector;
+import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.client.Listeners;
 import com.threerings.orth.client.OrthContext;
-import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.client.LocusDirector;
@@ -235,6 +236,8 @@ public class PartyDirector
 
         _partyObj.locusChanged.add(locusChanged);
 
+        _chatDir.registerRouter(OrthChatCodes.PARTY_CHAT_TYPE, _partyObj);
+
         partyJoined.dispatch();
     }
 
@@ -257,10 +260,10 @@ public class PartyDirector
         _locusDir.moveToHostedLocus(newLocus);
     }
 
+    protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
     protected const _module :Module = inject(Module);
     protected const _locusDir :LocusDirector = inject(LocusDirector);
     protected const _octx :OrthContext = inject(OrthContext);
-    protected const _comms :CommsDirector = inject(CommsDirector);
 
     protected var _prsvc :PartyRegistryService;
     protected var _pctx :PartyContext;

@@ -16,5 +16,8 @@ public class OrthChatCodes extends InvocationCodes
 
     /** The chat localtype code for messages delivered on the player's current guild object. */
     public static const GUILD_CHAT_TYPE :String = "guildChat";
+
+    /** The chat localtype code for messages delivered on the player's current party object. */
+    public static const PARTY_CHAT_TYPE :String = "partyChat";
 }
 }

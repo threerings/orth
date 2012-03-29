@@ -13,11 +13,13 @@ import com.google.common.collect.Sets;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.orth.chat.data.SpeakMarshaller;
+import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 
 public class PartyObject extends DObject
-    implements Cloneable
+    implements Cloneable, SpeakRouter
 {
     public transient final Set<Integer> invitedIds = Sets.newHashSet();
 
@@ -50,6 +52,10 @@ public class PartyObject extends DObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String PARTY_SERVICE = "partyService";
 
+    /** The field name of the <code>partyChatService</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String PARTY_CHAT_SERVICE = "partyChatService";
+
     /** The field name of the <code>locus</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String LOCUS = "locus";
@@ -76,8 +82,27 @@ public class PartyObject extends DObject
     /** The service for doing things on this party. */
     public PartyMarshaller partyService;
 
+    /** The chat service for this party. */
+    public SpeakMarshaller partyChatService;
+
     /** The shared locus the party is in, or null if they're in disparate locations */
     public HostedLocus locus;
+
+    // from SpeakRouter
+    @Override public DObject getSpeakObject ()
+    {
+        return this;
+    }
+
+    // from SpeakRouter
+    @Override public Set<Integer> getSpeakReceipients ()
+    {
+        Set<Integer> result = Sets.newHashSet();
+        for (PartyPeep peep : peeps) {
+            result.add(peep.getPlayerId());
+        }
+        return result;
+    }
 
     // AUTO-GENERATED: METHODS START
     /**
@@ -231,6 +256,23 @@ public class PartyObject extends DObject
         requestAttributeChange(
             PARTY_SERVICE, value, ovalue);
         this.partyService = value;
+    }
+
+    /**
+     * Requests that the <code>partyChatService</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setPartyChatService (SpeakMarshaller value)
+    {
+        SpeakMarshaller ovalue = this.partyChatService;
+        requestAttributeChange(
+            PARTY_CHAT_SERVICE, value, ovalue);
+        this.partyChatService = value;
     }
 
     /**

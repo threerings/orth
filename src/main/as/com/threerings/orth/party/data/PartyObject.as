@@ -15,6 +15,8 @@ import com.threerings.util.Util;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.orth.chat.data.SpeakMarshaller;
+import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.data.PartyMarshaller;
 import com.threerings.orth.party.data.PartyPeep;
@@ -23,7 +25,7 @@ import com.threerings.orth.party.data.PartyPeep;
 
 // GENERATED CLASSDECL START
 public class PartyObject extends DObject
-    implements Cloneable
+    implements Cloneable, SpeakRouter
 {
 // GENERATED CLASSDECL END
 
@@ -42,6 +44,8 @@ public class PartyObject extends DObject
 
     public var partyService :PartyMarshaller;
 
+    public var partyChatService :SpeakMarshaller;
+
     public var locus :HostedLocus;
 
     public var peepsChanged :Signal = new Signal(DSet, DSet);
@@ -54,6 +58,7 @@ public class PartyObject extends DObject
     public var recruitmentChanged :Signal = new Signal(int, int);
     public var disbandChanged :Signal = new Signal(Boolean, Boolean);
     public var partyServiceChanged :Signal = new Signal(PartyMarshaller, PartyMarshaller);
+    public var partyChatServiceChanged :Signal = new Signal(SpeakMarshaller, SpeakMarshaller);
     public var locusChanged :Signal = new Signal(HostedLocus, HostedLocus);
 
     public static const PEEPS :String = "peeps";
@@ -63,6 +68,7 @@ public class PartyObject extends DObject
     public static const RECRUITMENT :String = "recruitment";
     public static const DISBAND :String = "disband";
     public static const PARTY_SERVICE :String = "partyService";
+    public static const PARTY_CHAT_SERVICE :String = "partyChatService";
     public static const LOCUS :String = "locus";
 
     override public function readObject (ins :ObjectInputStream) :void
@@ -75,6 +81,7 @@ public class PartyObject extends DObject
         recruitment = ins.readByte();
         disband = ins.readBoolean();
         partyService = ins.readObject(PartyMarshaller);
+        partyChatService = ins.readObject(SpeakMarshaller);
         locus = ins.readObject(HostedLocus);
     }
 
@@ -83,6 +90,18 @@ public class PartyObject extends DObject
         new Signaller(this);
     }
 // GENERATED STREAMING END
+
+    // from SpeakRouter
+    public function get speakObject () :DObject
+    {
+        return this;
+    }
+
+    // from SpeakRouter
+    public function get speakMarshaller () :SpeakMarshaller
+    {
+        return partyChatService;
+    }
 
     public function clone () :Object
     {
@@ -148,6 +167,9 @@ class Signaller
                 break;
             case "partyService":
                 signal = _obj.partyServiceChanged;
+                break;
+            case "partyChatService":
+                signal = _obj.partyChatServiceChanged;
                 break;
             case "locus":
                 signal = _obj.locusChanged;
