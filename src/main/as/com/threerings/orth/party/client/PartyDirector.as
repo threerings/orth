@@ -106,7 +106,7 @@ public class PartyDirector
      */
     public function createParty () :void
     {
-        _prsvc.createParty(new ResultAdapter(connectParty, onJoinFailed));
+        _prsvc.createParty(new ResultAdapter(connectParty, F.adapt(onJoinFailed)));
     }
 
     /**
