@@ -130,22 +130,20 @@ public class PartyManager
         _partyObj.invitedIds.remove(playerId);
 
         _peerMgr.invokeSingleNodeRequest(createPartyClientSubscribedRequest(playerId, addr),
-            new ResultListener<AppearanceInfo>()
-            {
-                @Override public void requestCompleted (AppearanceInfo result)
-                {
+            new ResultListener<AppearanceInfo>() {
+                @Override public void requestCompleted (AppearanceInfo result) {
                     // listen for them to die
-                    partier.addListener(new ObjectDeathListener()
-                    {
-                        public void objectDestroyed (ObjectDestroyedEvent event)
-                        {
+                    partier.addListener(new ObjectDeathListener() {
+                        public void objectDestroyed (ObjectDestroyedEvent event) {
                             removePlayer(playerId);
                         }
                     });
+
                     // Crap, we used to do this in addPlayer, but they could never actually enter the
                     // party and leave it hosed. The downside of doing it this way is that we could
                     // approve more than MAX_PLAYERS to join the party...
-                    addPeepToParty(createPartyPeep(partier, result));
+                    PartyPeep peep = createPartyPeep(partier, result);
+                    doAddPeepToParty(peep);
                 }
 
                 @Override public void requestFailed (Exception cause)
@@ -160,7 +158,7 @@ public class PartyManager
      * This is the canonical place to add a peep to the party, so that subclasses can react
      * directly to the addition.
      */
-    protected void addPeepToParty (PartyPeep peep)
+    protected void doAddPeepToParty (PartyPeep peep)
     {
         if (!_partyObj.peeps.contains(peep)) {
             _partyObj.addToPeeps(peep);
