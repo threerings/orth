@@ -129,31 +129,38 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         InvocationListener listener)
         throws InvocationException
     {
-        FriendEntry entry = caller.friends.get(playerId);
+        final FriendEntry entry = caller.friends.get(playerId);
 
         if (entry == null) {
             log.info("Tried to unfriend non-friend", "caller", caller, "playerId", playerId);
             throw new InvocationException(AetherCodes.USER_IS_NOT_FRIEND);
         }
 
-        if (!_friendRepo.removeFriendship(caller.getPlayerId(), playerId)) {
-            // We crapped out removing the friendship from the db, so just say we had a problem
-            // and leave it alone. They'll try again if they really hate this person, and hopefully
-            // it'll stick
-            log.warning("Something went awry removing friend",
-                "caller", caller, "playerId", playerId);
-            throw new InvocationException(AetherCodes.E_INTERNAL_ERROR);
-        }
+        // hop to the invoker to sever the friendship in persistent store
+        _invoker.postUnit(new Resulting<Void>("Load offline friend names") {
+            @Override public Void invokePersist () throws Exception {
+                if (!_friendRepo.removeFriendship(caller.getPlayerId(), playerId)) {
+                    // We crapped out removing the friendship from the db, so just say we had a
+                    // problem and leave it alone. They'll try again if they really hate this
+                    // person, and hopefully it'll stick
+                    log.warning("Something went awry removing friend", "caller", caller,
+                        "playerId", playerId);
+                    throw new InvocationException(AetherCodes.E_INTERNAL_ERROR);
+                }
+                return null;
+            }
 
-        // I don't like you.
-        caller.removeFromFriends(playerId);
-        CommSender.receiveComm(caller, new FriendshipTermination(caller.playerName, entry.name));
+            @Override public void requestCompleted (Void result) {
+                // I don't like you.
+                caller.removeFromFriends(playerId);
+                CommSender.receiveComm(caller, new FriendshipTermination(caller.playerName, entry.name));
 
-        // You don't like me.
-        _peerMgr.invokeNodeAction(new AetherNodeAction(playerId) {
-            @Override
-            protected void execute (AetherClientObject memobj) {
-                memobj.removeFromFriends(caller.getPlayerId());
+                // You don't like me.
+                _peerMgr.invokeNodeAction(new AetherNodeAction(playerId) {
+                    @Override protected void execute (AetherClientObject memobj) {
+                        memobj.removeFromFriends(caller.getPlayerId());
+                    }
+                });
             }
         });
     }
