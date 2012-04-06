@@ -95,31 +95,28 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         });
     }
 
-    public void requestFriendship (final AetherClientObject caller, final int targetId,
+    public void requestFriendship (final AetherClientObject player, final int targetId,
         InvocationListener listener)
         throws InvocationException
     {
-        AetherClientObject player = caller;
-        final PlayerName playerName = player.playerName;
-
         // anti-spam logic
         final InviteThrottle throttle = player.getLocal(AetherLocal.class).getInviteThrottle();
         if (!throttle.allow(targetId)) {
-            log.info("Throttling friend request", "caller", caller, "targetId", targetId);
+            log.info("Throttling friend request", "player", player, "targetId", targetId);
             throw new InvocationException(AetherCodes.FRIEND_REQUEST_ALREADY_SENT);
         }
 
         // ok, notify the other player, wherever they are
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(targetId) {
             @Override protected void execute (AetherClientObject target, ResultListener listener) {
-                FriendshipRequest req = new FriendshipRequest(playerName, target.playerName);
+                FriendshipRequest req = new FriendshipRequest(player.playerName, target.playerName);
                 CommSender.receiveComm(target, req);
                 listener.requestProcessed(req);
             }
         }, new Resulting<FriendshipRequest>(listener) {
             @Override public void requestCompleted (FriendshipRequest result) {
                 super.requestCompleted(result);
-                CommSender.receiveComm(caller, result);
+                CommSender.receiveComm(player, result);
             }
             @Override public void requestFailed (Exception cause) {
                 throttle.clear(targetId);
