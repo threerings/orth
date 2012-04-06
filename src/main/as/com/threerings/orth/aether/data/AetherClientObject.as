@@ -9,6 +9,8 @@ import org.osflash.signals.Signal;
 
 import com.threerings.io.ObjectInputStream;
 
+import com.threerings.util.Set;
+
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
@@ -31,6 +33,8 @@ public class AetherClientObject extends ClientObject
 
     public var friends :DSet; /* of */ FriendEntry;
 
+    public var ignored :DSet; /* of */ PlayerName;
+
     public var party :PartyObjectAddress;
 
     public var guildName :GuildName;
@@ -42,12 +46,17 @@ public class AetherClientObject extends ClientObject
     public var friendsEntryAdded :Signal = new Signal(FriendEntry);
     public var friendsEntryRemoved :Signal = new Signal(FriendEntry);
     public var friendsEntryUpdated :Signal = new Signal(FriendEntry, FriendEntry);
+    public var ignoredChanged :Signal = new Signal(DSet, DSet);
+    public var ignoredEntryAdded :Signal = new Signal(PlayerName);
+    public var ignoredEntryRemoved :Signal = new Signal(PlayerName);
+    public var ignoredEntryUpdated :Signal = new Signal(PlayerName, PlayerName);
     public var partyChanged :Signal = new Signal(PartyObjectAddress, PartyObjectAddress);
     public var guildNameChanged :Signal = new Signal(GuildName, GuildName);
     public var guildChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
 
     public static const PLAYER_NAME :String = "playerName";
     public static const FRIENDS :String = "friends";
+    public static const IGNORED :String = "ignored";
     public static const PARTY :String = "party";
     public static const GUILD_NAME :String = "guildName";
     public static const GUILD :String = "guild";
@@ -57,6 +66,7 @@ public class AetherClientObject extends ClientObject
         super.readObject(ins);
         playerName = ins.readObject(PlayerName);
         friends = ins.readObject(DSet);
+        ignored = ins.readObject(DSet);
         party = ins.readObject(PartyObjectAddress);
         guildName = ins.readObject(GuildName);
         guild = ins.readObject(HostedNodelet);
@@ -133,6 +143,9 @@ class Signaller
             case "friends":
                 signal = _obj.friendsChanged;
                 break;
+            case "ignored":
+                signal = _obj.ignoredChanged;
+                break;
             case "party":
                 signal = _obj.partyChanged;
                 break;
@@ -155,6 +168,9 @@ class Signaller
             case "friends":
                 signal = _obj.friendsEntryAdded;
                 break;
+            case "ignored":
+                signal = _obj.ignoredEntryAdded;
+                break;
             default:
                 return;
         }
@@ -168,6 +184,9 @@ class Signaller
             case "friends":
                 signal = _obj.friendsEntryRemoved;
                 break;
+            case "ignored":
+                signal = _obj.ignoredEntryRemoved;
+                break;
             default:
                 return;
         }
@@ -180,6 +199,9 @@ class Signaller
         switch (event.getName()) {
             case "friends":
                 signal = _obj.friendsEntryUpdated;
+                break;
+            case "ignored":
+                signal = _obj.ignoredEntryUpdated;
                 break;
             default:
                 return;

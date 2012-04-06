@@ -11,8 +11,6 @@ public interface PlayerRepository
     PlayerRecord loadPlayer (int playerId);
     PlayerRecord loadPlayerForSession (String token);
 
-    // TODO: this is currently only used for friend entries. If we end up sending player's photos
-    // in VizPlayerName and therefore FriendEntry, this can perhaps just change to FriendEntry
-    // values
+    String resolvePlayerName (int playerId);
     Map<Integer, String> resolvePlayerNames (Iterable<Integer> playerIds);
 }

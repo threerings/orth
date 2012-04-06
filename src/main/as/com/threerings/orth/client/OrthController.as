@@ -25,6 +25,7 @@ import com.threerings.util.StringUtil;
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.aether.client.FriendDirector;
+import com.threerings.orth.aether.client.IgnoreDirector;
 import com.threerings.orth.aether.data.AetherCredentials;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
@@ -310,6 +311,7 @@ public class OrthController extends Controller
     protected const _aetherDir :AetherDirector = inject(AetherDirector);
     protected const _friendDir :FriendDirector = inject(FriendDirector);
     protected const _guildDir :GuildDirector = inject(GuildDirector);
+    protected const _ignoreDir :IgnoreDirector = inject(IgnoreDirector);
 
     /** The URL prefix for 'command' URLs, that post CommendEvents. */
     protected static const COMMAND_URL :String = "command://";

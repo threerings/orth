@@ -18,6 +18,8 @@ import com.threerings.whirled.server.SceneRegistry;
 import com.threerings.whirled.spot.server.SpotSceneRegistry;
 
 import com.threerings.orth.aether.server.AetherManager;
+import com.threerings.orth.aether.server.FriendManager;
+import com.threerings.orth.aether.server.IgnoreManager;
 import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.guild.server.GuildRegistry;
 import com.threerings.orth.instance.server.InstancingSceneRegistry;
@@ -64,24 +66,24 @@ public class OrthServer extends CrowdServer
     public void init (Injector injector)
         throws Exception
     {
-        super.init(injector);
-
         MediaDescFactory.init(injector.getInstance(MediaDescFactory.class));
 
         // handle room logins
         _clmgr.addSessionFactory(injector.getInstance(RoomSessionFactory.class));
         _conmgr.addChainedAuthenticator(injector.getInstance(RoomAuthenticator.class));
 
+        injector.getInstance(AetherManager.class);
+        injector.getInstance(FriendManager.class);
+        injector.getInstance(IgnoreManager.class);
+        injector.getInstance(LocusManager.class);
+        injector.getInstance(PartyRegistry.class);
+        injector.getInstance(GuildRegistry.class);
+
+        super.init(injector);
+
         // TODO: add implements Lifecycle.InitComponent for ChatManager
         _chatMgr.init();
-
-        //_partyReg.init();
     }
 
-    @Inject protected AetherManager _aetherMgr;
-    @Inject protected LocusManager _locusMgr;
     @Inject protected ChatManager _chatMgr;
-    @Inject protected OrthSceneMaterializer _sceneMtr;
-    @Inject protected PartyRegistry _partyReg;
-    @Inject protected GuildRegistry _guildReg;
 }

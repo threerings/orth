@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.server.CrowdClientResolver;
 
@@ -65,8 +66,11 @@ public class AetherClientResolver extends CrowdClientResolver
             "Missing player record for authenticated player? [username=%s]", _username);
 
         // load the friend ids, these will get fully resolved later
-        plobj.getLocal(AetherLocal.class).unresolvedFriendIds = Sets.newHashSet(
-            _friendRepo.getFriendIds(playerId));
+        final AetherLocal local = plobj.getLocal(AetherLocal.class);
+        local.unresolvedFriendIds = Sets.newHashSet(_relationRepo.getFriendIds(playerId));
+
+        // resolve the ignore list
+        plobj.ignored = DSet.newDSet(_ignoreMgr.resolveIgnoreList(playerId));
 
         // set the guild id
         plobj.guildName = _guildRepo.getGuildName(playerId);
@@ -93,7 +97,8 @@ public class AetherClientResolver extends CrowdClientResolver
 
     // dependencies
     @Inject protected PlayerRepository _playerRepo;
-    @Inject protected RelationshipRepository _friendRepo;
+    @Inject protected RelationshipRepository _relationRepo;
+    @Inject protected IgnoreManager _ignoreMgr;
     @Inject protected GuildRegistry _guildReg;
     @Inject protected GuildRepository _guildRepo;
 }

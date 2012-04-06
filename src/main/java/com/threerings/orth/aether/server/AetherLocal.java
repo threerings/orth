@@ -20,8 +20,8 @@ public class AetherLocal extends BodyLocal
     public InviteThrottle friendInviteThrottle;
 
     /**
-     * This is set during client resolution and cleared later after {@link AetherClientObject#friends} is
-     * populated.
+     * The set of playerIds for our friends, initialized during client resolution and later
+     * cleared from {@link FriendManager#initFriends(AetherClientObject)}.
      */
     public Set<Integer> unresolvedFriendIds;
 

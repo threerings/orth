@@ -28,4 +28,26 @@ public interface RelationshipRepository
      * guarantee is made. Some ids may appear twice.
      */
     public Collection<Integer> getFriendIds (int playerId);
+
+    /**
+     * Flag the given player as ignoring someone. Returns true if there was a change to the
+     * database, or false if we were already in the requested state.
+     */
+    public boolean ignorePlayer (int ignorerId, int ignoreeId);
+
+    /**
+     * Flag the given player as not ignoring someone. Returns true if there was a change to the
+     * database, or false if we were already in the requested state.
+     */
+    public boolean unignorePlayer (int ignorerId, int ignoreeId);
+
+    /**
+     * Retrieves a list of who the given player ignores.
+     */
+    public Collection<Integer> getIgnoreeIds (int playerId);
+
+    /**
+     * Retrieves a list of who ignores the given player.
+     */
+    public Collection<Integer> getIgnorerIds (int playerId);
 }

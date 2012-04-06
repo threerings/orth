@@ -41,6 +41,15 @@ public class PlayerName extends Name implements DSet.Entry
         return m1.toString().toLowerCase().compareTo(m2.toString().toLowerCase());
     }
 
+    /**
+     * Create a temporary {@link PlayerName} given only a playerId, specifically for purposes
+     * like testing for elements in a Set or DSet, or lookups on a Map.
+     */
+    public static PlayerName makeKey (int playerId)
+    {
+        return new PlayerName(null, playerId);
+    }
+
     /** Create a new PlayerName with the given display name and id. */
     public PlayerName (String name, int id)
     {
