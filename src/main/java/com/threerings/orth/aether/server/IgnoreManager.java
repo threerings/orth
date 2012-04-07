@@ -18,6 +18,7 @@ import com.google.inject.Singleton;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.Lifecycle;
 
+import com.threerings.presents.data.InvocationCodes;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.annotation.BlockingThread;
@@ -96,33 +97,42 @@ public class IgnoreManager implements Lifecycle.InitComponent, IgnoreProvider
     {
         final int ignorerId = caller.getPlayerId();
 
-        final PlayerName nameKey = PlayerName.makeKey(ignoreeId);
-        if (caller.ignored.contains(nameKey) ^ doIgnore) {
+        if (caller.ignored.containsKey(ignoreeId) ^ doIgnore) {
             // already in the requested state
             log.warning("Nothign to do in ignorePlayer", "caller", caller.who(),
                 "ignoreeId", ignoreeId, "doIgnore", doIgnore);
             return;
         }
 
+        if (caller.friends.containsKey(ignoreeId)) {
+            log.warning("Refusing to ignore a friend", "caller", caller.who(),
+                "ignoreeId", ignoreeId);
+            throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
+        }
+
         _invoker.postUnit(new Resulting<PlayerName>("Ignore player", listener) {
             @Override public PlayerName invokePersist () throws Exception {
                 if (doIgnore) {
                     _relationRepo.ignorePlayer(ignorerId, ignoreeId);
-                    // for a new ignoree, we need a real player name
                     String name = _playerRepo.resolvePlayerName(ignoreeId);
-                    return new PlayerName(name, ignoreeId);
+                    return (name != null) ? new PlayerName(name, ignoreeId) : null;
                 }
                 _relationRepo.unignorePlayer(ignorerId, ignoreeId);
-                return nameKey;
+                return null;
             }
 
             @Override public void requestCompleted (PlayerName name) {
                 if (doIgnore) {
+                    if (name == null) {
+                        log.info("Can't ignore nameless player", "caller", caller.who(),
+                            "ignoreeId", ignoreeId);
+                        return;
+                    }
                     caller.addToIgnored(name);
                     _ignoredBy.put(ignoreeId, ignorerId);
 
                 } else {
-                    caller.removeFromIgnored(name);
+                    caller.removeFromIgnored(ignoreeId);
                     _ignoredBy.remove(ignoreeId, ignorerId);
                 }
             }
