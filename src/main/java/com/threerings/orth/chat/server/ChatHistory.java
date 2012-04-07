@@ -31,6 +31,7 @@ import com.threerings.presents.peer.server.NodeRequestsListener;
 import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.orth.aether.server.IgnoreManager;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.data.PlayerName;
@@ -100,7 +101,12 @@ public class ChatHistory
 
     protected void doFile (PlayerName sender, Set<Integer> recipientIds, String msg, Date stamp)
     {
+        int senderId = sender.getId();
         for (int recipientId : recipientIds) {
+            // don't file what we recipient won't actually see
+            if (_ignoreMan.isIgnoredBy(senderId, recipientId)) {
+                continue;
+            }
             List<ChatHistoryEntry> entries = _history.get(recipientId);
             addEntry(entries, new ChatHistoryEntry(sender, msg, stamp));
         }
@@ -171,6 +177,7 @@ public class ChatHistory
             }
         });
 
+    @Inject protected IgnoreManager _ignoreMan;
     @Inject protected PeerManager _peerMan;
 
     protected static final Comparator<ChatHistoryEntry> SORT_BY_TIMESTAMP =

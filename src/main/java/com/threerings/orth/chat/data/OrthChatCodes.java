@@ -22,4 +22,7 @@ public interface OrthChatCodes extends InvocationCodes
 
     /** An error code delivered when the user targeted for a tell notification is not online. */
     public final String USER_NOT_ONLINE = "m.user_not_online";
+
+    /** An error code delivered when we're trying to send a tell to someone we're ignoring. */
+    public final String TELL_TO_IGNORED = "e.tell_to_ignored";
 }

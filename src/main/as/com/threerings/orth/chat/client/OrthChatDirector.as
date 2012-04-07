@@ -3,7 +3,6 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.chat.client {
-
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
@@ -15,9 +14,6 @@ import com.threerings.util.ObserverList;
 
 import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
-import com.threerings.presents.client.ClientEvent;
-import com.threerings.presents.client.ConfirmAdapter;
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.presents.dobj.MessageListener;
 
@@ -27,18 +23,19 @@ import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
+import com.threerings.orth.aether.client.AetherDirectorBase;
 import com.threerings.orth.chat.data.Broadcast;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.chat.data.Tell;
+import com.threerings.orth.client.Listeners;
 import com.threerings.orth.client.Msgs;
-import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 
-public class OrthChatDirector extends BasicDirector
+public class OrthChatDirector extends AetherDirectorBase
     implements MessageListener, TellReceiver
 {
     public static function buildTellMessage (from :PlayerName, text :String) :UserMessage
@@ -62,11 +59,9 @@ public class OrthChatDirector extends BasicDirector
 
     public function OrthChatDirector ()
     {
-        super(_octx);
-
         _chatHistory = new HistoryList(this);
 
-        _ctx.getClient().getInvocationDirector().registerReceiver(new TellDecoder(this));
+        _client.getInvocationDirector().registerReceiver(new TellDecoder(this));
 
         _comms.commReceived.add(function (msg :Object) :void {
             if (msg is Broadcast) {
@@ -82,14 +77,21 @@ public class OrthChatDirector extends BasicDirector
 
     public function requestSendTell (tellee :PlayerName, msg :String) :UserMessage
     {
-        _tellService.sendTell(tellee, msg, new ConfirmAdapter(null,
-            function (cause :String) :void { log.warning("Tell failed!", "reason", cause); }));
-        return buildTellMessage(_octx.myName, msg);
+        _tellService.sendTell(tellee, msg, Listeners.confirmListener(OrthCodes.CHAT_MSGS));
+        return buildTellMessage(aetherObj.playerName, msg);
     }
 
     public function receiveTell (tell :Tell) :void
     {
         dispatchPreparedMessage(buildTellMessage(tell.from, tell.message));
+    }
+
+    public function receiveSpeak (speak :Speak) :void
+    {
+        // filter out any speaks from ignored players
+        if (!aetherObj.ignored.containsKey(speak.from.id)) {
+            dispatchPreparedMessage(buildSpeakMessage(speak));
+        }
     }
 
     public function getHistoryList () :HistoryList
@@ -205,7 +207,7 @@ public class OrthChatDirector extends BasicDirector
         // We should decide to go one way or another rather than "convert" here.
         var value :Object = event.getArgs()[0];
         if (OrthChatCodes.SPEAK_MSG_TYPE == event.getName()) {
-            dispatchPreparedMessage(buildSpeakMessage(Speak(value)));
+            receiveSpeak(Speak(value));
 
         } else {
             log.warning("Got unhandled message type", "eventName", event.getName(), "event", event);
@@ -217,17 +219,7 @@ public class OrthChatDirector extends BasicDirector
     override protected function clientObjectUpdated (client :Client) :void
     {
         // we have an aether client object; listen to it for tells
-        _clobj = _ctx.getClient().getClientObject();
-        _clobj.addListener(this);
-    }
-
-    // from BasicDirector
-    override public function clientDidLogoff (event :ClientEvent) :void
-    {
-        // i don't see this happening often, but can't hurt to be proper
-        if (_clobj != null) {
-            _clobj.removeListener(this);
-        }
+        aetherObj.addListener(this);
     }
 
     protected function dispatchPreparedMessage (message :ChatMessage) :void
@@ -244,10 +236,9 @@ public class OrthChatDirector extends BasicDirector
 
     override protected function fetchServices (client :Client) :void
     {
-        _tellService = TellService(_ctx.getClient().requireService(TellService));
+        _tellService = TellService(_client.requireService(TellService));
     }
 
-    protected var _clobj :ClientObject;
     protected var _place :SpeakRouter;
     protected var _chatHistory :HistoryList;
     protected var _tellService :TellService;
@@ -258,7 +249,6 @@ public class OrthChatDirector extends BasicDirector
     protected var _displays :ObserverList = new ObserverList();
 
     protected const _comms :CommsDirector = inject(CommsDirector);
-    protected const _octx :OrthContext = inject(OrthContext);
 
     private static const log :Log = Log.getLog(OrthChatDirector);
 }

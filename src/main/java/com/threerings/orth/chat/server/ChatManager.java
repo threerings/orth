@@ -23,6 +23,7 @@ import com.threerings.presents.server.InvocationManager;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.aether.server.AetherSessionLocator;
+import com.threerings.orth.aether.server.IgnoreManager;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakRouter;
@@ -57,6 +58,16 @@ public class ChatManager
         }
 
         _history.file(tell, new Date());
+
+        // if sender is ignoring recipient, protest
+        if (_ignoreMgr.isIgnoredBy(tellee.getId(), caller.getPlayerId())) {
+            throw new InvocationException(OrthChatCodes.TELL_TO_IGNORED);
+        }
+
+        // if recipient is ignoring sender, silently drop the tell
+        if (_ignoreMgr.isIgnoredBy(caller.getPlayerId(), tellee.getId())) {
+            return;
+        }
 
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(tellee.getId()) {
             @Override protected void execute (AetherClientObject player, ResultListener listener) {
@@ -120,6 +131,7 @@ public class ChatManager
 
     @Inject protected AetherSessionLocator _locator;
     @Inject protected ChatHistory _history;
+    @Inject protected IgnoreManager _ignoreMgr;
     @Inject protected InvocationManager _invMgr;
     @Inject protected OrthPeerManager _peerMgr;
 }
