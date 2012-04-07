@@ -66,6 +66,15 @@ public class IgnoreManager implements Lifecycle.InitComponent, IgnoreProvider
     }
 
     /**
+     * Determine whether one person is ignored by another. NOTE: This class only keeps track of
+     * ignorers of currently-online players, though the ignorers themselves may be offline.
+     */
+    public boolean isIgnoredBy (int ignoreeId, int ignorerId)
+    {
+        return _ignoredBy.containsEntry(ignoreeId, ignorerId);
+    }
+
+    /**
      * Initializes the ignore list from persistent store.
      */
     @BlockingThread
