@@ -106,6 +106,16 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
             throw new InvocationException(AetherCodes.FRIEND_REQUEST_ALREADY_SENT);
         }
 
+        // if sender is ignoring recipient, protest
+        if (_ignoreMgr.isIgnoredBy(targetId, player.getPlayerId())) {
+            throw new InvocationException(OrthCodes.PLAYER_IGNORED);
+        }
+
+        // if recipient is ignoring sender, silently drop the request
+        if (_ignoreMgr.isIgnoredBy(player.getPlayerId(), targetId)) {
+            return;
+        }
+
         // ok, notify the other player, wherever they are
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(targetId) {
             @Override protected void execute (AetherClientObject target, ResultListener listener) {
@@ -366,6 +376,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     // dependencies
     @Inject protected AetherManager _aetherMgr;
     @Inject protected AetherSessionLocator _locator;
+    @Inject protected IgnoreManager _ignoreMgr;
     @Inject protected OrthPeerManager _peerMgr;
     @Inject protected PeerEyeballer _eyeballer;
     @Inject protected PlayerRepository _playerRepo;

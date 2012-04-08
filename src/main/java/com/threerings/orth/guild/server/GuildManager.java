@@ -34,6 +34,7 @@ import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.PeeredPlayerInfo;
 import com.threerings.orth.aether.server.AetherNodeAction;
 import com.threerings.orth.aether.server.AetherNodeRequest;
+import com.threerings.orth.aether.server.IgnoreManager;
 import com.threerings.orth.aether.server.PeerEyeballer;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakMarshaller;
@@ -41,6 +42,7 @@ import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.AuthName;
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.guild.data.GuildCodes;
@@ -190,6 +192,16 @@ public class GuildManager extends NodeletManager
         if (!getThrottle(sender).allow(targetId)) {
             log.info("Throttling guild invite", "sender", sender, "targetId", targetId);
             throw new InvocationException(E_INVITE_ALREADY_SENT);
+        }
+
+        // if sender is ignoring recipient, protest
+        if (_ignoreMgr.isIgnoredBy(targetId, sender.getPlayerId())) {
+            throw new InvocationException(OrthCodes.PLAYER_IGNORED);
+        }
+
+        // if recipient is ignoring sender, silently drop the request
+        if (_ignoreMgr.isIgnoredBy(sender.getPlayerId(), targetId)) {
+            return;
         }
 
         final String guildName = _guildObj.name;
@@ -480,10 +492,11 @@ public class GuildManager extends NodeletManager
     };
 
     // dependencies
-    @Inject protected GuildRepository _guildRepo;
-    @Inject protected InvocationManager _invmgr;
     @Inject protected @MainInvoker Invoker _invoker;
     @Inject protected ChatManager _chatMan;
+    @Inject protected GuildRepository _guildRepo;
+    @Inject protected IgnoreManager _ignoreMgr;
+    @Inject protected InvocationManager _invmgr;
     @Inject protected OrthPeerManager _peerMan;
     @Inject protected PeerEyeballer _eyeballer;
     @Inject protected PlayerRepository _playerRepo;
