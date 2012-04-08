@@ -61,7 +61,7 @@ public class ChatManager
 
         // if sender is ignoring recipient, protest
         if (_ignoreMgr.isIgnoredBy(tellee.getId(), caller.getPlayerId())) {
-            throw new InvocationException(OrthChatCodes.TELL_TO_IGNORED);
+            throw new InvocationException(OrthCodes.PLAYER_IGNORED);
         }
 
         // if recipient is ignoring sender, silently drop the tell

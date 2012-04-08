@@ -25,4 +25,7 @@ public interface OrthCodes extends InvocationCodes
 
     /** A message even dispatched on the member object to followers. */
     public static final String FOLLOWEE_MOVED = "folMov";
+
+    /** An error code delivered when we're trying to do something to someone we're ignoring. */
+    public static final String PLAYER_IGNORED = "e.player_ignored";
 }
