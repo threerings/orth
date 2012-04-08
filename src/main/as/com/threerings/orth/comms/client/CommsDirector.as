@@ -15,7 +15,7 @@ import com.threerings.orth.comms.data.CommReceiver;
 public class CommsDirector
    implements CommReceiver
 {
-    public const commReceived :Signal = new Signal(Object);// Dispatches the received comm
+    public const commReceived :Signal = new Signal(Object); // Dispatches the received comm
 
     public function CommsDirector ()
     {
