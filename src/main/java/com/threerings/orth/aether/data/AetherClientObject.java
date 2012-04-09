@@ -4,8 +4,6 @@
 
 package com.threerings.orth.aether.data;
 
-import java.util.Set;
-
 import javax.annotation.Generated;
 
 import com.threerings.presents.data.ClientObject;
