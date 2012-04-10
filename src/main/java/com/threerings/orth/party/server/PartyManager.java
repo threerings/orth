@@ -28,11 +28,13 @@ import com.threerings.presents.server.InvocationManager;
 import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.AetherNodeRequest;
+import com.threerings.orth.aether.server.IgnoreManager;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.comms.data.CommSender;
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.data.PartierObject;
@@ -260,6 +262,18 @@ public class PartyManager
             throw new InvocationException(PartyCodes.E_ALREADY_INVITED);
         }
 
+        // if sender is ignoring recipient, protest
+        if (_ignoreMgr.isIgnoredBy(invitee.getId(), caller.getPlayerId())) {
+            Log.log.info("invitee ignored by inviter, failing");
+            throw new InvocationException(OrthCodes.YOU_IGNORING_PLAYER);
+        }
+
+        // if recipient is ignoring caller, silently drop the request
+        if (_ignoreMgr.isIgnoredBy(caller.getPlayerId(), invitee.getId())) {
+            Log.log.info("inviter ignored by invitee, silently dropping");
+            return;
+        }
+
         // add them to the invited set
         _partyObj.invitedIds.add(invitee.getId());
 
@@ -440,6 +454,7 @@ public class PartyManager
 
     @Inject protected ChatManager _chatMan;
     @Inject protected ClientManager _clmgr;
+    @Inject protected IgnoreManager _ignoreMgr;
     @Inject protected OrthPeerManager _peerMgr;
     @Inject protected Provider<PartyPeep> _peepProvider;
 }
