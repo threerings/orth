@@ -27,5 +27,8 @@ public interface OrthCodes extends InvocationCodes
     public static final String FOLLOWEE_MOVED = "folMov";
 
     /** An error code delivered when we're trying to do something to someone we're ignoring. */
-    public static final String PLAYER_IGNORED = "e.player_ignored";
+    public static final String YOU_IGNORING_PLAYER = "e.you_ignoring_player";
+
+    /** An error code delivered when we're trying to do something to someone we're ignoring. */
+    public static final String PLAYER_IGNORING_YOU = "e.playing_ignoring_you";
 }

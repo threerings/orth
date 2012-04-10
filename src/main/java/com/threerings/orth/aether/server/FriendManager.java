@@ -108,7 +108,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
 
         // if sender is ignoring recipient, protest
         if (_ignoreMgr.isIgnoredBy(targetId, player.getPlayerId())) {
-            throw new InvocationException(OrthCodes.PLAYER_IGNORED);
+            throw new InvocationException(OrthCodes.YOU_IGNORING_PLAYER);
         }
 
         // if recipient is ignoring sender, silently drop the request
