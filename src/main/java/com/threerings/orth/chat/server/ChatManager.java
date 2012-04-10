@@ -59,15 +59,8 @@ public class ChatManager
 
         _history.file(tell, new Date());
 
-        // if sender is ignoring recipient, protest
-        if (_ignoreMgr.isIgnoredBy(tellee.getId(), caller.getPlayerId())) {
-            throw new InvocationException(OrthCodes.YOU_IGNORING_PLAYER);
-        }
-
-        // if recipient is ignoring sender, silently drop the tell
-        if (_ignoreMgr.isIgnoredBy(caller.getPlayerId(), tellee.getId())) {
-            return;
-        }
+        // make sure one of these folks isn't ignoring the other
+        _ignoreMgr.validateCommunication(caller.getPlayerId(), tellee.getId());
 
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(tellee.getId()) {
             @Override protected void execute (AetherClientObject player, ResultListener listener) {
