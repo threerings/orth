@@ -13,7 +13,6 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
-import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.guild.client.GuildService;
 import com.threerings.orth.guild.data.GuildMemberEntry;
 
@@ -21,7 +20,6 @@ import com.threerings.orth.guild.data.GuildMemberEntry;
 
 // GENERATED CLASSDECL START
 public class GuildObject extends DObject
-    implements SpeakRouter
 {
 // GENERATED CLASSDECL END
     GuildMemberEntry;
@@ -63,15 +61,6 @@ public class GuildObject extends DObject
         new Signaller(this);
     }
 // GENERATED STREAMING END
-    public function get speakObject () :DObject
-    {
-        return this;
-    }
-
-    public function get speakMarshaller () :SpeakMarshaller
-    {
-        return guildChatService;
-    }
 
 // GENERATED CLASSFINISH START
 }

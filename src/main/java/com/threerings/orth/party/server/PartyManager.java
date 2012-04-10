@@ -4,6 +4,9 @@
 
 package com.threerings.orth.party.server;
 
+import java.util.Set;
+
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -31,7 +34,9 @@ import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.aether.server.IgnoreManager;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakMarshaller;
+import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.chat.server.ChatManager;
+import com.threerings.orth.chat.server.DObjectSpeakRouter;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.PlayerName;
@@ -64,20 +69,30 @@ public class PartyManager
         // set up the new PartyObject
         _partyObj = partyObj;
 
-        // add the Orth speak service for this guild
-        _partyObj.partyChatService = invMgr.registerProvider(this, SpeakMarshaller.class);
-
         configurePartyObject(creator);
         _omgr.registerObject(_partyObj);
 
         addr = new PartyObjectAddress(conf.getPartyHost(), conf.getPartyPort(), _partyObj.getOid());
+
+        // add the Orth speak service for this party
+        _partyObj.partyChatService = invMgr.registerProvider(this, SpeakMarshaller.class);
+
+        _speakRouter = new DObjectSpeakRouter(_partyObj) {
+            @Override public Set<Integer> getSpeakReceipients () {
+                Set<Integer> result = Sets.newHashSet();
+                for (PartyPeep peep : _partyObj.peeps) {
+                    result.add(peep.getPlayerId());
+                }
+                return result;
+            }
+        };
     }
 
     // from SpeakProvider
     @Override public void speak (ClientObject caller, String msg, InvocationListener listener)
         throws InvocationException
     {
-        _chatMan.sendSpeak(_partyObj, ((PartierObject) caller).playerName, msg,
+        _chatMan.sendSpeak(_speakRouter, ((PartierObject) caller).playerName, msg,
             OrthChatCodes.PARTY_CHAT_TYPE, listener);
     }
 
@@ -440,6 +455,7 @@ public class PartyManager
 
     protected final InvocationManager _invMgr;
     protected final RootDObjectManager _omgr;
+    protected final SpeakRouter _speakRouter;
     protected final PartyObject _partyObj;
 
     @Inject protected ChatManager _chatMan;

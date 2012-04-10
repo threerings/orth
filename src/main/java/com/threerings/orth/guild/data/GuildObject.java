@@ -4,17 +4,12 @@
 
 package com.threerings.orth.guild.data;
 
-import java.util.Set;
-
 import javax.annotation.Generated;
-
-import com.google.common.collect.Sets;
 
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
-import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.guild.client.GuildService;
 
 /**
@@ -23,7 +18,6 @@ import com.threerings.orth.guild.client.GuildService;
  * information.
  */
 public class GuildObject extends DObject
-    implements SpeakRouter
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>name</code> field. */
@@ -55,22 +49,6 @@ public class GuildObject extends DObject
     /** The chat service for this guild. */
     public SpeakMarshaller guildChatService;
 
-    // from SpeakRouter
-    @Override public DObject getSpeakObject ()
-    {
-        return this;
-    }
-
-    // from SpeakRouter
-    @Override public Set<Integer> getSpeakReceipients ()
-    {
-        Set<Integer> result = Sets.newHashSet();
-        for (GuildMemberEntry entry : members) {
-            result.add(entry.getPlayerId());
-        }
-        return result;
-    }
-    
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>name</code> field be set to the

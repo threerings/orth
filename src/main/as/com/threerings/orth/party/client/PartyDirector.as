@@ -20,8 +20,10 @@ import com.threerings.presents.dobj.ObjectAccessError;
 import com.threerings.presents.util.SafeSubscriber;
 
 import com.threerings.orth.aether.client.AetherClient;
+import com.threerings.orth.chat.client.DObjectSpeakRouter;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.chat.data.OrthChatCodes;
+import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.client.Listeners;
 import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.data.OrthCodes;
@@ -236,7 +238,10 @@ public class PartyDirector
 
         _partyObj.locusChanged.add(locusChanged);
 
-        _chatDir.registerRouter(OrthChatCodes.PARTY_CHAT_TYPE, _partyObj);
+        _module.inject(function () :void {
+            _speakRouter = new DObjectSpeakRouter(_partyObj, _partyObj.partyChatService);
+        });
+        _chatDir.registerRouter(OrthChatCodes.PARTY_CHAT_TYPE, _speakRouter);
 
         partyJoined.dispatch();
     }
@@ -268,6 +273,7 @@ public class PartyDirector
     protected var _prsvc :PartyRegistryService;
     protected var _pctx :PartyContext;
     protected var _partyObj :PartyObject;
+    protected var _speakRouter :SpeakRouter;
     protected var _safeSubscriber :SafeSubscriber;
     protected var _onJoin :Function;
 

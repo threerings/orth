@@ -12,10 +12,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.MessageManager;
 import com.threerings.util.ObserverList;
 
-import com.threerings.presents.client.BasicDirector;
 import com.threerings.presents.client.Client;
-import com.threerings.presents.dobj.MessageEvent;
-import com.threerings.presents.dobj.MessageListener;
 
 import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
@@ -25,8 +22,8 @@ import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.orth.aether.client.AetherDirectorBase;
 import com.threerings.orth.chat.data.Broadcast;
-import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
+import com.threerings.orth.chat.data.SpeakPlace;
 import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.chat.data.Tell;
 import com.threerings.orth.client.Listeners;
@@ -36,7 +33,7 @@ import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 
 public class OrthChatDirector extends AetherDirectorBase
-    implements MessageListener, TellReceiver
+    implements TellReceiver
 {
     public static function buildTellMessage (from :PlayerName, text :String) :UserMessage
     {
@@ -72,7 +69,7 @@ public class OrthChatDirector extends AetherDirectorBase
 
     public function get placeObject () :SpeakRouter
     {
-        return _place;
+        return _placeRouter;
     }
 
     public function requestSendTell (tellee :PlayerName, msg :String) :UserMessage
@@ -152,7 +149,7 @@ public class OrthChatDirector extends AetherDirectorBase
 
         // start listening to the new one
         _routers.put(type, router);
-        router.speakObject.addListener(this);
+        router.startRouting();
     }
 
     /**
@@ -162,27 +159,29 @@ public class OrthChatDirector extends AetherDirectorBase
     {
         const oldRouter :SpeakRouter = _routers.get(type);
         if (oldRouter != null) {
-            oldRouter.speakObject.removeListener(this);
+            oldRouter.stopRouting();
         }
     }
 
-    public function enteredLocation (place :SpeakRouter) :void
+    public function enteredLocation (place :SpeakPlace) :void
     {
         // nix our old location if we have one
-        if (_place != null) {
-            leftLocation(_place);
+        if (_placeRouter != null) {
+            _placeRouter.stopRouting();
         }
 
-        _place = place;
-        place.speakObject.addListener(this);
+        _module.inject(function () :void {
+            _placeRouter = new DObjectSpeakRouter(place.getDObject(), place.getSpeakService());
+        });
+        _placeRouter.startRouting();
     }
 
-    public function leftLocation (place :SpeakRouter) :void
+    public function leftLocation (place :SpeakPlace) :void
     {
         // if this is our current place chat, then stop listening to it
-        if (place == _place) {
-            _place.speakObject.removeListener(this);
-            _place = null;
+        if (_placeRouter != null && _placeRouter.dobj == place) {
+            _placeRouter.stopRouting();
+            _placeRouter = null;
         }
     }
 
@@ -191,35 +190,6 @@ public class OrthChatDirector extends AetherDirectorBase
         const msgBundle :MessageBundle = _msgMgr.getBundle(bundle);
         dispatchPreparedMessage(new SystemMessage(
             msgBundle.xlate(msg), bundle, SystemMessage.FEEDBACK));
-    }
-
-    protected const _msgMgr :MessageManager = inject(MessageManager);
-
-    // from MessageListener
-    public function messageReceived (event :MessageEvent) :void
-    {
-
-        // ORTH TODO: for now, we have our own Tell and Speak objects from our rewrite,
-        // but the ChatMessage-based approach of the rendering code (from Whirled). When
-        // I did my from-scratch rewrite I wanted to be clear about not using any of the
-        // crowd stuff, and I still think that is cleaner, but then again it's perhaps a
-        // little silly to create near-exact duplicates of lots of useful data classes.
-        // We should decide to go one way or another rather than "convert" here.
-        var value :Object = event.getArgs()[0];
-        if (OrthChatCodes.SPEAK_MSG_TYPE == event.getName()) {
-            receiveSpeak(Speak(value));
-
-        } else {
-            log.warning("Got unhandled message type", "eventName", event.getName(), "event", event);
-            return;
-        }
-    }
-
-    // from BasicDirector
-    override protected function clientObjectUpdated (client :Client) :void
-    {
-        // we have an aether client object; listen to it for tells
-        aetherObj.addListener(this);
     }
 
     protected function dispatchPreparedMessage (message :ChatMessage) :void
@@ -239,7 +209,7 @@ public class OrthChatDirector extends AetherDirectorBase
         _tellService = TellService(_client.requireService(TellService));
     }
 
-    protected var _place :SpeakRouter;
+    protected var _placeRouter :DObjectSpeakRouter;
     protected var _chatHistory :HistoryList;
     protected var _tellService :TellService;
 
@@ -249,6 +219,7 @@ public class OrthChatDirector extends AetherDirectorBase
     protected var _displays :ObserverList = new ObserverList();
 
     protected const _comms :CommsDirector = inject(CommsDirector);
+    protected const _msgMgr :MessageManager = inject(MessageManager);
 
     private static const log :Log = Log.getLog(OrthChatDirector);
 }

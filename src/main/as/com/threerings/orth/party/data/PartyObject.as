@@ -16,7 +16,6 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
-import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.data.PartyMarshaller;
 import com.threerings.orth.party.data.PartyPeep;
@@ -25,7 +24,7 @@ import com.threerings.orth.party.data.PartyPeep;
 
 // GENERATED CLASSDECL START
 public class PartyObject extends DObject
-    implements Cloneable, SpeakRouter
+    implements Cloneable
 {
 // GENERATED CLASSDECL END
 
@@ -90,18 +89,6 @@ public class PartyObject extends DObject
         new Signaller(this);
     }
 // GENERATED STREAMING END
-
-    // from SpeakRouter
-    public function get speakObject () :DObject
-    {
-        return this;
-    }
-
-    // from SpeakRouter
-    public function get speakMarshaller () :SpeakMarshaller
-    {
-        return partyChatService;
-    }
 
     public function clone () :Object
     {

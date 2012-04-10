@@ -14,12 +14,11 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
-import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 
 public class PartyObject extends DObject
-    implements Cloneable, SpeakRouter
+    implements Cloneable
 {
     public transient final Set<Integer> invitedIds = Sets.newHashSet();
 
@@ -87,22 +86,6 @@ public class PartyObject extends DObject
 
     /** The shared locus the party is in, or null if they're in disparate locations */
     public HostedLocus locus;
-
-    // from SpeakRouter
-    @Override public DObject getSpeakObject ()
-    {
-        return this;
-    }
-
-    // from SpeakRouter
-    @Override public Set<Integer> getSpeakReceipients ()
-    {
-        Set<Integer> result = Sets.newHashSet();
-        for (PartyPeep peep : peeps) {
-            result.add(peep.getPlayerId());
-        }
-        return result;
-    }
 
     // AUTO-GENERATED: METHODS START
     /**

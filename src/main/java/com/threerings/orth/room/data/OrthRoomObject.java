@@ -4,29 +4,22 @@
 
 package com.threerings.orth.room.data;
 
-import java.util.Set;
-
 import javax.annotation.Generated;
-
-import com.google.common.collect.Sets;
 
 import com.threerings.util.Name;
 
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
-import com.threerings.crowd.data.OccupantInfo;
-
 import com.threerings.whirled.spot.data.SpotSceneObject;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
-import com.threerings.orth.chat.data.SpeakRouter;
-import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.chat.data.SpeakPlace;
 
 import static com.threerings.orth.Log.log;
 
 public class OrthRoomObject extends SpotSceneObject
-    implements SpeakRouter
+    implements SpeakPlace
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>name</code> field. */
@@ -72,20 +65,14 @@ public class OrthRoomObject extends SpotSceneObject
     /** Contains the memories for all entities in this room. */
     public DSet<EntityMemories> memories = DSet.newDSet();
 
-    @Override public DObject getSpeakObject ()
+    @Override public DObject getDObject ()
     {
         return this;
     }
 
-    @Override public Set<Integer> getSpeakReceipients ()
+    @Override public SpeakMarshaller getSpeakService ()
     {
-        Set<Integer> playerIds = Sets.newHashSetWithExpectedSize(this.occupantInfo.size());
-        for (OccupantInfo info : this.occupantInfo) {
-            if (info.username instanceof PlayerName) {
-                playerIds.add(((PlayerName) info.username).getId());
-            }
-        }
-        return playerIds;
+        return orthSpeakService;
     }
 
     // AUTO-GENERATED: METHODS START

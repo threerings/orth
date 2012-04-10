@@ -24,7 +24,6 @@ import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.aether.server.AetherSessionLocator;
 import com.threerings.orth.aether.server.IgnoreManager;
-import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.chat.data.Tell;
@@ -82,7 +81,7 @@ public class ChatManager
 
         _history.file(speak, router.getSpeakReceipients(), new Date());
 
-        router.getSpeakObject().postMessage(OrthChatCodes.SPEAK_MSG_TYPE, speak);
+        router.sendSpeak(speak);
     }
 
     public void addChatMonitor (ChatMonitor monitor)

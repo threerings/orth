@@ -12,6 +12,7 @@ import java.util.Set;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 import com.samskivert.util.ObjectUtil;
@@ -40,8 +41,11 @@ import com.threerings.whirled.spot.data.Portal;
 import com.threerings.whirled.spot.data.SceneLocation;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
+import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.chat.server.ChatManager;
+import com.threerings.orth.chat.server.DObjectSpeakRouter;
 import com.threerings.orth.chat.server.SpeakProvider;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.InLocus;
 import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.instance.server.InstancedSceneManager;
@@ -88,7 +92,7 @@ public class OrthRoomManager extends InstancedSceneManager
     public void speak (ClientObject caller, String msg, InvocationListener listener)
         throws InvocationException
     {
-        _chatMan.sendSpeak(_orthObj, ((SocializerObject)caller).name, msg,
+        _chatMan.sendSpeak(_speakRouter, ((SocializerObject)caller).name, msg,
             ChatCodes.PLACE_CHAT_TYPE, listener);
     }
 
@@ -323,10 +327,6 @@ public class OrthRoomManager extends InstancedSceneManager
         _orthObj.setOrthRoomService(addProvider(this, OrthRoomMarshaller.class));
         _orthObj.addListener(_roomListener);
 
-
-        // add the Orth speak service for this room
-        _orthObj.orthSpeakService = addProvider(this, SpeakMarshaller.class);
-
         OrthScene mscene = (OrthScene) _scene;
         _orthObj.startTransaction();
         try {
@@ -342,6 +342,21 @@ public class OrthRoomManager extends InstancedSceneManager
 
         // we're done with our auxiliary scene information, let's let it garbage collect
         _extras = null;
+
+        // add the Orth speak service for this room
+        _orthObj.orthSpeakService = addProvider(this, SpeakMarshaller.class);
+
+        _speakRouter = new DObjectSpeakRouter(_orthObj) {
+            @Override public Set<Integer> getSpeakReceipients () {
+                Set<Integer> playerIds = Sets.newHashSet();
+                for (OccupantInfo info : _orthObj.occupantInfo) {
+                    if (info.username instanceof PlayerName) {
+                        playerIds.add(((PlayerName) info.username).getId());
+                    }
+                }
+                return playerIds;
+            }
+        };
     }
 
     @Override // from PlaceManager
@@ -512,6 +527,9 @@ public class OrthRoomManager extends InstancedSceneManager
 
     /** The room object. */
     protected OrthRoomObject _orthObj;
+
+    /** How we route chats to the clients. */
+    protected SpeakRouter _speakRouter;
 
     /** Extra data from scene resolution. */
     protected OrthRoomExtras _extras;

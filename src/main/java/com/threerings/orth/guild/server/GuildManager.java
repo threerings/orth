@@ -6,11 +6,13 @@ package com.threerings.orth.guild.server;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 import com.samskivert.util.Invoker;
@@ -38,7 +40,9 @@ import com.threerings.orth.aether.server.IgnoreManager;
 import com.threerings.orth.aether.server.PeerEyeballer;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakMarshaller;
+import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.chat.server.ChatManager;
+import com.threerings.orth.chat.server.DObjectSpeakRouter;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.AuthName;
@@ -82,9 +86,6 @@ public class GuildManager extends NodeletManager
         _guildObj = ((GuildObject)_sharedObject);
         _guildId = ((GuildNodelet)_nodelet.nodelet).guildId;
 
-        // add the Orth speak service for this guild
-        _guildObj.guildChatService = _invmgr.registerProvider(this, SpeakMarshaller.class);
-
         _eyeballer.playerLoggedOn.connect(new Listener1<PeeredPlayerInfo>() {
             @Override public void apply (PeeredPlayerInfo info) {
                 updateEntry(info.authName.getId(), info);
@@ -100,6 +101,19 @@ public class GuildManager extends NodeletManager
                 updateEntry(info.authName.getId(), info);
             }
         });
+
+        // add the Orth speak service for this guild
+        _guildObj.guildChatService = _invmgr.registerProvider(this, SpeakMarshaller.class);
+
+        _speakRouter = new DObjectSpeakRouter(_guildObj) {
+            @Override public Set<Integer> getSpeakReceipients () {
+                Set<Integer> result = Sets.newHashSet();
+                for (GuildMemberEntry entry : _guildObj.members) {
+                    result.add(entry.getPlayerId());
+                }
+                return result;
+            }
+        };
     }
 
     @Override
@@ -169,7 +183,7 @@ public class GuildManager extends NodeletManager
     @Override public void speak (ClientObject caller, String msg, InvocationListener listener)
         throws InvocationException
     {
-        _chatMan.sendSpeak(_guildObj, requireMember(caller).name, msg,
+        _chatMan.sendSpeak(_speakRouter, requireMember(caller).name, msg,
             OrthChatCodes.GUILD_CHAT_TYPE, listener);
     }
 
@@ -474,6 +488,7 @@ public class GuildManager extends NodeletManager
     protected int _guildId;
     protected GuildObject _guildObj;
     protected GuildName _guildName;
+    protected SpeakRouter _speakRouter;
     protected Map<Integer, InviteThrottle> _invitations;
 
     protected static final Predicate<GuildMemberEntry> IS_OFFICER =

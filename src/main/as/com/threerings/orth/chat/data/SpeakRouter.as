@@ -4,10 +4,6 @@
 
 package com.threerings.orth.chat.data {
 
-import com.threerings.presents.dobj.DObject;
-
-import com.threerings.orth.chat.data.SpeakMarshaller;
-
 /**
  * Routes messages through the Orth chatting system's "speak" ability, i.e. broadcast to all
  * players currently subscribe to the given object. This is how we distribute chats in rooms,
@@ -15,8 +11,9 @@ import com.threerings.orth.chat.data.SpeakMarshaller;
  */
 public interface SpeakRouter
 {
-    /** Returns the {@link DObject} that receives SPEAK_MSG_TYPE for this location. */
-    function get speakObject () :DObject;
+    function startRouting () :void;
+
+    function stopRouting () :void;
 
     /** Returns the {@link SpeakMarshaller} to send messages for this location. */
     function get speakMarshaller () :SpeakMarshaller;

@@ -12,7 +12,7 @@ import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.orth.chat.client.OrthChatDirector;
-import com.threerings.orth.chat.data.SpeakRouter;
+import com.threerings.orth.chat.data.SpeakPlace;
 import com.threerings.orth.data.OrthCodes;
 
 /**
@@ -36,12 +36,16 @@ public class FakeChatDirector extends ChatDirector
 
     override public function enteredLocation (place :PlaceObject) :void
     {
-        _chatDir.enteredLocation(SpeakRouter(place));
+        if (place is SpeakPlace) {
+            _chatDir.enteredLocation(SpeakPlace(place));
+        }
     }
 
     override public function leftLocation (place :PlaceObject) :void
     {
-        _chatDir.leftLocation(SpeakRouter(place));
+        if (place is SpeakPlace) {
+            _chatDir.leftLocation(SpeakPlace(place));
+        }
     }
 
     protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
