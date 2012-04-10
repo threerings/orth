@@ -75,6 +75,19 @@ public class IgnoreManager implements Lifecycle.InitComponent, IgnoreProvider
         return _ignoredBy.containsEntry(ignoreeId, ignorerId);
     }
 
+    public void validateInvitation (int inviterId, int inviteeId)
+        throws InvocationException
+    {
+        // if sender is ignoring recipient, protest
+        if (isIgnoredBy(inviteeId, inviterId)) {
+            throw new InvocationException(OrthCodes.YOU_IGNORING_PLAYER);
+        }
+        // if recipient is ignoring caller, silently drop the request
+        if (isIgnoredBy(inviterId, inviteeId)) {
+            throw new InvocationException(OrthCodes.PLAYER_IGNORING_YOU);
+        }
+    }
+
     /**
      * Initializes the ignore list from persistent store.
      */

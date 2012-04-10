@@ -34,7 +34,6 @@ import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.comms.data.CommSender;
-import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.data.PartierObject;
@@ -262,17 +261,8 @@ public class PartyManager
             throw new InvocationException(PartyCodes.E_ALREADY_INVITED);
         }
 
-        // if sender is ignoring recipient, protest
-        if (_ignoreMgr.isIgnoredBy(invitee.getId(), caller.getPlayerId())) {
-            Log.log.info("invitee ignored by inviter, failing");
-            throw new InvocationException(OrthCodes.YOU_IGNORING_PLAYER);
-        }
-
-        // if recipient is ignoring caller, silently drop the request
-        if (_ignoreMgr.isIgnoredBy(caller.getPlayerId(), invitee.getId())) {
-            Log.log.info("inviter ignored by invitee, silently dropping");
-            return;
-        }
+        // make sure one of these folks isn't ignoring the other
+        _ignoreMgr.validateInvitation(caller.getPlayerId(), invitee.getId());
 
         // add them to the invited set
         _partyObj.invitedIds.add(invitee.getId());

@@ -42,7 +42,6 @@ import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.AuthName;
-import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.guild.data.GuildCodes;
@@ -194,15 +193,8 @@ public class GuildManager extends NodeletManager
             throw new InvocationException(E_INVITE_ALREADY_SENT);
         }
 
-        // if sender is ignoring recipient, protest
-        if (_ignoreMgr.isIgnoredBy(targetId, sender.getPlayerId())) {
-            throw new InvocationException(OrthCodes.YOU_IGNORING_PLAYER);
-        }
-
-        // if recipient is ignoring sender, silently drop the request
-        if (_ignoreMgr.isIgnoredBy(sender.getPlayerId(), targetId)) {
-            return;
-        }
+        // make sure one of these folks isn't ignoring the other
+        _ignoreMgr.validateInvitation(sender.getPlayerId(), targetId);
 
         final String guildName = _guildObj.name;
         final int guildId = _guildId;

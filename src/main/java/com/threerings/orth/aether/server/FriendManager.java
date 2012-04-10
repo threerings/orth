@@ -106,15 +106,8 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
             throw new InvocationException(AetherCodes.FRIEND_REQUEST_ALREADY_SENT);
         }
 
-        // if sender is ignoring recipient, protest
-        if (_ignoreMgr.isIgnoredBy(targetId, player.getPlayerId())) {
-            throw new InvocationException(OrthCodes.YOU_IGNORING_PLAYER);
-        }
-
-        // if recipient is ignoring sender, silently drop the request
-        if (_ignoreMgr.isIgnoredBy(player.getPlayerId(), targetId)) {
-            return;
-        }
+        // make sure one of these folks isn't ignoring the other
+        _ignoreMgr.validateInvitation(player.getPlayerId(), targetId);
 
         // ok, notify the other player, wherever they are
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(targetId) {
