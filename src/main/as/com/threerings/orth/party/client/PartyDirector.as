@@ -176,7 +176,7 @@ public class PartyDirector
         if (inParty) {
             _partyObj.partyService.invitePlayer(invitee, Listeners.listener(OrthCodes.PARTY_MSGS));
         } else {
-            _onJoin = F.callback(invitePlayer, invitee);
+            _onJoin = F.callback(invitePlayer, invitee, Listeners.listener(OrthCodes.PARTY_MSGS));
             partyJoined.addOnce(_onJoin);
             createParty();
         }
