@@ -107,7 +107,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }
 
         // make sure one of these folks isn't ignoring the other
-        _ignoreMgr.validateInvitation(player.getPlayerId(), targetId);
+        _ignoreMgr.validateCommunication(player.getPlayerId(), targetId);
 
         // ok, notify the other player, wherever they are
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(targetId) {

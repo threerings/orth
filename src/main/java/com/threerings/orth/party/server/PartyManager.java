@@ -262,7 +262,7 @@ public class PartyManager
         }
 
         // make sure one of these folks isn't ignoring the other
-        _ignoreMgr.validateInvitation(caller.getPlayerId(), invitee.getId());
+        _ignoreMgr.validateCommunication(caller.getPlayerId(), invitee.getId());
 
         // add them to the invited set
         _partyObj.invitedIds.add(invitee.getId());

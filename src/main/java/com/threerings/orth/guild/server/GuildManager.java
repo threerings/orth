@@ -194,7 +194,7 @@ public class GuildManager extends NodeletManager
         }
 
         // make sure one of these folks isn't ignoring the other
-        _ignoreMgr.validateInvitation(sender.getPlayerId(), targetId);
+        _ignoreMgr.validateCommunication(sender.getPlayerId(), targetId);
 
         final String guildName = _guildObj.name;
         final int guildId = _guildId;
