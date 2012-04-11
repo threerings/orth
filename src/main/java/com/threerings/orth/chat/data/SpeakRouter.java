@@ -6,6 +6,8 @@ package com.threerings.orth.chat.data;
 
 import java.util.Set;
 
+import com.samskivert.util.ResultListener;
+
 /**
  * Indicates a Streamable should implement this interface in Actionscript. See the actionscript
  * interface for its functionality.
@@ -13,10 +15,5 @@ import java.util.Set;
 public interface SpeakRouter
 {
     /** Route the speak to the destination audience. */
-    void sendSpeak (Speak speak);
-
-    /**
-     * Return the numerical ids of all the players that would currently receive a dispatched speak.
-     */
-    Set<Integer> getSpeakReceipients ();
+    void sendSpeak (Speak speak, ResultListener<Set<Integer>> listener);
 }

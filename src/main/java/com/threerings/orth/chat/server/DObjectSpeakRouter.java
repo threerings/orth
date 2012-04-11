@@ -4,6 +4,10 @@
 
 package com.threerings.orth.chat.server;
 
+import java.util.Set;
+
+import com.samskivert.util.ResultListener;
+
 import com.threerings.presents.dobj.DObject;
 
 import com.threerings.orth.chat.data.OrthChatCodes;
@@ -21,10 +25,16 @@ public abstract class DObjectSpeakRouter
         _dobj = dobj;
     }
 
-    @Override public void sendSpeak (Speak speak)
+    @Override public void sendSpeak (Speak speak, ResultListener<Set<Integer>> listener)
     {
         _dobj.postMessage(OrthChatCodes.SPEAK_MSG_TYPE, speak);
+        listener.requestCompleted(getSpeakReceipients());
     }
+
+    /**
+     * Return the numerical ids of all the players that would currently receive a dispatched speak.
+     */
+    abstract protected Set<Integer> getSpeakReceipients ();
 
     protected DObject _dobj;
 }

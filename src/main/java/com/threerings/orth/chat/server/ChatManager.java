@@ -5,6 +5,7 @@
 package com.threerings.orth.chat.server;
 
 import java.util.Date;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.google.inject.Inject;
@@ -73,15 +74,17 @@ public class ChatManager
         InvocationService.InvocationListener listener)
         throws InvocationException
     {
-        Speak speak = new Speak(sender, msg, localType);
+        final Speak speak = new Speak(sender, msg, localType);
         if (!check(speak)) {
             log.warning("Speak not sent", "router", router, "from", sender, "msg", msg);
             return;
         }
 
-        _history.file(speak, router.getSpeakReceipients(), new Date());
-
-        router.sendSpeak(speak);
+        router.sendSpeak(speak, new Resulting<Set<Integer>>(listener) {
+            @Override public void requestCompleted (Set<Integer> recipientIds) {
+                _history.file(speak, recipientIds, new Date());
+            }
+        });
     }
 
     public void addChatMonitor (ChatMonitor monitor)
