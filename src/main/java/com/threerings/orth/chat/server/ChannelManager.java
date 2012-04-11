@@ -9,23 +9,23 @@ import java.util.Set;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import com.samskivert.util.ResultListener;
 
-import com.threerings.presents.client.InvocationService;
+import com.threerings.util.Resulting;
+
 import com.threerings.presents.client.InvocationService.InvocationListener;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.NodeRequestsListener;
-import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.peer.server.PeerManager.NodeRequest;
+import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
-import com.threerings.util.Resulting;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.chat.data.ChannelEntry;
