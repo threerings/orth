@@ -3,8 +3,9 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.aether.client {
+import com.threerings.util.Log;
+
 import com.threerings.presents.client.Client;
-import com.threerings.presents.client.ClientEvent;
 
 import com.threerings.orth.aether.data.IgnoreMarshaller;
 import com.threerings.orth.client.Listeners;
@@ -24,9 +25,9 @@ public class IgnoreDirector extends AetherDirectorBase
         _isvc.ignorePlayer(ignoree.id, false, Listeners.listener());
     }
 
-    override public function clientObjectDidChange (event :ClientEvent) :void
+    override protected function clientObjectUpdated (client :Client) :void
     {
-        super.clientObjectDidChange(event);
+        super.clientObjectUpdated(client);
 
         aetherObj.ignoredEntryAdded.add(onPlayerIgnored);
         aetherObj.ignoredEntryRemoved.add(onPlayerUnignored);
