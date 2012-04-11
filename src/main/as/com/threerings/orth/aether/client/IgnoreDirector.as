@@ -13,9 +13,14 @@ public class IgnoreDirector extends AetherDirectorBase
 {
     IgnoreMarshaller;
 
-    public function ignorePlayer (ignoree :PlayerName, doIgnore :Boolean) :void
+    public function ignorePlayer (ignoree :PlayerName) :void
     {
-        _isvc.ignorePlayer(ignoree.id, doIgnore, Listeners.listener());
+        _isvc.ignorePlayer(ignoree.id, true, Listeners.listener());
+    }
+
+    public function unignorePlayer (ignoree :PlayerName) :void
+    {
+        _isvc.ignorePlayer(ignoree.id, false, Listeners.listener());
     }
 
     override protected function fetchServices (client :Client) :void
