@@ -110,9 +110,9 @@ public class IgnoreManager implements Lifecycle.InitComponent, IgnoreProvider
     {
         final int ignorerId = caller.getPlayerId();
 
-        if (caller.ignored.containsKey(ignoreeId) ^ doIgnore) {
+        if (caller.ignored.containsKey(ignoreeId) == doIgnore) {
             // already in the requested state
-            log.warning("Nothign to do in ignorePlayer", "caller", caller.who(),
+            log.warning("Nothing to do in ignorePlayer", "caller", caller.who(),
                 "ignoreeId", ignoreeId, "doIgnore", doIgnore);
             return;
         }
