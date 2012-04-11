@@ -4,6 +4,7 @@
 
 package com.threerings.orth.aether.client {
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ClientEvent;
 
 import com.threerings.orth.aether.data.IgnoreMarshaller;
 import com.threerings.orth.client.Listeners;
@@ -21,6 +22,24 @@ public class IgnoreDirector extends AetherDirectorBase
     public function unignorePlayer (ignoree :PlayerName) :void
     {
         _isvc.ignorePlayer(ignoree.id, false, Listeners.listener());
+    }
+
+    override public function clientObjectDidChange (event :ClientEvent) :void
+    {
+        super.clientObjectDidChange(event);
+
+        aetherObj.ignoredEntryAdded.add(onPlayerIgnored);
+        aetherObj.ignoredEntryRemoved.add(onPlayerUnignored);
+    }
+
+    protected function onPlayerIgnored (player :PlayerName) :void
+    {
+        // for subclasses to override
+    }
+
+    protected function onPlayerUnignored (player :PlayerName) :void
+    {
+        // for subclasses to override
     }
 
     override protected function fetchServices (client :Client) :void

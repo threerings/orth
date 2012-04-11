@@ -14,6 +14,7 @@ import com.threerings.util.MessageManager;
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.aether.client.FriendDirector;
+import com.threerings.orth.aether.client.IgnoreDirector;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.comms.client.CommsDirector;
 import com.threerings.orth.guild.client.GuildDirector;
@@ -43,6 +44,7 @@ public class OrthModule extends BindingModule
         bind(AetherDirector).asSingleton();
         bind(CommsDirector).asSingleton();
         bind(FriendDirector).asSingleton();
+        bind(IgnoreDirector).asSingleton();
         bind(GuildDirector).asSingleton();
         bind(LocusDirector).asSingleton();
         bind(MessageManager).asSingleton();
@@ -80,7 +82,8 @@ public class OrthModule extends BindingModule
         getInstance(OrthController);
         getInstance(PartyDirector);
         getInstance(GuildDirector);
-
+        getInstance(FriendDirector);
+        getInstance(IgnoreDirector);
     }
 
     private static const log :Log = Log.getLog(OrthModule);
