@@ -3,7 +3,6 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.aether.client {
-import com.threerings.util.Log;
 
 import com.threerings.presents.client.Client;
 
