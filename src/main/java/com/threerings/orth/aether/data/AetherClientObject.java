@@ -9,6 +9,7 @@ import javax.annotation.Generated;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.orth.chat.data.ChannelEntry;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.guild.data.GuildName;
@@ -33,6 +34,10 @@ public class AetherClientObject extends ClientObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String IGNORED = "ignored";
 
+    /** The field name of the <code>channels</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String CHANNELS = "channels";
+
     /** The field name of the <code>party</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String PARTY = "party";
@@ -54,6 +59,9 @@ public class AetherClientObject extends ClientObject
 
     /** The players on our ignore list. */
     public DSet<PlayerName> ignored; // initialized during resolution
+
+    /** Our current set of subscribed chat channels. */
+    public DSet<ChannelEntry> channels = DSet.newDSet();
 
     /** The player's current party, or null if they're not in a party.
      * Used to signal the PartyDirector. */
@@ -213,6 +221,57 @@ public class AetherClientObject extends ClientObject
         requestAttributeChange(IGNORED, value, this.ignored);
         DSet<PlayerName> clone = (value == null) ? null : value.clone();
         this.ignored = clone;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>channels</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void addToChannels (ChannelEntry elem)
+    {
+        requestEntryAdd(CHANNELS, channels, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>channels</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void removeFromChannels (Comparable<?> key)
+    {
+        requestEntryRemove(CHANNELS, channels, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>channels</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void updateChannels (ChannelEntry elem)
+    {
+        requestEntryUpdate(CHANNELS, channels, elem);
+    }
+
+    /**
+     * Requests that the <code>channels</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setChannels (DSet<ChannelEntry> value)
+    {
+        requestAttributeChange(CHANNELS, value, this.channels);
+        DSet<ChannelEntry> clone = (value == null) ? null : value.clone();
+        this.channels = clone;
     }
 
     /**

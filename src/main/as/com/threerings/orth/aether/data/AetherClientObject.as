@@ -14,6 +14,7 @@ import com.threerings.util.Set;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.orth.chat.data.ChannelEntry;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.data.PlayerName;
@@ -35,6 +36,8 @@ public class AetherClientObject extends ClientObject
 
     public var ignored :DSet; /* of */ PlayerName;
 
+    public var channels :DSet; /* of */ ChannelEntry;
+
     public var party :PartyObjectAddress;
 
     public var guildName :GuildName;
@@ -50,6 +53,10 @@ public class AetherClientObject extends ClientObject
     public var ignoredEntryAdded :Signal = new Signal(PlayerName);
     public var ignoredEntryRemoved :Signal = new Signal(PlayerName);
     public var ignoredEntryUpdated :Signal = new Signal(PlayerName, PlayerName);
+    public var channelsChanged :Signal = new Signal(DSet, DSet);
+    public var channelsEntryAdded :Signal = new Signal(ChannelEntry);
+    public var channelsEntryRemoved :Signal = new Signal(ChannelEntry);
+    public var channelsEntryUpdated :Signal = new Signal(ChannelEntry, ChannelEntry);
     public var partyChanged :Signal = new Signal(PartyObjectAddress, PartyObjectAddress);
     public var guildNameChanged :Signal = new Signal(GuildName, GuildName);
     public var guildChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
@@ -57,6 +64,7 @@ public class AetherClientObject extends ClientObject
     public static const PLAYER_NAME :String = "playerName";
     public static const FRIENDS :String = "friends";
     public static const IGNORED :String = "ignored";
+    public static const CHANNELS :String = "channels";
     public static const PARTY :String = "party";
     public static const GUILD_NAME :String = "guildName";
     public static const GUILD :String = "guild";
@@ -67,6 +75,7 @@ public class AetherClientObject extends ClientObject
         playerName = ins.readObject(PlayerName);
         friends = ins.readObject(DSet);
         ignored = ins.readObject(DSet);
+        channels = ins.readObject(DSet);
         party = ins.readObject(PartyObjectAddress);
         guildName = ins.readObject(GuildName);
         guild = ins.readObject(HostedNodelet);
@@ -146,6 +155,9 @@ class Signaller
             case "ignored":
                 signal = _obj.ignoredChanged;
                 break;
+            case "channels":
+                signal = _obj.channelsChanged;
+                break;
             case "party":
                 signal = _obj.partyChanged;
                 break;
@@ -171,6 +183,9 @@ class Signaller
             case "ignored":
                 signal = _obj.ignoredEntryAdded;
                 break;
+            case "channels":
+                signal = _obj.channelsEntryAdded;
+                break;
             default:
                 return;
         }
@@ -187,6 +202,9 @@ class Signaller
             case "ignored":
                 signal = _obj.ignoredEntryRemoved;
                 break;
+            case "channels":
+                signal = _obj.channelsEntryRemoved;
+                break;
             default:
                 return;
         }
@@ -202,6 +220,9 @@ class Signaller
                 break;
             case "ignored":
                 signal = _obj.ignoredEntryUpdated;
+                break;
+            case "channels":
+                signal = _obj.channelsEntryUpdated;
                 break;
             default:
                 return;
