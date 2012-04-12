@@ -80,7 +80,7 @@ public class ChannelManager
             throws InvocationException
         {
             _chatMgr.sendSpeak(this.router, ((AetherClientObject) caller).playerName, msg,
-                OrthChatCodes.SPEAK_MSG_TYPE, listener);
+                OrthChatCodes.CHANNEL_CHAT_TYPE, listener);
         }
     }
 
