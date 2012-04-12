@@ -11,11 +11,13 @@ public class ChannelEntry extends SimpleStreamableObject
     implements Entry
 {
     public String channelId;
+    public String title;
     public SpeakMarshaller speakService;
 
-    public ChannelEntry (String channelId, SpeakMarshaller speakService)
+    public ChannelEntry (String channelId, String title, SpeakMarshaller speakService)
     {
         this.channelId = channelId;
+        this.title = title;
         this.speakService = speakService;
     }
 

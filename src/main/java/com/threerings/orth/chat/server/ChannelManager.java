@@ -38,11 +38,11 @@ import com.threerings.orth.comms.data.CommSender;
 @Singleton
 public class ChannelManager
 {
-    public void registerChannel (String id)
+    public void registerChannel (String id, String title)
     {
         Preconditions.checkState(!_channels.containsKey(id));
 
-        _channels.put(id, new Channel(id));
+        _channels.put(id, new Channel(id, title));
     }
 
     public boolean subscribePlayer (AetherClientObject clobj, String channelId)
@@ -52,7 +52,7 @@ public class ChannelManager
         if (clobj.channels.containsKey(channelId)) {
             return false;
         }
-        clobj.addToChannels(new ChannelEntry(channelId, channel.service));
+        clobj.addToChannels(new ChannelEntry(channelId, channel.title, channel.service));
         return true;
     }
 
@@ -67,11 +67,13 @@ public class ChannelManager
 
     protected class Channel implements SpeakProvider
     {
+        public String title;
         public ChannelSpeakRouter router;
         public SpeakMarshaller service;
 
-        public Channel (String channelId)
+        public Channel (String channelId, String title)
         {
+            this.title = title;
             this.router = new ChannelSpeakRouter(channelId);
             this.service = _invMgr.registerProvider(this, SpeakMarshaller.class);
         }

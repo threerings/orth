@@ -29,12 +29,15 @@ public class ChannelEntry extends SimpleStreamableObject
 // GENERATED STREAMING START
     public var channelId :String;
 
+    public var title :String;
+
     public var speakService :SpeakMarshaller;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         channelId = ins.readField(String);
+        title = ins.readField(String);
         speakService = ins.readObject(SpeakMarshaller);
     }
 
@@ -42,6 +45,7 @@ public class ChannelEntry extends SimpleStreamableObject
     {
         super.writeObject(out);
         out.writeField(channelId);
+        out.writeField(title);
         out.writeObject(speakService);
     }
 
