@@ -63,6 +63,8 @@ public class OrthChatDirector extends AetherDirectorBase
         _comms.commReceived.add(function (msg :Object) :void {
             if (msg is Broadcast) {
                 displayFeedback(OrthCodes.GENERAL_MSGS, Broadcast(msg).message);
+            } else if (msg is Speak) {
+                receiveSpeak(Speak(msg));
             }
         });
     }
