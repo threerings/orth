@@ -131,7 +131,7 @@ public class TextUtil
     {
         var fmt :TextFormat = new TextFormat();
         fmt.align = defaultFormat.align;
-        fmt.font = FONT;
+        fmt.font = defaultFormat.font;
         fmt.size = defaultFormat.size;
         fmt.underline = true;
         fmt.color = useDefaultColor ? defaultFormat.color : 0x0093dd;
