@@ -43,7 +43,7 @@ public class PartyInvite extends BaseOneToOneComm
 
     public function onAccepted () :void
     {
-        _module.getInstance(PartyDirector).joinParty(address);
+        PartyDirector(_module.getInstance(PartyDirector)).joinParty(address);
     }
 
 // GENERATED STREAMING START

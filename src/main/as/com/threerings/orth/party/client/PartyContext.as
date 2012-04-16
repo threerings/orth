@@ -33,7 +33,7 @@ public class PartyContext implements PresentsContext
     public function connect (address :PartyObjectAddress) :void
     {
         const pcreds :PartyCredentials = new PartyCredentials();
-        pcreds.sessionToken = _module.getInstance(AetherClient).sessionToken;
+        pcreds.sessionToken = AetherClient(_module.getInstance(AetherClient)).sessionToken;
         pcreds.partyId = address.oid;
 
         PolicyLoader.registerClient(_client, _depConf.policyPort);

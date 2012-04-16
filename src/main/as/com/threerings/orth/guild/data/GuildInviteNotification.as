@@ -32,7 +32,7 @@ public class GuildInviteNotification extends BaseOneToOneComm
 
     public function onAccepted () :void
     {
-        _module.getInstance(AetherDirector).acceptGuildInvite(_from.id, _guildId);
+        AetherDirector(_module.getInstance(AetherDirector)).acceptGuildInvite(_from.id, _guildId);
     }
 
     public function get acceptMessage () :String

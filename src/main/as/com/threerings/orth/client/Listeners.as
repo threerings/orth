@@ -3,6 +3,8 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.client {
+import com.threerings.orth.chat.client.OrthChatDirector;
+
 import flashx.funk.ioc.Module;
 
 import com.threerings.util.Log;
@@ -71,7 +73,7 @@ public class Listeners
         if (bundle == null) {
             bundle = OrthCodes.GENERAL_MSGS;
         }
-        _module.getInstance(OrthChatDirector).displayFeedback(bundle, message);
+        OrthChatDirector(_module.getInstance(OrthChatDirector)).displayFeedback(bundle, message);
     }
 
     public static function displayError (bundle :String, cause :String,

@@ -7,7 +7,7 @@ package com.threerings.orth.aether.data {
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-
+import com.threerings.orth.aether.client.FriendDirector;
 import com.threerings.orth.aether.client.FriendDirector;
 import com.threerings.orth.comms.data.BaseOneToOneComm;
 import com.threerings.orth.comms.data.RequestComm;
@@ -41,7 +41,7 @@ public class FriendshipRequest extends BaseOneToOneComm
 
     public function onAccepted () :void
     {
-        _module.getInstance(FriendDirector).acceptFriendInvite(_from.id);
+        FriendDirector(_module.getInstance(FriendDirector)).acceptFriendInvite(_from.id);
     }
 
 // GENERATED STREAMING START
