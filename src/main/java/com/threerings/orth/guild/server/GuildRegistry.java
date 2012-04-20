@@ -64,11 +64,11 @@ public class GuildRegistry extends NodeletRegistry
      * Resolves the given guild and, if successful, configures the given {@link AetherClientObject}
      * with the hosting information.
      */
-    public void resolveGuild (final AetherClientObject plobj, GuildName guild)
+    public void resolveGuild (final AetherClientObject plobj, int guildId)
     {
-        resolveHosting(plobj, new GuildNodelet(guild.getGuildId()),
+        resolveHosting(plobj, new GuildNodelet(guildId),
             new Resulting<HostedNodelet>("HostedNodelet for guild", log,
-                "player", plobj.who(), "guildName", guild) {
+                "player", plobj.who(), "guildId", guildId) {
                 @Override public void requestCompleted (HostedNodelet result) {
                     plobj.setGuild(result);
                 }

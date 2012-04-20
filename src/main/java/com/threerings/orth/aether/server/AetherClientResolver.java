@@ -83,7 +83,7 @@ public class AetherClientResolver extends CrowdClientResolver
 
         final AetherClientObject plobj = (AetherClientObject)clobj;
         if (plobj.guildName != null) {
-            _guildReg.resolveGuild(plobj, plobj.guildName);
+            _guildReg.resolveGuild(plobj, plobj.guildName.getGuildId());
         }
     }
 
