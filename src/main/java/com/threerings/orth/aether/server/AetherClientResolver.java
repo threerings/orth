@@ -83,13 +83,7 @@ public class AetherClientResolver extends CrowdClientResolver
 
         final AetherClientObject plobj = (AetherClientObject)clobj;
         if (plobj.guildName != null) {
-            _guildReg.resolveHosting(clobj, new GuildNodelet(plobj.guildName.getGuildId()),
-                new Resulting<HostedNodelet>("HostedNodelet for guild", log,
-                        "player", plobj.who(), "guildName", plobj.guildName) {
-                    @Override public void requestCompleted (HostedNodelet result) {
-                        plobj.setGuild(result);
-                    }
-            });
+            _guildReg.resolveGuild(plobj, plobj.guildName);
         }
     }
 
