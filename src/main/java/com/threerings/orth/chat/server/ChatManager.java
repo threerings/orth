@@ -70,11 +70,12 @@ public class ChatManager
         _history.file(tell, new Date());
 
         // let the recipient know; we already know they're online
-        _peerMgr.invokeSingleNodeAction(new AetherNodeAction(tellee.getId()) {
-            @Override protected void execute (AetherClientObject player) {
+        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(tellee.getId()) {
+            @Override protected void execute (AetherClientObject player, ResultListener listener) {
                 TellSender.receiveTell(player, tell);
+                listener.requestProcessed(null);
             }
-        });
+        }, new Resulting<Void>(listener));
     }
 
     public void sendSpeak (SpeakRouter router, PlayerName sender, String msg, String localType,
