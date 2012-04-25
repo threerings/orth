@@ -22,9 +22,11 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.aether.server.AetherNodeAction;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.aether.server.AetherSessionLocator;
 import com.threerings.orth.aether.server.IgnoreManager;
+import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.Speak;
 import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.chat.data.Tell;
@@ -57,17 +59,22 @@ public class ChatManager
             return;
         }
 
-        _history.file(tell, new Date());
+        // the tell can't go through if the recipient is not online
+        if (null == _peerMgr.locatePlayer(tellee.getId())) {
+            throw new InvocationException(OrthChatCodes.USER_NOT_ONLINE);
+        }
 
         // make sure one of these folks isn't ignoring the other
         _ignoreMgr.validateCommunication(caller.getPlayerId(), tellee.getId());
 
-        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(tellee.getId()) {
-            @Override protected void execute (AetherClientObject player, ResultListener listener) {
+        _history.file(tell, new Date());
+
+        // let the recipient know; we already know they're online
+        _peerMgr.invokeSingleNodeAction(new AetherNodeAction(tellee.getId()) {
+            @Override protected void execute (AetherClientObject player) {
                 TellSender.receiveTell(player, tell);
-                listener.requestProcessed(null);
             }
-        }, new Resulting<Void>(listener));
+        });
     }
 
     public void sendSpeak (SpeakRouter router, PlayerName sender, String msg, String localType,
