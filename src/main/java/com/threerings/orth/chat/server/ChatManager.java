@@ -22,7 +22,6 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.aether.data.AetherClientObject;
-import com.threerings.orth.aether.server.AetherNodeAction;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.aether.server.AetherSessionLocator;
 import com.threerings.orth.aether.server.IgnoreManager;

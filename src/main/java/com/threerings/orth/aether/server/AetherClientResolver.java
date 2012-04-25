@@ -8,8 +8,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-import com.threerings.util.Resulting;
-
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
@@ -18,14 +16,10 @@ import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.data.AuthName;
-import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.server.GuildRegistry;
 import com.threerings.orth.guild.server.persist.GuildRepository;
-import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.server.persist.PlayerRecord;
 import com.threerings.orth.server.persist.PlayerRepository;
-
-import static com.threerings.orth.Log.log;
 
 /**
  * Performs resolution of aether clients.
