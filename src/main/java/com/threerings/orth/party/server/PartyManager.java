@@ -30,6 +30,7 @@ import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.aether.data.AetherCodes;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.aether.server.IgnoreManager;
 import com.threerings.orth.chat.data.OrthChatCodes;
@@ -274,6 +275,11 @@ public class PartyManager
 
         if (_partyObj.invitedIds.contains(invitee.getId())) {
             throw new InvocationException(PartyCodes.E_ALREADY_INVITED);
+        }
+
+        // the invite can't go through if the recipient is not online
+        if (null == _peerMgr.locatePlayer(invitee.getId())) {
+            throw new InvocationException(AetherCodes.USER_NOT_ONLINE);
         }
 
         // make sure one of these folks isn't ignoring the other
