@@ -39,6 +39,7 @@ import com.threerings.orth.aether.data.FriendshipRequest;
 import com.threerings.orth.aether.data.FriendshipTermination;
 import com.threerings.orth.aether.data.PeeredPlayerInfo;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
+import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthCodes;
@@ -104,6 +105,11 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         if (!throttle.allow(targetId)) {
             log.info("Throttling friend request", "player", player, "targetId", targetId);
             throw new InvocationException(AetherCodes.FRIEND_REQUEST_ALREADY_SENT);
+        }
+
+        // the request can't go through if the recipient is not online
+        if (null == _peerMgr.locatePlayer(targetId)) {
+            throw new InvocationException(OrthChatCodes.USER_NOT_ONLINE);
         }
 
         // make sure one of these folks isn't ignoring the other
