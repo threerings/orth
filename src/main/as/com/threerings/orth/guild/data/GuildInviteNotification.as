@@ -42,7 +42,7 @@ public class GuildInviteNotification extends BaseOneToOneComm
 
     public function get ignoreMessage () :String
     {
-        return "You declined the intivation to join '" + _guildName + "'.";
+        return "You declined the invitation to join '" + _guildName + "'.";
     }
 
 // GENERATED STREAMING START
