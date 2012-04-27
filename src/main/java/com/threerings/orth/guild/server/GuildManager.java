@@ -306,7 +306,10 @@ public class GuildManager extends NodeletManager
         throws InvocationException
     {
         final GuildMemberEntry member = requireMember(caller);
-        if (member.isOfficer()) {
+        // fish out the MemberEntry separately in this check until we've implemented real
+        // support checks in Orth and stopped Who from creating fake GuildMemberEntry
+        // for support+ ...
+        if (_guildObj.members.get(member.getPlayerId()).rank == GuildRank.OFFICER) {
             if (Iterables.size(Iterables.filter(_guildObj.members, IS_OFFICER)) == 1) {
                 log.warning("Last officer tried to leave guild", "officer", caller);
                 throw new InvocationException(E_INTERNAL_ERROR);
