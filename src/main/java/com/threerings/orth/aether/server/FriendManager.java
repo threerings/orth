@@ -166,9 +166,10 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 CommSender.receiveComm(caller, new FriendshipTermination(callerName, entry.name));
 
                 // You don't like me.
+                final int callerId = callerName.getId();
                 _peerMgr.invokeNodeAction(new AetherNodeAction(targetId) {
                     @Override protected void execute (AetherClientObject memobj) {
-                        memobj.removeFromFriends(callerName.getId());
+                        memobj.removeFromFriends(callerId);
                     }
                 });
             }
