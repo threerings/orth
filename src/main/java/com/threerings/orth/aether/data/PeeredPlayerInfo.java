@@ -19,4 +19,15 @@ public class PeeredPlayerInfo extends SimpleStreamableObject
     public PlayerName visibleName;
     public GuildName guildName;
     public Whereabouts whereabouts;
+
+    @Override public int hashCode ()
+    {
+        return authName.hashCode();
+    }
+
+    @Override public boolean equals (Object other)
+    {
+        return (other instanceof PeeredPlayerInfo) &&
+            authName.equals(((PeeredPlayerInfo) other).authName);
+    }
 }
