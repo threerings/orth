@@ -187,7 +187,7 @@ public class LocusDirector extends BasicDirector
         _materializing = null;
 
         log.warning("Place resolution request failed", "cause", cause);
-        Listeners.displayFeedback(OrthCodes.WORLD_MSGS, cause);
+        Listeners.displayFeedback(OrthCodes.GENERAL_MSGS, cause);
     }
 
     // from Java LocusService_PlaceResolutionListener
@@ -241,7 +241,7 @@ public class LocusDirector extends BasicDirector
 
         _connecting = null;
         _connected = null;
-        Listeners.displayFeedback(OrthCodes.WORLD_MSGS, "Connection failed");
+        Listeners.displayFeedback(OrthCodes.GENERAL_MSGS, "m.network_error");
     }
 
     protected function gotoConnecting (..._) :void
