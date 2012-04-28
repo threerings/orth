@@ -90,8 +90,6 @@ public class TopPanel extends Sprite
             }
         });
 
-        _locusDir.locusWillChange.add(onLocusWillChange);
-
         setMainView(getBlankPlaceView());
     }
 
