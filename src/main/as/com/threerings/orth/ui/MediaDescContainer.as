@@ -15,7 +15,7 @@ import com.threerings.orth.data.MediaDesc;
 
 public class MediaDescContainer extends MediaContainer
 {
-    public function MediaDescContainer (desc: MediaDesc = null)
+    public function MediaDescContainer (desc :MediaDesc = null)
     {
         super(null);
 

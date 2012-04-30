@@ -93,13 +93,13 @@ public class AetherClient extends Client
         }
     }
 
-    override public function gotClientObject (clobj :ClientObject):void
+    override public function gotClientObject (clobj :ClientObject) :void
     {
         _plobj = AetherClientObject(clobj);
         super.gotClientObject(clobj);
     }
 
-    override protected function buildClientProps ():Object
+    override protected function buildClientProps () :Object
     {
         var props :Object = super.buildClientProps();
         props[MODULE_PROP_NAME] = _module;

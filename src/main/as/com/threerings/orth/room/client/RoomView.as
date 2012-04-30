@@ -106,19 +106,19 @@ public class RoomView extends Sprite
     }
 
     // from ChatInfoProvider
-    public function getBubblePosition (speaker:Name):Point
+    public function getBubblePosition (speaker :Name) :Point
     {
         return isAbstract();
     }
 
     // from ChatInfoProvider
-    public function addBubbleObserver (observer:SpeakerObserver):void
+    public function addBubbleObserver (observer :SpeakerObserver) :void
     {
         isAbstract();
     }
 
     // from ChatInfoProvider
-    public function removeBubbleObserver (observer:SpeakerObserver):void
+    public function removeBubbleObserver (observer :SpeakerObserver) :void
     {
         isAbstract();
     }

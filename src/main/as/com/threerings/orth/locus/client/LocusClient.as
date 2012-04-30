@@ -56,7 +56,7 @@ public class LocusClient extends CrowdClient
         return isAbstract();
     }
 
-    override protected function buildClientProps ():Object
+    override protected function buildClientProps () :Object
     {
         var props :Object = super.buildClientProps();
         props[AetherClient.MODULE_PROP_NAME] = _module;

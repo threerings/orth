@@ -25,7 +25,7 @@ public class ActorSprite extends OccupantSprite
     /**
      * Initializes an actor sprite for the supplied actor.
      */
-    public function initActorSprite (occInfo :ActorInfo, extraInfo:Object) :void
+    public function initActorSprite (occInfo :ActorInfo, extraInfo :Object) :void
     {
         super.initOccupantSprite(occInfo, extraInfo);
     }
@@ -102,7 +102,7 @@ public class ActorSprite extends OccupantSprite
      * Update the actor's scene location. Called by our backend in response to a request from
      * usercode.
      */
-    public function setLocationFromUser (x :Number, y :Number, z: Number, orient :Number) :void
+    public function setLocationFromUser (x :Number, y :Number, z :Number, orient :Number) :void
     {
         var ctrl :RoomController = getController(true);
         if (ctrl != null) {

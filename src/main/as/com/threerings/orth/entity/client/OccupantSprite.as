@@ -59,7 +59,7 @@ public class OccupantSprite extends EntitySprite
      * Initializes a sprite for the supplied occupant.
      */
 
-    public function initOccupantSprite (occInfo :OccupantInfo, extraInfo :Object):void
+    public function initOccupantSprite (occInfo :OccupantInfo, extraInfo :Object) :void
     {
         // The label often jumps visibly when the actor is hovered over, a pixel up or down, and/or
         // left or right. As far as I (Ray) can figure, when the glow filter is applied it's doing

@@ -74,7 +74,7 @@ public class ActorControl extends EntityControl
      *
      * @see com.whirled.ControlEvent#APPEARANCE_CHANGED
      */
-    public function setLogicalLocation (x :Number, y :Number, z: Number, orient :Number) :void
+    public function setLogicalLocation (x :Number, y :Number, z :Number, orient :Number) :void
     {
         callHostCode("setLocation_v1", x, y, z, orient);
     }

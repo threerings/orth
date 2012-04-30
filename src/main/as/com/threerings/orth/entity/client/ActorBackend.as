@@ -43,7 +43,7 @@ public class ActorBackend extends EntityBackend
     /**
      * Called by user code when it wants to change the actor's scene location.
      */
-    protected function setLocation_v1 (x :Number, y :Number, z: Number, orient :Number) :void
+    protected function setLocation_v1 (x :Number, y :Number, z :Number, orient :Number) :void
     {
         if (_sprite != null) {
             (_sprite as ActorSprite).setLocationFromUser(x, y, z, orient);

@@ -18,7 +18,7 @@ public class OrthLocationDirector extends LocationDirector
         super(ctx);
     }
 
-    override public function didMoveTo (placeId:int, config:PlaceConfig):void
+    override public function didMoveTo (placeId :int, config :PlaceConfig) :void
     {
         var up :Function = super.didMoveTo;
 

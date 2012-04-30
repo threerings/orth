@@ -43,7 +43,6 @@ public abstract class InstancedSceneManager extends SpotSceneManager
         _instance = instance;
 
         _whereabouts = createWhereabouts();
-
     }
 
     // only overridden to widen to public

@@ -34,7 +34,7 @@ public class FurniSprite extends EntitySprite
     /**
      * Initializes a new FurniSprite.
      */
-    public function initFurniSprite (furni :FurniData):void
+    public function initFurniSprite (furni :FurniData) :void
     {
         _furni = furni;
 
@@ -65,7 +65,7 @@ public class FurniSprite extends EntitySprite
     /**
      * Call the provided function when this particular sprite is done loading
      */
-    public function setLoadedCallback (fn :Function):void
+    public function setLoadedCallback (fn :Function) :void
     {
         _loadedCallback = fn;
         if (_complete) {
@@ -221,7 +221,7 @@ public class FurniSprite extends EntitySprite
         }
     }
 
-    protected function loadingStopped (event :Event):void
+    protected function loadingStopped (event :Event) :void
     {
         _complete = true;
         if (_loadedCallback != null) {
@@ -252,7 +252,7 @@ public class FurniSprite extends EntitySprite
     protected var _furni :FurniData;
 
     /** A function we call when we've finished loading. */
-    protected var _loadedCallback:Function;
+    protected var _loadedCallback :Function;
 
     /** Remember if loading completed (or failed). */
     protected var _complete :Boolean;

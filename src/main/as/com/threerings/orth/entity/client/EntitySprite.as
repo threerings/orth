@@ -440,7 +440,7 @@ public class EntitySprite
     /**
      * Called when a datum in the this sprite's item's memory changes.
      */
-    public function memoryChanged (key :String, value: Object) :void
+    public function memoryChanged (key :String, value :Object) :void
     {
         callUserCode("memoryChanged_v1", key, value);
     }
@@ -773,7 +773,7 @@ public class EntitySprite
     /**
      * Update a memory datum. Called by our backend in response to a request from usercode.
      */
-    internal function updateMemory (key :String, value: Object, callback :Function) :void
+    internal function updateMemory (key :String, value :Object, callback :Function) :void
     {
         var ctrl :RoomController = getController(true);
         if (ctrl != null) {

@@ -63,7 +63,7 @@ public class ActorInfo extends OccupantInfo
 
     /** @inheritDoc */
     // from SimpleStreamableObject
-    override protected function toStringJoiner (j :Joiner): void
+    override protected function toStringJoiner (j :Joiner) :void
     {
         super.toStringJoiner(j);
         j.add("media", _media, "ident", _ident, "state", _state);
