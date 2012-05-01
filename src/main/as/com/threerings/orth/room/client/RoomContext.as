@@ -3,9 +3,10 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.room.client {
-
 import flashx.funk.ioc.Module;
 import flashx.funk.ioc.inject;
+
+import com.threerings.util.Preconditions;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.dobj.DObjectManager;
@@ -24,6 +25,8 @@ import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.client.LocusClient;
 import com.threerings.orth.locus.client.LocusContext;
 import com.threerings.orth.locus.data.Locus;
+import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.room.data.SocializerObject;
 
 /**
@@ -104,7 +107,14 @@ public class RoomContext
     // from LocusContext
     public function go (locus :Locus) :void
     {
+        Preconditions.checkArgument(locus is RoomContext, "Expecting a RoomContext");
         var sceneDir :OrthSceneDirector = _module.getInstance(SceneDirector);
+
+        if (RoomLocus(locus).loc == null) {
+            const loc :OrthLocation =
+            RoomLocus(locus).loc
+        }
+
         sceneDir.moveToLocalPlace(locus);
     }
 

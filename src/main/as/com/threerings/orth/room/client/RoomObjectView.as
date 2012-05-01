@@ -76,6 +76,7 @@ public class RoomObjectView extends RoomView
     public function loadingDone () :Boolean
     {
         return (_loadingWatcher != null) && _loadingWatcher.isFinished();
+        return (_loadingWatcher != null) && _loadingWatcher.isFinished();
     }
 
     /**
