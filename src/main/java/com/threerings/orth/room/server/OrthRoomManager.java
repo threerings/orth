@@ -55,6 +55,7 @@ import com.threerings.orth.room.data.ActorObject;
 import com.threerings.orth.room.data.EntityIdent;
 import com.threerings.orth.room.data.EntityMemories;
 import com.threerings.orth.room.data.OrthLocation;
+import com.threerings.orth.room.data.OrthPortal;
 import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.room.data.OrthRoomMarshaller;
 import com.threerings.orth.room.data.OrthRoomObject;
@@ -72,6 +73,18 @@ import static com.threerings.orth.Log.log;
 public class OrthRoomManager extends InstancedSceneManager
     implements OrthRoomProvider, SpeakProvider
 {
+    @Override
+    protected SceneLocation computeEnteringLocation (BodyObject body, Portal from, Portal entry)
+    {
+        // primary entrance is the 'dest' member of the source portal
+        OrthLocation loc = ((OrthPortal) from).dest;
+        // backup: the room's entrance, which is typically its default entrance
+        if (loc == null) {
+            loc = (OrthLocation) entry.loc;
+        }
+        return new SceneLocation(loc, body.getOid());
+    }
+
     @Override
     public void sendSpriteMessage (ClientObject caller, EntityIdent item,
         String name, byte[] arg, boolean isAction)
