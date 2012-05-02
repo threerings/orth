@@ -142,10 +142,6 @@ public class OrthSceneDirector extends SceneDirector
             sceneVers = data.model.version;
         }
 
-        // note: _departingPortalId is only needed *before* a server switch, so we intentionally
-        // allow it to get cleared out in the clientDidLogoff() call that happens as we're
-        // switching from one server to another
-
         // issue a moveTo request
         log.info("Issuing moveTo(->" + data.locus + ", " + sceneVers + ").");
         _mssvc.moveTo(data.locus, sceneVers, -1, this);
