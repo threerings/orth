@@ -66,7 +66,6 @@ public class RoomView extends Sprite
         _ctx = ctx;
         _ctrl = ctrl;
         _layout = RoomLayoutFactory.createLayout(null, this);
-        _walkmap = new WalkMap(_layout);
     }
 
     /**
@@ -782,7 +781,7 @@ public class RoomView extends Sprite
     /** What is the current offset into the RoomView that the player is watching? */
     protected var _scrollOffset :Point = new Point(0, 0);
 
-    protected var _walkmap :WalkMap;
+    protected var _walkmap :WalkMap = new WalkMap();
 
     /** Object responsible for our spatial layout. */
     protected var _layout :RoomLayout;

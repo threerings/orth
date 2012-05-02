@@ -455,9 +455,7 @@ public class RoomController extends SceneController
                         _walkTarget.alpha = 1;
                     }
 
-                    cloc.loc = _roomView.walkmap.getLastWalkablePoint(
-                        _roomView.getMyCurrentLocation(), cloc.loc);
-
+                    cloc.loc = _roomView.walkmap.getLastWalkablePoint(_roomView, cloc.loc);
                     // don't show the walk target if we're "in front" of the room view
                     showWalkTarget = (cloc.loc.z >= 0);
                     _walkTarget.setLocation(cloc.loc);
@@ -603,8 +601,8 @@ public class RoomController extends SceneController
             if (cloc != null && cloc.loc.z >= 0) {
                 // orient the location as appropriate
                 addAvatarYOffset(cloc);
-                var newLoc :OrthLocation = _roomView.walkmap.getLastWalkablePoint(
-                    _roomView.getMyCurrentLocation(), cloc.loc);
+                var newLoc :OrthLocation =
+                    _roomView.walkmap.getLastWalkablePoint(_roomView, cloc.loc);
                 var degrees :Number = 180 / Math.PI *
                     Math.atan2(newLoc.z - curLoc.z, newLoc.x - curLoc.x);
                 // we rotate so that 0 faces forward

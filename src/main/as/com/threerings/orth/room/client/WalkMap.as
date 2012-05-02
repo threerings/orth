@@ -6,7 +6,6 @@ import flash.geom.Point;
 
 import com.threerings.display.DisplayUtil;
 
-import com.threerings.orth.room.client.layout.RoomLayout;
 import com.threerings.orth.room.data.OrthLocation;
 import com.threerings.orth.room.data.OrthRoomCodes;
 import com.threerings.orth.ui.ObjectMediaDesc;
@@ -16,12 +15,11 @@ import com.threerings.orth.ui.ObjectMediaDesc;
  */
 public class WalkMap extends RoomElementSprite
 {
-    public function WalkMap (layout :RoomLayout)
+    public function WalkMap ()
     {
         this.mouseEnabled = false;
         this.visible = false;
 
-        _layout = layout;
         _loc.z = 1.0;
     }
 
@@ -39,8 +37,10 @@ public class WalkMap extends RoomElementSprite
         return _desc;
     }
 
-    public function getLastWalkablePoint (myLoc :OrthLocation, toLoc :OrthLocation) :OrthLocation
+    public function getLastWalkablePoint (view :RoomView, toLoc :OrthLocation) :OrthLocation
     {
+        const myLoc :OrthLocation = view.getMyCurrentLocation();
+        
         if (myLoc == null || toLoc == null || _desc == null) {
             return null;
         }
@@ -72,7 +72,7 @@ public class WalkMap extends RoomElementSprite
 
         // else figure out how far we got
         const lastPoint :Point = Point.interpolate(from, to, (n-(ii-1))/n);
-        const lastLoc :ClickLocation = _layout.pointToAvatarLocation(lastPoint.x, lastPoint.y);
+        const lastLoc :ClickLocation = view.layout.pointToAvatarLocation(lastPoint.x, lastPoint.y);
         return (lastLoc != null) ? lastLoc.loc : null;
 
         function isWalkable (ii :Number) :Boolean {
@@ -82,9 +82,9 @@ public class WalkMap extends RoomElementSprite
         }
     }
 
-    public function isLocationWalkable (loc :OrthLocation) :Boolean
+    public function isLocationWalkable (metrics :RoomMetrics, loc :OrthLocation) :Boolean
     {
-        const point :Point = localToGlobal(_layout.metrics.roomToScreen(loc.x, loc.y, loc.z));
+        const point :Point = localToGlobal(metrics.roomToScreen(loc.x, loc.y, loc.z));
         return (point == null) || hitTestPoint(point.x, point.y, true);
     }
 
@@ -95,6 +95,5 @@ public class WalkMap extends RoomElementSprite
     }
 
     protected var _desc :ObjectMediaDesc;
-    protected var _layout :RoomLayout;
 }
 }
