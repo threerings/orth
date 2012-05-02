@@ -45,8 +45,10 @@ public class WalkMap extends RoomElementSprite
             return null;
         }
 
-        const from :Point = localToGlobal(_layout.metrics.roomToScreen(myLoc.x, myLoc.y, myLoc.z));
-        const to :Point = localToGlobal(_layout.metrics.roomToScreen(toLoc.x, toLoc.y, toLoc.z));
+        const from :Point = view.localToGlobal(
+            view.layout.metrics.roomToScreen(myLoc.x, myLoc.y, myLoc.z));
+        const to :Point = view.localToGlobal(
+            view.layout.metrics.roomToScreen(toLoc.x, toLoc.y, toLoc.z));
 
         const n :int = Point.distance(from, to);
         var ii :int = 0;
