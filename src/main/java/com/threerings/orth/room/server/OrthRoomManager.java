@@ -80,7 +80,7 @@ public class OrthRoomManager extends InstancedSceneManager
         OrthLocation loc = ((OrthPortal) from).dest;
         // backup: the room's entrance, which is typically its default entrance
         if (loc == null) {
-            loc = (OrthLocation) entry.loc;
+            loc = pickStartingLocation(entry);
         }
         return new SceneLocation(loc, body.getOid());
     }
@@ -388,6 +388,11 @@ public class OrthRoomManager extends InstancedSceneManager
         // TODO: It could be argued that this class shouldn't need to know about HOSTED_ROOMS
         _peerMgr.getOrthNodeObject().removeFromHostedRooms(
             RoomLocus.makeKey(_scene.getId(), _instance.getInstanceId()));
+    }
+
+    protected OrthLocation pickStartingLocation (Portal entry)
+    {
+        return (OrthLocation) entry.loc;
     }
 
     /** A trivial class that remembers nothing. */
