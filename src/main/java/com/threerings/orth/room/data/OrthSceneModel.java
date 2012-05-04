@@ -5,8 +5,10 @@
 package com.threerings.orth.room.data;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import com.samskivert.util.ArrayUtil;
@@ -25,8 +27,7 @@ public class OrthSceneModel extends SceneModel
     /** The furniture in the scene. */
     public FurniData[] furnis = new FurniData[0];
 
-    /** The entrance location. */
-    public OrthLocation entrance;
+    public List<OrthLocation> entrances = Lists.newArrayList();
 
     /** Decor information. */
     public DecorData decor;
@@ -106,7 +107,7 @@ public class OrthSceneModel extends SceneModel
     {
         Portal p = new Portal();
         p.portalId = (short) -1;
-        p.loc = entrance;
+        p.loc = entrances.isEmpty() ? new OrthLocation(0.5, 0, 0.5, 0) : entrances.get(0);
         p.targetSceneId = sceneId;
         p.targetPortalId = -1;
 

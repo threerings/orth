@@ -8,10 +8,12 @@ package com.threerings.orth.room.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.TypedArray;
+import com.threerings.io.streamers.ArrayStreamer;
 
 import com.threerings.util.ArrayIterator;
 import com.threerings.util.Arrays;
 import com.threerings.util.Iterator;
+import com.threerings.util.Log;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
 import com.threerings.util.Short;
@@ -33,7 +35,7 @@ public class OrthSceneModel extends SceneModel
 // GENERATED STREAMING START
     public var furnis :TypedArray;
 
-    public var entrance :OrthLocation;
+    public var entrances :TypedArray; /* of */ OrthLocation;
 
     public var decor :DecorData;
 
@@ -41,7 +43,7 @@ public class OrthSceneModel extends SceneModel
     {
         super.readObject(ins);
         furnis = ins.readObject(TypedArray);
-        entrance = ins.readObject(OrthLocation);
+        entrances = ins.readField(ArrayStreamer.INSTANCE);
         decor = ins.readObject(DecorData);
     }
 
@@ -49,7 +51,7 @@ public class OrthSceneModel extends SceneModel
     {
         super.writeObject(out);
         out.writeObject(furnis);
-        out.writeObject(entrance);
+        out.writeField(entrances, ArrayStreamer.INSTANCE);
         out.writeObject(decor);
     }
 
@@ -116,7 +118,7 @@ public class OrthSceneModel extends SceneModel
     {
         var p :Portal = new Portal();
         p.portalId = -1;
-        p.loc = entrance;
+        p.loc = (entrances.length > 0) ? entrances[0] : new OrthLocation(0.5, 0, 0.5, 0);
         p.targetSceneId = sceneId;
         p.targetPortalId = -1;
 
@@ -185,7 +187,7 @@ public class OrthSceneModel extends SceneModel
     {
         var model :OrthSceneModel = (super.clone() as OrthSceneModel);
         model.furnis = (furnis.clone() as TypedArray);
-        model.entrance = (entrance.clone() as OrthLocation);
+        model.entrances = (entrances.clone() as TypedArray);
         model.decor = decor;
         return model;
     }

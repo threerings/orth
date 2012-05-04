@@ -20,9 +20,6 @@ public class SceneAttrsUpdate extends SceneUpdate
     /** Full description of the new decor. */
     public DecorData decor;
 
-    /** The new entrance location. */
-    public OrthLocation entrance;
-
     @Override
     public void apply (SceneModel model)
     {
@@ -31,7 +28,6 @@ public class SceneAttrsUpdate extends SceneUpdate
         OrthSceneModel mmodel = (OrthSceneModel) model;
         mmodel.name = name;
         mmodel.decor = decor;
-        mmodel.entrance = entrance;
     }
 
     @Override

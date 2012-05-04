@@ -61,14 +61,6 @@ public class OrthScene extends SceneImpl
     }
 
     /**
-     * Retrieve the room entrance.
-     */
-    public OrthLocation getEntrance ()
-    {
-        return _orthModel.entrance;
-    }
-
-    /**
      * Retrieve the decor geometry information.
      */
     public DecorData getDecorData ()
