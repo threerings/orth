@@ -89,6 +89,16 @@ public class PartyManager
         };
     }
 
+    public Set<Integer> getPlayerIds ()
+    {
+        Set<Integer> result = Sets.newHashSet();
+        for (PartyPeep peep : _partyObj.peeps) {
+            result.add(peep.getPlayerId());
+        }
+        return result;
+    }
+
+
     // from SpeakProvider
     @Override public void speak (ClientObject caller, String msg, InvocationListener listener)
         throws InvocationException
