@@ -53,6 +53,8 @@ import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.OrthDeploymentConfig;
 
+import static com.threerings.orth.Log.log;
+
 /**
  * Manages a particular party, living on a single node.
  */
@@ -336,6 +338,8 @@ public class PartyManager
     {
         PartierObject partier = (PartierObject)client;
         if (partier.getPlayerId() != _partyObj.leaderId) {
+            log.warning("Operation requires party leadership", "partier", partier.getPlayerId(),
+                "leader", _partyObj.leaderId, new Exception());
             throw new InvocationException(InvocationCodes.E_ACCESS_DENIED);
         }
         return partier;
