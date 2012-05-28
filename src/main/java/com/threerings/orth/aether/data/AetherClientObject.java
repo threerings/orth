@@ -14,7 +14,6 @@ import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
-import com.threerings.orth.party.data.PartyObjectAddress;
 
 /**
  * The core distributed object representing the location-agnostic aspect of an Orth player.
@@ -65,7 +64,7 @@ public class AetherClientObject extends ClientObject
 
     /** The player's current party, or null if they're not in a party.
      * Used to signal the PartyDirector. */
-    public PartyObjectAddress party;
+    public HostedNodelet party;
 
     /** The id of the guild this player belongs to, or zero if they belong to no guild. */
     public GuildName guildName;
@@ -283,9 +282,9 @@ public class AetherClientObject extends ClientObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setParty (PartyObjectAddress value)
+    public void setParty (HostedNodelet value)
     {
-        PartyObjectAddress ovalue = this.party;
+        HostedNodelet ovalue = this.party;
         requestAttributeChange(
             PARTY, value, ovalue);
         this.party = value;

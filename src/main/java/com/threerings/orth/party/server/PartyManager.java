@@ -1,5 +1,5 @@
 //
-// Orth - a package of MMO services: rooms, parties, guilds, and more!
+// Orth - a package of MMO services: rooms, parties, partys, and more!
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.party.server;
@@ -8,7 +8,6 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
@@ -23,10 +22,10 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.dobj.ObjectDeathListener;
 import com.threerings.presents.dobj.ObjectDestroyedEvent;
-import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
+import com.threerings.presents.server.PresentsDObjectMgr;
 
 import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherClientObject;
@@ -40,45 +39,36 @@ import com.threerings.orth.chat.server.ChatManager;
 import com.threerings.orth.chat.server.DObjectSpeakRouter;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.comms.data.CommSender;
+import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
+import com.threerings.orth.nodelet.data.HostedNodelet;
+import com.threerings.orth.nodelet.data.NodeletAuthName;
+import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.party.data.PartierObject;
-import com.threerings.orth.party.data.PartyAuthName;
 import com.threerings.orth.party.data.PartyCodes;
+import com.threerings.orth.party.data.PartyConfig;
 import com.threerings.orth.party.data.PartyInvite;
 import com.threerings.orth.party.data.PartyMarshaller;
+import com.threerings.orth.party.data.PartyNodelet;
 import com.threerings.orth.party.data.PartyObject;
-import com.threerings.orth.party.data.PartyObjectAddress;
 import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.peer.server.OrthPeerManager;
-import com.threerings.orth.server.OrthDeploymentConfig;
 
 import static com.threerings.orth.Log.log;
 
 /**
  * Manages a particular party, living on a single node.
  */
-public class PartyManager
+public class PartyManager extends NodeletManager
     implements PartyProvider, SpeakProvider
 {
-    public final PartyObjectAddress addr;
-
-    @Inject public PartyManager (RootDObjectManager omgr, InvocationManager invMgr,
-        OrthDeploymentConfig conf, AetherClientObject creator, PartyObject partyObj)
+    @Override public void didInit ()
     {
-        _omgr = omgr;
-        _invMgr = invMgr;
+        _partyObj = ((PartyObject)_sharedObject);
+        _partyId = ((PartyNodelet)_nodelet.nodelet).partyId;
 
-        // set up the new PartyObject
-        _partyObj = partyObj;
-
-        configurePartyObject(creator);
-        _omgr.registerObject(_partyObj);
-
-        addr = new PartyObjectAddress(conf.getPartyHost(), conf.getPartyPort(), _partyObj.getOid());
-
-        // add the Orth speak service for this party
-        _partyObj.partyChatService = invMgr.registerProvider(this, SpeakMarshaller.class);
+        configurePartyObject();
 
         _speakRouter = new DObjectSpeakRouter(_partyObj) {
             @Override public Set<Integer> getSpeakReceipients () {
@@ -91,6 +81,16 @@ public class PartyManager
         };
     }
 
+    public void configure (AetherClientObject creator, PartyConfig config)
+    {
+        _partyObj.setLeaderId(creator.getPlayerId());
+    }
+
+    public PartyObject getPartyObject ()
+    {
+        return _partyObj;
+    }
+
     public Set<Integer> getPlayerIds ()
     {
         Set<Integer> result = Sets.newHashSet();
@@ -100,6 +100,11 @@ public class PartyManager
         return result;
     }
 
+    protected PartierObject getPartier (int partierId)
+    {
+        AuthName authName = NodeletAuthName.makeKey(PartyNodelet.class, partierId);
+        return (PartierObject) _clientMgr.getClientObject(authName);
+    }
 
     // from SpeakProvider
     @Override public void speak (ClientObject caller, String msg, InvocationListener listener)
@@ -112,20 +117,32 @@ public class PartyManager
     /**
      * Fill in info on the party object.
      */
-    protected void configurePartyObject (AetherClientObject creator)
+    protected void configurePartyObject ()
     {
         // "invite" the creator
         _partyObj.invitedIds.add(_partyObj.leaderId);
 
-        _partyObj.leaderId = creator.getPlayerId();
         _partyObj.disband = true;
-        _partyObj.setAccessController(new PartyAccessController(this));
         _partyObj.partyService = _invMgr.registerProvider(this, PartyMarshaller.class);
+
+        // add the Orth speak service for this party
+        _partyObj.partyChatService = _invMgr.registerProvider(this, SpeakMarshaller.class);
     }
 
-    protected PartyPeep createPartyPeep (PartierObject partier, AppearanceInfo appearanceInfo)
+    /**
+     * Constructs a new, uninitialized PartyPeep, or a subclass thereof.
+     */
+    protected PartyPeep createPeep ()
     {
-        PartyPeep peep = _peepProvider.get();
+        return new PartyPeep();
+    }
+
+    /**
+     * Calls createPeep() and configures it using the given arguments.
+     */
+    protected PartyPeep buildPeep (PartierObject partier, AppearanceInfo info)
+    {
+        PartyPeep peep = createPeep();
         peep.name = partier.playerName;
         peep.joinOrder = nextJoinOrder();
         return peep;
@@ -134,8 +151,11 @@ public class PartyManager
     /**
      * Shutdown this party.
      */
+    @Override
     public void shutdown ()
     {
+        super.shutdown();
+        
         if (!_partyObj.isActive()) {
             return; // already shut down
         }
@@ -158,29 +178,28 @@ public class PartyManager
         // clear their invites to this party, if any
         _partyObj.invitedIds.remove(playerId);
 
-        _peerMgr.invokeSingleNodeRequest(createPartyClientSubscribedRequest(playerId, addr),
-            new ResultListener<AppearanceInfo>() {
-                @Override public void requestCompleted (AppearanceInfo result) {
-                    // listen for them to die
-                    partier.addListener(new ObjectDeathListener() {
-                        public void objectDestroyed (ObjectDestroyedEvent event) {
-                            removePlayer(playerId);
-                        }
-                    });
+        partier.setPartyId(_partyId);
 
-                    // Crap, we used to do this in addPlayer, but they could never actually enter the
-                    // party and leave it hosed. The downside of doing it this way is that we could
-                    // approve more than MAX_PLAYERS to join the party...
-                    PartyPeep peep = createPartyPeep(partier, result);
-                    doAddPeepToParty(peep);
-                }
-
-                @Override public void requestFailed (Exception cause)
-                {
-                    // TODO - notify the client that we done fucked up
-                    endPartierSession(playerId);
-                }
-            });
+        _peerMgr.invokeSingleNodeRequest(
+            createSubscribedRequest(playerId, _nodelet), new ResultListener<AppearanceInfo>() {
+            @Override public void requestCompleted (AppearanceInfo result) {
+                // listen for them to die
+                partier.addListener(new ObjectDeathListener() {
+                    public void objectDestroyed (ObjectDestroyedEvent event) {
+                        removePlayer(playerId);
+                    }
+                });
+                // Crap, we used to do this in addPlayer, but they could never actually enter the
+                // party and leave it hosed. The downside of doing it this way is that we could
+                // approve more than MAX_PLAYERS to join the party...
+                PartyPeep peep = buildPeep(partier, result);
+                doAddPeepToParty(peep);
+            }
+            @Override public void requestFailed (Exception cause) {
+                // TODO - notify the client that we done fucked up
+                endPartierSession(playerId);
+            }
+        });
     }
 
     /**
@@ -194,10 +213,9 @@ public class PartyManager
         }
     }
 
-    protected PartyClientSubscribedRequest createPartyClientSubscribedRequest (int playerId,
-        PartyObjectAddress addr)
+    protected SubscribedRequest createSubscribedRequest (int playerId, HostedNodelet hosted)
     {
-        return new PartyClientSubscribedRequest(playerId, addr);
+        return new SubscribedRequest(playerId, hosted);
     }
 
     // from interface PartyProvider
@@ -271,11 +289,10 @@ public class PartyManager
     }
 
     // from interface PartyProvider
-    public void invitePlayer (final PartierObject caller, PlayerName invitee,
+    public void invitePlayer (final PartierObject inviter, PlayerName invitee,
         InvocationService.InvocationListener listener)
         throws InvocationException
     {
-        PartierObject inviter = caller;
         if (_partyObj.recruitment == PartyCodes.RECRUITMENT_CLOSED &&
             _partyObj.leaderId != inviter.getPlayerId()) {
             throw new InvocationException(PartyCodes.E_CANT_INVITE_CLOSED);
@@ -295,7 +312,7 @@ public class PartyManager
         }
 
         // make sure one of these folks isn't ignoring the other
-        _ignoreMgr.validateCommunication(caller.getPlayerId(), invitee.getId());
+        _ignoreMgr.validateCommunication(inviter.getPlayerId(), invitee.getId());
 
         // add them to the invited set
         _partyObj.invitedIds.add(invitee.getId());
@@ -310,14 +327,14 @@ public class PartyManager
         }, new Resulting<Void>(listener) {
             @Override public void requestCompleted (Void result) {
                 super.requestCompleted(result);
-                CommSender.receiveComm(caller, invite);
+                CommSender.receiveComm(inviter, invite);
             }
         });
     }
 
     protected PartyInvite createInvite (PartierObject inviter, PlayerName invitee)
     {
-        return new PartyInvite(inviter.playerName, invitee, addr);
+        return new PartyInvite(inviter.playerName, invitee, _nodelet);
     }
 
     @Override
@@ -389,10 +406,6 @@ public class PartyManager
             _peerMgr.invokeSingleNodeRequest(request,
                 new Resulting<Void>("PartyClearer", Log.log, "playerId", playerId));
         }
-        PartySession session = (PartySession)_clmgr.getClient(PartyAuthName.makeKey(playerId));
-        if (session != null) {
-            session.endSession();
-        }
     }
 
     protected void setStatus (String status, byte statusType)
@@ -441,17 +454,17 @@ public class PartyManager
         return newLeader;
     }
 
-    protected static class PartyClientSubscribedRequest extends AetherNodeRequest
+    protected static class SubscribedRequest extends AetherNodeRequest
     {
-        public PartyClientSubscribedRequest (int playerId, PartyObjectAddress addr)
+        public SubscribedRequest (int playerId, HostedNodelet hosted)
         {
             super(playerId);
-            _addr = addr;
+            _hosted = hosted;
         }
 
         @Override protected void execute (AetherClientObject player,
             InvocationService.ResultListener listener) {
-            player.setParty(_addr);
+            player.setParty(_hosted);
             listener.requestProcessed(getAppearanceInfo(player));
         }
 
@@ -463,7 +476,7 @@ public class PartyManager
             return new AppearanceInfo();
         }
 
-        protected PartyObjectAddress _addr;
+        protected HostedNodelet _hosted;
     }
 
     /**
@@ -473,14 +486,14 @@ public class PartyManager
     {
     }
 
-    protected final InvocationManager _invMgr;
-    protected final RootDObjectManager _omgr;
-    protected final SpeakRouter _speakRouter;
-    protected final PartyObject _partyObj;
+    protected SpeakRouter _speakRouter;
+    protected PartyObject _partyObj;
+    protected int _partyId;
 
+    @Inject protected PresentsDObjectMgr _omgr;
     @Inject protected ChatManager _chatMan;
-    @Inject protected ClientManager _clmgr;
+    @Inject protected ClientManager _clientMgr;
     @Inject protected IgnoreManager _ignoreMgr;
+    @Inject protected InvocationManager _invMgr;
     @Inject protected OrthPeerManager _peerMgr;
-    @Inject protected Provider<PartyPeep> _peepProvider;
 }

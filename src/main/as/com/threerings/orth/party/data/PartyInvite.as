@@ -11,8 +11,8 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.orth.comms.data.BaseOneToOneComm;
 import com.threerings.orth.comms.data.OneToOneComm;
 import com.threerings.orth.comms.data.RequestComm;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.client.PartyDirector;
-import com.threerings.orth.party.data.PartyObjectAddress;
 
 // GENERATED PREAMBLE END
 
@@ -43,22 +43,22 @@ public class PartyInvite extends BaseOneToOneComm
 
     public function onAccepted () :void
     {
-        PartyDirector(_module.getInstance(PartyDirector)).joinParty(address);
+        PartyDirector(_module.getInstance(PartyDirector)).joinParty(hosted);
     }
 
 // GENERATED STREAMING START
-    public var address :PartyObjectAddress;
+    public var hosted :HostedNodelet;
 
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
-        address = ins.readObject(PartyObjectAddress);
+        hosted = ins.readObject(HostedNodelet);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
-        out.writeObject(address);
+        out.writeObject(hosted);
     }
 
 // GENERATED STREAMING END

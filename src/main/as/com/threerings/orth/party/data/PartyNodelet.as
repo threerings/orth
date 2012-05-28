@@ -8,24 +8,28 @@ package com.threerings.orth.party.data {
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
-import com.threerings.orth.data.AuthName;
+import com.threerings.orth.nodelet.data.Nodelet;
 
 // GENERATED PREAMBLE END
 
 // GENERATED CLASSDECL START
-public class PartyAuthName extends AuthName
+public class PartyNodelet extends Nodelet
 {
 // GENERATED CLASSDECL END
 
 // GENERATED STREAMING START
+    public var partyId :int;
+
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
+        partyId = ins.readInt();
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
+        out.writeInt(partyId);
     }
 
 // GENERATED STREAMING END

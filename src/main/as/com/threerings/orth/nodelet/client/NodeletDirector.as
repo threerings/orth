@@ -20,7 +20,6 @@ import com.threerings.orth.client.OrthContext;
 import com.threerings.orth.client.OrthDeploymentConfig;
 import com.threerings.orth.client.PolicyLoader;
 import com.threerings.orth.nodelet.data.HostedNodelet;
-import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.data.NodeletAuthName;
 import com.threerings.orth.nodelet.data.NodeletBootstrapData;
 import com.threerings.orth.nodelet.data.NodeletCredentials;

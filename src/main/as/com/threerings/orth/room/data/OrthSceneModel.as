@@ -13,7 +13,6 @@ import com.threerings.io.streamers.ArrayStreamer;
 import com.threerings.util.ArrayIterator;
 import com.threerings.util.Arrays;
 import com.threerings.util.Iterator;
-import com.threerings.util.Log;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
 import com.threerings.util.Short;

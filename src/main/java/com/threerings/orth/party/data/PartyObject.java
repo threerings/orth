@@ -279,7 +279,6 @@ public class PartyObject extends DObject
     /**
      * May the specified player join this party? Note that you may join a party
      * you can't even see on the party board.
-     *
      */
     public boolean mayJoin (PlayerName player)
     {

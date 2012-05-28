@@ -24,12 +24,12 @@ public class PartyRegistryMarshaller extends InvocationMarshaller
     public static const CREATE_PARTY :int = 1;
 
     // from interface PartyRegistryService
-    public function createParty (arg1 :InvocationService_ResultListener) :void
+    public function createParty (arg1 :PartyConfig, arg2 :InvocationService_ResultListener) :void
     {
-        var listener1 :InvocationMarshaller_ResultMarshaller = new InvocationMarshaller_ResultMarshaller();
-        listener1.listener = arg1;
+        var listener2 :InvocationMarshaller_ResultMarshaller = new InvocationMarshaller_ResultMarshaller();
+        listener2.listener = arg2;
         sendRequest(CREATE_PARTY, [
-            listener1
+            arg1, listener2
         ]);
     }
 }

@@ -34,7 +34,6 @@ import com.threerings.orth.guild.data.GuildRank;
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.party.client.PartyDirector;
-import com.threerings.orth.party.data.PartyObjectAddress;
 
 public class OrthController extends Controller
 {
@@ -73,9 +72,6 @@ public class OrthController extends Controller
 
     /** Command to set the rank of another player in the current guild. */
     public static const SET_GUILD_MEMBER_RANK :String = "SetGuildMemberRank";
-
-    /** Command to join a party. */
-    public static const JOIN_PARTY :String = "JoinParty";
 
     /** Command to create a new guild. */
     public static const CREATE_GUILD :String = "CreateGuild";
@@ -207,14 +203,6 @@ public class OrthController extends Controller
     public function handleSetGuildMemberRank (playerId :int, rank :GuildRank) :void
     {
         _guildDir.setRank(playerId, rank);
-    }
-
-    /**
-     * Handles the JOIN_PARTY command.
-     */
-    public function handleJoinParty (address :PartyObjectAddress) :void
-    {
-        _partyDir.joinParty(address);
     }
 
     override protected function setControlledPanel (panel :IEventDispatcher) :void

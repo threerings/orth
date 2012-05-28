@@ -7,15 +7,17 @@ package com.threerings.orth.party.data;
 import com.threerings.orth.comms.data.BaseOneToOneComm;
 import com.threerings.orth.comms.data.RequestComm;
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.nodelet.data.HostedNodelet;
 
 public class PartyInvite extends BaseOneToOneComm
     implements RequestComm
 {
-    public PartyObjectAddress address;
+    public HostedNodelet hosted;
 
-    public PartyInvite (PlayerName from, PlayerName to, PartyObjectAddress addr)
+    public PartyInvite (PlayerName from, PlayerName to, HostedNodelet hosted)
     {
         super(from, to);
-        address = addr;
+
+        this.hosted = hosted;
     }
 }

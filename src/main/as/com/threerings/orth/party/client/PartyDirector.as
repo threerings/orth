@@ -11,13 +11,12 @@ import org.osflash.signals.Signal;
 import com.threerings.util.DelayUtil;
 import com.threerings.util.F;
 import com.threerings.util.Log;
-import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.client.ResultAdapter;
+import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.ObjectAccessError;
-import com.threerings.presents.util.SafeSubscriber;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.chat.client.DObjectSpeakRouter;
@@ -25,28 +24,32 @@ import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakRouter;
 import com.threerings.orth.client.Listeners;
-import com.threerings.orth.client.OrthContext;
+import com.threerings.orth.comms.client.CommsDirector;
+import com.threerings.orth.comms.data.CommDecoder;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.locus.data.HostedLocus;
-import com.threerings.orth.party.data.PartyAuthName;
+import com.threerings.orth.nodelet.client.NodeletDirector;
+import com.threerings.orth.nodelet.data.HostedNodelet;
+import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyCodes;
+import com.threerings.orth.party.data.PartyConfig;
 import com.threerings.orth.party.data.PartyInvite;
+import com.threerings.orth.party.data.PartyNodelet;
 import com.threerings.orth.party.data.PartyObject;
-import com.threerings.orth.party.data.PartyObjectAddress;
 import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.party.data.PartyRegistryMarshaller;
 
 /**
  * Manages party stuff on the client.
  */
-public class PartyDirector
+public class PartyDirector extends NodeletDirector
 {
     // Hard reference some classes
     PartyRegistryMarshaller;
-    PartyAuthName;
-    PartyObject;
+    PartyNodelet;
+    PartierObject;
     PartyInvite;
 
     public const partyJoined :Signal = new Signal();
@@ -108,16 +111,17 @@ public class PartyDirector
      */
     public function createParty () :void
     {
-        _prsvc.createParty(new ResultAdapter(connectParty, F.adapt(onJoinFailed)));
+        _prsvc.createParty(new PartyConfig(),
+            new ResultAdapter(connectParty, F.adapt(onJoinFailed)));
     }
 
     /**
      * Join a party.
      */
-    public function joinParty (address :PartyObjectAddress) :void
+    public function joinParty (hosted :HostedNodelet) :void
     {
         clearParty(); // Drop the old one if there is one
-        connectParty(address);
+        connectParty(hosted);
     }
 
     /**
@@ -125,19 +129,12 @@ public class PartyDirector
      */
     public function clearParty () :void
     {
-        if (_safeSubscriber != null) {
-            _safeSubscriber.unsubscribe(_pctx.getDObjectManager());
-            _safeSubscriber = null;
-        }
         if (_partyObj != null) {
             _partyObj.destroyed.remove(clearParty);
             _partyObj = null;
             partyLeft.dispatch();
         }
-        if (_pctx != null) {
-            _pctx.getClient().logoff(false);
-            _pctx = null;
-        }
+        disconnect();
     }
 
     public function assignLeader (memberId :int) :void
@@ -189,54 +186,24 @@ public class PartyDirector
         partyJoined.remove(_onJoin);
     }
 
-    protected function partyConnectFailed (event :ClientEvent) :void
+    protected function connectParty (address :HostedNodelet) :void
     {
-        var cause :Error = event.getCause();
-        log.warning("Lost connection to party server", cause);
-
-        // we need to clear out our party stuff manually since everything was dropped
-        _safeSubscriber = null;
-        if (_partyObj != null) {
-            partyLeft.dispatch();
-        }
-        _partyObj = null;
-        _pctx = null;
-
-        // report via locus chat that we lost our party connection
-        if (cause != null) {
-            Listeners.displayFeedback(OrthCodes.PARTY_MSGS,
-                MessageBundle.tcompose("e.lost_party", cause.message));
-        }
-    }
-
-    protected function connectParty (address :PartyObjectAddress) :void
-    {
-        // create a new party session and connect to our party host node
-        _pctx = _module.getInstance(PartyContext);
-        var client :Client = _pctx.getClient();
-        client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
-            _safeSubscriber = new SafeSubscriber(address.oid, gotPartyObject, subscribeFailed);
-            _safeSubscriber.subscribe(_pctx.getDObjectManager());
-        });
-        client.addEventListener(ClientEvent.CLIENT_FAILED_TO_LOGON,
-            function (event :ClientEvent) :void {
-                log.warning("Failed to logon to party server", "cause", event.getCause());
-                onJoinFailed();
-                Listeners.displayFeedback(OrthCodes.PARTY_MSGS, event.getCause().message);
-        });
-        client.addEventListener(ClientEvent.CLIENT_CONNECTION_FAILED, partyConnectFailed);
-        _pctx.connect(address);
+        super.connect(address);
     }
 
     /**
      * Called if our safe subscriber has succeeded in getting the party object.
      */
-    protected function gotPartyObject (obj :PartyObject) :void
+    override protected function objectAvailable (obj :DObject) :void
     {
-        _partyObj = obj;
+        super.objectAvailable(obj);
+        
+        _partyObj = PartyObject(obj);
         _partyObj.destroyed.add(clearParty);
 
         _partyObj.locusChanged.add(locusChanged);
+
+        _ctx.getClient().getInvocationDirector().registerReceiver(new CommDecoder(_comms));
 
         _module.inject(function () :void {
             _speakRouter = new DObjectSpeakRouter(_partyObj, _partyObj.partyChatService);
@@ -266,15 +233,13 @@ public class PartyDirector
     }
 
     protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
+    protected const _comms :CommsDirector = inject(CommsDirector);
     protected const _module :Module = inject(Module);
     protected const _locusDir :LocusDirector = inject(LocusDirector);
-    protected const _octx :OrthContext = inject(OrthContext);
 
     protected var _prsvc :PartyRegistryService;
-    protected var _pctx :PartyContext;
     protected var _partyObj :PartyObject;
     protected var _speakRouter :SpeakRouter;
-    protected var _safeSubscriber :SafeSubscriber;
     protected var _onJoin :Function;
 
     private static const log :Log = Log.getLog(PartyDirector);

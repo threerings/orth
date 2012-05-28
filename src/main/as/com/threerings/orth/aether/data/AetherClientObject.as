@@ -20,7 +20,6 @@ import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
-import com.threerings.orth.party.data.PartyObjectAddress;
 
 // GENERATED PREAMBLE END
 
@@ -38,7 +37,7 @@ public class AetherClientObject extends ClientObject
 
     public var channels :DSet; /* of */ ChannelEntry;
 
-    public var party :PartyObjectAddress;
+    public var party :HostedNodelet;
 
     public var guildName :GuildName;
 
@@ -57,7 +56,7 @@ public class AetherClientObject extends ClientObject
     public var channelsEntryAdded :Signal = new Signal(ChannelEntry);
     public var channelsEntryRemoved :Signal = new Signal(ChannelEntry);
     public var channelsEntryUpdated :Signal = new Signal(ChannelEntry, ChannelEntry);
-    public var partyChanged :Signal = new Signal(PartyObjectAddress, PartyObjectAddress);
+    public var partyChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
     public var guildNameChanged :Signal = new Signal(GuildName, GuildName);
     public var guildChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
 
@@ -76,7 +75,7 @@ public class AetherClientObject extends ClientObject
         friends = ins.readObject(DSet);
         ignored = ins.readObject(DSet);
         channels = ins.readObject(DSet);
-        party = ins.readObject(PartyObjectAddress);
+        party = ins.readObject(HostedNodelet);
         guildName = ins.readObject(GuildName);
         guild = ins.readObject(HostedNodelet);
     }

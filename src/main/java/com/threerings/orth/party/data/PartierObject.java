@@ -20,16 +20,16 @@ public class PartierObject extends ClientObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String PLAYER_NAME = "playerName";
 
-    /** The field name of the <code>partyOid</code> field. */
+    /** The field name of the <code>partyId</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String PARTY_OID = "partyOid";
+    public static final String PARTY_ID = "partyId";
     // AUTO-GENERATED: FIELDS END
 
     /** The name and id information for this user. */
     public PlayerName playerName;
 
     /** The party to which this partier is party. */
-    public int partyOid;
+    public int partyId;
 
     /**
      * Returns this player's unique id.
@@ -58,7 +58,7 @@ public class PartierObject extends ClientObject
     }
 
     /**
-     * Requests that the <code>partyOid</code> field be set to the
+     * Requests that the <code>partyId</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
@@ -66,12 +66,12 @@ public class PartierObject extends ClientObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setPartyOid (int value)
+    public void setPartyId (int value)
     {
-        int ovalue = this.partyOid;
+        int ovalue = this.partyId;
         requestAttributeChange(
-            PARTY_OID, Integer.valueOf(value), Integer.valueOf(ovalue));
-        this.partyOid = value;
+            PARTY_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.partyId = value;
     }
     // AUTO-GENERATED: METHODS END
 }

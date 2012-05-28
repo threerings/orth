@@ -4,24 +4,39 @@
 
 package com.threerings.orth.party.server;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
+import com.samskivert.util.Randoms;
+
+import com.threerings.util.Resulting;
+
 import com.threerings.presents.client.InvocationService.ResultListener;
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
+import com.threerings.presents.dobj.DObject;
+import com.threerings.presents.server.ClientManager.ClientObserver;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
-import com.threerings.presents.server.SessionFactory;
-import com.threerings.presents.server.net.PresentsConnectionManager;
+import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.OrthCodes;
-import com.threerings.orth.party.data.PartyAuthName;
-import com.threerings.orth.party.data.PartyCredentials;
+import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.nodelet.data.HostedNodelet;
+import com.threerings.orth.nodelet.data.Nodelet;
+import com.threerings.orth.nodelet.data.NodeletAuthName;
+import com.threerings.orth.nodelet.server.NodeletManager;
+import com.threerings.orth.nodelet.server.NodeletRegistry;
+import com.threerings.orth.party.data.PartierObject;
+import com.threerings.orth.party.data.PartyConfig;
+import com.threerings.orth.party.data.PartyNodelet;
+import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyRegistryMarshaller;
+import com.threerings.orth.peer.data.OrthNodeObject;
+import com.threerings.orth.server.OrthDeploymentConfig;
 
 import static com.threerings.orth.Log.log;
 
@@ -30,35 +45,92 @@ import static com.threerings.orth.Log.log;
  * to their PartyManager via their party connection.
  */
 @Singleton
-public class PartyRegistry
+public class PartyRegistry extends NodeletRegistry
     implements PartyRegistryProvider
 {
-    @Inject public PartyRegistry (InvocationManager invmgr, PresentsConnectionManager conmgr,
-                                  ClientManager clmgr, PartyAuthenticator partyAuthor)
+    @Inject
+    public PartyRegistry (Injector injector, OrthDeploymentConfig config,
+        InvocationManager invmgr, ClientManager clientMgr)
     {
+        super(PartyNodelet.class, config.getPartyHost(),
+            new int[] { config.getPartyPort() }, injector);
+
         invmgr.registerProvider(this, PartyRegistryMarshaller.class, OrthCodes.AETHER_GROUP);
-        conmgr.addChainedAuthenticator(partyAuthor);
-        clmgr.addSessionFactory(SessionFactory.newSessionFactory(
-                                    PartyCredentials.class, PartySession.class,
-                                    PartyAuthName.class, PartyClientResolver.class));
+
+        // when party clients connect, figure out which manager to send them to, then do it
+        clientMgr.addClientObserver(new ClientObserver() {
+            @Override public void clientSessionDidStart (PresentsSession session) {
+                if (session.getClientObject() instanceof PartierObject) {
+                    PartyNodelet nodelet = (PartyNodelet) ((Session) session).getNodelet();
+                    getPartyManager(nodelet.partyId).clientSubscribed(
+                        (PartierObject) session.getClientObject());
+                }
+            }
+            @Override public void clientSessionDidEnd (PresentsSession session) {
+                // cleanup on disconnect is currently handled in PartyManager
+            }
+        });
+        
+        setPeeredHostingStrategy(OrthNodeObject.HOSTED_PARTIES, injector);
+        setResolverClass(PartyResolver.class);
     }
 
-    public void createParty (AetherClientObject caller, ResultListener rl)
+    protected static class PartyResolver extends Resolver
+    {
+        @Override public ClientObject createClientObject ()
+        {
+            return new PartierObject();
+        }
+
+        @Override protected void resolveClientData (ClientObject clobj) throws Exception
+        {
+            super.resolveClientData(clobj);
+
+            PartierObject partObj = (PartierObject)clobj;
+            NodeletAuthName authName = (NodeletAuthName)_username;
+
+            partObj.playerName = new PlayerName(authName.toString(), authName.getId());
+        }
+    }
+
+    public PartyManager getPartyManager (int partyId)
+    {
+        return (PartyManager) getManager(new PartyNodelet(partyId));
+    }
+
+    public void createParty (final AetherClientObject player,
+            final PartyConfig config, ResultListener rl)
         throws InvocationException
     {
-        final AetherClientObject player = caller;
-
         if (player.party != null) {
             log.warning("Player tried to create party while already in one", "player", player);
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
-        PartyManager mgr = _injector.createChildInjector(new AbstractModule() {
-            @Override protected void configure () {
-                bind(AetherClientObject.class).toInstance(player);
+
+        PartyNodelet nodelet;
+        do {
+            // create random partyId's until we find one that's not in obvious use -- this is not
+            // perfect; race conditions could mess it up, but I can't be arsed right now
+            nodelet = new PartyNodelet(Randoms.threadLocal().getInt(Integer.MAX_VALUE));
+        } while (_peerMan.findHostedNodelet(OrthNodeObject.HOSTED_GUILDS, nodelet) != null);
+        
+        final int partyId = nodelet.partyId;
+        _hoster.resolveHosting(player, nodelet, new Resulting<HostedNodelet>(rl) {
+            @Override public void requestCompleted (HostedNodelet result) {
+                getPartyManager(partyId).configure(player, config);
+                super.requestCompleted(result);
             }
-        }).getInstance(PartyManager.class);
-        rl.requestProcessed(mgr.addr);
+        });
     }
 
-    @Inject protected Injector _injector;
+    @Override public DObject createSharedObject (Nodelet nodelet)
+    {
+        return new PartyObject();
+    }
+
+    @Override
+    public Class<? extends NodeletManager> getManagerClass ()
+    {
+        return PartyManager.class;
+    }
 }

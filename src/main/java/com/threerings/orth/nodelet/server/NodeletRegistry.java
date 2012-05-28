@@ -10,6 +10,7 @@ import java.util.Set;
 import com.google.common.base.Functions;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -252,6 +253,11 @@ public abstract class NodeletRegistry
         _peerMan.invokeNodeRequest(nodes.iterator().next(), req, new Resulting<T>(lner));
     }
 
+    public Iterable<Nodelet> getHostedNodelets ()
+    {
+        return ImmutableSet.copyOf(_mgrs.keySet());
+    }
+
     public NodeletManager getManager (Nodelet nodelet)
     {
         return _mgrs.get(nodelet);
@@ -461,6 +467,16 @@ public abstract class NodeletRegistry
 
     protected static class Session extends PresentsSession
     {
+        public Nodelet getNodelet ()
+        {
+            return _nodelet;
+        }
+
+        public NodeletManager getNodeletManager ()
+        {
+            return _nodeletMgr;
+        }
+
         @Override // from PresentsSession
         protected BootstrapData createBootstrapData ()
         {
@@ -471,13 +487,17 @@ public abstract class NodeletRegistry
         protected void populateBootstrapData (BootstrapData data)
         {
             super.populateBootstrapData(data);
-            Nodelet nodelet = ((NodeletCredentials)_areq.getCredentials()).nodelet;
-            NodeletManager mgr = ((NodeletRegistry)_authdata)._mgrs.get(nodelet);
-            if (mgr == null) {
-                throw new RuntimeException(Logger.format("Manager not found", "nodelet", nodelet));
+
+            _nodelet = ((NodeletCredentials)_areq.getCredentials()).nodelet;
+            _nodeletMgr = ((NodeletRegistry)_authdata)._mgrs.get(_nodelet);
+            if (_nodeletMgr == null) {
+                throw new RuntimeException(Logger.format("Manager not found", "nodelet", _nodelet));
             }
-            ((NodeletBootstrapData)data).targetOid = mgr.getSharedObject().getOid();
+            ((NodeletBootstrapData)data).targetOid = _nodeletMgr.getSharedObject().getOid();
         }
+
+        protected Nodelet _nodelet;
+        protected NodeletManager _nodeletMgr;
     }
 
     /**

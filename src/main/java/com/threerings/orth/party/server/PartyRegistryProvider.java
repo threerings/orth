@@ -12,6 +12,7 @@ import com.threerings.presents.server.InvocationProvider;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.party.client.PartyRegistryService;
+import com.threerings.orth.party.data.PartyConfig;
 
 /**
  * Defines the server-side of the {@link PartyRegistryService}.
@@ -23,6 +24,6 @@ public interface PartyRegistryProvider extends InvocationProvider
     /**
      * Handles a {@link PartyRegistryService#createParty} request.
      */
-    void createParty (AetherClientObject caller, InvocationService.ResultListener arg1)
+    void createParty (AetherClientObject caller, PartyConfig arg1, InvocationService.ResultListener arg2)
         throws InvocationException;
 }

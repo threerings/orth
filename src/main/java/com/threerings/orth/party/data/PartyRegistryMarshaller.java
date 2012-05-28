@@ -28,12 +28,12 @@ public class PartyRegistryMarshaller extends InvocationMarshaller<AetherClientOb
     public static final int CREATE_PARTY = 1;
 
     // from interface PartyRegistryService
-    public void createParty (InvocationService.ResultListener arg1)
+    public void createParty (PartyConfig arg1, InvocationService.ResultListener arg2)
     {
-        InvocationMarshaller.ResultMarshaller listener1 = new InvocationMarshaller.ResultMarshaller();
-        listener1.listener = arg1;
+        InvocationMarshaller.ResultMarshaller listener2 = new InvocationMarshaller.ResultMarshaller();
+        listener2.listener = arg2;
         sendRequest(CREATE_PARTY, new Object[] {
-            listener1
+            arg1, listener2
         });
     }
 }
