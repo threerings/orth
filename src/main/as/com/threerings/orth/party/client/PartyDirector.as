@@ -16,7 +16,6 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.client.ResultAdapter;
 import com.threerings.presents.dobj.DObject;
-import com.threerings.presents.dobj.ObjectAccessError;
 
 import com.threerings.orth.aether.client.AetherClient;
 import com.threerings.orth.chat.client.DObjectSpeakRouter;
@@ -30,6 +29,7 @@ import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.client.LocusDirector;
 import com.threerings.orth.locus.data.HostedLocus;
+import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.nodelet.client.NodeletDirector;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.PartierObject;
@@ -83,6 +83,11 @@ public class PartyDirector extends NodeletDirector
     public function get partySize () :int
     {
         return (_partyObj == null) ? 0 : _partyObj.peeps.size();
+    }
+
+    public function get locus () :Locus
+    {
+        return (_partyObj != null && _partyObj.locus != null) ? _partyObj.locus.locus : null;
     }
 
     public function get inParty () :Boolean
