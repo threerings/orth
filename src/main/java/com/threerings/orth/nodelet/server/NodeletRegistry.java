@@ -469,12 +469,12 @@ public abstract class NodeletRegistry
     {
         public Nodelet getNodelet ()
         {
-            return _nodelet;
+            return ((NodeletCredentials)_areq.getCredentials()).nodelet;
         }
 
         public NodeletManager getNodeletManager ()
         {
-            return _nodeletMgr;
+            return ((NodeletRegistry)_authdata)._mgrs.get(getNodelet());
         }
 
         @Override // from PresentsSession
@@ -488,16 +488,12 @@ public abstract class NodeletRegistry
         {
             super.populateBootstrapData(data);
 
-            _nodelet = ((NodeletCredentials)_areq.getCredentials()).nodelet;
-            _nodeletMgr = ((NodeletRegistry)_authdata)._mgrs.get(_nodelet);
-            if (_nodeletMgr == null) {
-                throw new RuntimeException(Logger.format("Manager not found", "nodelet", _nodelet));
+            if (getNodeletManager() == null) {
+                throw new RuntimeException(Logger.format(
+                    "Manager not found", "nodelet", getNodelet()));
             }
-            ((NodeletBootstrapData)data).targetOid = _nodeletMgr.getSharedObject().getOid();
+            ((NodeletBootstrapData)data).targetOid = getNodeletManager().getSharedObject().getOid();
         }
-
-        protected Nodelet _nodelet;
-        protected NodeletManager _nodeletMgr;
     }
 
     /**
