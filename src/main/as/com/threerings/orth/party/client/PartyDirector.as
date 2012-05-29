@@ -213,16 +213,6 @@ public class PartyDirector extends NodeletDirector
         partyJoined.dispatch();
     }
 
-    /**
-     * Called when we've failed to subscribe to a party.
-     */
-    protected function subscribeFailed (oid :int, cause :ObjectAccessError) :void
-    {
-        log.warning("Party subscription failed", "cause", cause);
-        onJoinFailed();
-        clearParty();
-    }
-
     public function locusChanged (newLocus :HostedLocus) :void
     {
         if (newLocus == null || (_locusDir.locus != null &&
