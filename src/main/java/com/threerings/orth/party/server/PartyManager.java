@@ -91,6 +91,11 @@ public class PartyManager extends NodeletManager
         return _partyObj;
     }
 
+    public int getPartyId ()
+    {
+        return _partyId;
+    }
+
     public Set<Integer> getPlayerIds ()
     {
         Set<Integer> result = Sets.newHashSet();
