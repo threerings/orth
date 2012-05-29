@@ -176,7 +176,7 @@ public class PartyManager extends NodeletManager
     /**
      * Called from the access controller when subscription is approved for the specified player.
      */
-    public void clientSubscribed (final PartierObject partier)
+    public void clientConnected (final PartierObject partier)
     {
         final int playerId = partier.getPlayerId();
 

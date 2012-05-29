@@ -16,11 +16,9 @@ import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.dobj.DObject;
-import com.threerings.presents.server.ClientManager.ClientObserver;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
-import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.OrthCodes;
@@ -57,22 +55,28 @@ public class PartyRegistry extends NodeletRegistry
 
         invmgr.registerProvider(this, PartyRegistryMarshaller.class, OrthCodes.AETHER_GROUP);
 
-        // when party clients connect, figure out which manager to send them to, then do it
-        clientMgr.addClientObserver(new ClientObserver() {
-            @Override public void clientSessionDidStart (PresentsSession session) {
-                if (session.getClientObject() instanceof PartierObject) {
-                    PartyNodelet nodelet = (PartyNodelet) ((Session) session).getNodelet();
-                    getPartyManager(nodelet.partyId).clientSubscribed(
-                        (PartierObject) session.getClientObject());
-                }
-            }
-            @Override public void clientSessionDidEnd (PresentsSession session) {
-                // cleanup on disconnect is currently handled in PartyManager
-            }
-        });
-        
         setPeeredHostingStrategy(OrthNodeObject.HOSTED_PARTIES, injector);
         setResolverClass(PartyResolver.class);
+        setSessionClass(PartySession.class);
+    }
+
+    protected static class PartySession extends Session
+    {
+        @Override protected void sessionWillResume ()
+        {
+            didConnect();
+        }
+        @Override protected void sessionWillStart ()
+        {
+            didConnect();
+        }
+
+        protected void didConnect ()
+        {
+            ((PartyManager) getNodeletManager()).clientConnected((PartierObject) _clobj);
+        }
+
+        @Inject protected PartyRegistry _partyReg;
     }
 
     protected static class PartyResolver extends Resolver
