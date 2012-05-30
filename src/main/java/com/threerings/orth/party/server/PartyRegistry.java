@@ -64,10 +64,12 @@ public class PartyRegistry extends NodeletRegistry
     {
         @Override protected void sessionWillResume ()
         {
+            super.sessionWillResume();
             didConnect();
         }
         @Override protected void sessionWillStart ()
         {
+            super.sessionWillStart();
             didConnect();
         }
 
