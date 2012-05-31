@@ -15,8 +15,10 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
+import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusMarshaller;
 
@@ -31,11 +33,19 @@ public class LocusManager
     }
 
     @Override
-    public void materializeLocus (ClientObject caller, Locus locus,
-           LocusMaterializationListener listener)
+    public void materializeLocus (final AetherClientObject caller, Locus locus,
+           final LocusMaterializationListener listener)
         throws InvocationException
     {
-        specializedMaterializeLocus(caller, locus, listener);
+        specializedMaterializeLocus(caller, locus, new LocusMaterializationListener() {
+            @Override public void locusMaterialized (HostedLocus locus) {
+                caller.setLocus(locus.locus);
+                listener.locusMaterialized(locus);
+            }
+            @Override public void requestFailed (String cause) {
+                listener.requestFailed(cause);
+            }
+        });
     }
 
     // We can't provide the generic type in materializeLocus as its signature has to match
