@@ -19,6 +19,7 @@ import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.guild.data.GuildName;
+import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 
 // GENERATED PREAMBLE END
@@ -36,6 +37,8 @@ public class AetherClientObject extends ClientObject
     public var ignored :DSet; /* of */ PlayerName;
 
     public var channels :DSet; /* of */ ChannelEntry;
+
+    public var locus :Locus;
 
     public var party :HostedNodelet;
 
@@ -56,6 +59,7 @@ public class AetherClientObject extends ClientObject
     public var channelsEntryAdded :Signal = new Signal(ChannelEntry);
     public var channelsEntryRemoved :Signal = new Signal(ChannelEntry);
     public var channelsEntryUpdated :Signal = new Signal(ChannelEntry, ChannelEntry);
+    public var locusChanged :Signal = new Signal(Locus, Locus);
     public var partyChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
     public var guildNameChanged :Signal = new Signal(GuildName, GuildName);
     public var guildChanged :Signal = new Signal(HostedNodelet, HostedNodelet);
@@ -64,6 +68,7 @@ public class AetherClientObject extends ClientObject
     public static const FRIENDS :String = "friends";
     public static const IGNORED :String = "ignored";
     public static const CHANNELS :String = "channels";
+    public static const LOCUS :String = "locus";
     public static const PARTY :String = "party";
     public static const GUILD_NAME :String = "guildName";
     public static const GUILD :String = "guild";
@@ -75,6 +80,7 @@ public class AetherClientObject extends ClientObject
         friends = ins.readObject(DSet);
         ignored = ins.readObject(DSet);
         channels = ins.readObject(DSet);
+        locus = ins.readObject(Locus);
         party = ins.readObject(HostedNodelet);
         guildName = ins.readObject(GuildName);
         guild = ins.readObject(HostedNodelet);
@@ -156,6 +162,9 @@ class Signaller
                 break;
             case "channels":
                 signal = _obj.channelsChanged;
+                break;
+            case "locus":
+                signal = _obj.locusChanged;
                 break;
             case "party":
                 signal = _obj.partyChanged;

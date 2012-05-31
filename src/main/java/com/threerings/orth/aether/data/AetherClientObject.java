@@ -13,6 +13,7 @@ import com.threerings.orth.chat.data.ChannelEntry;
 import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.guild.data.GuildName;
+import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 
 /**
@@ -36,6 +37,10 @@ public class AetherClientObject extends ClientObject
     /** The field name of the <code>channels</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String CHANNELS = "channels";
+
+    /** The field name of the <code>locus</code> field. */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public static final String LOCUS = "locus";
 
     /** The field name of the <code>party</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -61,6 +66,9 @@ public class AetherClientObject extends ClientObject
 
     /** Our current set of subscribed chat channels. */
     public DSet<ChannelEntry> channels = DSet.newDSet();
+
+    /** Where this player currently is. May be set during client resolution. */
+    public Locus locus;
 
     /** The player's current party, or null if they're not in a party.
      * Used to signal the PartyDirector. */
@@ -271,6 +279,23 @@ public class AetherClientObject extends ClientObject
         requestAttributeChange(CHANNELS, value, this.channels);
         DSet<ChannelEntry> clone = (value == null) ? null : value.clone();
         this.channels = clone;
+    }
+
+    /**
+     * Requests that the <code>locus</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
+    public void setLocus (Locus value)
+    {
+        Locus ovalue = this.locus;
+        requestAttributeChange(
+            LOCUS, value, ovalue);
+        this.locus = value;
     }
 
     /**
