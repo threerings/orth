@@ -10,6 +10,7 @@ import flashx.funk.ioc.inject;
 import org.osflash.signals.Signal;
 
 import com.threerings.util.ClassUtil;
+import com.threerings.util.DelayUtil;
 import com.threerings.util.F;
 import com.threerings.util.Log;
 import com.threerings.util.Map;
@@ -105,6 +106,15 @@ public class LocusDirector extends BasicDirector
     public function get hostedLocus () :HostedLocus
     {
         return _connected;
+    }
+
+    override protected function clientObjectUpdated (client :Client) :void
+    {
+        super.clientObjectUpdated(client);
+
+        if (_octx.aetherObject.locus != null) {
+            DelayUtil.delayFrame(moveToLocus, [ _octx.aetherObject.locus ]);
+        }
     }
 
     /**
