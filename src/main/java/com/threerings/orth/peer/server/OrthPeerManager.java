@@ -11,6 +11,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import com.samskivert.util.Lifecycle;
 import com.samskivert.util.ObserverList.ObserverOp;
@@ -39,6 +40,7 @@ import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.data.OrthNodeObject;
+import com.threerings.orth.room.data.RoomAuthName;
 import com.threerings.orth.room.data.RoomLocus;
 
 import static com.threerings.orth.Log.log;
@@ -151,7 +153,15 @@ public abstract class OrthPeerManager extends PeerManager
      */
     public OrthClientInfo locateLocusBody (int playerId)
     {
-        return (OrthClientInfo)locateClient(LocusAuthName.makeKey(playerId));
+        Set<LocusAuthName> keys = Sets.newHashSet();
+        addLocusKeys(keys, playerId);
+        for (LocusAuthName key : keys) {
+            OrthClientInfo info = (OrthClientInfo) locateClient(key);
+            if (info != null) {
+                return info;
+            }
+        }
+        return null;
     }
 
     /**
@@ -286,6 +296,17 @@ public abstract class OrthPeerManager extends PeerManager
     protected Class<? extends PeerNode> getPeerNodeClass ()
     {
         return OrthPeerNode.class;
+    }
+
+    /**
+     * This method should create a {@link LocusAuthName} instance for every Locus type known
+     * in the system. This is our poor man's approach to locating locus bodies. A more complex
+     * system could easily be imagined, but this one works well enough for now. Subclasses
+     * must extend this method.
+     */
+    protected void addLocusKeys (Set<LocusAuthName> keys, int playerId)
+    {
+        keys.add(RoomAuthName.makeKey(playerId));
     }
 
     @Override // from PeerManager

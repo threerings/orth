@@ -11,6 +11,14 @@ import com.threerings.orth.locus.data.LocusAuthName;
  */
 public class RoomAuthName extends LocusAuthName
 {
+    /**
+     * Creates an instance that can be used as a DSet key.
+     */
+    public static RoomAuthName makeKey (int playerId)
+    {
+        return new RoomAuthName("", playerId);
+    }
+
     // for instantiation
     public RoomAuthName (String accountName, int playerId)
     {
