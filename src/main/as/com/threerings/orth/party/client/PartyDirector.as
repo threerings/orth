@@ -57,6 +57,7 @@ public class PartyDirector extends NodeletDirector
 
     public function PartyDirector ()
     {
+        // we can't use BasicDirector's fancyness; it's hooked up to the Nodelet client
         const client :Client = inject(AetherClient);
         client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
             _prsvc = client.requireService(PartyRegistryService);
