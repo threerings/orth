@@ -6,10 +6,10 @@ package com.threerings.orth.locus.server;
 
 import javax.annotation.Generated;
 
-import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
 
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.locus.client.LocusService;
 import com.threerings.orth.locus.data.Locus;
 
@@ -23,6 +23,6 @@ public interface LocusProvider extends InvocationProvider
     /**
      * Handles a {@link LocusService#materializeLocus} request.
      */
-    void materializeLocus (ClientObject caller, Locus arg1, LocusService.LocusMaterializationListener arg2)
+    void materializeLocus (AetherClientObject caller, Locus arg1, LocusService.LocusMaterializationListener arg2)
         throws InvocationException;
 }

@@ -7,11 +7,12 @@ package com.threerings.orth.locus.client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
 
 public interface LocusService
-    extends InvocationService<ClientObject>
+    extends InvocationService<AetherClientObject>
 {
     interface LocusMaterializationListener extends InvocationListener
     {
