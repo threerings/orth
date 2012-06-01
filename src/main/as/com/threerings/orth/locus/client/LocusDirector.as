@@ -228,11 +228,11 @@ public class LocusDirector extends BasicDirector
             logout();
         }
 
-        if (!ctx.prepareForConnection(_connecting, finished, failed)) {
-            finished();
+        if (!ctx.prepareForConnection(_connecting, continueConnecting, abort)) {
+            continueConnecting();
         }
 
-        function finished () :void {
+        function continueConnecting () :void {
 
             // now grab the (possibly) new client
             const connectingClient :LocusClient = ctx.locusClient;
@@ -245,13 +245,15 @@ public class LocusDirector extends BasicDirector
             connectingClient.logonTo(_connecting.host, _connecting.ports);
         }
 
-        function failed (error :String = null) :void {
-            log.warning("Preparations for Locus connection failed", "locus", _connecting,
+        function abort (error :String = null) :void {
+            log.warning("Preparations for Locus connection abort", "locus", _connecting,
                 "error", error);
 
             _connecting = null;
             _connected = null;
-            Listeners.displayFeedback(OrthCodes.GENERAL_MSGS, "m.network_error");
+            if (error != null) {
+                Listeners.displayFeedback(OrthCodes.GENERAL_MSGS, "m.network_error");
+            }
         }
     }
 
