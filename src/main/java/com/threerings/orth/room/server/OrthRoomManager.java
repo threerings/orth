@@ -47,7 +47,6 @@ import com.threerings.orth.chat.server.DObjectSpeakRouter;
 import com.threerings.orth.chat.server.SpeakProvider;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.InLocus;
-import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.instance.server.InstancedSceneManager;
 import com.threerings.orth.room.client.OrthRoomService;
 import com.threerings.orth.room.data.ActorInfo;
@@ -315,7 +314,7 @@ public class OrthRoomManager extends InstancedSceneManager
     }
 
     @Override
-    protected Whereabouts createWhereabouts ()
+    protected InLocus createWhereabouts ()
     {
         return new InLocus(
             new RoomLocus(_scene.getId(), _instance.getInstanceId(), null),

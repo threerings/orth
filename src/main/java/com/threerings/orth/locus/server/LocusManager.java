@@ -16,11 +16,15 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.aether.server.AetherNodeAction;
+import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.where.InLocus;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusMarshaller;
+import com.threerings.orth.peer.server.OrthPeerManager;
 
 @Singleton
 public class LocusManager
@@ -61,5 +65,28 @@ public class LocusManager
         materializer.materializeLocus(caller, locus, listener);
     }
 
+    /**
+     * Let the Locus system know a player has successfully arrived at a new Locus. This is
+     * typically called from a dependable server object such as e.g. a PlaceManager, where we
+     * can state with authoritaty that the move has completed successfully.
+     *
+     * Avoid calling this method when "we're pretty sure the move will finish", or, god forbid,
+     * directly from the client.
+     */
+    public void noteLocusForPlayer (AuthName name, final InLocus whereabouts)
+    {
+        // update the cross-peer information
+        _peerMgr.updateWhereabouts(name, whereabouts);
+
+        // update the player's vault
+        _peerMgr.invokeNodeAction(new AetherNodeAction(name.getId()) {
+            @Override protected void execute (AetherClientObject memobj) {
+                memobj.setLocus(whereabouts.getLocus());
+            }
+        });
+    }
+
     @Inject protected Map<Class<?>, LocusMaterializer<?>> _materializers;
+
+    @Inject protected OrthPeerManager _peerMgr;
 }

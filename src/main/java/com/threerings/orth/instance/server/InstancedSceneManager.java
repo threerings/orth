@@ -18,8 +18,9 @@ import com.threerings.whirled.spot.server.SpotSceneManager;
 import com.threerings.whirled.util.UpdateList;
 
 import com.threerings.orth.data.AuthName;
-import com.threerings.orth.data.where.Whereabouts;
+import com.threerings.orth.data.where.InLocus;
 import com.threerings.orth.instance.data.Instance;
+import com.threerings.orth.locus.server.LocusManager;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
 public abstract class InstancedSceneManager extends SpotSceneManager
@@ -58,8 +59,8 @@ public abstract class InstancedSceneManager extends SpotSceneManager
         super.bodyWillEnter(body);
 
         if (_whereabouts != null && body.username instanceof AuthName) {
-            // notify peers of our arrival in a locus
-            _peerMgr.updateWhereabouts((AuthName) body.username, _whereabouts);
+            // notify the locus system that we safely arrived
+            _locMgr.noteLocusForPlayer((AuthName) body.username, _whereabouts);
         }
     }
 
@@ -87,13 +88,14 @@ public abstract class InstancedSceneManager extends SpotSceneManager
      */
     abstract protected void deregisterPlace ();
 
-    abstract protected Whereabouts createWhereabouts ();
+    abstract protected InLocus createWhereabouts ();
 
     /** The instance this place is in. */
     protected Instance _instance;
 
     /** The whereabouts of anybody in this room. */
-    protected Whereabouts _whereabouts;
+    protected InLocus _whereabouts;
 
+    @Inject protected LocusManager _locMgr;
     @Inject protected OrthPeerManager _peerMgr;
 }
