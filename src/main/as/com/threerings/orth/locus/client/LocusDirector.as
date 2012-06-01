@@ -245,8 +245,9 @@ public class LocusDirector extends BasicDirector
             connectingClient.logonTo(_connecting.host, _connecting.ports);
         }
 
-        function failed () :void {
-            log.warning("Preparations for Locus connection failed", "locus", _connecting);
+        function failed (error :String = null) :void {
+            log.warning("Preparations for Locus connection failed", "locus", _connecting,
+                "error", error);
 
             _connecting = null;
             _connected = null;
