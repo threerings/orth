@@ -5,7 +5,6 @@
 package com.threerings.orth.locus.client;
 
 import com.threerings.presents.client.InvocationService;
-import com.threerings.presents.data.ClientObject;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.locus.data.HostedLocus;
