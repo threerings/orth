@@ -21,7 +21,6 @@ import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.where.InLocus;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
-import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusMarshaller;
 import com.threerings.orth.peer.server.OrthPeerManager;
@@ -41,15 +40,7 @@ public class LocusManager
            final LocusMaterializationListener listener)
         throws InvocationException
     {
-        specializedMaterializeLocus(caller, locus, new LocusMaterializationListener() {
-            @Override public void locusMaterialized (HostedLocus locus) {
-                caller.setLocus(locus.locus);
-                listener.locusMaterialized(locus);
-            }
-            @Override public void requestFailed (String cause) {
-                listener.requestFailed(cause);
-            }
-        });
+        specializedMaterializeLocus(caller, locus, listener);
     }
 
     // We can't provide the generic type in materializeLocus as its signature has to match
