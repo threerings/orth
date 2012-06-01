@@ -29,7 +29,8 @@ public interface LocusContext
      *
      * Return false to let the connection proceed automatically. Return true if you wish to
      * interject your own asynchronous activities, in which case it is your responsibility to
-     * execute one the provided callbacks when done.
+     * execute success, without arguments, if the connection should continue, or fail, with
+     * an optional helpful error message, if it should not.
      */
     function prepareForConnection (locus :HostedLocus, success :Function, fail :Function) :Boolean;
 
