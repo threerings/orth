@@ -52,6 +52,9 @@ public class PartyDirector extends NodeletDirector
     PartierObject;
     PartyInvite;
 
+    /** If isInitialized is false, this signal will trigger when we're fully logged on. */
+    public const onReady :Signal = new Signal();
+
     public const partyJoined :Signal = new Signal();
     public const partyLeft :Signal = new Signal();
 
@@ -63,8 +66,22 @@ public class PartyDirector extends NodeletDirector
             _prsvc = client.requireService(PartyRegistryService);
             if (_octx.aetherObject.party != null) {
                 DelayUtil.delayFrame(joinParty, [ _octx.aetherObject.party ]); // Join it!
+            } else {
+                didInitialize();
             }
         });
+    }
+
+    /** If this function returns false, onReady will be dispatched when we're logged on. */
+    public function isInitialized () :Boolean
+    {
+        return _initialized;
+    }
+
+    protected function didInitialize () :void
+    {
+        _initialized = true;
+        onReady.dispatch();
     }
 
     /**
@@ -217,6 +234,11 @@ public class PartyDirector extends NodeletDirector
         _chatDir.registerRouter(OrthChatCodes.PARTY_CHAT_TYPE, _speakRouter);
 
         partyJoined.dispatch();
+
+        // if we had not flagged ourselves as initialized yet, we certainly are now
+        if (!isInitialized()) {
+            didInitialize();
+        }
     }
 
     public function locusChanged (newLocus :HostedLocus) :void
@@ -237,6 +259,7 @@ public class PartyDirector extends NodeletDirector
     protected var _partyObj :PartyObject;
     protected var _speakRouter :SpeakRouter;
     protected var _onJoin :Function;
+    protected var _initialized :Boolean;
 
     private static const log :Log = Log.getLog(PartyDirector);
 }
