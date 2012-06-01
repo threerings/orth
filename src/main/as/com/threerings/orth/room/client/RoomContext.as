@@ -24,6 +24,7 @@ import com.threerings.orth.client.TopPanel;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.client.LocusClient;
 import com.threerings.orth.locus.client.LocusContext;
+import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.room.data.RoomLocus;
 import com.threerings.orth.room.data.SocializerObject;
@@ -101,6 +102,12 @@ public class RoomContext
     public function get locusClient () :LocusClient
     {
         return _client;
+    }
+
+    public function prepareForConnection (
+        locus :HostedLocus, success :Function, fail :Function) :Boolean
+    {
+        return false;
     }
 
     // from LocusContext

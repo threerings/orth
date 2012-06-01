@@ -6,6 +6,7 @@ package com.threerings.orth.locus.client {
 import com.threerings.presents.util.PresentsContext;
 
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.locus.data.Locus;
 
 /**
@@ -20,6 +21,17 @@ public interface LocusContext
 
     /** For convenience, return {@link #getClient} as a {@link LocusClient}. */
     function get locusClient () :LocusClient;
+
+    /**
+     * Optionally do anything needed to prepare the client for connecting to the given locus.
+     * This can be an asynchronous operation -- e.g. waiting for a party or guild connection
+     * to complete.
+     *
+     * Return false to let the connection proceed automatically. Return true if you wish to
+     * interject your own asynchronous activities, in which case it is your responsibility to
+     * execute one the provided callbacks when done.
+     */
+    function prepareForConnection (locus :HostedLocus, success :Function, fail :Function) :Boolean;
 
     /**
      * Given the precondition that our locus client is logged onto the correct server and

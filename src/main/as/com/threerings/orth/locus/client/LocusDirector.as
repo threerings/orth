@@ -3,6 +3,7 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.locus.client {
+
 import flash.utils.getQualifiedClassName;
 
 import flashx.funk.ioc.inject;
@@ -69,7 +70,6 @@ public class LocusDirector extends BasicDirector
      */
     public const locusChangeFailed :Signal = new Signal(Locus, String);
 
-
     public function LocusDirector ()
     {
         super(_octx);
@@ -123,7 +123,7 @@ public class LocusDirector extends BasicDirector
      */
     public function addBinding (locusClass :Class, moduleClass :Class) :void
     {
-        log.debug("Instantiating Locus subsystem", "moduleClass", moduleClass);
+        log.info("Instantiating Locus subsystem", "moduleClass", moduleClass);
         var ctx :LocusContext = _octx.setupLocus(moduleClass);
 
         _contexts.put(getQualifiedClassName(locusClass), ctx);
@@ -228,15 +228,30 @@ public class LocusDirector extends BasicDirector
             logout();
         }
 
-        // now grab the (possibly) new client
-        const connectingClient :LocusClient = ctx.locusClient;
+        if (!ctx.prepareForConnection(_connecting, finished, failed)) {
+            finished();
+        }
 
-        // listen to it
-        connectingClient.addClientObserver(_observer);
-        _clientObservers.apply(connectingClient.addClientObserver);
+        function finished () :void {
 
-        // and finally log on
-        connectingClient.logonTo(_connecting.host, _connecting.ports);
+            // now grab the (possibly) new client
+            const connectingClient :LocusClient = ctx.locusClient;
+
+            // listen to it
+            connectingClient.addClientObserver(_observer);
+            _clientObservers.apply(connectingClient.addClientObserver);
+
+            // and finally log on
+            connectingClient.logonTo(_connecting.host, _connecting.ports);
+        }
+
+        function failed () :void {
+            log.warning("Preparations for Locus connection failed", "locus", _connecting);
+
+            _connecting = null;
+            _connected = null;
+            Listeners.displayFeedback(OrthCodes.GENERAL_MSGS, "m.network_error");
+        }
     }
 
     // called if our connection to the locus server fails or we fail to login
