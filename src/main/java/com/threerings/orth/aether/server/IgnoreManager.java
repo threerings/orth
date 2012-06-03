@@ -4,19 +4,15 @@
 
 package com.threerings.orth.aether.server;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 import com.samskivert.util.Invoker;
-import com.samskivert.util.Lifecycle;
 
 import com.threerings.util.Resulting;
 
@@ -26,13 +22,13 @@ import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
-import com.threerings.presents.server.PresentsSession;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.IgnoreMarshaller;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
+import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.PlayerRepository;
 
@@ -42,48 +38,37 @@ import static com.threerings.orth.Log.log;
  * Manages {@link AetherClientObject#ignoring} and ignore-related request for the local server.
  */
 @Singleton
-public class IgnoreManager implements Lifecycle.InitComponent, IgnoreProvider
+public class IgnoreManager implements IgnoreProvider
 {
     @Inject public IgnoreManager (Injector injector)
     {
-        injector.getInstance(Lifecycle.class).addComponent(this);
-
         // register our bootstrap invocation service
         injector.getInstance(InvocationManager.class).registerProvider(
             this, IgnoreMarshaller.class, OrthCodes.AETHER_GROUP);
     }
 
-    @Override
-    public void init ()
+    /**
+     * Test to see if one player is ignoring another. This method can be called from any peer,
+     * including e.g. party or guild nodelets, because it uses data broadcast across the network.
+     */
+    public boolean isIgnoring (int ignorerId, int ignoreeId)
     {
-        _locator.addObserver(new AetherSessionLocator.Observer() {
-            @Override public void playerLoggedIn (PresentsSession session, AetherClientObject plobj) {
-                initReverseMapping(plobj);
-            }
-            @Override public void playerWillLogout (PresentsSession session, AetherClientObject plobj) {
-                clearReverseMapping(plobj);
-            }
-        });
+        return _peerMgr.isIgnoring(ignorerId, ignoreeId);
     }
 
     /**
-     * Determine whether one person is ignored by another. NOTE: This class only keeps track of
-     * ignorers of currently-online players, though the ignorers themselves may be offline.
+     * Ensure that neither of the given players is ignoring the others, and if they are, throw
+     * an appropriate InvocationException.
      */
-    public boolean isIgnoredBy (int ignoreeId, int ignorerId)
-    {
-        return _ignoredBy.containsEntry(ignoreeId, ignorerId);
-    }
-
     public void validateCommunication (int inviterId, int inviteeId)
         throws InvocationException
     {
         // if sender is ignoring recipient, protest
-        if (isIgnoredBy(inviteeId, inviterId)) {
+        if (_peerMgr.isIgnoring(inviterId, inviteeId)) {
             throw new InvocationException(OrthCodes.YOU_IGNORING_PLAYER);
         }
         // if recipient is ignoring caller, silently drop the request
-        if (isIgnoredBy(inviterId, inviteeId)) {
+        if (_peerMgr.isIgnoring(inviteeId, inviterId)) {
             throw new InvocationException(OrthCodes.PLAYER_IGNORING_YOU);
         }
     }
@@ -139,8 +124,10 @@ public class IgnoreManager implements Lifecycle.InitComponent, IgnoreProvider
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
 
-        _invoker.postUnit(new Resulting<PlayerName>("Ignore player", listener) {
-            @Override public PlayerName invokePersist () throws Exception {
+        _invoker.postUnit(new Resulting<PlayerName>("Ignore player", listener)
+        {
+            @Override public PlayerName invokePersist () throws Exception
+            {
                 if (doIgnore) {
                     _relationRepo.ignorePlayer(ignorerId, ignoreeId);
                     String name = _playerRepo.resolvePlayerName(ignoreeId);
@@ -150,51 +137,45 @@ public class IgnoreManager implements Lifecycle.InitComponent, IgnoreProvider
                 return null;
             }
 
-            @Override public void requestCompleted (PlayerName name) {
+            @Override public void requestCompleted (PlayerName name)
+            {
                 if (doIgnore) {
                     if (name == null) {
                         log.info("Can't ignore nameless player", "caller", caller.who(),
                             "ignoreeId", ignoreeId);
                         return;
                     }
-                    caller.addToIgnored(name);
-                    _ignoredBy.put(ignoreeId, ignorerId);
-
+                    updateIgnoring(caller, name, true);
                 } else {
-                    caller.removeFromIgnored(ignoreeId);
-                    _ignoredBy.remove(ignoreeId, ignorerId);
+                    updateIgnoring(caller, name, false);
                 }
             }
         });
     }
 
-    /**
-     * Find all the players who are currently ignoring us.
-     */
-    protected void initReverseMapping (AetherClientObject plobj)
+    protected void updateIgnoring (
+        final AetherClientObject caller, final PlayerName ignoree, final boolean doAdd)
     {
-        final int ignoreeId = plobj.getPlayerId();
-        _invoker.postUnit(new Resulting<Collection<Integer>>("initReverseMapping") {
-            @Override public Collection<Integer> invokePersist () throws Exception {
-                return _relationRepo.getIgnorerIds(ignoreeId);
-            }
-            @Override public void requestCompleted (Collection<Integer> ignorers) {
-                for (int ignorerId : ignorers) {
-                    _ignoredBy.put(ignoreeId, ignorerId);
+        // ignoring happens on the ignorer's vault peer, so we can do this the easy way
+        if (doAdd) {
+            caller.addToIgnoring(ignoree);
+        } else {
+            caller.removeFromIgnoring(ignoree);
+        }
+
+        // updating the reverse mapping may well need a peer hop, though
+        _peerMgr.invokeNodeAction(new AetherNodeAction(ignoree.getId()) {
+            @Override protected void execute (AetherClientObject player) {
+                if (doAdd) {
+                    player.addToIgnoredBy(caller.playerName);
+                } else {
+                    player.removeFromIgnoredBy(caller.playerName);
                 }
             }
         });
-    }
 
-    /**
-     * Forget who's ignoring us. We don't care.
-     */
-    protected void clearReverseMapping (AetherClientObject plobj)
-    {
-        _ignoredBy.removeAll(plobj.getPlayerId());
+        _peerMgr.noteIgnoring(caller.getPlayerId(), ignoree.getId(), doAdd);
     }
-
-    final protected Multimap<Integer, Integer> _ignoredBy = HashMultimap.create();
 
     // dependencies
     @Inject protected AetherSessionLocator _locator;

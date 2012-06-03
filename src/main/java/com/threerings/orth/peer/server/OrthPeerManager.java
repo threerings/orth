@@ -33,6 +33,7 @@ import com.threerings.presents.server.PresentsSession;
 import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.AuthName;
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.locus.data.LocusAuthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
@@ -124,8 +125,10 @@ public abstract class OrthPeerManager extends PeerManager
     public HostedNodelet findHostedNodelet (final String dsetName, Nodelet nodelet)
     {
         final Comparable<?> key = nodelet.getKey();
-        return lookupNodeDatum(new Function<NodeObject, HostedNodelet>() {
-            public HostedNodelet apply (NodeObject nodeobj) {
+        return lookupNodeDatum(new Function<NodeObject, HostedNodelet>()
+        {
+            public HostedNodelet apply (NodeObject nodeobj)
+            {
                 return nodeobj.<HostedNodelet>getSet(dsetName).get(key);
             }
         });
@@ -146,6 +149,15 @@ public abstract class OrthPeerManager extends PeerManager
     public OrthClientInfo locatePlayer (int playerId)
     {
         return (OrthClientInfo)locateClient(AetherAuthName.makeKey(playerId));
+    }
+
+    /**
+     * Locates the ignore list for one player and tests to see if another player is on it.
+     */
+    public boolean isIgnoring (int ignorerId, int ignoreeId)
+    {
+        OrthClientInfo info = locatePlayer(ignorerId);
+        return (info != null) && info.ignoring.contains(ignoreeId);
     }
 
     /**
@@ -248,6 +260,28 @@ public abstract class OrthPeerManager extends PeerManager
         }
     }
 
+    /**
+     * Add or remove someone from a player's peer-wide ignore list information.
+     */
+    public boolean noteIgnoring (int ignorerId, int ignoreeId, boolean doAdd)
+    {
+        OrthClientInfo info = (OrthClientInfo) _nodeobj.clients.get(ignorerId);
+        if (info != null) {
+            int setSize = info.ignoring.size();
+            if (doAdd) {
+                info.ignoring.add(ignoreeId);
+            } else {
+                info.ignoring.remove(ignoreeId);
+            }
+            if (setSize != info.ignoring.size()) {
+                updateClientInfo(info);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     protected void updateClientInfo (OrthClientInfo info)
     {
         _nodeobj.updateClients(info);
@@ -278,6 +312,8 @@ public abstract class OrthPeerManager extends PeerManager
             AetherClientObject aetherObj = (AetherClientObject) clobj;
             orthInfo.visibleName = aetherObj.playerName;
             orthInfo.guild = aetherObj.guildName;
+            orthInfo.ignoring = Sets.newHashSet(
+                Iterables.transform(aetherObj.ignoring.asSet(), PlayerName.ID));
         }
         orthInfo.whereabouts = Whereabouts.ONLINE;
 

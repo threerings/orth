@@ -104,7 +104,7 @@ public class ChatHistory
         int senderId = sender.getId();
         for (int recipientId : recipientIds) {
             // don't file what we recipient won't actually see
-            if (_ignoreMan.isIgnoredBy(senderId, recipientId)) {
+            if (_ignoreMan.isIgnoring(recipientId, senderId)) {
                 continue;
             }
             List<ChatHistoryEntry> entries = _history.get(recipientId);

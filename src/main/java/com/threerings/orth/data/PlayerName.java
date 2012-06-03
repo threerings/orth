@@ -4,8 +4,7 @@
 
 package com.threerings.orth.data;
 
-import java.util.Comparator;
-
+import com.google.common.base.Function;
 import com.google.common.primitives.Ints;
 
 import com.threerings.util.Name;
@@ -26,20 +25,11 @@ import com.threerings.presents.dobj.DSet;
  */
 public class PlayerName extends Name implements DSet.Entry
 {
-    /** A comparator for sorting Names by their display portion, case insensitively. */
-    public static final Comparator<PlayerName> BY_DISPLAY_NAME = new Comparator<PlayerName>() {
-        public int compare (PlayerName name1, PlayerName name2) {
-            return compareNames(name1, name2);
+    public static Function<PlayerName, Integer> ID = new Function<PlayerName, Integer>() {
+        @Override public Integer apply (PlayerName entry) {
+            return entry.getId();
         }
     };
-
-    /**
-     * Compares two member name records case insensitively.
-     */
-    public static int compareNames (PlayerName m1, PlayerName m2)
-    {
-        return m1.toString().toLowerCase().compareTo(m2.toString().toLowerCase());
-    }
 
     /**
      * Create a temporary {@link PlayerName} given only a playerId, specifically for purposes

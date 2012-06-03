@@ -4,6 +4,9 @@
 
 package com.threerings.orth.peer.data;
 
+import java.util.List;
+import java.util.Set;
+
 import com.threerings.presents.peer.data.ClientInfo;
 
 import com.threerings.orth.data.PlayerName;
@@ -20,6 +23,9 @@ public class OrthClientInfo extends ClientInfo
 
     /** For aether clients, what guild we're in, or null. */
     public GuildName guild;
+
+    /** All the players on our ignore list. */
+    public Set<Integer> ignoring;
 
     /**
      *  Where is this player? Any client type can theoretically contribute data, but at the
