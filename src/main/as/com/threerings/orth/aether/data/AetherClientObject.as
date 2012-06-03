@@ -36,6 +36,8 @@ public class AetherClientObject extends ClientObject
 
     public var ignoring :DSet; /* of */ PlayerName;
 
+    public var ignoredBy :DSet; /* of */ PlayerName;
+
     public var channels :DSet; /* of */ ChannelEntry;
 
     public var locus :Locus;
@@ -55,6 +57,10 @@ public class AetherClientObject extends ClientObject
     public var ignoringEntryAdded :Signal = new Signal(PlayerName);
     public var ignoringEntryRemoved :Signal = new Signal(PlayerName);
     public var ignoringEntryUpdated :Signal = new Signal(PlayerName, PlayerName);
+    public var ignoredByChanged :Signal = new Signal(DSet, DSet);
+    public var ignoredByEntryAdded :Signal = new Signal(PlayerName);
+    public var ignoredByEntryRemoved :Signal = new Signal(PlayerName);
+    public var ignoredByEntryUpdated :Signal = new Signal(PlayerName, PlayerName);
     public var channelsChanged :Signal = new Signal(DSet, DSet);
     public var channelsEntryAdded :Signal = new Signal(ChannelEntry);
     public var channelsEntryRemoved :Signal = new Signal(ChannelEntry);
@@ -67,6 +73,7 @@ public class AetherClientObject extends ClientObject
     public static const PLAYER_NAME :String = "playerName";
     public static const FRIENDS :String = "friends";
     public static const IGNORING :String = "ignoring";
+    public static const IGNORED_BY :String = "ignoredBy";
     public static const CHANNELS :String = "channels";
     public static const LOCUS :String = "locus";
     public static const PARTY :String = "party";
@@ -79,6 +86,7 @@ public class AetherClientObject extends ClientObject
         playerName = ins.readObject(PlayerName);
         friends = ins.readObject(DSet);
         ignoring = ins.readObject(DSet);
+        ignoredBy = ins.readObject(DSet);
         channels = ins.readObject(DSet);
         locus = ins.readObject(Locus);
         party = ins.readObject(HostedNodelet);
@@ -160,6 +168,9 @@ class Signaller
             case "ignoring":
                 signal = _obj.ignoringChanged;
                 break;
+            case "ignoredBy":
+                signal = _obj.ignoredByChanged;
+                break;
             case "channels":
                 signal = _obj.channelsChanged;
                 break;
@@ -191,6 +202,9 @@ class Signaller
             case "ignoring":
                 signal = _obj.ignoringEntryAdded;
                 break;
+            case "ignoredBy":
+                signal = _obj.ignoredByEntryAdded;
+                break;
             case "channels":
                 signal = _obj.channelsEntryAdded;
                 break;
@@ -210,6 +224,9 @@ class Signaller
             case "ignoring":
                 signal = _obj.ignoringEntryRemoved;
                 break;
+            case "ignoredBy":
+                signal = _obj.ignoredByEntryRemoved;
+                break;
             case "channels":
                 signal = _obj.channelsEntryRemoved;
                 break;
@@ -228,6 +245,9 @@ class Signaller
                 break;
             case "ignoring":
                 signal = _obj.ignoringEntryUpdated;
+                break;
+            case "ignoredBy":
+                signal = _obj.ignoredByEntryUpdated;
                 break;
             case "channels":
                 signal = _obj.channelsEntryUpdated;

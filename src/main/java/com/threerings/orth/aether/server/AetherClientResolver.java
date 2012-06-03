@@ -63,8 +63,9 @@ public class AetherClientResolver extends CrowdClientResolver
         final AetherLocal local = plobj.getLocal(AetherLocal.class);
         local.unresolvedFriendIds = Sets.newHashSet(_relationRepo.getFriendIds(playerId));
 
-        // resolve the ignore list
-        plobj.ignoring = DSet.newDSet(_ignoreMgr.resolveIgnoreList(playerId));
+        // resolve the ignoring/ignoredBy data
+        plobj.ignoring = DSet.newDSet(_ignoreMgr.resolveIgnoringList(playerId));
+        plobj.ignoredBy = DSet.newDSet(_ignoreMgr.resolveIgnoredByList(playerId));
 
         // set the guild id
         plobj.guildName = _guildRepo.getGuildName(playerId);

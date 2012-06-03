@@ -17,7 +17,8 @@ public interface IgnoreService
     /**
      * Requests that the specified player be added or removed to the local player's ignore list,
      * depending on the boolean argument. There is no return argument, but successful execution
-     * results in a change to {@link AetherClientObject#ignoring}.
+     * results in a change to the ignorer's {@link AetherClientObject#ignoring} as well as to the
+     * ignoree's {@link AetherClientObject#ignoredBy}.
      */
     void ignorePlayer (int playerId, boolean ignore, InvocationListener listener);
 }

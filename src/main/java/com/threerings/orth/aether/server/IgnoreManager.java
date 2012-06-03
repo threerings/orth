@@ -92,10 +92,26 @@ public class IgnoreManager implements Lifecycle.InitComponent, IgnoreProvider
      * Initializes the ignore list from persistent store.
      */
     @BlockingThread
-    public List<PlayerName> resolveIgnoreList (int ignorerId)
+    public List<PlayerName> resolveIgnoringList (int ignorerId)
     {
         Map<Integer, String> names = _playerRepo.resolvePlayerNames(
             _relationRepo.getIgnoreeIds(ignorerId));
+
+        List<PlayerName> list = Lists.newArrayList();
+        for (Map.Entry<Integer, String> pair : names.entrySet()) {
+            list.add(new PlayerName(pair.getValue(), pair.getKey()));
+        }
+        return list;
+    }
+
+    /**
+     * Initializes the ignore list from persistent store.
+     */
+    @BlockingThread
+    public List<PlayerName> resolveIgnoredByList (int ignorerId)
+    {
+        Map<Integer, String> names = _playerRepo.resolvePlayerNames(
+            _relationRepo.getIgnorerIds(ignorerId));
 
         List<PlayerName> list = Lists.newArrayList();
         for (Map.Entry<Integer, String> pair : names.entrySet()) {
