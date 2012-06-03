@@ -9,6 +9,7 @@ import com.threerings.presents.client.InvocationService_InvocationListener;
 
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
+import com.threerings.orth.party.data.PartyPolicy;
 
 /**
  * An ActionScript version of the Java PartyService interface.
@@ -31,7 +32,7 @@ public interface PartyService extends InvocationService
     function updateDisband (arg1 :Boolean, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface PartyService
-    function updateRecruitment (arg1 :int, arg2 :InvocationService_InvocationListener) :void;
+    function updatePolicy (arg1 :PartyPolicy, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface PartyService
     function updateStatus (arg1 :String, arg2 :InvocationService_InvocationListener) :void;

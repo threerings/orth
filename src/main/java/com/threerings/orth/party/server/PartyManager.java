@@ -47,6 +47,7 @@ import com.threerings.orth.nodelet.data.NodeletAuthName;
 import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyCodes;
+import com.threerings.orth.party.data.PartyPolicy;
 import com.threerings.orth.party.data.PartyConfig;
 import com.threerings.orth.party.data.PartyInvite;
 import com.threerings.orth.party.data.PartyMarshaller;
@@ -276,12 +277,12 @@ public class PartyManager extends NodeletManager
     }
 
     // from interface PartyProvider
-    public void updateRecruitment (PartierObject caller, byte recruitment,
+    public void updatePolicy (PartierObject caller, PartyPolicy policy,
         InvocationService.InvocationListener listener)
         throws InvocationException
     {
         requireLeader(caller);
-        _partyObj.setRecruitment(recruitment);
+        _partyObj.setPolicy(policy);
     }
 
     // from interface PartyProvider
@@ -298,7 +299,7 @@ public class PartyManager extends NodeletManager
         InvocationService.InvocationListener listener)
         throws InvocationException
     {
-        if (_partyObj.recruitment == PartyCodes.RECRUITMENT_CLOSED &&
+        if (_partyObj.policy == PartyPolicy.CLOSED &&
             _partyObj.leaderId != inviter.getPlayerId()) {
             throw new InvocationException(PartyCodes.E_CANT_INVITE_CLOSED);
         }

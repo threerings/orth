@@ -9,6 +9,7 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.data.PartierObject;
+import com.threerings.orth.party.data.PartyPolicy;
 
 /**
  * Provides services to people in a party.
@@ -25,7 +26,7 @@ public interface PartyService extends InvocationService<PartierObject>
     void updateStatus (String status, InvocationListener il);
 
     /** Requests to change the party access control. */
-    void updateRecruitment (byte recruitment, InvocationListener il);
+    void updatePolicy (PartyPolicy policy, InvocationListener il);
 
     /** Requests to change the disband setting. */
     void updateDisband (boolean disband, InvocationListener il);

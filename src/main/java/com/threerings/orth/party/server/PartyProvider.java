@@ -14,6 +14,7 @@ import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.client.PartyService;
 import com.threerings.orth.party.data.PartierObject;
+import com.threerings.orth.party.data.PartyPolicy;
 
 /**
  * Defines the server-side of the {@link PartyService}.
@@ -53,9 +54,9 @@ public interface PartyProvider extends InvocationProvider
         throws InvocationException;
 
     /**
-     * Handles a {@link PartyService#updateRecruitment} request.
+     * Handles a {@link PartyService#updatePolicy} request.
      */
-    void updateRecruitment (PartierObject caller, byte arg1, InvocationService.InvocationListener arg2)
+    void updatePolicy (PartierObject caller, PartyPolicy arg1, InvocationService.InvocationListener arg2)
         throws InvocationException;
 
     /**

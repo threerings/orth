@@ -14,7 +14,6 @@ import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.chat.data.SpeakMarshaller;
-import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 
 public class PartyObject extends DObject
@@ -39,9 +38,9 @@ public class PartyObject extends DObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String STATUS_TYPE = "statusType";
 
-    /** The field name of the <code>recruitment</code> field. */
+    /** The field name of the <code>policy</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String RECRUITMENT = "recruitment";
+    public static final String POLICY = "policy";
 
     /** The field name of the <code>disband</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -73,7 +72,7 @@ public class PartyObject extends DObject
     public byte statusType;
 
     /** This party's access control. @see PartyCodes */
-    public byte recruitment;
+    public PartyPolicy policy;
 
     /** Do we disband when the leader leaves? */
     public boolean disband = true;
@@ -191,7 +190,7 @@ public class PartyObject extends DObject
     }
 
     /**
-     * Requests that the <code>recruitment</code> field be set to the
+     * Requests that the <code>policy</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
@@ -199,12 +198,12 @@ public class PartyObject extends DObject
      * attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setRecruitment (byte value)
+    public void setPolicy (PartyPolicy value)
     {
-        byte ovalue = this.recruitment;
+        PartyPolicy ovalue = this.policy;
         requestAttributeChange(
-            RECRUITMENT, Byte.valueOf(value), Byte.valueOf(ovalue));
-        this.recruitment = value;
+            POLICY, value, ovalue);
+        this.policy = value;
     }
 
     /**
@@ -275,16 +274,6 @@ public class PartyObject extends DObject
         this.locus = value;
     }
     // AUTO-GENERATED: METHODS END
-
-    /**
-     * May the specified player join this party? Note that you may join a party
-     * you can't even see on the party board.
-     */
-    public boolean mayJoin (PlayerName player)
-    {
-        return peeps.size() < PartyCodes.MAX_PARTY_SIZE &&
-            (invitedIds.contains(player.getId()) || recruitment == PartyCodes.RECRUITMENT_OPEN);
-    }
 
     @Override
     public PartyObject clone ()

@@ -19,6 +19,7 @@ import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.party.data.PartyMarshaller;
 import com.threerings.orth.party.data.PartyPeep;
+import com.threerings.orth.party.data.PartyPolicy;
 
 // GENERATED PREAMBLE END
 
@@ -37,7 +38,7 @@ public class PartyObject extends DObject
 
     public var statusType :int;
 
-    public var recruitment :int;
+    public var policy :PartyPolicy;
 
     public var disband :Boolean;
 
@@ -54,7 +55,7 @@ public class PartyObject extends DObject
     public var leaderIdChanged :Signal = new Signal(int, int);
     public var statusChanged :Signal = new Signal(String, String);
     public var statusTypeChanged :Signal = new Signal(int, int);
-    public var recruitmentChanged :Signal = new Signal(int, int);
+    public var policyChanged :Signal = new Signal(PartyPolicy, PartyPolicy);
     public var disbandChanged :Signal = new Signal(Boolean, Boolean);
     public var partyServiceChanged :Signal = new Signal(PartyMarshaller, PartyMarshaller);
     public var partyChatServiceChanged :Signal = new Signal(SpeakMarshaller, SpeakMarshaller);
@@ -64,7 +65,7 @@ public class PartyObject extends DObject
     public static const LEADER_ID :String = "leaderId";
     public static const STATUS :String = "status";
     public static const STATUS_TYPE :String = "statusType";
-    public static const RECRUITMENT :String = "recruitment";
+    public static const POLICY :String = "policy";
     public static const DISBAND :String = "disband";
     public static const PARTY_SERVICE :String = "partyService";
     public static const PARTY_CHAT_SERVICE :String = "partyChatService";
@@ -77,7 +78,7 @@ public class PartyObject extends DObject
         leaderId = ins.readInt();
         status = ins.readField(String);
         statusType = ins.readByte();
-        recruitment = ins.readByte();
+        policy = ins.readObject(PartyPolicy);
         disband = ins.readBoolean();
         partyService = ins.readObject(PartyMarshaller);
         partyChatService = ins.readObject(SpeakMarshaller);
@@ -146,8 +147,8 @@ class Signaller
             case "statusType":
                 signal = _obj.statusTypeChanged;
                 break;
-            case "recruitment":
-                signal = _obj.recruitmentChanged;
+            case "policy":
+                signal = _obj.policyChanged;
                 break;
             case "disband":
                 signal = _obj.disbandChanged;
@@ -216,7 +217,7 @@ class Signaller
         signal.dispatch(event.getIndex(), event.getValue(), event.getOldValue());
     }
 
-    public function objectAdded (event :ObjectAddedEvent) :void
+    public function objectAdded (event:ObjectAddedEvent) :void
     {
         var signal :Signal;
         switch (event.getName()) {

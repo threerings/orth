@@ -33,12 +33,12 @@ import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.nodelet.client.NodeletDirector;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.PartierObject;
-import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyConfig;
 import com.threerings.orth.party.data.PartyInvite;
 import com.threerings.orth.party.data.PartyNodelet;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
+import com.threerings.orth.party.data.PartyPolicy;
 import com.threerings.orth.party.data.PartyRegistryMarshaller;
 
 /**
@@ -90,7 +90,7 @@ public class PartyDirector extends NodeletDirector
     public function get canInviteToParty () :Boolean
     {
         return (_partyObj != null) &&
-            ((_partyObj.recruitment == PartyCodes.RECRUITMENT_OPEN) || partyLeader);
+            ((_partyObj.policy == PartyPolicy.OPEN) || partyLeader);
     }
 
     public function partyContainsPlayer (memberId :int) :Boolean
@@ -170,9 +170,9 @@ public class PartyDirector extends NodeletDirector
         _partyObj.partyService.updateStatus(status, Listeners.listener(OrthCodes.PARTY_MSGS));
     }
 
-    public function updateRecruitment (recruitment :int) :void
+    public function updatePolicy (policy :PartyPolicy) :void
     {
-        _partyObj.partyService.updateRecruitment(recruitment, Listeners.listener(OrthCodes.PARTY_MSGS));
+        _partyObj.partyService.updatePolicy(policy, Listeners.listener(OrthCodes.PARTY_MSGS));
     }
 
     public function updateDisband (disband :Boolean) :void

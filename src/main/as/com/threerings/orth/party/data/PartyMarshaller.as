@@ -4,7 +4,6 @@
 
 package com.threerings.orth.party.data {
 
-import com.threerings.util.Byte;
 import com.threerings.util.Integer;
 import com.threerings.util.langBoolean;
 
@@ -91,16 +90,16 @@ public class PartyMarshaller extends InvocationMarshaller
         ]);
     }
 
-    /** The method id used to dispatch <code>updateRecruitment</code> requests. */
-    public static const UPDATE_RECRUITMENT :int = 6;
+    /** The method id used to dispatch <code>updatePolicy</code> requests. */
+    public static const UPDATE_POLICY :int = 6;
 
     // from interface PartyService
-    public function updateRecruitment (arg1 :int, arg2 :InvocationService_InvocationListener) :void
+    public function updatePolicy (arg1 :PartyPolicy, arg2 :InvocationService_InvocationListener) :void
     {
         var listener2 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
         listener2.listener = arg2;
-        sendRequest(UPDATE_RECRUITMENT, [
-            Byte.valueOf(arg1), listener2
+        sendRequest(UPDATE_POLICY, [
+            arg1, listener2
         ]);
     }
 
