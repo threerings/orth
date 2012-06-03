@@ -30,9 +30,9 @@ public class AetherClientObject extends ClientObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String FRIENDS = "friends";
 
-    /** The field name of the <code>ignored</code> field. */
+    /** The field name of the <code>ignoring</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String IGNORED = "ignored";
+    public static final String IGNORING = "ignoring";
 
     /** The field name of the <code>channels</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
@@ -62,7 +62,7 @@ public class AetherClientObject extends ClientObject
     public DSet<FriendEntry> friends = DSet.newDSet();
 
     /** The players on our ignore list. */
-    public DSet<PlayerName> ignored; // initialized during resolution
+    public DSet<PlayerName> ignoring; // initialized during resolution
 
     /** Our current set of subscribed chat channels. */
     public DSet<ChannelEntry> channels = DSet.newDSet();
@@ -181,39 +181,39 @@ public class AetherClientObject extends ClientObject
 
     /**
      * Requests that the specified entry be added to the
-     * <code>ignored</code> set. The set will not change until the event is
+     * <code>ignoring</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void addToIgnored (PlayerName elem)
+    public void addToIgnoring (PlayerName elem)
     {
-        requestEntryAdd(IGNORED, ignored, elem);
+        requestEntryAdd(IGNORING, ignoring, elem);
     }
 
     /**
      * Requests that the entry matching the supplied key be removed from
-     * the <code>ignored</code> set. The set will not change until the
+     * the <code>ignoring</code> set. The set will not change until the
      * event is actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void removeFromIgnored (Comparable<?> key)
+    public void removeFromIgnoring (Comparable<?> key)
     {
-        requestEntryRemove(IGNORED, ignored, key);
+        requestEntryRemove(IGNORING, ignoring, key);
     }
 
     /**
      * Requests that the specified entry be updated in the
-     * <code>ignored</code> set. The set will not change until the event is
+     * <code>ignoring</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void updateIgnored (PlayerName elem)
+    public void updateIgnoring (PlayerName elem)
     {
-        requestEntryUpdate(IGNORED, ignored, elem);
+        requestEntryUpdate(IGNORING, ignoring, elem);
     }
 
     /**
-     * Requests that the <code>ignored</code> field be set to the
+     * Requests that the <code>ignoring</code> field be set to the
      * specified value. Generally one only adds, updates and removes
      * entries of a distributed set, but certain situations call for a
      * complete replacement of the set value. The local value will be
@@ -223,11 +223,11 @@ public class AetherClientObject extends ClientObject
      * value change when they received the attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setIgnored (DSet<PlayerName> value)
+    public void setIgnoring (DSet<PlayerName> value)
     {
-        requestAttributeChange(IGNORED, value, this.ignored);
+        requestAttributeChange(IGNORING, value, this.ignoring);
         DSet<PlayerName> clone = (value == null) ? null : value.clone();
-        this.ignored = clone;
+        this.ignoring = clone;
     }
 
     /**

@@ -4,6 +4,10 @@
 
 package com.threerings.orth.data;
 
+import javax.annotation.Nullable;
+
+import com.google.common.base.Function;
+
 import com.google.inject.Inject;
 
 import com.threerings.io.SimpleStreamableObject;
@@ -16,6 +20,12 @@ import com.threerings.orth.guild.data.GuildName;
 public class PlayerEntry extends SimpleStreamableObject
     implements /* IsSerializable, */ DSet.Entry, Cloneable
 {
+    public static Function<PlayerEntry, PlayerName> NAME = new Function<PlayerEntry, PlayerName>() {
+        @Override public PlayerName apply (PlayerEntry entry) {
+            return entry.name;
+        }
+    };
+    
     /** The display name of the friend. */
     public PlayerName name;
 

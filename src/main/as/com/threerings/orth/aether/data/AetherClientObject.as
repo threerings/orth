@@ -34,7 +34,7 @@ public class AetherClientObject extends ClientObject
 
     public var friends :DSet; /* of */ FriendEntry;
 
-    public var ignored :DSet; /* of */ PlayerName;
+    public var ignoring :DSet; /* of */ PlayerName;
 
     public var channels :DSet; /* of */ ChannelEntry;
 
@@ -51,10 +51,10 @@ public class AetherClientObject extends ClientObject
     public var friendsEntryAdded :Signal = new Signal(FriendEntry);
     public var friendsEntryRemoved :Signal = new Signal(FriendEntry);
     public var friendsEntryUpdated :Signal = new Signal(FriendEntry, FriendEntry);
-    public var ignoredChanged :Signal = new Signal(DSet, DSet);
-    public var ignoredEntryAdded :Signal = new Signal(PlayerName);
-    public var ignoredEntryRemoved :Signal = new Signal(PlayerName);
-    public var ignoredEntryUpdated :Signal = new Signal(PlayerName, PlayerName);
+    public var ignoringChanged :Signal = new Signal(DSet, DSet);
+    public var ignoringEntryAdded :Signal = new Signal(PlayerName);
+    public var ignoringEntryRemoved :Signal = new Signal(PlayerName);
+    public var ignoringEntryUpdated :Signal = new Signal(PlayerName, PlayerName);
     public var channelsChanged :Signal = new Signal(DSet, DSet);
     public var channelsEntryAdded :Signal = new Signal(ChannelEntry);
     public var channelsEntryRemoved :Signal = new Signal(ChannelEntry);
@@ -66,7 +66,7 @@ public class AetherClientObject extends ClientObject
 
     public static const PLAYER_NAME :String = "playerName";
     public static const FRIENDS :String = "friends";
-    public static const IGNORED :String = "ignored";
+    public static const IGNORING :String = "ignoring";
     public static const CHANNELS :String = "channels";
     public static const LOCUS :String = "locus";
     public static const PARTY :String = "party";
@@ -78,7 +78,7 @@ public class AetherClientObject extends ClientObject
         super.readObject(ins);
         playerName = ins.readObject(PlayerName);
         friends = ins.readObject(DSet);
-        ignored = ins.readObject(DSet);
+        ignoring = ins.readObject(DSet);
         channels = ins.readObject(DSet);
         locus = ins.readObject(Locus);
         party = ins.readObject(HostedNodelet);
@@ -157,8 +157,8 @@ class Signaller
             case "friends":
                 signal = _obj.friendsChanged;
                 break;
-            case "ignored":
-                signal = _obj.ignoredChanged;
+            case "ignoring":
+                signal = _obj.ignoringChanged;
                 break;
             case "channels":
                 signal = _obj.channelsChanged;
@@ -188,8 +188,8 @@ class Signaller
             case "friends":
                 signal = _obj.friendsEntryAdded;
                 break;
-            case "ignored":
-                signal = _obj.ignoredEntryAdded;
+            case "ignoring":
+                signal = _obj.ignoringEntryAdded;
                 break;
             case "channels":
                 signal = _obj.channelsEntryAdded;
@@ -207,8 +207,8 @@ class Signaller
             case "friends":
                 signal = _obj.friendsEntryRemoved;
                 break;
-            case "ignored":
-                signal = _obj.ignoredEntryRemoved;
+            case "ignoring":
+                signal = _obj.ignoringEntryRemoved;
                 break;
             case "channels":
                 signal = _obj.channelsEntryRemoved;
@@ -226,8 +226,8 @@ class Signaller
             case "friends":
                 signal = _obj.friendsEntryUpdated;
                 break;
-            case "ignored":
-                signal = _obj.ignoredEntryUpdated;
+            case "ignoring":
+                signal = _obj.ignoringEntryUpdated;
                 break;
             case "channels":
                 signal = _obj.channelsEntryUpdated;

@@ -88,7 +88,7 @@ public class OrthChatDirector extends AetherDirectorBase
     public function receiveSpeak (speak :Speak) :void
     {
         // filter out any speaks from ignored players
-        if (!aetherObj.ignored.containsKey(speak.from.id)) {
+        if (!aetherObj.ignoring.containsKey(speak.from.id)) {
             dispatchPreparedMessage(buildSpeakMessage(speak));
         }
     }

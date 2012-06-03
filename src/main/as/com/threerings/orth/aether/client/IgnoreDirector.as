@@ -28,8 +28,8 @@ public class IgnoreDirector extends AetherDirectorBase
     {
         super.clientObjectUpdated(client);
 
-        aetherObj.ignoredEntryAdded.add(onPlayerIgnored);
-        aetherObj.ignoredEntryRemoved.add(onPlayerUnignored);
+        aetherObj.ignoringEntryAdded.add(onPlayerIgnored);
+        aetherObj.ignoringEntryRemoved.add(onPlayerUnignored);
     }
 
     protected function onPlayerIgnored (player :PlayerName) :void

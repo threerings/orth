@@ -39,7 +39,7 @@ import com.threerings.orth.server.persist.PlayerRepository;
 import static com.threerings.orth.Log.log;
 
 /**
- * Manages {@link AetherClientObject#ignored} and ignore-related request for the local server.
+ * Manages {@link AetherClientObject#ignoring} and ignore-related request for the local server.
  */
 @Singleton
 public class IgnoreManager implements Lifecycle.InitComponent, IgnoreProvider
@@ -110,7 +110,7 @@ public class IgnoreManager implements Lifecycle.InitComponent, IgnoreProvider
     {
         final int ignorerId = caller.getPlayerId();
 
-        if (caller.ignored.containsKey(ignoreeId) == doIgnore) {
+        if (caller.ignoring.containsKey(ignoreeId) == doIgnore) {
             // already in the requested state
             log.warning("Nothing to do in ignorePlayer", "caller", caller.who(),
                 "ignoreeId", ignoreeId, "doIgnore", doIgnore);
