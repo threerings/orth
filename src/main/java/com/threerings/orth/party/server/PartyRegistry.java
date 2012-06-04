@@ -118,8 +118,8 @@ public class PartyRegistry extends NodeletRegistry
             // create random partyId's until we find one that's not in obvious use -- this is not
             // perfect; race conditions could mess it up, but I can't be arsed right now
             nodelet = new PartyNodelet(Randoms.threadLocal().getInt(Integer.MAX_VALUE));
-        } while (_peerMan.findHostedNodelet(OrthNodeObject.HOSTED_GUILDS, nodelet) != null);
-        
+        } while (_peerMan.findHostedNodelet(OrthNodeObject.HOSTED_PARTIES, nodelet) != null);
+
         final int partyId = nodelet.partyId;
         _hoster.resolveHosting(player, nodelet, new Resulting<HostedNodelet>(rl) {
             @Override public void requestCompleted (HostedNodelet result) {
