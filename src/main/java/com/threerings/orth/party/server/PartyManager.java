@@ -125,9 +125,6 @@ public class PartyManager extends NodeletManager
      */
     protected void configurePartyObject ()
     {
-        // "invite" the creator
-        _partyObj.invitedIds.add(_partyObj.leaderId);
-
         _partyObj.disband = true;
         _partyObj.partyService = _invMgr.registerProvider(this, PartyMarshaller.class);
 
@@ -161,7 +158,7 @@ public class PartyManager extends NodeletManager
     public void shutdown ()
     {
         super.shutdown();
-        
+
         if (!_partyObj.isActive()) {
             return; // already shut down
         }
@@ -182,7 +179,7 @@ public class PartyManager extends NodeletManager
         final int playerId = partier.getPlayerId();
 
         // clear their invites to this party, if any
-        _partyObj.invitedIds.remove(playerId);
+        _invitedIds.remove(playerId);
 
         partier.setPartyId(_partyId);
 
@@ -308,7 +305,7 @@ public class PartyManager extends NodeletManager
             throw new InvocationException(PartyCodes.E_ALREADY_IN_PARTY);
         }
 
-        if (_partyObj.invitedIds.contains(invitee.getId())) {
+        if (_invitedIds.contains(invitee.getId())) {
             throw new InvocationException(PartyCodes.E_ALREADY_INVITED);
         }
 
@@ -321,7 +318,7 @@ public class PartyManager extends NodeletManager
         _ignoreMgr.validateCommunication(inviter.getPlayerId(), invitee.getId());
 
         // add them to the invited set
-        _partyObj.invitedIds.add(invitee.getId());
+        _invitedIds.add(invitee.getId());
 
         final PartyInvite invite = createInvite(inviter, invitee);
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(invitee.getId()) {
@@ -495,6 +492,8 @@ public class PartyManager extends NodeletManager
     protected SpeakRouter _speakRouter;
     protected PartyObject _partyObj;
     protected int _partyId;
+
+    protected Set<Integer> _invitedIds = Sets.newHashSet();
 
     @Inject protected PresentsDObjectMgr _omgr;
     @Inject protected ChatManager _chatMan;

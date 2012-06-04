@@ -4,11 +4,7 @@
 
 package com.threerings.orth.party.data;
 
-import java.util.Set;
-
 import javax.annotation.Generated;
-
-import com.google.common.collect.Sets;
 
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
@@ -19,8 +15,6 @@ import com.threerings.orth.locus.data.HostedLocus;
 public class PartyObject extends DObject
     implements Cloneable
 {
-    public transient final Set<Integer> invitedIds = Sets.newHashSet();
-
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>peeps</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
