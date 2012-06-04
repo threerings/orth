@@ -224,7 +224,13 @@ public class PartyDirector extends NodeletDirector
         _partyObj = PartyObject(obj);
         _partyObj.destroyed.add(clearParty);
 
+        // respond to future locus changes
         _partyObj.locusChanged.add(locusChanged);
+
+        // if we're joining a party that's in an intervention, joining them is not optional
+        if (_partyObj.locus != null) {
+            _locusDir.moveToHostedLocus(_partyObj.locus);
+        }
 
         _ctx.getClient().getInvocationDirector().registerReceiver(new CommDecoder(_comms));
 
