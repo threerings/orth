@@ -47,13 +47,13 @@ import com.threerings.orth.nodelet.data.NodeletAuthName;
 import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyCodes;
-import com.threerings.orth.party.data.PartyPolicy;
 import com.threerings.orth.party.data.PartyConfig;
 import com.threerings.orth.party.data.PartyInvite;
 import com.threerings.orth.party.data.PartyMarshaller;
 import com.threerings.orth.party.data.PartyNodelet;
 import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
+import com.threerings.orth.party.data.PartyPolicy;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
 import static com.threerings.orth.Log.log;

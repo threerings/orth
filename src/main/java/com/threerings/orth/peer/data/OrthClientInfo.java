@@ -4,7 +4,6 @@
 
 package com.threerings.orth.peer.data;
 
-import java.util.List;
 import java.util.Set;
 
 import com.threerings.presents.peer.data.ClientInfo;

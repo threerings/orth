@@ -4,10 +4,7 @@
 
 package com.threerings.orth.data;
 
-import javax.annotation.Nullable;
-
 import com.google.common.base.Function;
-
 import com.google.inject.Inject;
 
 import com.threerings.io.SimpleStreamableObject;

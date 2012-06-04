@@ -28,7 +28,6 @@ import com.threerings.orth.aether.data.IgnoreMarshaller;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
-import com.threerings.orth.peer.data.OrthClientInfo;
 import com.threerings.orth.peer.server.OrthPeerManager;
 import com.threerings.orth.server.persist.PlayerRepository;
 
