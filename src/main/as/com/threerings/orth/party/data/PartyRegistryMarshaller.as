@@ -4,6 +4,8 @@
 
 package com.threerings.orth.party.data {
 
+import com.threerings.util.Integer;
+
 import com.threerings.presents.client.InvocationService_ResultListener;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.data.InvocationMarshaller_ResultMarshaller;
@@ -30,6 +32,19 @@ public class PartyRegistryMarshaller extends InvocationMarshaller
         listener2.listener = arg2;
         sendRequest(CREATE_PARTY, [
             arg1, listener2
+        ]);
+    }
+
+    /** The method id used to dispatch <code>joinParty</code> requests. */
+    public static const JOIN_PARTY :int = 2;
+
+    // from interface PartyRegistryService
+    public function joinParty (arg1 :int, arg2 :InvocationService_ResultListener) :void
+    {
+        var listener2 :InvocationMarshaller_ResultMarshaller = new InvocationMarshaller_ResultMarshaller();
+        listener2.listener = arg2;
+        sendRequest(JOIN_PARTY, [
+            Integer.valueOf(arg1), listener2
         ]);
     }
 }

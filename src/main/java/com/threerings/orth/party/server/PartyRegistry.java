@@ -16,11 +16,13 @@ import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.dobj.DObject;
-import com.threerings.presents.server.ClientManager;
+import com.threerings.presents.peer.data.NodeObject;
+import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
@@ -48,7 +50,7 @@ public class PartyRegistry extends NodeletRegistry
 {
     @Inject
     public PartyRegistry (Injector injector, OrthDeploymentConfig config,
-        InvocationManager invmgr, ClientManager clientMgr)
+        InvocationManager invmgr)
     {
         super(PartyNodelet.class, config.getPartyHost(),
             new int[] { config.getPartyPort() }, injector);
@@ -56,6 +58,7 @@ public class PartyRegistry extends NodeletRegistry
         invmgr.registerProvider(this, PartyRegistryMarshaller.class, OrthCodes.AETHER_GROUP);
 
         setPeeredHostingStrategy(OrthNodeObject.HOSTED_PARTIES, injector);
+
         setResolverClass(PartyResolver.class);
         setSessionClass(PartySession.class);
     }
@@ -73,12 +76,16 @@ public class PartyRegistry extends NodeletRegistry
             didConnect();
         }
 
+        @Override protected void sessionConnectionClosed ()
+        {
+            super.sessionConnectionClosed();
+            ((PartyManager) getNodeletManager()).clientDisconnected((AuthName) _authname);
+        }
+
         protected void didConnect ()
         {
             ((PartyManager) getNodeletManager()).clientConnected((PartierObject) _clobj);
         }
-
-        @Inject protected PartyRegistry _partyReg;
     }
 
     protected static class PartyResolver extends Resolver
@@ -104,8 +111,25 @@ public class PartyRegistry extends NodeletRegistry
         return (PartyManager) getManager(new PartyNodelet(partyId));
     }
 
-    public void createParty (final AetherClientObject player,
-            final PartyConfig config, ResultListener rl)
+    @Override
+    public void joinParty (final AetherClientObject player, int partyId, ResultListener listener)
+        throws InvocationException
+    {
+        _peerMan.invokeSingleNodeRequest(new PartyRequest(partyId) {
+            @Override protected Object executeForParty (PartyManager mgr) {
+                mgr.addPlayer(player, false);
+                return mgr.getNodelet();
+            }}, new Resulting<HostedNodelet>(listener) {
+            @Override public void requestCompleted (HostedNodelet result) {
+                player.setParty(result);
+                super.requestCompleted(result);
+            }
+        });
+    }
+
+    @Override
+    public void createParty (final AetherClientObject player, final PartyConfig config,
+        final ResultListener rl)
         throws InvocationException
     {
         if (player.party != null) {
@@ -120,11 +144,33 @@ public class PartyRegistry extends NodeletRegistry
             nodelet = new PartyNodelet(Randoms.threadLocal().getInt(Integer.MAX_VALUE));
         } while (_peerMan.findHostedNodelet(OrthNodeObject.HOSTED_PARTIES, nodelet) != null);
 
-        final int partyId = nodelet.partyId;
         _hoster.resolveHosting(player, nodelet, new Resulting<HostedNodelet>(rl) {
             @Override public void requestCompleted (HostedNodelet result) {
-                getPartyManager(partyId).configure(player, config);
-                super.requestCompleted(result);
+                configureManager(result, player, config, rl);
+            }
+        });
+    }
+
+    /**
+     * After the party is hosted, we have to somewhat annoyingly do another request to
+     * configure the newly minted manager with the leader and the {@link PartyConfig}.
+     *
+     * Truth be told we could probably avoid this with lots of clever subclassing of the
+     * internals of NodeletRegistry, but I'm not in the mood.
+     */
+    void configureManager (final HostedNodelet nodelet, final AetherClientObject player,
+        final PartyConfig config, ResultListener listener)
+    {
+        _peerMan.invokeSingleNodeRequest(
+            new PartyRequest(((PartyNodelet) nodelet.nodelet).partyId) {
+                @Override protected Object executeForParty (PartyManager mgr) {
+                    mgr.configure(player, config);
+                    return nodelet;
+                }
+            }, new Resulting<HostedNodelet>(listener) {
+            @Override public void requestCompleted (HostedNodelet result) {
+                player.setParty(result);
+                super.requestCompleted( result);
             }
         });
     }
@@ -138,5 +184,30 @@ public class PartyRegistry extends NodeletRegistry
     public Class<? extends NodeletManager> getManagerClass ()
     {
         return PartyManager.class;
+    }
+
+    protected static abstract class PartyRequest<T> extends PeerManager.NodeRequest {
+        private final int partyId;
+
+        public PartyRequest (int partyId) {
+            this.partyId = partyId;
+        }
+
+        @Override public boolean isApplicable (NodeObject nodeobj) {
+            return ((OrthNodeObject) nodeobj).hostedParties.containsKey(partyId);
+        }
+
+        @Override protected void execute (ResultListener listener) {
+            PartyManager mgr = _partyReg.getPartyManager(partyId);
+            if (mgr == null) {
+                log.warning("Expected to find a party manager here", "partyId", partyId);
+                throw new IllegalStateException(InvocationCodes.E_INTERNAL_ERROR);
+            }
+            listener.requestProcessed(executeForParty(mgr));
+        }
+
+        protected abstract T executeForParty (PartyManager mgr);
+
+        @Inject protected transient PartyRegistry _partyReg;
     }
 }

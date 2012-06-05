@@ -64,12 +64,25 @@ public class PartyDirector extends NodeletDirector
         const client :Client = inject(AetherClient);
         client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
             _prsvc = client.requireService(PartyRegistryService);
+
+            // if our authoritative party address changes, follow it
+            _octx.aetherObject.partyChanged.add(F.adapt(gotPartyNodelet));
+
+            // if we think we have a
             if (_octx.aetherObject.party != null) {
-                DelayUtil.delayFrame(joinParty, [ _octx.aetherObject.party ]); // Join it!
+                gotPartyNodelet();
             } else {
                 didInitialize();
             }
         });
+    }
+
+    protected function gotPartyNodelet () :void
+    {
+        if (_ctx.getClient().isConnected()) {
+            disconnect();
+        }
+        DelayUtil.delayFrame(connectParty);
     }
 
     /** If this function returns false, onReady will be dispatched when we're logged on. */
@@ -134,8 +147,13 @@ public class PartyDirector extends NodeletDirector
      */
     public function createParty () :void
     {
-        _prsvc.createParty(new PartyConfig(),
-            new ResultAdapter(connectParty, F.adapt(onJoinFailed)));
+        disconnect();
+
+        _prsvc.createParty(new PartyConfig(), new ResultAdapter(didCreate, F.adapt(onJoinFailed)));
+
+        function didCreate (hosted :HostedNodelet) :void {
+            // nada
+        }
     }
 
     /**
@@ -143,21 +161,36 @@ public class PartyDirector extends NodeletDirector
      */
     public function joinParty (hosted :HostedNodelet) :void
     {
-        clearParty(); // Drop the old one if there is one
-        connectParty(hosted);
+        disconnect();
+
+        _prsvc.joinParty(PartyNodelet(hosted.nodelet).partyId,
+            new ResultAdapter(didJoin, F.adapt(onJoinFailed)));
+
+        function didJoin (hosted :HostedNodelet) :void {
+            log.info("Successfully joined!");
+        }
     }
 
     /**
      * Clear/leave the current party, if any.
      */
-    public function clearParty () :void
+    public function leaveParty () :void
     {
         if (_partyObj != null) {
-            _partyObj.destroyed.remove(clearParty);
-            _partyObj = null;
-            partyLeft.dispatch();
+            _partyObj.partyService.leaveParty(Listeners.listener());
         }
         disconnect();
+    }
+
+    override public function clientDidLogoff (event :ClientEvent) :void
+    {
+        super.clientDidLogoff(event);
+
+        if (_partyObj != null) {
+            partyLeft.dispatch();
+            _partyObj.destroyed.remove(disconnect);
+            _partyObj = null;
+        }
     }
 
     public function assignLeader (memberId :int) :void
@@ -204,14 +237,18 @@ public class PartyDirector extends NodeletDirector
         }
     }
 
-    protected function onJoinFailed () :void
+    protected function onJoinFailed (msg :String = null) :void
     {
+        log.info("Boo, join failed", "msg", msg);
+
         partyJoined.remove(_onJoin);
     }
 
-    protected function connectParty (address :HostedNodelet) :void
+    protected function connectParty () :void
     {
-        super.connect(address);
+        if (_octx.aetherObject != null && _octx.aetherObject.party) {
+            super.connect(_octx.aetherObject.party);
+        }
     }
 
     /**
@@ -220,9 +257,9 @@ public class PartyDirector extends NodeletDirector
     override protected function objectAvailable (obj :DObject) :void
     {
         super.objectAvailable(obj);
-        
+
         _partyObj = PartyObject(obj);
-        _partyObj.destroyed.add(clearParty);
+        _partyObj.destroyed.add(disconnect);
 
         // respond to future locus changes
         _partyObj.locusChanged.add(locusChanged);

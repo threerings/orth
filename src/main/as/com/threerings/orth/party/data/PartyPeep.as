@@ -20,16 +20,20 @@ public class PartyPeep extends PlayerEntry
 // GENERATED STREAMING START
     public var joinOrder :int;
 
+    public var connected :Boolean;
+
     override public function readObject (ins :ObjectInputStream) :void
     {
         super.readObject(ins);
         joinOrder = ins.readInt();
+        connected = ins.readBoolean();
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
     {
         super.writeObject(out);
         out.writeInt(joinOrder);
+        out.writeBoolean(connected);
     }
 
 // GENERATED STREAMING END

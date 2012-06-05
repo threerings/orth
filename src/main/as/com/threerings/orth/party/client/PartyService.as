@@ -26,6 +26,9 @@ public interface PartyService extends InvocationService
     function invitePlayer (arg1 :PlayerName, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface PartyService
+    function leaveParty (arg1 :InvocationService_InvocationListener) :void;
+
+    // from Java interface PartyService
     function moveParty (arg1 :HostedLocus, arg2 :InvocationService_InvocationListener) :void;
 
     // from Java interface PartyService

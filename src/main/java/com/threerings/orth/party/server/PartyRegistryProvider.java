@@ -26,4 +26,10 @@ public interface PartyRegistryProvider extends InvocationProvider
      */
     void createParty (AetherClientObject caller, PartyConfig arg1, InvocationService.ResultListener arg2)
         throws InvocationException;
+
+    /**
+     * Handles a {@link PartyRegistryService#joinParty} request.
+     */
+    void joinParty (AetherClientObject caller, int arg1, InvocationService.ResultListener arg2)
+        throws InvocationException;
 }

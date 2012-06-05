@@ -64,8 +64,21 @@ public class PartyMarshaller extends InvocationMarshaller<PartierObject>
         });
     }
 
+    /** The method id used to dispatch {@link #leaveParty} requests. */
+    public static final int LEAVE_PARTY = 4;
+
+    // from interface PartyService
+    public void leaveParty (InvocationService.InvocationListener arg1)
+    {
+        ListenerMarshaller listener1 = new ListenerMarshaller();
+        listener1.listener = arg1;
+        sendRequest(LEAVE_PARTY, new Object[] {
+            listener1
+        });
+    }
+
     /** The method id used to dispatch {@link #moveParty} requests. */
-    public static final int MOVE_PARTY = 4;
+    public static final int MOVE_PARTY = 5;
 
     // from interface PartyService
     public void moveParty (HostedLocus arg1, InvocationService.InvocationListener arg2)
@@ -78,7 +91,7 @@ public class PartyMarshaller extends InvocationMarshaller<PartierObject>
     }
 
     /** The method id used to dispatch {@link #updateDisband} requests. */
-    public static final int UPDATE_DISBAND = 5;
+    public static final int UPDATE_DISBAND = 6;
 
     // from interface PartyService
     public void updateDisband (boolean arg1, InvocationService.InvocationListener arg2)
@@ -91,7 +104,7 @@ public class PartyMarshaller extends InvocationMarshaller<PartierObject>
     }
 
     /** The method id used to dispatch {@link #updatePolicy} requests. */
-    public static final int UPDATE_POLICY = 6;
+    public static final int UPDATE_POLICY = 7;
 
     // from interface PartyService
     public void updatePolicy (PartyPolicy arg1, InvocationService.InvocationListener arg2)
@@ -104,7 +117,7 @@ public class PartyMarshaller extends InvocationMarshaller<PartierObject>
     }
 
     /** The method id used to dispatch {@link #updateStatus} requests. */
-    public static final int UPDATE_STATUS = 7;
+    public static final int UPDATE_STATUS = 8;
 
     // from interface PartyService
     public void updateStatus (String arg1, InvocationService.InvocationListener arg2)

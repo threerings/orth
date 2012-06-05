@@ -36,4 +36,17 @@ public class PartyRegistryMarshaller extends InvocationMarshaller<AetherClientOb
             arg1, listener2
         });
     }
+
+    /** The method id used to dispatch {@link #joinParty} requests. */
+    public static final int JOIN_PARTY = 2;
+
+    // from interface PartyRegistryService
+    public void joinParty (int arg1, InvocationService.ResultListener arg2)
+    {
+        InvocationMarshaller.ResultMarshaller listener2 = new InvocationMarshaller.ResultMarshaller();
+        listener2.listener = arg2;
+        sendRequest(JOIN_PARTY, new Object[] {
+            Integer.valueOf(arg1), listener2
+        });
+    }
 }

@@ -16,4 +16,11 @@ public class PartyPeep extends PlayerEntry
      * value, the better priority they have to be auto-assigned leadership.
      */
     public int joinOrder;
+
+    /**
+     * An explicit online/offline boolean. We could sort of use {@link PlayerEntry#whereabouts},
+     * but that value has complex connotations, whereas this one specifically refers to the party
+     * connection being established.
+     */
+    public boolean connected;
 }

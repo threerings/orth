@@ -18,4 +18,9 @@ public interface PartyRegistryService extends InvocationService<AetherClientObje
      * Creates a new party with the requester as its leader. Sends a HostedNodelet back.
      */
     void createParty (PartyConfig config, ResultListener rl);
+
+    /**
+     * Joins the given party, which must be open. Sends a HostedNodelet back.
+     */
+    void joinParty (int partyId, ResultListener rl);
 }

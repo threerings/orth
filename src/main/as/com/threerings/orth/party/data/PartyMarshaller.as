@@ -64,8 +64,21 @@ public class PartyMarshaller extends InvocationMarshaller
         ]);
     }
 
+    /** The method id used to dispatch <code>leaveParty</code> requests. */
+    public static const LEAVE_PARTY :int = 4;
+
+    // from interface PartyService
+    public function leaveParty (arg1 :InvocationService_InvocationListener) :void
+    {
+        var listener1 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
+        listener1.listener = arg1;
+        sendRequest(LEAVE_PARTY, [
+            listener1
+        ]);
+    }
+
     /** The method id used to dispatch <code>moveParty</code> requests. */
-    public static const MOVE_PARTY :int = 4;
+    public static const MOVE_PARTY :int = 5;
 
     // from interface PartyService
     public function moveParty (arg1 :HostedLocus, arg2 :InvocationService_InvocationListener) :void
@@ -78,7 +91,7 @@ public class PartyMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch <code>updateDisband</code> requests. */
-    public static const UPDATE_DISBAND :int = 5;
+    public static const UPDATE_DISBAND :int = 6;
 
     // from interface PartyService
     public function updateDisband (arg1 :Boolean, arg2 :InvocationService_InvocationListener) :void
@@ -91,7 +104,7 @@ public class PartyMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch <code>updatePolicy</code> requests. */
-    public static const UPDATE_POLICY :int = 6;
+    public static const UPDATE_POLICY :int = 7;
 
     // from interface PartyService
     public function updatePolicy (arg1 :PartyPolicy, arg2 :InvocationService_InvocationListener) :void
@@ -104,7 +117,7 @@ public class PartyMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch <code>updateStatus</code> requests. */
-    public static const UPDATE_STATUS :int = 7;
+    public static const UPDATE_STATUS :int = 8;
 
     // from interface PartyService
     public function updateStatus (arg1 :String, arg2 :InvocationService_InvocationListener) :void

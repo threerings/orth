@@ -16,5 +16,8 @@ public interface PartyRegistryService extends InvocationService
 {
     // from Java interface PartyRegistryService
     function createParty (arg1 :PartyConfig, arg2 :InvocationService_ResultListener) :void;
+
+    // from Java interface PartyRegistryService
+    function joinParty (arg1 :int, arg2 :InvocationService_ResultListener) :void;
 }
 }

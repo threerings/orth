@@ -16,6 +16,9 @@ import com.threerings.orth.party.data.PartyPolicy;
  */
 public interface PartyService extends InvocationService<PartierObject>
 {
+    /** Requests our departure from this party. */
+    void leaveParty (InvocationListener il);
+
     /** Requests to boot a player from the party. */
     void bootPlayer (int playerId, InvocationListener il);
 

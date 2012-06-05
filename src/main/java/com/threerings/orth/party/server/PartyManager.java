@@ -9,10 +9,7 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
-
-import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.util.Resulting;
 
@@ -20,16 +17,14 @@ import com.threerings.presents.client.InvocationService.InvocationListener;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationCodes;
-import com.threerings.presents.dobj.ObjectDeathListener;
-import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.server.ClientManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 import com.threerings.presents.server.PresentsDObjectMgr;
 
-import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.AetherCodes;
+import com.threerings.orth.aether.server.AetherNodeAction;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.aether.server.IgnoreManager;
 import com.threerings.orth.chat.data.OrthChatCodes;
@@ -42,7 +37,6 @@ import com.threerings.orth.comms.data.CommSender;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
-import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.nodelet.data.NodeletAuthName;
 import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.party.data.PartierObject;
@@ -82,9 +76,18 @@ public class PartyManager extends NodeletManager
         };
     }
 
-    public void configure (AetherClientObject creator, PartyConfig config)
+    public void configure (AetherClientObject player, PartyConfig config)
     {
-        _partyObj.setLeaderId(creator.getPlayerId());
+        _partyObj.startTransaction();
+        try {
+            // setting up a brand new party, we have to add the creator as a peep
+            addPlayer(player, true);
+            // and make them the leader
+            _partyObj.setLeaderId(player.getPlayerId());
+
+        } finally {
+            _partyObj.commitTransaction();
+        }
     }
 
     public PartyObject getPartyObject ()
@@ -143,11 +146,12 @@ public class PartyManager extends NodeletManager
     /**
      * Calls createPeep() and configures it using the given arguments.
      */
-    protected PartyPeep buildPeep (PartierObject partier, AppearanceInfo info)
+    protected PartyPeep buildPeep (AetherClientObject player)
     {
         PartyPeep peep = createPeep();
-        peep.name = partier.playerName;
+        peep.name = player.playerName;
         peep.joinOrder = nextJoinOrder();
+        peep.connected = false;
         return peep;
     }
 
@@ -172,56 +176,62 @@ public class PartyManager extends NodeletManager
     }
 
     /**
+     * Called from a vault peer via a node action to add a player to our party, preparing for
+     * their client to log in at which point the peep's status will flip to online.
+     *
+     * TODO: For simplicity, we currently accept a full AetherClientObject here, which means
+     * we stream a ton of data from peer to peer. This is somewhere we could optimize easily
+     * in the future.
+     */
+    public void addPlayer (final AetherClientObject player, boolean override) {
+        boolean wasInvited = _invitedIds.remove(player.getPlayerId());
+        if (!override && (_partyObj.policy == PartyPolicy.CLOSED && !wasInvited)) {
+            log.warning("Attempting to add and uninvited player to a closed group.",
+                "partyId", _partyId, "player", player);
+            throw new IllegalStateException(InvocationCodes.E_ACCESS_DENIED);
+        }
+        if (_partyObj.peeps.containsKey(player.getPlayerId())) {
+            log.warning("Attempting to add a player that's already in the party.",
+                "partyId", _partyId, "player", player);
+            // but let it pass
+            return;
+        }
+        doAddPeepToParty(buildPeep(player));
+    }
+
+    /**
      * Called from the access controller when subscription is approved for the specified player.
      */
     public void clientConnected (final PartierObject partier)
     {
-        final int playerId = partier.getPlayerId();
+        final PartyPeep peep = _partyObj.peeps.get(partier.getPlayerId());
+        if (peep == null) {
+            // this likely just means they were booted in the time it took them to connect
+            return;
+        }
 
-        // clear their invites to this party, if any
-        _invitedIds.remove(playerId);
-
+        // else hook them up with party info (not sure how useful this really is, but whatever)
         partier.setPartyId(_partyId);
 
-        _peerMgr.invokeSingleNodeRequest(
-            createSubscribedRequest(playerId, _nodelet), new ResultListener<AppearanceInfo>() {
-            @Override public void requestCompleted (AppearanceInfo result) {
-                // listen for them to die
-                partier.addListener(new ObjectDeathListener() {
-                    public void objectDestroyed (ObjectDestroyedEvent event) {
-                        removePlayer(playerId);
-                    }
-                });
-                // Crap, we used to do this in addPlayer, but they could never actually enter the
-                // party and leave it hosed. The downside of doing it this way is that we could
-                // approve more than MAX_PLAYERS to join the party...
-                PartyPeep peep = buildPeep(partier, result);
-                doAddPeepToParty(peep);
-            }
-            @Override public void requestFailed (Exception cause) {
-                // TODO - notify the client that we done fucked up
-                endPartierSession(playerId);
-            }
-        });
+        // finally show them as connected!
+        peep.connected = true;
+        _partyObj.updatePeeps(peep);
     }
 
     /**
-     * This is the canonical place to add a peep to the party, so that subclasses can react
-     * directly to the addition.
+     * Called from the access controller when a player's party connection is lost.
      */
-    protected void doAddPeepToParty (PartyPeep peep)
+    public void clientDisconnected (AuthName player)
     {
-        if (!_partyObj.peeps.contains(peep)) {
-            _partyObj.addToPeeps(peep);
+        PartyPeep peep = _partyObj.peeps.get(player.getId());
+        if (peep != null) {
+            // they disconnected but they're still in the party; note them offline
+            peep.connected = false;
+            _partyObj.updatePeeps(peep);
         }
     }
 
-    protected SubscribedRequest createSubscribedRequest (int playerId, HostedNodelet hosted)
-    {
-        return new SubscribedRequest(playerId, hosted);
-    }
-
-    // from interface PartyProvider
+    @Override
     public void bootPlayer (PartierObject caller, int playerId,
         InvocationService.InvocationListener listener)
         throws InvocationException
@@ -234,7 +244,14 @@ public class PartyManager extends NodeletManager
         }
     }
 
-    // from interface PartyProvider
+    @Override
+    public void leaveParty (PartierObject caller, InvocationService.InvocationListener listener)
+        throws InvocationException
+    {
+        removePlayer(caller.getPlayerId());
+    }
+
+    @Override
     public void assignLeader (PartierObject caller, int playerId,
         InvocationService.InvocationListener listener)
         throws InvocationException
@@ -243,7 +260,7 @@ public class PartyManager extends NodeletManager
 
         PartyPeep leader = _partyObj.peeps.get(_partyObj.leaderId);
         PartyPeep peep = _partyObj.peeps.get(playerId);
-        if (peep == null || peep == leader) {
+        if (peep == null || peep == leader || !peep.connected) {
             // TODO: nicer error? The player may have just left
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
@@ -260,7 +277,7 @@ public class PartyManager extends NodeletManager
         }
     }
 
-    // from interface PartyProvider
+    @Override
     public void updateStatus (PartierObject caller, String status,
         InvocationService.InvocationListener listener)
         throws InvocationException
@@ -273,7 +290,7 @@ public class PartyManager extends NodeletManager
         setStatus(status, PartyCodes.STATUS_TYPE_USER);
     }
 
-    // from interface PartyProvider
+    @Override
     public void updatePolicy (PartierObject caller, PartyPolicy policy,
         InvocationService.InvocationListener listener)
         throws InvocationException
@@ -282,7 +299,7 @@ public class PartyManager extends NodeletManager
         _partyObj.setPolicy(policy);
     }
 
-    // from interface PartyProvider
+    @Override
     public void updateDisband (PartierObject caller, boolean disband,
         InvocationService.InvocationListener listener)
         throws InvocationException
@@ -291,7 +308,7 @@ public class PartyManager extends NodeletManager
         _partyObj.setDisband(disband);
     }
 
-    // from interface PartyProvider
+    @Override
     public void invitePlayer (final PartierObject inviter, PlayerName invitee,
         InvocationService.InvocationListener listener)
         throws InvocationException
@@ -307,6 +324,10 @@ public class PartyManager extends NodeletManager
 
         if (_invitedIds.contains(invitee.getId())) {
             throw new InvocationException(PartyCodes.E_ALREADY_INVITED);
+        }
+
+        if (!hasVacancies(1)) {
+            throw new InvocationException(PartyCodes.E_PARTY_FULL);
         }
 
         // the invite can't go through if the recipient is not online
@@ -333,6 +354,21 @@ public class PartyManager extends NodeletManager
                 CommSender.receiveComm(inviter, invite);
             }
         });
+    }
+
+    /**
+     * Return the maximum number of players in a party, or zero for unlimited.
+     */
+    public int getMaxPartySize ()
+    {
+        return 0;
+    }
+
+    public boolean hasVacancies (int count)
+    {
+        int limit = getMaxPartySize();
+
+        return (limit == 0) || _partyObj.peeps.size() + count <= limit;
     }
 
     protected PartyInvite createInvite (PartierObject inviter, PlayerName invitee)
@@ -363,6 +399,15 @@ public class PartyManager extends NodeletManager
             throw new InvocationException(InvocationCodes.E_ACCESS_DENIED);
         }
         return partier;
+    }
+
+    /**
+     * This is the canonical place to add a peep to the party, so that subclasses can react
+     * directly to the addition.
+     */
+    protected void doAddPeepToParty (PartyPeep peep)
+    {
+        _partyObj.addToPeeps(peep);
     }
 
     /**
@@ -397,18 +442,12 @@ public class PartyManager extends NodeletManager
 
     protected void endPartierSession (int playerId)
     {
-        AetherNodeRequest request = new AetherNodeRequest(playerId) {
-            @Override protected void execute (
-                    AetherClientObject pl, InvocationService.ResultListener rl) {
-                pl.setParty(null);
-                rl.requestProcessed(null);
+        // just hop over to the vault and clear out the player's party
+        _peerMgr.invokeNodeAction(new AetherNodeAction(playerId) {
+            @Override protected void execute (AetherClientObject memobj) {
+                memobj.setParty(null);
             }
-        };
-        // the player may have logged off, but otherwise should have only 1 aether login
-        if (!_peerMgr.findApplicableNodes(request).isEmpty()) {
-            _peerMgr.invokeSingleNodeRequest(request,
-                new Resulting<Void>("PartyClearer", Log.log, "playerId", playerId));
-        }
+        });
     }
 
     protected void setStatus (String status, byte statusType)
@@ -455,38 +494,6 @@ public class PartyManager extends NodeletManager
             }
         }
         return newLeader;
-    }
-
-    protected static class SubscribedRequest extends AetherNodeRequest
-    {
-        public SubscribedRequest (int playerId, HostedNodelet hosted)
-        {
-            super(playerId);
-            _hosted = hosted;
-        }
-
-        @Override protected void execute (AetherClientObject player,
-            InvocationService.ResultListener listener) {
-            player.setParty(_hosted);
-            listener.requestProcessed(getAppearanceInfo(player));
-        }
-
-        /**
-         * Returns appropriate party appearance info for the player.
-         */
-        protected AppearanceInfo getAppearanceInfo (AetherClientObject player)
-        {
-            return new AppearanceInfo();
-        }
-
-        protected HostedNodelet _hosted;
-    }
-
-    /**
-     * Captures any relevant info about a player's appearance to include in the party data.
-     */
-    protected static class AppearanceInfo extends SimpleStreamableObject
-    {
     }
 
     protected SpeakRouter _speakRouter;
