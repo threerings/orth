@@ -9,8 +9,6 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-import com.samskivert.util.StringUtil;
-
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.client.InvocationService.InvocationListener;
