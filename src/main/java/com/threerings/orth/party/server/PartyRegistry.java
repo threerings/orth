@@ -115,8 +115,8 @@ public class PartyRegistry extends NodeletRegistry
     public void joinParty (final AetherClientObject player, int partyId, ResultListener listener)
         throws InvocationException
     {
-        _peerMan.invokeSingleNodeRequest(new PartyRequest(partyId) {
-            @Override protected Object executeForParty (PartyManager mgr) {
+        _peerMan.invokeSingleNodeRequest(new PartyRequest<HostedNodelet>(partyId) {
+            @Override protected HostedNodelet executeForParty (PartyManager mgr) {
                 mgr.addPlayer(player, false);
                 return mgr.getNodelet();
             }}, new Resulting<HostedNodelet>(listener) {
@@ -162,8 +162,8 @@ public class PartyRegistry extends NodeletRegistry
         final PartyConfig config, ResultListener listener)
     {
         _peerMan.invokeSingleNodeRequest(
-            new PartyRequest(((PartyNodelet) nodelet.nodelet).partyId) {
-                @Override protected Object executeForParty (PartyManager mgr) {
+            new PartyRequest<HostedNodelet>(((PartyNodelet) nodelet.nodelet).partyId) {
+                @Override protected HostedNodelet executeForParty (PartyManager mgr) {
                     mgr.configure(player, config);
                     return nodelet;
                 }
