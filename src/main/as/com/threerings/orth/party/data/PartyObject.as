@@ -34,10 +34,6 @@ public class PartyObject extends DObject
 
     public var leaderId :int;
 
-    public var status :String;
-
-    public var statusType :int;
-
     public var policy :PartyPolicy;
 
     public var disband :Boolean;
@@ -53,8 +49,6 @@ public class PartyObject extends DObject
     public var peepsEntryRemoved :Signal = new Signal(PartyPeep);
     public var peepsEntryUpdated :Signal = new Signal(PartyPeep, PartyPeep);
     public var leaderIdChanged :Signal = new Signal(int, int);
-    public var statusChanged :Signal = new Signal(String, String);
-    public var statusTypeChanged :Signal = new Signal(int, int);
     public var policyChanged :Signal = new Signal(PartyPolicy, PartyPolicy);
     public var disbandChanged :Signal = new Signal(Boolean, Boolean);
     public var partyServiceChanged :Signal = new Signal(PartyMarshaller, PartyMarshaller);
@@ -63,8 +57,6 @@ public class PartyObject extends DObject
 
     public static const PEEPS :String = "peeps";
     public static const LEADER_ID :String = "leaderId";
-    public static const STATUS :String = "status";
-    public static const STATUS_TYPE :String = "statusType";
     public static const POLICY :String = "policy";
     public static const DISBAND :String = "disband";
     public static const PARTY_SERVICE :String = "partyService";
@@ -76,8 +68,6 @@ public class PartyObject extends DObject
         super.readObject(ins);
         peeps = ins.readObject(DSet);
         leaderId = ins.readInt();
-        status = ins.readField(String);
-        statusType = ins.readByte();
         policy = ins.readObject(PartyPolicy);
         disband = ins.readBoolean();
         partyService = ins.readObject(PartyMarshaller);
@@ -140,12 +130,6 @@ class Signaller
                 break;
             case "leaderId":
                 signal = _obj.leaderIdChanged;
-                break;
-            case "status":
-                signal = _obj.statusChanged;
-                break;
-            case "statusType":
-                signal = _obj.statusTypeChanged;
                 break;
             case "policy":
                 signal = _obj.policyChanged;

@@ -198,11 +198,6 @@ public class PartyDirector extends NodeletDirector
         _partyObj.partyService.assignLeader(memberId, Listeners.listener(OrthCodes.PARTY_MSGS));
     }
 
-    public function updateStatus (status :String) :void
-    {
-        _partyObj.partyService.updateStatus(status, Listeners.listener(OrthCodes.PARTY_MSGS));
-    }
-
     public function updatePolicy (policy :PartyPolicy) :void
     {
         _partyObj.partyService.updatePolicy(policy, Listeners.listener(OrthCodes.PARTY_MSGS));

@@ -278,19 +278,6 @@ public class PartyManager extends NodeletManager
     }
 
     @Override
-    public void updateStatus (PartierObject caller, String status,
-        InvocationService.InvocationListener listener)
-        throws InvocationException
-    {
-        requireLeader(caller);
-        if (status == null) {
-            throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
-        }
-        status = StringUtil.truncate(status, PartyCodes.MAX_NAME_LENGTH);
-        setStatus(status, PartyCodes.STATUS_TYPE_USER);
-    }
-
-    @Override
     public void updatePolicy (PartierObject caller, PartyPolicy policy,
         InvocationService.InvocationListener listener)
         throws InvocationException
@@ -448,20 +435,6 @@ public class PartyManager extends NodeletManager
                 memobj.setParty(null);
             }
         });
-    }
-
-    protected void setStatus (String status, byte statusType)
-    {
-        if (_partyObj.status == null || !_partyObj.status.equals(status) ||
-                statusType != _partyObj.statusType) {
-            _partyObj.startTransaction();
-            try {
-                _partyObj.setStatusType(statusType);
-                _partyObj.setStatus(status);
-            } finally {
-                _partyObj.commitTransaction();
-            }
-        }
     }
 
     /**

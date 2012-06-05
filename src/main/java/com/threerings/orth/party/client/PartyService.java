@@ -25,9 +25,6 @@ public interface PartyService extends InvocationService<PartierObject>
     /** Requests to reassign leadership to another player. */
     void assignLeader (int playerId, InvocationListener il);
 
-    /** Requests to update the party status. */
-    void updateStatus (String status, InvocationListener il);
-
     /** Requests to change the party access control. */
     void updatePolicy (PartyPolicy policy, InvocationListener il);
 

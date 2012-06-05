@@ -24,14 +24,6 @@ public class PartyObject extends DObject
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String LEADER_ID = "leaderId";
 
-    /** The field name of the <code>status</code> field. */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String STATUS = "status";
-
-    /** The field name of the <code>statusType</code> field. */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public static final String STATUS_TYPE = "statusType";
-
     /** The field name of the <code>policy</code> field. */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
     public static final String POLICY = "policy";
@@ -58,12 +50,6 @@ public class PartyObject extends DObject
 
     /** The player ID of the current leader. */
     public int leaderId;
-
-    /** Customizable flavor text. */
-    public String status;
-
-    /** Helps interpret the status. */
-    public byte statusType;
 
     /** This party's access control. @see PartyCodes */
     public PartyPolicy policy;
@@ -147,40 +133,6 @@ public class PartyObject extends DObject
         requestAttributeChange(
             LEADER_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.leaderId = value;
-    }
-
-    /**
-     * Requests that the <code>status</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setStatus (String value)
-    {
-        String ovalue = this.status;
-        requestAttributeChange(
-            STATUS, value, ovalue);
-        this.status = value;
-    }
-
-    /**
-     * Requests that the <code>statusType</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setStatusType (byte value)
-    {
-        byte ovalue = this.statusType;
-        requestAttributeChange(
-            STATUS_TYPE, Byte.valueOf(value), Byte.valueOf(ovalue));
-        this.statusType = value;
     }
 
     /**

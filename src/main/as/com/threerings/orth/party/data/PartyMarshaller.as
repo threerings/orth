@@ -115,18 +115,5 @@ public class PartyMarshaller extends InvocationMarshaller
             arg1, listener2
         ]);
     }
-
-    /** The method id used to dispatch <code>updateStatus</code> requests. */
-    public static const UPDATE_STATUS :int = 8;
-
-    // from interface PartyService
-    public function updateStatus (arg1 :String, arg2 :InvocationService_InvocationListener) :void
-    {
-        var listener2 :InvocationMarshaller_ListenerMarshaller = new InvocationMarshaller_ListenerMarshaller();
-        listener2.listener = arg2;
-        sendRequest(UPDATE_STATUS, [
-            arg1, listener2
-        ]);
-    }
 }
 }

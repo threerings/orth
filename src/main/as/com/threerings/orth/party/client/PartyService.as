@@ -36,8 +36,5 @@ public interface PartyService extends InvocationService
 
     // from Java interface PartyService
     function updatePolicy (arg1 :PartyPolicy, arg2 :InvocationService_InvocationListener) :void;
-
-    // from Java interface PartyService
-    function updateStatus (arg1 :String, arg2 :InvocationService_InvocationListener) :void;
 }
 }
