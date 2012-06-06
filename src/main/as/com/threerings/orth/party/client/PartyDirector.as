@@ -75,6 +75,9 @@ public class PartyDirector extends NodeletDirector
                 didInitialize();
             }
         });
+
+        // register receivers on the party client
+        _ctx.getClient().getInvocationDirector().registerReceiver(new CommDecoder(_comms));
     }
 
     protected function gotPartyNodelet () :void
@@ -268,8 +271,6 @@ public class PartyDirector extends NodeletDirector
         if (_partyObj.locus != null) {
             _locusDir.moveToHostedLocus(_partyObj.locus);
         }
-
-        _ctx.getClient().getInvocationDirector().registerReceiver(new CommDecoder(_comms));
 
         _module.inject(function () :void {
             _speakRouter = new DObjectSpeakRouter(_partyObj, _partyObj.partyChatService);
