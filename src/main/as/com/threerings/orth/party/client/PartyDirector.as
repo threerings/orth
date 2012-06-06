@@ -136,10 +136,15 @@ public class PartyDirector extends NodeletDirector
         return _partyObj;
     }
 
-    public function get partierIds () :Array //<int>
+    public function getPeeps (onlineOnly :Boolean = false) :Array
     {
-        return F.map(partyObject.peeps.toArray(),
-            function (peep :PartyPeep) :int { return peep.name.id; });
+        var peeps :Array = (partyObject != null) ? partyObject.peeps.toArray() : [];
+        if (onlineOnly) {
+            peeps = F.filter(peeps, function (peep :PartyPeep) :Boolean {
+                return peep.online;
+            });
+        }
+        return F.map(peeps, function (peep :PartyPeep) :int { return peep.name.id; });
     }
 
     /**
