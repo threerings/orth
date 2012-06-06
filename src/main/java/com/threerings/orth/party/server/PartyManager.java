@@ -166,6 +166,9 @@ public class PartyManager extends NodeletManager
             endPartierSession(peep.name.getId());
         }
         _invMgr.clearDispatcher(_partyObj.partyService);
+        _invMgr.clearDispatcher(_partyObj.partyChatService);
+
+        super.shutdown();
     }
 
     /**
