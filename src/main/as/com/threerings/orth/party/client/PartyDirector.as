@@ -141,7 +141,7 @@ public class PartyDirector extends NodeletDirector
         var peeps :Array = (partyObject != null) ? partyObject.peeps.toArray() : [];
         if (onlineOnly) {
             peeps = F.filter(peeps, function (peep :PartyPeep) :Boolean {
-                return peep.online;
+                return peep.connected;
             });
         }
         return F.map(peeps, function (peep :PartyPeep) :int { return peep.name.id; });
