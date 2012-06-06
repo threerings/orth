@@ -23,6 +23,8 @@ import com.threerings.orth.nodelet.data.Nodelet;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
+import static com.threerings.orth.Log.log;
+
 /**
  * Implement hosting for nodelets, assuming said hosting is governed by a DSet in
  * OrthNodeObject. Delegates the actual instantiation of a nodelet to a subclass.
@@ -71,6 +73,7 @@ public abstract class DSetNodeletHoster
                 return nodeobj.getSet(dsetName).containsKey(key);
             }
             @Override protected void execute () {
+                log.debug("Clearning out Nodelet hosting.", "DSet", dsetName, "key", key);
                 _orthPeerMgr.getOrthNodeObject().removeFromSet(dsetName, key);
             }
             @Inject protected transient OrthPeerManager _orthPeerMgr;

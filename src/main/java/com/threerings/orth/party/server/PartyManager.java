@@ -167,6 +167,8 @@ public class PartyManager extends NodeletManager
     {
         super.shutdown();
 
+        log.debug("Party Manager shutting down.", "partyId", _partyId, "peeps", _partyObj.peeps);
+
         // clear the party info from all remaining players' player objects
         for (PartyPeep peep : _partyObj.peeps) {
             endPartierSession(peep.name.getId());
