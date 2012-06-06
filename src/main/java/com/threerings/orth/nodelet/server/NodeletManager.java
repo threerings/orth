@@ -50,6 +50,7 @@ public class NodeletManager
      */
     public void shutdown ()
     {
+        _registry.managerDidShutdown(this);
     }
 
     /**

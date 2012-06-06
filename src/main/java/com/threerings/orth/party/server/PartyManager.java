@@ -37,7 +37,6 @@ import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.locus.data.HostedLocus;
 import com.threerings.orth.nodelet.data.NodeletAuthName;
 import com.threerings.orth.nodelet.server.NodeletManager;
-import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.orth.party.data.PartierObject;
 import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyConfig;
@@ -156,17 +155,10 @@ public class PartyManager extends NodeletManager
 
     /**
      * Shutdown this party.
-     *
-     * NOTE: Do not call this method directly. Go through
-     * {@link NodeletRegistry#shutdownManager(NodeletManager)}).
-     *
-     * TODO: I kind of hate this pattern. I want to call mgr.shutdown().
      */
     @Override
     public void shutdown ()
     {
-        super.shutdown();
-
         log.debug("Party Manager shutting down.", "partyId", _partyId, "peeps", _partyObj.peeps);
 
         // clear the party info from all remaining players' player objects
@@ -409,7 +401,7 @@ public class PartyManager extends NodeletManager
 
         // if they're the last one, just kill the party
         if (_partyObj.peeps.size() == 1 || (_partyObj.leaderId == playerId && _partyObj.disband)) {
-            _registry.shutdownManager(this);
+            shutdown();
             return true;
         }
 

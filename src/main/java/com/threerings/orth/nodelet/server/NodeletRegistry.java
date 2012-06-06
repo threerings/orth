@@ -274,9 +274,9 @@ public abstract class NodeletRegistry
     }
 
     /**
-     * Calls the {@link NodeletManager#shutdown()} method and performs other cleanup.
+     * Called from {@link NodeletManager} to clean out our mapping(s).
      */
-    public void shutdownManager (NodeletManager manager)
+    public void managerDidShutdown (NodeletManager manager)
     {
         Nodelet nodelet = manager.getNodelet().nodelet;
         boolean hasMgr = _mgrs.remove(nodelet) != null;
@@ -285,12 +285,6 @@ public abstract class NodeletRegistry
         }
 
         DObject obj = manager.getSharedObject();
-        try {
-            manager.shutdown();
-        } catch (Exception e) {
-            log.warning("Manager failed to shutdown", "nodelet", manager.getNodelet());
-        }
-        
         if (_serviceField != null) {
             try {
                 _invMgr.clearDispatcher((InvocationMarshaller<?>)

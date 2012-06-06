@@ -161,6 +161,16 @@ public class GuildManager extends NodeletManager
         return true;
     }
 
+    @Override
+    public void shutdown ()
+    {
+        if (!_guildObj.members.isEmpty()) {
+            log.warning("Guild with members shutting down.", "guildId", _guildId);
+        }
+
+        super.shutdown();
+    }
+
     public int getGuildId ()
     {
         return _guildId;
@@ -350,7 +360,7 @@ public class GuildManager extends NodeletManager
                 _guildObj.removeFromMembers(member.getKey());
                 clearPlayerObjectGuild(member.getPlayerId());
                 super.requestCompleted(result);
-                _registry.shutdownManager(GuildManager.this);
+                shutdown();
             }
         });
     }
