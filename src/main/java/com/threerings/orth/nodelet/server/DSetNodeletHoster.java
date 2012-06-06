@@ -14,6 +14,8 @@ import com.samskivert.util.ResultListener;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.peer.data.NodeObject;
+import com.threerings.presents.peer.server.PeerManager.NodeAction;
 
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
@@ -43,6 +45,7 @@ public abstract class DSetNodeletHoster
         return _dsetName;
     }
 
+    @Override
     public void resolveHosting (final ClientObject caller, final Nodelet nodelet,
             final ResultListener<HostedNodelet> listener)
     {
@@ -56,6 +59,22 @@ public abstract class DSetNodeletHoster
         _peerMan.invokeNodeRequest(determineHostingPeer(nodelet),
             createHostingRequest((AuthName) caller.username, nodelet),
             new Resulting<HostedNodelet>(listener));
+    }
+
+    @Override
+    public void clearHosting (Nodelet nodelet)
+    {
+        final String dsetName = _dsetName;
+        final Comparable<?> key = nodelet.getKey();
+        _peerMan.invokeNodeAction(new NodeAction() {
+            @Override public boolean isApplicable (NodeObject nodeobj) {
+                return nodeobj.getSet(dsetName).containsKey(key);
+            }
+            @Override protected void execute () {
+                _orthPeerMgr.getOrthNodeObject().removeFromSet(dsetName, key);
+            }
+            @Inject protected transient OrthPeerManager _orthPeerMgr;
+        });
     }
 
     /**

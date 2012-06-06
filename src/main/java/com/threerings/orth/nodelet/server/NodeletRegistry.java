@@ -99,6 +99,12 @@ public abstract class NodeletRegistry
          */
         void resolveHosting (ClientObject caller, Nodelet nodelet,
                 ResultListener<HostedNodelet> listener);
+
+        /**
+         * When the nodelet disappears (its manager its shut down), this method is called to
+         * clear out any and all associated mappings and artifacts.
+         */
+        void clearHosting (Nodelet nodelet);
     }
 
     /**
@@ -123,6 +129,10 @@ public abstract class NodeletRegistry
             @Override public void resolveHosting (ClientObject caller, Nodelet nodelet,
                     ResultListener<HostedNodelet> listener) {
                 listener.requestCompleted(new HostedNodelet(nodelet, _host, _ports));
+            }
+            @Override public void clearHosting (Nodelet nodelet)
+            {
+                // nothing to clear out
             }
         };
 
@@ -268,16 +278,19 @@ public abstract class NodeletRegistry
      */
     public void shutdownManager (NodeletManager manager)
     {
-        boolean hasMgr = _mgrs.remove(manager.getNodelet().nodelet) != null;
+        Nodelet nodelet = manager.getNodelet().nodelet;
+        boolean hasMgr = _mgrs.remove(nodelet) != null;
         if (!hasMgr) {
             throw new RuntimeException("Shutting down a manager twice: " + manager.getNodelet());
         }
+
         DObject obj = manager.getSharedObject();
         try {
             manager.shutdown();
         } catch (Exception e) {
             log.warning("Manager failed to shutdown", "nodelet", manager.getNodelet());
         }
+        
         if (_serviceField != null) {
             try {
                 _invMgr.clearDispatcher((InvocationMarshaller<?>)
@@ -286,6 +299,10 @@ public abstract class NodeletRegistry
             }
         }
         _omgr.destroyObject(obj.getOid());
+
+        // there is a short period of time when our manager is shut down but we're still
+        // potentially advertising across the peers; for now we'll just accept this reality
+        _hoster.clearHosting(nodelet);
     }
 
     /**
