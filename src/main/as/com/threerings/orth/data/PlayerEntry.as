@@ -60,7 +60,7 @@ public class PlayerEntry extends SimpleStreamableObject
 
     public function get online () :Boolean
     {
-        return whereabouts.isOnline();
+        return whereabouts != null && whereabouts.isOnline();
     }
 
     // from Hashable
