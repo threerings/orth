@@ -137,7 +137,8 @@ public class PartyRegistry extends NodeletRegistry
         throws InvocationException
     {
         if (player.party != null) {
-            log.warning("Player tried to create party while already in one", "player", player);
+            log.warning("Player tried to create party while already in one", "player", player,
+                "partyId", ((PartyNodelet) player.party.nodelet).partyId);
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
 
