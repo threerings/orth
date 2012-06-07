@@ -76,9 +76,29 @@ public class PartyDirector extends NodeletDirector
         onReady.dispatch();
     }
 
-    public function connectToParty (party :HostedNodelet) :void
+    override protected function refreshPlayer () :void
     {
-        super.connect(party);
+        super.refreshPlayer();
+
+        if (_plobj != null) {
+            // if our authoritative party address changes, follow it
+            _plobj.partyChanged.add(connectToParty);
+
+            if (_plobj.party != null) {
+                log.info("Player object's got a party configured: hooking up",
+                    "partyId", PartyNodelet(_plobj.party.nodelet).partyId);
+                connectToParty(_plobj.party);
+
+            } else {
+                log.info("Player object's got no party configured");
+                disconnect();
+                aetherIsReady();
+            }
+        }
+
+        function connectToParty (party :HostedNodelet, oldParty :HostedNodelet = null) :void {
+            connect(party);
+        }
     }
 
     /**

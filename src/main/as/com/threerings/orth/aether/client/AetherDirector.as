@@ -13,7 +13,6 @@ import com.threerings.presents.client.ResultAdapter;
 
 import com.threerings.orth.client.Listeners;
 import com.threerings.orth.nodelet.data.HostedNodelet;
-import com.threerings.orth.party.client.PartyDirector;
 import com.threerings.orth.party.client.PartyRegistryService;
 import com.threerings.orth.party.data.PartyConfig;
 import com.threerings.orth.party.data.PartyNodelet;
@@ -38,7 +37,7 @@ public class AetherDirector extends AetherDirectorBase
      */
     public function createParty (success :Function = null, failure :Function = null) :void
     {
-        doCreate(new PartyConfig(), success, failure);
+        doCreate(createPartyConfig(), success, failure);
     }
 
     /**
@@ -51,11 +50,6 @@ public class AetherDirector extends AetherDirectorBase
             (success != null) ? success : F.id, (failure != null) ? failure : F.id));
     }
 
-    protected function get partyDir () :PartyDirector
-    {
-        return _module.getInstance(PartyDirector);
-    }
-
     protected function doCreate (config :PartyConfig, success :Function = null,
         failure :Function = null) :void
     {
@@ -63,25 +57,9 @@ public class AetherDirector extends AetherDirectorBase
             (success != null) ? success : F.id, (failure != null) ? failure : F.id));
     }
 
-    override protected function clientObjectUpdated (client :Client) :void
+    protected function createPartyConfig () :PartyConfig
     {
-        super.clientObjectUpdated(client);
-
-        const pDir :PartyDirector = _module.getInstance(PartyDirector);
-
-        // if our authoritative party address changes, follow it
-        aetherObj.partyChanged.add(partyDidChange);
-
-        if (aetherObj.party != null) {
-            partyDidChange(aetherObj.party);
-        } else {
-            pDir.aetherIsReady();
-        }
-    }
-
-    protected function partyDidChange (party :HostedNodelet, oldParty :HostedNodelet = null) :void
-    {
-        partyDir.connectToParty(party);
+        return new PartyConfig();
     }
 
     override protected function fetchServices (client :Client) :void
