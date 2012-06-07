@@ -8,16 +8,14 @@ import flashx.funk.ioc.inject;
 
 import org.osflash.signals.Signal;
 
-import com.threerings.util.DelayUtil;
 import com.threerings.util.F;
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientEvent;
-import com.threerings.presents.client.ResultAdapter;
 import com.threerings.presents.dobj.DObject;
 
-import com.threerings.orth.aether.client.AetherClient;
+import com.threerings.orth.aether.client.AetherDirector;
 import com.threerings.orth.chat.client.DObjectSpeakRouter;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.chat.data.OrthChatCodes;
@@ -33,7 +31,6 @@ import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.nodelet.client.NodeletDirector;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.data.PartierObject;
-import com.threerings.orth.party.data.PartyConfig;
 import com.threerings.orth.party.data.PartyInvite;
 import com.threerings.orth.party.data.PartyNodelet;
 import com.threerings.orth.party.data.PartyObject;
@@ -60,32 +57,8 @@ public class PartyDirector extends NodeletDirector
 
     public function PartyDirector ()
     {
-        // we can't use BasicDirector's fancyness; it's hooked up to the Nodelet client
-        const client :Client = inject(AetherClient);
-        client.addEventListener(ClientEvent.CLIENT_DID_LOGON, function (..._) :void {
-            _prsvc = client.requireService(PartyRegistryService);
-
-            // if our authoritative party address changes, follow it
-            _octx.aetherObject.partyChanged.add(F.adapt(gotPartyNodelet));
-
-            // if we think we have a
-            if (_octx.aetherObject.party != null) {
-                gotPartyNodelet();
-            } else {
-                didInitialize();
-            }
-        });
-
         // register receivers on the party client
         _ctx.getClient().getInvocationDirector().registerReceiver(new CommDecoder(_comms));
-    }
-
-    protected function gotPartyNodelet () :void
-    {
-        if (_ctx.getClient().isConnected()) {
-            disconnect();
-        }
-        DelayUtil.delayFrame(connectParty);
     }
 
     /** If this function returns false, onReady will be dispatched when we're logged on. */
@@ -94,10 +67,18 @@ public class PartyDirector extends NodeletDirector
         return _initialized;
     }
 
-    protected function didInitialize () :void
+    public function aetherIsReady () :void
     {
+        if (_initialized) {
+            return;
+        }
         _initialized = true;
         onReady.dispatch();
+    }
+
+    public function connectToParty (party :HostedNodelet) :void
+    {
+        super.connect(party);
     }
 
     /**
@@ -148,35 +129,6 @@ public class PartyDirector extends NodeletDirector
             });
         }
         return F.map(peeps, function (peep :PartyPeep) :int { return peep.name.id; });
-    }
-
-    /**
-     * Create a new party.
-     */
-    public function createParty () :void
-    {
-        disconnect();
-
-        _prsvc.createParty(new PartyConfig(), new ResultAdapter(didCreate, F.adapt(onJoinFailed)));
-
-        function didCreate (hosted :HostedNodelet) :void {
-            // nada
-        }
-    }
-
-    /**
-     * Join a party.
-     */
-    public function joinParty (hosted :HostedNodelet) :void
-    {
-        disconnect();
-
-        _prsvc.joinParty(PartyNodelet(hosted.nodelet).partyId,
-            new ResultAdapter(didJoin, F.adapt(onJoinFailed)));
-
-        function didJoin (hosted :HostedNodelet) :void {
-            log.info("Successfully joined!");
-        }
     }
 
     /**
@@ -234,23 +186,9 @@ public class PartyDirector extends NodeletDirector
         if (inParty) {
             _partyObj.partyService.invitePlayer(invitee, Listeners.listener(OrthCodes.PARTY_MSGS));
         } else {
-            _onJoin = F.callback(invitePlayer, invitee, Listeners.listener(OrthCodes.PARTY_MSGS));
-            partyJoined.addOnce(_onJoin);
-            createParty();
-        }
-    }
-
-    protected function onJoinFailed (msg :String = null) :void
-    {
-        log.info("Boo, join failed", "msg", msg);
-
-        partyJoined.remove(_onJoin);
-    }
-
-    protected function connectParty () :void
-    {
-        if (_octx.aetherObject != null && _octx.aetherObject.party) {
-            super.connect(_octx.aetherObject.party);
+            _aetherDir.createParty(function () :void {
+                invitePlayer(invitee);
+            }, Listeners.chatErrHandler(OrthCodes.PARTY_MSGS));
         }
     }
 
@@ -281,7 +219,7 @@ public class PartyDirector extends NodeletDirector
 
         // if we had not flagged ourselves as initialized yet, we certainly are now
         if (!isInitialized()) {
-            didInitialize();
+            aetherIsReady();
         }
     }
 
@@ -294,15 +232,14 @@ public class PartyDirector extends NodeletDirector
         _locusDir.moveToHostedLocus(newLocus);
     }
 
+    protected const _aetherDir :AetherDirector = inject(AetherDirector);
     protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
     protected const _comms :CommsDirector = inject(CommsDirector);
     protected const _module :Module = inject(Module);
     protected const _locusDir :LocusDirector = inject(LocusDirector);
 
-    protected var _prsvc :PartyRegistryService;
     protected var _partyObj :PartyObject;
     protected var _speakRouter :SpeakRouter;
-    protected var _onJoin :Function;
     protected var _initialized :Boolean;
 
     private static const log :Log = Log.getLog(PartyDirector);

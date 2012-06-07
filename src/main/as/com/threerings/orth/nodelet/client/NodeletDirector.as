@@ -122,7 +122,7 @@ public class NodeletDirector extends BasicDirector
     /**
      * Disconnects from the current nodelet, if any.
      */
-    protected function disconnect () :void
+    public function disconnect () :void
     {
         connect(null);
     }
