@@ -3,6 +3,8 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.aether.client {
+import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.presents.client.ClientEvent;
 import com.threerings.util.Config;
 import com.threerings.util.F;
 import com.threerings.util.Log;
@@ -17,11 +19,16 @@ import com.threerings.orth.party.client.PartyRegistryService;
 import com.threerings.orth.party.data.PartyConfig;
 import com.threerings.orth.party.data.PartyNodelet;
 
+import org.osflash.signals.Signal;
+
 /**
  * Handles player-oriented requests.
  */
 public class AetherDirector extends AetherDirectorBase
 {
+    public const playerDidLogon :Signal = new Signal(AetherClientObject);
+    public const playerDidLogoff :Signal = new Signal();
+
     public function acceptGuildInvite (senderId :int, guildId :int) :void
     {
         _asvc.acceptGuildInvite(senderId, guildId, Listeners.listener());
@@ -55,6 +62,20 @@ public class AetherDirector extends AetherDirectorBase
     {
         _prsvc.createParty(config, new ResultAdapter(
             (success != null) ? success : F.id, (failure != null) ? failure : F.id));
+    }
+
+    override public function clientDidLogon (event :ClientEvent) :void
+    {
+        super.clientDidLogon(event);
+
+        playerDidLogon.dispatch(aetherObj);
+    }
+
+    override public function clientDidLogoff (event :ClientEvent) :void
+    {
+        super.clientDidLogoff(event);
+
+        playerDidLogoff.dispatch(aetherObj);
     }
 
     protected function createPartyConfig () :PartyConfig
