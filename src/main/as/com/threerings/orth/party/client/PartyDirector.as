@@ -216,9 +216,11 @@ public class PartyDirector extends NodeletDirector
         if (inParty) {
             _partyObj.partyService.invitePlayer(invitee, Listeners.listener(OrthCodes.PARTY_MSGS));
         } else {
-            _aetherDir.createParty(function () :void {
-                invitePlayer(invitee);
-            }, Listeners.chatErrHandler(OrthCodes.PARTY_MSGS));
+            if (_pendingInvites.length == 0) {
+                // we have no party and we've not already sent off a creation request; do so
+                _aetherDir.createParty(null, Listeners.chatErrHandler(OrthCodes.PARTY_MSGS));
+            }
+            _pendingInvites.push(invitee);
         }
     }
 
@@ -254,6 +256,11 @@ public class PartyDirector extends NodeletDirector
         if (!isInitialized()) {
             aetherIsReady();
         }
+
+        for each (var invitee :PlayerName in _pendingInvites) {
+            _partyObj.partyService.invitePlayer(invitee, Listeners.listener(OrthCodes.PARTY_MSGS));
+        }
+        _pendingInvites = [];
     }
 
     public function locusChanged (newLocus :HostedLocus) :void
@@ -274,6 +281,7 @@ public class PartyDirector extends NodeletDirector
     protected var _partyObj :PartyObject;
     protected var _speakRouter :SpeakRouter;
     protected var _initialized :Boolean;
+    protected var _pendingInvites :Array = [];
 
     private static const log :Log = Log.getLog(PartyDirector);
 }
