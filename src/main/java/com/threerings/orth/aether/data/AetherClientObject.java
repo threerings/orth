@@ -15,7 +15,6 @@ import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.nodelet.data.HostedNodelet;
-import com.threerings.orth.party.data.PartyPeep;
 
 /**
  * The core distributed object representing the location-agnostic aspect of an Orth player.
