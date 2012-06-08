@@ -54,6 +54,7 @@ public class PartyDirector extends NodeletDirector
 
     public const partyJoined :Signal = new Signal();
     public const partyLeft :Signal = new Signal();
+    public const partyLeaderChanged :Signal = new Signal();
 
     public function PartyDirector ()
     {
@@ -233,6 +234,9 @@ public class PartyDirector extends NodeletDirector
 
         // respond to future locus changes
         _partyObj.locusChanged.add(locusChanged);
+
+        // signal changes to party leadership
+        _partyObj.leaderIdChanged.add(F.callback(partyLeaderChanged.dispatch));
 
         // if we're joining a party that's in an intervention, joining them is not optional
         if (_partyObj.locus != null) {
