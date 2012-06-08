@@ -15,6 +15,7 @@ import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.nodelet.data.HostedNodelet;
+import com.threerings.orth.party.data.PartyPeep;
 
 /**
  * The core distributed object representing the location-agnostic aspect of an Orth player.
@@ -103,6 +104,19 @@ public class AetherClientObject extends ClientObject
     public boolean isOnlineFriend (int memberId)
     {
         return friends.containsKey(memberId);
+    }
+
+    /**
+     * Returns true if at least one of the given players is a friend of ours.
+     */
+    public boolean containsOnlineFriend (Iterable<Integer> playerIds)
+    {
+        for (int playerId : playerIds) {
+            if (friends.containsKey(playerId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

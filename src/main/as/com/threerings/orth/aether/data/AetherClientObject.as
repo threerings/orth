@@ -117,6 +117,19 @@ public class AetherClientObject extends ClientObject
     }
 
     /**
+     * Returns true if at least one of the given players is a friend of ours.
+     */
+    public function containsOnlineFriend (playerIds :Array) :Boolean
+    {
+        for each (var playerId :int in playerIds) {
+            if (friends.containsKey(playerId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Get our unique integer reference.
      */
     public function get id () :int
