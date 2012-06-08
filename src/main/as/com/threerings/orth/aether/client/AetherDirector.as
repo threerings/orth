@@ -3,23 +3,23 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.aether.client {
-import com.threerings.orth.aether.data.AetherClientObject;
-import com.threerings.presents.client.ClientEvent;
+import org.osflash.signals.Signal;
+
 import com.threerings.util.Config;
 import com.threerings.util.F;
 import com.threerings.util.Log;
 
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.client.ConfirmAdapter;
 import com.threerings.presents.client.ResultAdapter;
 
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.client.Listeners;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 import com.threerings.orth.party.client.PartyRegistryService;
 import com.threerings.orth.party.data.PartyConfig;
 import com.threerings.orth.party.data.PartyNodelet;
-
-import org.osflash.signals.Signal;
 
 /**
  * Handles player-oriented requests.
