@@ -106,8 +106,10 @@ public class PartyDirector extends NodeletDirector
      */
     public function get canInviteToParty () :Boolean
     {
-        return (_partyObj != null) &&
-            ((_partyObj.policy == PartyPolicy.OPEN) || partyLeader);
+        return (_partyObj != null) && (partyLeader ||
+            (_partyObj.policy == PartyPolicy.OPEN) ||
+            (_partyObj.policy == PartyPolicy.FRIENDS &&
+                _aetherDir.aetherObj.containsOnlineFriend(getPlayerIds())));
     }
 
     public function partyContainsPlayer (memberId :int) :Boolean
@@ -138,6 +140,13 @@ public class PartyDirector extends NodeletDirector
     public function get partyObject () :PartyObject
     {
         return _partyObj;
+    }
+
+    public function getPlayerIds (onlineOnly :Boolean = false) :Array
+    {
+        return F.map(getPeeps(onlineOnly), function (peep :PartyPeep) :int {
+            return peep.id;
+        });
     }
 
     public function getPeeps (onlineOnly :Boolean = false) :Array

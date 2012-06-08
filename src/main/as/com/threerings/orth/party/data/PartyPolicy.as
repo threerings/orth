@@ -16,6 +16,7 @@ public final class PartyPolicy extends Enum
 
 // GENERATED ENUM START
     public static const OPEN :PartyPolicy = new PartyPolicy("OPEN");
+    public static const FRIENDS :PartyPolicy = new PartyPolicy("FRIENDS");
     public static const CLOSED :PartyPolicy = new PartyPolicy("CLOSED");
     finishedEnumerating(PartyPolicy);
 

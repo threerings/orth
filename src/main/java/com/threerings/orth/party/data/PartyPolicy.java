@@ -6,7 +6,6 @@ package com.threerings.orth.party.data;
 public enum PartyPolicy
 {
     OPEN,
-// TODO: not yet implemented
-//    FRIENDS,
+    FRIENDS, // TODO: Add support in Who's TeamupLogic
     CLOSED
 }

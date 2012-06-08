@@ -113,6 +113,14 @@ public class PartyManager extends NodeletManager
         return (PartierObject) _clientMgr.getClientObject(authName);
     }
 
+    /**
+     * Determine whether or not the given player has at least one friend in this party.
+     */
+    public boolean isPartyFriend (AetherClientObject player)
+    {
+        return player.containsOnlineFriend(getPlayerIds());
+    }
+
     // from SpeakProvider
     @Override public void speak (ClientObject caller, String msg, InvocationListener listener)
         throws InvocationException
@@ -181,19 +189,22 @@ public class PartyManager extends NodeletManager
      */
     public void addPlayer (final AetherClientObject player, boolean override) {
         boolean wasInvited = _invitedIds.remove(player.getPlayerId());
-        if (!override && (_partyObj.policy == PartyPolicy.CLOSED && !wasInvited)) {
-            log.warning("Attempting to add and uninvited player to a closed group.",
-                "partyId", _partyId, "player", player);
-            throw new IllegalStateException(InvocationCodes.E_ACCESS_DENIED);
-        }
-        if (_partyObj.peeps.containsKey(player.getPlayerId())) {
-            log.warning("Attempting to add a player that's already in the party.",
-                "partyId", _partyId, "player", player);
-            // but let it pass
+        if (override || wasInvited || _partyObj.policy == PartyPolicy.OPEN ||
+            (_partyObj.policy == PartyPolicy.FRIENDS && isPartyFriend(player))) {
+            if (_partyObj.peeps.containsKey(player.getPlayerId())) {
+                log.warning("Attempting to add a player that's already in the party.",
+                    "partyId", _partyId, "player", player);
+                // but let it pass
+                return;
+            }
+            doAddPeepToParty(buildPeep(player));
             return;
         }
-        doAddPeepToParty(buildPeep(player));
+        log.warning("Attempting to add and uninvited player to a closed group.",
+            "partyId", _partyId, "player", player);
+        throw new IllegalStateException(InvocationCodes.E_ACCESS_DENIED);
     }
+
 
     /**
      * Called from the access controller when subscription is approved for the specified player.
@@ -292,7 +303,7 @@ public class PartyManager extends NodeletManager
     }
 
     @Override
-    public void invitePlayer (final PartierObject inviter, PlayerName invitee,
+    public void invitePlayer (final PartierObject inviter, final PlayerName invitee,
         InvocationService.InvocationListener listener)
         throws InvocationException
     {
@@ -300,6 +311,10 @@ public class PartyManager extends NodeletManager
             _partyObj.leaderId != inviter.getPlayerId()) {
             throw new InvocationException(PartyCodes.E_CANT_INVITE_CLOSED);
         }
+
+        // if this party is in FRIENDS mode, we need to test friendship in the node request later
+        final Set<Integer> mustContainFriend =
+            (_partyObj.policy == PartyPolicy.FRIENDS) ? getPlayerIds() : null;
 
         if (_partyObj.peeps.containsKey(invitee.getKey())) {
             throw new InvocationException(PartyCodes.E_ALREADY_IN_PARTY);
@@ -321,19 +336,25 @@ public class PartyManager extends NodeletManager
         // make sure one of these folks isn't ignoring the other
         _ignoreMgr.validateCommunication(inviter.getPlayerId(), invitee.getId());
 
-        // add them to the invited set
-        _invitedIds.add(invitee.getId());
-
         final PartyInvite invite = createInvite(inviter, invitee);
         _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(invitee.getId()) {
             @Override protected void execute (AetherClientObject plobj,
                 InvocationService.ResultListener listener) {
+                // once on the invitee's aether peer, we can validate friendship
+                if (mustContainFriend != null && !plobj.containsOnlineFriend(mustContainFriend)) {
+                    listener.requestFailed(PartyCodes.E_CANT_INVITE_CLOSED);
+                    return;
+                }
                 CommSender.receiveComm(plobj, invite);
                 listener.requestProcessed(null);
             }
         }, new Resulting<Void>(listener) {
             @Override public void requestCompleted (Void result) {
                 super.requestCompleted(result);
+
+                // add them to the invited set
+                _invitedIds.add(invitee.getId());
+
                 CommSender.receiveComm(inviter, invite);
             }
         });
