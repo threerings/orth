@@ -21,6 +21,7 @@ import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
+import com.threerings.orth.Log;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthCodes;
@@ -137,8 +138,8 @@ public class PartyRegistry extends NodeletRegistry
         throws InvocationException
     {
         if (player.party != null) {
-            log.warning("Player tried to create party while already in one", "player", player,
-                "partyId", ((PartyNodelet) player.party.nodelet).partyId);
+            log.warning("Player tried to create party while already in one", "player",
+                player.playerName, "partyId", ((PartyNodelet) player.party.nodelet).partyId);
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
 
