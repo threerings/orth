@@ -9,7 +9,6 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-import com.threerings.signals.Listener1;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.client.InvocationService.InvocationListener;
@@ -50,6 +49,8 @@ import com.threerings.orth.party.data.PartyObject;
 import com.threerings.orth.party.data.PartyPeep;
 import com.threerings.orth.party.data.PartyPolicy;
 import com.threerings.orth.peer.server.OrthPeerManager;
+
+import com.threerings.signals.Listener1;
 
 import static com.threerings.orth.Log.log;
 
