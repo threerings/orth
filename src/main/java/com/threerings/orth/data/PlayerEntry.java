@@ -70,7 +70,7 @@ public class PlayerEntry extends SimpleStreamableObject
 
     /** Copies this player entry. */
     @Override
-    public PlayerEntry clone () throws CloneNotSupportedException
+    public PlayerEntry clone ()
     {
         try {
             return (PlayerEntry)super.clone();

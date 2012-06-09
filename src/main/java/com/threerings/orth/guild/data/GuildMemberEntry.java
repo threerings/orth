@@ -19,14 +19,14 @@ public class GuildMemberEntry extends PlayerEntry
         this.rank = rank;
     }
 
+    public boolean isOfficer ()
+    {
+        return rank == GuildRank.OFFICER;
+    }
+
     @Override
     public GuildMemberEntry clone ()
     {
         return (GuildMemberEntry)super.clone();
-    }
-
-    public boolean isOfficer ()
-    {
-        return rank == GuildRank.OFFICER;
     }
 }
