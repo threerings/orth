@@ -9,6 +9,7 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
+import com.threerings.signals.Listener1;
 import com.threerings.util.Resulting;
 
 import com.threerings.presents.client.InvocationService.InvocationListener;
@@ -22,9 +23,11 @@ import com.threerings.presents.server.PresentsDObjectMgr;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.AetherCodes;
+import com.threerings.orth.aether.data.PeeredPlayerInfo;
 import com.threerings.orth.aether.server.AetherNodeAction;
 import com.threerings.orth.aether.server.AetherNodeRequest;
 import com.threerings.orth.aether.server.IgnoreManager;
+import com.threerings.orth.aether.server.PeerEyeballer;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.chat.data.SpeakMarshaller;
 import com.threerings.orth.chat.data.SpeakRouter;
@@ -163,6 +166,19 @@ public class PartyManager extends NodeletManager
         peep.name = player.playerName;
         peep.joinOrder = nextJoinOrder();
         peep.connected = false;
+
+        // get some data from the eyeballer
+        PeeredPlayerInfo info = _eyeballer.getPlayerData(player.getPlayerId());
+        if (info != null) {
+            updatePeepFromEyeballer(info, peep);
+
+            // and start listening to updates!
+            _eyeballer.playerInfoChanged.connect(new EyeballListener(peep.getPlayerId()));
+
+        } else {
+            log.warning("Erk, peep with no eyeballer info", "playerId", peep.getPlayerId());
+        }
+
         return peep;
     }
 
@@ -342,27 +358,31 @@ public class PartyManager extends NodeletManager
         _ignoreMgr.validateCommunication(inviter.getPlayerId(), invitee.getId());
 
         final PartyInvite invite = createInvite(inviter, invitee);
-        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(invitee.getId()) {
-            @Override protected void execute (AetherClientObject plobj,
-                InvocationService.ResultListener listener) {
-                // once on the invitee's aether peer, we can validate friendship
-                if (mustContainFriend != null && !plobj.containsOnlineFriend(mustContainFriend)) {
-                    listener.requestFailed(PartyCodes.E_CANT_INVITE_CLOSED);
-                    return;
+        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(invitee.getId())
+            {
+                @Override protected void execute (AetherClientObject plobj,
+                    InvocationService.ResultListener listener)
+                {
+                    // once on the invitee's aether peer, we can validate friendship
+                    if (mustContainFriend != null &&
+                        !plobj.containsOnlineFriend(mustContainFriend)) {
+                        listener.requestFailed(PartyCodes.E_CANT_INVITE_CLOSED);
+                        return;
+                    }
+                    CommSender.receiveComm(plobj, invite);
+                    listener.requestProcessed(null);
                 }
-                CommSender.receiveComm(plobj, invite);
-                listener.requestProcessed(null);
-            }
-        }, new Resulting<Void>(listener) {
-            @Override public void requestCompleted (Void result) {
+            }, new Resulting<Void>(listener)
+        {
+            @Override public void requestCompleted (Void result)
+            {
                 super.requestCompleted(result);
-
                 // add them to the invited set
                 _invitedIds.add(invitee.getId());
-
                 CommSender.receiveComm(inviter, invite);
             }
-        });
+        }
+        );
     }
 
     /**
@@ -417,6 +437,16 @@ public class PartyManager extends NodeletManager
     protected void doAddPeepToParty (PartyPeep peep)
     {
         _partyObj.addToPeeps(peep);
+    }
+
+    /**
+     * Copy information from a {@link PeeredPlayerInfo} (or subclass thereof) into its
+     * respective {@link PartyPeep} (or subclass thereof). Meant to be overriden.
+     */
+    protected void updatePeepFromEyeballer (PeeredPlayerInfo info, PartyPeep peep)
+    {
+        peep.guild = info.guildName;
+        peep.whereabouts = info.whereabouts;
     }
 
     /**
@@ -491,6 +521,30 @@ public class PartyManager extends NodeletManager
         return newLeader;
     }
 
+    protected class EyeballListener implements Listener1<PeeredPlayerInfo>
+    {
+        public EyeballListener (int playerId)
+        {
+            _playerId = playerId;
+        }
+
+        @Override public void apply (PeeredPlayerInfo info)
+        {
+            PartyPeep peep = getPeep(_playerId);
+            if (peep == null) {
+                log.warning("EyeballListener still attached, but peep is gone!",
+                    "partyId", getPartyId(), "playerId", _playerId);
+                // not actually that big a deal though
+                return;
+            }
+
+            updatePeepFromEyeballer(info, peep);
+            _partyObj.updatePeeps(peep);
+        }
+
+        int _playerId;
+    }
+
     protected SpeakRouter _speakRouter;
     protected PartyObject _partyObj;
     protected int _partyId;
@@ -500,6 +554,7 @@ public class PartyManager extends NodeletManager
     @Inject protected PresentsDObjectMgr _omgr;
     @Inject protected ChatManager _chatMan;
     @Inject protected ClientManager _clientMgr;
+    @Inject protected PeerEyeballer _eyeballer;
     @Inject protected IgnoreManager _ignoreMgr;
     @Inject protected InvocationManager _invMgr;
     @Inject protected OrthPeerManager _peerMgr;
