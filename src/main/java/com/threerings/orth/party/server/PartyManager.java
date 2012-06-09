@@ -216,7 +216,7 @@ public class PartyManager extends NodeletManager
      */
     public void clientConnected (final PartierObject partier)
     {
-        final PartyPeep peep = _partyObj.peeps.get(partier.getPlayerId());
+        final PartyPeep peep = getPeep(partier.getPlayerId());
         if (peep == null) {
             // this likely just means they were booted in the time it took them to connect
             return;
@@ -235,7 +235,7 @@ public class PartyManager extends NodeletManager
      */
     public void clientDisconnected (AuthName player)
     {
-        PartyPeep peep = _partyObj.peeps.get(player.getId());
+        PartyPeep peep = getPeep(player.getId());
         if (peep != null) {
             // they disconnected but they're still in the party; note them offline
             peep.connected = false;
@@ -270,8 +270,8 @@ public class PartyManager extends NodeletManager
     {
         requireLeader(caller);
 
-        PartyPeep leader = _partyObj.peeps.get(_partyObj.leaderId);
-        PartyPeep peep = _partyObj.peeps.get(playerId);
+        PartyPeep leader = getPeep(_partyObj.leaderId);
+        PartyPeep peep = getPeep(playerId);
         if (peep == null || peep == leader || !peep.connected) {
             // TODO: nicer error? The player may have just left
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
