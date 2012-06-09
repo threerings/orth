@@ -107,6 +107,11 @@ public class PartyManager extends NodeletManager
         return result;
     }
 
+    public PartyPeep getPeep (int playerId)
+    {
+        return (_partyObj != null) ? _partyObj.peeps.get(playerId) : null;
+    }
+
     protected PartierObject getPartier (int partierId)
     {
         AuthName authName = NodeletAuthName.makeKey(PartyNodelet.class, partierId);
