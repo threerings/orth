@@ -14,12 +14,11 @@ import com.threerings.orth.aether.data.FriendshipRequest;
 import com.threerings.orth.aether.data.FriendshipTermination;
 import com.threerings.orth.client.Listeners;
 import com.threerings.orth.comms.client.CommsDirector;
-import com.threerings.orth.data.FriendEntry;
+import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.data.PlayerName;
 
 public class FriendDirector extends AetherDirectorBase
 {
-    FriendEntry;
     FriendshipRequest;
     FriendshipAcceptance;
     FriendshipTermination;
@@ -52,7 +51,7 @@ public class FriendDirector extends AetherDirectorBase
         _fsvc = client.requireService(FriendService);
     }
 
-    protected function onFriendUpdate (entry :FriendEntry, oldEntry :FriendEntry) :void
+    protected function onFriendUpdate (entry :PlayerEntry, oldEntry :PlayerEntry) :void
     {
         // if they either went from online to offline or vice versa, send a notification
         if (oldEntry.online != entry.online) {

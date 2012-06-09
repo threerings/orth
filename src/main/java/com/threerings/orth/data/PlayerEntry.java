@@ -67,4 +67,15 @@ public class PlayerEntry extends SimpleStreamableObject
         return (other instanceof PlayerEntry) &&
             (this.name.getId() == ((PlayerEntry)other).name.getId());
     }
+
+    /** Copies this player entry. */
+    @Override
+    public PlayerEntry clone ()
+    {
+        try {
+            return (PlayerEntry)super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(e);
+        }
+    }
 }

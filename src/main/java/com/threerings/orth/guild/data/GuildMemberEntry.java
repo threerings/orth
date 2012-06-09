@@ -22,11 +22,7 @@ public class GuildMemberEntry extends PlayerEntry
     @Override
     public GuildMemberEntry clone ()
     {
-        try {
-            return (GuildMemberEntry)super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError(e);
-        }
+        return (GuildMemberEntry)super.clone();
     }
 
     public boolean isOfficer ()

@@ -10,7 +10,7 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.chat.data.ChannelEntry;
-import com.threerings.orth.data.FriendEntry;
+import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.locus.data.Locus;
@@ -63,7 +63,7 @@ public class AetherClientObject extends ClientObject
     public PlayerName playerName;
 
     /** The online friends of this player. */
-    public DSet<FriendEntry> friends = DSet.newDSet();
+    public DSet<PlayerEntry> friends = DSet.newDSet();
 
     /** The players on our ignore list. */
     public DSet<PlayerName> ignoring; // initialized during resolution
@@ -154,7 +154,7 @@ public class AetherClientObject extends ClientObject
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void addToFriends (FriendEntry elem)
+    public void addToFriends (PlayerEntry elem)
     {
         requestEntryAdd(FRIENDS, friends, elem);
     }
@@ -176,7 +176,7 @@ public class AetherClientObject extends ClientObject
      * actually propagated through the system.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void updateFriends (FriendEntry elem)
+    public void updateFriends (PlayerEntry elem)
     {
         requestEntryUpdate(FRIENDS, friends, elem);
     }
@@ -192,10 +192,10 @@ public class AetherClientObject extends ClientObject
      * value change when they received the attribute changed notification.
      */
     @Generated(value={"com.threerings.presents.tools.GenDObjectTask"})
-    public void setFriends (DSet<FriendEntry> value)
+    public void setFriends (DSet<PlayerEntry> value)
     {
         requestAttributeChange(FRIENDS, value, this.friends);
-        DSet<FriendEntry> clone = (value == null) ? null : value.clone();
+        DSet<PlayerEntry> clone = (value == null) ? null : value.clone();
         this.friends = clone;
     }
 

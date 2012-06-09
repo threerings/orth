@@ -9,13 +9,10 @@ import org.osflash.signals.Signal;
 
 import com.threerings.io.ObjectInputStream;
 
-import com.threerings.util.Set;
-
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.orth.chat.data.ChannelEntry;
-import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.guild.data.GuildName;
@@ -32,7 +29,7 @@ public class AetherClientObject extends ClientObject
 // GENERATED STREAMING START
     public var playerName :PlayerName;
 
-    public var friends :DSet; /* of */ FriendEntry;
+    public var friends :DSet; /* of */ PlayerEntry;
 
     public var ignoring :DSet; /* of */ PlayerName;
 
@@ -50,9 +47,9 @@ public class AetherClientObject extends ClientObject
 
     public var playerNameChanged :Signal = new Signal(PlayerName, PlayerName);
     public var friendsChanged :Signal = new Signal(DSet, DSet);
-    public var friendsEntryAdded :Signal = new Signal(FriendEntry);
-    public var friendsEntryRemoved :Signal = new Signal(FriendEntry);
-    public var friendsEntryUpdated :Signal = new Signal(FriendEntry, FriendEntry);
+    public var friendsEntryAdded :Signal = new Signal(PlayerEntry);
+    public var friendsEntryRemoved :Signal = new Signal(PlayerEntry);
+    public var friendsEntryUpdated :Signal = new Signal(PlayerEntry, PlayerEntry);
     public var ignoringChanged :Signal = new Signal(DSet, DSet);
     public var ignoringEntryAdded :Signal = new Signal(PlayerName);
     public var ignoringEntryRemoved :Signal = new Signal(PlayerName);

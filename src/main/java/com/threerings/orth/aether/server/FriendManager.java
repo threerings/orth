@@ -41,8 +41,8 @@ import com.threerings.orth.aether.data.PeeredPlayerInfo;
 import com.threerings.orth.aether.server.persist.RelationshipRepository;
 import com.threerings.orth.chat.data.OrthChatCodes;
 import com.threerings.orth.comms.data.CommSender;
-import com.threerings.orth.data.FriendEntry;
 import com.threerings.orth.data.OrthCodes;
+import com.threerings.orth.data.PlayerEntry;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.peer.server.OrthPeerManager;
@@ -138,7 +138,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         InvocationListener listener)
         throws InvocationException
     {
-        final FriendEntry entry = caller.friends.get(targetId);
+        final PlayerEntry entry = caller.friends.get(targetId);
         final PlayerName callerName = caller.playerName;
 
         if (entry == null) {
@@ -243,7 +243,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }
 
         final AetherLocal local = player.getLocal(AetherLocal.class);
-        final List<FriendEntry> friends = Lists.newArrayListWithCapacity(
+        final List<PlayerEntry> friends = Lists.newArrayListWithCapacity(
             local.unresolvedFriendIds.size());
 
         log.debug("Starting resolution of friends dset", "player", player.who(),
@@ -252,7 +252,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         for (Integer friendId : local.unresolvedFriendIds) {
             PeeredPlayerInfo playerInfo = _eyeballer.getPlayerData(friendId);
             if (playerInfo != null) {
-                friends.add(toFriendEntry(playerInfo));
+                friends.add(toPlayerEntry(playerInfo));
                 resolved.add(friendId);
             }
         }
@@ -278,24 +278,24 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
                 }
 
                 for (Map.Entry<Integer, String> pair : result.entrySet()) {
-                    friends.add(offlineFriendEntry(pair.getKey(), pair.getValue()));
+                    friends.add(offlinePlayerEntry(pair.getKey(), pair.getValue()));
                 }
                 updateFriends(player, friends);
             }
         });
     }
 
-    protected void updateFriends (AetherClientObject player, List<FriendEntry> friends)
+    protected void updateFriends (AetherClientObject player, List<PlayerEntry> friends)
     {
         // the player may have had some friends come online already while we were off in invoker
         // land. Replace the ones in the invoker list since the status should be more up to
-        for (FriendEntry entry : player.friends) {
+        for (PlayerEntry entry : player.friends) {
             friends.remove(entry.getKey()); // out with the resolved
             friends.add(entry); // in with the recently online
         }
 
         // set up the reverse listening map
-        for (FriendEntry entry : friends) {
+        for (PlayerEntry entry : friends) {
             _notifyMap.put(entry.name.getId(), player);
         }
 
@@ -313,7 +313,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
     {
         log.debug("Removing friend notifications", "player", player);
 
-        for (FriendEntry entry : player.friends) {
+        for (PlayerEntry entry : player.friends) {
             _notifyMap.remove(entry.name.getId(), player);
         }
     }
@@ -323,7 +323,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         log.debug("Notifying friends", "playerId", playerId, "playerInfo", info);
 
         for (AetherClientObject friend : _notifyMap.get(playerId)) {
-            FriendEntry entry = friend.friends.get(playerId);
+            PlayerEntry entry = friend.friends.get(playerId);
             if (entry == null) {
                 continue;
             }
@@ -333,7 +333,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         }
     }
 
-    protected void populateEntry (FriendEntry entry, PeeredPlayerInfo info)
+    protected void populateEntry (PlayerEntry entry, PeeredPlayerInfo info)
     {
         entry.whereabouts = (info != null) ? info.whereabouts : Whereabouts.OFFLINE;
     }
@@ -343,7 +343,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
         if (other == null) {
             return;
         }
-        FriendEntry otherEntry = toFriendEntry(other);
+        PlayerEntry otherEntry = toPlayerEntry(other);
         if (player.friends.contains(otherEntry)) {
             log.warning("Erk, player already contains friend", "player", player.who(),
                 "other", other.visibleName, "isInNotifyMap",
@@ -358,17 +358,17 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
      * Creates a new offline friend entry for the given player id and name. The status
      * message will be null.
      */
-    protected FriendEntry offlineFriendEntry (int id, String name)
+    protected PlayerEntry offlinePlayerEntry (int id, String name)
     {
-        return new FriendEntry(new PlayerName(name, id), null, Whereabouts.OFFLINE);
+        return new PlayerEntry(new PlayerName(name, id), null, Whereabouts.OFFLINE);
     }
 
     /**
      * Creates a new friend entry, given a logged-on player's client info.
      */
-    protected FriendEntry toFriendEntry (PeeredPlayerInfo info)
+    protected PlayerEntry toPlayerEntry (PeeredPlayerInfo info)
     {
-        return new FriendEntry(info.visibleName, info.guildName, info.whereabouts);
+        return new PlayerEntry(info.visibleName, info.guildName, info.whereabouts);
     }
 
     /** Mapping of local and remote player ids to friend ids logged into this server. */
