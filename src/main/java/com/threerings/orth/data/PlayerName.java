@@ -55,6 +55,12 @@ public class PlayerName extends Name implements DSet.Entry
         return _id;
     }
 
+    /** Return this player's actual name, as a string. */
+    public String getName ()
+    {
+        return _name;
+    }
+
     public Comparable<?> getKey ()
     {
         return _id;
