@@ -342,10 +342,6 @@ public class PartyManager extends NodeletManager
             throw new InvocationException(PartyCodes.E_ALREADY_IN_PARTY);
         }
 
-        if (_invitedIds.contains(invitee.getId())) {
-            throw new InvocationException(PartyCodes.E_ALREADY_INVITED);
-        }
-
         if (!hasVacancies(1)) {
             throw new InvocationException(PartyCodes.E_PARTY_FULL);
         }
