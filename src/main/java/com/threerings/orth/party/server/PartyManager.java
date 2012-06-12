@@ -354,26 +354,23 @@ public class PartyManager extends NodeletManager
         // make sure one of these folks isn't ignoring the other
         _ignoreMgr.validateCommunication(inviter.getPlayerId(), invitee.getId());
 
-        final PartyInvite invite = createInvite(inviter, invitee);
-        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(invitee.getId())
-            {
+        final PartyInvite fInvite = createInvite(inviter.playerName, invitee);
+        _peerMgr.invokeSingleNodeRequest(new AetherNodeRequest(invitee.getId()) {
                 @Override protected void execute (AetherClientObject plobj,
-                    InvocationService.ResultListener listener)
-                {
+                    InvocationService.ResultListener listener) {
+                    fInvite.aetherInfusion(plobj);
                     // once on the invitee's aether peer, we can validate friendship
                     if (mustContainFriend != null &&
                         !plobj.containsOnlineFriend(mustContainFriend)) {
                         listener.requestFailed(PartyCodes.E_CANT_INVITE_CLOSED);
                         return;
                     }
-                    CommSender.receiveComm(plobj, invite);
-                    listener.requestProcessed(null);
+                    CommSender.receiveComm(plobj, fInvite);
+                    listener.requestProcessed(fInvite);
                 }
-            }, new Resulting<Void>(listener)
-        {
-            @Override public void requestCompleted (Void result)
-            {
-                super.requestCompleted(result);
+            }, new Resulting<PartyInvite>(listener) {
+            @Override public void requestCompleted (PartyInvite invite) {
+                super.requestCompleted(invite);
                 // add them to the invited set
                 _invitedIds.add(invitee.getId());
                 CommSender.receiveComm(inviter, invite);
@@ -397,9 +394,9 @@ public class PartyManager extends NodeletManager
         return (limit == 0) || _partyObj.peeps.size() + count <= limit;
     }
 
-    protected PartyInvite createInvite (PartierObject inviter, PlayerName invitee)
+    protected PartyInvite createInvite (PlayerName inviter, PlayerName invitee)
     {
-        return new PartyInvite(inviter.playerName, invitee, _nodelet);
+        return new PartyInvite(inviter, invitee, _nodelet);
     }
 
     @Override

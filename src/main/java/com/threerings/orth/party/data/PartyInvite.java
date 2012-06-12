@@ -4,6 +4,7 @@
 
 package com.threerings.orth.party.data;
 
+import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.comms.data.BaseOneToOneComm;
 import com.threerings.orth.comms.data.RequestComm;
 import com.threerings.orth.data.PlayerName;
@@ -19,5 +20,10 @@ public class PartyInvite extends BaseOneToOneComm
         super(from, to);
 
         this.hosted = hosted;
+    }
+
+    public void aetherInfusion (AetherClientObject plobj)
+    {
+        // nothing; override
     }
 }
