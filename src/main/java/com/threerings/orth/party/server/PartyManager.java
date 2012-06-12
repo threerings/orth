@@ -76,6 +76,9 @@ public class PartyManager extends NodeletManager
                 return result;
             }
         };
+
+        // start listening to player updates from the vault
+        _eyeballer.playerInfoChanged.connect(new EyeballListener());
     }
 
     public void configure (AetherClientObject player, PartyConfig config)
@@ -172,9 +175,6 @@ public class PartyManager extends NodeletManager
         PeeredPlayerInfo info = _eyeballer.getPlayerData(player.getPlayerId());
         if (info != null) {
             updatePeepFromEyeballer(info, peep);
-
-            // and start listening to updates!
-            _eyeballer.playerInfoChanged.connect(new EyeballListener(peep.getPlayerId()));
 
         } else {
             log.warning("Erk, peep with no eyeballer info", "playerId", peep.getPlayerId());
@@ -517,26 +517,16 @@ public class PartyManager extends NodeletManager
 
     protected class EyeballListener implements Listener1<PeeredPlayerInfo>
     {
-        public EyeballListener (int playerId)
-        {
-            _playerId = playerId;
-        }
-
         @Override public void apply (PeeredPlayerInfo info)
         {
-            PartyPeep peep = getPeep(_playerId);
-            if (peep == null) {
-                log.warning("EyeballListener still attached, but peep is gone!",
-                    "partyId", getPartyId(), "playerId", _playerId);
-                // not actually that big a deal though
-                return;
+            int playerId = info.authName.getId();
+            PartyPeep peep = getPeep(playerId);
+            // we only care about updates to one of our peeps
+            if (peep != null) {
+                updatePeepFromEyeballer(info, peep);
+                _partyObj.updatePeeps(peep);
             }
-
-            updatePeepFromEyeballer(info, peep);
-            _partyObj.updatePeeps(peep);
         }
-
-        int _playerId;
     }
 
     protected SpeakRouter _speakRouter;
