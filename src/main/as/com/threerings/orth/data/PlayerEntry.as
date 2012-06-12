@@ -10,17 +10,11 @@ import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.util.Cloneable;
-import com.threerings.util.Hashable;
-import com.threerings.util.Map;
-import com.threerings.util.Maps;
 
 import com.threerings.presents.dobj.DSet_Entry;
 
-import com.threerings.orth.data.PlayerName;
-import com.threerings.orth.data.where.InLocus;
 import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.guild.data.GuildName;
-import com.threerings.orth.locus.data.Locus;
 
 // GENERATED PREAMBLE END
 // GENERATED CLASSDECL START
@@ -34,28 +28,6 @@ public class PlayerEntry extends SimpleStreamableObject
     public static function sortByName (lhs :PlayerEntry, rhs :PlayerEntry, ... rest) :int
     {
         return PlayerName.BY_DISPLAY_NAME(lhs.name, rhs.name);
-    }
-
-    /**
-     * Given an array of PlayerEntries, figure out the dominant Locus among them, if any.
-     */
-    public static function majorityLocus (peeps :Array) :Locus
-    {
-        const counts :Map = Maps.newMapOf(Locus);
-        var maxCount :int = 0;
-        var maxLocus :Locus = null;
-        for each (var peep :PlayerEntry in peeps) {
-            if (peep.whereabouts is InLocus) {
-                const locus :Locus = InLocus(peep.whereabouts).locus;
-                const count :int = 1 + int(counts.get(locus));
-                counts.put(locus, count);
-                if (count > maxCount) {
-                    maxCount = count;
-                    maxLocus = locus;
-                }
-            }
-        }
-        return locus;
     }
 
 // GENERATED STREAMING START
