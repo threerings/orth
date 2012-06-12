@@ -240,8 +240,8 @@ public class PartyDirector extends NodeletDirector
         // signal changes to party leadership
         _partyObj.leaderIdChanged.add(F.callback(partyLeaderChanged.dispatch));
 
-        // if we're joining a party that's in an intervention, joining them is not optional
-        if (_partyObj.locus != null) {
+        // if we're joining a party that's collectivey in a specific locus, we must go there
+        if (_partyObj.locus != null && !_partyObj.locus.locus.equals(_aetherDir.aetherObj.locus)) {
             _locusDir.moveToHostedLocus(_partyObj.locus);
         }
 
