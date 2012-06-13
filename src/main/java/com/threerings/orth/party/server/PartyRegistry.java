@@ -84,7 +84,7 @@ public class PartyRegistry extends NodeletRegistry
 
         @Override protected void sessionConnectionClosed ()
         {
-            _mgr.clientDisconnected((AuthName) _authname);
+            _mgr.clientDisconnected((PartierObject) _clobj);
             super.sessionConnectionClosed();
         }
 

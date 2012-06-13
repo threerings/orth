@@ -250,9 +250,9 @@ public class PartyManager extends NodeletManager
     /**
      * Called from the access controller when a player's party connection is lost.
      */
-    public void clientDisconnected (AuthName player)
+    public void clientDisconnected (PartierObject partier)
     {
-        PartyPeep peep = getPeep(player.getId());
+        PartyPeep peep = getPeep(partier.getPlayerId());
         if (peep != null) {
             // they disconnected but they're still in the party; note them offline
             peep.connected = false;
