@@ -177,9 +177,9 @@ public class PartyDirector extends NodeletDirector
         super.clientDidLogoff(event);
 
         if (_partyObj != null) {
-            partyLeft.dispatch();
             _partyObj.destroyed.remove(disconnect);
             _partyObj = null;
+            partyLeft.dispatch();
         }
     }
 
