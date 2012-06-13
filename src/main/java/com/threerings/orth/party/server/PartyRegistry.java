@@ -80,16 +80,17 @@ public class PartyRegistry extends NodeletRegistry
         {
             _mgr = (PartyManager) getNodeletManager();
             _mgr.clientConnected((PartierObject) _clobj);
+            _name = ((PartierObject) _clobj).playerName;
         }
 
         @Override protected void sessionConnectionClosed ()
         {
-            _mgr.clientDisconnected((PartierObject) _clobj);
+            _mgr.clientDisconnected(_name);
             super.sessionConnectionClosed();
         }
 
-
         protected PartyManager _mgr;
+        protected PlayerName _name;
     }
 
     protected static class PartyResolver extends Resolver
