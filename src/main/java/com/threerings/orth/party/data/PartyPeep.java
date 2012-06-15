@@ -4,6 +4,8 @@
 
 package com.threerings.orth.party.data;
 
+import com.google.common.base.Predicate;
+
 import com.threerings.orth.data.PlayerEntry;
 
 /**
@@ -11,6 +13,12 @@ import com.threerings.orth.data.PlayerEntry;
  */
 public class PartyPeep extends PlayerEntry
 {
+    public static Predicate<PartyPeep> DISCONNECTED = new Predicate<PartyPeep>() {
+        @Override public boolean apply (PartyPeep peep) {
+            return !peep.connected;
+        }
+    };
+
     /**
      * The order of the partier among all the players who have joined this party. The lower this
      * value, the better priority they have to be auto-assigned leadership.
