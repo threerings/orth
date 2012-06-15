@@ -16,6 +16,7 @@ import com.threerings.presents.client.ClientEvent;
 import com.threerings.presents.dobj.DObject;
 
 import com.threerings.orth.aether.client.AetherDirector;
+import com.threerings.orth.aether.data.PartyMemberNotificationComm;
 import com.threerings.orth.chat.client.DObjectSpeakRouter;
 import com.threerings.orth.chat.client.OrthChatDirector;
 import com.threerings.orth.chat.data.OrthChatCodes;
@@ -240,6 +241,10 @@ public class PartyDirector extends NodeletDirector
         // signal changes to party leadership
         _partyObj.leaderIdChanged.add(F.callback(partyLeaderChanged.dispatch));
 
+        _partyObj.peepsEntryAdded.add(peepAdded);
+        _partyObj.peepsEntryRemoved.add(peepRemoved);
+        _partyObj.peepsEntryUpdated.add(peepUpdated);
+
         // if we're joining a party that's collectivey in a specific locus, we must go there
         if (_partyObj.locus != null && !_partyObj.locus.locus.equals(_aetherDir.aetherObj.locus)) {
             _locusDir.moveToHostedLocus(_partyObj.locus);
@@ -272,11 +277,42 @@ public class PartyDirector extends NodeletDirector
         _locusDir.moveToHostedLocus(newLocus);
     }
 
+    protected function peepAdded (entry :PartyPeep) :void
+    {
+        if (entry.name.id == _octx.myId) {
+            // the server should already have added us prior to subscription
+            log.warning("Local player added to party, weird");
+        } else {
+            notify(entry, PartyMemberNotificationComm.NOTE_JOIN);
+        }
+    }
+
+    protected function peepRemoved (entry :PartyPeep) :void
+    {
+        notify(entry, PartyMemberNotificationComm.NOTE_LEAVE);
+    }
+
+    protected function peepUpdated (entry :PartyPeep, old :PartyPeep) :void
+    {
+        if (entry.name.id != _octx.myId && old.connected != entry.connected) {
+            notify(entry, entry.connected ?
+                PartyMemberNotificationComm.NOTE_LOGON : PartyMemberNotificationComm.NOTE_LOGOFF);
+        }
+    }
+
+    protected function notify (entry :PartyPeep, event :int) :void
+    {
+        _commsDir.receiveComm(new PartyMemberNotificationComm(
+            entry.name, _aetherDir.aetherObj.playerName, event));
+    }
+
+
     protected const _aetherDir :AetherDirector = inject(AetherDirector);
     protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
     protected const _comms :CommsDirector = inject(CommsDirector);
     protected const _module :Module = inject(Module);
     protected const _locusDir :LocusDirector = inject(LocusDirector);
+    protected const _commsDir :CommsDirector = inject(CommsDirector);
 
     protected var _partyObj :PartyObject;
     protected var _speakRouter :SpeakRouter;
