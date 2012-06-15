@@ -15,8 +15,6 @@ import com.threerings.orth.data.PlayerName;
 public class PartyMemberNotificationComm
     implements ToOneComm
 {
-    public static const NOTE_LOGON :int = 1;
-    public static const NOTE_LOGOFF :int = 2;
     public static const NOTE_JOIN :int = 3;
     public static const NOTE_LEAVE :int = 4;
 
@@ -31,10 +29,6 @@ public class PartyMemberNotificationComm
     {
         const head :String = _from + " has ";
         switch (_note) {
-        case NOTE_LOGON:
-            return head + "logged on.";
-        case NOTE_LOGOFF:
-            return head + "logged off.";
         case NOTE_JOIN:
             return head + "joined the party.";
         case NOTE_LEAVE:

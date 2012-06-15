@@ -243,7 +243,6 @@ public class PartyDirector extends NodeletDirector
 
         _partyObj.peepsEntryAdded.add(peepAdded);
         _partyObj.peepsEntryRemoved.add(peepRemoved);
-        _partyObj.peepsEntryUpdated.add(peepUpdated);
 
         // if we're joining a party that's collectivey in a specific locus, we must go there
         if (_partyObj.locus != null && !_partyObj.locus.locus.equals(_aetherDir.aetherObj.locus)) {
@@ -290,14 +289,6 @@ public class PartyDirector extends NodeletDirector
     protected function peepRemoved (entry :PartyPeep) :void
     {
         notify(entry, PartyMemberNotificationComm.NOTE_LEAVE);
-    }
-
-    protected function peepUpdated (entry :PartyPeep, old :PartyPeep) :void
-    {
-        if (entry.name.id != _octx.myId && old.connected != entry.connected) {
-            notify(entry, entry.connected ?
-                PartyMemberNotificationComm.NOTE_LOGON : PartyMemberNotificationComm.NOTE_LOGOFF);
-        }
     }
 
     protected function notify (entry :PartyPeep, event :int) :void
