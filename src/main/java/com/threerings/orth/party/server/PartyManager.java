@@ -380,6 +380,36 @@ public class PartyManager extends NodeletManager
     }
 
     /**
+     * Remove the specified player from the party.
+     * @return true if they were removed.
+     */
+    public boolean removePlayer (int playerId)
+    {
+        // make sure we're still alive and they're actually in
+        if (_partyObj == null || !_partyObj.peeps.containsKey(playerId)) { return false; }
+
+        // if they're the last one, just kill the party
+        if (_partyObj.peeps.size() == 1 || (_partyObj.leaderId == playerId && _partyObj.disband)) {
+            shutdown();
+            return true;
+        }
+
+        endPartierSession(playerId);
+
+        _partyObj.startTransaction();
+        try {
+            _partyObj.removeFromPeeps(playerId);
+            // maybe reassign the leader
+            if (_partyObj.leaderId == playerId) {
+                _partyObj.setLeaderId(nextLeader());
+            }
+        } finally {
+            _partyObj.commitTransaction();
+        }
+        return true;
+    }
+
+    /**
      * Return the maximum number of players in a party, or zero for unlimited.
      */
     public int getMaxPartySize ()
@@ -441,36 +471,6 @@ public class PartyManager extends NodeletManager
     {
         peep.guild = info.guildName;
         peep.whereabouts = info.whereabouts;
-    }
-
-    /**
-     * Remove the specified player from the party.
-     * @return true if they were removed.
-     */
-    protected boolean removePlayer (int playerId)
-    {
-        // make sure we're still alive and they're actually in
-        if (_partyObj == null || !_partyObj.peeps.containsKey(playerId)) { return false; }
-
-        // if they're the last one, just kill the party
-        if (_partyObj.peeps.size() == 1 || (_partyObj.leaderId == playerId && _partyObj.disband)) {
-            shutdown();
-            return true;
-        }
-
-        endPartierSession(playerId);
-
-        _partyObj.startTransaction();
-        try {
-            _partyObj.removeFromPeeps(playerId);
-            // maybe reassign the leader
-            if (_partyObj.leaderId == playerId) {
-                _partyObj.setLeaderId(nextLeader());
-            }
-        } finally {
-            _partyObj.commitTransaction();
-        }
-        return true;
     }
 
     protected void endPartierSession (int playerId)

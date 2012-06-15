@@ -89,6 +89,17 @@ public class PartyRegistry extends NodeletRegistry
             super.sessionConnectionClosed();
         }
 
+        @Override protected void sessionDidEnd ()
+        {
+            // e.g. if we disconnected and our session then expired
+            _mgr.removePlayer(_name.getId());
+        }
+
+        @Override protected long getFlushTime ()
+        {
+            return 10 * 1000L;
+        }
+
         protected PartyManager _mgr;
         protected PlayerName _name;
     }
