@@ -22,7 +22,6 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.aether.data.AetherClientObject;
-import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.nodelet.data.HostedNodelet;
@@ -225,12 +224,21 @@ public class PartyRegistry extends NodeletRegistry
             PartyManager mgr = _partyReg.getPartyManager(partyId);
             if (mgr == null) {
                 log.warning("Expected to find a party manager here", "partyId", partyId);
-                throw new IllegalStateException(InvocationCodes.E_INTERNAL_ERROR);
+                listener.requestFailed(InvocationCodes.E_INTERNAL_ERROR);
             }
-            listener.requestProcessed(executeForParty(mgr));
+            try {
+                listener.requestProcessed(executeForParty(mgr));
+
+            } catch (InvocationException e) {
+                listener.requestFailed(e.getMessage());
+
+            } catch (Throwable t) {
+                log.warning("Failure executing party request", t);
+                listener.requestFailed(InvocationCodes.E_INTERNAL_ERROR);
+            }
         }
 
-        protected abstract T executeForParty (PartyManager mgr);
+        protected abstract T executeForParty (PartyManager mgr) throws InvocationException;
 
         @Inject protected transient PartyRegistry _partyReg;
     }
