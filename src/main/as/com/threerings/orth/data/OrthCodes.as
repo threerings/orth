@@ -39,6 +39,6 @@ public class OrthCodes extends InvocationCodes
     public static const EDITING_MSGS :String = "editing";
 
     /** Identifies our party message bundle. */
-    public static const PARTY_MSGS :String = "party";
+    public static const PARTY_MSGS :String = "general";
 }
 }
