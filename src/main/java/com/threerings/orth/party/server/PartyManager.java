@@ -215,15 +215,21 @@ public class PartyManager extends NodeletManager
             (_partyObj.policy == PartyPolicy.FRIENDS && isPartyFriend(player))) {
             if (_partyObj.peeps.containsKey(player.getPlayerId())) {
                 log.warning("Attempting to add a player that's already in the party.",
-                    "partyId", _partyId, "player", player);
+                    "partyId", _partyId, "player", player.who());
                 // but let it pass
                 return;
+            }
+            if (!hasVacancies(1)) {
+                // this however is a no-no
+                log.warning("tried to join a party with no free spots!", "partyId", _partyId,
+                    "player", player.who());
+                throw new IllegalStateException(InvocationCodes.E_INTERNAL_ERROR);
             }
             doAddPeepToParty(buildPeep(player));
             return;
         }
         log.warning("Attempting to add and uninvited player to a closed group.",
-            "partyId", _partyId, "player", player);
+            "partyId", _partyId, "player", player.who());
         throw new IllegalStateException(InvocationCodes.E_ACCESS_DENIED);
     }
 
