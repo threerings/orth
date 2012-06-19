@@ -386,7 +386,10 @@ public class PartyManager extends NodeletManager
     public boolean removePlayer (int playerId)
     {
         // make sure we're still alive and they're actually in
-        if (_partyObj == null || !_partyObj.peeps.containsKey(playerId)) { return false; }
+        if (_partyObj == null || !_partyObj.isActive() ||
+            !_partyObj.peeps.containsKey(playerId)) {
+            return false;
+        }
 
         // if they're the last one, just kill the party
         if (_partyObj.peeps.size() == 1 || (_partyObj.leaderId == playerId && _partyObj.disband)) {
