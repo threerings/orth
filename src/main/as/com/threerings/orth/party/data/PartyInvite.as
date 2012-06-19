@@ -9,9 +9,11 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.orth.aether.client.AetherDirector;
+import com.threerings.orth.client.Listeners;
 import com.threerings.orth.comms.data.BaseOneToOneComm;
 import com.threerings.orth.comms.data.OneToOneComm;
 import com.threerings.orth.comms.data.RequestComm;
+import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.nodelet.data.HostedNodelet;
 
 // GENERATED PREAMBLE END
@@ -43,7 +45,8 @@ public class PartyInvite extends BaseOneToOneComm
 
     public function onAccepted () :void
     {
-        AetherDirector(_module.getInstance(AetherDirector)).joinParty(hosted);
+        AetherDirector(_module.getInstance(AetherDirector)).joinParty(hosted, null,
+            Listeners.chatErrHandler(OrthCodes.PARTY_MSGS));
     }
 
 // GENERATED STREAMING START
