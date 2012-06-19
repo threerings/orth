@@ -31,6 +31,7 @@ import com.threerings.orth.nodelet.data.NodeletAuthName;
 import com.threerings.orth.nodelet.server.NodeletManager;
 import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.orth.party.data.PartierObject;
+import com.threerings.orth.party.data.PartyCodes;
 import com.threerings.orth.party.data.PartyConfig;
 import com.threerings.orth.party.data.PartyNodelet;
 import com.threerings.orth.party.data.PartyObject;
@@ -134,7 +135,11 @@ public class PartyRegistry extends NodeletRegistry
         throws InvocationException
     {
         _peerMan.invokeSingleNodeRequest(new PartyRequest<HostedNodelet>(partyId) {
-            @Override protected HostedNodelet executeForParty (PartyManager mgr) {
+            @Override protected HostedNodelet executeForParty (PartyManager mgr)
+                throws InvocationException {
+                if (!mgr.hasVacancies(1)) {
+                    throw new InvocationException(PartyCodes.E_PARTY_FULL);
+                }
                 mgr.addPlayer(player, false);
                 return mgr.getNodelet();
             }}, new Resulting<HostedNodelet>(listener) {
@@ -189,7 +194,7 @@ public class PartyRegistry extends NodeletRegistry
             }, new Resulting<HostedNodelet>(listener) {
             @Override public void requestCompleted (HostedNodelet result) {
                 player.setParty(result);
-                super.requestCompleted( result);
+                super.requestCompleted(result);
             }
         });
     }
