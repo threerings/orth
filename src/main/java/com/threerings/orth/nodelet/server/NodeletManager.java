@@ -43,10 +43,10 @@ public class NodeletManager
     }
 
     /**
-     * Stops managing. This should <em>only</em> be called by {@link
-     * NodeletRegistry#shutdownManager()}. That method will also take care of destroying the shared
-     * object and clearing the invocation dispatcher for the service. So this method only needs to
-     * clean up its non-generic structures, if any. By default, does nothing.
+     * Stops managing. This offloads most of its work on {@link NodeletRegistry#shutdownManager()}.
+     * That method will also take care of destroying the shared object and clearing the invocation
+     * dispatcher for the service. So this method only needs to clean up its non-generic
+     * structures, if any. By default, does nothing else.
      */
     public void shutdown ()
     {
