@@ -97,11 +97,6 @@ public class PartyRegistry extends NodeletRegistry
             _mgr.removePlayer(_name.getId());
         }
 
-        @Override protected long getFlushTime ()
-        {
-            return 10 * 1000L;
-        }
-
         protected PartyManager _mgr;
         protected PlayerName _name;
     }
