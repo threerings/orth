@@ -174,7 +174,6 @@ public class IgnoreManager implements IgnoreProvider
     }
 
     // dependencies
-    @Inject protected AetherSessionLocator _locator;
     @Inject protected OrthPeerManager _peerMgr;
     @Inject protected PlayerRepository _playerRepo;
     @Inject protected RelationshipRepository _relationRepo;
