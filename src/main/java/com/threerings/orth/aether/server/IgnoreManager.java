@@ -123,10 +123,8 @@ public class IgnoreManager implements IgnoreProvider
             throw new InvocationException(InvocationCodes.E_INTERNAL_ERROR);
         }
 
-        _invoker.postUnit(new Resulting<PlayerName>("Ignore player", listener)
-        {
-            @Override public PlayerName invokePersist () throws Exception
-            {
+        _invoker.postUnit(new Resulting<PlayerName>("Ignore player", listener) {
+            @Override public PlayerName invokePersist () throws Exception {
                 if (doIgnore) {
                     _relationRepo.ignorePlayer(ignorerId, ignoreeId);
                     String name = _playerRepo.resolvePlayerName(ignoreeId);
@@ -136,8 +134,7 @@ public class IgnoreManager implements IgnoreProvider
                 return null;
             }
 
-            @Override public void requestCompleted (PlayerName name)
-            {
+            @Override public void requestCompleted (PlayerName name) {
                 if (doIgnore) {
                     if (name == null) {
                         log.info("Can't ignore nameless player", "caller", caller.who(),
