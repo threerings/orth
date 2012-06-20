@@ -14,6 +14,8 @@ import com.threerings.orth.aether.data.AetherAuthName;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.data.AetherCodes;
 
+import static com.threerings.orth.Log.log;
+
 /**
  * Request that applies to a node that a specified aether player is on and invokes the subclass'
  * {@link #execute(AetherClientObject, ResultListener)} method with the player object.
@@ -31,6 +33,10 @@ public abstract class AetherNodeRequest extends NodeRequest
     @Override // from NodeRequest
     public boolean isApplicable (NodeObject nodeobj)
     {
+        if (nodeobj == null || nodeobj.clients == null) {
+            log.warning("isApplicable with bizarre nodeobj", "nodeobj", nodeobj);
+            return false;
+        }
         return nodeobj.clients.containsKey(_targetPlayer);
     }
 
