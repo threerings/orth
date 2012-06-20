@@ -51,6 +51,8 @@ import com.threerings.orth.party.data.PartyPolicy;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
 import com.threerings.signals.Listener1;
+import com.threerings.signals.Signal1;
+import com.threerings.signals.Signals;
 
 import static com.threerings.orth.Log.log;
 
@@ -60,6 +62,9 @@ import static com.threerings.orth.Log.log;
 public class PartyManager extends NodeletManager
     implements PartyProvider, SpeakProvider
 {
+    public Signal1<PlayerName> onPeepDisconnected = Signals.newSignal1();
+    public Signal1<PlayerName> onPeepConnected = Signals.newSignal1();
+
     @Override public void didInit ()
     {
         _partyObj = ((PartyObject)_sharedObject);
@@ -251,6 +256,9 @@ public class PartyManager extends NodeletManager
         // finally show them as connected!
         peep.connected = true;
         _partyObj.updatePeeps(peep);
+
+        // let interested parties know
+        onPeepConnected.dispatch(peep.name);
     }
 
     /**
@@ -263,6 +271,9 @@ public class PartyManager extends NodeletManager
             // they disconnected but they're still in the party; note them offline
             peep.connected = false;
             _partyObj.updatePeeps(peep);
+
+            // let interested parties know
+            onPeepDisconnected.dispatch(name);
         }
     }
 
