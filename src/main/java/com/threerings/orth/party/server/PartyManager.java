@@ -83,7 +83,7 @@ public class PartyManager extends NodeletManager
         };
 
         // start listening to player updates from the vault
-        _eyeballer.playerInfoChanged.connect(new EyeballListener());
+        _eyeballer.playerInfoChanged.connect(_listener);
     }
 
     public void configure (AetherClientObject player, PartyConfig config)
@@ -196,6 +196,9 @@ public class PartyManager extends NodeletManager
     {
         log.debug("Party Manager shutting down.", "partyId", _partyId, "peeps", _partyObj.peeps);
 
+        // stop listening to player updates from the vault
+        _eyeballer.playerInfoChanged.disconnect(_listener);
+
         // clear the party info from all remaining players' player objects
         for (PartyPeep peep : _partyObj.peeps) {
             endPartierSession(peep.name.getId());
@@ -244,21 +247,21 @@ public class PartyManager extends NodeletManager
      */
     public void clientConnected (final PartierObject partier)
     {
-        final PartyPeep peep = getPeep(partier.getPlayerId());
-        if (peep == null) {
-            // this likely just means they were booted in the time it took them to connect
-            return;
+        PartyPeep peep = getPeep(partier.getPlayerId());
+
+        // make sure they are still active and we're still interested
+        if (peep != null && _partyObj.isActive()) {
+
+            // hook them up with party info (not sure how useful this really is, but whatever)
+            partier.setPartyId(_partyId);
+
+            // finally show them as connected!
+            peep.connected = true;
+            _partyObj.updatePeeps(peep);
+
+            // let interested parties know
+            onPeepConnected.dispatch(peep.name);
         }
-
-        // else hook them up with party info (not sure how useful this really is, but whatever)
-        partier.setPartyId(_partyId);
-
-        // finally show them as connected!
-        peep.connected = true;
-        _partyObj.updatePeeps(peep);
-
-        // let interested parties know
-        onPeepConnected.dispatch(peep.name);
     }
 
     /**
@@ -267,7 +270,9 @@ public class PartyManager extends NodeletManager
     public void clientDisconnected (PlayerName name)
     {
         PartyPeep peep = getPeep(name.getId());
-        if (peep != null) {
+
+        // make sure they are still active and we're still interested
+        if (peep != null && _partyObj.isActive()) {
             // they disconnected but they're still in the party; note them offline
             peep.connected = false;
             _partyObj.updatePeeps(peep);
@@ -537,8 +542,7 @@ public class PartyManager extends NodeletManager
 
     protected class EyeballListener implements Listener1<PeeredPlayerInfo>
     {
-        @Override public void apply (PeeredPlayerInfo info)
-        {
+        @Override public void apply (PeeredPlayerInfo info) {
             int playerId = info.authName.getId();
             PartyPeep peep = getPeep(playerId);
             // we only care about updates to one of our peeps
@@ -554,6 +558,8 @@ public class PartyManager extends NodeletManager
     protected int _partyId;
 
     protected Set<Integer> _invitedIds = Sets.newHashSet();
+
+    protected final EyeballListener _listener = new EyeballListener();
 
     @Inject protected PresentsDObjectMgr _omgr;
     @Inject protected ChatManager _chatMan;
