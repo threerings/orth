@@ -48,7 +48,6 @@ public class SceneAttrsUpdate extends SceneUpdate
         mmodel.decor = decor;
     }
 
-
 // GENERATED CLASSFINISH START
 }
 }

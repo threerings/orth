@@ -145,7 +145,6 @@ public class ChatHistory
     }
 
 
-
     protected void addEntry (List<ChatHistoryEntry> history, ChatHistoryEntry entry)
     {
         history.add(entry);

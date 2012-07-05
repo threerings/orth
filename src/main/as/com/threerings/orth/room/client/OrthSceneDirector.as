@@ -113,7 +113,6 @@ public class OrthSceneDirector extends SceneDirector
         return true;
     }
 
-
     // from SceneDirector
     override protected function createPendingData () :PendingData
     {

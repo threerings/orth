@@ -167,7 +167,6 @@ public class OrthRoomManager extends InstancedSceneManager
         throw new IllegalStateException("Not yet implemented");
     }
 
-
     @Override
     public void updateMemory (ClientObject caller, EntityIdent ident,
         String key, byte[] newValue, OrthRoomService.ResultListener listener)
@@ -442,7 +441,6 @@ public class OrthRoomManager extends InstancedSceneManager
             _orthObj.commitTransaction();
         }
     }
-
 
     /**
      * Validate that the caller be allowed to update memory for the item.

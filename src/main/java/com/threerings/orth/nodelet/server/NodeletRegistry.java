@@ -326,7 +326,6 @@ public abstract class NodeletRegistry
         return (nname.getDiscriminator().equals(_nodeletClass.getSimpleName()));
     }
 
-
     /**
      * Overrides the default "local only" hosting strategy with one that will negotiate the
      * publishing of nodelets using the peer manager's locking system.

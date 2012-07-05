@@ -766,7 +766,6 @@ public class RoomController extends SceneController
         }
     }
 
-
     /**
      * Handles the GO_SCENE command.
      */
@@ -785,7 +784,6 @@ public class RoomController extends SceneController
         //         });
         //     }
     }
-
 
     /** The number of pixels we scroll the room on a keypress. */
     protected static const ROOM_SCROLL_INCREMENT :int = 20;

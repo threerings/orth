@@ -126,7 +126,6 @@ public class OrthSceneMaterializer
         }
     }
 
-
     // -- BITS THAT RUN ON THE ROOM SERVER
 
     @Override

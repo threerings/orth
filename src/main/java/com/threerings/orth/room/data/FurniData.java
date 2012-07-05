@@ -125,7 +125,6 @@ public class FurniData extends SimpleStreamableObject
         return isLayoutInfo(NOGLOW_FLAG);
     }
 
-
     /**
      * @return true if the other FurniData is identical.
      */

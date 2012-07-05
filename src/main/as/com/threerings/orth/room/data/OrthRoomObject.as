@@ -89,7 +89,6 @@ public class OrthRoomObject extends SpotSceneObject
         return orthSpeakService;
     }
 
-
 // GENERATED CLASSFINISH START
 }
 }

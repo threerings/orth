@@ -749,7 +749,6 @@ public class RoomView extends Sprite
         _elements.remove(element.getVisualization());
     }
 
-
     /** Our controller. */
     protected var _ctrl :RoomController;
 

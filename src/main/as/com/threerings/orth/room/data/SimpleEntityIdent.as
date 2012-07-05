@@ -83,7 +83,6 @@ public class SimpleEntityIdent implements EntityIdent
         return _type + ":" + _id;
     }
 
-
 // GENERATED STREAMING START
     public function readObject (ins :ObjectInputStream) :void
     {

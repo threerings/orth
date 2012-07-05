@@ -315,7 +315,6 @@ public class LocusDirector extends BasicDirector
         _lsvc = LocusService(client.requireService(LocusService));
     }
 
-
     protected const _octx :OrthContext = inject(OrthContext);
 
     protected var _lsvc :LocusService;

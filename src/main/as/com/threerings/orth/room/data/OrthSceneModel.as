@@ -56,7 +56,6 @@ public class OrthSceneModel extends SceneModel
 
 // GENERATED STREAMING END
 
-
     /** Constructor. */
     public function OrthSceneModel ()
     {

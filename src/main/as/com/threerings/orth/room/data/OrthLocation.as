@@ -56,7 +56,6 @@ public class OrthLocation implements Location, Streamable
 
 // GENERATED STREAMING END
 
-
     public function OrthLocation (x :Number = 0, y :Number = 0, z :Number = 0, orient :int = 0)
     {
         this.x = x;

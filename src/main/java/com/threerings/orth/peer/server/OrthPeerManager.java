@@ -279,7 +279,6 @@ public abstract class OrthPeerManager extends PeerManager
         return false;
     }
 
-
     protected void updateClientInfo (OrthClientInfo info)
     {
         _nodeobj.updateClients(info);

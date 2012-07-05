@@ -297,7 +297,6 @@ public class PartyDirector extends NodeletDirector
             entry.name, _aetherDir.aetherObj.playerName, event));
     }
 
-
     protected const _aetherDir :AetherDirector = inject(AetherDirector);
     protected const _chatDir :OrthChatDirector = inject(OrthChatDirector);
     protected const _comms :CommsDirector = inject(CommsDirector);

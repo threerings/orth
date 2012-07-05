@@ -34,7 +34,6 @@ public class OrthPortal extends Portal
 
 // GENERATED STREAMING END
 
-
     /**
      * Constructs a portal from the supplied furni data record.
      */
@@ -72,7 +71,6 @@ public class OrthPortal extends Portal
         p.dest = dest;
         return p;
     }
-
 
 // GENERATED CLASSFINISH START
 }

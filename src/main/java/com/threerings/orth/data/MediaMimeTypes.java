@@ -4,7 +4,6 @@
 
 package com.threerings.orth.data;
 
-
 /**
  * Mime-type specific utility for the {@link com.threerings.orth.data.MediaDesc} family of classes.
  */

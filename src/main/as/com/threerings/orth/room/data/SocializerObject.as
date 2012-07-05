@@ -65,7 +65,6 @@ public class SocializerObject extends ActorObject
     }
 // GENERATED STREAMING END
 
-
 // GENERATED CLASSFINISH START
 }
 }

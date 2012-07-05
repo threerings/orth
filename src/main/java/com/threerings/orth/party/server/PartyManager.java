@@ -241,7 +241,6 @@ public class PartyManager extends NodeletManager
         throw new IllegalStateException(InvocationCodes.E_ACCESS_DENIED);
     }
 
-
     /**
      * Called from the access controller when subscription is approved for the specified player.
      */
