@@ -263,7 +263,7 @@ public abstract class OrthPeerManager extends PeerManager
      */
     public boolean noteIgnoring (int ignorerId, int ignoreeId, boolean doAdd)
     {
-        OrthClientInfo info = (OrthClientInfo) _nodeobj.clients.get(ignorerId);
+        OrthClientInfo info = locatePlayer (ignorerId);
         if (info != null) {
             int setSize = info.ignoring.size();
             if (doAdd) {
