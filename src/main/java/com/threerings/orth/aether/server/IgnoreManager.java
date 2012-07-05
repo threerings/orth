@@ -156,7 +156,7 @@ public class IgnoreManager implements IgnoreProvider
         if (doAdd) {
             caller.addToIgnoring(ignoree);
         } else {
-            caller.removeFromIgnoring(ignoree);
+            caller.removeFromIgnoring(ignoree.getKey());
         }
 
         // updating the reverse mapping may well need a peer hop, though
