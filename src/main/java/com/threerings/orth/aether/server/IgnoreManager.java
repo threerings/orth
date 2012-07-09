@@ -141,36 +141,39 @@ public class IgnoreManager implements IgnoreProvider
                             "ignoreeId", ignoreeId);
                         return;
                     }
-                    updateIgnoring(caller, name, true);
+                    doIgnore(caller, name);
+
                 } else {
-                    updateIgnoring(caller, name, false);
+                    doUnignore(caller, ignoreeId);
                 }
             }
         });
     }
 
-    protected void updateIgnoring (
-        final AetherClientObject caller, final PlayerName ignoree, final boolean doAdd)
+    protected void doIgnore (final AetherClientObject caller, final PlayerName ignoree)
     {
-        // ignoring happens on the ignorer's vault peer, so we can do this the easy way
-        if (doAdd) {
-            caller.addToIgnoring(ignoree);
-        } else {
-            caller.removeFromIgnoring(ignoree.getKey());
-        }
+        caller.addToIgnoring(ignoree);
 
-        // updating the reverse mapping may well need a peer hop, though
         _peerMgr.invokeNodeAction(new AetherNodeAction(ignoree.getId()) {
             @Override protected void execute (AetherClientObject player) {
-                if (doAdd) {
-                    player.addToIgnoredBy(caller.playerName);
-                } else {
-                    player.removeFromIgnoredBy(caller.playerName);
-                }
+                player.addToIgnoredBy(caller.playerName);
             }
         });
 
-        _peerMgr.noteIgnoring(caller.getPlayerId(), ignoree.getId(), doAdd);
+        _peerMgr.noteIgnoring(caller.getPlayerId(), ignoree.getId(), true);
+    }
+
+    protected void doUnignore (final AetherClientObject caller, final int ignoreeId)
+    {
+        caller.removeFromIgnoring(ignoreeId);
+
+        _peerMgr.invokeNodeAction(new AetherNodeAction(ignoreeId) {
+            @Override protected void execute (AetherClientObject player) {
+                player.removeFromIgnoredBy(caller.getPlayerId());
+            }
+        });
+
+        _peerMgr.noteIgnoring(caller.getPlayerId(), ignoreeId, false);
     }
 
     // dependencies
