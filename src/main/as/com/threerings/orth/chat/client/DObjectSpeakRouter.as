@@ -61,10 +61,6 @@ public class DObjectSpeakRouter
         var value :Object = event.getArgs()[0];
         if (OrthChatCodes.SPEAK_MSG_TYPE == event.getName()) {
             _chatDir.receiveSpeak(Speak(value));
-
-        } else {
-            log.warning("Got unhandled message type", "eventName", event.getName(), "event", event);
-            return;
         }
     }
 
