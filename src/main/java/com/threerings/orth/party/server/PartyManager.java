@@ -423,10 +423,8 @@ public class PartyManager extends NodeletManager
         _partyObj.startTransaction();
         try {
             _partyObj.removeFromPeeps(playerId);
-            // maybe reassign the leader
-            if (_partyObj.leaderId == playerId) {
-                _partyObj.setLeaderId(nextLeader());
-            }
+            maybeReassignLeader(playerId);
+
         } finally {
             _partyObj.commitTransaction();
         }
@@ -487,6 +485,14 @@ public class PartyManager extends NodeletManager
         _partyObj.addToPeeps(peep);
     }
 
+    /** If the given player is the leader, make someone else the leader. */
+    protected void maybeReassignLeader (int playerId)
+    {
+        if (_partyObj.leaderId == playerId) {
+            _partyObj.setLeaderId(nextLeader());
+        }
+    }
+
     /**
      * Copy information from a {@link PeeredPlayerInfo} (or subclass thereof) into its
      * respective {@link PartyPeep} (or subclass thereof). Meant to be overriden.
@@ -531,6 +537,10 @@ public class PartyManager extends NodeletManager
         int joinOrder = Integer.MAX_VALUE;
         int newLeader = 0;
         for (PartyPeep peep : _partyObj.peeps) {
+            // skip disconnected peeps, as well as the current leader
+            if (!peep.connected || peep.name.getId() == _partyObj.leaderId) {
+                continue;
+            }
             if (peep.joinOrder < joinOrder) {
                 joinOrder = peep.joinOrder;
                 newLeader = peep.name.getId();
