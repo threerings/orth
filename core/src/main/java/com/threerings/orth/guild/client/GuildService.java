@@ -18,9 +18,9 @@ public interface GuildService extends InvocationService<ClientObject>
 {
     /**
      * Invites another player to join the guild. If the invitation is accepted, the target player
-     * will have {@link AetherClientObject#guild guild} and {@link AetherClientObject#guildId guildId} updated
-     * and will be added to {@link GuildObject#members}. On failure, the listener will be notified
-     * of the error.
+     * will have {@link AetherClientObject#guild} and {@link AetherClientObject#guildName}
+     * updated and will be added to {@link GuildObject#members}. On failure, the listener will be
+     * notified of the error.
      */
     void sendInvite (int playerId, InvocationListener listener);
 

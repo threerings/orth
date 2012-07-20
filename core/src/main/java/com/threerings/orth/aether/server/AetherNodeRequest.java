@@ -6,6 +6,7 @@ package com.threerings.orth.aether.server;
 
 import com.google.inject.Inject;
 
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService.ResultListener;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerManager.NodeRequest;
@@ -18,7 +19,8 @@ import static com.threerings.orth.Log.log;
 
 /**
  * Request that applies to a node that a specified aether player is on and invokes the subclass'
- * {@link #execute(AetherClientObject, ResultListener)} method with the player object.
+ * {@link #execute(AetherClientObject, InvocationService.ResultListener)} method with the player
+ * object.
  */
 public abstract class AetherNodeRequest extends NodeRequest
 {
