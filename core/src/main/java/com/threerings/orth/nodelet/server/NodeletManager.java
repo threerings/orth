@@ -26,7 +26,8 @@ public class NodeletManager
     }
 
     /**
-     * Called by the {@link NodeletRegistry} after {@link #init()}. Does nothing by default.
+     * Called by the {@link NodeletRegistry} after
+     * {@link #init(NodeletRegistry, HostedNodelet, DObject)}. Does nothing by default.
      */
     public void didInit ()
     {
@@ -43,7 +44,7 @@ public class NodeletManager
     }
 
     /**
-     * Stops managing. This offloads most of its work on {@link NodeletRegistry#shutdownManager()}.
+     * Stops managing. This offloads most of its work on {@link NodeletRegistry#managerDidShutdown(NodeletManager)}.
      * That method will also take care of destroying the shared object and clearing the invocation
      * dispatcher for the service. So this method only needs to clean up its non-generic
      * structures, if any. By default, does nothing else.

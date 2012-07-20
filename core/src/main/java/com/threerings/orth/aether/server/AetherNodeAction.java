@@ -15,8 +15,8 @@ import com.threerings.orth.aether.data.AetherClientObject;
 import static com.threerings.orth.Log.log;
 
 /**
- * An action to be invoked on every server on which a player is logged in. You must read {@link
- * PeerManager.NodeAction} for caveats before using this class.
+ * An action to be invoked on every server on which a player is logged in. You must read
+ * {@link PeerManager.NodeAction} for caveats before using this class.
  */
 public abstract class AetherNodeAction extends PeerManager.NodeAction
 {

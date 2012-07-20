@@ -20,10 +20,9 @@ public interface OrthSceneService extends InvocationService<ClientObject>
     /**
      * Requests that that this client's body be moved to the specified scene.
      *
-     * @param sceneId the scene id to which we want to move.
+     * @param locus the {@link RoomLocus} where we want to go
      * @param version the version number of the scene object that we have in our local repository.
      * @param portalId the id of the portal via which we are departing the current scene, or 0.
-     * @param destLoc the location in the target scene where the client wishes to enter.
      */
     public void moveTo (RoomLocus locus, int version, int portalId, SceneMoveListener listener);
 }

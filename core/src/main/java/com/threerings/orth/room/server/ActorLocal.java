@@ -22,21 +22,6 @@ public class ActorLocal extends BodyLocal
     }
 
     /**
-     * Called when a player has just switched from one avatar to a new one or by {@link
-     * #willEnterRoom} below. In either case, {@link #memories} is expected to contain the memories
-     * for the avatar; either because it was put there (and possibly serialized in the case of a
-     * peer move) when the player left a previous room, or because we put them there manually as
-     * part of avatar resolution (see {@link MemberManager#finishSetAvatar}).
-     */
-    public void putAvatarMemoriesIntoRoom (OrthRoomObject roomObj)
-    {
-        if (memories != null) {
-            roomObj.putMemories(memories);
-            memories = null;
-        }
-    }
-
-    /**
      * Called when we depart a room to remove our avatar memories from the room and store them in
      * this local storage.
      */
@@ -47,22 +32,22 @@ public class ActorLocal extends BodyLocal
     }
 
     /**
-     * Called by the {@link RoomManager} when we're about to enter a room, and also
-     * takes care of calling willEnterPartyPlace().
+     * Called by the {@link OrthRoomManager} when we're about to enter a room.
      */
     public void willEnterRoom (ActorObject memobj, OrthRoomObject roomObj)
     {
-        putAvatarMemoriesIntoRoom(roomObj);
+        if (memories != null) {
+            roomObj.putMemories(memories);
+            memories = null;
+        }
     }
 
     /**
-     * Called by the {@link RoomManager} when we're about to leave a room, and also
-     * takes care of calling willLeavePartyPlace().
+     * Called by the {@link OrthRoomManager} when we're about to leave a room.
      */
     public void willLeaveRoom (ActorObject memobj, OrthRoomObject roomObj)
     {
         // remove our avatar memories from this room
         takeAvatarMemoriesFromRoom(memobj, roomObj);
     }
-
 }

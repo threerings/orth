@@ -15,9 +15,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
- * A forwarding map that never returns null from {@link Map#get()}, but instead computes a new
+ * A forwarding map that never returns null from {@link Map#get(Object)}, but instead computes a new
  * value for the requested key. The creation of the value is delegated to subclasses using the
- * {@link ComputingMap#compute()} method.
+ * {@link ComputingMap#compute(Object)} method.
  */
 public abstract class ComputingMap<K, V> extends ForwardingMap<K, V>
 {
@@ -148,7 +148,7 @@ public abstract class ComputingMap<K, V> extends ForwardingMap<K, V>
 
     /**
      * Returns the value to use when a key is missing. May not return null. If null is returned,
-     * {@link #get()} will throw a runtime exception.
+     * {@link #get(Object)} will throw a runtime exception.
      */
     abstract protected V compute (K key);
 

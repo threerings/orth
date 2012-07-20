@@ -72,7 +72,7 @@
 
   <target name="javadoc" depends="prepare" description="Builds the Java documentation">
     <mkdir dir="${deploy.dir}/docs"/>
-    <javadoc sourcepath="${src.dir}" packagenames="com.threerings.*"
+    <javadoc sourcepath="${src.dir}" packagenames="com.threerings.orth.*"
              destdir="${deploy.dir}/docs" stylesheetfile="docs/stylesheet.css"
              additionalparam="-breakiterator" classpathref="build.classpath">
       <link href="http://download.oracle.com/javase/6/docs/api/"/>
@@ -80,8 +80,9 @@
       <link href="http://samskivert.googlecode.com/svn/apidocs"/>
       <link href="http://depot.googlecode.com/svn/apidocs/"/>
       <link href="http://www.jajakarta.org/ant/ant-1.6.1/docs/ja/manual/api/"/>
-      <link href="http://www.threerings.net/code/narya/docs/api"/>
-      <link href="http://www.threerings.net/code/vilya/docs/api"/>
+      <link href="http://threerings.github.com/narya/apidocs"/>
+      <link href="http://threerings.github.com/vilya/apidocs"/>
+      <link href="http://threerings.github.com/nenya/apidocs"/>
     </javadoc>
   </target>
 

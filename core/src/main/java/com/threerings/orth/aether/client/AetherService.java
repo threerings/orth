@@ -7,6 +7,7 @@ package com.threerings.orth.aether.client;
 import com.threerings.presents.client.InvocationService;
 
 import com.threerings.orth.aether.data.AetherClientObject;
+import com.threerings.orth.guild.client.GuildService;
 
 /**
  * Requests from an Orth client to the Aether server related to their PlayerObject.
@@ -22,8 +23,8 @@ public interface AetherService extends InvocationService<AetherClientObject>
 
     /**
      * Accepts a previously sent guild invitation. The sender must be in the guild and must have
-     * sent the invite using {@link com.threerings.orth.guild.client.GuildService#sendInvite()
-     * sendInvite}. The guildId is not technically needed but may help avoid the edge case where
+     * sent the invite using {@link GuildService#sendInvite(int, InvocationService.InvocationListener)}.
+     * The guildId is not technically needed but may help avoid the edge case where
      * the sender has changed guilds just after sending the invitation.
      */
     void acceptGuildInvite (int senderId, int guildId, InvocationListener listener);
