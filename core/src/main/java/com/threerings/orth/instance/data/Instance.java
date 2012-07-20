@@ -18,8 +18,8 @@ import com.samskivert.util.ObserverList;
 import com.samskivert.jdbc.RepositoryUnit;
 
 import com.threerings.presents.annotation.MainInvoker;
-import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService.ConfirmListener;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 

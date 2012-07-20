@@ -6,8 +6,8 @@ package com.threerings.orth.aether.server;
 
 import com.google.inject.Inject;
 
-import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.client.InvocationService.ResultListener;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.PeerManager.NodeRequest;
 
