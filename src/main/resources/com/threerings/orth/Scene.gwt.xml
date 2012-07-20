@@ -1,5 +1,0 @@
-<module>
-  <inherits name="com.threerings.orth.Orth"/>
-
-  <source path="scene/data"/>
-</module>

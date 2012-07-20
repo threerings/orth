@@ -2,35 +2,32 @@
 <!-- build configuration -->
 <project name="orth" default="compile" basedir="." xmlns:artifact="urn:maven-artifact-ant">
   <!-- configuration parameters -->
-  <property name="src.dir"      location="src/main/java"/>
-  <property name="asrc.dir"     location="src/main/as"/>
-  <property name="rsrc.dir"     location="src/main/resources"/>
+  <property name="src.dir"      location="core/src/main/java"/>
+  <property name="asrc.dir"     location="aslib/src/main/as"/>
   <property name="deploy.dir"   location="dist"/>
-  <property name="as.dependencies" location="${deploy.dir}/as-build-dependencies.xml"/>
-  <property name="java.dependencies" location="${deploy.dir}/java-build-dependencies.xml"/>
-  <property name="savedoc.dir"  location="docs"/>
-  <property name="javadoc.home" location="${deploy.dir}/docs"/>
   <property name="classes.dir"  location="${deploy.dir}/classes"/>
-  <property name="gwtjar.dir"   location="${deploy.dir}/gwt-jar"/>
 
   <!-- bring in our standard build support -->
-  <property name="ooo-build.vers" value="2.5"/>
+  <property name="ooo-build.vers" value="2.9"/>
   <ant antfile="bootstrap.xml"/>
   <import file="${user.home}/.m2/ooo-build/${ooo-build.vers}/ooo-build.xml"/>
 
   <!-- -prepares the application directories -->
-  <target name="prepare" depends="mavendeps">
+  <target name="prepare" depends="-init-ooo">
+    <mavendep pom="core/pom.xml" id="pom"/>
+
+    <!-- we can't use <mavendep> here because we need to exclude our pom depends -->
+    <artifact:dependencies filesetId="aslib.fileset" cacheDependencyRefs="true" type="swc"
+      dependencyRefsBuildFile="${deploy.dir}/aslib-pom.dependencies">
+      <pom file="aslib/pom.xml"/>
+    </artifact:dependencies>
+    <pathconvert pathsep="," property="aslib.path" refid="aslib.fileset"/>
+
     <mkdir dir="${classes.dir}"/>
-    <mkdir dir="${javadoc.home}"/>
     <path id="build.classpath">
       <pathelement location="${classes.dir}"/>
-      <fileset refid="pom.xml.fileset"/>
+      <path refid="pom.path"/>
     </path>
-  </target>
-
-  <target name="mavendeps" depends="-init-ooo">
-    <mavendep pom="pom.xml"/>
-    <mavendep pom="as-pom.xml" pathprop="aslib.path"/>
   </target>
 
   <!-- makes sure our tools are compiled and defines the ant tasks -->
@@ -67,39 +64,10 @@
     <ooojavac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath"/>
   </target>
 
-  <target name="aslib" depends="mavendeps">
+  <target name="aslib" depends="prepare">
     <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.4"/>
     <compc srcdir="${asrc.dir}" libpath="${aslib.path}"
         dest="${deploy.dir}/${ant.project.name}lib.swc"/>
-  </target>
-
-  <target name="javadoc" depends="prepare">
-    <javadoc sourcepath="${src.dir}" packagenames="com.threerings.*"
-             destdir="${javadoc.home}" stylesheetfile="docs/stylesheet.css"
-             additionalparam="-breakiterator"
-             link="http://www.threerings.net/code/orth/docs/api">
-      <classpath refid="build.classpath"/>
-      <link href="http://java.sun.com/j2se/1.5/docs/api/"/>
-      <!-- ant documentation is not available online, sorry kids -->
-      <link href="file:///usr/share/doc/ant-doc/javadocs"/>
-      <link href="http://samskivert.com/code/samskivert/samskivert/docs/api"/>
-    </javadoc>
-  </target>
-
-  <!-- builds the javadocs and stuffs them in a directory where they -->
-  <!-- won't be blown away when we do "clean" next time -->
-  <target name="savedoc" depends="javadoc">
-    <delete dir="${savedoc.dir}/api"/>
-    <copy todir="${savedoc.dir}/api">
-      <fileset dir="${javadoc.home}" includes="**/*"/>
-    </copy>
-  </target>
-
-  <!-- builds the ActionScript documention -->
-  <target name="asdoc" depends="mavendeps">
-    <mkdir dir="${deploy.dir}/asdocs"/>
-    <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.0"/>
-    <asdoc srcdir="${asrc.dir}" destdir="${deploy.dir}/asdocs" libpath="${aslib.path}"/>
   </target>
 
   <!-- a target for rebuilding everything -->
@@ -109,16 +77,6 @@
   <target name="dist" depends="compile,procstream">
     <!-- build our various jar files -->
     <jar destfile="${deploy.dir}/${ant.project.name}.jar" basedir="${classes.dir}"/>
-    <copy todir="${gwtjar.dir}">
-      <fileset dir="${rsrc.dir}" includes="com/**"/>
-      <fileset dir="${src.dir}" includes="com/threerings/orth/scene/data/*.java"/>
-      <fileset dir="${src.dir}">
-        <include name="com/threerings/orth/data/OrthName*.java"/>
-        <include name="com/threerings/orth/data/MediaDesc*.java"/>
-      </fileset>
-    </copy>
-    <jar destfile="${deploy.dir}/${ant.project.name}-gwt.jar" basedir="${gwtjar.dir}"/>
-    <delete dir="${gwtjar.dir}"/>
   </target>
 
   <!-- reorders our actionscript imports -->
@@ -233,11 +191,17 @@
     </instream>
   </target>
 
-  <target name="maven-deploy" depends="distall"
+  <target name="install" depends="distall"
+          description="Installs artifacts to local Maven repository.">
+    <maveninstall file="pom.xml" pom="pom.xml"/>
+    <maveninstall file="${deploy.dir}/${ant.project.name}.jar" pom="core/pom.xml"/>
+    <maveninstall file="${deploy.dir}/${ant.project.name}lib.swc" pom="aslib/pom.xml"/>
+  </target>
+
+  <target name="deploy" depends="distall"
       description="Deploys our build artifacts to a Maven repository.">
-    <mavendeploy file="${deploy.dir}/${ant.project.name}.jar" pom="pom.xml" srcdir="${src.dir}"/>
-    <mavendeploy file="${deploy.dir}/${ant.project.name}lib.swc" pom="as-pom.xml"
-        srcdir="${asrc.dir}"/>
-    <mavendeploy file="${deploy.dir}/${ant.project.name}-gwt.jar" pom="gwt-pom.xml"/>
+    <mavendeploy file="pom.xml" pom="pom.xml"/>
+    <mavendeploy file="${deploy.dir}/${ant.project.name}.jar" pom="core/pom.xml" srcdir="${src.dir}"/>
+    <mavendeploy file="${deploy.dir}/${ant.project.name}lib.swc" pom="aslib/pom.xml" srcdir="${asrc.dir}"/>
   </target>
 </project>
