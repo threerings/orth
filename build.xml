@@ -70,6 +70,27 @@
         dest="${deploy.dir}/${ant.project.name}lib.swc"/>
   </target>
 
+  <target name="javadoc" depends="prepare" description="Builds the Java documentation">
+    <mkdir dir="${deploy.dir}/docs"/>
+    <javadoc sourcepath="${src.dir}" packagenames="com.threerings.*"
+             destdir="${deploy.dir}/docs" stylesheetfile="docs/stylesheet.css"
+             additionalparam="-breakiterator" classpathref="build.classpath">
+      <link href="http://download.oracle.com/javase/6/docs/api/"/>
+      <link href="http://docs.guava-libraries.googlecode.com/git/javadoc/"/>
+      <link href="http://samskivert.googlecode.com/svn/apidocs"/>
+      <link href="http://depot.googlecode.com/svn/apidocs/"/>
+      <link href="http://www.jajakarta.org/ant/ant-1.6.1/docs/ja/manual/api/"/>
+      <link href="http://www.threerings.net/code/narya/docs/api"/>
+      <link href="http://www.threerings.net/code/vilya/docs/api"/>
+    </javadoc>
+  </target>
+
+  <target name="asdoc" depends="prepare" description="Builds the ActionScript documention">
+    <maventaskdef groupId="com.threerings.ant" artifactId="actionscript" version="1.4"/>
+    <mkdir dir="${deploy.dir}/asdocs"/>
+    <asdoc srcdir="${asrc.dir}" libpath="${aslib.path}" destdir="${deploy.dir}/asdocs"/>
+  </target>
+
   <!-- a target for rebuilding everything -->
   <target name="distall" depends="dist,aslib"/>
 
@@ -198,10 +219,12 @@
     <maveninstall file="${deploy.dir}/${ant.project.name}lib.swc" pom="aslib/pom.xml"/>
   </target>
 
-  <target name="deploy" depends="distall"
+  <target name="deploy" depends="distall,javadoc"
       description="Deploys our build artifacts to a Maven repository.">
     <mavendeploy file="pom.xml" pom="pom.xml"/>
-    <mavendeploy file="${deploy.dir}/${ant.project.name}.jar" pom="core/pom.xml" srcdir="${src.dir}"/>
-    <mavendeploy file="${deploy.dir}/${ant.project.name}lib.swc" pom="aslib/pom.xml" srcdir="${asrc.dir}"/>
+    <mavendeploy file="${deploy.dir}/${ant.project.name}.jar" pom="core/pom.xml"
+                 srcdir="${src.dir}" docdir="${deploy.dir}/docs"/>
+    <mavendeploy file="${deploy.dir}/${ant.project.name}lib.swc" pom="aslib/pom.xml"
+                 srcdir="${asrc.dir}"/>
   </target>
 </project>
