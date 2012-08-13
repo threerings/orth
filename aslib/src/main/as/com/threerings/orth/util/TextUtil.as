@@ -89,6 +89,13 @@ public class TextUtil
         }
     }
 
+    public static function cloneTextFormat (format :TextFormat) :TextFormat
+    {
+        return new TextFormat(format.font, format.size, format.color, format.bold, format.italic,
+            format.underline, format.url, format.target, format.align, format.leftMargin,
+            format.rightMargin, format.indent, format.leading);
+    }
+
     /**
      * Parse any "special links" (in the format "\uFFFCtext\uFFFCurl\uFFFD") in the specified text.
      *
