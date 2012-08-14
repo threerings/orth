@@ -14,17 +14,17 @@ import com.threerings.util.StringUtil;
  */
 public class TextUtil
 {
-   /**
-    * Return an array of text strings, with any string needing special formatting preceeded by
-    * that format.
-    *
-    * @param text The text to parse
-    * @param defaultFormat The format to use for normal text.
-    * @param parseSpecial If true, parsing will look for special links, such as those we use in
-    *                     translation messages and commands.
-    * @param useDefaultColor If true, the color from the defaultFormat will be used for links,
-    *                        otherwise links will be displayed in blue.
-    */
+    /**
+     * Return an array of text strings, with any string needing special formatting preceeded by
+     * that format.
+     *
+     * @param text The text to parse
+     * @param defaultFormat The format to use for normal text.
+     * @param parseSpecial If true, parsing will look for special links, such as those we use in
+     *                     translation messages and commands.
+     * @param useDefaultColor If true, the color from the defaultFormat will be used for links,
+     *                        otherwise links will be displayed in blue.
+     */
     public static function parseLinks (
         text :String, defaultFormat :TextFormat, parseSpecial :Boolean = false,
         useDefaultColor :Boolean = false) :Array
