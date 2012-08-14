@@ -2,6 +2,7 @@
 // Who - Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.util
 {
+import com.threerings.util.Log;
 import com.threerings.util.Map;
 import com.threerings.util.Maps;
 
@@ -19,8 +20,10 @@ public class MarkupString
     public static function parseString (str :String) :MarkupString
     {
         const chunks :Array = [ ];
-        const formats :Dictionary = new Dictionary();
         const tagReg :RegExp = /\[(\/?)(\w)\]/g;
+
+        var boldLevel :int = 0;
+        var italicLevel :int = 0;
 
         var ix :int = 0;
         while (ix < str.length) {
@@ -29,11 +32,23 @@ public class MarkupString
             const nextIx :int = (match != null) ? match.index : str.length;
             if (nextIx > ix) {
                 chunks.push(new MarkupChunk(str.substr(ix, nextIx-ix),
-                    formats["i"] > 0, formats["b"] > 0));
+                    italicLevel > 0, boldLevel > 0));
             }
             ix = nextIx;
             if (match != null) {
-                formats[match[2]] = int(formats[match[2]]) + (match[1] == "/") ? -1 : 1;
+                var modifier :int = (match[1] == "") ? 1 : -1;
+                switch(match[2]) {
+                    case "i":
+                        italicLevel += modifier;
+                        break;
+                    case "b":
+                        boldLevel += modifier;
+                        break;
+                    default:
+                        // whatever
+                        break;
+                }
+
                 ix += match[0].length;
             }
         }
@@ -77,12 +92,9 @@ class MarkupChunk
 
     public function getTextFormat (defaultFormat :TextFormat) :TextFormat
     {
-        if (isItalic || isBold) {
-            const newFormat :TextFormat = TextUtil.cloneTextFormat(defaultFormat);
-            newFormat.italic = isItalic;
-            newFormat.bold = isBold;
-            return newFormat;
-        }
-        return defaultFormat;
+        const newFormat :TextFormat = TextUtil.cloneTextFormat(defaultFormat);
+        newFormat.italic = isItalic;
+        newFormat.bold = isBold;
+        return newFormat;
     }
 }
