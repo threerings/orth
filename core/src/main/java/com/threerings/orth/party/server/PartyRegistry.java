@@ -65,34 +65,29 @@ public class PartyRegistry extends NodeletRegistry
 
     protected static class PartySession extends Session
     {
-        @Override protected void sessionWillResume ()
-        {
+        @Override protected void sessionWillResume () {
             super.sessionWillResume();
             didConnect();
         }
-        @Override protected void sessionWillStart ()
-        {
+        @Override protected void sessionWillStart () {
             super.sessionWillStart();
             didConnect();
         }
 
-        protected void didConnect ()
-        {
+        protected void didConnect () {
             _mgr = (PartyManager) getNodeletManager();
             _mgr.clientConnected((PartierObject) _clobj);
             _name = ((PartierObject) _clobj).playerName;
         }
 
-        @Override protected void sessionConnectionClosed ()
-        {
+        @Override protected void sessionConnectionClosed () {
             if (_mgr != null) {
                 _mgr.clientDisconnected(_name);
             }
             super.sessionConnectionClosed();
         }
 
-        @Override protected void sessionDidEnd ()
-        {
+        @Override protected void sessionDidEnd () {
             // e.g. if we disconnected and our session then expired
             _mgr.removePlayer(_name.getId());
         }
@@ -103,13 +98,11 @@ public class PartyRegistry extends NodeletRegistry
 
     protected static class PartyResolver extends Resolver
     {
-        @Override public ClientObject createClientObject ()
-        {
+        @Override public ClientObject createClientObject () {
             return new PartierObject();
         }
 
-        @Override protected void resolveClientData (ClientObject clobj) throws Exception
-        {
+        @Override protected void resolveClientData (ClientObject clobj) throws Exception {
             super.resolveClientData(clobj);
 
             PartierObject partObj = (PartierObject)clobj;
@@ -185,12 +178,13 @@ public class PartyRegistry extends NodeletRegistry
                     mgr.configure(player, config);
                     return nodelet;
                 }
-            }, new Resulting<HostedNodelet>(listener) {
-            @Override public void requestCompleted (HostedNodelet result) {
-                player.setParty(result);
-                super.requestCompleted(result);
-            }
-        });
+            },
+            new Resulting<HostedNodelet>(listener) {
+                @Override public void requestCompleted (HostedNodelet result) {
+                    player.setParty(result);
+                    super.requestCompleted(result);
+                }
+            });
     }
 
     @Override public DObject createSharedObject (Nodelet nodelet)
