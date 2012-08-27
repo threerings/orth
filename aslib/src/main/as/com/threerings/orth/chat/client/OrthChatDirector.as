@@ -3,6 +3,8 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.chat.client {
+import com.threerings.orth.chat.data.Message;
+
 import flashx.funk.ioc.inject;
 
 import com.threerings.util.Log;
@@ -35,6 +37,10 @@ import com.threerings.orth.data.PlayerName;
 public class OrthChatDirector extends AetherDirectorBase
     implements TellReceiver
 {
+    Speak;
+    Tell;
+    Message;
+
     public static function buildTellMessage (from :PlayerName, text :String) :UserMessage
     {
         return buildMessage(from, MessageBundle.taint(text), ChatCodes.USER_CHAT_TYPE);
