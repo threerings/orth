@@ -2,12 +2,7 @@
 // Who - Copyright 2010-2011 Three Rings Design, Inc.
 package com.threerings.orth.util
 {
-import com.threerings.util.Log;
-import com.threerings.util.Map;
-import com.threerings.util.Maps;
-
 import flash.text.TextFormat;
-import flash.utils.Dictionary;
 
 /**
  * A type-safe representation of simple formatted strings.
@@ -73,9 +68,9 @@ public class MarkupString
 }
 }
 
-import com.threerings.orth.util.TextUtil;
-
 import flash.text.TextFormat;
+
+import com.threerings.orth.util.TextUtil;
 
 class MarkupChunk
 {

@@ -13,6 +13,7 @@ import com.threerings.util.Cloneable;
 
 import com.threerings.presents.dobj.DSet_Entry;
 
+import com.threerings.orth.data.PlayerName;
 import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.guild.data.GuildName;
 
