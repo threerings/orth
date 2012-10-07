@@ -17,12 +17,12 @@ import com.threerings.presents.server.InvocationManager;
 
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.aether.server.AetherNodeAction;
-import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.where.InLocus;
 import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.locus.data.Locus;
+import com.threerings.orth.locus.data.LocusAuthName;
 import com.threerings.orth.locus.data.LocusMarshaller;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
@@ -65,9 +65,9 @@ public class LocusManager
      * Avoid calling this method when "we're pretty sure the move will finish", or, god forbid,
      * directly from the client.
      */
-    public void noteLocusForPlayer (AuthName name, final InLocus whereabouts)
+    public void noteLocusForPlayer (LocusAuthName name, InLocus whereabouts)
     {
-        doNote(name, whereabouts);
+        doNote(name, whereabouts, null);
     }
 
     /**
@@ -75,22 +75,26 @@ public class LocusManager
      * e.g. a server has forcefully evicted them, but can't presume to know where to
      * send them.
      */
-    public void noteLocusLost (AuthName name)
+    public void noteLocusLost (LocusAuthName name, Locus lostLocus)
     {
-        doNote(name, Whereabouts.OFFLINE);
+        doNote(name, null, lostLocus);
     }
 
     // do the lifting
-    protected void doNote (final AuthName name, final Whereabouts whereabouts)
+    protected void doNote (LocusAuthName name, final Whereabouts whereabouts, final Locus ifLocus)
     {
-        // update the cross-peer information
+        // update the cross-peer information *on this peer*, i.e. the locus peer
         _peerMgr.updateWhereabouts(name, whereabouts);
 
         // update the player's vault
         _peerMgr.invokeNodeAction(new AetherNodeAction(name.getId()) {
             @Override protected void execute (AetherClientObject memobj) {
-                memobj.setLocus((whereabouts instanceof InLocus) ?
-                    ((InLocus) whereabouts).getLocus() : null);
+                // if ifLocus is non-null, we validate the player's current locus against it
+                if (ifLocus != null && !ifLocus.equals(memobj.locus)) {
+                    // if it's changed, drop our own modification
+                    return;
+                }
+                memobj.setLocus(whereabouts != null ? ((InLocus) whereabouts).getLocus() : null);
             }
         });
     }

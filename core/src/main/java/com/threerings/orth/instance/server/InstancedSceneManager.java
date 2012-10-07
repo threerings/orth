@@ -20,6 +20,7 @@ import com.threerings.whirled.util.UpdateList;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.where.InLocus;
 import com.threerings.orth.instance.data.Instance;
+import com.threerings.orth.locus.data.LocusAuthName;
 import com.threerings.orth.locus.server.LocusManager;
 import com.threerings.orth.peer.server.OrthPeerManager;
 
@@ -58,9 +59,9 @@ public abstract class InstancedSceneManager extends SpotSceneManager
     {
         super.bodyWillEnter(body);
 
-        if (_whereabouts != null && body.username instanceof AuthName) {
+        if (_whereabouts != null && body.username instanceof LocusAuthName) {
             // notify the locus system that we safely arrived
-            _locMgr.noteLocusForPlayer((AuthName) body.username, _whereabouts);
+            _locMgr.noteLocusForPlayer((LocusAuthName) body.username, _whereabouts);
         }
     }
 
