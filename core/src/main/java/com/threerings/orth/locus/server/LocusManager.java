@@ -20,6 +20,7 @@ import com.threerings.orth.aether.server.AetherNodeAction;
 import com.threerings.orth.data.AuthName;
 import com.threerings.orth.data.OrthCodes;
 import com.threerings.orth.data.where.InLocus;
+import com.threerings.orth.data.where.Whereabouts;
 import com.threerings.orth.locus.client.LocusService.LocusMaterializationListener;
 import com.threerings.orth.locus.data.Locus;
 import com.threerings.orth.locus.data.LocusMarshaller;
@@ -66,13 +67,30 @@ public class LocusManager
      */
     public void noteLocusForPlayer (AuthName name, final InLocus whereabouts)
     {
+        doNote(name, whereabouts);
+    }
+
+    /**
+     * Intended for uses where a player has left a Locus without a known destination,
+     * e.g. a server has forcefully evicted them, but can't presume to know where to
+     * send them.
+     */
+    public void noteLocusLost (AuthName name)
+    {
+        doNote(name, Whereabouts.OFFLINE);
+    }
+
+    // do the lifting
+    protected void doNote (final AuthName name, final Whereabouts whereabouts)
+    {
         // update the cross-peer information
         _peerMgr.updateWhereabouts(name, whereabouts);
 
         // update the player's vault
         _peerMgr.invokeNodeAction(new AetherNodeAction(name.getId()) {
             @Override protected void execute (AetherClientObject memobj) {
-                memobj.setLocus(whereabouts.getLocus());
+                memobj.setLocus((whereabouts instanceof InLocus) ?
+                    ((InLocus) whereabouts).getLocus() : null);
             }
         });
     }
