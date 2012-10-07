@@ -417,13 +417,15 @@ public class PartyManager extends NodeletManager
         if (peep == null) {
             return false;
         }
+
+        onPeepRemoved.dispatch(peep.name);
+
         // if they're the last one, just kill the party
         if (_partyObj.peeps.size() == 1 || (_partyObj.leaderId == playerId && _partyObj.disband)) {
             shutdown();
             return true;
         }
 
-        onPeepRemoved.dispatch(peep.name);
         endPartierSession(playerId);
 
         _partyObj.startTransaction();
