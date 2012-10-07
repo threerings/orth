@@ -64,6 +64,8 @@ public class PartyManager extends NodeletManager
 {
     public Signal1<PlayerName> onPeepDisconnected = Signals.newSignal1();
     public Signal1<PlayerName> onPeepConnected = Signals.newSignal1();
+    public Signal1<PlayerName> onPeepAdded = Signals.newSignal1();
+    public Signal1<PlayerName> onPeepRemoved = Signals.newSignal1();
 
     @Override public void didInit ()
     {
@@ -407,17 +409,21 @@ public class PartyManager extends NodeletManager
     public boolean removePlayer (int playerId)
     {
         // make sure we're still alive and they're actually in
-        if (_partyObj == null || !_partyObj.isActive() ||
-            !_partyObj.peeps.containsKey(playerId)) {
+        if (_partyObj == null || !_partyObj.isActive()) {
             return false;
         }
 
+        PartyPeep peep = _partyObj.peeps.get(playerId);
+        if (peep == null) {
+            return false;
+        }
         // if they're the last one, just kill the party
         if (_partyObj.peeps.size() == 1 || (_partyObj.leaderId == playerId && _partyObj.disband)) {
             shutdown();
             return true;
         }
 
+        onPeepRemoved.dispatch(peep.name);
         endPartierSession(playerId);
 
         _partyObj.startTransaction();
@@ -483,6 +489,7 @@ public class PartyManager extends NodeletManager
     protected void doAddPeepToParty (PartyPeep peep)
     {
         _partyObj.addToPeeps(peep);
+        onPeepAdded.dispatch(peep.name);
     }
 
     /** If the given player is the leader, make someone else the leader. */
