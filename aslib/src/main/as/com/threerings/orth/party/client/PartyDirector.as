@@ -87,12 +87,9 @@ public class PartyDirector extends NodeletDirector
             _plobj.partyChanged.add(connectToParty);
 
             if (_plobj.party != null) {
-                log.info("Player object's got a party configured: hooking up",
-                    "partyId", PartyNodelet(_plobj.party.nodelet).partyId);
                 connectToParty(_plobj.party);
 
             } else {
-                log.info("Player object's got no party configured");
                 disconnect();
                 aetherIsReady();
             }
