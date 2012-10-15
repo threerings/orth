@@ -418,14 +418,7 @@ public class PartyManager extends NodeletManager
             return false;
         }
 
-        onPeepRemoved.dispatch(peep.name);
-
-        // if they're the last one, just kill the party
-        if (_partyObj.peeps.size() == 1 || (_partyObj.leaderId == playerId && _partyObj.disband)) {
-            shutdown();
-            return true;
-        }
-
+        boolean wasLeader = (_partyObj.leaderId == playerId);
         endPartierSession(playerId);
 
         _partyObj.startTransaction();
@@ -435,6 +428,13 @@ public class PartyManager extends NodeletManager
 
         } finally {
             _partyObj.commitTransaction();
+        }
+
+        onPeepRemoved.dispatch(peep.name);
+
+        // if they were the last one, kill the party
+        if (_partyObj.peeps.isEmpty() || (wasLeader && _partyObj.disband)) {
+            shutdown();
         }
         return true;
     }
