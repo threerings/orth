@@ -39,11 +39,24 @@ public class SocializerInfo extends ActorInfo
         protected SocializerObject _mobj;
     }
 
+    public static class TitleUpdater implements Updater<SocializerInfo>
+    {
+        public TitleUpdater (SocializerObject mobj) {
+            _mobj = mobj;
+        }
+        public boolean update (SocializerInfo info) {
+            info.updateTitle(_mobj.title);
+            return true;
+        }
+        protected SocializerObject _mobj;
+    }
+
     public SocializerInfo (SocializerObject sobj)
     {
         super(sobj);
         // configure our various bits
         _guild = sobj.guild;
+        _title = sobj.title;
         // updatePartyId(sobj.partyId);
         updateIsAway(sobj);
     }
@@ -96,6 +109,11 @@ public class SocializerInfo extends ActorInfo
         _guild = guild;
     }
 
+    public void updateTitle (String title)
+    {
+        _title = title;
+    }
+
     // from PartyOccupantInfo
     public boolean updatePartyId (int partyId)
     {
@@ -130,4 +148,5 @@ public class SocializerInfo extends ActorInfo
     protected GuildName _guild;
     protected int _partyId;
     protected boolean _away;
+    protected String _title;
 }

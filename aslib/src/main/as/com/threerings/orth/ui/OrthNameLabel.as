@@ -27,6 +27,10 @@ public class OrthNameLabel extends Sprite
             { textColor: 0xFFFFFF, selectable: false, autoSize :TextFieldAutoSize.LEFT,
             outlineColor: 0x000000, outlineWidth: 5, outlineStrength: 12 });
 
+        _title = TextFieldUtil.createField("",
+            { textColor: 0xFFFFFF, selectable: false, autoSize :TextFieldAutoSize.LEFT,
+            outlineColor: 0x000000, outlineWidth: 5, outlineStrength: 12 });
+
         _guild = TextFieldUtil.createField("",
             { textColor: 0xFFFFFF, selectable: false, autoSize :TextFieldAutoSize.LEFT,
             outlineColor: 0x000000, outlineWidth: 5, outlineStrength: 12 });
@@ -34,8 +38,10 @@ public class OrthNameLabel extends Sprite
         // It's ok that we modify this later, as it gets cloned anyway when assigned to the field.
         _label.defaultTextFormat = FORMAT;
         _guild.defaultTextFormat = FORMAT;
+        _title.defaultTextFormat = FORMAT;
 
         addChild(_label);
+        addChild(_title);
         addChild(_guild);
     }
 
@@ -46,12 +52,21 @@ public class OrthNameLabel extends Sprite
     {
         TextFieldUtil.updateText(_label, info.username.toString());
         var guildName :String = "";
+        var title :String = "";
         if ((info is SocializerInfo) && SocializerInfo(info).guild != null) {
             _guild.visible = true;
             guildName = "<" + SocializerInfo(info).guild.toString() + ">";
         } else {
             _guild.visible = false;
         }
+
+//        if ((info is SocializerInfo) && SocializerInfo(info). != null) {
+//            _guild.visible = true;
+//            guildName = "<" + SocializerInfo(info).guild.toString() + ">";
+//        } else {
+//            _guild.visible = false;
+//        }
+
         TextFieldUtil.updateText(_guild, guildName);
         setStatus(info.status, (info is SocializerInfo) && SocializerInfo(info).isAway(), false);
 
@@ -88,6 +103,7 @@ public class OrthNameLabel extends Sprite
 
     protected var _label :TextField;
     protected var _guild :TextField;
+    protected var _title :TextField;
 
     protected static const FORMAT :TextFormat =
         TextFieldUtil.createFormat({ font: "_sans", size: 12, letterSpacing: .6 });

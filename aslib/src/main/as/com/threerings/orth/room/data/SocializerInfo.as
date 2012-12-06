@@ -80,6 +80,7 @@ public class SocializerInfo extends ActorInfo
         _guild = ins.readObject(GuildName);
         _partyId = ins.readInt();
         _away = ins.readBoolean();
+        _title = ins.readField(String);
     }
 
     override public function writeObject (out :ObjectOutputStream) :void
@@ -89,12 +90,14 @@ public class SocializerInfo extends ActorInfo
         out.writeObject(_guild);
         out.writeInt(_partyId);
         out.writeBoolean(_away);
+        out.writeField(_title);
     }
 
     protected var _scale :Number;
     protected var _guild :GuildName;
     protected var _partyId :int;
     protected var _away :Boolean;
+    protected var _title :String;
 // GENERATED STREAMING END
 // GENERATED CLASSFINISH START
 }

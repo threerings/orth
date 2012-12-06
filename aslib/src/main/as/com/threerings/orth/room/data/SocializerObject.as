@@ -28,6 +28,8 @@ public class SocializerObject extends ActorObject
 
     public var guild :GuildName;
 
+    public var title :String;
+
     public var avatar :Avatar;
 
     public var avatarCache :DSet; /* of */ Avatar;
@@ -36,6 +38,7 @@ public class SocializerObject extends ActorObject
 
     public var nameChanged :Signal = new Signal(PlayerName, PlayerName);
     public var guildChanged :Signal = new Signal(GuildName, GuildName);
+    public var titleChanged :Signal = new Signal(String, String);
     public var avatarChanged :Signal = new Signal(Avatar, Avatar);
     public var avatarCacheChanged :Signal = new Signal(DSet, DSet);
     public var avatarCacheEntryAdded :Signal = new Signal(Avatar);
@@ -45,6 +48,7 @@ public class SocializerObject extends ActorObject
 
     public static const NAME :String = "name";
     public static const GUILD :String = "guild";
+    public static const TITLE :String = "title";
     public static const AVATAR :String = "avatar";
     public static const AVATAR_CACHE :String = "avatarCache";
     public static const WALKING_ID :String = "walkingId";
@@ -54,6 +58,7 @@ public class SocializerObject extends ActorObject
         super.readObject(ins);
         name = ins.readObject(PlayerName);
         guild = ins.readObject(GuildName);
+        title = ins.readField(String);
         avatar = ins.readObject(Avatar);
         avatarCache = ins.readObject(DSet);
         walkingId = ins.readInt();
@@ -105,6 +110,9 @@ class Signaller
                 break;
             case "guild":
                 signal = _obj.guildChanged;
+                break;
+            case "title":
+                signal = _obj.titleChanged;
                 break;
             case "avatar":
                 signal = _obj.avatarChanged;
