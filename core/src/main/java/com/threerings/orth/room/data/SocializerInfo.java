@@ -142,11 +142,12 @@ public class SocializerInfo extends ActorInfo
         super.toString(buf);
         buf.append(", scale=").append(_scale).append(", away=").append(_away);
         buf.append(", party=").append(_partyId).append(", guild=").append(_guild);
+        buf.append(", title =").append(_title);
     }
 
     protected float _scale;
     protected GuildName _guild;
     protected int _partyId;
     protected boolean _away;
-    protected String _title;
+    protected String _title = "";
 }

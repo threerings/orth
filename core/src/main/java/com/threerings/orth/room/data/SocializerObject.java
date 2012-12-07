@@ -58,7 +58,7 @@ public class SocializerObject extends ActorObject
     public GuildName guild;
 
     /** This player's specialization title */
-    public String title;
+    public String title = "";
 
     /** The avatar that the user has chosen, or null for guests. */
     public Avatar avatar;

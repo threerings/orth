@@ -3,11 +3,12 @@
 // Copyright 2010-2012 Three Rings Design, Inc.
 
 package com.threerings.orth.ui {
-
 import flash.display.Sprite;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
+
+import com.threerings.util.F;
 
 import com.threerings.crowd.data.OccupantInfo;
 
@@ -53,6 +54,7 @@ public class OrthNameLabel extends Sprite
         TextFieldUtil.updateText(_label, info.username.toString());
         var guildName :String = "";
         var title :String = "";
+        var titleColor :uint;
         if ((info is SocializerInfo) && SocializerInfo(info).guild != null) {
             _guild.visible = true;
             guildName = "<" + SocializerInfo(info).guild.toString() + ">";
@@ -60,20 +62,37 @@ public class OrthNameLabel extends Sprite
             _guild.visible = false;
         }
 
-//        if ((info is SocializerInfo) && SocializerInfo(info). != null) {
-//            _guild.visible = true;
-//            guildName = "<" + SocializerInfo(info).guild.toString() + ">";
-//        } else {
-//            _guild.visible = false;
-//        }
+        if ((info is SocializerInfo) && SocializerInfo(info).title != null) {
+            _title.visible = true;
+            title = SocializerInfo(info).title;
+        } else {
+            _title.visible = false;
+        }
+
+        if (gTitles.indexOf(title, 0) != -1 ) {
+            titleColor = 0x45fe83;
+        } else if (dTitles.indexOf(title, 0) != -1) {
+            titleColor = 0x8073d;
+        } else if (tTitles.indexOf(title, 0) != -1) {
+            titleColor = 0xfed26d;
+        } else if (aTitles.indexOf(title, 0) != -1) {
+            titleColor = 0xe4743e;
+        } else {
+            titleColor = 0xa2a5aa;
+        }
 
         TextFieldUtil.updateText(_guild, guildName);
+        TextFieldUtil.updateText(_title, title.toUpperCase());
+        _title.textColor = titleColor;
+
         setStatus(info.status, (info is SocializerInfo) && SocializerInfo(info).isAway(), false);
 
         const center :Number = Math.max(_label.textWidth, _guild.textWidth) / 2;
         _label.x = center - (_label.textWidth / 2);
+        _title.x = center - (_title.textWidth / 2);
+        _title.y = _label.y + _label.textHeight + 2;
         _guild.x = center - (_guild.textWidth / 2);
-        _guild.y = _label.y + _label.textHeight + 2;
+        _guild.y = _title.y + _title.textHeight + 2;
     }
 
     /**
@@ -107,5 +126,14 @@ public class OrthNameLabel extends Sprite
 
     protected static const FORMAT :TextFormat =
         TextFieldUtil.createFormat({ font: "_sans", size: 12, letterSpacing: .6 });
+
+    protected static const gTitles :Array = ["Novice", "Defender", "Protector", "Warrior",
+        "Warden", "Captain", "Major", "Brigadier", "Champion", "Sentinel", "Centurion"];
+    protected static const tTitles :Array = ["Tinkerer", "Fixer", "Hacker", "Sabateur",
+        "Operative", "Engineer", "Architect", "Inventor", "Scientist", "Mastermind", "Time Agent"];
+    protected static const dTitles :Array = ["Advocate", "Companion", "Mediator", "Negotiator",
+        "Scholar", "Librarian", "Professor", "Detective", "Alienist", "Councilor", "Oracle"];
+    protected static const aTitles :Array = ["Wanderer", "Traveler", "Pilgrim", "Pioneer",
+        "Explorer", "Archaeologist", "Swashbuckler", "Voyager", "Astronaut", "Guide", "Questor"];
 }
 }

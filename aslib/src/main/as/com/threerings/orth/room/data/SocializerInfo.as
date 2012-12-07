@@ -41,6 +41,11 @@ public class SocializerInfo extends ActorInfo
         return _guild;
     }
 
+    public function get title () :String
+    {
+        return _title;
+    }
+
     /**
      * Returns true if this player is away, false otherwise.
      */
