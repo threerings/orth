@@ -100,6 +100,12 @@ public class MemberSprite extends ActorSprite
             return true;
         }
 
+        const oldTitle :String = SocializerInfo(oldInfo).title;
+        const newTitle :String = SocializerInfo(newInfo).title;
+        if (oldTitle != newTitle) {
+            return true;
+        }
+
         return (SocializerInfo(oldInfo).isAway() != SocializerInfo(newInfo).isAway());
     }
 

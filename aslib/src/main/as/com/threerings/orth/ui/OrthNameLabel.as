@@ -72,7 +72,7 @@ public class OrthNameLabel extends Sprite
         if (gTitles.indexOf(title, 0) != -1 ) {
             titleColor = 0x45fe83;
         } else if (dTitles.indexOf(title, 0) != -1) {
-            titleColor = 0x8073d;
+            titleColor = 0x8073ed;
         } else if (tTitles.indexOf(title, 0) != -1) {
             titleColor = 0xfed26d;
         } else if (aTitles.indexOf(title, 0) != -1) {
