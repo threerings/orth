@@ -22,6 +22,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.orth.aether.data.AetherClientObject;
 import com.threerings.orth.guild.data.GuildCodes;
 import com.threerings.orth.guild.data.GuildMarshaller;
+import com.threerings.orth.guild.data.GuildMemberEntry;
 import com.threerings.orth.guild.data.GuildName;
 import com.threerings.orth.guild.data.GuildNodelet;
 import com.threerings.orth.guild.data.GuildObject;
@@ -33,6 +34,9 @@ import com.threerings.orth.nodelet.server.NodeletRegistry;
 import com.threerings.orth.peer.data.OrthNodeObject;
 import com.threerings.orth.server.OrthDeploymentConfig;
 
+import com.threerings.signals.Signal1;
+import com.threerings.signals.Signals;
+
 import static com.threerings.orth.Log.log;
 
 /**
@@ -41,6 +45,12 @@ import static com.threerings.orth.Log.log;
 @Singleton
 public class GuildRegistry extends NodeletRegistry
 {
+    /** A new member joins a guild, with the new {@link GuildMemberEntry}. */
+    public final Signal1<GuildMemberEntry> onGuildJoined = Signals.newSignal1();
+
+    /** A member leaves a guild, with the now-invalidated {@link GuildMemberEntry}. */
+    public final Signal1<GuildMemberEntry> onGuildLeft = Signals.newSignal1();
+
     @Inject public GuildRegistry (Injector injector, OrthDeploymentConfig config)
     {
         super(GuildNodelet.class, config.getGuildHost(), config.getGuildPorts(), injector);

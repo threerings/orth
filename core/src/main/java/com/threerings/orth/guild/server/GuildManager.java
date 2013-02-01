@@ -306,6 +306,7 @@ public class GuildManager extends NodeletManager
             @Override public void requestCompleted (Void result) {
                 _guildObj.removeFromMembers(target.getPlayerId());
                 clearPlayerObjectGuild(target.getPlayerId());
+                _guildReg.onGuildLeft.dispatch(target);
                 super.requestCompleted(result);
             }
         });
@@ -394,6 +395,7 @@ public class GuildManager extends NodeletManager
 
             @Override public void requestCompleted (Void result) {
                 _guildObj.addToMembers(newEntry);
+                _guildReg.onGuildJoined.dispatch(newEntry);
                 super.requestCompleted(result);
             }
         });
@@ -514,6 +516,7 @@ public class GuildManager extends NodeletManager
     // dependencies
     @Inject protected @MainInvoker Invoker _invoker;
     @Inject protected ChatManager _chatMan;
+    @Inject protected GuildRegistry _guildReg;
     @Inject protected GuildRepository _guildRepo;
     @Inject protected IgnoreManager _ignoreMgr;
     @Inject protected InvocationManager _invmgr;
