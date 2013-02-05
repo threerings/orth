@@ -311,7 +311,7 @@ public class FriendManager implements Lifecycle.InitComponent, FriendProvider
 
     protected void shutdownFriends (AetherClientObject player)
     {
-        log.debug("Removing friend notifications", "player", player);
+        log.debug("Removing friend notifications", "player", player.who());
 
         for (PlayerEntry entry : player.friends) {
             _notifyMap.remove(entry.name.getId(), player);
