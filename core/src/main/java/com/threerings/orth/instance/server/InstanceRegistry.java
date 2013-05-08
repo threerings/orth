@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
-import com.google.inject.internal.Preconditions;
+import com.google.common.base.Preconditions;
 
 import com.threerings.orth.instance.data.Instance;
 
