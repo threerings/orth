@@ -4,8 +4,8 @@ Orth is a collection of code for building multiplayer online virtual environment
 [Narya] and [Vilya], mostly extracted from [Whirled] so that we could use it on smaller standalone
 projects.
 
-We used it for a game called [Bite Me!] and probably some other stuff that I've forgotten in the
-numerous years that have elapsed since those halcyon days.
+We used it for games like [Bite Me!] and [Doctor Who: Worlds in Time] and probably some other stuff
+that I've forgotten in the numerous years that have elapsed since those halcyon days.
 
 ## Building
 
@@ -23,3 +23,4 @@ equivalent to "Halp? I have not the clues." will be summarily closed.
 [Bite Me!]: https://www.facebook.com/Bite-Me-232437613501222/
 [Three Rings]: https://en.wikipedia.org/wiki/Three_Rings_Design
 [Ant]: https://ant.apache.org/
+[Doctor Who: Worlds in Time]: https://en.wikipedia.org/wiki/Doctor_Who:_Worlds_in_Time
